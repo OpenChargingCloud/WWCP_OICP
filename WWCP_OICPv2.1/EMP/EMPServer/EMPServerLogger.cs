@@ -148,9 +148,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (EMPServer == null)
                 throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
-            this.EMPServer = EMPServer;
-
             #endregion
+
+            this.EMPServer = EMPServer;
 
             #region Register AuthorizeStart/Stop and SendCDR log events
 

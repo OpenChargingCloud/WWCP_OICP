@@ -149,9 +149,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (CPOServer == null)
                 throw new ArgumentNullException(nameof(CPOServer), "The given CPO server must not be null!");
 
-            this.CPOServer = CPOServer;
-
             #endregion
+
+            this.CPOServer = CPOServer;
 
             #region Register remote start/stop log events
 

@@ -39,19 +39,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region Properties
 
         /// <summary>
-        /// An enumeration of authorization identifications.
+        /// The e-mobility provider authentication data.
         /// </summary>
-        public IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications   { get; }
+        public ProviderAuthenticationData  ProviderAuthenticationData    { get; }
 
         /// <summary>
-        /// An e-mobility provider identification.
+        /// The e-mobility provider identification.
         /// </summary>
-        public Provider_Id                               ProviderId                     { get; }
+        public Provider_Id                 ProviderId                    { get; }
 
         /// <summary>
         /// The server-side data management operation.
         /// </summary>
-        public ActionTypes                               OICPAction                     { get; }
+        public ActionTypes                 OICPAction                    { get; }
 
         #endregion
 
@@ -60,17 +60,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Create an OICP PushAuthenticationDataRequest XML/SOAP request.
         /// </summary>
-        /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
+        /// <param name="ProviderAuthenticationData">The e-mobility provider authentication data.</param>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
-        public PushAuthenticationDataRequest(IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
-                                             Provider_Id                               ProviderId,
-                                             ActionTypes                               OICPAction          = ActionTypes.fullLoad,
+        public PushAuthenticationDataRequest(ProviderAuthenticationData  ProviderAuthenticationData,
+                                             ActionTypes                 OICPAction          = ActionTypes.fullLoad,
 
-                                             DateTime?                                 Timestamp           = null,
-                                             CancellationToken?                        CancellationToken   = null,
-                                             EventTracking_Id                          EventTrackingId     = null,
-                                             TimeSpan?                                 RequestTimeout      = null)
+                                             DateTime?                   Timestamp           = null,
+                                             CancellationToken?          CancellationToken   = null,
+                                             EventTracking_Id            EventTrackingId     = null,
+                                             TimeSpan?                   RequestTimeout      = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -81,14 +80,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Initial checks
 
-            if (AuthorizationIdentifications == null)
-                throw new ArgumentNullException(nameof(AuthorizationIdentifications), "The given enumeration of authorization identifications must not be null!");
+            if (ProviderAuthenticationData == null)
+                throw new ArgumentNullException(nameof(ProviderAuthenticationData), "The given enumeration of authorization identifications must not be null!");
 
             #endregion
 
-            this.AuthorizationIdentifications  = AuthorizationIdentifications;
-            this.ProviderId                    = ProviderId;
-            this.OICPAction                    = OICPAction;
+            this.ProviderAuthenticationData  = ProviderAuthenticationData;
+            this.ProviderId                  = ProviderId;
+            this.OICPAction                  = OICPAction;
 
         }
 
@@ -110,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         // 
         //          <AuthenticationData:ProviderAuthenticationData>
         // 
-        //             <AuthenticationData:ProviderID>?</AuthenticationData:ProviderID>
+        //             <AuthenticationData:ProviderID>DE*GDF</AuthenticationData:ProviderID>
         // 
         //             <!--Zero or more repetitions:-->
         //             <AuthenticationData:AuthenticationDataRecord>
@@ -118,30 +117,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         // 
         //                   <!--You have a CHOICE of the next 4 items at this level-->
         //                   <CommonTypes:RFIDmifarefamilyIdentification>
-        //                      <CommonTypes:UID>?</CommonTypes:UID>
+        //                      <CommonTypes:UID>08152305</CommonTypes:UID>
         //                   </CommonTypes:RFIDmifarefamilyIdentification>
         // 
         //                   <CommonTypes:QRCodeIdentification>
         // 
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                      <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         // 
         //                      <!--You have a CHOICE of the next 2 items at this level-->
         //                      <CommonTypes:PIN>?</CommonTypes:PIN>
         // 
         //                      <CommonTypes:HashedPIN>
-        //                         <CommonTypes:Value>?</CommonTypes:Value>
-        //                         <CommonTypes:Function>?</CommonTypes:Function>
-        //                         <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                         <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //                         <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //                         <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
         //                      </CommonTypes:HashedPIN>
         // 
         //                   </CommonTypes:QRCodeIdentification>
         // 
         //                   <CommonTypes:PlugAndChargeIdentification>
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                      <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //                   </CommonTypes:PlugAndChargeIdentification>
         // 
         //                   <CommonTypes:RemoteIdentification>
-        //                      <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                      <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //                   </CommonTypes:RemoteIdentification>
         // 
         //                </AuthenticationData:Identification>
@@ -164,12 +163,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushAuthenticationDataRequest Parse(XElement             PushAuthenticationDataRequestXML,
+            CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                           OnExceptionDelegate  OnException = null)
         {
 
             PushAuthenticationDataRequest _PushAuthenticationDataRequest;
 
-            if (TryParse(PushAuthenticationDataRequestXML, out _PushAuthenticationDataRequest, OnException))
+            if (TryParse(PushAuthenticationDataRequestXML,
+                         out _PushAuthenticationDataRequest,
+                         CustomProviderAuthenticationDataParser,
+                         CustomAuthorizationIdentificationParser,
+                         OnException))
+
                 return _PushAuthenticationDataRequest;
 
             return null;
@@ -186,12 +192,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushAuthenticationDataRequest Parse(String               PushAuthenticationDataRequestText,
+            CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                           OnExceptionDelegate  OnException = null)
         {
 
             PushAuthenticationDataRequest _PushAuthenticationDataRequest;
 
-            if (TryParse(PushAuthenticationDataRequestText, out _PushAuthenticationDataRequest, OnException))
+            if (TryParse(PushAuthenticationDataRequestText,
+                         out _PushAuthenticationDataRequest,
+                         CustomProviderAuthenticationDataParser,
+                         CustomAuthorizationIdentificationParser,
+                         OnException))
+
                 return _PushAuthenticationDataRequest;
 
             return null;
@@ -208,25 +221,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                           PushAuthenticationDataRequestXML,
-                                       out PushAuthenticationDataRequest  PushAuthenticationDataRequest,
-                                       OnExceptionDelegate                OnException  = null)
+        public static Boolean TryParse(XElement                                          PushAuthenticationDataRequestXML,
+                                       out PushAuthenticationDataRequest                 PushAuthenticationDataRequest,
+                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+
+                                       OnExceptionDelegate                               OnException                               = null)
         {
 
             try
             {
 
-                var ProviderAuthenticationDataXML = PushAuthenticationDataRequestXML.ElementOrFail(OICPNS.AuthenticationData + "ProviderAuthenticationData");
+                if (PushAuthenticationDataRequestXML.Name != OICPNS.AuthenticationData + "eRoamingPushAuthenticationData")
+                {
+                    PushAuthenticationDataRequest = null;
+                    return false;
+                }
 
                 PushAuthenticationDataRequest = new PushAuthenticationDataRequest(
 
-                                                    ProviderAuthenticationDataXML.   MapElements   (OICPNS.AuthenticationData + "AuthenticationDataRecord",
-                                                                                                    AuthorizationIdentification.Parse),
+                                                    PushAuthenticationDataRequestXML.MapElement    (OICPNS.AuthenticationData + "ProviderAuthenticationData",
+                                                                                                    (xml, e) => ProviderAuthenticationData.Parse(xml,
+                                                                                                                                                 CustomProviderAuthenticationDataParser,
+                                                                                                                                                 CustomAuthorizationIdentificationParser,
+                                                                                                                                                 e),
+                                                                                                    OnException),
 
-                                                    PushAuthenticationDataRequestXML.MapValueOrFail(OICPNS.AuthenticationData + "ProviderID",
-                                                                                                    Provider_Id.Parse),
-
-                                                    ProviderAuthenticationDataXML.   MapValueOrFail(OICPNS.AuthenticationData + "ActionType",
+                                                    PushAuthenticationDataRequestXML.MapValueOrFail(OICPNS.AuthenticationData + "ActionType",
                                                                                                     XML_IO.AsActionType)
 
                                                 );
@@ -258,6 +279,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                             PushAuthenticationDataRequestText,
                                        out PushAuthenticationDataRequest  PushAuthenticationDataRequest,
+                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                        OnExceptionDelegate                OnException  = null)
         {
 
@@ -266,6 +289,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(PushAuthenticationDataRequestText).Root,
                              out PushAuthenticationDataRequest,
+                             CustomProviderAuthenticationDataParser,
+                             CustomAuthorizationIdentificationParser,
                              OnException))
 
                     return true;
@@ -292,17 +317,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             => new XElement(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData",
 
-                   new XElement(OICPNS.AuthenticationData + "ActionType",      XML_IO.AsText(OICPAction)),
+                   new XElement(OICPNS.AuthenticationData + "ActionType",  XML_IO.AsText(OICPAction)),
 
-                   new XElement(OICPNS.AuthenticationData + "ProviderAuthenticationData",
-
-                       new XElement(OICPNS.AuthenticationData + "ProviderID",  ProviderId.ToString()),
-
-                       AuthorizationIdentifications.
-                           SafeSelect(AuthorizationIdentification => new XElement(OICPNS.AuthenticationData + "AuthenticationDataRecord",
-                                                                                  AuthorizationIdentification.ToXML(OICPNS.AuthenticationData)))
-
-                   )
+                   ProviderAuthenticationData.ToXML()
 
                );
 
@@ -390,9 +407,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if ((Object) PushAuthenticationDataRequest == null)
                 return false;
 
-            return AuthorizationIdentifications.Count().Equals(PushAuthenticationDataRequest.AuthorizationIdentifications.Count()) &&
-                   ProviderId.                          Equals(PushAuthenticationDataRequest.ProviderId) &&
-                   OICPAction.                          Equals(PushAuthenticationDataRequest.OICPAction);
+            return ProviderAuthenticationData.Equals(PushAuthenticationDataRequest.ProviderAuthenticationData) &&
+                   ProviderId.                Equals(PushAuthenticationDataRequest.ProviderId)                 &&
+                   OICPAction.                Equals(PushAuthenticationDataRequest.OICPAction);
 
         }
 
@@ -411,9 +428,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             unchecked
             {
 
-                return AuthorizationIdentifications.GetHashCode() * 5  ^
-                       ProviderId.                  GetHashCode() * 17 ^
-                       OICPAction.                  GetHashCode();
+                return ProviderAuthenticationData.GetHashCode() * 5 ^
+                       ProviderId.                GetHashCode() * 3 ^
+                       OICPAction.                GetHashCode();
 
             }
         }
@@ -427,9 +444,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OICPAction, " ",
-                             AuthorizationIdentifications, " authorization identification(s)",
-                             " (", ProviderId, ")");
+            => String.Concat("'", OICPAction, "' ",
+                             " of ",
+                             ProviderAuthenticationData.ToString());
 
         #endregion
 

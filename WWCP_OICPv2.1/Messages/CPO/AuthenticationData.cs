@@ -26,13 +26,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
     /// <summary>
-    /// A group of OICP provider authentication data records.
+    /// A group of OICP authentication data records.
     /// </summary>
-    public class AuthenticationData
+    public class AuthenticationData : AResponse<PullAuthenticationDataRequest,
+                                                AuthenticationData>
     {
 
         #region Properties
@@ -45,21 +46,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The status code for this request.
         /// </summary>
-        public StatusCode                               StatusCode                           { get; }
+        public StatusCode?                              StatusCode                           { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        #region AuthenticationData(ProviderAuthenticationDataRecords, StatusCode  = null)
+        #region AuthenticationData(Request, ProviderAuthenticationDataRecords, StatusCode = null, CustomData = null)
 
         /// <summary>
         /// Create a new group of OICP provider authentication data records.
         /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
         /// <param name="ProviderAuthenticationDataRecords">An enumeration of provider authentication data records.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
-        public AuthenticationData(IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
-                                  StatusCode                               StatusCode  = null)
+        /// <param name="CustomData">Optional custom data.</param>
+        public AuthenticationData(PullAuthenticationDataRequest            Request,
+                                  IEnumerable<ProviderAuthenticationData>  ProviderAuthenticationDataRecords,
+                                  StatusCode?                              StatusCode   = null,
+                                  IReadOnlyDictionary<String, Object>      CustomData   = null)
+
+            : base(Request,
+                   CustomData)
+
         {
 
             #region Initial checks
@@ -70,32 +79,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.ProviderAuthenticationDataRecords  = ProviderAuthenticationDataRecords;
-            this.StatusCode                         = StatusCode ?? new StatusCode(StatusCodes.SystemError);
+            this.StatusCode                         = StatusCode;
 
         }
 
         #endregion
 
-        #region AuthenticationData(Code, Description = null, AdditionalInfo = null)
+        #region AuthenticationData(Request, Code, Description = null, AdditionalInfo = null, CustomData = null)
 
         /// <summary>
         /// Create a new group of OICP provider authentication data records.
         /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
         /// <param name="Code">The result code of the operation.</param>
         /// <param name="Description">An optional description of the result code.</param>
         /// <param name="AdditionalInfo">An optional additional information.</param>
-        public AuthenticationData(StatusCodes  Code,
-                                  String       Description     = null,
-                                  String       AdditionalInfo  = null)
+        /// <param name="CustomData">Optional custom data.</param>
+        public AuthenticationData(PullAuthenticationDataRequest        Request,
+                                  StatusCodes                          Code,
+                                  String                               Description      = null,
+                                  String                               AdditionalInfo   = null,
+                                  IReadOnlyDictionary<String, Object>  CustomData       = null)
 
-        {
+            : this(Request,
+                   new ProviderAuthenticationData[0],
+                   new StatusCode(Code,
+                                  Description,
+                                  AdditionalInfo),
+                   CustomData)
 
-            this.ProviderAuthenticationDataRecords  = new ProviderAuthenticationData[0];
-            this.StatusCode                         = new StatusCode(Code,
-                                                                     Description,
-                                                                     AdditionalInfo);
-
-        }
+        { }
 
         #endregion
 
@@ -104,118 +117,418 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        // 
+        // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:AuthenticationData  = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
+        //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
         //    <soapenv:Header/>
-        // 
+        //
         //    <soapenv:Body>
         //       <AuthenticationData:eRoamingAuthenticationData>
-        // 
+        //
         //          <AuthenticationData:AuthenticationData>
-        // 
+        //
         //             <!--Zero or more repetitions:-->
         //             <AuthenticationData:ProviderAuthenticationData>
-        // 
+        //
         //                <AuthenticationData:ProviderID>DE*GDF</AuthenticationData:ProviderID>
-        // 
+        //
         //                <!--Zero or more repetitions:-->
         //                <AuthenticationData:AuthenticationDataRecord>
         //                   <AuthenticationData:Identification>
-        // 
+        //
         //                      <!--You have a CHOICE of the next 4 items at this level-->
         //                      <CommonTypes:RFIDmifarefamilyIdentification>
         //                         <CommonTypes:UID>08152305</CommonTypes:UID>
         //                      </CommonTypes:RFIDmifarefamilyIdentification>
-        // 
-        //                      <CommonTypes:QRCodeIdentification>
-        // 
+        //
+        //                      <CommonTypes:AuthenticationData>
+        //
         //                         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        // 
+        //
         //                         <!--You have a CHOICE of the next 2 items at this level-->
         //                         <CommonTypes:PIN>?</CommonTypes:PIN>
-        // 
+        //
         //                         <CommonTypes:HashedPIN>
         //                            <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
         //                            <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
         //                            <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
         //                         </CommonTypes:HashedPIN>
-        // 
-        //                      </CommonTypes:QRCodeIdentification>
-        // 
+        //
+        //                      </CommonTypes:AuthenticationData>
+        //
         //                      <CommonTypes:PlugAndChargeIdentification>
         //                         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //                      </CommonTypes:PlugAndChargeIdentification>
-        // 
+        //
         //                      <CommonTypes:RemoteIdentification>
         //                         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //                      </CommonTypes:RemoteIdentification>
-        // 
+        //
         //                   </AuthenticationData:Identification>
         //                </AuthenticationData:AuthenticationDataRecord>
-        // 
+        //
         //             </AuthenticationData:ProviderAuthenticationData>
         //          </AuthenticationData:AuthenticationData>
-        // 
+        //
         //          <!--Optional:-->
         //          <AuthenticationData:StatusCode>
-        // 
+        //
         //             <CommonTypes:Code>?</CommonTypes:Code>
-        // 
+        //
         //             <!--Optional:-->
         //             <CommonTypes:Description>?</CommonTypes:Description>
-        // 
+        //
         //             <!--Optional:-->
         //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        // 
+        //
         //          </AuthenticationData:StatusCode>
-        // 
+        //
         //       </AuthenticationData:eRoamingAuthenticationData>
         //    </soapenv:Body>
-        // 
+        //
         // </soapenv:Envelope>
 
         #endregion
 
-        #region (static) Parse(eRoamingAuthenticationDataXML)
+        #region (static) Parse   (Request, AuthenticationDataXML,  ..., OnException = null)
 
         /// <summary>
-        /// Parse the givem XML as an OICP provider authentication data records.
+        /// Parse the given XML representation of an OICP authentication data.
         /// </summary>
-        /// <param name="AuthenticationDataXML">A XML representation of OICP provider authentication data records.</param>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        /// <param name="AuthenticationDataXML">The XML to parse.</param>
+        /// <param name="CustomAuthenticationDataParser">A delegate to parse custom AuthenticationData XML elements.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthenticationData Parse(XElement             AuthenticationDataXML,
-                                               OnExceptionDelegate  OnException  = null)
+        public static AuthenticationData Parse(PullAuthenticationDataRequest                     Request,
+                                               XElement                                          AuthenticationDataXML,
+                                               CustomParserDelegate<AuthenticationData>          CustomAuthenticationDataParser            = null,
+                                               CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                               CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                               OnExceptionDelegate                               OnException                               = null)
         {
 
-            if (AuthenticationDataXML.Name != OICPNS.AuthenticationData + "eRoamingAuthenticationData")
-                throw new Exception("Invalid eRoamingAuthenticationData XML!");
+            AuthenticationData _AuthenticationData;
 
-            var _AuthenticationDataXML  = AuthenticationDataXML.Element   (OICPNS.AuthenticationData + "AuthenticationData");
-            var _StatusCode             = AuthenticationDataXML.MapElement(OICPNS.AuthenticationData + "StatusCode",
-                                                                           StatusCode.Parse);
+            if (TryParse(Request,
+                         AuthenticationDataXML,
+                         out _AuthenticationData,
+                         CustomAuthenticationDataParser,
+                         CustomProviderAuthenticationDataParser,
+                         CustomAuthorizationIdentificationParser,
+                         OnException))
 
-            if (_AuthenticationDataXML != null)
-                return new AuthenticationData(_AuthenticationDataXML.
-                                                  Elements  (OICPNS.AuthenticationData + "ProviderAuthenticationData").
-                                                  SafeSelect(ProviderAuthenticationDataXML => ProviderAuthenticationData.Parse(ProviderAuthenticationDataXML)).
-                                                  Where     (ProviderAuthenticationData    => ProviderAuthenticationData != null),
-                                              _StatusCode);
+                return _AuthenticationData;
 
-
-            return _StatusCode != null
-
-                       ? new AuthenticationData(_StatusCode.Code,
-                                                _StatusCode.Description,
-                                                _StatusCode.AdditionalInfo)
-
-                       : new AuthenticationData(StatusCodes.DataError);
+            return default(AuthenticationData);
 
         }
 
         #endregion
 
+        #region (static) Parse   (Request, AuthenticationDataText, ..., OnException = null)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        /// <param name="AuthenticationDataText">The text to parse.</param>
+        /// <param name="CustomAuthenticationDataParser">A delegate to parse custom AuthenticationData XML elements.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static AuthenticationData Parse(PullAuthenticationDataRequest                     Request,
+                                               String                                            AuthenticationDataText,
+                                               CustomParserDelegate<AuthenticationData>          CustomAuthenticationDataParser            = null,
+                                               CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                               CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                               OnExceptionDelegate                               OnException                               = null)
+        {
+
+            AuthenticationData _AuthenticationData;
+
+            if (TryParse(Request,
+                         AuthenticationDataText,
+                         out _AuthenticationData,
+                         CustomAuthenticationDataParser,
+                         CustomProviderAuthenticationDataParser,
+                         CustomAuthorizationIdentificationParser,
+                         OnException))
+
+                return _AuthenticationData;
+
+            return default(AuthenticationData);
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthenticationDataXML,  out AuthenticationData, ..., OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        /// <param name="AuthenticationDataXML">The XML to parse.</param>
+        /// <param name="AuthenticationData">The parsed authentication data.</param>
+        /// <param name="CustomAuthenticationDataParser">A delegate to parse custom AuthenticationData XML elements.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(PullAuthenticationDataRequest                     Request,
+                                       XElement                                          AuthenticationDataXML,
+                                       out AuthenticationData                            AuthenticationData,
+                                       CustomParserDelegate<AuthenticationData>          CustomAuthenticationDataParser            = null,
+                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       OnExceptionDelegate                               OnException                               = null)
+        {
+
+            try
+            {
+
+                if (AuthenticationDataXML.Name != OICPNS.AuthenticationData + "eRoamingAuthenticationData")
+                {
+                    AuthenticationData = null;
+                    return false;
+                }
+
+                AuthenticationData = new AuthenticationData(
+
+                                         Request,
+
+                                         AuthenticationDataXML.MapElements         (OICPNS.AuthenticationData + "ProviderAuthenticationData",
+                                                                                    (xml, e) => ProviderAuthenticationData.Parse(xml,
+                                                                                                                                 CustomProviderAuthenticationDataParser,
+                                                                                                                                 CustomAuthorizationIdentificationParser,
+                                                                                                                                 e),
+                                                                                    OnException),
+
+                                         AuthenticationDataXML.MapElementOrNullable(OICPNS.AuthenticationData + "StatusCode",
+                                                                                    OICPv2_1.StatusCode.Parse,
+                                                                                    OnException)
+
+                                     );
+
+
+                if (CustomAuthenticationDataParser != null)
+                    AuthenticationData = CustomAuthenticationDataParser(AuthenticationDataXML,
+                                                                        AuthenticationData);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+
+                OnException?.Invoke(DateTime.Now, AuthenticationDataXML, e);
+
+                AuthenticationData = null;
+                return false;
+
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthenticationDataText, out AuthenticationData, ..., OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        /// <param name="AuthenticationDataText">The text to parse.</param>
+        /// <param name="AuthenticationData">The parsed authentication data.</param>
+        /// <param name="CustomAuthenticationDataParser">A delegate to parse custom AuthenticationData XML elements.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(PullAuthenticationDataRequest                     Request,
+                                       String                                            AuthenticationDataText,
+                                       out AuthenticationData                            AuthenticationData,
+                                       CustomParserDelegate<AuthenticationData>          CustomAuthenticationDataParser            = null,
+                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       OnExceptionDelegate                               OnException                               = null)
+        {
+
+            try
+            {
+
+                if (TryParse(Request,
+                             XDocument.Parse(AuthenticationDataText).Root,
+                             out AuthenticationData,
+                             CustomAuthenticationDataParser,
+                             CustomProviderAuthenticationDataParser,
+                             CustomAuthorizationIdentificationParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, AuthenticationDataText, e);
+            }
+
+            AuthenticationData = default(AuthenticationData);
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(CustomAuthenticationDataSerializer = null, CustomProviderAuthenticationDataSerializer = null, CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="CustomEVSEStatusByIdSerializer">A delegate to customize the serialization of EVSEStatusById respones.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<AuthenticationData>         CustomAuthenticationDataSerializer           = null,
+                              CustomSerializerDelegate<ProviderAuthenticationData> CustomProviderAuthenticationDataSerializer   = null,
+                              CustomSerializerDelegate<Identification>             CustomIdentificationSerializer               = null)
+
+        {
+
+            var XML = new XElement(OICPNS.EVSEStatus + "eRoamingAuthenticationData",
+
+                          ProviderAuthenticationDataRecords.Any()
+                              ? ProviderAuthenticationDataRecords.Select(record => record.ToXML(CustomProviderAuthenticationDataSerializer,
+                                                                                                CustomIdentificationSerializer))
+                              : null,
+
+                          StatusCode?.ToXML(OICPNS.AuthenticationData + "StatusCode")
+
+                      );
+
+
+            return CustomAuthenticationDataSerializer != null
+                       ? CustomAuthenticationDataSerializer(this, XML)
+                       : XML;
+
+        }
+
+        #endregion
+
+
+
+        #region Operator overloading
+
+        #region Operator == (AuthenticationData1, AuthenticationData2)
+
+        /// <summary>
+        /// Compares two authentication data for equality.
+        /// </summary>
+        /// <param name="AuthenticationData1">An authentication data.</param>
+        /// <param name="AuthenticationData2">Another authentication data.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (AuthenticationData AuthenticationData1, AuthenticationData AuthenticationData2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(AuthenticationData1, AuthenticationData2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) AuthenticationData1 == null) || ((Object) AuthenticationData2 == null))
+                return false;
+
+            return AuthenticationData1.Equals(AuthenticationData2);
+
+        }
+
+        #endregion
+
+        #region Operator != (AuthenticationData1, AuthenticationData2)
+
+        /// <summary>
+        /// Compares two authentication data for inequality.
+        /// </summary>
+        /// <param name="AuthenticationData1">An authentication data.</param>
+        /// <param name="AuthenticationData2">Another authentication data.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (AuthenticationData AuthenticationData1, AuthenticationData AuthenticationData2)
+
+            => !(AuthenticationData1 == AuthenticationData2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<AuthenticationData> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var AuthenticationData = Object as AuthenticationData;
+            if ((Object) AuthenticationData == null)
+                return false;
+
+            return Equals(AuthenticationData);
+
+        }
+
+        #endregion
+
+        #region Equals(AuthenticationData)
+
+        /// <summary>
+        /// Compares two electric vehicle contract identifications with (hashed) pins for equality.
+        /// </summary>
+        /// <param name="AuthenticationData">An electric vehicle contract identification with (hashed) pin to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public override Boolean Equals(AuthenticationData AuthenticationData)
+        {
+
+            if ((Object) AuthenticationData == null)
+                return false;
+
+            return ProviderAuthenticationDataRecords.Count().Equals(AuthenticationData.ProviderAuthenticationDataRecords.Count()) &&
+
+                   ((StatusCode == null && AuthenticationData.StatusCode == null) ||
+                    (StatusCode != null &&  AuthenticationData.StatusCode != null) || StatusCode.Equals(AuthenticationData.StatusCode));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Get the hashcode of this object.
+        /// </summary>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return ProviderAuthenticationDataRecords.GetHashCode() * 3 ^
+
+                       (StatusCode != null
+                            ? StatusCode.GetHashCode()
+                            : 0);
+
+            }
+        }
+
+        #endregion
 
         #region (override) ToString()
 
@@ -224,9 +537,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => (ProviderAuthenticationDataRecords != null ? ProviderAuthenticationDataRecords.Count().ToString() : "0") + " Authentication data records";
+            => String.Concat(ProviderAuthenticationDataRecords.Count(),
+                             " Authentication data record(s)",
+
+                             StatusCode.HasValue
+                                 ? ", " + StatusCode
+                                 : "");
 
         #endregion
+
 
     }
 

@@ -119,20 +119,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(AuthorizeRemoteStopRequestXML,  OnException = null)
+        #region (static) Parse   (AuthorizeRemoteStopRequestXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestXML">The XML to parse.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeRemoteStopRequest Parse(XElement             AuthorizeRemoteStopRequestXML,
-                                             OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeRemoteStopRequest
+
+            Parse(XElement                                          AuthorizeRemoteStopRequestXML,
+                  CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                  OnExceptionDelegate                               OnException                              = null,
+
+                  DateTime?                                         Timestamp                                = null,
+                  CancellationToken?                                CancellationToken                        = null,
+                  EventTracking_Id                                  EventTrackingId                          = null,
+                  TimeSpan?                                         RequestTimeout                           = null)
+
         {
 
             AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest;
 
-            if (TryParse(AuthorizeRemoteStopRequestXML, out _AuthorizeRemoteStopRequest, OnException))
+            if (TryParse(AuthorizeRemoteStopRequestXML,
+                         out _AuthorizeRemoteStopRequest,
+                         CustomAuthorizeRemoteStopRequestParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _AuthorizeRemoteStopRequest;
 
             return null;
@@ -141,20 +165,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(AuthorizeRemoteStopRequestText, OnException = null)
+        #region (static) Parse   (AuthorizeRemoteStopRequestText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeRemoteStopRequest Parse(String               AuthorizeRemoteStopRequestText,
-                                             OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeRemoteStopRequest
+
+            Parse(String                                            AuthorizeRemoteStopRequestText,
+                  CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                  OnExceptionDelegate                               OnException                              = null,
+
+                  DateTime?                                         Timestamp                                = null,
+                  CancellationToken?                                CancellationToken                        = null,
+                  EventTracking_Id                                  EventTrackingId                          = null,
+                  TimeSpan?                                         RequestTimeout                           = null)
+
         {
 
             AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest;
 
-            if (TryParse(AuthorizeRemoteStopRequestText, out _AuthorizeRemoteStopRequest, OnException))
+            if (TryParse(AuthorizeRemoteStopRequestText,
+                         out _AuthorizeRemoteStopRequest,
+                         CustomAuthorizeRemoteStopRequestParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _AuthorizeRemoteStopRequest;
 
             return null;
@@ -163,26 +211,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(AuthorizeRemoteStopRequestXML,  out AuthorizeRemoteStopRequest, OnException = null)
+        #region (static) TryParse(AuthorizeRemoteStopRequestXML,  out AuthorizeRemoteStopRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed authorize remote stop request.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                        AuthorizeRemoteStopRequestXML,
-                                       out AuthorizeRemoteStopRequest  AuthorizeRemoteStopRequest,
-                                       OnExceptionDelegate             OnException         = null,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                          AuthorizeRemoteStopRequestXML,
+                                       out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
+                                       CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                                       OnExceptionDelegate                               OnException                              = null,
 
-                                       DateTime?                       Timestamp           = null,
-                                       CancellationToken?              CancellationToken   = null,
-                                       EventTracking_Id                EventTrackingId     = null,
-                                       TimeSpan?                       RequestTimeout      = null)
+                                       DateTime?                                         Timestamp                                = null,
+                                       CancellationToken?                                CancellationToken                        = null,
+                                       EventTracking_Id                                  EventTrackingId                          = null,
+                                       TimeSpan?                                         RequestTimeout                           = null)
         {
 
             try
             {
+
+                if (AuthorizeRemoteStopRequestXML.Name != OICPNS.Reservation + "eRoamingAuthorizeRemoteStop")
+                {
+                    AuthorizeRemoteStopRequest = null;
+                    return false;
+                }
 
                 AuthorizeRemoteStopRequest = new AuthorizeRemoteStopRequest(
 
@@ -205,6 +266,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                              );
 
+
+                if (CustomAuthorizeRemoteStopRequestParser != null)
+                    AuthorizeRemoteStopRequest = CustomAuthorizeRemoteStopRequestParser(AuthorizeRemoteStopRequestXML,
+                                                                                        AuthorizeRemoteStopRequest);
+
                 return true;
 
             }
@@ -222,17 +288,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(AuthorizeRemoteStopRequestText, out AuthorizeRemoteStopRequest, OnException = null)
+        #region (static) TryParse(AuthorizeRemoteStopRequestText, out AuthorizeRemoteStopRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed authorize remote stop request.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                AuthorizeRemoteStopRequestText,
-                                       out AuthorizeRemoteStopRequest  AuthorizeRemoteStopRequest,
-                                       OnExceptionDelegate   OnException  = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                            AuthorizeRemoteStopRequestText,
+                                       out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
+                                       CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                                       OnExceptionDelegate                               OnException                              = null,
+
+                                       DateTime?                                         Timestamp                                = null,
+                                       CancellationToken?                                CancellationToken                        = null,
+                                       EventTracking_Id                                  EventTrackingId                          = null,
+                                       TimeSpan?                                         RequestTimeout                           = null)
         {
 
             try
@@ -240,7 +318,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(AuthorizeRemoteStopRequestText).Root,
                              out AuthorizeRemoteStopRequest,
-                             OnException))
+                             CustomAuthorizeRemoteStopRequestParser,
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

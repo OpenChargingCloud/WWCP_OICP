@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private static readonly  Regex                                                  pattern                      = new Regex(@"\s=\s");
 
-        public  static readonly  ChargingStationOperatorNameSelectorDelegate            DefaultOperatorNameSelector  = I18N => I18N.FirstText;
+        public  static readonly  ChargingStationOperatorNameSelectorDelegate            DefaultOperatorNameSelector  = I18N => I18N.FirstText();
 
                 /// <summary>
         /// The default service check intervall.
@@ -4688,8 +4688,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  Id,
                                  SessionId,
                                  response.Content.ProviderId.ToWWCP(),
-                                 response.Content?.StatusCode?.Description,
-                                 response.Content?.StatusCode?.AdditionalInfo
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.Description
+                                     : null,
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.AdditionalInfo
+                                     : null
                              );
 
                 }
@@ -4698,8 +4702,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  Id,
                                  SessionId,
                                  response.Content?.ProviderId.ToWWCP(),
-                                 response.Content?.StatusCode?.Description,
-                                 response.Content?.StatusCode?.AdditionalInfo
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.Description
+                                     : null,
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.AdditionalInfo
+                                     : null
                              );
 
             }
@@ -4852,8 +4860,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  Id,
                                  SessionId,
                                  response.Content?.ProviderId?.ToWWCP(),
-                                 response.Content?.StatusCode?.Description,
-                                 response.Content?.StatusCode?.AdditionalInfo
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.Description
+                                     : null,
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.AdditionalInfo
+                                     : null
                              );
 
                 }
@@ -4862,8 +4874,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  Id,
                                  SessionId,
                                  response.Content?.ProviderId?.ToWWCP(),
-                                 response.Content?.StatusCode?.Description,
-                                 response.Content?.StatusCode?.AdditionalInfo
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.Description
+                                     : null,
+                                 response.Content.StatusCode.HasResult
+                                     ? response.Content.StatusCode.AdditionalInfo
+                                     : null
                              );
 
             }
@@ -5280,7 +5296,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     else
                         SendCDRsResults.Add(_ChargeDetailRecord, SendCDRsResult.NotForwared(Id,
                                                                                             new WWCP.ChargeDetailRecord[] { _ChargeDetailRecord },
-                                                                                            response?.Content?.StatusCode?.Description));
+                                                                                            response.Content != null
+                                                                                                ? response.Content.StatusCode.HasResult
+                                                                                                    ? response.Content.StatusCode.Description
+                                                                                                    : null
+                                                                                                : null));
 
                 }
 

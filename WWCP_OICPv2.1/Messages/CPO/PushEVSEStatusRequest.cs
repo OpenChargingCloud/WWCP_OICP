@@ -145,8 +145,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Parse the given XML representation of an OICP push EVSE status request.
         /// </summary>
         /// <param name="PushEVSEStatusXML">The XML to parse.</param>
-        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEStatusRequest Parse(XElement                                  PushEVSEStatusXML,
                                                   CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
@@ -187,8 +187,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Parse the given text representation of an OICP push EVSE status request.
         /// </summary>
         /// <param name="PushEVSEStatusText">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEStatusRequest Parse(String                                    PushEVSEStatusText,
                                                   CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
@@ -230,8 +230,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="PushEVSEStatusXML">The XML to parse.</param>
         /// <param name="PushEVSEStatus">The parsed push EVSE status request.</param>
-        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                  PushEVSEStatusXML,
                                        out PushEVSEStatusRequest                 PushEVSEStatus,
@@ -296,8 +296,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="PushEVSEStatusText">The text to parse.</param>
         /// <param name="PushEVSEStatus">The parsed push EVSE status request.</param>
-        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus xml elements.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                    PushEVSEStatusText,
                                        out PushEVSEStatusRequest                 PushEVSEStatus,
@@ -341,30 +341,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML(OperatorEVSEStatusXName = null, CustomOperatorEVSEStatusSerializer = null, EVSEStatusRecordXName = null, CustomEVSEStatusRecordSerializer = null)
+        #region ToXML(CustomPushEVSEStatusRequestSerializer = null, OperatorEVSEStatusXName = null, CustomOperatorEVSEStatusSerializer = null, EVSEStatusRecordXName = null, CustomEVSEStatusRecordSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
+        /// <param name="CustomPushEVSEStatusRequestSerializer">A delegate to customize the serialization of PushEVSEStatus requests.</param>
         /// <param name="OperatorEVSEStatusXName">The OperatorEVSEStatus XML name to use.</param>
-        /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom OperatorEVSEStatus xml elements.</param>
+        /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom OperatorEVSEStatus XML elements.</param>
         /// <param name="EVSEStatusRecordXName">The EVSEStatusRecord XML name to use.</param>
-        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord xml elements.</param>
-        public XElement ToXML(XName                                         OperatorEVSEStatusXName             = null,
-                              CustomSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer  = null,
-                              XName                                         EVSEStatusRecordXName               = null,
-                              CustomSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer    = null)
+        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord XML elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<PushEVSEStatusRequest>  CustomPushEVSEStatusRequestSerializer   = null,
+                              XName                                            OperatorEVSEStatusXName                 = null,
+                              CustomSerializerDelegate<OperatorEVSEStatus>     CustomOperatorEVSEStatusSerializer      = null,
+                              XName                                            EVSEStatusRecordXName                   = null,
+                              CustomSerializerDelegate<EVSEStatusRecord>       CustomEVSEStatusRecordSerializer        = null)
 
-            => new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
+        {
 
-                                new XElement(OICPNS.EVSEStatus + "ActionType",  XML_IO.AsText(Action)),
+            var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPushEvseStatus",
 
-                                OperatorEVSEStatus.ToXML(OperatorEVSEStatusXName,
-                                                         CustomOperatorEVSEStatusSerializer,
-                                                         EVSEStatusRecordXName,
-                                                         CustomEVSEStatusRecordSerializer)
+                                       new XElement(OICPNS.EVSEStatus + "ActionType",  XML_IO.AsText(Action)),
 
-                           );
+                                       OperatorEVSEStatus.ToXML(OperatorEVSEStatusXName,
+                                                                CustomOperatorEVSEStatusSerializer,
+                                                                EVSEStatusRecordXName,
+                                                                CustomEVSEStatusRecordSerializer)
+
+                                  );
+
+            return CustomPushEVSEStatusRequestSerializer != null
+                       ? CustomPushEVSEStatusRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

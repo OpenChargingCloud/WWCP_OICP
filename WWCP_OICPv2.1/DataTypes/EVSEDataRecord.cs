@@ -290,123 +290,129 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
         //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData/v2.1"
         //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData/v2.0">
-
-        // <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
         //
-        //    <EVSEData:EvseId>?</EVSEData:EvseId>
+        // [...]
         //
-        //    <!--Optional:-->
-        //    <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
-        //    <!--Optional:-->
-        //    <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
-        //    <!--Optional:-->
-        //    <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
+        //    <EVSEData:eRoamingEvseDataRecord deltaType="?" lastUpdate="?">
         //
-        //    <EVSEData:Address>
-        //       <CommonTypes:Country>?</CommonTypes:Country>
-        //       <CommonTypes:City>?</CommonTypes:City>
-        //       <CommonTypes:Street>?</CommonTypes:Street>
+        //       <EVSEData:EvseId>?</EVSEData:EvseId>
+        //
         //       <!--Optional:-->
-        //       <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+        //       <EVSEData:ChargingStationId>?</EVSEData:ChargingStationId>
         //       <!--Optional:-->
-        //       <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+        //       <EVSEData:ChargingStationName>?</EVSEData:ChargingStationName>
         //       <!--Optional:-->
-        //       <CommonTypes:Floor>?</CommonTypes:Floor>
+        //       <EVSEData:EnChargingStationName>?</EVSEData:EnChargingStationName>
+        //
+        //       <EVSEData:Address>
+        //          <CommonTypes:Country>?</CommonTypes:Country>
+        //          <CommonTypes:City>?</CommonTypes:City>
+        //          <CommonTypes:Street>?</CommonTypes:Street>
+        //          <!--Optional:-->
+        //          <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+        //          <!--Optional:-->
+        //          <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+        //          <!--Optional:-->
+        //          <CommonTypes:Floor>?</CommonTypes:Floor>
+        //          <!--Optional:-->
+        //          <CommonTypes:Region>?</CommonTypes:Region>
+        //          <!--Optional:-->
+        //          <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+        //       </EVSEData:Address>
+        //
+        //       <EVSEData:GeoCoordinates>
+        //          <!--You have a CHOICE of the next 3 items at this level-->
+        //          <CommonTypes:Google>
+        //             <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+        //          </CommonTypes:Google>
+        //          <CommonTypes:DecimalDegree>
+        //             <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //             <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //          </CommonTypes:DecimalDegree>
+        //          <CommonTypes:DegreeMinuteSeconds>
+        //             <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //             <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //          </CommonTypes:DegreeMinuteSeconds>
+        //       </EVSEData:GeoCoordinates>
+        //
+        //       <EVSEData:Plugs>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:Plug>?</EVSEData:Plug>
+        //       </EVSEData:Plugs>
+        //
         //       <!--Optional:-->
-        //       <CommonTypes:Region>?</CommonTypes:Region>
+        //       <EVSEData:ChargingFacilities>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
+        //       </EVSEData:ChargingFacilities>
+        //
         //       <!--Optional:-->
-        //       <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
-        //    </EVSEData:Address>
+        //       <EVSEData:ChargingModes>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
+        //       </EVSEData:ChargingModes>
         //
-        //    <EVSEData:GeoCoordinates>
-        //       <!--You have a CHOICE of the next 3 items at this level-->
-        //       <CommonTypes:Google>
-        //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-        //       </CommonTypes:Google>
-        //       <CommonTypes:DecimalDegree>
-        //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //       </CommonTypes:DecimalDegree>
-        //       <CommonTypes:DegreeMinuteSeconds>
-        //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //       </CommonTypes:DegreeMinuteSeconds>
-        //    </EVSEData:GeoCoordinates>
+        //       <EVSEData:AuthenticationModes>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
+        //       </EVSEData:AuthenticationModes>
         //
-        //    <EVSEData:Plugs>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:Plug>?</EVSEData:Plug>
-        //    </EVSEData:Plugs>
+        //       <!--Optional:-->
+        //       <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:ChargingFacilities>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:ChargingFacility>?</EVSEData:ChargingFacility>
-        //    </EVSEData:ChargingFacilities>
+        //       <!--Optional:-->
+        //       <EVSEData:PaymentOptions>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
+        //       </EVSEData:PaymentOptions>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:ChargingModes>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:ChargingMode>?</EVSEData:ChargingMode>
-        //    </EVSEData:ChargingModes>
+        //       <EVSEData:ValueAddedServices>
+        //          <!--1 or more repetitions:-->
+        //          <EVSEData:ValueAddedService>?</EVSEData:ValueAddedService>
+        //       </EVSEData:ValueAddedServices>
         //
-        //    <EVSEData:AuthenticationModes>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:AuthenticationMode>?</EVSEData:AuthenticationMode>
-        //    </EVSEData:AuthenticationModes>
+        //       <EVSEData:Accessibility>?</EVSEData:Accessibility>
+        //       <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:MaxCapacity>?</EVSEData:MaxCapacity>
+        //       <!--Optional:-->
+        //       <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:PaymentOptions>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:PaymentOption>?</EVSEData:PaymentOption>
-        //    </EVSEData:PaymentOptions>
+        //       <!--Optional:-->
+        //       <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
         //
-        //    <EVSEData:ValueAddedServices>
-        //       <!--1 or more repetitions:-->
-        //       <EVSEData:ValueAddedService>?</EVSEData:ValueAddedService>
-        //    </EVSEData:ValueAddedServices>
+        //       <!--Optional:-->
+        //       <EVSEData:GeoChargingPointEntrance>
+        //          <!--You have a CHOICE of the next 3 items at this level-->
+        //          <CommonTypes:Google>
+        //             <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
+        //          </CommonTypes:Google>
+        //          <CommonTypes:DecimalDegree>
+        //             <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //             <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //          </CommonTypes:DecimalDegree>
+        //          <CommonTypes:DegreeMinuteSeconds>
+        //             <CommonTypes:Longitude>?</CommonTypes:Longitude>
+        //             <CommonTypes:Latitude>?</CommonTypes:Latitude>
+        //          </CommonTypes:DegreeMinuteSeconds>
+        //       </EVSEData:GeoChargingPointEntrance>
         //
-        //    <EVSEData:Accessibility>?</EVSEData:Accessibility>
-        //    <EVSEData:HotlinePhoneNum>?</EVSEData:HotlinePhoneNum>
+        //       <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
+        //       <!--Optional:-->
+        //       <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:AdditionalInfo>?</EVSEData:AdditionalInfo>
+        //       <!--Optional:-->
+        //       <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:EnAdditionalInfo>?</EVSEData:EnAdditionalInfo>
+        //       <!--Optional:-->
+        //       <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
+        //       <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
+        //       <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
         //
-        //    <!--Optional:-->
-        //    <EVSEData:GeoChargingPointEntrance>
-        //       <!--You have a CHOICE of the next 3 items at this level-->
-        //       <CommonTypes:Google>
-        //          <CommonTypes:Coordinates>?</CommonTypes:Coordinates>
-        //       </CommonTypes:Google>
-        //       <CommonTypes:DecimalDegree>
-        //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //       </CommonTypes:DecimalDegree>
-        //       <CommonTypes:DegreeMinuteSeconds>
-        //          <CommonTypes:Longitude>?</CommonTypes:Longitude>
-        //          <CommonTypes:Latitude>?</CommonTypes:Latitude>
-        //       </CommonTypes:DegreeMinuteSeconds>
-        //    </EVSEData:GeoChargingPointEntrance>
+        //    </EVSEData:eRoamingEvseDataRecord>
         //
-        //    <EVSEData:IsOpen24Hours>?</EVSEData:IsOpen24Hours>
-        //    <!--Optional:-->
-        //    <EVSEData:OpeningTime>?</EVSEData:OpeningTime>
+        // [...]
         //
-        //    <!--Optional:-->
-        //    <EVSEData:HubOperatorID>?</EVSEData:HubOperatorID>
-        //
-        //    <!--Optional:-->
-        //    <EVSEData:ClearinghouseID>?</EVSEData:ClearinghouseID>
-        //    <EVSEData:IsHubjectCompatible>?</EVSEData:IsHubjectCompatible>
-        //    <EVSEData:DynamicInfoAvailable>?</EVSEData:DynamicInfoAvailable>
-        //
-        // </EVSEData:eRoamingEvseDataRecord>
+        // </soapenv:Envelope>
 
         #endregion
 
@@ -416,7 +422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given XML representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordXML">The XML to parse.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEDataRecord Parse(XElement                                EVSEDataRecordXML,
                                              CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
@@ -444,7 +450,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given text representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEDataRecord Parse(String                                  EVSEDataRecordText,
                                              CustomParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
@@ -473,7 +479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEDataRecordXML">The XML to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                              EVSEDataRecordXML,
                                        out EVSEDataRecord                    EVSEDataRecord,
@@ -703,7 +709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                EVSEDataRecordText,
                                        out EVSEDataRecord                    EVSEDataRecord,
@@ -741,7 +747,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
         /// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
-        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
         public XElement ToXML(XName                                     XName                           = null,
                               Boolean                                   IncludeMetadata                 = false,
                               CustomSerializerDelegate<EVSEDataRecord>  CustomEVSEDataRecordSerializer  = null)
@@ -765,7 +771,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                           new XElement(OICPNS.EVSEData + "Address",
                               new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
-                              new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText),
+                              new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText()),
                               new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICP v2.1 requires at least 5 characters!
 
                               Address.PostalCode. IsNotNullOrEmpty()
@@ -1136,8 +1142,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    IsHubjectCompatible,
                    DynamicInfoAvailable,
 
-                   Values != null
-                       ? Values.ToDictionary(kvp => kvp.Key,
+                   CustomValues != null
+                       ? CustomValues.ToDictionary(kvp => kvp.Key,
                                                   kvp => kvp.Value)
                        : null);
 

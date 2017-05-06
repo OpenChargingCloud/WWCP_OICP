@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            StatusCode _StatusCode = null;
+            StatusCode _StatusCode;
 
             if (StatusCode.TryParse(XML, out _StatusCode))
             {

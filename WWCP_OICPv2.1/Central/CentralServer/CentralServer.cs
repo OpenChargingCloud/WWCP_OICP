@@ -97,10 +97,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// </summary>
         public event AccessLogHandler        OnPushEvseDataSOAPResponse;
 
-        /// <summary>
-        /// An event sent whenever a remote reservation start command was received.
-        /// </summary>
-        public event OnPushEvseDataDelegate  OnPushEvseDataRequest;
+        ///// <summary>
+        ///// An event sent whenever a remote reservation start command was received.
+        ///// </summary>
+        //public event OnPushEvseDataDelegate  OnPushEvseDataRequest;
 
         #endregion
 

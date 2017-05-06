@@ -41,7 +41,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         public static XElement MobileAuthorizeStartXML(EVSE_Id        EVSEId,
-                                                       EVCOIdWithPIN  EVCOIdWithPIN,
+                                                       QRCodeIdentification  EVCOIdWithPIN,
                                                        String         PartnerProductId  = null,
                                                        Boolean?       GetNewSession     = null)
 

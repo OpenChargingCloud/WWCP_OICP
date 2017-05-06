@@ -39,27 +39,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator.
         /// </summary>
-        public Operator_Id         OperatorId         { get; }
+        public Operator_Id         OperatorId          { get; }
 
         /// <summary>
         /// The charging session identification.
         /// </summary>
-        public Session_Id          SessionId          { get; }
+        public Session_Id          SessionId           { get; }
 
         /// <summary>
         /// A (RFID) user identification.
         /// </summary>
-        public UID                 UID                { get; }
+        public UID                 UID                 { get; }
 
         /// <summary>
         /// An optional EVSE identification.
         /// </summary>
-        public EVSE_Id?            EVSEId             { get; }
+        public EVSE_Id?            EVSEId              { get; }
 
         /// <summary>
         /// An optional partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId   { get; }
+        public PartnerSession_Id?  PartnerSessionId    { get; }
 
         #endregion
 
@@ -124,33 +124,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         //          <Authorization:EVSEID>?</Authorization:EVSEID>
         // 
         //          <Authorization:Identification>
-        // 
         //             <!--You have a CHOICE of the next 4 items at this level-->
+        //
         //             <CommonTypes:RFIDmifarefamilyIdentification>
-        //                <CommonTypes:UID>?</CommonTypes:UID>
+        //                <CommonTypes:UID>08152305</CommonTypes:UID>
         //             </CommonTypes:RFIDmifarefamilyIdentification>
         // 
         //             <CommonTypes:QRCodeIdentification>
-        //
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //
+        // 
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        // 
         //                <!--You have a CHOICE of the next 2 items at this level-->
-        //                <CommonTypes:PIN>?</CommonTypes:PIN>
-        //
+        //                <CommonTypes:PIN>1234</CommonTypes:PIN>
+        // 
         //                <CommonTypes:HashedPIN>
-        //                   <CommonTypes:Value>?</CommonTypes:Value>
-        //                   <CommonTypes:Function>?</CommonTypes:Function>
-        //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                   <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //                   <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //                   <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
         //                </CommonTypes:HashedPIN>
-        //
+        // 
         //             </CommonTypes:QRCodeIdentification>
         // 
         //             <CommonTypes:PlugAndChargeIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //             </CommonTypes:PlugAndChargeIdentification>
         // 
         //             <CommonTypes:RemoteIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //             </CommonTypes:RemoteIdentification>
         // 
         //          </Authorization:Identification>
@@ -162,20 +162,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(AuthorizeStopXML,  OnException = null)
+        #region (static) Parse   (AuthorizeStopXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize stop request.
         /// </summary>
         /// <param name="AuthorizeStopXML">The XML to parse.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStopRequest Parse(XElement             AuthorizeStopXML,
-                                                 OnExceptionDelegate  OnException = null)
+        public static AuthorizeStopRequest Parse(XElement                                    AuthorizeStopXML,
+                                                 CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                                 OnExceptionDelegate                         OnException                        = null)
         {
 
             AuthorizeStopRequest _AuthorizeStop;
 
-            if (TryParse(AuthorizeStopXML, out _AuthorizeStop, OnException))
+            if (TryParse(AuthorizeStopXML,
+                         out _AuthorizeStop,
+                         CustomAuthorizeStopRequestParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _AuthorizeStop;
 
             return null;
@@ -184,20 +193,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(AuthorizeStopText, OnException = null)
+        #region (static) Parse   (AuthorizeStopText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize stop request.
         /// </summary>
         /// <param name="AuthorizeStopText">The text to parse.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStopRequest Parse(String               AuthorizeStopText,
-                                                 OnExceptionDelegate  OnException = null)
+        public static AuthorizeStopRequest Parse(String                                      AuthorizeStopText,
+                                                 CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                                 CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 OnExceptionDelegate                         OnException                        = null)
         {
 
             AuthorizeStopRequest _AuthorizeStop;
 
-            if (TryParse(AuthorizeStopText, out _AuthorizeStop, OnException))
+            if (TryParse(AuthorizeStopText,
+                         out _AuthorizeStop,
+                         CustomAuthorizeStopRequestParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _AuthorizeStop;
 
             return null;
@@ -206,48 +224,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStopXML,  out AuthorizeStop, OnException = null)
+        #region (static) TryParse(AuthorizeStopXML,  out AuthorizeStop, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize stop request.
         /// </summary>
         /// <param name="AuthorizeStopXML">The XML to parse.</param>
         /// <param name="AuthorizeStop">The parsed authorize stop request.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                  AuthorizeStopXML,
-                                       out AuthorizeStopRequest  AuthorizeStop,
-                                       OnExceptionDelegate       OnException         = null,
+        public static Boolean TryParse(XElement                                    AuthorizeStopXML,
+                                       out AuthorizeStopRequest                    AuthorizeStop,
+                                       CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                       CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       OnExceptionDelegate                         OnException                        = null,
 
-                                       DateTime?                 Timestamp           = null,
-                                       CancellationToken?        CancellationToken   = null,
-                                       EventTracking_Id          EventTrackingId     = null,
-                                       TimeSpan?                 RequestTimeout      = null)
+                                       DateTime?                                   Timestamp                          = null,
+                                       CancellationToken?                          CancellationToken                  = null,
+                                       EventTracking_Id                            EventTrackingId                    = null,
+                                       TimeSpan?                                   RequestTimeout                     = null)
         {
 
             try
             {
 
-                UID _UID = default(UID);
-
-                var IdentificationXML = AuthorizeStopXML.Element(OICPNS.Authorization + "Identification");
-                if (IdentificationXML != null)
+                if (AuthorizeStopXML.Name != OICPNS.Authorization + "eRoamingAuthorizeStop")
                 {
-
-                    _UID = IdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                            OICPNS.CommonTypes + "UID",
-                                                            UID.Parse);
-
+                    AuthorizeStop = null;
+                    return false;
                 }
+
+                var UID = AuthorizeStopXML.MapElementOrFail(OICPNS.Authorization + "Identification",
+                                                            (xml, e) => Identification.Parse(xml,
+                                                                                             CustomIdentificationParser,
+                                                                                             e),
+                                                            OnException).RFIDId;
+
+                if (!UID.HasValue)
+                    throw new Exception("No UID/RFID identification found in request!");
+
 
                 AuthorizeStop = new AuthorizeStopRequest(
 
                                      AuthorizeStopXML.MapValueOrFail    (OICPNS.Authorization + "OperatorID",
-                                                                          Operator_Id.Parse),
+                                                                         Operator_Id.Parse),
 
                                      AuthorizeStopXML.MapValueOrFail    (OICPNS.Authorization + "SessionID",
-                                     Session_Id.Parse),
+                                                                         Session_Id.Parse),
 
-                                     _UID,
+                                     UID.Value,
 
                                      AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
                                                                          EVSE_Id.Parse),
@@ -279,17 +305,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStopText, out AuthorizeStop, OnException = null)
+        #region (static) TryParse(AuthorizeStopText, out AuthorizeStop, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize stop request.
         /// </summary>
         /// <param name="AuthorizeStopText">The text to parse.</param>
         /// <param name="AuthorizeStop">The parsed authorize stop request.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                    AuthorizeStopText,
-                                       out AuthorizeStopRequest  AuthorizeStop,
-                                       OnExceptionDelegate       OnException  = null)
+        public static Boolean TryParse(String                                      AuthorizeStopText,
+                                       out AuthorizeStopRequest                    AuthorizeStop,
+                                       CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                       CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       OnExceptionDelegate                         OnException                        = null)
         {
 
             try
@@ -297,6 +327,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (TryParse(XDocument.Parse(AuthorizeStopText).Root,
                              out AuthorizeStop,
+                             CustomAuthorizeStopRequestParser,
+                             CustomIdentificationParser,
                              OnException))
 
                     return true;
@@ -314,34 +346,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAuthorizeStopRequestSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAuthorizeStopRequestSerializer">A delegate to customize the serialization of AuthorizeStop requests.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<AuthorizeStopRequest> CustomAuthorizeStopRequestSerializer  = null,
+                              CustomSerializerDelegate<Identification>       CustomIdentificationSerializer        = null)
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizeStop",
+        {
 
-                                new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
+            var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeStop",
 
-                                PartnerSessionId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                                    : null,
+                                      new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
 
-                                new XElement(OICPNS.Authorization + "OperatorID",              OperatorId.      ToString()),
+                                      PartnerSessionId.HasValue
+                                          ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                          : null,
 
-                                EVSEId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.          ToString())
-                                    : null,
+                                      new XElement(OICPNS.Authorization + "OperatorID",              OperatorId.      ToString()),
 
-                                new XElement(OICPNS.Authorization + "Identification",
-                                    new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                       new XElement(OICPNS.CommonTypes + "UID", UID.ToString())
-                                    )
-                                )
+                                      EVSEId.HasValue
+                                          ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.          ToString())
+                                          : null,
 
-                            );
+                                      Identification.FromRFIDId(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
+
+                                  );
+
+            return CustomAuthorizeStopRequestSerializer != null
+                       ? CustomAuthorizeStopRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

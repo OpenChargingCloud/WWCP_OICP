@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
     public delegate TB CustomMapper2Delegate<TB>(TB ResponseBuilder);
 
-    public delegate TB CustomMapperDelegate<T, TB>(XElement XML, TB ResponseBuilder);
+  //  public delegate TB CustomMapperDelegate<T, TB>(XElement XML, TB ResponseBuilder);
 
 
     /// <summary>

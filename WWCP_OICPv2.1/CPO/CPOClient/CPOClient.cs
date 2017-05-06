@@ -158,7 +158,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper { get; set; }
+        public CustomParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser { get; set; }
 
         #endregion
 
@@ -208,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper { get; set; }
+        public CustomParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser   { get; set; }
 
         #endregion
 
@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper { get; set; }
+        //public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper { get; set; }
 
         #endregion
 
@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper { get; set; }
+        //public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper { get; set; }
 
         #endregion
 
@@ -359,7 +359,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<SendChargeDetailRecordRequest>, Acknowledgement<SendChargeDetailRecordRequest>.Builder> CustomSendChargeDetailRecordResponseMapper { get; set; }
+        public CustomParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser   { get; set; }
 
         #endregion
 
@@ -410,18 +410,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper { get; set; }
+        //public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper { get; set; }
 
         #endregion
 
 
-        public CustomSerializerDelegate<OperatorEVSEData>    CustomOperatorEVSEDataSerializer    { get; set; }
-        public CustomSerializerDelegate<EVSEDataRecord>      CustomEVSEDataRecordSerializer      { get; set; }
+        public CustomSerializerDelegate<PushEVSEDataRequest>            CustomPushEVSEDataRequestSerializer              { get; set; }
+        public CustomSerializerDelegate<OperatorEVSEData>               CustomOperatorEVSEDataSerializer                 { get; set; }
+        public CustomSerializerDelegate<EVSEDataRecord>                 CustomEVSEDataRecordSerializer                   { get; set; }
 
-        public CustomSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer  { get; set; }
-        public CustomSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer    { get; set; }
+        public CustomSerializerDelegate<PushEVSEStatusRequest>          CustomPushEVSEStatusRequestSerializer            { get; set; }
+        public CustomSerializerDelegate<OperatorEVSEStatus>             CustomOperatorEVSEStatusSerializer               { get; set; }
+        public CustomSerializerDelegate<EVSEStatusRecord>               CustomEVSEStatusRecordSerializer                 { get; set; }
 
-        public CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer  { get; set; }
+
+        public CustomParserDelegate<AuthenticationData>                 CustomAuthenticationDataParser                   { get; set; }
+        public CustomParserDelegate<ProviderAuthenticationData>         CustomProviderAuthenticationDataParser           { get; set; }
+        public CustomParserDelegate<Identification>                     CustomAuthorizationIdentificationParser          { get; set; }
+
+        public CustomSerializerDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestSerializer            { get; set; }
+        public CustomSerializerDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestSerializer             { get; set; }
+        public CustomSerializerDelegate<ChargeDetailRecord>             CustomSendChargeDetailRecordRequestSerializer    { get; set; }
+
+        public CustomSerializerDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestSerializer    { get; set; }
 
         #endregion
 
@@ -792,8 +803,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = await _OICPClient.Query(_CustomPushEVSEDataSOAPRequestMapper(Request,
-                                                                                      SOAP.Encapsulation(Request.ToXML(CustomOperatorEVSEDataSerializer: CustomOperatorEVSEDataSerializer,
-                                                                                                                       CustomEVSEDataRecordSerializer:   CustomEVSEDataRecordSerializer))),
+                                                                                      SOAP.Encapsulation(Request.ToXML(CustomPushEVSEDataRequestSerializer: CustomPushEVSEDataRequestSerializer,
+                                                                                                                       CustomOperatorEVSEDataSerializer:    CustomOperatorEVSEDataSerializer,
+                                                                                                                       CustomEVSEDataRecordSerializer:      CustomEVSEDataRecordSerializer))),
                                                  "eRoamingPushEvseData",
                                                  RequestLogDelegate:   OnPushEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
@@ -807,7 +819,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       (request, xml, onexception) =>
                                                                                                       Acknowledgement<PushEVSEDataRequest>.Parse(request,
                                                                                                                                                  xml,
-                                                                                                                                                 CustomPushEVSEDataResponseMapper,
+                                                                                                                                                 CustomPushEVSEDataParser,
                                                                                                                                                  onexception)),
 
                                                  #endregion
@@ -1002,8 +1014,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomPushEVSEStatusSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(CustomOperatorEVSEStatusSerializer: CustomOperatorEVSEStatusSerializer,
-                                                                                                                                  CustomEVSEStatusRecordSerializer:   CustomEVSEStatusRecordSerializer))),
+                result = await _OICPClient.Query(_CustomPushEVSEStatusSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(CustomPushEVSEStatusRequestSerializer: CustomPushEVSEStatusRequestSerializer,
+                                                                                                                                  CustomOperatorEVSEStatusSerializer:    CustomOperatorEVSEStatusSerializer,
+                                                                                                                                  CustomEVSEStatusRecordSerializer:      CustomEVSEStatusRecordSerializer))),
                                                  "eRoamingPushEvseStatus",
                                                  RequestLogDelegate:   OnPushEVSEStatusSOAPRequest,
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
@@ -1017,7 +1030,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       (request, xml, onexception) =>
                                                                                                       Acknowledgement<PushEVSEStatusRequest>.Parse(request,
                                                                                                                                                    xml,
-                                                                                                                                                   CustomPushEVSEStatusResponseMapper,
+                                                                                                                                                   CustomPushEVSEStatusParser,
                                                                                                                                                    onexception)),
 
                                                  #endregion
@@ -1216,7 +1229,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request,
+                                                                                        SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStartRequestSerializer))),
                                                  "eRoamingAuthorizeStart",
                                                  RequestLogDelegate:   OnAuthorizeStartSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
@@ -1410,7 +1424,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request,
-                                                                                       SOAP.Encapsulation(Request.ToXML())),
+                                                                                       SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStopRequestSerializer))),
                                                  "eRoamingAuthorizeStop",
                                                  RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
@@ -1596,7 +1610,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomChargeDetailRecordSerializer))),
+                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request,
+                                                                                                SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomSendChargeDetailRecordRequestSerializer))),
                                                  "eRoamingChargeDetailRecord",
                                                  RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
@@ -1610,7 +1625,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       (request, xml, onexception) =>
                                                                                                       Acknowledgement<SendChargeDetailRecordRequest>.Parse(request,
                                                                                                                                                            xml,
-                                                                                                                                                           CustomSendChargeDetailRecordResponseMapper,
+                                                                                                                                                           CustomSendChargeDetailRecordParser,
                                                                                                                                                            onexception)),
 
                                                  #endregion
@@ -1808,7 +1823,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomPullAuthenticationDataSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomPullAuthenticationDataSOAPRequestMapper(Request,
+                                                                                                SOAP.Encapsulation(Request.ToXML(CustomPullAuthenticationDataRequestSerializer))),
                                                  "eRoamingPullAuthenticationData",
                                                  RequestLogDelegate:   OnPullAuthenticationDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
@@ -1818,7 +1834,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(AuthenticationData.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                      AuthenticationData.Parse(request,
+                                                                                                                               xml,
+                                                                                                                               CustomAuthenticationDataParser,
+                                                                                                                               CustomProviderAuthenticationDataParser,
+                                                                                                                               CustomAuthorizationIdentificationParser,
+                                                                                                                               onexception)),
 
                                                  #endregion
 
@@ -1854,7 +1877,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(StatusCodes.SystemError,
+                                                     return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(Request,
+                                                                                                                                    StatusCodes.SystemError,
                                                                                                                                     exception.Message,
                                                                                                                                     exception.StackTrace),
                                                                                                              Exception: exception);

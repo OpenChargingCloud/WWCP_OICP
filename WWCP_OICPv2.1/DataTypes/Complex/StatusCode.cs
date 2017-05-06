@@ -30,10 +30,26 @@ using org.GraphDefined.Vanaheimr.Hermod;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    public static class StatusCodeExtentions
+    {
+
+        public static Boolean HasResult(this StatusCode? StatusCode)
+        {
+
+            if (!StatusCode.HasValue)
+                return false;
+
+            return StatusCode.Value.HasResult;
+
+        }
+
+    }
+
+
     /// <summary>
     /// An OICP status code.
     /// </summary>
-    public class StatusCode
+    public struct StatusCode
     {
 
         #region Properties
@@ -117,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(StatusCodeXML, out _StatusCode, OnException))
                 return _StatusCode;
 
-            return null;
+            return default(StatusCode);
 
         }
 
@@ -139,7 +155,51 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(StatusCodeText, out _StatusCode, OnException))
                 return _StatusCode;
 
-            return null;
+            return default(StatusCode);
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(StatusCodeXML,                  OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP status code.
+        /// </summary>
+        /// <param name="StatusCodeXML">The XML to parse.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static StatusCode? TryParse(XElement             StatusCodeXML,
+                                           OnExceptionDelegate  OnException  = null)
+        {
+
+            try
+            {
+
+                if (!(StatusCodeXML.Name == OICPNS.CommonTypes +   "StatusCode" ||
+                      StatusCodeXML.Name == OICPNS.Authorization + "StatusCode"))
+                {
+                    return null;
+                }
+
+                return new StatusCode(StatusCodeXML.MapValueOrFail       (OICPNS.CommonTypes + "Code",
+                                                                          s => (StatusCodes) Int16.Parse(s),
+                                                                          "Invalid or missing 'Code' XML tag!"),
+
+                                      StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "Description",
+                                                                          String.Empty),
+
+                                      StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "AdditionalInfo",
+                                                                          String.Empty));
+
+            }
+            catch (Exception e)
+            {
+
+                OnException?.Invoke(DateTime.Now, StatusCodeXML, e);
+
+                return null;
+
+            }
 
         }
 
@@ -158,38 +218,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OnExceptionDelegate  OnException  = null)
         {
 
+            var _StatusCode = TryParse(StatusCodeXML, OnException);
+
+            if (_StatusCode.HasValue)
+            {
+                StatusCode = _StatusCode.Value;
+                return true;
+            }
+
+            StatusCode = default(StatusCode);
+            return false;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(StatusCodeText,                 OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP status code.
+        /// </summary>
+        /// <param name="StatusCodeText">The text to parse.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static StatusCode? TryParse(String               StatusCodeText,
+                                           OnExceptionDelegate  OnException  = null)
+        {
+
             try
             {
 
-                // Sometimes CommonTypes:StatusCode, sometimes Authorization:StatusCode!
-                if (StatusCodeXML.Name.LocalName != "StatusCode")
-                {
-                    StatusCode = null;
-                    return false;
-                }
-
-                StatusCode = new StatusCode(StatusCodeXML.MapValueOrFail       (OICPNS.CommonTypes + "Code",
-                                                                                str => (StatusCodes) Int16.Parse(str),
-                                                                                "Invalid or missing 'Code' XML tag!"),
-
-                                            StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "Description",
-                                                                                String.Empty),
-
-                                            StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "AdditionalInfo",
-                                                                                String.Empty));
-
-                return true;
+                return TryParse(XDocument.Parse(StatusCodeText).Root,
+                                OnException);
 
             }
             catch (Exception e)
             {
-
-                OnException?.Invoke(DateTime.Now, StatusCodeXML, e);
-
-                StatusCode = null;
-                return false;
-
+                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
             }
+
+            return null;
 
         }
 
@@ -223,7 +290,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 OnException?.Invoke(DateTime.Now, StatusCodeText, e);
             }
 
-            StatusCode = null;
+            StatusCode = default(StatusCode);
             return false;
 
         }
@@ -333,12 +400,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is a result.
-            var StatusCode = Object as StatusCode;
-            if ((Object) StatusCode == null)
+            if (!(Object is StatusCode))
                 return false;
 
-            return this.Equals(StatusCode);
+            return Equals((StatusCode) Object);
 
         }
 
@@ -404,9 +469,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat("StatusCode: ",         (Int32) Code,
-                             ", Description: ",      Description,
-                             ", Additional Info: ",  AdditionalInfo);
+            => String.Concat("StatusCode: ", (Int32) Code,
+
+                             Description.IsNotNullOrEmpty()
+                                 ? ", Description: " + Description
+                                 : "",
+
+                             AdditionalInfo.IsNotNullOrEmpty()
+                                 ? ", Additional Info: " + AdditionalInfo
+                                 : "");
 
         #endregion
 

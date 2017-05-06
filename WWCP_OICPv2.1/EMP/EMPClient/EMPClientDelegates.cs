@@ -137,8 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  EMPClient                                        Sender,
                                                                  String                                           SenderId,
                                                                  EventTracking_Id                                 EventTrackingId,
-                                                                 IEnumerable<AuthorizationIdentification>         AuthorizationIdentifications,
-                                                                 Provider_Id                                      ProviderId,
+                                                                 ProviderAuthenticationData                       ProviderAuthenticationData,
                                                                  ActionTypes                                      OICPAction,
                                                                  TimeSpan                                         RequestTimeout);
 
@@ -149,8 +148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                  EMPClient                                        Sender,
                                                                  String                                           SenderId,
                                                                  EventTracking_Id                                 EventTrackingId,
-                                                                 IEnumerable<AuthorizationIdentification>         AuthorizationIdentifications,
-                                                                 Provider_Id                                      ProviderId,
+                                                                 ProviderAuthenticationData                       ProviderAuthenticationData,
                                                                  ActionTypes                                      OICPAction,
                                                                  TimeSpan                                         RequestTimeout,
                                                                  Acknowledgement<PushAuthenticationDataRequest>   Result,

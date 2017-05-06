@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 #endregion
@@ -32,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private Dictionary<String, Object> _CustomData   { get; }
 
-        public IReadOnlyDictionary<String, Object> Values
+        public IReadOnlyDictionary<String, Object> CustomValues
             => _CustomData;
 
         #endregion
@@ -57,6 +58,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        public Boolean HasCustomData
+            => _CustomData != null && _CustomData.Count > 0;
+
         public Boolean IsDefined(String Key)
         {
 
@@ -65,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Object _Value;
 
-            return Values.TryGetValue(Key, out _Value);
+            return CustomValues.TryGetValue(Key, out _Value);
 
         }
 
@@ -77,7 +81,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Object _Value;
 
-            if (Values.TryGetValue(Key, out _Value))
+            if (CustomValues.TryGetValue(Key, out _Value))
                 return _Value;
 
             return null;
@@ -92,7 +96,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Object _Value;
 
-            if (Values.TryGetValue(Key, out _Value))
+            if (CustomValues.TryGetValue(Key, out _Value))
                 return (T) _Value;
 
             return default(T);
@@ -110,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Object _Value;
 
-            if (Values.TryGetValue(Key, out _Value))
+            if (CustomValues.TryGetValue(Key, out _Value))
                 ValueDelegate(_Value);
 
         }
@@ -125,7 +129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             Object _Value;
 
-            if (Values.TryGetValue(Key, out _Value))
+            if (CustomValues.TryGetValue(Key, out _Value))
                 ValueDelegate((T) _Value);
 
         }
@@ -140,6 +144,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         private Dictionary<String, Object> _CustomData;
 
+        public IReadOnlyDictionary<String, Object> ImmutableCustomData
+            => _CustomData;
+
         #endregion
 
         #region Constructor(s)
@@ -151,8 +158,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         }
 
+        protected ACustomDataBuilder(IReadOnlyDictionary<String, Object> CustomData = null)
+        {
+
+            if (CustomData != null && CustomData.Count > 0)
+            {
+
+                _CustomData = new Dictionary<String, Object>();
+
+                foreach (var item in CustomData)
+                    _CustomData.Add(item.Key, item.Value);
+
+            }
+
+        }
+
+        protected ACustomDataBuilder(IEnumerable<KeyValuePair<String, Object>> CustomData = null)
+        {
+
+            if (CustomData != null && CustomData.Any())
+            {
+
+                _CustomData = new Dictionary<String, Object>();
+
+                foreach (var item in CustomData)
+                {
+
+                    if (!_CustomData.ContainsKey(item.Key))
+                        _CustomData.Add(item.Key, item.Value);
+
+                    else
+                        _CustomData[item.Key] = item.Value;
+
+                }
+
+            }
+
+        }
+
         #endregion
 
+
+        public Boolean HasCustomData
+            => _CustomData != null && _CustomData.Count > 0;
 
         public void AddCustomData(String Key,
                                   Object Value)

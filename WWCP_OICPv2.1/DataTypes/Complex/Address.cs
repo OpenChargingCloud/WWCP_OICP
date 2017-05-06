@@ -160,7 +160,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.PostalCodeSub  = PostalCodeSub;
             this.City           = City;
             this.Country        = Country;
-            this.Comment        = Comment != null ? Comment : new I18NString();
+            this.Comment        = Comment ?? new I18NString();
 
         }
 
@@ -321,13 +321,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => Street                        + " " +
-               HouseNumber                   + " " +
-               FloorLevel                    + ", " +
-               PostalCode                    + " " +
-               PostalCodeSub                 + " " +
-               City                          + ", " +
-               Country.CountryName.FirstText + " / " +
+            => Street                          + " " +
+               HouseNumber                     + " " +
+               FloorLevel                      + ", " +
+               PostalCode                      + " " +
+               PostalCodeSub                   + " " +
+               City                            + ", " +
+               Country.CountryName.FirstText() + " / " +
                Comment;
 
         #endregion

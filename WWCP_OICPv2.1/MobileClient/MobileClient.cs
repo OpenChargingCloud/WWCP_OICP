@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             => await MobileAuthorizeStart(EVSEId,
-                                          new EVCOIdWithPIN(EVCOId, PIN),
+                                          new QRCodeIdentification(EVCOId, PIN),
                                           PartnerProductId,
                                           GetNewSession,
 
@@ -344,7 +344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
             => await MobileAuthorizeStart(EVSEId,
-                                          new EVCOIdWithPIN(EVCOId, HashedPIN, Function, Salt),
+                                          new QRCodeIdentification(EVCOId, HashedPIN, Function, Salt),
                                           PartnerProductId,
                                           GetNewSession,
 
@@ -373,7 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 EVCOIdWithPIN       EVCOIdWithPIN,
+                                 QRCodeIdentification       EVCOIdWithPIN,
                                  String              ProductId          = null,
                                  Boolean?            GetNewSession      = null,
 

@@ -18,10 +18,11 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Collections.Generic;
 
 #endregion
 
@@ -71,26 +72,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
+        /// <param name="StatusCode">An optional status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        /// <param name="StatusCode">An optional status code.</param>
-        private AuthorizationStop(AuthorizeStopRequest      Request,
-                                  AuthorizationStatusTypes  AuthorizationStatus,
-                                  Session_Id?               SessionId          = null,
-                                  PartnerSession_Id?        PartnerSessionId   = null,
-                                  Provider_Id?              ProviderId         = null,
-                                  StatusCode                StatusCode         = null)
+        /// <param name="CustomData">Optional custom data.</param>
+        private AuthorizationStop(AuthorizeStopRequest                 Request,
+                                  AuthorizationStatusTypes             AuthorizationStatus,
+                                  StatusCode                           StatusCode,
+                                  Session_Id?                          SessionId          = null,
+                                  PartnerSession_Id?                   PartnerSessionId   = null,
+                                  Provider_Id?                         ProviderId         = null,
+                                  IReadOnlyDictionary<String, Object>  CustomData         = null)
 
-            : base(Request)
+            : base(Request,
+                   CustomData)
 
         {
 
             this.AuthorizationStatus  = AuthorizationStatus;
+            this.StatusCode           = StatusCode;
             this.SessionId            = SessionId;
             this.PartnerSessionId     = PartnerSessionId;
             this.ProviderId           = ProviderId;
-            this.StatusCode           = StatusCode;
 
         }
 
@@ -118,14 +122,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.Authorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.Success,
                                          StatusCodeDescription,
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -151,14 +155,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCode,
                                          StatusCodeDescription,
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -182,14 +186,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.SessionIsInvalid,
                                          StatusCodeDescription ?? "Session is invalid",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -213,14 +217,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.CommunicationToEVSEFailed,
                                          StatusCodeDescription ?? "Communication to EVSE failed!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -244,14 +248,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.NoEVConnectedToEVSE,
                                          StatusCodeDescription ?? "No EV connected to EVSE!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -275,14 +279,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.EVSEAlreadyReserved,
                                          StatusCodeDescription ?? "EVSE already reserved!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -306,14 +310,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.UnknownEVSEID,
                                          StatusCodeDescription ?? "Unknown EVSE ID!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -337,14 +341,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.EVSEOutOfService,
                                          StatusCodeDescription ?? "EVSE out of service!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -368,14 +372,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.ServiceNotAvailable,
                                          StatusCodeDescription ?? "Service not available!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -399,14 +403,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.DataError,
                                          StatusCodeDescription ?? "Data Error!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
@@ -430,55 +434,55 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
-                                     SessionId,
-                                     PartnerSessionId,
-                                     ProviderId,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          StatusCodeDescription ?? "System Error!",
                                          StatusCodeAdditionalInfo
-                                     ));
+                                     ),
+                                     SessionId,
+                                     PartnerSessionId,
+                                     ProviderId);
 
         #endregion
 
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        // 
+        // <soapenv:Envelope xmlns:soapenv        = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/v2.0"
+        //                   xmlns:CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
         //    <soapenv:Header/>
-        // 
+        //
         //    <soapenv:Body>
         //       <Authorization:eRoamingAuthorizationStop>
-        // 
+        //
         //          <!--Optional:-->
         //          <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
-        // 
+        //
         //          <!--Optional:-->
         //          <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        // 
+        //
         //          <!--Optional:-->
         //          <Authorization:ProviderID>DE*GDF</Authorization:ProviderID>
-        // 
+        //
         //          <Authorization:AuthorizationStatus>Authorized|NotAuthorized</Authorization:AuthorizationStatus>
-        // 
+        //
         //          <Authorization:StatusCode>
-        // 
+        //
         //             <CommonTypes:Code>?</CommonTypes:Code>
-        // 
+        //
         //             <!--Optional:-->
         //             <CommonTypes:Description>?</CommonTypes:Description>
-        // 
+        //
         //             <!--Optional:-->
         //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        // 
+        //
         //          </Authorization:StatusCode>
-        // 
+        //
         //       </Authorization:eRoamingAuthorizationStop>
         //    </soapenv:Body>
-        // 
+        //
         // </soapenv:Envelope>
 
         #endregion
@@ -532,13 +536,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     throw new ArgumentException("Invalid eRoamingAuthorizationStop XML");
 
                 AuthorizationStop = new AuthorizationStop(
+
                                         Request,
-                                        (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), AuthorizationStopXML.ElementValueOrFail(OICPNS.Authorization + "AuthorizationStatus")),
-                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",         Session_Id.       Parse),
-                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",  PartnerSession_Id.Parse),
-                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",        Provider_Id.      Parse),
-                                        AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",        StatusCode.       Parse)
+
+                                        AuthorizationStopXML.MapValueOrFail    (OICPNS.Authorization + "AuthorizationStatus",
+                                                                                s => (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), s)),
+
+                                        AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",
+                                                                                StatusCode.       Parse),
+
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
+                                                                                Session_Id.       Parse),
+
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
+                                                                                PartnerSession_Id.Parse),
+
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",
+                                                                                Provider_Id.      Parse)
+
                                     );
+
+
+                if (CustomMapper != null)
+                    AuthorizationStop = CustomMapper(AuthorizationStopXML, AuthorizationStop.ToBuilder).ToImmutable;
 
                 return true;
 
@@ -617,7 +637,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         }
 
 
-        public class Builder : ABuilder
+        #region ToBuilder
+
+        /// <summary>
+        /// Return a response builder.
+        /// </summary>
+        public Builder ToBuilder
+            => new Builder(this);
+
+        #endregion
+
+        #region (class) Builder
+
+        /// <summary>
+        /// An AuthorizationStop response builder.
+        /// </summary>
+        public class Builder : AResponseBuilder<AuthorizeStopRequest,
+                                                AuthorizationStop>
         {
 
             #region Properties
@@ -649,50 +685,87 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             /// </summary>
             public StatusCode                  StatusCode            { get; set; }
 
-            /// <summary>
-            /// The result of the operation.
-            /// </summary>
-            public Result                      Result                { get; set; }
-
-            public Dictionary<String, Object>  CustomData            { get; set; }
+            //     /// <summary>
+            //     /// The result of the operation.
+            //     /// </summary>
+            //     public Result                      Result                { get; set; }
 
             #endregion
 
-            public Builder(AuthorizationStop AuthorizationStop = null)
+            #region Constructor(s)
+
+            #region Builder(Request,           CustomData = null)
+
+            /// <summary>
+            /// Create a new AuthorizationStop response builder.
+            /// </summary>
+            /// <param name="Request">An AuthorizeStop request.</param>
+            /// <param name="CustomData">Optional custom data.</param>
+            public Builder(AuthorizeStopRequest                 Request,
+                           IReadOnlyDictionary<String, Object>  CustomData  = null)
+
+                : base(Request,
+                       CustomData)
+
+            { }
+
+            #endregion
+
+            #region Builder(AuthorizationStop, CustomData = null)
+
+            /// <summary>
+            /// Create a new AuthorizationStop response builder.
+            /// </summary>
+            /// <param name="AuthorizationStop">An AuthorizeStop response.</param>
+            /// <param name="CustomData">Optional custom data.</param>
+            public Builder(AuthorizationStop                    AuthorizationStop,
+                           IReadOnlyDictionary<String, Object>  CustomData  = null)
+
+                : base(AuthorizationStop?.Request,
+                       AuthorizationStop.HasCustomData
+                           ? CustomData != null && CustomData.Any()
+                                 ? AuthorizationStop.CustomValues.Concat(CustomData)
+                                 : AuthorizationStop.CustomValues
+                           : CustomData)
+
             {
 
                 if (AuthorizationStop != null)
                 {
 
-                    this.Request              = AuthorizationStop.Request;
+                    this.AuthorizationStatus  = AuthorizationStop.AuthorizationStatus;
+                    this.StatusCode           = AuthorizationStop.StatusCode;
                     this.SessionId            = AuthorizationStop.SessionId;
                     this.PartnerSessionId     = AuthorizationStop.PartnerSessionId;
                     this.ProviderId           = AuthorizationStop.ProviderId;
-                    this.AuthorizationStatus  = AuthorizationStop.AuthorizationStatus;
-                    this.StatusCode           = AuthorizationStop.StatusCode;
-                    this.Result               = AuthorizationStop.Result;
-                    this.CustomData           = new Dictionary<String, Object>();
-
-                    if (AuthorizationStop.CustomData != null)
-                        foreach (var item in AuthorizationStop.CustomData)
-                            CustomData.Add(item.Key, item.Value);
 
                 }
 
             }
 
+            #endregion
 
-            //public Acknowledgement<T> ToImmutable()
+            #endregion
 
-            //    => new Acknowledgement<T>(Request,
-            //                              Result,
-            //                              StatusCode,
-            //                              SessionId,
-            //                              PartnerSessionId,
-            //                              CustomData);
+
+            public override Boolean Equals(AuthorizationStop AResponse)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override AuthorizationStop ToImmutable
+
+                => new AuthorizationStop(Request,
+                                         AuthorizationStatus,
+                                         StatusCode,
+                                         SessionId,
+                                         PartnerSessionId,
+                                         ProviderId,
+                                         ImmutableCustomData);
 
         }
 
+        #endregion
 
     }
 

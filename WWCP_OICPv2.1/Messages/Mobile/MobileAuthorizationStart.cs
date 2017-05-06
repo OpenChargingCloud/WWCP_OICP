@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The status code of the request.
         /// </summary>
-        public StatusCode               StatusCode              { get; }
+        public StatusCode?              StatusCode              { get; }
 
         /// <summary>
         /// The terms of use.
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                         I18NString                ChargingStationName  = null,
                                         Address                   Address              = null,
                                         Session_Id?               SessionId            = null,
-                                        StatusCode                StatusCode           = null,
+                                        StatusCode?               StatusCode           = null,
                                         I18NString                TermsOfUse           = null,
                                         I18NString                AdditionalInfo       = null)
         {
@@ -135,7 +135,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             this.AuthorizationStatus  = AuthorizationStatusTypes.NotAuthorized;
-            this.StatusCode           = new StatusCode(StatusCode, Description, AdditionalInfo);
+            this.StatusCode           = new StatusCode(StatusCode,
+                                                       Description,
+                                                       AdditionalInfo);
             this.GeoCoordinates       = GeoCoordinate.Zero;
 
         }
@@ -261,7 +263,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 ChargingStationName:  ChargingStationName,
                                                 Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XML_IO.ParseAddressXML, null),
                                                 SessionId:            MobileAuthorizationStartXML.MapValueOrNullable(OICPNS.MobileAuthorization + "SessionID",  Session_Id.Parse),
-                                                StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", StatusCode.Parse,           null),
+                                                StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", OICPv2_1.StatusCode.Parse,             null),
                                                 TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.deu, s), null),
                                                 AdditionalInfo:       AdditionalInfo);
 

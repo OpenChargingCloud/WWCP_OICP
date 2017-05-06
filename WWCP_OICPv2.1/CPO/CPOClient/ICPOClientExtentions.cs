@@ -54,13 +54,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             PushEVSEData(this ICPOClient                 ICPOClient,
                          OperatorEVSEData                OperatorEVSEData,
-                         ActionTypes                     Action                   = ActionTypes.fullLoad,
-                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
+                         ActionTypes                     Action              = ActionTypes.fullLoad,
 
-                         DateTime?                       Timestamp                = null,
-                         CancellationToken?              CancellationToken        = null,
-                         EventTracking_Id                EventTrackingId          = null,
-                         TimeSpan?                       RequestTimeout           = null)
+                         DateTime?                       Timestamp           = null,
+                         CancellationToken?              CancellationToken   = null,
+                         EventTracking_Id                EventTrackingId     = null,
+                         TimeSpan?                       RequestTimeout      = null)
 
 
                 => ICPOClient.PushEVSEData(new PushEVSEDataRequest(OperatorEVSEData,
@@ -69,9 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout.HasValue
-                                                                       ? RequestTimeout.Value
-                                                                       : ICPOClient.RequestTimeout));
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -115,9 +112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout.HasValue
-                                                                       ? RequestTimeout.Value
-                                                                       : ICPOClient.RequestTimeout));
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -157,9 +152,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout.HasValue
-                                                                       ? RequestTimeout.Value
-                                                                       : ICPOClient.RequestTimeout));
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -205,13 +198,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             PushEVSEStatus(this ICPOClient                   ICPOClient,
                            OperatorEVSEStatus                OperatorEVSEStatus,
-                           ActionTypes                       Action                     = ActionTypes.update,
-                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords   = null,
+                           ActionTypes                       Action              = ActionTypes.update,
 
-                           DateTime?                         Timestamp                  = null,
-                           CancellationToken?                CancellationToken          = null,
-                           EventTracking_Id                  EventTrackingId            = null,
-                           TimeSpan?                         RequestTimeout             = null)
+                           DateTime?                         Timestamp           = null,
+                           CancellationToken?                CancellationToken   = null,
+                           EventTracking_Id                  EventTrackingId     = null,
+                           TimeSpan?                         RequestTimeout      = null)
 
 
                 => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(OperatorEVSEStatus,
@@ -220,9 +212,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        Timestamp,
                                                                        CancellationToken,
                                                                        EventTrackingId,
-                                                                       RequestTimeout.HasValue
-                                                                           ? RequestTimeout.Value
-                                                                           : ICPOClient.RequestTimeout));
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -266,9 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        Timestamp,
                                                                        CancellationToken,
                                                                        EventTrackingId,
-                                                                       RequestTimeout.HasValue
-                                                                           ? RequestTimeout.Value
-                                                                           : ICPOClient.RequestTimeout));
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -308,9 +296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        Timestamp,
                                                                        CancellationToken,
                                                                        EventTrackingId,
-                                                                       RequestTimeout.HasValue
-                                                                           ? RequestTimeout.Value
-                                                                           : ICPOClient.RequestTimeout));
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -381,9 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        Timestamp,
                                                                        CancellationToken,
                                                                        EventTrackingId,
-                                                                       RequestTimeout.HasValue
-                                                                           ? RequestTimeout.Value
-                                                                           : ICPOClient.RequestTimeout));
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -430,9 +414,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                       Timestamp,
                                                                       CancellationToken,
                                                                       EventTrackingId,
-                                                                      RequestTimeout.HasValue
-                                                                          ? RequestTimeout.Value
-                                                                          : ICPOClient.RequestTimeout));
+                                                                      RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -463,9 +445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                        Timestamp,
                                                                                        CancellationToken,
                                                                                        EventTrackingId,
-                                                                                       RequestTimeout.HasValue
-                                                                                           ? RequestTimeout.Value
-                                                                                           : ICPOClient.RequestTimeout));
+                                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
 
@@ -497,11 +477,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                        Timestamp,
                                                                                        CancellationToken,
                                                                                        EventTrackingId,
-                                                                                       RequestTimeout.HasValue
-                                                                                           ? RequestTimeout.Value
-                                                                                           : ICPOClient.RequestTimeout));
+                                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
+
 
     }
 

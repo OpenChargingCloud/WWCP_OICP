@@ -204,8 +204,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given XML representation of an OICP operator EVSE data request.
         /// </summary>
         /// <param name="OperatorEVSEDataXML">The XML to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(XElement                                OperatorEVSEDataXML,
                                              CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -235,8 +235,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given text representation of an OICP operator EVSE data request.
         /// </summary>
         /// <param name="OperatorEVSEDataText">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(String                                  OperatorEVSEDataText,
                                              CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -267,8 +267,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorEVSEDataXML">The XML to parse.</param>
         /// <param name="OperatorEVSEData">The parsed operator EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                OperatorEVSEDataXML,
                                        out OperatorEVSEData                    OperatorEVSEData,
@@ -326,8 +326,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="OperatorEVSEDataText">The text to parse.</param>
         /// <param name="OperatorEVSEData">The parsed operator EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  OperatorEVSEDataText,
                                        out OperatorEVSEData                    OperatorEVSEData,
@@ -366,10 +366,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
-        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData XML elements.</param>
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
-        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
         public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
                               CustomSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
                               XName                                       EVSEDataRecordXName               = null,

@@ -242,7 +242,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                           _ChargingPool.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                           _ChargingPool.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                                                           _ChargingPool.Accessibility         = EvseDataRecord.Accessibility.ToWWCP();
-                                                                                          _ChargingPool.HotlinePhoneNumber    = EvseDataRecord.HotlinePhoneNumber;
+                                                                                          _ChargingPool.HotlinePhoneNumber    = I18NString.Create(Languages.unknown, EvseDataRecord.HotlinePhoneNumber);
 
                                                                                       }
 
@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                                                 pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                                                                 pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                                                                                                 pool.Accessibility               = EvseDataRecord.Accessibility.ToWWCP();
-                                                                                                                                pool.HotlinePhoneNumber          = EvseDataRecord.HotlinePhoneNumber;
+                                                                                                                                pool.HotlinePhoneNumber          = I18NString.Create(Languages.unknown, EvseDataRecord.HotlinePhoneNumber);
                                                                                                                                 //pool.StatusAggregationDelegate   = ChargingStationStatusAggregationDelegate;
 
                                                                                                                             }
@@ -283,7 +283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                   _ChargingStation.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                   _ChargingStation.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                                   _ChargingStation.Accessibility              = EvseDataRecord.Accessibility.ToWWCP();
-                                                                  _ChargingStation.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
+                                                                  _ChargingStation.HotlinePhoneNumber         = I18NString.Create(Languages.unknown, EvseDataRecord.HotlinePhoneNumber);
                                                                   _ChargingStation.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
                                                                   _ChargingStation.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;
                                                                   _ChargingStation.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
@@ -303,7 +303,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                            station.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(EvseDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                                            station.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (EvseDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                                                                            station.Accessibility              = EvseDataRecord.Accessibility.ToWWCP();
-                                                                                                           station.HotlinePhoneNumber         = EvseDataRecord.HotlinePhoneNumber;
+                                                                                                           station.HotlinePhoneNumber         = I18NString.Create(Languages.unknown, EvseDataRecord.HotlinePhoneNumber);
                                                                                                            station.IsHubjectCompatible        = EvseDataRecord.IsHubjectCompatible;
                                                                                                            station.DynamicInfoAvailable       = EvseDataRecord.DynamicInfoAvailable;
                                                                                                            station.StatusAggregationDelegate  = EVSEStatusAggregationDelegate;
@@ -323,7 +323,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                                   // Update via events!
                                                                   _EVSE.Description     = EvseDataRecord.AdditionalInfo;
-                                                                  _EVSE.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(EvseDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                                                                  _EVSE.ChargingModes   = EvseDataRecord.ChargingModes.AsWWCPChargingMode();
                                                                   OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
                                                                   _EVSE.MaxCapacity     = EvseDataRecord.MaxCapacity;
                                                                   _EVSE.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
@@ -336,7 +336,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                               Configurator: evse => {
 
                                                                                                   evse.Description     = EvseDataRecord.AdditionalInfo;
-                                                                                                  evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(EvseDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
+                                                                                                  evse.ChargingModes   = EvseDataRecord.ChargingModes.AsWWCPChargingMode();
                                                                                                   OICPMapper.ApplyChargingFacilities(_EVSE, EvseDataRecord.ChargingFacilities);
                                                                                                   evse.MaxCapacity     = EvseDataRecord.MaxCapacity;
                                                                                                   evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(EvseDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
@@ -913,7 +913,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             PullEVSEData(_ProviderId).
                             ContinueWith(PullEVSEDataTask => {
 
-                                if (PullEVSEDataTask.Result.Content.StatusCode.Code == 0)
+                                if (PullEVSEDataTask.Result.Content.StatusCode.Value.Code == 0)
                                 {
 
                                     //if (_EVSEDataXMLHandler != null)

@@ -168,7 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper  { get; set; }
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper  { get; set; }
 
         #endregion
 
@@ -218,7 +218,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper  { get; set; }
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper  { get; set; }
 
         #endregion
 
@@ -268,7 +268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper  { get; set; }
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper  { get; set; }
 
         #endregion
 
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper  { get; set; }
+        public CustomParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser  { get; set; }
 
         #endregion
 
@@ -370,7 +370,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>, Acknowledgement<AuthorizeRemoteReservationStartRequest>.Builder> CustomAuthorizeRemoteReservationStartResponseMapper  { get; set; }
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser  { get; set; }
 
         #endregion
 
@@ -420,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper  { get; set; }
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser  { get; set; }
 
         #endregion
 
@@ -470,7 +470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStartRequest>, Acknowledgement<AuthorizeRemoteStartRequest>.Builder> CustomAuthorizeRemoteStartResponseMapper  { get; set; }
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser  { get; set; }
 
         #endregion
 
@@ -520,7 +520,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStopRequest>, Acknowledgement<AuthorizeRemoteStopRequest>.Builder> CustomAuthorizeRemoteStopResponseMapper  { get; set; }
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser  { get; set; }
 
         #endregion
 
@@ -571,7 +571,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<GetChargeDetailRecordsResponse, GetChargeDetailRecordsResponse.Builder> CustomGetChargeDetailRecordsResponseMapper  { get; set; }
+        public CustomParserDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsParser  { get; set; }
 
         #endregion
 
@@ -579,10 +579,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public CustomParserDelegate<OperatorEVSEData>    CustomOperatorEVSEDataParser     { get; set; }
         public CustomParserDelegate<EVSEDataRecord>      CustomEVSEDataRecordParser       { get; set; }
 
+        public CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           { get; set; }
         public CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   { get; set; }
+        public CustomParserDelegate<EVSEStatusById>      CustomEVSEStatusByIdParser       { get; set; }
         public CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     { get; set; }
 
+        public CustomParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   { get; set; }
         public CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   { get; set; }
+        public CustomParserDelegate<Identification>                  CustomIdentificationParser { get; set; }
 
         #endregion
 
@@ -1230,7 +1234,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatus.Parse(xml,
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatus.Parse(Request,
+                                                                                                                                   xml,
+                                                                                                                                   CustomEVSEStatusParser,
                                                                                                                                    CustomOperatorEVSEStatusParser,
                                                                                                                                    CustomEVSEStatusRecordParser,
                                                                                                                                    e)),
@@ -1257,7 +1263,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                      return new HTTPResponse<EVSEStatus>(httpresponse,
-                                                                                         new EVSEStatus(StatusCodes.DataError,
+                                                                                         new EVSEStatus(Request,
+                                                                                                        StatusCodes.DataError,
                                                                                                         Description:    httpresponse.HTTPStatusCode.ToString(),
                                                                                                         AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                          IsFault: true);
@@ -1272,7 +1279,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<EVSEStatus>.ExceptionThrown(new EVSEStatus(StatusCodes.ServiceNotAvailable,
+                                                     return HTTPResponse<EVSEStatus>.ExceptionThrown(new EVSEStatus(Request,
+                                                                                                                    StatusCodes.ServiceNotAvailable,
                                                                                                                     exception.Message,
                                                                                                                     exception.StackTrace),
                                                                                                      Exception: exception);
@@ -1288,6 +1296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (result == null)
                 result = HTTPResponse<EVSEStatus>.ClientError(
                              new EVSEStatus(
+                                 Request,
                                  StatusCodes.SystemError,
                                  "HTTP request failed!"
                              )
@@ -1408,7 +1417,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatusById.Parse(xml,
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatusById.Parse(Request,
+                                                                                                                                       xml,
+                                                                                                                                       CustomEVSEStatusByIdParser,
                                                                                                                                        CustomEVSEStatusRecordParser,
                                                                                                                                        e)),
 
@@ -1434,7 +1445,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
                                                      return new HTTPResponse<EVSEStatusById>(httpresponse,
-                                                                                             new EVSEStatusById(StatusCodes.DataError,
+                                                                                             new EVSEStatusById(Request,
+                                                                                                                StatusCodes.DataError,
                                                                                                                 Description:    httpresponse.HTTPStatusCode.ToString(),
                                                                                                                 AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
                                                                                              IsFault: true);
@@ -1449,7 +1461,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<EVSEStatusById>.ExceptionThrown(new EVSEStatusById(StatusCodes.ServiceNotAvailable,
+                                                     return HTTPResponse<EVSEStatusById>.ExceptionThrown(new EVSEStatusById(Request,
+                                                                                                                            StatusCodes.ServiceNotAvailable,
                                                                                                                             exception.Message,
                                                                                                                             exception.StackTrace),
                                                                                                          Exception: exception);
@@ -1465,6 +1478,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (result == null)
                 result = HTTPResponse<EVSEStatusById>.ClientError(
                              new EVSEStatusById(
+                                 Request,
                                  StatusCodes.SystemError,
                                  "HTTP request failed!"
                              )
@@ -1549,8 +1563,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      this,
                                                      ClientId,
                                                      Request.EventTrackingId,
-                                                     Request.AuthorizationIdentifications,
-                                                     Request.ProviderId,
+                                                     Request.ProviderAuthenticationData,
                                                      Request.OICPAction,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
@@ -1588,7 +1601,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception) =>
                                                                                                           Acknowledgement<PushAuthenticationDataRequest>.Parse(request,
                                                                                                                                                                xml,
-                                                                                                                                                               CustomPushAuthenticationDataResponseMapper,
+                                                                                                                                                               CustomPushAuthenticationDataParser,
                                                                                                                                                                onexception)),
 
                                                  #endregion
@@ -1693,8 +1706,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      this,
                                                      ClientId,
                                                      Request.EventTrackingId,
-                                                     Request.AuthorizationIdentifications,
-                                                     Request.ProviderId,
+                                                     Request.ProviderAuthenticationData,
                                                      Request.OICPAction,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
@@ -1800,7 +1812,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception) =>
                                                                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse(request,
                                                                                                                                                                         xml,
-                                                                                                                                                                        CustomAuthorizeRemoteReservationStartResponseMapper,
+                                                                                                                                                                        CustomAuthorizeRemoteReservationStartParser,
                                                                                                                                                                         onexception)),
 
                                                  #endregion
@@ -2013,7 +2025,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception) =>
                                                                                                           Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse(request,
                                                                                                                                                                        xml,
-                                                                                                                                                                       CustomAuthorizeRemoteReservationStopResponseMapper,
+                                                                                                                                                                       CustomAuthorizeRemoteReservationStopParser,
                                                                                                                                                                        onexception)),
 
                                                  #endregion
@@ -2227,7 +2239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception) =>
                                                                                                           Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
                                                                                                                                                              xml,
-                                                                                                                                                             CustomAuthorizeRemoteStartResponseMapper,
+                                                                                                                                                             CustomAuthorizeRemoteStartParser,
                                                                                                                                                              onexception)),
 
                                                  #endregion
@@ -2437,7 +2449,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception) =>
                                                                                                       Acknowledgement<AuthorizeRemoteStopRequest>.Parse(request,
                                                                                                                                                         xml,
-                                                                                                                                                        CustomAuthorizeRemoteStopResponseMapper,
+                                                                                                                                                        CustomAuthorizeRemoteStopParser,
                                                                                                                                                         onexception)),
 
                                                  #endregion
@@ -2648,8 +2660,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       (request, xml, onexception)
                                                                                                           => GetChargeDetailRecordsResponse.ParseXML(request,
                                                                                                                                                      xml,
-                                                                                                                                                     CustomGetChargeDetailRecordsResponseMapper,
+                                                                                                                                                     CustomGetChargeDetailRecordsParser,
                                                                                                                                                      CustomChargeDetailRecordParser,
+                                                                                                                                                     CustomIdentificationParser,
                                                                                                                                                      onexception)),
 
                                                  #endregion

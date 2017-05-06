@@ -89,6 +89,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public String  ReservationURI      { get; }
 
+
+
+        public CustomParserDelegate<Identification>                              CustomIdentificationParser                             { get; set; }
+
+        public CustomParserDelegate<EMP.AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                { get; set; }
+        public CustomParserDelegate<EMP.AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                 { get; set; }
+        public CustomParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser     { get; set; }
+        public CustomParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser      { get; set; }
+
+        public OnExceptionDelegate                         OnException { get; set; }
+
         #endregion
 
         #region Events
@@ -337,7 +348,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (EMP.AuthorizeRemoteReservationStartRequest.TryParse(AuthorizeRemoteReservationStartXML,
                                                                         out AuthorizeRemoteReservationStartRequest,
-                                                                        null,
+                                                                        CustomAuthorizeRemoteReservationStartRequestParser,
+                                                                        CustomIdentificationParser,
+                                                                        OnException,
+
                                                                         HTTPRequest.Timestamp,
                                                                         HTTPRequest.CancellationToken,
                                                                         HTTPRequest.EventTrackingId,
@@ -515,7 +529,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (EMP.AuthorizeRemoteReservationStopRequest.TryParse(AuthorizeRemoteReservationStopXML,
                                                                        out AuthorizeRemoteReservationStopRequest,
-                                                                       null,
+                                                                       CustomAuthorizeRemoteReservationStopRequestParser,
+                                                                       OnException,
+
                                                                        HTTPRequest.Timestamp,
                                                                        HTTPRequest.CancellationToken,
                                                                        HTTPRequest.EventTrackingId,
@@ -690,7 +706,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (EMP.AuthorizeRemoteStartRequest.TryParse(AuthorizeRemoteStartXML,
                                                              out AuthorizeRemoteStartRequest,
-                                                             null,
+                                                             CustomAuthorizeRemoteStartRequestParser,
+                                                             CustomIdentificationParser,
+                                                             OnException,
+
                                                              HTTPRequest.Timestamp,
                                                              HTTPRequest.CancellationToken,
                                                              HTTPRequest.EventTrackingId,
@@ -868,7 +887,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (EMP.AuthorizeRemoteStopRequest.TryParse(AuthorizeRemoteStopXML,
                                                             out AuthorizeRemoteStopRequest,
-                                                            null,
+                                                            CustomAuthorizeRemoteStopRequestParser,
+                                                            OnException,
+
                                                             HTTPRequest.Timestamp,
                                                             HTTPRequest.CancellationToken,
                                                             HTTPRequest.EventTrackingId,

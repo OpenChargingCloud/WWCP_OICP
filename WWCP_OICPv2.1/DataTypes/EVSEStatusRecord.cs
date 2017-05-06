@@ -91,6 +91,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //   </EVSEStatus:EvseStatusRecord>
         //
         // [...]
+        //
+        // </soapenv:Envelope>
 
         #endregion
 
@@ -100,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given XML representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEStatusRecord Parse(XElement                                EVSEStatusRecordXML,
                                              CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
@@ -128,7 +130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given text representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEStatusRecord Parse(String                                  EVSEStatusRecordText,
                                              CustomParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
@@ -157,7 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                EVSEStatusRecordXML,
                                        out EVSEStatusRecord                    EVSEStatusRecord,
@@ -183,6 +185,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                           XML_IO.AsEVSEStatusType)
 
                                    );
+
 
                 if (CustomEVSEStatusRecordParser != null)
                     EVSEStatusRecord = CustomEVSEStatusRecordParser(EVSEStatusRecordXML, EVSEStatusRecord);
@@ -211,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  EVSEStatusRecordText,
                                        out EVSEStatusRecord                    EVSEStatusRecord,
@@ -248,7 +251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord xml elements.</param>
+        /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord XML elements.</param>
         public XElement ToXML(XName                                       XName                             = null,
                               CustomSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer  = null)
 

@@ -40,13 +40,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// An enumeration of EVSE data records grouped by their operators.
         /// </summary>
-        public IEnumerable<OperatorEVSEData>  OperatorEVSEData  { get; }
+        public IEnumerable<OperatorEVSEData>  OperatorEVSEData   { get; }
 
         /// <summary>
         /// The status code for this request.
         /// (Not defined by OICP!)
         /// </summary>
-        public StatusCode                     StatusCode        { get; }
+        public StatusCode?                    StatusCode         { get; }
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
         /// <param name="StatusCode">An optional status code for this request.</param>
         public EVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData,
-                        StatusCode                     StatusCode  = null)
+                        StatusCode?                    StatusCode  = null)
         {
 
             #region Initial checks
@@ -103,77 +103,75 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Documentation
 
-        // <?xml version="1.0" encoding="UTF-8"?>
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:fn          = "http://www.w3.org/2005/xpath-functions"
-        //                   xmlns:sbp         = "http://www.inubit.com/eMobility/SBP"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0"
-        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.1">
+        // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+        //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/v2.1">
         //
-        //    <soapenv:Body>
-        //       <EVSEData:eRoamingEvseData>
-        //          <EVSEData:EvseData>
+        // [...]
         //
-        //             <!--Zero or more repetitions:-->
-        //             <EVSEData:OperatorEvseData>
+        //   <EVSEData:EvseData>
         //
-        //                <EVSEData:OperatorID>DE*GEF</EVSEData:OperatorID>
+        //      <!--Zero or more repetitions:-->
+        //      <EVSEData:OperatorEvseData>
         //
-        //                <!--Optional:-->
-        //                <EVSEData:OperatorName>GraphDefined</EVSEData:OperatorName>
+        //         <EVSEData:OperatorID>DE*GEF</EVSEData:OperatorID>
         //
-        //                <!--Zero or more repetitions:-->
-        //                <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="2017-04-21T01:00:03.000Z">
+        //         <!--Optional:-->
+        //         <EVSEData:OperatorName>GraphDefined</EVSEData:OperatorName>
         //
-        //                   <EVSEData:EvseId>DE*GEF*EVSE*CI*TESTS*A*1</EVSEData:EvseId>
-        //                   <EVSEData:ChargingStationId>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationId>
-        //                   <EVSEData:ChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationName>
-        //                   <EVSEData:EnChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:EnChargingStationName>
+        //         <!--Zero or more repetitions:-->
+        //         <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="2017-04-21T01:00:03.000Z">
         //
-        //                   <EVSEData:Address>
-        //                      <CommonTypes:Country>DE</CommonTypes:Country>
-        //                      <CommonTypes:City>Jena</CommonTypes:City>
-        //                      <CommonTypes:Street>Biberweg</CommonTypes:Street>
-        //                      <CommonTypes:PostalCode>07749</CommonTypes:PostalCode>
-        //                      <CommonTypes:HouseNum>18</CommonTypes:HouseNum>
-        //                   </EVSEData:Address>
+        //            <EVSEData:EvseId>DE*GEF*EVSE*CI*TESTS*A*1</EVSEData:EvseId>
+        //            <EVSEData:ChargingStationId>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationId>
+        //            <EVSEData:ChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:ChargingStationName>
+        //            <EVSEData:EnChargingStationName>DE*GEF*STATION*CI*TESTS*A*1</EVSEData:EnChargingStationName>
         //
-        //                   <EVSEData:GeoCoordinates>
-        //                      <CommonTypes:DecimalDegree>
-        //                         <CommonTypes:Longitude>11.6309461</CommonTypes:Longitude>
-        //                         <CommonTypes:Latitude>50.9293504</CommonTypes:Latitude>
-        //                      </CommonTypes:DecimalDegree>
-        //                   </EVSEData:GeoCoordinates>
+        //            <EVSEData:Address>
+        //               <CommonTypes:Country>DE</CommonTypes:Country>
+        //               <CommonTypes:City>Jena</CommonTypes:City>
+        //               <CommonTypes:Street>Biberweg</CommonTypes:Street>
+        //               <CommonTypes:PostalCode>07749</CommonTypes:PostalCode>
+        //               <CommonTypes:HouseNum>18</CommonTypes:HouseNum>
+        //            </EVSEData:Address>
         //
-        //                   <EVSEData:Plugs>
-        //                      <EVSEData:Plug>Type 2 Outlet</EVSEData:Plug>
-        //                   </EVSEData:Plugs>
+        //            <EVSEData:GeoCoordinates>
+        //               <CommonTypes:DecimalDegree>
+        //                  <CommonTypes:Longitude>11.6309461</CommonTypes:Longitude>
+        //                  <CommonTypes:Latitude>50.9293504</CommonTypes:Latitude>
+        //               </CommonTypes:DecimalDegree>
+        //            </EVSEData:GeoCoordinates>
         //
-        //                   <EVSEData:AuthenticationModes>
-        //                      <EVSEData:AuthenticationMode>NFC RFID Classic</EVSEData:AuthenticationMode>
-        //                      <EVSEData:AuthenticationMode>NFC RFID DESFire</EVSEData:AuthenticationMode>
-        //                      <EVSEData:AuthenticationMode>REMOTE</EVSEData:AuthenticationMode>
-        //                      <EVSEData:AuthenticationMode>Direct Payment</EVSEData:AuthenticationMode>
-        //                   </EVSEData:AuthenticationModes>
+        //            <EVSEData:Plugs>
+        //               <EVSEData:Plug>Type 2 Outlet</EVSEData:Plug>
+        //            </EVSEData:Plugs>
         //
-        //                   <EVSEData:ValueAddedServices>
-        //                      <EVSEData:ValueAddedService>Reservation</EVSEData:ValueAddedService>
-        //                   </EVSEData:ValueAddedServices>
+        //            <EVSEData:AuthenticationModes>
+        //               <EVSEData:AuthenticationMode>NFC RFID Classic</EVSEData:AuthenticationMode>
+        //               <EVSEData:AuthenticationMode>NFC RFID DESFire</EVSEData:AuthenticationMode>
+        //               <EVSEData:AuthenticationMode>REMOTE</EVSEData:AuthenticationMode>
+        //               <EVSEData:AuthenticationMode>Direct Payment</EVSEData:AuthenticationMode>
+        //            </EVSEData:AuthenticationModes>
         //
-        //                   <EVSEData:Accessibility>Free publicly accessible</EVSEData:Accessibility>
-        //                   <EVSEData:HotlinePhoneNum>+4955512345</EVSEData:HotlinePhoneNum>
-        //                   <EVSEData:IsOpen24Hours>true</EVSEData:IsOpen24Hours>
-        //                   <EVSEData:HubOperatorID>DE*GEF</EVSEData:HubOperatorID>
-        //                   <EVSEData:IsHubjectCompatible>true</EVSEData:IsHubjectCompatible>
-        //                   <EVSEData:DynamicInfoAvailable>true</EVSEData:DynamicInfoAvailable>
+        //            <EVSEData:ValueAddedServices>
+        //               <EVSEData:ValueAddedService>Reservation</EVSEData:ValueAddedService>
+        //            </EVSEData:ValueAddedServices>
         //
-        //                </EVSEData:EvseDataRecord>
+        //            <EVSEData:Accessibility>Free publicly accessible</EVSEData:Accessibility>
+        //            <EVSEData:HotlinePhoneNum>+4955512345</EVSEData:HotlinePhoneNum>
+        //            <EVSEData:IsOpen24Hours>true</EVSEData:IsOpen24Hours>
+        //            <EVSEData:HubOperatorID>DE*GEF</EVSEData:HubOperatorID>
+        //            <EVSEData:IsHubjectCompatible>true</EVSEData:IsHubjectCompatible>
+        //            <EVSEData:DynamicInfoAvailable>true</EVSEData:DynamicInfoAvailable>
         //
-        //             </EVSEData:OperatorEvseData>
-        // 
-        //           </EVSEData:EvseData>
-        //       </EVSEData:eRoamingEvseData>
-        //    </soapenv:Body>
+        //         </EVSEData:EvseDataRecord>
+        //
+        //      </EVSEData:OperatorEvseData>
+        //
+        //    </EVSEData:EvseData>
+        //
+        // [...]
+        //
         // </soapenv:Envelope>
 
         #endregion
@@ -184,8 +182,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given XML representation of an OICP EVSE data request.
         /// </summary>
         /// <param name="EVSEDataXML">The XML to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEData Parse(XElement                                EVSEDataXML,
                                      CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -215,8 +213,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the given text representation of an OICP EVSE data request.
         /// </summary>
         /// <param name="EVSEDataText">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static EVSEData Parse(String                                  EVSEDataText,
                                      CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -247,8 +245,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEDataXML">The XML to parse.</param>
         /// <param name="EVSEData">The parsed EVSEData request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                EVSEDataXML,
                                        out EVSEData                            EVSEData,
@@ -301,8 +299,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="EVSEDataText">The text to parse.</param>
         /// <param name="EVSEData">The parsed EVSEData request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  EVSEDataText,
                                        out EVSEData                            EVSEData,
@@ -341,10 +339,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
-        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData XML elements.</param>
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
-        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
         public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
                               CustomSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
                               XName                                       EVSEDataRecordXName               = null,
@@ -489,7 +487,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public override String ToString()
 
             => String.Concat(OperatorEVSEData.Count() + " operator EVSE data record(s)",
-                             StatusCode != null ? " -> " + StatusCode.Code.ToString() : "");
+
+                             StatusCode.HasValue
+                                 ? " -> " + StatusCode.Value.Code
+                                 : "");
 
         #endregion
 

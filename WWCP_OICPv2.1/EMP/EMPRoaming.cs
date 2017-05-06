@@ -1165,21 +1165,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper
-        {
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEDataRequest>, Acknowledgement<PullEVSEDataRequest>.Builder> CustomPullEVSEDataResponseMapper
+        //{
 
-            get
-            {
-                return EMPClient.CustomPullEVSEDataResponseMapper;
-            }
+        //    get
+        //    {
+        //        return EMPClient.CustomPullEVSEDataResponseMapper;
+        //    }
 
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomPullEVSEDataResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        if (value != null)
+        //            EMPClient.CustomPullEVSEDataResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -1225,21 +1225,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper
-        {
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusRequest>, Acknowledgement<PullEVSEStatusRequest>.Builder> CustomPullEVSEStatusResponseMapper
+        //{
 
-            get
-            {
-                return EMPClient.CustomPullEVSEStatusResponseMapper;
-            }
+        //    get
+        //    {
+        //        return EMPClient.CustomPullEVSEStatusResponseMapper;
+        //    }
 
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomPullEVSEStatusResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        if (value != null)
+        //            EMPClient.CustomPullEVSEStatusResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -1285,21 +1285,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper
-        {
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper
+        //{
 
-            get
-            {
-                return EMPClient.CustomPullEVSEStatusByIdResponseMapper;
-            }
+        //    get
+        //    {
+        //        return EMPClient.CustomPullEVSEStatusByIdResponseMapper;
+        //    }
 
-            set
-            {
-                if (value != null)
-                    EMPClient.CustomPullEVSEStatusByIdResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        if (value != null)
+        //            EMPClient.CustomPullEVSEStatusByIdResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -1346,18 +1346,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushAuthenticationDataRequest>, Acknowledgement<PushAuthenticationDataRequest>.Builder> CustomPushAuthenticationDataResponseMapper
+        public CustomParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser
         {
 
             get
             {
-                return EMPClient.CustomPushAuthenticationDataResponseMapper;
+                return EMPClient.CustomPushAuthenticationDataParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomPushAuthenticationDataResponseMapper = value;
+                    EMPClient.CustomPushAuthenticationDataParser = value;
             }
 
         }
@@ -1407,18 +1407,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>, Acknowledgement<AuthorizeRemoteReservationStartRequest>.Builder> CustomAuthorizeRemoteReservationStartResponseMapper
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser
         {
 
             get
             {
-                return EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper;
+                return EMPClient.CustomAuthorizeRemoteReservationStartParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomAuthorizeRemoteReservationStartResponseMapper = value;
+                    EMPClient.CustomAuthorizeRemoteReservationStartParser = value;
             }
 
         }
@@ -1467,18 +1467,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>, Acknowledgement<AuthorizeRemoteReservationStopRequest>.Builder> CustomAuthorizeRemoteReservationStopResponseMapper
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser
         {
 
             get
             {
-                return EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper;
+                return EMPClient.CustomAuthorizeRemoteReservationStopParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomAuthorizeRemoteReservationStopResponseMapper = value;
+                    EMPClient.CustomAuthorizeRemoteReservationStopParser = value;
             }
 
         }
@@ -1528,18 +1528,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStartRequest>, Acknowledgement<AuthorizeRemoteStartRequest>.Builder> CustomAuthorizeRemoteStartResponseMapper
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser
         {
 
             get
             {
-                return EMPClient.CustomAuthorizeRemoteStartResponseMapper;
+                return EMPClient.CustomAuthorizeRemoteStartParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomAuthorizeRemoteStartResponseMapper = value;
+                    EMPClient.CustomAuthorizeRemoteStartParser = value;
             }
 
         }
@@ -1588,18 +1588,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<AuthorizeRemoteStopRequest>, Acknowledgement<AuthorizeRemoteStopRequest>.Builder> CustomAuthorizeRemoteStopResponseMapper
+        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser
         {
 
             get
             {
-                return EMPClient.CustomAuthorizeRemoteStopResponseMapper;
+                return EMPClient.CustomAuthorizeRemoteStopParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomAuthorizeRemoteStopResponseMapper = value;
+                    EMPClient.CustomAuthorizeRemoteStopParser = value;
             }
 
         }
@@ -1649,18 +1649,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomMapperDelegate<GetChargeDetailRecordsResponse, GetChargeDetailRecordsResponse.Builder> CustomGetChargeDetailRecordsResponseMapper
+        public CustomParserDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsParser
         {
 
             get
             {
-                return EMPClient.CustomGetChargeDetailRecordsResponseMapper;
+                return EMPClient.CustomGetChargeDetailRecordsParser;
             }
 
             set
             {
                 if (value != null)
-                    EMPClient.CustomGetChargeDetailRecordsResponseMapper = value;
+                    EMPClient.CustomGetChargeDetailRecordsParser = value;
             }
 
         }

@@ -144,8 +144,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Parse the given XML representation of an OICP push EVSE data request.
         /// </summary>
         /// <param name="PushEVSEDataXML">The XML to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEDataRequest Parse(XElement                                PushEVSEDataXML,
                                                 CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -186,8 +186,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Parse the given text representation of an OICP push EVSE data request.
         /// </summary>
         /// <param name="PushEVSEDataText">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEDataRequest Parse(String                                  PushEVSEDataText,
                                                 CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
@@ -228,8 +228,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="PushEVSEDataXML">The XML to parse.</param>
         /// <param name="PushEVSEData">The parsed push EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                PushEVSEDataXML,
                                        out PushEVSEDataRequest                 PushEVSEData,
@@ -292,8 +292,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="PushEVSEDataText">The text to parse.</param>
         /// <param name="PushEVSEData">The parsed push EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData xml elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  PushEVSEDataText,
                                        out PushEVSEDataRequest                 PushEVSEData,
@@ -336,33 +336,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML(OperatorEVSEDataXName = null, CustomOperatorEVSEDataSerializer = null, EVSEDataRecordXName = null, IncludeEVSEDataRecordMetadata = true, CustomEVSEDataRecordSerializer = null)
+        #region ToXML(CustomPushEVSEDataRequestSerializer = null, OperatorEVSEDataXName = null, CustomOperatorEVSEDataSerializer = null, EVSEDataRecordXName = null, IncludeEVSEDataRecordMetadata = true, CustomEVSEDataRecordSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
+        /// <param name="CustomPushEVSEDataRequestSerializer">A delegate to customize the serialization of PushEVSEData requests.</param>
         /// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
-        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData xml elements.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData XML elements.</param>
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
-        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord xml elements.</param>
-        public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
-                              CustomSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
-                              XName                                       EVSEDataRecordXName               = null,
-                              Boolean                                     IncludeEVSEDataRecordMetadata     = true,
-                              CustomSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer    = null)
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
+                              XName                                          OperatorEVSEDataXName                 = null,
+                              CustomSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
+                              XName                                          EVSEDataRecordXName                   = null,
+                              Boolean                                        IncludeEVSEDataRecordMetadata         = true,
+                              CustomSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null)
 
-            => new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
+        {
 
-                                new XElement(OICPNS.EVSEData + "ActionType",  XML_IO.AsText(Action)),
+            var XML = new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
 
-                                OperatorEVSEData.ToXML(OperatorEVSEDataXName,
-                                                       CustomOperatorEVSEDataSerializer,
-                                                       EVSEDataRecordXName,
-                                                       IncludeEVSEDataRecordMetadata,
-                                                       CustomEVSEDataRecordSerializer)
+                                       new XElement(OICPNS.EVSEData + "ActionType",  XML_IO.AsText(Action)),
 
-                           );
+                                       OperatorEVSEData.ToXML(OperatorEVSEDataXName,
+                                                              CustomOperatorEVSEDataSerializer,
+                                                              EVSEDataRecordXName,
+                                                              IncludeEVSEDataRecordMetadata,
+                                                              CustomEVSEDataRecordSerializer)
+
+                                  );
+
+            return CustomPushEVSEDataRequestSerializer != null
+                       ? CustomPushEVSEDataRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

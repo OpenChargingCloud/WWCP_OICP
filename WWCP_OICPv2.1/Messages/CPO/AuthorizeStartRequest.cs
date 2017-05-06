@@ -39,32 +39,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator.
         /// </summary>
-        public Operator_Id         OperatorId         { get; }
+        public Operator_Id         OperatorId          { get; }
 
         /// <summary>
         /// A (RFID) user identification.
         /// </summary>
-        public UID                 UID                { get; }
+        public UID                 UID                 { get; }
 
         /// <summary>
         /// An optional EVSE identification.
         /// </summary>
-        public EVSE_Id?            EVSEId             { get; }
+        public EVSE_Id?            EVSEId              { get; }
 
         /// <summary>
         /// An optional partner product identification.
         /// </summary>
-        public PartnerProduct_Id?  PartnerProductId   { get; }
+        public PartnerProduct_Id?  PartnerProductId    { get; }
 
         /// <summary>
         /// An optional charging session identification.
         /// </summary>
-        public Session_Id?         SessionId          { get; }
+        public Session_Id?         SessionId           { get; }
 
         /// <summary>
         /// An optional partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId   { get; }
+        public PartnerSession_Id?  PartnerSessionId    { get; }
 
         #endregion
 
@@ -112,9 +112,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
-        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
+        // <soapenv:Envelope xmlns:soapenv        = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/EVSEData.0"
+        //                   xmlns:CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/EVSEData.0">
         //
         //    <soapenv:Header/>
         //
@@ -133,33 +133,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         //          <Authorization:EVSEID>?</Authorization:EVSEID>
         //
         //          <Authorization:Identification>
-        //
         //             <!--You have a CHOICE of the next 4 items at this level-->
+        //
         //             <CommonTypes:RFIDmifarefamilyIdentification>
-        //                <CommonTypes:UID>?</CommonTypes:UID>
+        //                <CommonTypes:UID>08152305</CommonTypes:UID>
         //             </CommonTypes:RFIDmifarefamilyIdentification>
-        //
+        // 
         //             <CommonTypes:QRCodeIdentification>
-        //
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //
+        // 
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        // 
         //                <!--You have a CHOICE of the next 2 items at this level-->
-        //                <CommonTypes:PIN>?</CommonTypes:PIN>
-        //
+        //                <CommonTypes:PIN>1234</CommonTypes:PIN>
+        // 
         //                <CommonTypes:HashedPIN>
-        //                   <CommonTypes:Value>?</CommonTypes:Value>
-        //                   <CommonTypes:Function>?</CommonTypes:Function>
-        //                   <CommonTypes:Salt>?</CommonTypes:Salt>
+        //                   <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //                   <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //                   <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
         //                </CommonTypes:HashedPIN>
-        //
+        // 
         //             </CommonTypes:QRCodeIdentification>
-        //
+        // 
         //             <CommonTypes:PlugAndChargeIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //             </CommonTypes:PlugAndChargeIdentification>
-        //
+        // 
         //             <CommonTypes:RemoteIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //                <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         //             </CommonTypes:RemoteIdentification>
         //
         //          </Authorization:Identification>
@@ -174,20 +174,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(AuthorizeStartXML,  OnException = null)
+        #region (static) Parse   (AuthorizeStartXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize start request.
         /// </summary>
         /// <param name="AuthorizeStartXML">The XML to parse.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStartRequest Parse(XElement             AuthorizeStartXML,
-                                                  OnExceptionDelegate  OnException = null)
+        public static AuthorizeStartRequest Parse(XElement                                     AuthorizeStartXML,
+                                                  CustomParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
+                                                  CustomParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                                  OnExceptionDelegate                          OnException                         = null)
         {
 
             AuthorizeStartRequest _AuthorizeStart;
 
-            if (TryParse(AuthorizeStartXML, out _AuthorizeStart, OnException))
+            if (TryParse(AuthorizeStartXML,
+                         out _AuthorizeStart,
+                         CustomAuthorizeStartRequestParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _AuthorizeStart;
 
             return null;
@@ -196,20 +205,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(AuthorizeStartText, OnException = null)
+        #region (static) Parse   (AuthorizeStartText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize start request.
         /// </summary>
         /// <param name="AuthorizeStartText">The text to parse.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStartRequest Parse(String               AuthorizeStartText,
-                                                  OnExceptionDelegate  OnException = null)
+        public static AuthorizeStartRequest Parse(String                                       AuthorizeStartText,
+                                                  CustomParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
+                                                  CustomParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                                  OnExceptionDelegate                          OnException                         = null)
         {
 
             AuthorizeStartRequest _AuthorizeStart;
 
-            if (TryParse(AuthorizeStartText, out _AuthorizeStart, OnException))
+            if (TryParse(AuthorizeStartText,
+                         out _AuthorizeStart,
+                         CustomAuthorizeStartRequestParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _AuthorizeStart;
 
             return null;
@@ -218,45 +236,53 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStartXML,  out AuthorizeStart, OnException = null)
+        #region (static) TryParse(AuthorizeStartXML,  out AuthorizeStart, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize start request.
         /// </summary>
         /// <param name="AuthorizeStartXML">The XML to parse.</param>
         /// <param name="AuthorizeStart">The parsed authorize start request.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                   AuthorizeStartXML,
-                                       out AuthorizeStartRequest  AuthorizeStart,
-                                       OnExceptionDelegate        OnException         = null,
+        public static Boolean TryParse(XElement                                     AuthorizeStartXML,
+                                       out AuthorizeStartRequest                    AuthorizeStart,
+                                       CustomParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
+                                       CustomParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                       OnExceptionDelegate                          OnException                         = null,
 
-                                       DateTime?                  Timestamp           = null,
-                                       CancellationToken?         CancellationToken   = null,
-                                       EventTracking_Id           EventTrackingId     = null,
-                                       TimeSpan?                  RequestTimeout      = null)
+                                       DateTime?                                    Timestamp                           = null,
+                                       CancellationToken?                           CancellationToken                   = null,
+                                       EventTracking_Id                             EventTrackingId                     = null,
+                                       TimeSpan?                                    RequestTimeout                      = null)
         {
 
             try
             {
 
-                UID _UID = default(UID);
-
-                var IdentificationXML = AuthorizeStartXML.Element(OICPNS.Authorization + "Identification");
-                if (IdentificationXML != null)
+                if (AuthorizeStartXML.Name != OICPNS.Authorization + "eRoamingAuthorizeStart")
                 {
-
-                    _UID = IdentificationXML.MapValueOrFail(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                                            OICPNS.CommonTypes + "UID",
-                                                            UID.Parse);
-
+                    AuthorizeStart = null;
+                    return false;
                 }
+
+                var UID = AuthorizeStartXML.MapElementOrFail(OICPNS.Authorization + "Identification",
+                                                             (xml, e) => Identification.Parse(xml,
+                                                                                              CustomIdentificationParser,
+                                                                                              e),
+                                                             OnException).RFIDId;
+
+                if (!UID.HasValue)
+                    throw new Exception("No UID/RFID identification found in request!");
+
 
                 AuthorizeStart = new AuthorizeStartRequest(
 
-                                     AuthorizeStartXML.MapValueOrFail(OICPNS.Authorization + "OperatorID",
-                                                                      Operator_Id.Parse),
+                                     AuthorizeStartXML.MapValueOrFail    (OICPNS.Authorization + "OperatorID",
+                                                                          Operator_Id.Parse),
 
-                                     _UID,
+                                     UID.Value,
 
                                      AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
                                                                           EVSE_Id.Parse),
@@ -277,6 +303,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                  );
 
+
+                if (CustomAuthorizeStartRequestParser != null)
+                    AuthorizeStart = CustomAuthorizeStartRequestParser(AuthorizeStartXML,
+                                                                       AuthorizeStart);
+
                 return true;
 
             }
@@ -294,17 +325,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStartText, out AuthorizeStart, OnException = null)
+        #region (static) TryParse(AuthorizeStartText, out AuthorizeStart, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize start request.
         /// </summary>
         /// <param name="AuthorizeStartText">The text to parse.</param>
         /// <param name="AuthorizeStart">The parsed authorize start request.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                     AuthorizeStartText,
-                                       out AuthorizeStartRequest  AuthorizeStart,
-                                       OnExceptionDelegate        OnException  = null)
+        public static Boolean TryParse(String                                       AuthorizeStartText,
+                                       out AuthorizeStartRequest                    AuthorizeStart,
+                                       CustomParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
+                                       CustomParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                       OnExceptionDelegate                          OnException                         = null)
         {
 
             try
@@ -312,6 +347,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (TryParse(XDocument.Parse(AuthorizeStartText).Root,
                              out AuthorizeStart,
+                             CustomAuthorizeStartRequestParser,
+                             CustomIdentificationParser,
                              OnException))
 
                     return true;
@@ -329,35 +366,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAuthorizeStartRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAuthorizeStartRequestSerializer">A delegate to customize the serialization of AuthorizeStart requests.</param>
+        public XElement ToXML(CustomSerializerDelegate<AuthorizeStartRequest> CustomAuthorizeStartRequestSerializer  = null,
+                              CustomSerializerDelegate<Identification>        CustomIdentificationSerializer         = null)
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
+        {
 
-                                 SessionId.       HasValue ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
-                                 PartnerSessionId.HasValue ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+            var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
 
-                                 new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.ToString()),
+                                       SessionId.       HasValue ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
+                                       PartnerSessionId.HasValue ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
 
-                                 EVSEId.HasValue
-                                     ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.    ToString())
-                                     : null,
+                                       new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.ToString()),
 
-                                 new XElement(OICPNS.Authorization + "Identification",
-                                     new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                        new XElement(OICPNS.CommonTypes + "UID",      UID.       ToString())
-                                     )
-                                 ),
+                                       EVSEId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.    ToString())
+                                           : null,
 
-                                 PartnerProductId.HasValue
-                                     ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
-                                     : null
+                                       Identification.FromRFIDId(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
+   
+                                       PartnerProductId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
+                                           : null
 
-                            );
+                                  );
+
+            return CustomAuthorizeStartRequestSerializer != null
+                       ? CustomAuthorizeStartRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

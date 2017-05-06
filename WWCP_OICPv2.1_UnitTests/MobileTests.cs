@@ -34,23 +34,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         #region TestMobileAuth(HubjectMobile, EVSEId, eMAIdWithPin)
 
-        public async Task TestMobileAuth(MobileClient   HubjectMobile,
-                                         EVSE_Id        EVSEId,
-                                         EVCOIdWithPIN  EVCOIdWithPIN)
+        public async Task TestMobileAuth(MobileClient          HubjectMobile,
+                                         EVSE_Id               EVSEId,
+                                         QRCodeIdentification  QRCodeIdentification)
         {
 
             var MobileAuthorizationStart = await HubjectMobile.
                                    MobileAuthorizeStart(EVSEId,
-                                                        EVCOIdWithPIN,
+                                                        QRCodeIdentification,
                                                         RequestTimeout: TimeSpan.FromSeconds(120));
 
 
 
             if (MobileAuthorizationStart.Content.AuthorizationStatus != AuthorizationStatusTypes.Authorized)
             {
-                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Code);
-                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Description);
-                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.AdditionalInfo);
+                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Value.Code);
+                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Value.Description);
+                Console.WriteLine(MobileAuthorizationStart.Content.StatusCode.Value.AdditionalInfo);
             }
 
             else

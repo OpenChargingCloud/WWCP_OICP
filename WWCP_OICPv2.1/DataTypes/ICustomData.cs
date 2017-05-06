@@ -27,6 +27,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public interface ICustomDataBuilder
     {
 
+        Boolean HasCustomData { get; }
+
         void AddCustomData(string Key, object Value);
 
         object GetCustomData(string Key);

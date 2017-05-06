@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An identification.
         /// </summary>
         [Optional]
-        public AuthorizationIdentification  Identification          { get; }
+        public Identification  Identification          { get; }
 
         /// <summary>
         /// An unqiue identification for the consumed charging product.
@@ -165,7 +165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   Session_Id                          SessionId,
                                   DateTime                            SessionStart,
                                   DateTime                            SessionEnd,
-                                  AuthorizationIdentification         Identification,
+                                  Identification         Identification,
                                   PartnerProduct_Id?                  PartnerProductId       = null,
                                   PartnerSession_Id?                  PartnerSessionId       = null,
                                   DateTime?                           ChargingStart          = null,
@@ -208,104 +208,119 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Documentation
 
+        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
+        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //
         // [...]
-        // <Authorization:eRoamingChargeDetailRecord>
-        // 
-        //    <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
-        // 
-        //    <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
-        // 
-        //    <Authorization:Identification>
-        //      <!--You have a CHOICE of the next 4 items at this level-->
-        // 
-        //      <CommonTypes:RFIDmifarefamilyIdentification>
-        //         <CommonTypes:UID>08152305</CommonTypes:UID>
-        //      </CommonTypes:RFIDmifarefamilyIdentification>
-        // 
-        //      <CommonTypes:QRCodeIdentification>
-        // 
-        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        // 
-        //         <!--You have a CHOICE of the next 2 items at this level-->
-        //         <CommonTypes:PIN>1234</CommonTypes:PIN>
-        // 
-        //         <CommonTypes:HashedPIN>
-        //            <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-        //            <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-        //            <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-        //         </CommonTypes:HashedPIN>
-        // 
-        //      </CommonTypes:QRCodeIdentification>
-        // 
-        //      <CommonTypes:PlugAndChargeIdentification>
-        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //      </CommonTypes:PlugAndChargeIdentification>
-        // 
-        //      <CommonTypes:RemoteIdentification>
-        //         <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //      </CommonTypes:RemoteIdentification>
-        // 
-        //    </Authorization:Identification>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
-        //    <!--Optional:-->
-        //    <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
-        // 
-        //    <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
-        //    <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
-        // 
-        //    <!--Optional: \d\.\d{0,3} -->
-        //    <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
-        //    <!--Optional: \d\.\d{0,3} -->
-        //    <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
-        //    <!--Optional:-->
-        //    <Authorization:MeterValueInBetween>
-        //      <!--1 or more repetitions: \d\.\d{0,3} -->
-        //      <Authorization:MeterValue>123.456</Authorization:MeterValue>
-        //      <Authorization:MeterValue>189.768</Authorization:MeterValue>
-        //      <Authorization:MeterValue>223.312</Authorization:MeterValue>
-        //      <Authorization:MeterValue>234.560</Authorization:MeterValue>
-        //      <Authorization:MeterValue>234.567</Authorization:MeterValue>
-        //    </Authorization:MeterValueInBetween>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
-        //    <!--Optional:-->
-        //    <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
-        // 
-        //    <!--Optional:-->
-        //    <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
-        //    <!--Optional:-->
-        //    <Authorization:HubProviderID>?</Authorization:HubProviderID>
-        // 
-        // </Authorization:eRoamingChargeDetailRecord>
+        //
+        //    <Authorization:eRoamingChargeDetailRecord>
+        //
+        //       <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
+        //
+        //       <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
+        //
+        //       <Authorization:Identification>
+        //         <!--You have a CHOICE of the next 4 items at this level-->
+        //
+        //         <CommonTypes:RFIDmifarefamilyIdentification>
+        //            <CommonTypes:UID>08152305</CommonTypes:UID>
+        //         </CommonTypes:RFIDmifarefamilyIdentification>
+        //
+        //         <CommonTypes:QRCodeIdentification>
+        //
+        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //
+        //            <!--You have a CHOICE of the next 2 items at this level-->
+        //            <CommonTypes:PIN>1234</CommonTypes:PIN>
+        //
+        //            <CommonTypes:HashedPIN>
+        //               <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //               <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //               <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+        //            </CommonTypes:HashedPIN>
+        //
+        //         </CommonTypes:QRCodeIdentification>
+        //
+        //         <CommonTypes:PlugAndChargeIdentification>
+        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //         </CommonTypes:PlugAndChargeIdentification>
+        //
+        //         <CommonTypes:RemoteIdentification>
+        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //         </CommonTypes:RemoteIdentification>
+        //
+        //       </Authorization:Identification>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
+        //       <!--Optional:-->
+        //       <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
+        //
+        //       <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
+        //       <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
+        //
+        //       <!--Optional: \d\.\d{0,3} -->
+        //       <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
+        //       <!--Optional: \d\.\d{0,3} -->
+        //       <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
+        //       <!--Optional:-->
+        //       <Authorization:MeterValueInBetween>
+        //         <!--1 or more repetitions: \d\.\d{0,3} -->
+        //         <Authorization:MeterValue>123.456</Authorization:MeterValue>
+        //         <Authorization:MeterValue>189.768</Authorization:MeterValue>
+        //         <Authorization:MeterValue>223.312</Authorization:MeterValue>
+        //         <Authorization:MeterValue>234.560</Authorization:MeterValue>
+        //         <Authorization:MeterValue>234.567</Authorization:MeterValue>
+        //       </Authorization:MeterValueInBetween>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
+        //       <!--Optional:-->
+        //       <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
+        //       <!--Optional:-->
+        //       <Authorization:HubProviderID>?</Authorization:HubProviderID>
+        //
+        //    </Authorization:eRoamingChargeDetailRecord>
+        //
         // [...]
+        //
+        // </soapenv:Envelope>
 
         #endregion
 
-        #region (static) Parse   (ChargeDetailRecordXML,  CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) Parse   (ChargeDetailRecordXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordXML">The XML to parse.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ChargeDetailRecord Parse(XElement                                  ChargeDetailRecordXML,
-                                               CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
-                                               OnExceptionDelegate                       OnException                     = null)
+                                               CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                               CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               OnExceptionDelegate                       OnException                      = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
 
-            if (TryParse(ChargeDetailRecordXML, out _ChargeDetailRecord, CustomChargeDetailRecordParser, OnException))
+            if (TryParse(ChargeDetailRecordXML,
+                         out _ChargeDetailRecord,
+                         CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _ChargeDetailRecord;
 
             return null;
@@ -314,22 +329,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (ChargeDetailRecordText, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) Parse   (ChargeDetailRecordText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static ChargeDetailRecord Parse(String                                  ChargeDetailRecordText,
-                                             CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
-                                             OnExceptionDelegate                       OnException                     = null)
+        public static ChargeDetailRecord Parse(String                                    ChargeDetailRecordText,
+                                               CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                               CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               OnExceptionDelegate                       OnException                      = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
 
-            if (TryParse(ChargeDetailRecordText, out _ChargeDetailRecord, CustomChargeDetailRecordParser, OnException))
+            if (TryParse(ChargeDetailRecordText,
+                         out _ChargeDetailRecord,
+                         CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
+                         OnException))
+
                 return _ChargeDetailRecord;
 
             return null;
@@ -338,19 +360,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(ChargeDetailRecordXML,  out ChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) TryParse(ChargeDetailRecordXML,  out ChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                  ChargeDetailRecordXML,
                                        out ChargeDetailRecord                    ChargeDetailRecord,
-                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
-                                       OnExceptionDelegate                       OnException                     = null)
+                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       OnExceptionDelegate                       OnException                      = null)
         {
 
             try
@@ -360,7 +384,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
 
                 var Identification = ChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-                                                                            AuthorizationIdentification.Parse,
+                                                                            (xml, e) => OICPv2_1.Identification.Parse(xml,
+                                                                                                                      CustomIdentificationParser,
+                                                                                                                      e),
                                                                             OnException);
 
                 ChargeDetailRecord = new ChargeDetailRecord(
@@ -434,19 +460,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                    ChargeDetailRecordText,
                                        out ChargeDetailRecord                    ChargeDetailRecord,
-                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser  = null,
-                                       OnExceptionDelegate                       OnException                     = null)
+                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       OnExceptionDelegate                       OnException                      = null)
         {
 
             try
@@ -455,6 +483,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (TryParse(XDocument.Parse(ChargeDetailRecordText).Root,
                              out ChargeDetailRecord,
                              CustomChargeDetailRecordParser,
+                             CustomIdentificationParser,
                              OnException))
 
                     return true;
@@ -472,15 +501,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null)
+        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord xml elements.</param>
-        public XElement ToXML(XName                                         XName                               = null,
-                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer  = null)
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(XName                                         XName                                = null,
+                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
+                              CustomSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 
         {
 
@@ -498,7 +529,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                           new XElement(OICPNS.Authorization + "EvseID",                  EVSEId.          ToString()),
 
-                          Identification.ToXML(OICPNS.Authorization),
+                          Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
 
                           ChargingStart.HasValue
                               ? new XElement(OICPNS.Authorization + "ChargingStart",     ChargingStart.Value.ToIso8601())
@@ -813,8 +844,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    HubOperatorId,
                    HubProviderId,
 
-                   Values != null
-                       ? Values.ToDictionary(kvp => kvp.Key,
+                   CustomValues != null
+                       ? CustomValues.ToDictionary(kvp => kvp.Key,
                                              kvp => kvp.Value)
                        : null);
 
@@ -858,7 +889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// An identification.
             /// </summary>
             [Optional]
-            public AuthorizationIdentification  Identification          { get; set; }
+            public Identification  Identification          { get; set; }
 
             /// <summary>
             /// An unqiue identification for the consumed charging product.
@@ -954,7 +985,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            Session_Id                   SessionId,
                            DateTime                     SessionStart,
                            DateTime                     SessionEnd,
-                           AuthorizationIdentification  Identification,
+                           Identification  Identification,
                            PartnerProduct_Id?           PartnerProductId       = null,
                            PartnerSession_Id?           PartnerSessionId       = null,
                            DateTime?                    ChargingStart          = null,

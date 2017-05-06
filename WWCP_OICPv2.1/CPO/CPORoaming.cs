@@ -742,17 +742,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushEVSEDataRequest>, Acknowledgement<PushEVSEDataRequest>.Builder> CustomPushEVSEDataResponseMapper
+        public CustomParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser
         {
 
             get
             {
-                return CPOClient.CustomPushEVSEDataResponseMapper;
+                return CPOClient.CustomPushEVSEDataParser;
             }
 
             set
             {
-                CPOClient.CustomPushEVSEDataResponseMapper = value;
+                CPOClient.CustomPushEVSEDataParser = value;
             }
 
         }
@@ -799,17 +799,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PushEVSEStatusRequest>, Acknowledgement<PushEVSEStatusRequest>.Builder> CustomPushEVSEStatusResponseMapper
+        public CustomParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser
         {
 
             get
             {
-                return CPOClient.CustomPushEVSEStatusResponseMapper;
+                return CPOClient.CustomPushEVSEStatusParser;
             }
 
             set
             {
-                CPOClient.CustomPushEVSEStatusResponseMapper = value;
+                CPOClient.CustomPushEVSEStatusParser = value;
             }
 
         }
@@ -857,20 +857,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper
-        {
+        //public CustomParserDelegate<AuthorizationStart> CustomAuthorizeStartResponseMapper
+        //{
 
-            get
-            {
-                return CPOClient.CustomAuthorizeStartResponseMapper;
-            }
+        //    get
+        //    {
+        //        return CPOClient.CustomAuthorizeStartRequestMapper
+        //    }
 
-            set
-            {
-                CPOClient.CustomAuthorizeStartResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        CPOClient.CustomAuthorizeStartResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -914,20 +914,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper
-        {
+        //public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper
+        //{
 
-            get
-            {
-                return CPOClient.CustomAuthorizeStopResponseMapper;
-            }
+        //    get
+        //    {
+        //        return CPOClient.CustomAuthorizeStopResponseMapper;
+        //    }
 
-            set
-            {
-                CPOClient.CustomAuthorizeStopResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        CPOClient.CustomAuthorizeStopResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -971,17 +971,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<SendChargeDetailRecordRequest>, Acknowledgement<SendChargeDetailRecordRequest>.Builder> CustomSendChargeDetailRecordResponseMapper
+        public CustomParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser
         {
 
             get
             {
-                return CPOClient.CustomSendChargeDetailRecordResponseMapper;
+                return CPOClient.CustomSendChargeDetailRecordParser;
             }
 
             set
             {
-                CPOClient.CustomSendChargeDetailRecordResponseMapper = value;
+                CPOClient.CustomSendChargeDetailRecordParser = value;
             }
 
         }
@@ -1029,20 +1029,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper
-        {
+        //public CustomMapperDelegate<Acknowledgement<PullAuthenticationDataRequest>, Acknowledgement<PullAuthenticationDataRequest>.Builder> CustomPullAuthenticationDataResponseMapper
+        //{
 
-            get
-            {
-                return CPOClient.CustomPullAuthenticationDataResponseMapper;
-            }
+        //    get
+        //    {
+        //        return CPOClient.CustomPullAuthenticationDataResponseMapper;
+        //    }
 
-            set
-            {
-                CPOClient.CustomPullAuthenticationDataResponseMapper = value;
-            }
+        //    set
+        //    {
+        //        CPOClient.CustomPullAuthenticationDataResponseMapper = value;
+        //    }
 
-        }
+        //}
 
         #endregion
 

@@ -208,18 +208,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomPullAuthenticationDataRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomPullAuthenticationDataRequestSerializer">A delegate to customize the serialization of PullAuthenticationData requests.</param>
+        public XElement ToXML(CustomSerializerDelegate<PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestSerializer = null)
+        {
 
-            => new XElement(OICPNS.AuthenticationData + "eRoamingPullAuthenticationData",
+            var XML = new XElement(OICPNS.AuthenticationData + "eRoamingPullAuthenticationData",
 
-                   new XElement(OICPNS.AuthenticationData + "OperatorID",  OperatorId.ToString())
+                          new XElement(OICPNS.AuthenticationData + "OperatorID", OperatorId.ToString())
 
-               );
+                      );
+
+            return CustomPullAuthenticationDataRequestSerializer != null
+                       ? CustomPullAuthenticationDataRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

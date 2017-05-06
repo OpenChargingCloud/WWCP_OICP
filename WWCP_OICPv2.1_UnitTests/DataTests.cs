@@ -130,7 +130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
                               var eRoamingEVSEData = task.Result.Content;
 
-                              if (eRoamingEVSEData.StatusCode.HasResult)
+                              if (eRoamingEVSEData.StatusCode.Value.HasResult)
                               {
 
                                   Console.WriteLine(eRoamingEVSEData.
@@ -145,9 +145,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                               }
                               else
                               {
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Code);
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Description);
-                                  Console.WriteLine(eRoamingEVSEData.StatusCode.AdditionalInfo);
+                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Code);
+                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Description);
+                                  Console.WriteLine(eRoamingEVSEData.StatusCode.Value.AdditionalInfo);
                               }
 
                           });
@@ -205,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
                               var eRoamingEVSEStatus = task.Result.Content;
 
-                              if (eRoamingEVSEStatus.StatusCode.HasResult)
+                              if (eRoamingEVSEStatus.StatusCode.Value.HasResult)
                               {
 
                                   Console.WriteLine(eRoamingEVSEStatus.
@@ -220,9 +220,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                               }
                               else
                               {
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Code);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Description);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.AdditionalInfo);
+                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.Code);
+                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.Description);
+                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.AdditionalInfo);
                               }
 
                           });
@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
                     var eRoamingEVSEStatusById = task.Result.Content;
 
-                    if (eRoamingEVSEStatusById.StatusCode.HasResult)
+                    if (eRoamingEVSEStatusById.StatusCode.Value.HasResult)
                     {
 
                         Console.WriteLine(eRoamingEVSEStatusById.
@@ -258,9 +258,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                     }
                     else
                     {
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Code);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Description);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.AdditionalInfo);
+                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.Code);
+                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.Description);
+                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.AdditionalInfo);
                     }
 
                 });
@@ -276,9 +276,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                 var result = await HubjectEMP.
                     PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
 
-                                               AuthorizationIdentification.FromRFIDId(UID.Parse("08152305")),
+                                               Identification.FromRFIDId(UID.Parse("08152305")),
 
-                                               AuthorizationIdentification.FromQRCodeIdentification
+                                               Identification.FromQRCodeIdentification
                                                    (EVCO_Id.Parse("DE-GDF-C123ABC56-X"),
                                                     "1234") //DE**GDF*CAETE4*3"), "1234") //
 
@@ -315,7 +315,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                            RequestTimeout: TimeSpan.FromSeconds(120));
 
 
-                if (result.Content.StatusCode.HasResult)
+                if (result.Content.StatusCode.HasResult())
                     Console.WriteLine(result.Content.
                                           ProviderAuthenticationDataRecords.
                                           Select(authdata => "Provider '" + authdata.ProviderId.ToString() +

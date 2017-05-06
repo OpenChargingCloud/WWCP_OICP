@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                 String                     SenderId,
                                                                 EventTracking_Id           EventTrackingId,
                                                                 EVSE_Id                    EVSEId,
-                                                                EVCOIdWithPIN              EVCOIdWithPIN,
+                                                                QRCodeIdentification              EVCOIdWithPIN,
                                                                 String                     ProductId,
                                                                 Boolean?                   GetNewSession,
                                                                 TimeSpan?                  RequestTimeout);
@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                 String                     SenderId,
                                                                 EventTracking_Id           EventTrackingId,
                                                                 EVSE_Id                    EVSEId,
-                                                                EVCOIdWithPIN              EVCOIdWithPIN,
+                                                                QRCodeIdentification              EVCOIdWithPIN,
                                                                 String                     ProductId,
                                                                 Boolean?                   GetNewSession,
                                                                 TimeSpan?                  RequestTimeout,

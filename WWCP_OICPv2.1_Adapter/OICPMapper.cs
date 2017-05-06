@@ -224,7 +224,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      EVSE.ChargingStation.PaymentOptions.SafeSelect(option => AsOICPPaymentOption(option)).Reduce(),
                                                      ValueAddedServices.None,
                                                      EVSE.ChargingStation.Accessibility.ToOICP(),
-                                                     EVSE.ChargingStation.HotlinePhoneNumber,
+                                                     EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
                                                      EVSE.ChargingStation.Description, // AdditionalInfo
                                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
                                                      EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
@@ -348,8 +348,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region ChargingFacilities
-
         #region AsChargingFacilities(WWCP.EVSE)
 
         /// <summary>
@@ -363,7 +361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region AC, 1 phase
 
-            if (EVSE.CurrentType == CurrentTypes.AC_OnePhase)
+            if (EVSE.CurrentTypes == CurrentTypes.AC_OnePhase)
             {
 
                 if (EVSE.AverageVoltage >= 100.0 &&
@@ -405,7 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region AC, 3 phases
 
-            else if (EVSE.CurrentType == CurrentTypes.AC_ThreePhases)
+            else if (EVSE.CurrentTypes == CurrentTypes.AC_ThreePhases)
             {
 
                 if (EVSE.AverageVoltage >= 380.0 &&
@@ -429,7 +427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region DC
 
-            else if (EVSE.CurrentType == CurrentTypes.DC)
+            else if (EVSE.CurrentTypes == CurrentTypes.DC)
             {
 
                 if (EVSE.MaxPower > 50000)
@@ -471,8 +469,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 110.0)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 10.0)
                             EVSE.MaxCurrent = 10.0f;
@@ -484,8 +482,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 110.0)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 16.0)
                             EVSE.MaxCurrent = 16.0f;
@@ -498,8 +496,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 110.0)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
                             EVSE.MaxCurrent = 32.0f;
@@ -513,8 +511,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 230.0)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 10.0)
                             EVSE.MaxCurrent = 10.0f;
@@ -526,8 +524,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 230.0)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 16.0)
                             EVSE.MaxCurrent = 16.0f;
@@ -539,8 +537,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 230.0)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
                             EVSE.MaxCurrent = 32.0f;
@@ -552,8 +550,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 230.0)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
 
                         if (EVSE.MaxCurrent < 32.0)
                             EVSE.MaxCurrent = 32.0f;
@@ -566,8 +564,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 400.0)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 16.0)
                             EVSE.MaxCurrent = 16.0f;
@@ -579,8 +577,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 400.0)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 32.0)
                             EVSE.MaxCurrent = 32.0f;
@@ -592,8 +590,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                         if (EVSE.AverageVoltage < 400.0)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
 
                         if (EVSE.MaxCurrent < 63.0)
                             EVSE.MaxCurrent = 63.0f;
@@ -604,8 +602,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.DCCharging_lessOrEquals20kW:
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.DC;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 20000.0)
                             EVSE.MaxPower = 20000.0f;
@@ -614,8 +612,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.DCCharging_lessOrEquals50kW:
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.DC;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 50000.0)
                             EVSE.MaxPower = 50000.0f;
@@ -624,8 +622,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.DCCharging_moreThan50kW:
 
-                        if (EVSE.CurrentType == CurrentTypes.Undefined)
-                            EVSE.CurrentType = CurrentTypes.DC;
+                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
+                            EVSE.CurrentTypes = CurrentTypes.DC;
 
                         if (EVSE.MaxPower < 50000.0)
                             EVSE.MaxPower = 50000.0f;
@@ -640,9 +638,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #endregion
-
-
 
         #region ToOICP(this AccessibilityType)
 
@@ -654,6 +649,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             switch (AccessibilityType)
+            {
+
+                case WWCP.AccessibilityTypes.Free_publicly_accessible:   return AccessibilityTypes.Free_publicly_accessible;
+                case WWCP.AccessibilityTypes.Restricted_access:          return AccessibilityTypes.Restricted_access;
+                case WWCP.AccessibilityTypes.Paying_publicly_accessible: return AccessibilityTypes.Paying_publicly_accessible;
+
+                default: return AccessibilityTypes.Unspecified;
+
+            }
+
+        }
+
+        /// <summary>
+        /// Maps a WWCP accessibility type to an OICP  accessibility type.
+        /// </summary>
+        /// <param name="AccessibilityType">A accessibility type.</param>
+        public static AccessibilityTypes ToOICP(this WWCP.AccessibilityTypes? AccessibilityType)
+        {
+
+            if (!AccessibilityType.HasValue)
+                return AccessibilityTypes.Free_publicly_accessible;
+
+            switch (AccessibilityType.Value)
             {
 
                 case WWCP.AccessibilityTypes.Free_publicly_accessible:   return AccessibilityTypes.Free_publicly_accessible;
@@ -935,7 +953,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ChargingModes
 
         #region AsWWCPChargingMode(ChargingMode)
 
@@ -1001,7 +1018,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         }
 
-        #endregion
+        public static ChargingModes AsOICPChargingMode(this WWCP.ChargingModes? ChargingMode)
+        {
+
+            if (!ChargingMode.HasValue)
+                return ChargingModes.Unspecified;
+
+            switch (ChargingMode)
+            {
+
+                case WWCP.ChargingModes.Mode_1:
+                    return ChargingModes.Mode_1;
+
+                case WWCP.ChargingModes.Mode_2:
+                    return ChargingModes.Mode_2;
+
+                case WWCP.ChargingModes.Mode_3:
+                    return ChargingModes.Mode_3;
+
+                case WWCP.ChargingModes.Mode_4:
+                    return ChargingModes.Mode_4;
+
+                case WWCP.ChargingModes.CHAdeMO:
+                    return ChargingModes.CHAdeMO;
+
+
+                default:
+                    return ChargingModes.Unspecified;
+
+            }
+
+        }
 
         public static ChargingModes AsOICPChargingMode(this IEnumerable<WWCP.ChargingModes> WWCPChargingModes)
         {
@@ -1310,23 +1357,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new identification for authorization based on the given WWCP AuthInfo.
         /// </summary>
         /// <param name="AuthInfo">A WWCP auth info.</param>
-        public static AuthorizationIdentification ToOICP(this AuthInfo AuthInfo)
+        public static Identification ToOICP(this AuthInfo AuthInfo)
         {
 
             if (AuthInfo.AuthToken                   != null)
-                return AuthorizationIdentification.FromRFIDId                     (AuthInfo.AuthToken.ToOICP());
+                return Identification.FromRFIDId                     (AuthInfo.AuthToken.ToOICP());
 
             if (AuthInfo.QRCodeIdentification        != null)
-                return AuthorizationIdentification.FromQRCodeIdentification       (new EVCOIdWithPIN(AuthInfo.QRCodeIdentification.eMAId.ToOICP(),
-                                                                                                     AuthInfo.QRCodeIdentification.PIN,
-                                                                                                     AuthInfo.QRCodeIdentification.Function.ToOICP(),
-                                                                                                     AuthInfo.QRCodeIdentification.Salt));
+                return Identification.FromQRCodeIdentification       (new QRCodeIdentification(AuthInfo.QRCodeIdentification.eMAId.ToOICP(),
+                                                                                               AuthInfo.QRCodeIdentification.PIN,
+                                                                                               AuthInfo.QRCodeIdentification.Function.ToOICP(),
+                                                                                               AuthInfo.QRCodeIdentification.Salt));
 
             if (AuthInfo.PlugAndChargeIdentification.HasValue)
-                return AuthorizationIdentification.FromPlugAndChargeIdentification(AuthInfo.PlugAndChargeIdentification.Value.ToOICP());
+                return Identification.FromPlugAndChargeIdentification(AuthInfo.PlugAndChargeIdentification.Value.ToOICP());
 
             if (AuthInfo.RemoteIdentification.       HasValue)
-                return AuthorizationIdentification.FromRemoteIdentification       (AuthInfo.RemoteIdentification.       Value.ToOICP());
+                return Identification.FromRemoteIdentification       (AuthInfo.RemoteIdentification.       Value.ToOICP());
 
             throw new ArgumentException("Invalid AuthInfo!", nameof(AuthInfo));
 

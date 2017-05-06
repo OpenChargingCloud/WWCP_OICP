@@ -97,16 +97,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(SendChargeDetailRecordXML,  CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) Parse   (SendChargeDetailRecordXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordXML">The XML to parse.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static SendChargeDetailRecordRequest Parse(XElement                                  SendChargeDetailRecordXML,
                                                           CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                                          CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
                                                           OnExceptionDelegate                       OnException                      = null,
 
                                                           DateTime?                                 Timestamp                        = null,
@@ -121,6 +122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (TryParse(SendChargeDetailRecordXML,
                          out _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -136,16 +138,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(SendChargeDetailRecordText, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) Parse   (SendChargeDetailRecordText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static SendChargeDetailRecordRequest Parse(String                                    SendChargeDetailRecordText,
                                                           CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                                          CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
                                                           OnExceptionDelegate                       OnException                      = null,
 
                                                           DateTime?                                 Timestamp                        = null,
@@ -160,6 +163,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (TryParse(SendChargeDetailRecordText,
                          out _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -175,18 +179,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(SendChargeDetailRecordXML,  out SendChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) TryParse(SendChargeDetailRecordXML,  out SendChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                  SendChargeDetailRecordXML,
                                        out SendChargeDetailRecordRequest         SendChargeDetailRecord,
                                        CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
                                        OnExceptionDelegate                       OnException                      = null,
 
                                        DateTime?                                 Timestamp                        = null,
@@ -202,6 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 SendChargeDetailRecord = new SendChargeDetailRecordRequest(
                                              ChargeDetailRecord.Parse(SendChargeDetailRecordXML,
                                                                       CustomChargeDetailRecordParser,
+                                                                      CustomIdentificationParser,
                                                                       OnException),
 
                                              Timestamp,
@@ -227,18 +233,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(SendChargeDetailRecordText, out SendChargeDetailRecord, CustomChargeDetailRecordParser = null, OnException = null)
+        #region (static) TryParse(SendChargeDetailRecordText, out SendChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord xml elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                    SendChargeDetailRecordText,
                                        out SendChargeDetailRecordRequest         SendChargeDetailRecord,
                                        CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
                                        OnExceptionDelegate                       OnException                      = null,
 
                                        DateTime?                                 Timestamp                        = null,
@@ -254,6 +261,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (TryParse(XDocument.Parse(SendChargeDetailRecordText).Root,
                              out SendChargeDetailRecord,
                              CustomChargeDetailRecordParser,
+                             CustomIdentificationParser,
                              OnException,
 
                              Timestamp,
@@ -276,18 +284,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null)
+        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord xml elements.</param>
-        public XElement ToXML(XName                                         XName                               = null,
-                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer  = null)
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to customize the serialization of SendChargeDetailRecord requests.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(XName                                         XName                                = null,
+                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
+                              CustomSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 
             => ChargeDetailRecord.ToXML(XName,
-                                        CustomChargeDetailRecordSerializer);
+                                        CustomChargeDetailRecordSerializer,
+                                        CustomIdentificationSerializer);
 
         #endregion
 

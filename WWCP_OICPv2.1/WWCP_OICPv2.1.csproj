@@ -64,10 +64,10 @@
     <Compile Include="DataTypes\ACustomData.cs" />
     <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\ResultCodes.cs" />
-    <Compile Include="DataTypes\Data\Address.cs" />
+    <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
-    <Compile Include="DataTypes\EVSEStatus.cs" />
+    <Compile Include="Messages\EMP\EVSEStatus.cs" />
     <Compile Include="DataTypes\ICustomData.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\HubOperator_Id.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Messages\ABuilder.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
-    <Compile Include="Messages\Common\PushEVSEDataResponse.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataResponse.cs" />
     <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
@@ -125,7 +125,7 @@
     <Compile Include="IO\OICPNS.cs" />
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
-    <Compile Include="MobileClient\MobileClient_XMLMethods.cs" />
+    <Compile Include="Messages\Mobile\MobileClient_XMLMethods.cs" />
     <Compile Include="DataTypes\Enums\ActionTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
     <Compile Include="DataTypes\Enums\PlugTypes.cs" />
@@ -133,9 +133,9 @@
     <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
-    <Compile Include="DataTypes\Data\AuthorizationIdentification.cs" />
+    <Compile Include="DataTypes\Complex\AuthorizationIdentification.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
-    <Compile Include="DataTypes\Data\EVCOIdWithPIN.cs" />
+    <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormats.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
@@ -150,9 +150,9 @@
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
     <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="DataTypes\EVSEData.cs" />
-    <Compile Include="DataTypes\EVSEStatusById.cs" />
-    <Compile Include="DataTypes\MobileAuthorizationStart.cs" />
-    <Compile Include="DataTypes\Data\StatusCode.cs" />
+    <Compile Include="Messages\EMP\EVSEStatusById.cs" />
+    <Compile Include="Messages\Mobile\MobileAuthorizationStart.cs" />
+    <Compile Include="DataTypes\Complex\StatusCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

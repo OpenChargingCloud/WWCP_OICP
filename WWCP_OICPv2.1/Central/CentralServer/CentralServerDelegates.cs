@@ -36,27 +36,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #region OnPushEvseData
 
-    /// <summary>
-    /// Add charge detail records.
-    /// </summary>
-    /// <param name="Timestamp">The timestamp of the request.</param>
-    /// <param name="Sender">The sender of the request.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
-    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    /// 
-    /// <param name="CDRInfos">An enumeration of charge detail records.</param>
-    /// 
-    /// <param name="QueryTimeout">An optional timeout for this request.</param>
-    public delegate Task<PushEVSEDataResponse>
+    ///// <summary>
+    ///// Add charge detail records.
+    ///// </summary>
+    ///// <param name="Timestamp">The timestamp of the request.</param>
+    ///// <param name="Sender">The sender of the request.</param>
+    ///// <param name="CancellationToken">A token to cancel this task.</param>
+    ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+    ///// 
+    ///// <param name="CDRInfos">An enumeration of charge detail records.</param>
+    ///// 
+    ///// <param name="QueryTimeout">An optional timeout for this request.</param>
+    //public delegate Task<PushEVSEDataResponse>
 
-        OnPushEvseDataDelegate(DateTime               Timestamp,
-                               CentralServer          Sender,
-                               CancellationToken      CancellationToken,
-                               EventTracking_Id       EventTrackingId,
+    //    OnPushEvseDataDelegate(DateTime               Timestamp,
+    //                           CentralServer          Sender,
+    //                           CancellationToken      CancellationToken,
+    //                           EventTracking_Id       EventTrackingId,
 
-                               //IEnumerable<CDRInfo>   CDRInfos,
+    //                           //IEnumerable<CDRInfo>   CDRInfos,
 
-                               TimeSpan?              QueryTimeout = null);
+    //                           TimeSpan?              QueryTimeout = null);
 
     #endregion
 

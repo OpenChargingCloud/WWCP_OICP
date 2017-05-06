@@ -79,6 +79,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeRemoteStartRequest(Provider_Id         ProviderId,
                                            EVSE_Id             EVSEId,
                                            EVCO_Id             EVCOId,
@@ -171,20 +176,47 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(AuthorizeRemoteStartRequestXML,  OnException = null)
+        #region (static) Parse   (AuthorizeRemoteStartRequestXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestXML">The XML to parse.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeRemoteStartRequest Parse(XElement             AuthorizeRemoteStartRequestXML,
-                                                        OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeRemoteStartRequest
+
+            Parse(XElement                                           AuthorizeRemoteStartRequestXML,
+                  CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                  CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                  OnExceptionDelegate                                OnException                               = null,
+
+                  DateTime?                                          Timestamp                                 = null,
+                  CancellationToken?                                 CancellationToken                         = null,
+                  EventTracking_Id                                   EventTrackingId                           = null,
+                  TimeSpan?                                          RequestTimeout                            = null)
+
         {
 
             AuthorizeRemoteStartRequest _AuthorizeRemoteStartRequest;
 
-            if (TryParse(AuthorizeRemoteStartRequestXML, out _AuthorizeRemoteStartRequest, OnException))
+            if (TryParse(AuthorizeRemoteStartRequestXML,
+                         out _AuthorizeRemoteStartRequest,
+                         CustomAuthorizeRemoteStartRequestParser,
+                         CustomIdentificationParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _AuthorizeRemoteStartRequest;
 
             return null;
@@ -193,20 +225,47 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(AuthorizeRemoteStartRequestText, OnException = null)
+        #region (static) Parse   (AuthorizeRemoteStartRequestText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeRemoteStartRequest Parse(String               AuthorizeRemoteStartRequestText,
-                                                        OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeRemoteStartRequest
+
+            Parse(String                                             AuthorizeRemoteStartRequestText,
+                  CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                  CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                  OnExceptionDelegate                                OnException                               = null,
+
+                  DateTime?                                          Timestamp                                 = null,
+                  CancellationToken?                                 CancellationToken                         = null,
+                  EventTracking_Id                                   EventTrackingId                           = null,
+                  TimeSpan?                                          RequestTimeout                            = null)
+
         {
 
             AuthorizeRemoteStartRequest _AuthorizeRemoteStartRequest;
 
-            if (TryParse(AuthorizeRemoteStartRequestText, out _AuthorizeRemoteStartRequest, OnException))
+            if (TryParse(AuthorizeRemoteStartRequestText,
+                         out _AuthorizeRemoteStartRequest,
+                         CustomAuthorizeRemoteStartRequestParser,
+                         CustomIdentificationParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _AuthorizeRemoteStartRequest;
 
             return null;
@@ -215,58 +274,54 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(AuthorizeRemoteStartRequestXML,  out AuthorizeRemoteStartRequest, OnException = null)
+        #region (static) TryParse(AuthorizeRemoteStartRequestXML,  out AuthorizeRemoteStartRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                         AuthorizeRemoteStartRequestXML,
-                                       out AuthorizeRemoteStartRequest  AuthorizeRemoteStartRequest,
-                                       OnExceptionDelegate              OnException         = null,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                           AuthorizeRemoteStartRequestXML,
+                                       out AuthorizeRemoteStartRequest                    AuthorizeRemoteStartRequest,
+                                       CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                                       CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                                       OnExceptionDelegate                                OnException                               = null,
 
-                                       DateTime?                        Timestamp           = null,
-                                       CancellationToken?               CancellationToken   = null,
-                                       EventTracking_Id                 EventTrackingId     = null,
-                                       TimeSpan?                        RequestTimeout      = null)
+                                       DateTime?                                          Timestamp                                 = null,
+                                       CancellationToken?                                 CancellationToken                         = null,
+                                       EventTracking_Id                                   EventTrackingId                           = null,
+                                       TimeSpan?                                          RequestTimeout                            = null)
+
         {
 
             try
             {
 
-                EVCO_Id? EVCOID = null;
-
-                var IdentificationXML = AuthorizeRemoteStartRequestXML.Element(OICPNS.Reservation + "Identification");
-                if (IdentificationXML != null)
+                if (AuthorizeRemoteStartRequestXML.Name != OICPNS.Reservation + "eRoamingAuthorizeRemoteStart")
                 {
-
-                    foreach (var XML in new XElement[] {
-                        IdentificationXML.Element(OICPNS.CommonTypes + "QRCodeIdentification"),
-                        IdentificationXML.Element(OICPNS.CommonTypes + "PlugAndChargeIdentification"),
-                        IdentificationXML.Element(OICPNS.CommonTypes + "RemoteIdentification")
-                    })
-                    {
-
-                        if (XML == null)
-                            continue;
-
-                        var EVCOIDXML = XML.Element(OICPNS.CommonTypes + "EVCOID");
-
-                        if (EVCOIDXML == null)
-                            continue;
-
-                        EVCOID = EVCO_Id.Parse(EVCOIDXML.Value);
-
-                    }
-
+                    AuthorizeRemoteStartRequest = null;
+                    return false;
                 }
-                else
-                    throw new Exception("Missing 'Identification'-XML tag!");
 
-                if (!EVCOID.HasValue)
-                    throw new Exception("Missing 'Identification/EVCOID'-XML tag!");
+                var _AuthorizationIdentification = AuthorizeRemoteStartRequestXML.MapElementOrFail(OICPNS.Reservation + "Identification",
+                                                                                                   (xml, e) => Identification.Parse(xml,
+                                                                                                                                    CustomIdentificationParser,
+                                                                                                                                    e),
+                                                                                                   OnException);
+
+                if (!(_AuthorizationIdentification.QRCodeIdentification.       HasValue ||
+                      _AuthorizationIdentification.PlugAndChargeIdentification.HasValue ||
+                      _AuthorizationIdentification.RemoteIdentification.       HasValue))
+
+                    throw new Exception("No EVCO identification found in request!");
 
 
                 AuthorizeRemoteStartRequest = new AuthorizeRemoteStartRequest(
@@ -277,8 +332,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                   AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
                                                                                                     EVSE_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
-                                                                                                    EVCO_Id.Parse),
+                                                  _AuthorizationIdentification.QRCodeIdentification.HasValue
+                                                          ? _AuthorizationIdentification.QRCodeIdentification.Value.EVCOId
+                                                          : _AuthorizationIdentification.PlugAndChargeIdentification.HasValue
+                                                                ? _AuthorizationIdentification.PlugAndChargeIdentification.Value
+                                                                : _AuthorizationIdentification.RemoteIdentification.HasValue
+                                                                      ? _AuthorizationIdentification.RemoteIdentification.Value
+                                                                      : default(EVCO_Id),
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Reservation + "SessionID",
                                                                                                     Session_Id.Parse),
@@ -295,6 +355,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                   RequestTimeout
 
                                               );
+
+                if (CustomAuthorizeRemoteStartRequestParser != null)
+                    AuthorizeRemoteStartRequest = CustomAuthorizeRemoteStartRequestParser(AuthorizeRemoteStartRequestXML,
+                                                                                          AuthorizeRemoteStartRequest);
 
                 return true;
 
@@ -313,17 +377,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(AuthorizeRemoteStartRequestText, out AuthorizeRemoteStartRequest, OnException = null)
+        #region (static) TryParse(AuthorizeRemoteStartRequestText, out AuthorizeRemoteStartRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                           AuthorizeRemoteStartRequestText,
-                                       out AuthorizeRemoteStartRequest  AuthorizeRemoteStartRequest,
-                                       OnExceptionDelegate              OnException  = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                             AuthorizeRemoteStartRequestText,
+                                       out AuthorizeRemoteStartRequest                    AuthorizeRemoteStartRequest,
+                                       CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                                       CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                                       OnExceptionDelegate                                OnException                               = null,
+
+                                       DateTime?                                          Timestamp                                 = null,
+                                       CancellationToken?                                 CancellationToken                         = null,
+                                       EventTracking_Id                                   EventTrackingId                           = null,
+                                       TimeSpan?                                          RequestTimeout                            = null)
+
         {
 
             try
@@ -331,7 +410,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(AuthorizeRemoteStartRequestText).Root,
                              out AuthorizeRemoteStartRequest,
-                             OnException))
+                             CustomAuthorizeRemoteStartRequestParser,
+                             CustomIdentificationParser,
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 
@@ -348,39 +434,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAuthorizeRemoteStartRequestSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomIdentificationSerializer">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomSerializerDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestSerializer   = null,
+                              CustomSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
+        {
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
+            var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
-                                SessionId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.       ToString())
-                                    : null,
+                                       SessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.       ToString())
+                                           : null,
 
-                                PartnerSessionId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                                    : null,
+                                       PartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                           : null,
 
-                                new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
-                                new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString()),
+                                       new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
+                                       new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString()),
 
-                                new XElement(OICPNS.Authorization + "Identification",
-                                    new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                        new XElement(OICPNS.CommonTypes + "EVCOID",
-                                            EVCOId.ToString()
-                                        )
-                                    )
-                                ),
+                                       Identification.FromRemoteIdentification(EVCOId).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
 
-                                PartnerProductId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
-                                    : null
+                                       PartnerProductId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
+                                           : null
 
-                            );
+                                   );
+
+            return CustomAuthorizeRemoteStartRequestSerializer != null
+                       ? CustomAuthorizeRemoteStartRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

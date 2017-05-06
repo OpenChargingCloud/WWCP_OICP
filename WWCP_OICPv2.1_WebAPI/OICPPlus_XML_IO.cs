@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                              new XElement(OICPNS.EVSEData + "OperatorID", group.Key.ToString()),
 
                                                                              RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).Name.Any()
-                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).Name.FirstText)
+                                                                                 ? new XElement(OICPNS.EVSEData + "OperatorName", RoamingNetwork.GetChargingStationOperatorById(group.Key.ToWWCP().Value).Name.FirstText())
                                                                                  : null,
 
                                                                              new XElement(OICPPlusNS.EVSEOperator + "DataLicenses",
@@ -181,7 +181,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                 new XElement(OICPNS.EVSEStatus + "OperatorID", group.Key.Id.ToString()),
 
                                                                 group.Key.Name.Any()
-                                                                    ? new XElement(OICPNS.EVSEStatus + "OperatorName", group.Key.Name.FirstText)
+                                                                    ? new XElement(OICPNS.EVSEStatus + "OperatorName", group.Key.Name.FirstText())
                                                                     : null,
 
                                                                 new XElement(OICPPlusNS.EVSEOperator + "DataLicenses",

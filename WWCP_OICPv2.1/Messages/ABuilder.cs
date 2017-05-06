@@ -25,14 +25,15 @@ using System.Collections.Generic;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public abstract class ABuilder
+    public abstract class ABuilder<T> : ACustomDataBuilder
     {
 
-        public Dictionary<String, Object>  CustomData   { get; set; }
+        public ABuilder(IReadOnlyDictionary<String, Object> CustomData = null)
 
-        public ABuilder()
+            : base(CustomData)
+
         {
-            this.CustomData = new Dictionary<String, Object>();
+
         }
 
     }

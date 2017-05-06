@@ -78,9 +78,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                    Timestamp,
                                                                    CancellationToken,
                                                                    EventTrackingId,
-                                                                   RequestTimeout.HasValue
-                                                                       ? RequestTimeout.Value
-                                                                       : IEMPClient.RequestTimeout));
+                                                                   RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -120,9 +118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                        Timestamp,
                                                                        CancellationToken,
                                                                        EventTrackingId,
-                                                                       RequestTimeout.HasValue
-                                                                           ? RequestTimeout.Value
-                                                                           : IEMPClient.RequestTimeout));
+                                                                       RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -156,14 +152,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                Timestamp,
                                                                                CancellationToken,
                                                                                EventTrackingId,
-                                                                               RequestTimeout.HasValue
-                                                                                   ? RequestTimeout.Value
-                                                                                   : IEMPClient.RequestTimeout));
+                                                                               RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
 
-        #region PushAuthenticationData(ProviderAuthenticationDataRecords, ProviderId, Action = fullLoad, ...)
+        #region PushAuthenticationData(ProviderAuthenticationData, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Create a new task pushing provider authentication data onto the OICP server.
+        /// </summary>
+        /// <param name="ProviderAuthenticationData">Provider authentication data.</param>
+        /// <param name="Action">An optional OICP action.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
+
+            PushAuthenticationData(this IEMPClient             IEMPClient,
+                                   ProviderAuthenticationData  ProviderAuthenticationData,
+                                   ActionTypes                 Action              = ActionTypes.fullLoad,
+
+                                   DateTime?                   Timestamp           = null,
+                                   CancellationToken?          CancellationToken   = null,
+                                   EventTracking_Id            EventTrackingId     = null,
+                                   TimeSpan?                   RequestTimeout      = null)
+
+
+                => IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(ProviderAuthenticationData,
+                                                                                       Action,
+
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout ?? IEMPClient.RequestTimeout));
+
+        #endregion
+
+        #region PushAuthenticationData(AuthorizationIdentifications, ProviderId, Action = fullLoad, ...)
 
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
@@ -179,7 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
             PushAuthenticationData(this IEMPClient                           IEMPClient,
-                                   IEnumerable<AuthorizationIdentification>  AuthorizationIdentifications,
+                                   IEnumerable<Identification>  AuthorizationIdentifications,
                                    Provider_Id                               ProviderId,
                                    ActionTypes                               Action              = ActionTypes.fullLoad,
 
@@ -189,16 +217,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                    TimeSpan?                                 RequestTimeout      = null)
 
 
-                => IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(AuthorizationIdentifications,
-                                                                                       ProviderId,
+                => IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(new ProviderAuthenticationData(ProviderId,
+                                                                                                                      AuthorizationIdentifications),
                                                                                        Action,
 
                                                                                        Timestamp,
                                                                                        CancellationToken,
                                                                                        EventTrackingId,
-                                                                                       RequestTimeout.HasValue
-                                                                                           ? RequestTimeout.Value
-                                                                                           : IEMPClient.RequestTimeout));
+                                                                                       RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -245,9 +271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                           Timestamp,
                                                                                           CancellationToken,
                                                                                           EventTrackingId,
-                                                                                          RequestTimeout.HasValue
-                                                                                              ? RequestTimeout.Value
-                                                                                              : IEMPClient.RequestTimeout));
+                                                                                          RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -286,9 +310,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                         Timestamp,
                                                                                         CancellationToken,
                                                                                         EventTrackingId,
-                                                                                        RequestTimeout.HasValue
-                                                                                            ? RequestTimeout.Value
-                                                                                            : IEMPClient.RequestTimeout));
+                                                                                        RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -334,9 +356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                           Timestamp,
                                                                           CancellationToken,
                                                                           EventTrackingId,
-                                                                          RequestTimeout.HasValue
-                                                                              ? RequestTimeout.Value
-                                                                              : IEMPClient.RequestTimeout));
+                                                                          RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -376,9 +396,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                         Timestamp,
                                                                         CancellationToken,
                                                                         EventTrackingId,
-                                                                        RequestTimeout.HasValue
-                                                                            ? RequestTimeout.Value
-                                                                            : IEMPClient.RequestTimeout));
+                                                                        RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -416,11 +434,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                        Timestamp,
                                                                                        CancellationToken,
                                                                                        EventTrackingId,
-                                                                                       RequestTimeout.HasValue
-                                                                                           ? RequestTimeout.Value
-                                                                                           : IEMPClient.RequestTimeout));
+                                                                                       RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
+
 
     }
 
