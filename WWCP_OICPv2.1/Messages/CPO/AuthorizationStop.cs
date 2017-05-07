@@ -672,32 +672,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAuthorizationStopSerializer = null, CustomStatusCodeSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAuthorizationStopSerializer">A delegate to customize the serialization of AuthorizationStop respones.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizationStop>  CustomAuthorizationStopSerializer   = null,
+                              CustomXMLSerializerDelegate<StatusCode>         CustomStatusCodeSerializer          = null)
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizationStop",
+        {
 
-                SessionId != null
-                    ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
-                    : null,
+            var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizationStop",
 
-                PartnerSessionId != null
-                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                    : null,
+                          SessionId != null
+                              ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
+                              : null,
 
-                ProviderId != null
-                    ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
-                    : null,
+                          PartnerSessionId != null
+                              ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                              : null,
 
-                new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
+                          ProviderId != null
+                              ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
+                              : null,
 
-                StatusCode.ToXML()
+                          new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
 
-            );
+                          StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer)
+
+                      );
+
+            return CustomAuthorizationStopSerializer != null
+                       ? CustomAuthorizationStopSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

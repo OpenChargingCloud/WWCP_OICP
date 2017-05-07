@@ -23,7 +23,6 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Threading;
 
 #endregion
 
@@ -42,32 +41,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The charging session identification.
         /// </summary>
-        public Session_Id?                               SessionId                           { get; }
+        public Session_Id?                  SessionId                           { get; }
 
         /// <summary>
         /// An optional partner charging session identification.
         /// </summary>
-        public PartnerSession_Id?                        PartnerSessionId                    { get; }
+        public PartnerSession_Id?           PartnerSessionId                    { get; }
 
         /// <summary>
         /// The e-mobility provider identification.
         /// </summary>
-        public Provider_Id?                              ProviderId                          { get; }
+        public Provider_Id?                 ProviderId                          { get; }
 
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusTypes                  AuthorizationStatus                 { get; }
+        public AuthorizationStatusTypes     AuthorizationStatus                 { get; }
 
         /// <summary>
         /// The authorization status code.
         /// </summary>
-        public StatusCode                                StatusCode                          { get; }
+        public StatusCode                   StatusCode                          { get; }
 
         /// <summary>
         /// An enumeration of authorization identifications.
         /// </summary>
-        public IEnumerable<Identification>               AuthorizationStopIdentifications    { get; }
+        public IEnumerable<Identification>  AuthorizationStopIdentifications    { get; }
 
         #endregion
 
@@ -537,7 +536,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (Request, AuthorizationStartXML, ..., OnException = null)
+        #region (static) Parse   (Request, AuthorizationStartXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP EVSE statuses request.
@@ -611,7 +610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(Request, AuthorizationStartXML,  out AuthorizationStart, ..., OnException = null, ...)
+        #region (static) TryParse(Request, AuthorizationStartXML,  out AuthorizationStart, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP EVSE statuses request.
@@ -740,14 +739,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML(CustomAuthorizationStartSerializer = null, CustomIdentificationSerializer = null)
+        #region ToXML(CustomAuthorizationStartSerializer = null, CustomStatusCodeSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="CustomAuthorizationStartSerializer">A delegate to customize the serialization of AuthorizationStart respones.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<AuthorizationStart>  CustomAuthorizationStartSerializer   = null,
+                              CustomXMLSerializerDelegate<StatusCode>          CustomStatusCodeSerializer           = null,
                               CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 
         {
@@ -769,7 +770,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
 
 
-                          StatusCode.ToXML(),
+                          StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer),
 
                           AuthorizationStopIdentifications.Any()
                               ? new XElement(OICPNS.Authorization + "AuthorizationStopIdentifications",
@@ -807,7 +808,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         {
             throw new NotImplementedException();
         }
-
 
 
         #region ToBuilder

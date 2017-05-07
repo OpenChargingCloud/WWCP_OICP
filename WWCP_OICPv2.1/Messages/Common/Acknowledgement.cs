@@ -665,28 +665,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
 
         /// <summary>
         /// Return a XML-representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
+                              CustomXMLSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
+        {
 
-            => new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+            var XML = new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
 
-                   new XElement(OICPNS.CommonTypes + "Result", Result),
+                          new XElement(OICPNS.CommonTypes + "Result", Result),
 
-                   StatusCode.ToXML(),
+                          StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer),
 
-                   SessionId != null
-                       ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
-                       : null,
+                          SessionId != null
+                              ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                              : null,
 
-                   PartnerSessionId != null
-                       ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
-                       : null
+                          PartnerSessionId != null
+                              ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
+                              : null
 
-             );
+                      );
+
+            return CustomAcknowledgementSerializer != null
+                       ? CustomAcknowledgementSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
