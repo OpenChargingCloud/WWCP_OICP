@@ -81,11 +81,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<CPO.AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   { get; set; }
-        public CustomParserDelegate<CPO.AuthorizeStopRequest>   CustomAuthorizeStopRequestParser    { get; set; }
-        public CustomParserDelegate<Identification>             CustomIdentificationParser          { get; set; }
+        public CustomXMLParserDelegate<CPO.AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   { get; set; }
+        public CustomXMLParserDelegate<CPO.AuthorizeStopRequest>   CustomAuthorizeStopRequestParser    { get; set; }
+        public CustomXMLParserDelegate<Identification>             CustomIdentificationParser          { get; set; }
 
-        public CustomParserDelegate<ChargeDetailRecord>         CustomChargeDetailRecordParser      { get; set; }
+        public CustomXMLParserDelegate<ChargeDetailRecord>         CustomChargeDetailRecordParser      { get; set; }
 
 
         public OnExceptionDelegate                              OnException                         { get; set; }

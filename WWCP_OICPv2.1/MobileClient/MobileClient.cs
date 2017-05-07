@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -28,16 +29,18 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Xml.Linq;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 {
 
     /// <summary>
     /// An OICP Mobile client.
     /// </summary>
-    public partial class MobileClient : ASOAPClient
+    public partial class MobileClient : ASOAPClient,
+                                        IMobileClient
     {
 
         #region Data
@@ -45,56 +48,125 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public new const           String  DefaultHTTPUserAgent  = "GraphDefined OICP " + Version.Number + " Mobile client";
+        public new const           String  DefaultHTTPUserAgent            = "GraphDefined OICP " + Version.Number + " Mobile client";
 
         /// <summary>
         /// The default remote TCP port to connect to.
         /// </summary>
-        public new static readonly IPPort  DefaultRemotePort     = IPPort.Parse(443);
+        public new static readonly IPPort  DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public const               String  DefaultURIPrefix      = "/ibis/ws";
+        public const               String  DefaultURIPrefix                = "/ibis/ws";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP MobileAuthorization requests.
+        /// </summary>
+        public     const           String  DefaultMobileAuthorizationURI   = "/eRoamingMobileAuthorization_V2.0";
 
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Mobile Authorization requests.
+        /// </summary>
+        public String              MobileAuthorizationURI    { get; }
+
+        /// <summary>
         /// The attached OICP Mobile client (HTTP/SOAP client) logger.
         /// </summary>
-        public MobileClientLogger Logger { get; }
+        public MobileClientLogger  Logger                    { get; }
+
+        #endregion
+
+        #region Custom request/response mappers
+
+        #region MobileAuthorizeStart(SOAP)RequestMapper
+
+        #region CustomMobileAuthorizeStartRequestMapper
+
+        private Func<MobileAuthorizeStartRequest, MobileAuthorizeStartRequest> _CustomMobileAuthorizeStartRequestMapper = _ => _;
+
+        public Func<MobileAuthorizeStartRequest, MobileAuthorizeStartRequest> CustomMobileAuthorizeStartRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileAuthorizeStartRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileAuthorizeStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomMobileAuthorizeStartSOAPRequestMapper
+
+        private Func<MobileAuthorizeStartRequest, XElement, XElement> _CustomMobileAuthorizeStartSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<MobileAuthorizeStartRequest, XElement, XElement> CustomMobileAuthorizeStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileAuthorizeStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileAuthorizeStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #endregion
+
+
+
+        public CustomXMLParserDelegate<StatusCode>                       CustomStatusCodeParser                         { get; set; }
+        public CustomXMLSerializerDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestSerializer    { get; set; }
+
 
         #endregion
 
         #region Events
 
-        #region OnMobileAuthorizeStartRequest/-Response
+        #region OnMobileAuthorizeStartRequest
 
         /// <summary>
-        /// An event fired whenever a MobileAuthorizeStart request will be send.
+        /// An event fired whenever a 'mobile authorize start' request will be send.
         /// </summary>
-        public event OnMobileAuthorizeStartRequestDelegate   OnMobileAuthorizeStartRequest;
+        public event OnMobileAuthorizeStartRequestHandler   OnMobileAuthorizeStartRequest;
 
         /// <summary>
-        /// An event fired whenever a MobileAuthorizeStart SOAP request will be send.
+        /// An event fired whenever a 'mobile authorize start' SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                 OnMobileAuthorizeStartSOAPRequest;
+        public event ClientRequestLogHandler                OnMobileAuthorizeStartSOAPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a MobileAuthorizeStart SOAP request had been received.
+        /// An event fired whenever a response to a 'mobile authorize start' SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                OnMobileAuthorizeStartSOAPResponse;
+        public event ClientResponseLogHandler               OnMobileAuthorizeStartSOAPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a MobileAuthorizeStart request had been received.
+        /// An event fired whenever a response to a 'mobile authorize start' request had been received.
         /// </summary>
-        public event OnMobileAuthorizeStartResponseDelegate  OnMobileAuthorizeStartResponse;
+        public event OnMobileAuthorizeStartResponseHandler  OnMobileAuthorizeStartResponse;
 
         #endregion
 
-        #region OnMobileRemoteStart/-Stop
+
+        #region OnMobileRemoteStart
 
         /// <summary>
         /// An event fired whenever a MobileRemoteStart request will be send.
@@ -116,6 +188,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public event OnMobileRemoteStartResponseDelegate  OnMobileRemoteStartResponse;
 
+        #endregion
+
+        #region OnMobileRemoteStop
 
         /// <summary>
         /// An event fired whenever a MobileRemoteStop request will be send.
@@ -166,6 +241,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             X509Certificate                      ClientCert                  = null,
                             String                               HTTPVirtualHost             = null,
                             String                               URIPrefix                   = DefaultURIPrefix,
+                            String                               MobileAuthorizationURI      = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                             TimeSpan?                            QueryTimeout                = null,
                             DNSClient                            DNSClient                   = null,
@@ -196,9 +272,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this.Logger = new MobileClientLogger(this,
-                                                 LoggingContext,
-                                                 LogfileCreator);
+
+            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+
+            this.Logger                  = new MobileClientLogger(this,
+                                                                  LoggingContext,
+                                                                  LogfileCreator);
 
         }
 
@@ -227,6 +306,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                             X509Certificate                      ClientCert                  = null,
                             String                               HTTPVirtualHost             = null,
                             String                               URIPrefix                   = DefaultURIPrefix,
+                            String                               MobileAuthorizationURI      = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent               = DefaultHTTPUserAgent,
                             TimeSpan?                            QueryTimeout                = null,
                             DNSClient                            DNSClient                   = null)
@@ -258,112 +338,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this.Logger = Logger;
+            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+
+            this.Logger                  = Logger;
 
         }
 
-
         #endregion
 
         #endregion
 
 
-        #region MobileAuthorizeStart(EVSEId, EVCOId, PIN, PartnerProductId = null, GetNewSession = null, ...)
-
-        /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
-        /// </summary>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOId">The eMA identification.</param>
-        /// <param name="PIN">The PIN of the eMA identification.</param>
-        /// <param name="PartnerProductId">The optional charging product identification.</param>
-        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<MobileAuthorizationStart>>
-
-            MobileAuthorizeStart(EVSE_Id              EVSEId,
-                                 EVCO_Id              EVCOId,
-                                 String               PIN,
-                                 String               PartnerProductId   = null,
-                                 Boolean?             GetNewSession      = null,
-
-                                 DateTime?            Timestamp          = null,
-                                 CancellationToken?   CancellationToken  = null,
-                                 EventTracking_Id     EventTrackingId    = null,
-                                 TimeSpan?            RequestTimeout     = null)
-
-
-            => await MobileAuthorizeStart(EVSEId,
-                                          new QRCodeIdentification(EVCOId, PIN),
-                                          PartnerProductId,
-                                          GetNewSession,
-
-                                          Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          RequestTimeout);
-
-
-        #endregion
-
-        #region MobileAuthorizeStart(EVSEId, EVCOId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, ...)
-
-        /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
-        /// </summary>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOId">The eMA identification.</param>
-        /// <param name="HashedPIN">The PIN of the eMA identification.</param>
-        /// <param name="Function">The crypto hash function of the eMA identification.</param>
-        /// <param name="Salt">The Salt of the eMA identification.</param>
-        /// <param name="PartnerProductId">The optional charging product identification.</param>
-        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<MobileAuthorizationStart>>
-
-            MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 EVCO_Id             EVCOId,
-                                 String              HashedPIN,
-                                 PINCrypto           Function,
-                                 String              Salt,
-                                 String              PartnerProductId   = null,
-                                 Boolean?            GetNewSession      = null,
-
-                                 DateTime?           Timestamp          = null,
-                                 CancellationToken?  CancellationToken  = null,
-                                 EventTracking_Id    EventTrackingId    = null,
-                                 TimeSpan?           RequestTimeout     = null)
-
-
-            => await MobileAuthorizeStart(EVSEId,
-                                          new QRCodeIdentification(EVCOId, HashedPIN, Function, Salt),
-                                          PartnerProductId,
-                                          GetNewSession,
-
-                                          Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          RequestTimeout);
-
-
-        #endregion
-
-        #region MobileAuthorizeStart(EVSEId, EVCOIdWithPIN, PartnerProductId = null, GetNewSession = null, ...)
+        #region MobileAuthorizeStart(Request)
 
         /// <summary>
         /// Create a new task sending a MobileAuthorizeStart request.
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
-        /// <param name="ProductId">The optional charging product identification.</param>
+        /// <param name="PartnerProductId">The optional charging product identification.</param>
         /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -372,46 +365,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
-            MobileAuthorizeStart(EVSE_Id             EVSEId,
-                                 QRCodeIdentification       EVCOIdWithPIN,
-                                 String              ProductId          = null,
-                                 Boolean?            GetNewSession      = null,
-
-                                 DateTime?           Timestamp          = null,
-                                 CancellationToken?  CancellationToken  = null,
-                                 EventTracking_Id    EventTrackingId    = null,
-                                 TimeSpan?           RequestTimeout     = null)
+            MobileAuthorizeStart(MobileAuthorizeStartRequest Request)
 
         {
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given MobileAuthorizeStart request must not be null!");
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            Request = _CustomMobileAuthorizeStartRequestMapper(Request);
 
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped MobileAuthorizeStart request must not be null!");
+
+
+            HTTPResponse<MobileAuthorizationStart> result = null;
 
             #endregion
 
             #region Send OnMobileAuthorizeStartRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnMobileAuthorizeStartRequest?.Invoke(DateTime.Now,
-                                                      Timestamp.Value,
-                                                      this,
-                                                      ClientId,
-                                                      EventTrackingId,
-                                                      EVSEId,
-                                                      EVCOIdWithPIN,
-                                                      ProductId,
-                                                      GetNewSession,
-                                                      RequestTimeout);
+                if (OnMobileAuthorizeStartRequest != null)
+                    await Task.WhenAll(OnMobileAuthorizeStartRequest.GetInvocationList().
+                                       Cast<OnMobileAuthorizeStartRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.EVSEId,
+                                                     Request.QRCodeIdentification,
+                                                     Request.PartnerProductId,
+                                                     Request.GetNewSession,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -425,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingMobileAuthorization_V2.0",
+                                                    URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -433,108 +426,123 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             {
 
-                var result = await _OICPClient.Query(MobileClient_XMLMethods.MobileAuthorizeStartXML(EVSEId,
-                                                                                                     EVCOIdWithPIN,
-                                                                                                     ProductId,
-                                                                                                     GetNewSession),
-                                                     "eRoamingMobileAuthorizeStart",
-                                                     RequestLogDelegate:   OnMobileAuthorizeStartSOAPRequest,
-                                                     ResponseLogDelegate:  OnMobileAuthorizeStartSOAPResponse,
-                                                     CancellationToken:    CancellationToken,
-                                                     EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                result = await _OICPClient.Query(_CustomMobileAuthorizeStartSOAPRequestMapper(Request,
+                                                                                              SOAP.Encapsulation(Request.ToXML(CustomMobileAuthorizeStartRequestSerializer))),
+                                                 "eRoamingMobileAuthorizeStart",
+                                                 RequestLogDelegate:   OnMobileAuthorizeStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnMobileAuthorizeStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(MobileAuthorizationStart.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          MobileAuthorizationStart.Parse(request,
+                                                                                                                                         xml,
+                                                                                                                                         CustomStatusCodeParser,
+                                                                                                                                         onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                         return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
-                                                                                                           new MobileAuthorizationStart(
-                                                                                                               StatusCodes.SystemError,
-                                                                                                               httpresponse.Content.ToString()
-                                                                                                           ),
-                                                                                                           IsFault: true);
+                                                     return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
+                                                                                                       new MobileAuthorizationStart(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           httpresponse.Content.ToString()
+                                                                                                       ),
+                                                                                                       IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnHTTPError
+                                                 #region OnHTTPError
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                         return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
-                                                                                                           new MobileAuthorizationStart(
-                                                                                                               StatusCodes.SystemError,
-                                                                                                               httpresponse.HTTPStatusCode.ToString(),
-                                                                                                               httpresponse.HTTPBody.      ToUTF8String()
-                                                                                                           ),
-                                                                                                           IsFault: true);
+                                                     return new HTTPResponse<MobileAuthorizationStart>(httpresponse,
+                                                                                                       new MobileAuthorizationStart(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           httpresponse.HTTPStatusCode.ToString(),
+                                                                                                           httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                       ),
+                                                                                                       IsFault: true);
 
-                                                     },
+                                                 },
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnException
+                                                 #region OnException
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                                                         SendException(timestamp, sender, exception);
+                                                     SendException(timestamp, sender, exception);
 
-                                                         return HTTPResponse<MobileAuthorizationStart>.ExceptionThrown(new MobileAuthorizationStart(
-                                                                                                                           StatusCodes.SystemError,
-                                                                                                                           exception.Message,
-                                                                                                                           exception.StackTrace
-                                                                                                                       ),
-                                                                                                                       Exception: exception);
+                                                     return HTTPResponse<MobileAuthorizationStart>.ExceptionThrown(new MobileAuthorizationStart(
+                                                                                                                       StatusCodes.SystemError,
+                                                                                                                       exception.Message,
+                                                                                                                       exception.StackTrace
+                                                                                                                   ),
+                                                                                                                   Exception: exception);
 
-                                                     }
+                                                 }
 
-                                                     #endregion
+                                                 #endregion
 
-                                                    );
-
-
-                #region Send OnMobileAuthorizeStartResponse event
-
-                try
-                {
-
-                    OnMobileAuthorizeStartResponse?.Invoke(DateTime.Now,
-                                                           Timestamp.Value,
-                                                           this,
-                                                           ClientId,
-                                                           EventTrackingId,
-                                                           EVSEId,
-                                                           EVCOIdWithPIN,
-                                                           ProductId,
-                                                           GetNewSession,
-                                                           RequestTimeout,
-                                                           result.Content,
-                                                           DateTime.Now - Timestamp.Value);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(MobileClient) + "." + nameof(OnMobileAuthorizeStartResponse));
-                }
-
-                #endregion
-
-
-                return result;
+                                                ).ConfigureAwait(false);
 
             }
+
+            if (result == null)
+                result = HTTPResponse<MobileAuthorizationStart>.ClientError(
+                             new MobileAuthorizationStart(
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnMobileAuthorizeStartResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                if (OnMobileAuthorizeStartResponse != null)
+                    await Task.WhenAll(OnMobileAuthorizeStartResponse.GetInvocationList().
+                                       Cast<OnMobileAuthorizeStartResponseHandler>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.EVSEId,
+                                                     Request.QRCodeIdentification,
+                                                     Request.PartnerProductId,
+                                                     Request.GetNewSession,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(MobileClient) + "." + nameof(OnMobileAuthorizeStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

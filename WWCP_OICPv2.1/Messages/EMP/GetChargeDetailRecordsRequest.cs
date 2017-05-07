@@ -107,20 +107,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(GetChargeDetailRecordsXML,  OnException = null)
+        #region (static) Parse(GetChargeDetailRecordsRequestXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP get charge detail records request.
         /// </summary>
-        /// <param name="GetChargeDetailRecordsXML">The XML to parse.</param>
+        /// <param name="GetChargeDetailRecordsRequestXML">The XML to parse.</param>
+        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static GetChargeDetailRecordsRequest Parse(XElement             GetChargeDetailRecordsXML,
-                                                          OnExceptionDelegate  OnException = null)
+        public static GetChargeDetailRecordsRequest Parse(XElement                                                GetChargeDetailRecordsRequestXML,
+                                                          CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
+                                                          OnExceptionDelegate                                     OnException                                 = null)
         {
 
             GetChargeDetailRecordsRequest _GetChargeDetailRecordsRequest;
 
-            if (TryParse(GetChargeDetailRecordsXML, out _GetChargeDetailRecordsRequest, OnException))
+            if (TryParse(GetChargeDetailRecordsRequestXML,
+                         out _GetChargeDetailRecordsRequest,
+                         CustomGetChargeDetailRecordsRequestParser,
+                         OnException))
+
                 return _GetChargeDetailRecordsRequest;
 
             return null;
@@ -129,20 +135,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(GetChargeDetailRecordsText, OnException = null)
+        #region (static) Parse(GetChargeDetailRecordsRequestText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP get charge detail records request.
         /// </summary>
-        /// <param name="GetChargeDetailRecordsText">The text to parse.</param>
+        /// <param name="GetChargeDetailRecordsRequestText">The text to parse.</param>
+        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static GetChargeDetailRecordsRequest Parse(String               GetChargeDetailRecordsText,
-                                                          OnExceptionDelegate  OnException = null)
+        public static GetChargeDetailRecordsRequest Parse(String                                                  GetChargeDetailRecordsRequestText,
+                                                          CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
+                                                          OnExceptionDelegate                                     OnException                                 = null)
         {
 
             GetChargeDetailRecordsRequest _GetChargeDetailRecordsRequest;
 
-            if (TryParse(GetChargeDetailRecordsText, out _GetChargeDetailRecordsRequest, OnException))
+            if (TryParse(GetChargeDetailRecordsRequestText,
+                         out _GetChargeDetailRecordsRequest,
+                         CustomGetChargeDetailRecordsRequestParser,
+                         OnException))
+
                 return _GetChargeDetailRecordsRequest;
 
             return null;
@@ -151,17 +163,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(GetChargeDetailRecordsXML,  out GetChargeDetailRecordsRequest, OnException = null)
+        #region (static) TryParse(GetChargeDetailRecordsRequestXML,  out GetChargeDetailRecordsRequest, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP get charge detail records request.
         /// </summary>
-        /// <param name="GetChargeDetailRecordsXML">The XML to parse.</param>
+        /// <param name="GetChargeDetailRecordsRequestXML">The XML to parse.</param>
         /// <param name="GetChargeDetailRecordsRequest">The parsed get charge detail records request.</param>
+        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                          GetChargeDetailRecordsXML,
-                                       out GetChargeDetailRecordsRequest GetChargeDetailRecordsRequest,
-                                       OnExceptionDelegate               OnException  = null)
+        public static Boolean TryParse(XElement                                                GetChargeDetailRecordsRequestXML,
+                                       out GetChargeDetailRecordsRequest                       GetChargeDetailRecordsRequest,
+                                       CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
+                                       OnExceptionDelegate                                     OnException                                 = null)
         {
 
             try
@@ -169,16 +183,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 GetChargeDetailRecordsRequest = new GetChargeDetailRecordsRequest(
 
-                                                    GetChargeDetailRecordsXML.MapValueOrFail(OICPNS.Authorization + "ProviderID",
-                                                                                             Provider_Id.Parse),
+                                                    GetChargeDetailRecordsRequestXML.MapValueOrFail(OICPNS.Authorization + "ProviderID",
+                                                                                                    Provider_Id.Parse),
 
-                                                    GetChargeDetailRecordsXML.MapValueOrFail(OICPNS.Authorization + "From",
-                                                                                             DateTime.Parse),
+                                                    GetChargeDetailRecordsRequestXML.MapValueOrFail(OICPNS.Authorization + "From",
+                                                                                                    DateTime.Parse),
 
-                                                    GetChargeDetailRecordsXML.MapValueOrFail(OICPNS.Authorization + "To",
-                                                                                             DateTime.Parse)
+                                                    GetChargeDetailRecordsRequestXML.MapValueOrFail(OICPNS.Authorization + "To",
+                                                                                                    DateTime.Parse)
 
                                                 );
+
+
+                if (CustomGetChargeDetailRecordsRequestParser != null)
+                    GetChargeDetailRecordsRequest = CustomGetChargeDetailRecordsRequestParser(GetChargeDetailRecordsRequestXML,
+                                                                                              GetChargeDetailRecordsRequest);
 
                 return true;
 
@@ -186,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsXML, e);
+                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsRequestXML, e);
 
                 GetChargeDetailRecordsRequest = null;
                 return false;
@@ -197,24 +216,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(GetChargeDetailRecordsText, out GetChargeDetailRecordsRequest, OnException = null)
+        #region (static) TryParse(GetChargeDetailRecordsRequestText, out GetChargeDetailRecordsRequest, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP get charge detail records request.
         /// </summary>
-        /// <param name="GetChargeDetailRecordsText">The text to parse.</param>
+        /// <param name="GetChargeDetailRecordsRequestText">The text to parse.</param>
         /// <param name="GetChargeDetailRecordsRequest">The parsed get charge detail records request.</param>
+        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                             GetChargeDetailRecordsText,
-                                       out GetChargeDetailRecordsRequest  GetChargeDetailRecordsRequest,
-                                       OnExceptionDelegate                OnException  = null)
+        public static Boolean TryParse(String                                                  GetChargeDetailRecordsRequestText,
+                                       out GetChargeDetailRecordsRequest                       GetChargeDetailRecordsRequest,
+                                       CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
+                                       OnExceptionDelegate                                     OnException                                 = null)
         {
 
             try
             {
 
-                if (TryParse(XDocument.Parse(GetChargeDetailRecordsText).Root,
+                if (TryParse(XDocument.Parse(GetChargeDetailRecordsRequestText).Root,
                              out GetChargeDetailRecordsRequest,
+                             CustomGetChargeDetailRecordsRequestParser,
                              OnException))
 
                     return true;
@@ -222,7 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsText, e);
+                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsRequestText, e);
             }
 
             GetChargeDetailRecordsRequest = null;
@@ -232,18 +254,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomGetChargeDetailRecordsRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomGetChargeDetailRecordsRequestSerializer">A delegate to customize the serialization of GetChargeDetailRecords requests.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestSerializer = null)
+        {
 
-            => new XElement(OICPNS.Authorization + "eRoamingGetChargeDetailRecords",
+            var XML = new XElement(OICPNS.Authorization + "eRoamingGetChargeDetailRecords",
                    new XElement(OICPNS.Authorization + "ProviderID",  ProviderId.ToString()),
                    new XElement(OICPNS.Authorization + "From",        From.      ToIso8601()),
                    new XElement(OICPNS.Authorization + "To",          To.        ToIso8601())
                );
+
+            return CustomGetChargeDetailRecordsRequestSerializer != null
+                       ? CustomGetChargeDetailRecordsRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

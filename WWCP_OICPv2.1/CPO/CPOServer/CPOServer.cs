@@ -91,12 +91,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
 
-        public CustomParserDelegate<Identification>                              CustomIdentificationParser                             { get; set; }
+        public CustomXMLParserDelegate<Identification>                              CustomIdentificationParser                             { get; set; }
 
-        public CustomParserDelegate<EMP.AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                { get; set; }
-        public CustomParserDelegate<EMP.AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                 { get; set; }
-        public CustomParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser     { get; set; }
-        public CustomParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser      { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                 { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser     { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser      { get; set; }
 
         public OnExceptionDelegate                         OnException { get; set; }
 

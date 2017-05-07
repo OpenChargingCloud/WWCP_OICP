@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Threading;
 
 #endregion
 
@@ -66,7 +67,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An enumeration of authorization identifications.
         /// </summary>
-        public IEnumerable<Identification>  AuthorizationStopIdentifications    { get; }
+        public IEnumerable<Identification>               AuthorizationStopIdentifications    { get; }
 
         #endregion
 
@@ -536,24 +537,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (Request, AuthorizationStartXML, CustomMapper = null, OnException = null)
+        #region (static) Parse   (Request, AuthorizationStartXML, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP authorization start result.
+        /// Parse the given XML representation of an OICP EVSE statuses request.
         /// </summary>
-        /// <param name="Request">An AuthorizeStartRequest request.</param>
+        /// <param name="Request">An PullAuthorizationStart request.</param>
         /// <param name="AuthorizationStartXML">The XML to parse.</param>
-        public static AuthorizationStart Parse(AuthorizeStartRequest                              Request,
-                                               XElement                                           AuthorizationStartXML,
-                                               CustomMapperDelegate<AuthorizationStart, Builder>  CustomMapper  = null,
-                                               OnExceptionDelegate                                OnException   = null)
-
-
+        /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static AuthorizationStart Parse(AuthorizeStartRequest                        Request,
+                                               XElement                                     AuthorizationStartXML,
+                                               CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
+                                               CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
             AuthorizationStart _AuthorizationStart;
 
-            if (TryParse(Request, AuthorizationStartXML, out _AuthorizationStart, CustomMapper, OnException))
+            if (TryParse(Request,
+                         AuthorizationStartXML,
+                         out _AuthorizationStart,
+                         CustomAuthorizationStartParser,
+                         CustomIdentificationParser,
+                         CustomStatusCodeParser,
+                         OnException))
+
                 return _AuthorizationStart;
 
             return null;
@@ -562,28 +574,72 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(Request, AuthorizationStartXML, out AuthorizationStart, CustomMapper = null, OnException = null)
+        #region (static) Parse   (Request, AuthorizationStartText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP authorization start result.
+        /// Parse the given text representation of an OICP EVSE statuses request.
         /// </summary>
-        /// <param name="Request">An AuthorizeStartRequest request.</param>
-        /// <param name="AuthorizationStartXML">The XML to parse.</param>
-        public static Boolean TryParse(AuthorizeStartRequest                              Request,
-                                       XElement                                           AuthorizationStartXML,
-                                       out AuthorizationStart                             AuthorizationStart,
-                                       CustomMapperDelegate<AuthorizationStart, Builder>  CustomMapper  = null,
-                                       OnExceptionDelegate                                OnException   = null)
-
-
+        /// <param name="Request">An PullAuthorizationStart request.</param>
+        /// <param name="AuthorizationStartText">The text to parse.</param>
+        /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static AuthorizationStart Parse(AuthorizeStartRequest                        Request,
+                                               String                                       AuthorizationStartText,
+                                               CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
+                                               CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
+            AuthorizationStart _AuthorizationStart;
+
+            if (TryParse(Request,
+                         AuthorizationStartText,
+                         out _AuthorizationStart,
+                         CustomAuthorizationStartParser,
+                         CustomIdentificationParser,
+                         CustomStatusCodeParser,
+                         OnException))
+
+                return _AuthorizationStart;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthorizationStartXML,  out AuthorizationStart, ..., OnException = null, ...)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP EVSE statuses request.
+        /// </summary>
+        /// <param name="Request">An PullAuthorizationStart request.</param>
+        /// <param name="AuthorizationStartXML">The XML to parse.</param>
+        /// <param name="AuthorizationStart">The parsed AuthorizationStart request.</param>
+        /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(AuthorizeStartRequest                        Request,
+                                       XElement                                     AuthorizationStartXML,
+                                       out AuthorizationStart                       AuthorizationStart,
+                                       CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
+        {
 
             try
             {
 
                 if (AuthorizationStartXML.Name != OICPNS.Authorization + "eRoamingAuthorizationStart")
-                    throw new ArgumentException("Invalid eRoamingAuthorizationStart XML");
+                {
+                    AuthorizationStart = null;
+                    return false;
+                }
 
                 AuthorizationStart = new AuthorizationStart(
 
@@ -593,7 +649,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                   s => (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), s)),
 
                                          AuthorizationStartXML.MapElement        (OICPNS.Authorization + "StatusCode",
-                                                                                  StatusCode.       Parse),
+                                                                                  (XML, e) => StatusCode.Parse(XML,
+                                                                                                               CustomStatusCodeParser,
+                                                                                                               e),
+                                                                                  OnException),
 
                                          AuthorizationStartXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                   Session_Id.       Parse),
@@ -605,13 +664,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                   Provider_Id.      Parse),
 
                                          AuthorizationStartXML.MapElements       (OICPNS.Authorization + "AuthorizationStopIdentifications",
-                                                                                  (XML, e) => Identification.Parse(XML))
+                                                                                  (XML, e) => Identification.Parse(XML,
+                                                                                                                   CustomIdentificationParser,
+                                                                                                                   e),
+                                                                                  OnException)
 
                                      );
 
 
-                if (CustomMapper != null)
-                    AuthorizationStart = CustomMapper(AuthorizationStartXML, AuthorizationStart.ToBuilder).ToImmutable;
+                if (CustomAuthorizationStartParser != null)
+                    AuthorizationStart = CustomAuthorizationStartParser(AuthorizationStartXML,
+                                                                        AuthorizationStart);
 
                 return true;
 
@@ -630,39 +693,97 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML()
+        #region (static) TryParse(Request, AuthorizationStartText, out AuthorizationStart, ..., OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP EVSE statuses request.
+        /// </summary>
+        /// <param name="Request">An PullAuthorizationStart request.</param>
+        /// <param name="AuthorizationStartText">The text to parse.</param>
+        /// <param name="AuthorizationStart">The parsed EVSE statuses request.</param>
+        /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(AuthorizeStartRequest                        Request,
+                                       String                                       AuthorizationStartText,
+                                       out AuthorizationStart                       AuthorizationStart,
+                                       CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
+        {
+
+            try
+            {
+
+                if (TryParse(Request,
+                             XDocument.Parse(AuthorizationStartText).Root,
+                             out AuthorizationStart,
+                             CustomAuthorizationStartParser,
+                             CustomIdentificationParser,
+                             CustomStatusCodeParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, AuthorizationStartText, e);
+            }
+
+            AuthorizationStart = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(CustomAuthorizationStartSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAuthorizationStartSerializer">A delegate to customize the serialization of AuthorizationStart respones.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizationStart>  CustomAuthorizationStartSerializer   = null,
+                              CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
+        {
 
-                SessionId != null
-                    ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
-                    : null,
+            var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizationStart",
 
-                PartnerSessionId != null
-                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                    : null,
+                          SessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
+                              : null,
 
-                ProviderId != null
-                    ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
-                    : null,
+                          PartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                              : null,
 
-                new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
+                          ProviderId.HasValue
+                              ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
+                              : null,
+
+                          new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
 
 
-                StatusCode.ToXML(),
+                          StatusCode.ToXML(),
 
-                AuthorizationStopIdentifications.Any()
-                    ? new XElement(OICPNS.Authorization + "AuthorizationStopIdentifications",
-                          AuthorizationStopIdentifications.Select(identification => new XElement(OICPNS.Authorization + "Identification", identification.ToXML()))
-                      )
-                    : null
+                          AuthorizationStopIdentifications.Any()
+                              ? new XElement(OICPNS.Authorization + "AuthorizationStopIdentifications",
+                                    AuthorizationStopIdentifications.Select(identification => identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer))
+                                )
+                              : null
 
-            );
+                      );
+
+            return CustomAuthorizationStartSerializer != null
+                       ? CustomAuthorizationStartSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
@@ -675,17 +796,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public override String ToString()
 
             => String.Concat(AuthorizationStatus,
-
-                             StatusCode != null
-                                 ? "; " + StatusCode.Code +
-
-                                       (StatusCode.Description.IsNotNullOrEmpty()
-                                            ? " / " + StatusCode.Description
-                                            : "") +
-
-                                       (StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                            ? " / " + StatusCode.AdditionalInfo
-                                            : "")
+                             StatusCode.HasResult
+                                 ? ", " + StatusCode
                                  : "");
 
         #endregion

@@ -135,8 +135,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ProviderAuthenticationData Parse(XElement                                          ProviderAuthenticationDataXML,
-                                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                        OnExceptionDelegate                               OnException                               = null)
         {
 
@@ -166,8 +166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ProviderAuthenticationData Parse(String                                            ProviderAuthenticationDataText,
-                                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                        OnExceptionDelegate                               OnException = null)
         {
 
@@ -199,8 +199,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                          ProviderAuthenticationDataXML,
                                        out ProviderAuthenticationData                    ProviderAuthenticationData,
-                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                        OnExceptionDelegate                               OnException                               = null)
         {
 
@@ -259,8 +259,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                            ProviderAuthenticationDataText,
                                        out ProviderAuthenticationData                    ProviderAuthenticationData,
-                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                        OnExceptionDelegate                               OnException                               = null)
         {
 
@@ -295,8 +295,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom ProviderAuthenticationData XML elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<ProviderAuthenticationData> CustomProviderAuthenticationDataSerializer   = null,
-                              CustomSerializerDelegate<Identification>             CustomIdentificationSerializer               = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<ProviderAuthenticationData> CustomProviderAuthenticationDataSerializer   = null,
+                              CustomXMLSerializerDelegate<Identification>             CustomIdentificationSerializer               = null)
         {
 
             var XML = new XElement(OICPNS.AuthenticationData + "ProviderAuthenticationData",

@@ -25,7 +25,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 {
 
     /// <summary>
@@ -244,7 +244,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Parse the givem XML as an OICP Authorization Start response.
         /// </summary>
         /// <param name="MobileAuthorizationStartXML">A XML representation of an OICP Authorization Start response.</param>
-        public static MobileAuthorizationStart Parse(XElement MobileAuthorizationStartXML)
+        public static MobileAuthorizationStart Parse(MobileAuthorizeStartRequest          Request,
+                                                     XElement                             MobileAuthorizationStartXML,
+                                                     CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                                     OnExceptionDelegate                  OnException              = null)
         {
 
             if (MobileAuthorizationStartXML.Name != OICPNS.MobileAuthorization + "eRoamingMobileAuthorizationStart")
@@ -263,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                 ChargingStationName:  ChargingStationName,
                                                 Address:              MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "Address",    XML_IO.ParseAddressXML, null),
                                                 SessionId:            MobileAuthorizationStartXML.MapValueOrNullable(OICPNS.MobileAuthorization + "SessionID",  Session_Id.Parse),
-                                                StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", OICPv2_1.StatusCode.Parse,             null),
+                                                StatusCode:           MobileAuthorizationStartXML.MapElement        (OICPNS.MobileAuthorization + "StatusCode", (xml, e) => OICPv2_1.StatusCode.Parse(xml, CustomStatusCodeParser, e), OnException),
                                                 TermsOfUse:           MobileAuthorizationStartXML.MapValueOrDefault (OICPNS.MobileAuthorization + "TermsOfUse", s => new I18NString(Languages.deu, s), null),
                                                 AdditionalInfo:       AdditionalInfo);
 

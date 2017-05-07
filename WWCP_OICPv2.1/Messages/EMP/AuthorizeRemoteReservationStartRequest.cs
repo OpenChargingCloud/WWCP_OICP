@@ -182,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given XML representation of an OICP authorize remote reservation start request.
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartXML">The XML to parse.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteReservationStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -193,8 +193,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteReservationStartRequest
 
             Parse(XElement                                                      AuthorizeRemoteReservationStartXML,
-                  CustomParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
-                  CustomParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                  CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
                   OnExceptionDelegate                                           OnException                                          = null,
 
                   DateTime?                                                     Timestamp                                            = null,
@@ -231,7 +231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given text representation of an OICP authorize remote reservation start request.
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartText">The text to parse.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteReservationStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -242,8 +242,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteReservationStartRequest
 
             Parse(String                                                        AuthorizeRemoteReservationStartText,
-                  CustomParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
-                  CustomParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                  CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
                   OnExceptionDelegate                                           OnException                                          = null,
 
                   DateTime?                                                     Timestamp                                            = null,
@@ -281,7 +281,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteReservationStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -291,8 +291,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                                      AuthorizeRemoteReservationStartXML,
                                        out AuthorizeRemoteReservationStartRequest                    AuthorizeRemoteReservationStart,
-                                       CustomParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
-                                       CustomParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
                                        OnExceptionDelegate                                           OnException                                          = null,
 
                                        DateTime?                                                     Timestamp                                            = null,
@@ -384,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartText">The text to parse.</param>
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteReservationStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -394,8 +394,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                                        AuthorizeRemoteReservationStartText,
                                        out AuthorizeRemoteReservationStartRequest                    AuthorizeRemoteReservationStart,
-                                       CustomParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
-                                       CustomParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
                                        OnExceptionDelegate                                           OnException                                          = null,
 
                                        DateTime?                                                     Timestamp                                            = null,
@@ -441,8 +441,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestSerializer">A delegate to customize the serialization of AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer   = null,
-                              CustomSerializerDelegate<Identification>                          CustomIdentificationSerializer                           = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer   = null,
+                              CustomXMLSerializerDelegate<Identification>                          CustomIdentificationSerializer                           = null)
 
         {
 

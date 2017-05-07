@@ -106,6 +106,9 @@
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Messages\IResponse.cs" />
+    <Compile Include="Messages\Mobile\MobileAuthorizeStartRequest.cs" />
+    <Compile Include="MobileClient\IMobileClientExtentions.cs" />
+    <Compile Include="MobileClient\IMobileClient.cs" />
     <Compile Include="MobileClient\MobileClientDelegates.cs" />
     <Compile Include="MobileClient\MobileClientLogger.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />

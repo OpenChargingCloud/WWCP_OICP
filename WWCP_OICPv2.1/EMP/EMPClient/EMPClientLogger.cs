@@ -182,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region PullEVSEStatus
 
-                RegisterEvent("PullEVSEStatusRequest",
+                RegisterEvent("AuthorizeStartRequest",
                               handler => EMPClient.OnPullEVSEStatusSOAPRequest += handler,
                               handler => EMPClient.OnPullEVSEStatusSOAPRequest -= handler,
                               "PullEVSEStatus", "Requests", "All").

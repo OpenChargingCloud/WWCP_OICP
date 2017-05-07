@@ -74,7 +74,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         // Towards CPOs
 
-        #region CustomAuthorizeRemoteReservationStart(SOAP)RequestMapper
+        #region CustomAuthorizeRemoteReservationStart...
 
         #region CustomAuthorizeRemoteReservationStartRequestMapper
 
@@ -120,11 +120,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>  CustomAuthorizeRemoteReservationStartParser               { get; set; }
+
+        public CustomXMLSerializerDelegate<EMP.AuthorizeRemoteReservationStartRequest>               CustomAuthorizeRemoteReservationStartRequestSerializer    { get; set; }
 
         #endregion
 
-        #region CustomAuthorizeRemoteReservationStop (SOAP)RequestMapper
+        #region CustomAuthorizeRemoteReservationStop...
 
         #region CustomAuthorizeRemoteReservationStopRequestMapper
 
@@ -170,12 +172,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>   CustomAuthorizeRemoteReservationStopParser                { get; set; }
+
+        public CustomXMLSerializerDelegate<EMP.AuthorizeRemoteReservationStopRequest>                CustomAuthorizeRemoteReservationStopRequestSerializer     { get; set; }
 
         #endregion
 
-
-        #region CustomAuthorizeRemoteStart(SOAP)RequestMapper
+        #region CustomAuthorizeRemoteStart...
 
         #region CustomAuthorizeRemoteStartRequestMapper
 
@@ -221,11 +224,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<EMP.AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>             CustomAuthorizeRemoteStartParser                          { get; set; }
+
+        public CustomXMLSerializerDelegate<EMP.AuthorizeRemoteStartRequest>                          CustomAuthorizeRemoteStartRequestSerializer               { get; set; }
 
         #endregion
 
-        #region CustomAuthorizeRemoteStop (SOAP)RequestMapper
+        #region CustomAuthorizeRemoteStop...
 
         #region CustomAuthorizeRemoteStopRequestMapper
 
@@ -271,7 +276,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<EMP.AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser   { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>              CustomAuthorizeRemoteStopParser                           { get; set; }
+
+        public CustomXMLSerializerDelegate<EMP.AuthorizeRemoteStopRequest>                           CustomAuthorizeRemoteStopRequestSerializer                { get; set; }
 
         #endregion
 
@@ -324,7 +331,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        //public CustomMapperDelegate<CPO.AuthorizationStart, CPO.AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper { get; set; }
+        public CustomXMLParserDelegate<CPO.AuthorizationStart>                                       CustomAuthorizeStartResponseParser                        { get; set; }
+
+        public CustomXMLSerializerDelegate<CPO.AuthorizeStartRequest>                                CustomAuthorizeStartRequestSerializer                     { get; set; }
 
         #endregion
 
@@ -374,7 +383,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        //public CustomMapperDelegate<CPO.AuthorizationStop, CPO.AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper { get; set; }
+        public CustomXMLParserDelegate<CPO.AuthorizationStop>                                        CustomAuthorizeStopParser                                 { get; set; }
+
+        public CustomXMLSerializerDelegate<CPO.AuthorizeStopRequest>                                 CustomAuthorizeStopRequestSerializer                      { get; set; }
 
         #endregion
 
@@ -424,13 +435,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<CPO.SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<CPO.SendChargeDetailRecordRequest>>           CustomSendChargeDetailRecordParser                        { get; set; }
+
+        public CustomXMLSerializerDelegate<ChargeDetailRecord>                                       CustomChargeDetailRecordSerializer                        { get; set; }
 
         #endregion
 
+        public CustomXMLSerializerDelegate<Identification>                                           CustomIdentificationSerializer                            { get; set; }
 
-        public CustomSerializerDelegate<EMP.AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer   { get; set; }
-        public CustomSerializerDelegate<Identification>                              CustomIdentificationSerializer                           { get; set; }
+        public CustomXMLParserDelegate<Identification>                                               CustomIdentificationParser                                { get; set; }
+
+
+
+        public CustomXMLParserDelegate<StatusCode>         CustomStatusCodeParser       { get; set; }
 
         #endregion
 
@@ -824,6 +841,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                                                                           Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.Parse(request,
                                                                                                                                                                             xml,
                                                                                                                                                                             CustomAuthorizeRemoteReservationStartParser,
+                                                                                                                                                                            CustomStatusCodeParser,
                                                                                                                                                                             onexception)),
 
                                                  #endregion
@@ -1023,7 +1041,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             {
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStopSOAPRequestMapper(Request,
-                                                                                                        SOAP.Encapsulation(Request.ToXML())),
+                                                                                                        SOAP.Encapsulation(Request.ToXML(CustomAuthorizeRemoteReservationStopRequestSerializer))),
                                                  "eRoamingAuthorizeRemoteReservationStop",
                                                  RequestLogDelegate:   OnAuthorizeRemoteReservationStopSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
@@ -1038,6 +1056,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                                                                           Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.Parse(request,
                                                                                                                                                                            xml,
                                                                                                                                                                            CustomAuthorizeRemoteReservationStopParser,
+                                                                                                                                                                           CustomStatusCodeParser,
                                                                                                                                                                            onexception)),
 
                                                  #endregion
@@ -1166,7 +1185,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-
         #region AuthorizeRemoteStart(Request)
 
         /// <summary>
@@ -1245,10 +1263,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteStartSOAPRequestMapper(Request,
-                                                                                              SOAP.Encapsulation(Request.ToXML())),
+                                                                                              SOAP.Encapsulation(Request.ToXML(CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                                                               CustomIdentificationSerializer))),
                                                  "AuthorizeRemoteStart",
-                                                 QueryTimeout: RequestTimeout ?? this.RequestTimeout,
-                                                 HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1257,6 +1279,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                                                                           Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Parse(request,
                                                                                                                                                                  xml,
                                                                                                                                                                  CustomAuthorizeRemoteStartParser,
+                                                                                                                                                                 CustomStatusCodeParser,
                                                                                                                                                                  onexception)),
 
                                                  #endregion
@@ -1460,10 +1483,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             {
 
                 result = await _OICPClient.Query(_CustomAuthorizeRemoteStopSOAPRequestMapper(Request,
-                                                                                             SOAP.Encapsulation(Request.ToXML())),
+                                                                                             SOAP.Encapsulation(Request.ToXML(CustomAuthorizeRemoteStopRequestSerializer))),
                                                  "AuthorizeRemoteStop",
-                                                 QueryTimeout: RequestTimeout ?? this.RequestTimeout,
-                                                 HTTPRequestBuilder: req => { req.FakeURIPrefix = ""; },
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStopSOAPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1472,6 +1498,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                                                                           Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Parse(request,
                                                                                                                                                                 xml,
                                                                                                                                                                 CustomAuthorizeRemoteStopParser,
+                                                                                                                                                                CustomStatusCodeParser,
                                                                                                                                                                 onexception)),
 
                                                  #endregion
@@ -1673,7 +1700,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request,
+                                                                                        SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStartRequestSerializer,
+                                                                                                                         CustomIdentificationSerializer))),
                                                  "eRoamingAuthorizeStart",
                                                  RequestLogDelegate:   OnAuthorizeStartSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
@@ -1686,7 +1715,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
                                                                                                       (request, xml, onexception) => CPO.AuthorizationStart.Parse(request,
                                                                                                                                                                   xml,
-                                                                                                                                                                  CustomAuthorizeStartResponseMapper,
+                                                                                                                                                                  CustomAuthorizeStartResponseParser,
+                                                                                                                                                                  CustomIdentificationParser,
+                                                                                                                                                                  CustomStatusCodeParser,
                                                                                                                                                                   onexception)),
 
                                                  #endregion
@@ -1865,7 +1896,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             {
 
                 result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request,
-                                                                                       SOAP.Encapsulation(Request.ToXML())),
+                                                                                       SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStopRequestSerializer,
+                                                                                                                        CustomIdentificationSerializer))),
                                                  "eRoamingAuthorizeStop",
                                                  RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
@@ -1878,7 +1910,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
                                                                                                       (request, xml, onexception) => CPO.AuthorizationStop.Parse(request,
                                                                                                                                                                  xml,
-                                                                                                                                                                 CustomAuthorizeStopResponseMapper,
+                                                                                                                                                                 CustomAuthorizeStopParser,
+                                                                                                                                                                 CustomStatusCodeParser,
                                                                                                                                                                  onexception)),
 
                                                  #endregion
@@ -2049,7 +2082,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request,
+                                                                                                SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomChargeDetailRecordSerializer,
+                                                                                                                                 CustomIdentificationSerializer:     CustomIdentificationSerializer))),
                                                  "eRoamingChargeDetailRecord",
                                                  RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
@@ -2064,6 +2099,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                                                                       Acknowledgement<CPO.SendChargeDetailRecordRequest>.Parse(request,
                                                                                                                                                                xml,
                                                                                                                                                                CustomSendChargeDetailRecordParser,
+                                                                                                                                                               CustomStatusCodeParser,
                                                                                                                                                                onexception)),
 
                                                  #endregion

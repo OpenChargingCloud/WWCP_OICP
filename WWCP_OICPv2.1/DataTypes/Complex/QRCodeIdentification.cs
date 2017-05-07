@@ -197,7 +197,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                if (!(QRCodeIdentificationXML.Name == OICPNS.CommonTypes + "QRCodeIdentification"))
+                if (!(QRCodeIdentificationXML.Name == OICPNS.CommonTypes         + "QRCodeIdentification") &&
+                     (QRCodeIdentificationXML.Name == OICPNS.MobileAuthorization + "QRCodeIdentification"))
                 {
                     QRCodeIdentification = default(QRCodeIdentification);
                     return false;

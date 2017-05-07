@@ -180,34 +180,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 //#endregion
 
-                //#region PullEVSEStatus/-ById
+                //#region PullAuthorizationStart/-ById
 
-                //RegisterEvent("PullEVSEStatusRequest",
-                //              handler => CentralClient.OnPullEVSEStatusSOAPRequest += handler,
-                //              handler => CentralClient.OnPullEVSEStatusSOAPRequest -= handler,
-                //              "PullEVSEStatus", "Requests", "All").
+                //RegisterEvent("AuthorizeStartRequest",
+                //              handler => CentralClient.OnPullAuthorizationStartSOAPRequest += handler,
+                //              handler => CentralClient.OnPullAuthorizationStartSOAPRequest -= handler,
+                //              "PullAuthorizationStart", "Requests", "All").
                 //    RegisterDefaultConsoleLogTarget(this).
                 //    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("PullEVSEStatusResponse",
-                //              handler => CentralClient.OnPullEVSEStatusSOAPResponse += handler,
-                //              handler => CentralClient.OnPullEVSEStatusSOAPResponse -= handler,
-                //              "PullEVSEStatus", "Responses", "All").
+                //RegisterEvent("PullAuthorizationStartResponse",
+                //              handler => CentralClient.OnPullAuthorizationStartSOAPResponse += handler,
+                //              handler => CentralClient.OnPullAuthorizationStartSOAPResponse -= handler,
+                //              "PullAuthorizationStart", "Responses", "All").
                 //    RegisterDefaultConsoleLogTarget(this).
                 //    RegisterDefaultDiscLogTarget(this);
 
 
-                //RegisterEvent("PullEVSEStatusByIdRequest",
-                //              handler => CentralClient.OnPullEVSEStatusByIdSOAPRequest += handler,
-                //              handler => CentralClient.OnPullEVSEStatusByIdSOAPRequest -= handler,
-                //              "PullEVSEStatusById", "Requests", "All").
+                //RegisterEvent("PullAuthorizationStartByIdRequest",
+                //              handler => CentralClient.OnPullAuthorizationStartByIdSOAPRequest += handler,
+                //              handler => CentralClient.OnPullAuthorizationStartByIdSOAPRequest -= handler,
+                //              "PullAuthorizationStartById", "Requests", "All").
                 //    RegisterDefaultConsoleLogTarget(this).
                 //    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("PullEVSEStatusByIdResponse",
-                //              handler => CentralClient.OnPullEVSEStatusByIdSOAPResponse += handler,
-                //              handler => CentralClient.OnPullEVSEStatusByIdSOAPResponse -= handler,
-                //              "PullEVSEStatusById", "Responses", "All").
+                //RegisterEvent("PullAuthorizationStartByIdResponse",
+                //              handler => CentralClient.OnPullAuthorizationStartByIdSOAPResponse += handler,
+                //              handler => CentralClient.OnPullAuthorizationStartByIdSOAPResponse -= handler,
+                //              "PullAuthorizationStartById", "Responses", "All").
                 //    RegisterDefaultConsoleLogTarget(this).
                 //    RegisterDefaultDiscLogTarget(this);
 

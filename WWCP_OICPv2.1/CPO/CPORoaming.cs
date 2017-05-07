@@ -742,7 +742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser
+        public CustomXMLParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser
         {
 
             get
@@ -799,7 +799,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser
+        public CustomXMLParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser
         {
 
             get
@@ -971,7 +971,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser
+        public CustomXMLParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser
         {
 
             get

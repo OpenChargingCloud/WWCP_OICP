@@ -1346,7 +1346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser
+        public CustomXMLParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser
         {
 
             get
@@ -1407,7 +1407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser
         {
 
             get
@@ -1467,7 +1467,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser
         {
 
             get
@@ -1528,7 +1528,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser
         {
 
             get
@@ -1588,7 +1588,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser
         {
 
             get
@@ -1649,7 +1649,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsParser
+        public CustomXMLParserDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsParser
         {
 
             get
@@ -1666,7 +1666,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
 
-        public CustomParserDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
+        public CustomXMLParserDelegate<ChargeDetailRecord> CustomChargeDetailRecordXMLMapper
         {
 
             get

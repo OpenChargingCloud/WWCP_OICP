@@ -21,45 +21,78 @@ using System;
 using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_1
+namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 {
 
     #region OnMobileAuthorizeStart
 
     /// <summary>
-    /// A delegate called whenever a MobileAuthorizeStart request will be send.
+    /// A delegate called whenever a 'mobile authorize start' request will be send.
     /// </summary>
-    public delegate Task OnMobileAuthorizeStartRequestDelegate (DateTime                   LogTimestamp,
-                                                                DateTime                   RequestTimestamp,
-                                                                MobileClient               Sender,
-                                                                String                     SenderId,
-                                                                EventTracking_Id           EventTrackingId,
-                                                                EVSE_Id                    EVSEId,
-                                                                QRCodeIdentification              EVCOIdWithPIN,
-                                                                String                     ProductId,
-                                                                Boolean?                   GetNewSession,
-                                                                TimeSpan?                  RequestTimeout);
+    public delegate Task OnMobileAuthorizeStartRequestHandler (DateTime                        LogTimestamp,
+                                                               DateTime                        RequestTimestamp,
+                                                               IMobileClient                   Sender,
+                                                               String                          SenderId,
+                                                               EventTracking_Id                EventTrackingId,
+                                                               EVSE_Id                         EVSEId,
+                                                               QRCodeIdentification            QRCodeIdentification,
+                                                               PartnerProduct_Id?              PartnerProductId,
+                                                               Boolean?                        GetNewSession,
+                                                               TimeSpan                        RequestTimeout);
 
     /// <summary>
-    /// A delegate called whenever a response for a MobileAuthorizeStart request had been received.
+    /// A delegate called whenever a response for a 'mobile authorize start' request had been received.
     /// </summary>
-    public delegate Task OnMobileAuthorizeStartResponseDelegate(DateTime                   LogTimestamp,
-                                                                DateTime                   RequestTimestamp,
-                                                                MobileClient               Sender,
-                                                                String                     SenderId,
-                                                                EventTracking_Id           EventTrackingId,
-                                                                EVSE_Id                    EVSEId,
-                                                                QRCodeIdentification              EVCOIdWithPIN,
-                                                                String                     ProductId,
-                                                                Boolean?                   GetNewSession,
-                                                                TimeSpan?                  RequestTimeout,
-                                                                MobileAuthorizationStart   Result,
-                                                                TimeSpan                   Duration);
+    public delegate Task OnMobileAuthorizeStartResponseHandler(DateTime                        Timestamp,
+                                                               IMobileClient                   Sender,
+                                                               String                          SenderId,
+                                                               EventTracking_Id                EventTrackingId,
+                                                               EVSE_Id                         EVSEId,
+                                                               QRCodeIdentification            QRCodeIdentification,
+                                                               PartnerProduct_Id?              PartnerProductId,
+                                                               Boolean?                        GetNewSession,
+                                                               TimeSpan                        RequestTimeout,
+                                                               MobileAuthorizationStart        Result,
+                                                               TimeSpan                        Duration);
 
     #endregion
+
+
+
+    //#region OnMobileAuthorizeStart
+
+    ///// <summary>
+    ///// A delegate called whenever a MobileAuthorizeStart request will be send.
+    ///// </summary>
+    //public delegate Task OnMobileAuthorizeStartRequestDelegate (DateTime                   LogTimestamp,
+    //                                                            DateTime                   RequestTimestamp,
+    //                                                            MobileClient               Sender,
+    //                                                            String                     SenderId,
+    //                                                            EventTracking_Id           EventTrackingId,
+                                                                
+    //                                                            TimeSpan?                  RequestTimeout);
+
+    ///// <summary>
+    ///// A delegate called whenever a response for a MobileAuthorizeStart request had been received.
+    ///// </summary>
+    //public delegate Task OnMobileAuthorizeStartResponseDelegate(DateTime                   LogTimestamp,
+    //                                                            DateTime                   RequestTimestamp,
+    //                                                            MobileClient               Sender,
+    //                                                            String                     SenderId,
+    //                                                            EventTracking_Id           EventTrackingId,
+    //                                                            EVSE_Id                    EVSEId,
+    //                                                            QRCodeIdentification              EVCOIdWithPIN,
+    //                                                            String                     ProductId,
+    //                                                            Boolean?                   GetNewSession,
+    //                                                            TimeSpan?                  RequestTimeout,
+    //                                                            MobileAuthorizationStart   Result,
+    //                                                            TimeSpan                   Duration);
+
+    //#endregion
 
     #region OnMobileRemoteStart
 

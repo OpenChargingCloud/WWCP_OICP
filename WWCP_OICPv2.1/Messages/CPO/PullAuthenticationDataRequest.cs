@@ -214,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="CustomPullAuthenticationDataRequestSerializer">A delegate to customize the serialization of PullAuthenticationData requests.</param>
-        public XElement ToXML(CustomSerializerDelegate<PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestSerializer = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<PullAuthenticationDataRequest> CustomPullAuthenticationDataRequestSerializer = null)
         {
 
             var XML = new XElement(OICPNS.AuthenticationData + "eRoamingPullAuthenticationData",

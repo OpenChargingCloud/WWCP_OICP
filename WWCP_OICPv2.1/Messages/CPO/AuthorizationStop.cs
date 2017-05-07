@@ -487,24 +487,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (Request, AuthorizationStopXML, CustomMapper = null, OnException = null)
+        #region (static) Parse   (Request, AuthorizationStopXML,  ..., OnException = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP authorization stop result.
+        /// Parse the given XML representation of an OICP authorization stop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopXML">The XML to parse.</param>
-        public static AuthorizationStop Parse(AuthorizeStopRequest                              Request,
-                                              XElement                                          AuthorizationStopXML,
-                                              CustomMapperDelegate<AuthorizationStop, Builder>  CustomMapper  = null,
-                                              OnExceptionDelegate                               OnException   = null)
-
-
+        /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static AuthorizationStop Parse(AuthorizeStopRequest                        Request,
+                                              XElement                                    AuthorizationStopXML,
+                                              CustomXMLParserDelegate<AuthorizationStop>  CustomAuthorizationStopParser   = null,
+                                              CustomXMLParserDelegate<StatusCode>         CustomStatusCodeParser          = null,
+                                              OnExceptionDelegate                         OnException                     = null)
         {
 
             AuthorizationStop _AuthorizationStop;
 
-            if (TryParse(Request, AuthorizationStopXML, out _AuthorizationStop, CustomMapper, OnException))
+            if (TryParse(Request,
+                         AuthorizationStopXML,
+                         out _AuthorizationStop,
+                         CustomAuthorizationStopParser,
+                         CustomStatusCodeParser,
+                         OnException))
+
                 return _AuthorizationStop;
 
             return null;
@@ -513,27 +521,67 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(Request, AuthorizationStopXML, out AuthorizationStop, CustomMapper = null, OnException = null)
+        #region (static) Parse   (Request, AuthorizationStopText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP authorization stop result.
+        /// Parse the given text representation of an OICP authorization stop request.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStopRequest request.</param>
+        /// <param name="AuthorizationStopText">The text to parse.</param>
+        /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static AuthorizationStop Parse(AuthorizeStopRequest                        Request,
+                                              String                                      AuthorizationStopText,
+                                              CustomXMLParserDelegate<AuthorizationStop>  CustomAuthorizationStopParser   = null,
+                                              CustomXMLParserDelegate<StatusCode>         CustomStatusCodeParser          = null,
+                                              OnExceptionDelegate                         OnException                     = null)
+        {
+
+            AuthorizationStop _AuthorizationStop;
+
+            if (TryParse(Request,
+                         AuthorizationStopText,
+                         out _AuthorizationStop,
+                         CustomAuthorizationStopParser,
+                         CustomStatusCodeParser,
+                         OnException))
+
+                return _AuthorizationStop;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthorizationStopXML,  out AuthorizationStop, ..., OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP authorization stop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopXML">The XML to parse.</param>
-        public static Boolean TryParse(AuthorizeStopRequest                              Request,
-                                       XElement                                          AuthorizationStopXML,
-                                       out AuthorizationStop                             AuthorizationStop,
-                                       CustomMapperDelegate<AuthorizationStop, Builder>  CustomMapper  = null,
-                                       OnExceptionDelegate                               OnException   = null)
-
-
+        /// <param name="AuthorizationStop">The parsed AuthorizationStop request.</param>
+        /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(AuthorizeStopRequest                        Request,
+                                       XElement                                    AuthorizationStopXML,
+                                       out AuthorizationStop                       AuthorizationStop,
+                                       CustomXMLParserDelegate<AuthorizationStop>  CustomAuthorizationStopParser   = null,
+                                       CustomXMLParserDelegate<StatusCode>         CustomStatusCodeParser          = null,
+                                       OnExceptionDelegate                         OnException                     = null)
         {
 
             try
             {
 
                 if (AuthorizationStopXML.Name != OICPNS.Authorization + "eRoamingAuthorizationStop")
-                    throw new ArgumentException("Invalid eRoamingAuthorizationStop XML");
+                {
+                    AuthorizationStop = null;
+                    return false;
+                }
 
                 AuthorizationStop = new AuthorizationStop(
 
@@ -543,7 +591,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                 s => (AuthorizationStatusTypes) Enum.Parse(typeof(AuthorizationStatusTypes), s)),
 
                                         AuthorizationStopXML.MapElement        (OICPNS.Authorization + "StatusCode",
-                                                                                StatusCode.       Parse),
+                                                                                (xml, e) => StatusCode.Parse(xml,
+                                                                                                             CustomStatusCodeParser,
+                                                                                                             e)),
 
                                         AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                 Session_Id.       Parse),
@@ -557,8 +607,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                     );
 
 
-                if (CustomMapper != null)
-                    AuthorizationStop = CustomMapper(AuthorizationStopXML, AuthorizationStop.ToBuilder).ToImmutable;
+                if (CustomAuthorizationStopParser != null)
+                    AuthorizationStop = CustomAuthorizationStopParser(AuthorizationStopXML,
+                                                                      AuthorizationStop);
 
                 return true;
 
@@ -572,6 +623,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 return false;
 
             }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, AuthorizationStopText, out AuthorizationStop, ..., OnException = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP authorization stop request.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStopRequest request.</param>
+        /// <param name="AuthorizationStopText">The text to parse.</param>
+        /// <param name="AuthorizationStop">The parsed authorization stop request.</param>
+        /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(AuthorizeStopRequest                        Request,
+                                       String                                      AuthorizationStopText,
+                                       out AuthorizationStop                       AuthorizationStop,
+                                       CustomXMLParserDelegate<AuthorizationStop>  CustomAuthorizationStopParser   = null,
+                                       CustomXMLParserDelegate<StatusCode>         CustomStatusCodeParser          = null,
+                                       OnExceptionDelegate                         OnException                     = null)
+        {
+
+            try
+            {
+
+                if (TryParse(Request,
+                             XDocument.Parse(AuthorizationStopText).Root,
+                             out AuthorizationStop,
+                             CustomAuthorizationStopParser,
+                             CustomStatusCodeParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, AuthorizationStopText, e);
+            }
+
+            AuthorizationStop = null;
+            return false;
 
         }
 

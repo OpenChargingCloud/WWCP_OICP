@@ -172,8 +172,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizeStopRequest Parse(XElement                                    AuthorizeStopXML,
-                                                 CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
-                                                 CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                                 CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                                  OnExceptionDelegate                         OnException                        = null)
         {
 
@@ -203,8 +203,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizeStopRequest Parse(String                                      AuthorizeStopText,
-                                                 CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
-                                                 CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                                 CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
                                                  OnExceptionDelegate                         OnException                        = null)
         {
 
@@ -236,8 +236,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                    AuthorizeStopXML,
                                        out AuthorizeStopRequest                    AuthorizeStop,
-                                       CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
-                                       CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
                                        OnExceptionDelegate                         OnException                        = null,
 
                                        DateTime?                                   Timestamp                          = null,
@@ -317,8 +317,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                      AuthorizeStopText,
                                        out AuthorizeStopRequest                    AuthorizeStop,
-                                       CustomParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
-                                       CustomParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
                                        OnExceptionDelegate                         OnException                        = null)
         {
 
@@ -353,8 +353,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="CustomAuthorizeStopRequestSerializer">A delegate to customize the serialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<AuthorizeStopRequest> CustomAuthorizeStopRequestSerializer  = null,
-                              CustomSerializerDelegate<Identification>       CustomIdentificationSerializer        = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeStopRequest> CustomAuthorizeStopRequestSerializer  = null,
+                              CustomXMLSerializerDelegate<Identification>       CustomIdentificationSerializer        = null)
 
         {
 

@@ -576,10 +576,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="XML">The XML to parse.</param>
-        public static Acknowledgement<TRequest> Parse(TRequest                                         Request,
-                                                      XElement                                         AcknowledgementXML,
-                                                      CustomParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
-                                                      OnExceptionDelegate                              OnException                   = null)
+        public static Acknowledgement<TRequest> Parse(TRequest                                            Request,
+                                                      XElement                                            AcknowledgementXML,
+                                                      CustomXMLParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
+                                                      CustomXMLParserDelegate<StatusCode>                 CustomStatusCodeParser        = null,
+                                                      OnExceptionDelegate                                 OnException                   = null)
         {
 
             Acknowledgement<TRequest> _Acknowledgement;
@@ -588,6 +589,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          AcknowledgementXML,
                          out _Acknowledgement,
                          CustomAcknowledgementParser,
+                         CustomStatusCodeParser,
                          OnException))
 
                 return _Acknowledgement;
@@ -605,11 +607,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(TRequest                                         Request,
-                                       XElement                                         AcknowledgementXML,
-                                       out Acknowledgement<TRequest>                    Acknowledgement,
-                                       CustomParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
-                                       OnExceptionDelegate                              OnException                   = null)
+        public static Boolean TryParse(TRequest                                            Request,
+                                       XElement                                            AcknowledgementXML,
+                                       out Acknowledgement<TRequest>                       Acknowledgement,
+                                       CustomXMLParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
+                                       CustomXMLParserDelegate<StatusCode>                 CustomStatusCodeParser        = null,
+                                       OnExceptionDelegate                                 OnException                   = null)
         {
 
             try
@@ -628,7 +631,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result") == "true",
 
                                       AcknowledgementXML.MapElementOrFail  (OICPNS.CommonTypes + "StatusCode",
-                                                                            StatusCode.Parse,
+                                                                            (xml, e) => StatusCode.Parse(xml,
+                                                                                                         CustomStatusCodeParser,
+                                                                                                         e),
                                                                             OnException),
 
                                       AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "SessionID",
@@ -1189,7 +1194,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="XML">The XML to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement</param>
-        public static Boolean TryParse(XElement XML, out Acknowledgement Acknowledgement)
+        public static Boolean TryParse(XElement                             XML,
+                                       out Acknowledgement                  Acknowledgement,
+                                       CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                       OnExceptionDelegate                  OnException              = null)
         {
 
             Acknowledgement = null;
@@ -1211,7 +1219,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                           : false,
 
                                                       AcknowledgementXML.MapElementOrFail  (OICPNS.CommonTypes + "StatusCode",
-                                                                                            StatusCode.Parse),
+                                                                                            (xml, e) => StatusCode.Parse(xml,
+                                                                                                                         CustomStatusCodeParser,
+                                                                                                                         e),
+                                                                                            OnException),
 
                                                       AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "SessionID",
                                                                                             Session_Id.Parse),

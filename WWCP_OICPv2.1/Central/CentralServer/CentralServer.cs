@@ -332,9 +332,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                     IEnumerable<XElement> PullEVSEDataXMLs;
                     IEnumerable<XElement> GetEVSEByIdXMLs;
 
-                    IEnumerable<XElement> PushEVSEStatusXMLs;
-                    IEnumerable<XElement> PullEVSEStatusXMLs;
-                    IEnumerable<XElement> PullEVSEStatusByIdXMLs;
+                    IEnumerable<XElement> PushAuthorizationStartXMLs;
+                    IEnumerable<XElement> PullAuthorizationStartXMLs;
+                    IEnumerable<XElement> PullAuthorizationStartByIdXMLs;
 
 
                     // EvseDataBinding
@@ -343,17 +343,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                     GetEVSEByIdXMLs         = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingGetEvseById");
 
                     // EvseStatusBinding
-                    PushEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPushEvseStatus");
-                    PullEVSEStatusXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus");
-                    PullEVSEStatusByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById");
+                    PushAuthorizationStartXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPushEvseStatus");
+                    PullAuthorizationStartXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus");
+                    PullAuthorizationStartByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById");
 
                     if (!PushEVSEDataXMLs.      Any() &&
                         !PullEVSEDataXMLs.      Any() &&
                         !GetEVSEByIdXMLs.       Any() &&
 
-                        !PushEVSEStatusXMLs.    Any() &&
-                        !PullEVSEStatusXMLs.    Any() &&
-                        !PullEVSEStatusByIdXMLs.Any())
+                        !PushAuthorizationStartXMLs.    Any() &&
+                        !PullAuthorizationStartXMLs.    Any() &&
+                        !PullAuthorizationStartByIdXMLs.Any())
                     {
                         throw new Exception("Unkown XML/SOAP request!");
                     }
@@ -368,14 +368,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                         throw new Exception("Multiple GetEVSEById XML tags within a single request are not supported!");
 
 
-                    if (PushEVSEStatusXMLs.     Count() > 1)
-                        throw new Exception("Multiple PushEVSEStatus XML tags within a single request are not supported!");
+                    if (PushAuthorizationStartXMLs.     Count() > 1)
+                        throw new Exception("Multiple PushAuthorizationStart XML tags within a single request are not supported!");
 
-                    if (PullEVSEStatusXMLs.     Count() > 1)
-                        throw new Exception("Multiple PullEVSEStatus XML tags within a single request are not supported!");
+                    if (PullAuthorizationStartXMLs.     Count() > 1)
+                        throw new Exception("Multiple PullAuthorizationStart XML tags within a single request are not supported!");
 
-                    if (PullEVSEStatusByIdXMLs. Count() > 1)
-                        throw new Exception("Multiple PullEVSEStatusBy XML tags within a single request are not supported!");
+                    if (PullAuthorizationStartByIdXMLs. Count() > 1)
+                        throw new Exception("Multiple PullAuthorizationStartBy XML tags within a single request are not supported!");
 
                     #endregion
 
@@ -435,10 +435,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                     #endregion
 
 
-                    #region PushEVSEStatus
+                    #region PushAuthorizationStart
 
-                    var PushEVSEStatusXML = PushEVSEStatusXMLs.FirstOrDefault();
-                    if (PushEVSEStatusXML != null)
+                    var PushAuthorizationStartXML = PushAuthorizationStartXMLs.FirstOrDefault();
+                    if (PushAuthorizationStartXML != null)
                     {
 
                         #region Parse request parameters
@@ -446,32 +446,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                         String                  ActionType;
                         IEnumerable<XElement>   OperatorEvseStatusXML;
 
-                        ActionType             = PushEVSEStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
-                        OperatorEvseStatusXML  = PushEVSEStatusXML.ElementsOrFail    (OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
+                        ActionType             = PushAuthorizationStartXML.ElementValueOrFail(OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
+                        OperatorEvseStatusXML  = PushAuthorizationStartXML.ElementsOrFail    (OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
 
                         foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
                         {
 
                             Operator_Id         OperatorId;
                             String                  OperatorName;
-                            IEnumerable<XElement>   EVSEStatusRecordsXML;
+                            IEnumerable<XElement>   AuthorizationStartRecordsXML;
 
                             if (!Operator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
                                 throw new ApplicationException("Invalid OperatorID XML tag provided!");
 
                             OperatorName          = SingleOperatorEvseStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
-                            EVSEStatusRecordsXML  = SingleOperatorEvseStatusXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
+                            AuthorizationStartRecordsXML  = SingleOperatorEvseStatusXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
 
-                            foreach (var EVSEStatusRecordXML in EVSEStatusRecordsXML)
+                            foreach (var AuthorizationStartRecordXML in AuthorizationStartRecordsXML)
                             {
 
                                 EVSE_Id  EVSEId;
-                                String   EVSEStatus;
+                                String   AuthorizationStart;
 
-                                if (!EVSE_Id.TryParse(EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
+                                if (!EVSE_Id.TryParse(AuthorizationStartRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
                                     throw new ApplicationException("Invalid EvseId XML tag provided!");
 
-                                EVSEStatus = EVSEStatusRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
+                                AuthorizationStart = AuthorizationStartRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
 
                             }
 
@@ -503,20 +503,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                     #endregion
 
-                    #region PullEVSEStatus
+                    #region PullAuthorizationStart
 
-                    var PullEVSEStatusXML = PullEVSEStatusXMLs.FirstOrDefault();
-                    if (PullEVSEStatusXML != null)
+                    var PullAuthorizationStartXML = PullAuthorizationStartXMLs.FirstOrDefault();
+                    if (PullAuthorizationStartXML != null)
                     {
 
                     }
 
                     #endregion
 
-                    #region PullEVSEStatusById
+                    #region PullAuthorizationStartById
 
-                    var PullEVSEStatusByIdXML = PullEVSEStatusByIdXMLs.FirstOrDefault();
-                    if (PullEVSEStatusByIdXML != null)
+                    var PullAuthorizationStartByIdXML = PullAuthorizationStartByIdXMLs.FirstOrDefault();
+                    if (PullAuthorizationStartByIdXML != null)
                     {
 
                     }

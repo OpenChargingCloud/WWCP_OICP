@@ -216,7 +216,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Identification Parse(XElement                              IdentificationXML,
-                                           CustomParserDelegate<Identification>  CustomIdentificationParser   = null,
+                                           CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
                                            OnExceptionDelegate                   OnException                  = null)
         {
 
@@ -244,7 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Identification Parse(String                                IdentificationText,
-                                           CustomParserDelegate<Identification>  CustomIdentificationParser   = null,
+                                           CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
                                            OnExceptionDelegate                   OnException                  = null)
         {
 
@@ -274,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                              IdentificationXML,
                                        out Identification                    Identification,
-                                       CustomParserDelegate<Identification>  CustomIdentificationParser   = null,
+                                       CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
                                        OnExceptionDelegate                   OnException                  = null)
         {
 
@@ -345,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                IdentificationText,
                                        out Identification                    Identification,
-                                       CustomParserDelegate<Identification>  CustomIdentificationParser   = null,
+                                       CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
                                        OnExceptionDelegate                   OnException                  = null)
         {
 
@@ -380,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(XName                                     XName                            = null,
-                              CustomSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
+                              CustomXMLSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
 
         {
 

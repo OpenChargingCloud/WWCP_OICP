@@ -200,29 +200,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                          EVSEStatusFilter:  EVSEStatusTypes.Available,
                                          RequestTimeout:    TimeSpan.FromSeconds(120)).
 
-                          ContinueWith(task =>
+                          ContinueWith((Task<Vanaheimr.Hermod.HTTP.HTTPResponse<EMP.EVSEStatus>> task) =>
                           {
 
-                              var eRoamingEVSEStatus = task.Result.Content;
+                              var result = task.Result.Content;
 
-                              if (eRoamingEVSEStatus.StatusCode.Value.HasResult)
+                              if (result.StatusCode.Value.HasResult)
                               {
 
-                                  Console.WriteLine(eRoamingEVSEStatus.
+                                  Console.WriteLine(result.
                                                         OperatorEVSEStatus.
-                                                        Select(evsestatusrecord => "'" + evsestatusrecord.OperatorName +
+                                                        Select(operatorevsestatus => "'" + operatorevsestatus.OperatorName +
                                                                                    "' has " +
-                                                                                   evsestatusrecord.EVSEStatusRecords.Count() +
-                                                                                   " available EVSEs").
-                                                        AggregateWith(Environment.NewLine) +
+                                                                                   operatorevsestatus.EVSEStatusRecords.Count() +
+                                                                                   " available EVSEs").AggregateWith(Environment.NewLine) +
                                                         Environment.NewLine);
 
                               }
                               else
                               {
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.Code);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.Description);
-                                  Console.WriteLine(eRoamingEVSEStatus.StatusCode.Value.AdditionalInfo);
+                                  Console.WriteLine(result.StatusCode.Value.Code);
+                                  Console.WriteLine(result.StatusCode.Value.Description);
+                                  Console.WriteLine(result.StatusCode.Value.AdditionalInfo);
                               }
 
                           });
@@ -241,12 +240,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                 ContinueWith(task =>
                 {
 
-                    var eRoamingEVSEStatusById = task.Result.Content;
+                    var result = task.Result.Content;
 
-                    if (eRoamingEVSEStatusById.StatusCode.Value.HasResult)
+                    if (result.StatusCode.Value.HasResult)
                     {
 
-                        Console.WriteLine(eRoamingEVSEStatusById.
+                        Console.WriteLine(result.
                                               EVSEStatusRecords.
                                               Select(evsestatusrecord => "EVSE '" + evsestatusrecord.Id +
                                                                          "' has status '" +
@@ -258,9 +257,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                     }
                     else
                     {
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.Code);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.Description);
-                        Console.WriteLine(eRoamingEVSEStatusById.StatusCode.Value.AdditionalInfo);
+                        Console.WriteLine(result.StatusCode.Value.Code);
+                        Console.WriteLine(result.StatusCode.Value.Description);
+                        Console.WriteLine(result.StatusCode.Value.AdditionalInfo);
                     }
 
                 });

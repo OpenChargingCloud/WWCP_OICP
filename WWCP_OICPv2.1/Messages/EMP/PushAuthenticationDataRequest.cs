@@ -163,8 +163,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushAuthenticationDataRequest Parse(XElement             PushAuthenticationDataRequestXML,
-            CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+            CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                           OnExceptionDelegate  OnException = null)
         {
 
@@ -192,8 +192,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushAuthenticationDataRequest Parse(String               PushAuthenticationDataRequestText,
-            CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+            CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                                           OnExceptionDelegate  OnException = null)
         {
 
@@ -223,8 +223,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                          PushAuthenticationDataRequestXML,
                                        out PushAuthenticationDataRequest                 PushAuthenticationDataRequest,
-                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
 
                                        OnExceptionDelegate                               OnException                               = null)
         {
@@ -279,8 +279,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                             PushAuthenticationDataRequestText,
                                        out PushAuthenticationDataRequest  PushAuthenticationDataRequest,
-                                       CustomParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
+                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
                                        OnExceptionDelegate                OnException  = null)
         {
 

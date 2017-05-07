@@ -51,7 +51,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         /// <summary>
         /// The EVSE was not found.
-        /// (PullEVSEStatusById)
+        /// (PullAuthorizationStartById)
         /// </summary>
         EvseNotFound
 

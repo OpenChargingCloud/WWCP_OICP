@@ -116,14 +116,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         //    <soapenv:Body>
         //       <EVSEData:eRoamingPushEvseData>
         // 
-        //          <EVSEData:ActionType>fullLoad|update|insert|delete</EVSEStatus:ActionType>
+        //          <EVSEData:ActionType>fullLoad|update|insert|delete</AuthorizationStart:ActionType>
         // 
         //          <EVSEData:OperatorEvseData>
         // 
-        //             <EVSEData:OperatorID>DE*GEF</EVSEStatus:OperatorID>
+        //             <EVSEData:OperatorID>DE*GEF</AuthorizationStart:OperatorID>
         // 
         //             <!--Optional:-->
-        //             <EVSEData:OperatorName>GraphDefined e-Mobility Operator</EVSEStatus:OperatorName>
+        //             <EVSEData:OperatorName>GraphDefined e-Mobility Operator</AuthorizationStart:OperatorName>
         // 
         //             <!--Zero or more repetitions:-->
         //             <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
@@ -148,8 +148,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEDataRequest Parse(XElement                                PushEVSEDataXML,
-                                                CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                                CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                                CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                                CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                                 OnExceptionDelegate                     OnException                   = null,
 
                                                 DateTime?                               Timestamp                     = null,
@@ -190,8 +190,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static PushEVSEDataRequest Parse(String                                  PushEVSEDataText,
-                                                CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                                CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                                CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                                CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                                 OnExceptionDelegate                     OnException                   = null,
 
                                                 DateTime?                               Timestamp                     = null,
@@ -233,8 +233,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                PushEVSEDataXML,
                                        out PushEVSEDataRequest                 PushEVSEData,
-                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                        OnExceptionDelegate                     OnException                   = null,
 
                                        DateTime?                               Timestamp                     = null,
@@ -297,8 +297,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  PushEVSEDataText,
                                        out PushEVSEDataRequest                 PushEVSEData,
-                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                        OnExceptionDelegate                     OnException                   = null,
 
                                        DateTime?                               Timestamp                     = null,
@@ -347,12 +347,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
+        public XElement ToXML(CustomXMLSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
                               XName                                          OperatorEVSEDataXName                 = null,
-                              CustomSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
+                              CustomXMLSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
                               XName                                          EVSEDataRecordXName                   = null,
                               Boolean                                        IncludeEVSEDataRecordMetadata         = true,
-                              CustomSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null)
+                              CustomXMLSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null)
 
         {
 

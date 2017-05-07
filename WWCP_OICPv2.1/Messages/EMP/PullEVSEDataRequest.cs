@@ -168,20 +168,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEDataXML,  OnException = null)
+        #region (static) Parse(PullEVSEDataXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull EVSE data request.
         /// </summary>
         /// <param name="PullEVSEDataXML">The XML to parse.</param>
+        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEDataRequest Parse(XElement             PullEVSEDataXML,
-                                                OnExceptionDelegate  OnException = null)
+        public static PullEVSEDataRequest Parse(XElement                                      PullEVSEDataXML,
+                                                CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
+                                                OnExceptionDelegate                           OnException                       = null)
         {
 
             PullEVSEDataRequest _PullEVSEData;
 
-            if (TryParse(PullEVSEDataXML, out _PullEVSEData, OnException))
+            if (TryParse(PullEVSEDataXML,
+                         out _PullEVSEData,
+                         CustomPullEVSEDataRequestParser,
+                         OnException))
                 return _PullEVSEData;
 
             return null;
@@ -190,20 +195,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEDataText, OnException = null)
+        #region (static) Parse(PullEVSEDataText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP pull EVSE data request.
         /// </summary>
         /// <param name="PullEVSEDataText">The text to parse.</param>
+        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEDataRequest Parse(String               PullEVSEDataText,
-                                                OnExceptionDelegate  OnException = null)
+        public static PullEVSEDataRequest Parse(String                                        PullEVSEDataText,
+                                                CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
+                                                OnExceptionDelegate                           OnException                       = null)
         {
 
             PullEVSEDataRequest _PullEVSEData;
 
-            if (TryParse(PullEVSEDataText, out _PullEVSEData, OnException))
+            if (TryParse(PullEVSEDataText,
+                         out _PullEVSEData,
+                         CustomPullEVSEDataRequestParser,
+                         OnException))
+
                 return _PullEVSEData;
 
             return null;
@@ -212,21 +223,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEDataXML,  out PullEVSEData, OnException = null)
+        #region (static) TryParse(PullEVSEDataXML,  out PullEVSEData, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull EVSE data request.
         /// </summary>
         /// <param name="PullEVSEDataXML">The XML to parse.</param>
         /// <param name="PullEVSEData">The parsed pull EVSE data request.</param>
+        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                 PullEVSEDataXML,
-                                       out PullEVSEDataRequest  PullEVSEData,
-                                       OnExceptionDelegate      OnException  = null)
+        public static Boolean TryParse(XElement                                      PullEVSEDataXML,
+                                       out PullEVSEDataRequest                       PullEVSEData,
+                                       CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
+                                       OnExceptionDelegate                           OnException                       = null)
         {
 
             try
             {
+
+                if (PullEVSEDataXML.Name != OICPNS.EVSEData + "eRoamingPullEvseData")
+                {
+                    PullEVSEData = null;
+                    return false;
+                }
 
                 #region Parse the optional search center
 
@@ -289,6 +308,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                   );
 
+
+                if (CustomPullEVSEDataRequestParser != null)
+                    PullEVSEData = CustomPullEVSEDataRequestParser(PullEVSEDataXML,
+                                                                   PullEVSEData);
+
                 return true;
 
             }
@@ -306,17 +330,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEDataText, out PullEVSEData, OnException = null)
+        #region (static) TryParse(PullEVSEDataText, out PullEVSEData, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP pull EVSE data request.
         /// </summary>
         /// <param name="PullEVSEDataText">The text to parse.</param>
         /// <param name="PullEVSEData">The parsed pull EVSE data request.</param>
+        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                   PullEVSEDataText,
-                                       out PullEVSEDataRequest  PullEVSEData,
-                                       OnExceptionDelegate      OnException  = null)
+        public static Boolean TryParse(String                                        PullEVSEDataText,
+                                       out PullEVSEDataRequest                       PullEVSEData,
+                                       CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
+                                       OnExceptionDelegate                           OnException                       = null)
         {
 
             try
@@ -324,6 +350,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(PullEVSEDataText).Root,
                              out PullEVSEData,
+                             CustomPullEVSEDataRequestParser,
                              OnException))
 
                     return true;
@@ -346,8 +373,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to serialize custom eRoamingPullEvseData XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestSerializer = null)
+        /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to customize the serialization of PullEVSEData requests.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestSerializer = null)
         {
 
             var XML = new XElement(OICPNS.EVSEData + "eRoamingPullEvseData",

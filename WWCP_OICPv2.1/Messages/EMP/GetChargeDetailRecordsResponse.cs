@@ -144,9 +144,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                         Request,
                                                               XElement                                              ChargeDetailRecordsXML,
-                                                              CustomParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
-                                                              CustomParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
-                                                              CustomParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                                                              CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
+                                                              CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
+                                                              CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
                                                               OnExceptionDelegate                                   OnException                                  = null)
         {
 
@@ -214,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region (class) Builder
 
         /// <summary>
-        /// An EVSEStatusById response builder.
+        /// An AuthorizationStartById response builder.
         /// </summary>
         public class Builder : AResponseBuilder<GetChargeDetailRecordsRequest,
                                                 GetChargeDetailRecordsResponse>
@@ -251,7 +251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            #region Builder(EVSEStatusById, CustomData = null)
+            #region Builder(AuthorizationStartById, CustomData = null)
 
             /// <summary>
             /// Create a new GetChargeDetailRecords response builder.

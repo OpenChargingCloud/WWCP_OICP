@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given XML representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestXML">The XML to parse.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -135,7 +135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteStopRequest
 
             Parse(XElement                                          AuthorizeRemoteStopRequestXML,
-                  CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
                   OnExceptionDelegate                               OnException                              = null,
 
                   DateTime?                                         Timestamp                                = null,
@@ -171,7 +171,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given text representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -181,7 +181,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteStopRequest
 
             Parse(String                                            AuthorizeRemoteStopRequestText,
-                  CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
                   OnExceptionDelegate                               OnException                              = null,
 
                   DateTime?                                         Timestamp                                = null,
@@ -218,7 +218,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed authorize remote stop request.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -227,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                          AuthorizeRemoteStopRequestXML,
                                        out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
-                                       CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
                                        OnExceptionDelegate                               OnException                              = null,
 
                                        DateTime?                                         Timestamp                                = null,
@@ -295,7 +295,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed authorize remote stop request.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
+        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -304,7 +304,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                            AuthorizeRemoteStopRequestText,
                                        out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
-                                       CustomParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
                                        OnExceptionDelegate                               OnException                              = null,
 
                                        DateTime?                                         Timestamp                                = null,
@@ -341,25 +341,33 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomAuthorizeRemoteStopRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomAuthorizeRemoteStopRequestSerializer">A delegate to customize the serialization of AuthorizeRemoteStop requests.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestSerializer   = null)
+        {
 
-            => new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
+            var XML= new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
-                                new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
+                                      new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
 
-                                PartnerSessionId.HasValue
-                                    ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
-                                    : null,
+                                      PartnerSessionId.HasValue
+                                          ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                          : null,
 
-                                new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
-                                new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString())
+                                      new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
+                                      new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString())
 
-                           );
+                                 );
+
+            return CustomAuthorizeRemoteStopRequestSerializer != null
+                       ? CustomAuthorizeRemoteStopRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 

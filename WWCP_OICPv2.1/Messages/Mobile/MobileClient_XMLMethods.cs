@@ -31,79 +31,79 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public static class MobileClient_XMLMethods
     {
 
-        #region MobileAuthorizeStartXML(EVSEId, EVCOIdWithPIN, PartnerProductId = null, GetNewSession = null)
+        //#region MobileAuthorizeStartXML(EVSEId, EVCOIdWithPIN, PartnerProductId = null, GetNewSession = null)
 
-        /// <summary>
-        /// Create a new MobileAuthorizeStart request.
-        /// </summary>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
-        /// <param name="PartnerProductId">The optional charging product identification.</param>
-        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        public static XElement MobileAuthorizeStartXML(EVSE_Id        EVSEId,
-                                                       QRCodeIdentification  EVCOIdWithPIN,
-                                                       String         PartnerProductId  = null,
-                                                       Boolean?       GetNewSession     = null)
+        ///// <summary>
+        ///// Create a new MobileAuthorizeStart request.
+        ///// </summary>
+        ///// <param name="EVSEId">The EVSE identification.</param>
+        ///// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
+        ///// <param name="PartnerProductId">The optional charging product identification.</param>
+        ///// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
+        //public static XElement MobileAuthorizeStartXML(EVSE_Id        EVSEId,
+        //                                               QRCodeIdentification  EVCOIdWithPIN,
+        //                                               String         PartnerProductId  = null,
+        //                                               Boolean?       GetNewSession     = null)
 
-            #region Documentation
+        //    #region Documentation
 
-            // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
-            //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
-            //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-            //
-            //    <soapenv:Header/>
-            //
-            //    <soapenv:Body>
-            //       <MobileAuthorization:eRoamingMobileAuthorizeStart>
-            // 
-            //          <MobileAuthorization:EvseID>DE*GEF*E123456789*1</MobileAuthorization:EvseID>
-            // 
-            //          <MobileAuthorization:QRCodeIdentification>
-            // 
-            //             <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-            // 
-            //             <!--You have a CHOICE of the next 2 items at this level-->
-            //             <CommonTypes:PIN>1234</CommonTypes:PIN>
-            // 
-            //             <CommonTypes:HashedPIN>
-            //                <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-            //                <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-            //                <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-            //             </CommonTypes:HashedPIN>
-            // 
-            //          </MobileAuthorization:QRCodeIdentification>
-            // 
-            //          <!--Optional:-->
-            //          <MobileAuthorization:PartnerProductID>AC1</MobileAuthorization:PartnerProductID>
-            // 
-            //          <!--Optional:-->
-            //          <MobileAuthorization:GetNewSession>?</MobileAuthorization:GetNewSession>
-            // 
-            //       </MobileAuthorization:eRoamingMobileAuthorizeStart>
-            //    </soapenv:Body>
-            //
-            // </soapenv:Envelope>
+        //    // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
+        //    //                   xmlns:MobileAuthorization = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0"
+        //    //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //    //
+        //    //    <soapenv:Header/>
+        //    //
+        //    //    <soapenv:Body>
+        //    //       <MobileAuthorization:eRoamingMobileAuthorizeStart>
+        //    // 
+        //    //          <MobileAuthorization:EvseID>DE*GEF*E123456789*1</MobileAuthorization:EvseID>
+        //    // 
+        //    //          <MobileAuthorization:QRCodeIdentification>
+        //    // 
+        //    //             <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //    // 
+        //    //             <!--You have a CHOICE of the next 2 items at this level-->
+        //    //             <CommonTypes:PIN>1234</CommonTypes:PIN>
+        //    // 
+        //    //             <CommonTypes:HashedPIN>
+        //    //                <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
+        //    //                <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
+        //    //                <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
+        //    //             </CommonTypes:HashedPIN>
+        //    // 
+        //    //          </MobileAuthorization:QRCodeIdentification>
+        //    // 
+        //    //          <!--Optional:-->
+        //    //          <MobileAuthorization:PartnerProductID>AC1</MobileAuthorization:PartnerProductID>
+        //    // 
+        //    //          <!--Optional:-->
+        //    //          <MobileAuthorization:GetNewSession>?</MobileAuthorization:GetNewSession>
+        //    // 
+        //    //       </MobileAuthorization:eRoamingMobileAuthorizeStart>
+        //    //    </soapenv:Body>
+        //    //
+        //    // </soapenv:Envelope>
 
-            #endregion
+        //    #endregion
 
 
-            => SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
+        //    => SOAP.Encapsulation(new XElement(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart",
 
-                                      new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
+        //                              new XElement(OICPNS.MobileAuthorization + "EvseID", EVSEId.ToString()),
 
-                                      EVCOIdWithPIN.ToXML(OICPNS.MobileAuthorization + "QRCodeIdentification"),
+        //                              EVCOIdWithPIN.ToXML(OICPNS.MobileAuthorization + "QRCodeIdentification"),
 
-                                      PartnerProductId != null
-                                          ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
-                                          : null,
+        //                              PartnerProductId != null
+        //                                  ? new XElement(OICPNS.MobileAuthorization + "PartnerProductID", PartnerProductId.ToString())
+        //                                  : null,
 
-                                      (GetNewSession != null && GetNewSession.HasValue)
-                                          ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value ? "true" : "false")
-                                          : null
+        //                              (GetNewSession != null && GetNewSession.HasValue)
+        //                                  ? new XElement(OICPNS.MobileAuthorization + "GetNewSession", GetNewSession.Value ? "true" : "false")
+        //                                  : null
 
-                                 ));
+        //                         ));
 
-        #endregion
+        //#endregion
 
         #region MobileRemoteStartXML(SessionId)
 

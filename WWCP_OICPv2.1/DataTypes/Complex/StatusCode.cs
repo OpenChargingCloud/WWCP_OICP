@@ -117,20 +117,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(StatusCodeXML,  OnException = null)
+        #region (static) Parse   (StatusCodeXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static StatusCode Parse(XElement             StatusCodeXML,
-                                       OnExceptionDelegate  OnException = null)
+        public static StatusCode Parse(XElement                             StatusCodeXML,
+                                       CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                       OnExceptionDelegate                  OnException              = null)
         {
 
             StatusCode _StatusCode;
 
-            if (TryParse(StatusCodeXML, out _StatusCode, OnException))
+            if (TryParse(StatusCodeXML,
+                         out _StatusCode,
+                         CustomStatusCodeParser,
+                         OnException))
+
                 return _StatusCode;
 
             return default(StatusCode);
@@ -139,20 +145,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(StatusCodeText, OnException = null)
+        #region (static) Parse   (StatusCodeText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static StatusCode Parse(String               StatusCodeText,
-                                       OnExceptionDelegate  OnException = null)
+        public static StatusCode Parse(String                               StatusCodeText,
+                                       CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                       OnExceptionDelegate                  OnException              = null)
         {
 
             StatusCode _StatusCode;
 
-            if (TryParse(StatusCodeText, out _StatusCode, OnException))
+            if (TryParse(StatusCodeText,
+                         out _StatusCode,
+                         CustomStatusCodeParser,
+                         OnException))
+
                 return _StatusCode;
 
             return default(StatusCode);
@@ -161,15 +173,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(StatusCodeXML,                  OnException = null)
+        #region (static) TryParse(StatusCodeXML,                  ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static StatusCode? TryParse(XElement             StatusCodeXML,
-                                           OnExceptionDelegate  OnException  = null)
+        public static StatusCode? TryParse(XElement                             StatusCodeXML,
+                                           CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                           OnExceptionDelegate                  OnException              = null)
         {
 
             try
@@ -181,15 +195,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return null;
                 }
 
-                return new StatusCode(StatusCodeXML.MapValueOrFail       (OICPNS.CommonTypes + "Code",
-                                                                          s => (StatusCodes) Int16.Parse(s),
-                                                                          "Invalid or missing 'Code' XML tag!"),
+                var StatusCode = new StatusCode(StatusCodeXML.MapValueOrFail       (OICPNS.CommonTypes + "Code",
+                                                                                    s => (StatusCodes) Int16.Parse(s),
+                                                                                    "Invalid or missing 'Code' XML tag!"),
 
-                                      StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "Description",
-                                                                          String.Empty),
+                                                StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "Description",
+                                                                                    String.Empty),
 
-                                      StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "AdditionalInfo",
-                                                                          String.Empty));
+                                                StatusCodeXML.ElementValueOrDefault(OICPNS.CommonTypes + "AdditionalInfo",
+                                                                                    String.Empty));
+
+                if (CustomStatusCodeParser != null)
+                    StatusCode = CustomStatusCodeParser(StatusCodeXML,
+                                                        StatusCode);
+
+                return StatusCode;
 
             }
             catch (Exception e)
@@ -205,20 +225,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(StatusCodeXML,  out StatusCode, OnException = null)
+        #region (static) TryParse(StatusCodeXML,  out StatusCode, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeXML">The XML to parse.</param>
         /// <param name="StatusCode">The parsed status code</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement             StatusCodeXML,
-                                       out StatusCode       StatusCode,
-                                       OnExceptionDelegate  OnException  = null)
+        public static Boolean TryParse(XElement                             StatusCodeXML,
+                                       out StatusCode                       StatusCode,
+                                       CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                       OnExceptionDelegate                  OnException              = null)
         {
 
-            var _StatusCode = TryParse(StatusCodeXML, OnException);
+            var _StatusCode = TryParse(StatusCodeXML,
+                                       CustomStatusCodeParser,
+                                       OnException);
 
             if (_StatusCode.HasValue)
             {
@@ -233,21 +257,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(StatusCodeText,                 OnException = null)
+        #region (static) TryParse(StatusCodeText,                 ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static StatusCode? TryParse(String               StatusCodeText,
-                                           OnExceptionDelegate  OnException  = null)
+        public static StatusCode? TryParse(String                               StatusCodeText,
+                                           CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                           OnExceptionDelegate                  OnException              = null)
         {
 
             try
             {
 
                 return TryParse(XDocument.Parse(StatusCodeText).Root,
+                                CustomStatusCodeParser,
                                 OnException);
 
             }
@@ -262,17 +289,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(StatusCodeText, out StatusCode, OnException = null)
+        #region (static) TryParse(StatusCodeText, out StatusCode, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
         /// <param name="StatusCode">The parsed status code.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String               StatusCodeText,
-                                       out StatusCode       StatusCode,
-                                       OnExceptionDelegate  OnException  = null)
+        public static Boolean TryParse(String                               StatusCodeText,
+                                       out StatusCode                       StatusCode,
+                                       CustomXMLParserDelegate<StatusCode>  CustomStatusCodeParser   = null,
+                                       OnExceptionDelegate                  OnException              = null)
         {
 
             try
@@ -280,6 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 if (TryParse(XDocument.Parse(StatusCodeText).Root,
                              out StatusCode,
+                             CustomStatusCodeParser,
                              OnException))
 
                     return true;
@@ -297,47 +327,69 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(XName = null)
+        #region ToXML(XName = null, CustomStatusCodeSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
-        public XElement ToXML(XName XName = null)
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
+        public XElement ToXML(XName                                    XName                        = null,
+                              CustomXMLSerializerDelegate<StatusCode>  CustomStatusCodeSerializer   = null)
 
-            => new XElement(XName ?? OICPNS.CommonTypes + "StatusCode",
+        {
 
-                   new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
+            var XML = new XElement(XName ?? OICPNS.CommonTypes + "StatusCode",
 
-                   Description.IsNotNullOrEmpty()
-                       ? new XElement(OICPNS.CommonTypes + "Description",     Description)
-                       : null,
+                          new XElement(OICPNS.CommonTypes + "Code",  ((Int32) Code).ToString("D3")),
 
-                   AdditionalInfo.IsNotNullOrEmpty()
-                       ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
-                       : null
+                          Description.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "Description",     Description)
+                              : null,
 
-               );
+                          AdditionalInfo.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "AdditionalInfo",  AdditionalInfo)
+                              : null
+
+                      );
+
+            return CustomStatusCodeSerializer != null
+                       ? CustomStatusCodeSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
-        #region ToJSON()
+        #region ToJSON(CustomStatusCodeSerializer = null)
 
-        public JObject ToJSON()
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<StatusCode>  CustomStatusCodeSerializer   = null)
 
-            => JSONObject.Create(
+        {
 
-                   new JProperty("Code",  Code),
+            var JSON = JSONObject.Create(
 
-                   Description.IsNotNullOrEmpty()
-                       ? new JProperty("Description",     Description)
-                       : null,
+                           new JProperty("Code",  Code),
 
-                   AdditionalInfo.IsNotNullOrEmpty()
-                       ? new JProperty("AdditionalInfo",  AdditionalInfo)
-                       : null
+                           Description.IsNotNullOrEmpty()
+                               ? new JProperty("Description",     Description)
+                               : null,
 
-               );
+                           AdditionalInfo.IsNotNullOrEmpty()
+                               ? new JProperty("AdditionalInfo",  AdditionalInfo)
+                               : null
+
+                       );
+
+            return CustomStatusCodeSerializer != null
+                       ? CustomStatusCodeSerializer(this, JSON)
+                       : JSON;
+
+        }
 
         #endregion
 

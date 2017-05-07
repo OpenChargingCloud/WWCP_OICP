@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionTypes                              Action,
-                                                          UInt64                                   NumberOfEVSEStatus,
+                                                          UInt64                                   NumberOfAuthorizationStart,
                                                           IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
                                                           TimeSpan                                 RequestTimeout);
 
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                           String                                   SenderId,
                                                           EventTracking_Id                         EventTrackingId,
                                                           ActionTypes                              Action,
-                                                          UInt64                                   NumberOfEVSEStatus,
+                                                          UInt64                                   NumberOfAuthorizationStart,
                                                           IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
                                                           TimeSpan                                 RequestTimeout,
                                                           Acknowledgement<PushEVSEStatusRequest>   Result,

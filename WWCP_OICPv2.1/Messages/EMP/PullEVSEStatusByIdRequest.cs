@@ -111,20 +111,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEStatusByIdXML,  OnException = null)
+        #region (static) Parse(PullEVSEStatusByIdXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEStatusByIdRequest Parse(XElement             PullEVSEStatusByIdXML,
-                                                      OnExceptionDelegate  OnException = null)
+        public static PullEVSEStatusByIdRequest Parse(XElement                                            PullEVSEStatusByIdXML,
+                                                      CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
+                                                      OnExceptionDelegate                                 OnException                             = null)
         {
 
             PullEVSEStatusByIdRequest _PullEVSEStatusById;
 
-            if (TryParse(PullEVSEStatusByIdXML, out _PullEVSEStatusById, OnException))
+            if (TryParse(PullEVSEStatusByIdXML,
+                         out _PullEVSEStatusById,
+                         CustomPullEVSEStatusByIdRequestParser,
+                         OnException))
+
                 return _PullEVSEStatusById;
 
             return null;
@@ -133,20 +139,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEStatusByIdText, OnException = null)
+        #region (static) Parse(PullEVSEStatusByIdText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdText">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEStatusByIdRequest Parse(String               PullEVSEStatusByIdText,
-                                                      OnExceptionDelegate  OnException = null)
+        public static PullEVSEStatusByIdRequest Parse(String                                              PullEVSEStatusByIdText,
+                                                      CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
+                                                      OnExceptionDelegate                                 OnException                             = null)
         {
 
             PullEVSEStatusByIdRequest _PullEVSEStatusById;
 
-            if (TryParse(PullEVSEStatusByIdText, out _PullEVSEStatusById, OnException))
+            if (TryParse(PullEVSEStatusByIdText,
+                         out _PullEVSEStatusById,
+                         CustomPullEVSEStatusByIdRequestParser,
+                         OnException))
+
                 return _PullEVSEStatusById;
 
             return null;
@@ -155,27 +167,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEStatusByIdXML,  out PullEVSEStatusById, OnException = null)
+        #region (static) TryParse(PullEVSEStatusByIdXML,  out PullEVSEStatusById, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status by id request.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                       PullEVSEStatusByIdXML,
-                                       out PullEVSEStatusByIdRequest  PullEVSEStatusById,
-                                       OnExceptionDelegate            OnException  = null)
+        public static Boolean TryParse(XElement                                            PullEVSEStatusByIdXML,
+                                       out PullEVSEStatusByIdRequest                       PullEVSEStatusById,
+                                       CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
+                                       OnExceptionDelegate                                 OnException                             = null)
         {
 
             try
             {
+
+                if (PullEVSEStatusByIdXML.Name != OICPNS.EVSEStatus + "eRoamingPullEvseStatusById")
+                {
+                    PullEVSEStatusById = null;
+                    return false;
+                }
 
                 PullEVSEStatusById = new PullEVSEStatusByIdRequest(PullEVSEStatusByIdXML.MapValueOrFail (OICPNS.EVSEStatus + "ProviderID",
                                                                                                          Provider_Id.Parse),
 
                                                                    PullEVSEStatusByIdXML.MapValuesOrFail(OICPNS.EVSEStatus + "EvseId",
                                                                                                          EVSE_Id.Parse));
+
+
+                if (CustomPullEVSEStatusByIdRequestParser != null)
+                    PullEVSEStatusById = CustomPullEVSEStatusByIdRequestParser(PullEVSEStatusByIdXML,
+                                                                               PullEVSEStatusById);
 
                 return true;
 
@@ -194,17 +219,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEStatusByIdText, out PullEVSEStatusById, OnException = null)
+        #region (static) TryParse(PullEVSEStatusByIdText, out PullEVSEStatusById, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdText">The text to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status by id request.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                         PullEVSEStatusByIdText,
-                                       out PullEVSEStatusByIdRequest  PullEVSEStatusById,
-                                       OnExceptionDelegate            OnException  = null)
+        public static Boolean TryParse(String                                              PullEVSEStatusByIdText,
+                                       out PullEVSEStatusByIdRequest                       PullEVSEStatusById,
+                                       CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
+                                       OnExceptionDelegate                                 OnException                             = null)
         {
 
             try
@@ -212,6 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(PullEVSEStatusByIdText).Root,
                              out PullEVSEStatusById,
+                             CustomPullEVSEStatusByIdRequestParser,
                              OnException))
 
                     return true;
@@ -235,7 +263,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusById XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer = null)
         {
 
             var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",

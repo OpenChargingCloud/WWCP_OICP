@@ -166,7 +166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse   (Request, EVSEStatusXML,  CustomEVSEStatusParser = null, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+        #region (static) Parse   (Request, EVSEStatusXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP EVSE statuses request.
@@ -176,13 +176,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CustomEVSEStatusParser">A delegate to parse custom EVSEStatus XML elements.</param>
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEStatus Parse(PullEVSEStatusRequest                     Request,
-                                       XElement                                  EVSEStatusXML,
-                                       CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
-                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
-                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+        public static EVSEStatus Parse(PullEVSEStatusRequest                        Request,
+                                       XElement                                     EVSEStatusXML,
+                                       CustomXMLParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             EVSEStatus _EVSEStatus;
@@ -193,6 +195,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          CustomEVSEStatusParser,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
+                         CustomStatusCodeParser,
                          OnException))
 
                 return _EVSEStatus;
@@ -203,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse   (Request, EVSEStatusText, CustomEVSEStatusParser = null, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+        #region (static) Parse   (Request, EVSEStatusText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP EVSE statuses request.
@@ -213,13 +216,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CustomEVSEStatusParser">A delegate to parse custom EVSEStatus XML elements.</param>
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEStatus Parse(PullEVSEStatusRequest                     Request,
-                                       String                                    EVSEStatusText,
-                                       CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
-                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
-                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+        public static EVSEStatus Parse(PullEVSEStatusRequest                        Request,
+                                       String                                       EVSEStatusText,
+                                       CustomXMLParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             EVSEStatus _EVSEStatus;
@@ -230,6 +235,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          CustomEVSEStatusParser,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
+                         CustomStatusCodeParser,
                          OnException))
 
                 return _EVSEStatus;
@@ -240,7 +246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(Request, EVSEStatusXML,  out EVSEStatus, CustomEVSEStatusParser = null, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+        #region (static) TryParse(Request, EVSEStatusXML,  out EVSEStatus, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP EVSE statuses request.
@@ -251,14 +257,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CustomEVSEStatusParser">A delegate to parse custom EVSEStatus XML elements.</param>
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(PullEVSEStatusRequest                     Request,
-                                       XElement                                  EVSEStatusXML,
-                                       out EVSEStatus                            EVSEStatus,
-                                       CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
-                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
-                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+        public static Boolean TryParse(PullEVSEStatusRequest                        Request,
+                                       XElement                                     EVSEStatusXML,
+                                       out EVSEStatus                               EVSEStatus,
+                                       CustomXMLParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -283,7 +291,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                             OnException),
 
                                   EVSEStatusXML.MapElement (OICPNS.EVSEStatus + "StatusCode",
-                                                            OICPv2_1.StatusCode.Parse)
+                                                           (XML, e) => OICPv2_1.StatusCode.Parse(XML,
+                                                                                                 CustomStatusCodeParser,
+                                                                                                 e),
+                                                            OnException)
 
                               );
 
@@ -308,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(Request, EVSEStatusText, out EVSEStatus, CustomEVSEStatusParser = null, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
+        #region (static) TryParse(Request, EVSEStatusText, out EVSEStatus, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP EVSE statuses request.
@@ -319,14 +330,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CustomEVSEStatusParser">A delegate to parse custom EVSEStatus XML elements.</param>
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(PullEVSEStatusRequest                     Request,
-                                       String                                    EVSEStatusText,
-                                       out EVSEStatus                            EVSEStatus,
-                                       CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
-                                       CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
-                                       CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+        public static Boolean TryParse(PullEVSEStatusRequest                        Request,
+                                       String                                       EVSEStatusText,
+                                       out EVSEStatus                               EVSEStatus,
+                                       CustomXMLParserDelegate<EVSEStatus>          CustomEVSEStatusParser           = null,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -338,6 +351,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                              CustomEVSEStatusParser,
                              CustomOperatorEVSEStatusParser,
                              CustomEVSEStatusRecordParser,
+                             CustomStatusCodeParser,
                              OnException))
 
                     return true;
@@ -365,11 +379,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom OperatorEVSEStatus XML elements.</param>
         /// <param name="EVSEStatusRecordXName">The EVSEStatusRecord XML name to use.</param>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<EVSEStatus>          CustomEVSEStatusSerializer           = null,
+        public XElement ToXML(CustomXMLSerializerDelegate<EVSEStatus>          CustomEVSEStatusSerializer           = null,
                               XName                                         OperatorEVSEStatusXName              = null,
-                              CustomSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer   = null,
+                              CustomXMLSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer   = null,
                               XName                                         EVSEStatusRecordXName                = null,
-                              CustomSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer     = null)
+                              CustomXMLSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer     = null)
 
         {
 

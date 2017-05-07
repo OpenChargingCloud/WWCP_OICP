@@ -17,6 +17,7 @@
 
 #region Usings
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -26,9 +27,17 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public delegate T CustomParserDelegate<T>(XElement XML, T ResponseBuilder);
+    public delegate T        CustomXMLParserDelegate<T>        (XElement XML,  T Data);
 
-    public delegate XElement CustomSerializerDelegate<T>(T ResponseBuilder, XElement XML);
+    public delegate T        CustomJObjectParserDelegate<T>    (JObject  JSON, T Data);
+
+    public delegate T        CustomJArrayParserDelegate<T>     (JArray   JSON, T Data);
+
+    public delegate XElement CustomXMLSerializerDelegate<T>    (T ResponseBuilder, XElement XML);
+
+    public delegate JObject  CustomJObjectSerializerDelegate<T>(T ResponseBuilder, JObject JSON);
+
+    public delegate JArray   CustomJArraySerializerDelegate<T> (T ResponseBuilder, JArray  JSON);
 
     public delegate TB CustomMapper2Delegate<TB>(TB ResponseBuilder);
 

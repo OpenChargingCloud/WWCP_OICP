@@ -179,14 +179,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 RegisterEvent("EVSEStatusPush",
                               handler => CPOClient.OnPushEVSEStatusSOAPRequest  += handler,
                               handler => CPOClient.OnPushEVSEStatusSOAPRequest  -= handler,
-                              "EVSE", "EVSEStatus", "Request", "All").
+                              "EVSE", "AuthorizationStart", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent("EVSEStatusPushed",
                               handler => CPOClient.OnPushEVSEStatusSOAPResponse += handler,
                               handler => CPOClient.OnPushEVSEStatusSOAPResponse -= handler,
-                              "EVSE", "EVSEStatus", "Response", "All").
+                              "EVSE", "AuthorizationStart", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

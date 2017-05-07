@@ -104,9 +104,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
+        // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
         //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         //
         //    <soapenv:Header/>
         //    <soapenv:Body>
@@ -153,20 +153,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEStatusXML,  OnException = null)
+        #region (static) Parse(PullEVSEStatusXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusXML">The XML to parse.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEStatusRequest Parse(XElement             PullEVSEStatusXML,
-                                                  OnExceptionDelegate  OnException = null)
+        public static PullEVSEStatusRequest Parse(XElement                                        PullEVSEStatusXML,
+                                                  CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
+                                                  OnExceptionDelegate                             OnException                         = null)
         {
 
             PullEVSEStatusRequest _PullEVSEStatus;
 
-            if (TryParse(PullEVSEStatusXML, out _PullEVSEStatus, OnException))
+            if (TryParse(PullEVSEStatusXML,
+                         out _PullEVSEStatus,
+                         CustomPullEVSEStatusRequestParser,
+                         OnException))
+
                 return _PullEVSEStatus;
 
             return null;
@@ -175,20 +181,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEStatusText, OnException = null)
+        #region (static) Parse(PullEVSEStatusText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusText">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullEVSEStatusRequest Parse(String               PullEVSEStatusText,
-                                                  OnExceptionDelegate  OnException = null)
+        public static PullEVSEStatusRequest Parse(String                                          PullEVSEStatusText,
+                                                  CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
+                                                  OnExceptionDelegate                             OnException                         = null)
         {
 
             PullEVSEStatusRequest _PullEVSEStatus;
 
-            if (TryParse(PullEVSEStatusText, out _PullEVSEStatus, OnException))
+            if (TryParse(PullEVSEStatusText,
+                         out _PullEVSEStatus,
+                         CustomPullEVSEStatusRequestParser,
+                         OnException))
+
                 return _PullEVSEStatus;
 
             return null;
@@ -197,21 +209,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEStatusXML,  out PullEVSEStatus, OnException = null)
+        #region (static) TryParse(PullEVSEStatusXML,  out PullEVSEStatus, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusXML">The XML to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status request.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                   PullEVSEStatusXML,
-                                       out PullEVSEStatusRequest  PullEVSEStatus,
-                                       OnExceptionDelegate        OnException  = null)
+        public static Boolean TryParse(XElement                                        PullEVSEStatusXML,
+                                       out PullEVSEStatusRequest                       PullEVSEStatus,
+                                       CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
+                                       OnExceptionDelegate                             OnException                         = null)
         {
 
             try
             {
+
+                if (PullEVSEStatusXML.Name != OICPNS.EVSEStatus + "eRoamingPullEvseStatus")
+                {
+                    PullEVSEStatus = null;
+                    return false;
+                }
 
                 #region Parse the optional search center
 
@@ -270,6 +290,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                             s => (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), s))
                                                           );
 
+
+                if (CustomPullEVSEStatusRequestParser != null)
+                    PullEVSEStatus = CustomPullEVSEStatusRequestParser(PullEVSEStatusXML,
+                                                                       PullEVSEStatus);
+
                 return true;
 
             }
@@ -287,17 +312,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEStatusText, out PullEVSEStatus, OnException = null)
+        #region (static) TryParse(PullEVSEStatusText, out PullEVSEStatus, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusText">The text to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status request.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                     PullEVSEStatusText,
-                                       out PullEVSEStatusRequest  PullEVSEStatus,
-                                       OnExceptionDelegate        OnException  = null)
+        public static Boolean TryParse(String                                          PullEVSEStatusText,
+                                       out PullEVSEStatusRequest                       PullEVSEStatus,
+                                       CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
+                                       OnExceptionDelegate                             OnException                         = null)
         {
 
             try
@@ -305,6 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(PullEVSEStatusText).Root,
                              out PullEVSEStatus,
+                             CustomPullEVSEStatusRequestParser,
                              OnException))
 
                     return true;
@@ -328,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="CustomPullEVSEStatusRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatus XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestSerializer = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestSerializer = null)
         {
 
             var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatus",

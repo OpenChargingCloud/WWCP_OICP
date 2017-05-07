@@ -182,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given XML representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestXML">The XML to parse.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -193,8 +193,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteStartRequest
 
             Parse(XElement                                           AuthorizeRemoteStartRequestXML,
-                  CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
-                  CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                  CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
                   OnExceptionDelegate                                OnException                               = null,
 
                   DateTime?                                          Timestamp                                 = null,
@@ -231,7 +231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Parse the given text representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -242,8 +242,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static AuthorizeRemoteStartRequest
 
             Parse(String                                             AuthorizeRemoteStartRequestText,
-                  CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
-                  CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                  CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                  CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
                   OnExceptionDelegate                                OnException                               = null,
 
                   DateTime?                                          Timestamp                                 = null,
@@ -281,7 +281,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestXML">The XML to parse.</param>
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -291,8 +291,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                           AuthorizeRemoteStartRequestXML,
                                        out AuthorizeRemoteStartRequest                    AuthorizeRemoteStartRequest,
-                                       CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
-                                       CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
                                        OnExceptionDelegate                                OnException                               = null,
 
                                        DateTime?                                          Timestamp                                 = null,
@@ -384,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -394,8 +394,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                             AuthorizeRemoteStartRequestText,
                                        out AuthorizeRemoteStartRequest                    AuthorizeRemoteStartRequest,
-                                       CustomParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
-                                       CustomParserDelegate<Identification>               CustomIdentificationParser                = null,
+                                       CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
+                                       CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
                                        OnExceptionDelegate                                OnException                               = null,
 
                                        DateTime?                                          Timestamp                                 = null,
@@ -441,8 +441,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="CustomIdentificationSerializer">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(CustomSerializerDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestSerializer   = null,
-                              CustomSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
+        public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestSerializer   = null,
+                              CustomXMLSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
         {
 
             var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",

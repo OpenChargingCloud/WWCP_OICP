@@ -120,7 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region Custom request mappers
+        #region Custom request/response mappers
 
         #region CustomPullEVSEData(SOAP)RequestMapper
 
@@ -319,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<PushAuthenticationDataRequest>> CustomPushAuthenticationDataParser  { get; set; }
 
         #endregion
 
@@ -370,7 +370,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>> CustomAuthorizeRemoteReservationStartParser  { get; set; }
 
         #endregion
 
@@ -420,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>> CustomAuthorizeRemoteReservationStopParser  { get; set; }
 
         #endregion
 
@@ -470,7 +470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>> CustomAuthorizeRemoteStartParser  { get; set; }
 
         #endregion
 
@@ -520,7 +520,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser  { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>> CustomAuthorizeRemoteStopParser  { get; set; }
 
         #endregion
 
@@ -571,22 +571,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        public CustomParserDelegate<GetChargeDetailRecordsResponse> CustomGetChargeDetailRecordsParser  { get; set; }
+        public CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsParser           { get; set; }
 
         #endregion
 
 
-        public CustomParserDelegate<OperatorEVSEData>    CustomOperatorEVSEDataParser     { get; set; }
-        public CustomParserDelegate<EVSEDataRecord>      CustomEVSEDataRecordParser       { get; set; }
+        public CustomXMLParserDelegate<OperatorEVSEData>                CustomOperatorEVSEDataParser                 { get; set; }
+        public CustomXMLParserDelegate<EVSEDataRecord>                  CustomEVSEDataRecordParser                   { get; set; }
 
-        public CustomParserDelegate<EVSEStatus>          CustomEVSEStatusParser           { get; set; }
-        public CustomParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   { get; set; }
-        public CustomParserDelegate<EVSEStatusById>      CustomEVSEStatusByIdParser       { get; set; }
-        public CustomParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     { get; set; }
+        public CustomXMLParserDelegate<EVSEStatus>                      CustomEVSEStatusParser                       { get; set; }
+        public CustomXMLParserDelegate<OperatorEVSEStatus>              CustomOperatorEVSEStatusParser               { get; set; }
+        public CustomXMLParserDelegate<EVSEStatusById>                  CustomEVSEStatusByIdParser                   { get; set; }
+        public CustomXMLParserDelegate<EVSEStatusRecord>                CustomEVSEStatusRecordParser                 { get; set; }
 
-        public CustomParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   { get; set; }
-        public CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   { get; set; }
-        public CustomParserDelegate<Identification>                  CustomIdentificationParser { get; set; }
+        public CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   { get; set; }
+        public CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               { get; set; }
+        public CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   { get; set; }
+
+
+        public CustomXMLParserDelegate<StatusCode>                      CustomStatusCodeParser                       { get; set; }
 
         #endregion
 
@@ -1239,6 +1242,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                                                    CustomEVSEStatusParser,
                                                                                                                                    CustomOperatorEVSEStatusParser,
                                                                                                                                    CustomEVSEStatusRecordParser,
+                                                                                                                                   CustomStatusCodeParser,
                                                                                                                                    e)),
 
                                                  #endregion
@@ -1421,6 +1425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                                                        xml,
                                                                                                                                        CustomEVSEStatusByIdParser,
                                                                                                                                        CustomEVSEStatusRecordParser,
+                                                                                                                                       CustomStatusCodeParser,
                                                                                                                                        e)),
 
                                                  #endregion
@@ -1602,6 +1607,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           Acknowledgement<PushAuthenticationDataRequest>.Parse(request,
                                                                                                                                                                xml,
                                                                                                                                                                CustomPushAuthenticationDataParser,
+                                                                                                                                                               CustomStatusCodeParser,
                                                                                                                                                                onexception)),
 
                                                  #endregion
@@ -1813,6 +1819,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>.Parse(request,
                                                                                                                                                                         xml,
                                                                                                                                                                         CustomAuthorizeRemoteReservationStartParser,
+                                                                                                                                                                        CustomStatusCodeParser,
                                                                                                                                                                         onexception)),
 
                                                  #endregion
@@ -2026,6 +2033,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           Acknowledgement<AuthorizeRemoteReservationStopRequest>.Parse(request,
                                                                                                                                                                        xml,
                                                                                                                                                                        CustomAuthorizeRemoteReservationStopParser,
+                                                                                                                                                                       CustomStatusCodeParser,
                                                                                                                                                                        onexception)),
 
                                                  #endregion
@@ -2240,6 +2248,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                           Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
                                                                                                                                                              xml,
                                                                                                                                                              CustomAuthorizeRemoteStartParser,
+                                                                                                                                                             CustomStatusCodeParser,
                                                                                                                                                              onexception)),
 
                                                  #endregion
@@ -2450,6 +2459,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                       Acknowledgement<AuthorizeRemoteStopRequest>.Parse(request,
                                                                                                                                                         xml,
                                                                                                                                                         CustomAuthorizeRemoteStopParser,
+                                                                                                                                                        CustomStatusCodeParser,
                                                                                                                                                         onexception)),
 
                                                  #endregion

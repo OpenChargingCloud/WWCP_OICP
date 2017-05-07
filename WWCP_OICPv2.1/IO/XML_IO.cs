@@ -886,9 +886,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region AsEVSEStatusType(EVSEStatusType)
 
         /// <summary>
-        /// Parses the OICP ValueAddedService.
+        /// Parses OICP EVSE status.
         /// </summary>
-        /// <param name="EVSEStatusType">A value added service.</param>
+        /// <param name="EVSEStatusType">An EVSE status.</param>
         public static EVSEStatusTypes AsEVSEStatusType(String EVSEStatusType)
         {
 
@@ -920,12 +920,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region AsString(EVSEStatusType)
+        #region AsString(AuthorizationStartType)
 
-        public static String AsText(this EVSEStatusTypes EVSEStatusType)
+        public static String AsText(this EVSEStatusTypes AuthorizationStartType)
         {
 
-            switch (EVSEStatusType)
+            switch (AuthorizationStartType)
             {
 
                 case EVSEStatusTypes.Available:

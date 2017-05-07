@@ -158,7 +158,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataParser { get; set; }
 
         #endregion
 
@@ -208,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser   { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusParser   { get; set; }
 
         #endregion
 
@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        //public CustomMapperDelegate<AuthorizationStart, AuthorizationStart.Builder> CustomAuthorizeStartResponseMapper { get; set; }
+        public CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser { get; set; }
 
         #endregion
 
@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        //public CustomMapperDelegate<AuthorizationStop, AuthorizationStop.Builder> CustomAuthorizeStopResponseMapper { get; set; }
+        public CustomXMLParserDelegate<AuthorizationStop>  CustomAuthorizationStopParser { get; set; }
 
         #endregion
 
@@ -359,7 +359,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        public CustomParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser   { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordParser   { get; set; }
 
         #endregion
 
@@ -415,24 +415,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        public CustomSerializerDelegate<PushEVSEDataRequest>            CustomPushEVSEDataRequestSerializer              { get; set; }
-        public CustomSerializerDelegate<OperatorEVSEData>               CustomOperatorEVSEDataSerializer                 { get; set; }
-        public CustomSerializerDelegate<EVSEDataRecord>                 CustomEVSEDataRecordSerializer                   { get; set; }
+        public CustomXMLSerializerDelegate<PushEVSEDataRequest>            CustomPushEVSEDataRequestSerializer              { get; set; }
+        public CustomXMLSerializerDelegate<OperatorEVSEData>               CustomOperatorEVSEDataSerializer                 { get; set; }
+        public CustomXMLSerializerDelegate<EVSEDataRecord>                 CustomEVSEDataRecordSerializer                   { get; set; }
 
-        public CustomSerializerDelegate<PushEVSEStatusRequest>          CustomPushEVSEStatusRequestSerializer            { get; set; }
-        public CustomSerializerDelegate<OperatorEVSEStatus>             CustomOperatorEVSEStatusSerializer               { get; set; }
-        public CustomSerializerDelegate<EVSEStatusRecord>               CustomEVSEStatusRecordSerializer                 { get; set; }
+        public CustomXMLSerializerDelegate<PushEVSEStatusRequest>          CustomPushEVSEStatusRequestSerializer            { get; set; }
+        public CustomXMLSerializerDelegate<OperatorEVSEStatus>             CustomOperatorEVSEStatusSerializer               { get; set; }
+        public CustomXMLSerializerDelegate<EVSEStatusRecord>               CustomEVSEStatusRecordSerializer                 { get; set; }
 
 
-        public CustomParserDelegate<AuthenticationData>                 CustomAuthenticationDataParser                   { get; set; }
-        public CustomParserDelegate<ProviderAuthenticationData>         CustomProviderAuthenticationDataParser           { get; set; }
-        public CustomParserDelegate<Identification>                     CustomAuthorizationIdentificationParser          { get; set; }
+        public CustomXMLParserDelegate<AuthenticationData>                 CustomAuthenticationDataParser                   { get; set; }
+        public CustomXMLParserDelegate<ProviderAuthenticationData>         CustomProviderAuthenticationDataParser           { get; set; }
+        public CustomXMLParserDelegate<Identification>                     CustomAuthorizationIdentificationParser          { get; set; }
 
-        public CustomSerializerDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestSerializer            { get; set; }
-        public CustomSerializerDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestSerializer             { get; set; }
-        public CustomSerializerDelegate<ChargeDetailRecord>             CustomSendChargeDetailRecordRequestSerializer    { get; set; }
+        public CustomXMLSerializerDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestSerializer            { get; set; }
+        public CustomXMLSerializerDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestSerializer             { get; set; }
+        public CustomXMLSerializerDelegate<ChargeDetailRecord>             CustomSendChargeDetailRecordRequestSerializer    { get; set; }
 
-        public CustomSerializerDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestSerializer    { get; set; }
+        public CustomXMLSerializerDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestSerializer    { get; set; }
+
+
+        public CustomXMLParserDelegate<Identification>                     CustomIdentificationParser                       { get; set; }
+        public CustomXMLParserDelegate<StatusCode>                         CustomStatusCodeParser                           { get; set; }
 
         #endregion
 
@@ -601,7 +605,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="EVSEDataURI">The HTTP/SOAP/XML URI for OICP EvseData requests.</param>
-        /// <param name="EVSEStatusURI">The HTTP/SOAP/XML URI for OICP EvseStatus requests.</param>
+        /// <param name="AuthorizationStartURI">The HTTP/SOAP/XML URI for OICP EvseStatus requests.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP Authorization requests.</param>
         /// <param name="AuthenticationDataURI">The HTTP/SOAP/XML URI for OICP AuthenticationData requests.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
@@ -820,6 +824,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       Acknowledgement<PushEVSEDataRequest>.Parse(request,
                                                                                                                                                  xml,
                                                                                                                                                  CustomPushEVSEDataParser,
+                                                                                                                                                 CustomStatusCodeParser,
                                                                                                                                                  onexception)),
 
                                                  #endregion
@@ -1031,6 +1036,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       Acknowledgement<PushEVSEStatusRequest>.Parse(request,
                                                                                                                                                    xml,
                                                                                                                                                    CustomPushEVSEStatusParser,
+                                                                                                                                                   CustomStatusCodeParser,
                                                                                                                                                    onexception)),
 
                                                  #endregion
@@ -1243,7 +1249,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
                                                                                                       (request, xml, onexception) => AuthorizationStart.Parse(request,
                                                                                                                                                               xml,
-                                                                                                                                                              CustomAuthorizeStartResponseMapper,
+                                                                                                                                                              CustomAuthorizationStartParser,
+                                                                                                                                                              CustomIdentificationParser,
+                                                                                                                                                              CustomStatusCodeParser,
                                                                                                                                                               onexception)),
 
                                                  #endregion
@@ -1437,7 +1445,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
                                                                                                       (request, xml, onexception) => AuthorizationStop.Parse(request,
                                                                                                                                                              xml,
-                                                                                                                                                             CustomAuthorizeStopResponseMapper,
+                                                                                                                                                             CustomAuthorizationStopParser,
+                                                                                                                                                             CustomStatusCodeParser,
                                                                                                                                                              onexception)),
 
                                                  #endregion
@@ -1626,6 +1635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                       Acknowledgement<SendChargeDetailRecordRequest>.Parse(request,
                                                                                                                                                            xml,
                                                                                                                                                            CustomSendChargeDetailRecordParser,
+                                                                                                                                                           CustomStatusCodeParser,
                                                                                                                                                            onexception)),
 
                                                  #endregion
@@ -1841,6 +1851,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                                                                CustomAuthenticationDataParser,
                                                                                                                                CustomProviderAuthenticationDataParser,
                                                                                                                                CustomAuthorizationIdentificationParser,
+                                                                                                                               CustomStatusCodeParser,
                                                                                                                                onexception)),
 
                                                  #endregion

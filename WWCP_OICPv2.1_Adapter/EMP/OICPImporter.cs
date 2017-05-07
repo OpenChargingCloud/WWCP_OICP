@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                             Func  <String, DateTime, IEnumerable<EVSE_Id>>            GetEVSEIdsForStatusUpdate      = null,
                             Action<String, DateTime, XElement>                        EVSEStatusXMLHandler           = null,
-                            Action<String, DateTime, EVSE_Id, EVSEStatusTypes>        EVSEStatusHandler              = null,
+                            Action<String, DateTime, EVSE_Id, WWCP.EVSEStatusTypes>        EVSEStatusHandler              = null,
 
                             Func<EVSEStatusReport, ChargingStationStatusTypes>         EVSEStatusAggregationDelegate  = null
 
@@ -1077,7 +1077,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         Element (OICPNS.EVSEStatus + "EvseStatusRecords").
                                                         Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
                                                         Select(v => new KeyValuePair<EVSE_Id, EVSEStatusTypes>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
-                                                                                                                (EVSEStatusTypes) Enum.Parse(typeof(EVSEStatusTypes), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
+                                                                                                               (EVSEStatusTypes) Enum.Parse(typeof(WWCP.EVSEStatusTypes), v.Element(OICPNS.EVSEStatus + "EvseStatus").Value))).
                                                         ToArray();
 
                             if (EvseStatus.Length > 0)

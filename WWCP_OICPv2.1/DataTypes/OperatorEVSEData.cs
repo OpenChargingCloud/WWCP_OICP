@@ -102,14 +102,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         //    <soapenv:Body>
         //       <EVSEData:eRoamingPushEvseData>
         // 
-        //          <EVSEData:ActionType>fullLoad|update|insert|delete</EVSEStatus:ActionType>
+        //          <EVSEData:ActionType>fullLoad|update|insert|delete</AuthorizationStart:ActionType>
         // 
         //          <EVSEData:OperatorEvseData>
         // 
-        //             <EVSEData:OperatorID>DE*GEF</EVSEStatus:OperatorID>
+        //             <EVSEData:OperatorID>DE*GEF</AuthorizationStart:OperatorID>
         // 
         //             <!--Optional:-->
-        //             <EVSEData:OperatorName>GraphDefined</EVSEStatus:OperatorName>
+        //             <EVSEData:OperatorName>GraphDefined</AuthorizationStart:OperatorName>
         // 
         //             <!--Zero or more repetitions:-->
         //             <EVSEData:EvseDataRecord deltaType="update|insert|delete" lastUpdate="?">
@@ -208,8 +208,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(XElement                                OperatorEVSEDataXML,
-                                             CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                             CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                              OnExceptionDelegate                     OnException                   = null)
         {
 
@@ -239,8 +239,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(String                                  OperatorEVSEDataText,
-                                             CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                             CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                              OnExceptionDelegate                     OnException                   = null)
         {
 
@@ -272,8 +272,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                OperatorEVSEDataXML,
                                        out OperatorEVSEData                    OperatorEVSEData,
-                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                        OnExceptionDelegate                     OnException                   = null)
         {
 
@@ -331,8 +331,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                  OperatorEVSEDataText,
                                        out OperatorEVSEData                    OperatorEVSEData,
-                                       CustomParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
                                        OnExceptionDelegate                     OnException                   = null)
         {
 
@@ -371,10 +371,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
         public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
-                              CustomSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
+                              CustomXMLSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
                               XName                                       EVSEDataRecordXName               = null,
                               Boolean                                     IncludeEVSEDataRecordMetadata     = true,
-                              CustomSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer    = null)
+                              CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer    = null)
 
         {
 

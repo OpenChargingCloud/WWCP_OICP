@@ -106,8 +106,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static SendChargeDetailRecordRequest Parse(XElement                                  SendChargeDetailRecordXML,
-                                                          CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-                                                          CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                                          CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                                          CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
                                                           OnExceptionDelegate                       OnException                      = null,
 
                                                           DateTime?                                 Timestamp                        = null,
@@ -147,8 +147,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static SendChargeDetailRecordRequest Parse(String                                    SendChargeDetailRecordText,
-                                                          CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-                                                          CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                                          CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                                          CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
                                                           OnExceptionDelegate                       OnException                      = null,
 
                                                           DateTime?                                 Timestamp                        = null,
@@ -190,8 +190,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                  SendChargeDetailRecordXML,
                                        out SendChargeDetailRecordRequest         SendChargeDetailRecord,
-                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
                                        OnExceptionDelegate                       OnException                      = null,
 
                                        DateTime?                                 Timestamp                        = null,
@@ -244,8 +244,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                    SendChargeDetailRecordText,
                                        out SendChargeDetailRecordRequest         SendChargeDetailRecord,
-                                       CustomParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-                                       CustomParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
                                        OnExceptionDelegate                       OnException                      = null,
 
                                        DateTime?                                 Timestamp                        = null,
@@ -293,8 +293,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomChargeDetailRecordSerializer">A delegate to customize the serialization of SendChargeDetailRecord requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(XName                                         XName                                = null,
-                              CustomSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
-                              CustomSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
+                              CustomXMLSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
+                              CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 
             => ChargeDetailRecord.ToXML(XName,
                                         CustomChargeDetailRecordSerializer,
