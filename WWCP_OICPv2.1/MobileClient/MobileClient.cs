@@ -131,11 +131,110 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
+        #region MobileRemoteStart   (SOAP)RequestMapper
 
+        #region CustomMobileRemoteStartRequestMapper
 
-        public CustomXMLParserDelegate<StatusCode>                       CustomStatusCodeParser                         { get; set; }
-        public CustomXMLSerializerDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestSerializer    { get; set; }
+        private Func<MobileRemoteStartRequest, MobileRemoteStartRequest> _CustomMobileRemoteStartRequestMapper = _ => _;
 
+        public Func<MobileRemoteStartRequest, MobileRemoteStartRequest> CustomMobileRemoteStartRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileRemoteStartRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileRemoteStartRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomMobileRemoteStartSOAPRequestMapper
+
+        private Func<MobileRemoteStartRequest, XElement, XElement> _CustomMobileRemoteStartSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<MobileRemoteStartRequest, XElement, XElement> CustomMobileRemoteStartSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileRemoteStartSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileRemoteStartSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MobileRemoteStop    (SOAP)RequestMapper
+
+        #region CustomMobileRemoteStopRequestMapper
+
+        private Func<MobileRemoteStopRequest, MobileRemoteStopRequest> _CustomMobileRemoteStopRequestMapper = _ => _;
+
+        public Func<MobileRemoteStopRequest, MobileRemoteStopRequest> CustomMobileRemoteStopRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileRemoteStopRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileRemoteStopRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomMobileRemoteStopSOAPRequestMapper
+
+        private Func<MobileRemoteStopRequest, XElement, XElement> _CustomMobileRemoteStopSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<MobileRemoteStopRequest, XElement, XElement> CustomMobileRemoteStopSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomMobileRemoteStopSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomMobileRemoteStopSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #endregion
+
+        public CustomXMLSerializerDelegate<MobileAuthorizeStartRequest>            CustomMobileAuthorizeStartRequestSerializer    { get; set; }
+        public CustomXMLSerializerDelegate<MobileRemoteStartRequest>               CustomMobileRemoteStartRequestSerializer       { get; set; }
+        public CustomXMLSerializerDelegate<MobileRemoteStopRequest>                CustomMobileRemoteStopRequestSerializer        { get; set; }
+
+        public CustomXMLParserDelegate<StatusCode>                                 CustomStatusCodeParser                         { get; set; }
+
+        public CustomXMLParserDelegate<Acknowledgement<MobileRemoteStartRequest>>  CustomAcknowledgementMobileRemoteStartParser   { get; set; }
+        public CustomXMLParserDelegate<Acknowledgement<MobileRemoteStopRequest>>   CustomAcknowledgementMobileRemoteStopParser    { get; set; }
 
         #endregion
 
@@ -522,6 +621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                     await Task.WhenAll(OnMobileAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnMobileAuthorizeStartResponseHandler>().
                                        Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
                                                      this,
                                                      ClientId,
                                                      Request.EventTrackingId,
@@ -548,8 +648,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-
-        #region MobileRemoteStart(SessionId, ...)
+        #region MobileRemoteStart(Request)
 
         /// <summary>
         /// Create a new task starting a remote charging session.
@@ -560,46 +659,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>>
 
-            MobileRemoteStart(Session_Id          SessionId,
-
-                              DateTime?           Timestamp          = null,
-                              CancellationToken?  CancellationToken  = null,
-                              EventTracking_Id    EventTrackingId    = null,
-                              TimeSpan?           RequestTimeout     = null)
+            MobileRemoteStart(MobileRemoteStartRequest  Request)
 
         {
 
             #region Initial checks
 
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given MobileRemoteStart request must not be null!");
+
+            Request = _CustomMobileRemoteStartRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped MobileRemoteStart request must not be null!");
 
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
-
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
+            HTTPResponse<Acknowledgement<MobileRemoteStartRequest>> result = null;
 
             #endregion
 
             #region Send OnMobileRemoteStartRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnMobileRemoteStartRequest?.Invoke(DateTime.Now,
-                                                   Timestamp.Value,
-                                                   this,
-                                                   ClientId,
-                                                   EventTrackingId,
-                                                   SessionId,
-                                                   RequestTimeout);
+                if (OnMobileRemoteStartRequest != null)
+                    await Task.WhenAll(OnMobileRemoteStartRequest.GetInvocationList().
+                                       Cast<OnMobileRemoteStartRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.SessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -613,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingMobileAuthorization_V2.0",
+                                                    URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -621,106 +719,149 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
             {
 
-                var result = await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStartXML(SessionId),
-                                                     "eRoamingMobileRemoteStart",
-                                                     RequestLogDelegate:   OnMobileRemoteStartSOAPRequest,
-                                                     ResponseLogDelegate:  OnMobileRemoteStartSOAPResponse,
-                                                     CancellationToken:    CancellationToken,
-                                                     EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                result = await _OICPClient.Query(_CustomMobileRemoteStartSOAPRequestMapper(Request,
+                                                                                           SOAP.Encapsulation(Request.ToXML(CustomMobileRemoteStartRequestSerializer))),
+                                                 "eRoamingMobileRemoteStart",
+                                                 RequestLogDelegate:   OnMobileRemoteStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnMobileRemoteStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<MobileRemoteStartRequest>.Parse(request,
+                                                                                                                                                          xml,
+                                                                                                                                                          CustomAcknowledgementMobileRemoteStartParser,
+                                                                                                                                                          CustomStatusCodeParser,
+                                                                                                                                                          onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                  Acknowledgement.SystemError(
-                                                                                                      httpresponse.Content.ToString()
-                                                                                                  ),
-                                                                                                  IsFault: true);
+                                                     return new HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>(
 
-                                                     },
+                                                                httpresponse,
 
-                                                     #endregion
+                                                                new Acknowledgement<MobileRemoteStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
 
-                                                     #region OnHTTPError
+                                                                IsFault: true
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                            );
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                 },
 
-                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                  Acknowledgement.SystemError(
-                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                      httpresponse.HTTPBody.      ToUTF8String()
-                                                                                                  ),
-                                                                                                  IsFault: true);
+                                                 #endregion
 
-                                                     },
+                                                 #region OnHTTPError
 
-                                                     #endregion
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                     #region OnException
+                                                     SendHTTPError(timestamp, this, httpresponse);
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                     return new HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>(
 
-                                                         SendException(timestamp, sender, exception);
+                                                                httpresponse,
 
-                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(Acknowledgement.ServiceNotAvailable(
-                                                                                                                  exception.Message,
-                                                                                                                  exception.StackTrace,
-                                                                                                                  SessionId
-                                                                                                              ),
-                                                                                                              Exception: exception);
+                                                                new Acknowledgement<MobileRemoteStartRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                                                     }
+                                                                IsFault: true
 
-                                                     #endregion
+                                                            );
 
-                                                    );
+                                                 },
 
+                                                 #endregion
 
-                #region Send OnMobileRemoteStartResponse event
+                                                 #region OnException
 
-                try
-                {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                    OnMobileRemoteStartResponse?.Invoke(DateTime.Now,
-                                                        Timestamp.Value,
-                                                        this,
-                                                        ClientId,
-                                                        EventTrackingId,
-                                                        SessionId,
-                                                        RequestTimeout,
-                                                        result.Content,
-                                                        DateTime.Now - Timestamp.Value);
+                                                     SendException(timestamp, sender, exception);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(MobileClient) + "." + nameof(OnMobileRemoteStartResponse));
-                }
+                                                     return HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>.ExceptionThrown(
 
-                #endregion
+                                                            new Acknowledgement<MobileRemoteStartRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace
+                                                            ),
 
+                                                            Exception: exception
 
-                return result;
+                                                        );
+
+                                                 }
+
+                                                 #endregion
+
+                                                );
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>.OK(
+                             new Acknowledgement<MobileRemoteStartRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnMobileRemoteStartResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                if (OnMobileRemoteStartResponse != null)
+                    await Task.WhenAll(OnMobileRemoteStartResponse.GetInvocationList().
+                                       Cast<OnMobileRemoteStartResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.SessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(MobileClient) + "." + nameof(OnMobileRemoteStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
         #endregion
 
-        #region MobileRemoteStop(SessionId, ...)
+        #region MobileRemoteStop(Request)
 
         /// <summary>
         /// Create a new task stopping a remote charging session.
@@ -731,46 +872,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<HTTPResponse<Acknowledgement>>
+        public async Task<HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>>
 
-            MobileRemoteStop(Session_Id          SessionId,
-
-                             DateTime?           Timestamp          = null,
-                             CancellationToken?  CancellationToken  = null,
-                             EventTracking_Id    EventTrackingId    = null,
-                             TimeSpan?           RequestTimeout     = null)
+            MobileRemoteStop(MobileRemoteStopRequest Request)
 
         {
 
             #region Initial checks
 
-            if (SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given MobileRemoteStop request must not be null!");
+
+            Request = _CustomMobileRemoteStopRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped MobileRemoteStop request must not be null!");
 
 
-            if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
-
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = this.RequestTimeout;
+            HTTPResponse<Acknowledgement<MobileRemoteStopRequest>> result = null;
 
             #endregion
 
             #region Send OnMobileRemoteStopRequest event
 
+            var StartTime = DateTime.Now;
+
             try
             {
 
-                OnMobileRemoteStopRequest?.Invoke(DateTime.Now,
-                                                  Timestamp.Value,
-                                                  this,
-                                                  ClientId,
-                                                  EventTrackingId,
-                                                  SessionId,
-                                                  RequestTimeout);
+                if (OnMobileRemoteStopRequest != null)
+                    await Task.WhenAll(OnMobileRemoteStopRequest.GetInvocationList().
+                                       Cast<OnMobileRemoteStopRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.SessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
 
             }
             catch (Exception e)
@@ -784,7 +924,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingMobileAuthorization_V2.0",
+                                                    URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -792,100 +932,143 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
             {
 
-                var result = await _OICPClient.Query(MobileClient_XMLMethods.MobileRemoteStopXML(SessionId),
-                                                     "eRoamingMobileRemoteStop",
-                                                     RequestLogDelegate:   OnMobileRemoteStopSOAPRequest,
-                                                     ResponseLogDelegate:  OnMobileRemoteStopSOAPResponse,
-                                                     CancellationToken:    CancellationToken,
-                                                     EventTrackingId:      EventTrackingId,
-                                                     QueryTimeout:         RequestTimeout,
+                result = await _OICPClient.Query(_CustomMobileRemoteStopSOAPRequestMapper(Request,
+                                                                                          SOAP.Encapsulation(Request.ToXML(CustomMobileRemoteStopRequestSerializer))),
+                                                 "eRoamingMobileRemoteStop",
+                                                 RequestLogDelegate:   OnMobileRemoteStartSOAPRequest,
+                                                 ResponseLogDelegate:  OnMobileRemoteStartSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                     #region OnSuccess
+                                                 #region OnSuccess
 
-                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Acknowledgement.Parse),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) =>
+                                                                                                          Acknowledgement<MobileRemoteStopRequest>.Parse(request,
+                                                                                                                                                         xml,
+                                                                                                                                                         CustomAcknowledgementMobileRemoteStopParser,
+                                                                                                                                                         CustomStatusCodeParser,
+                                                                                                                                                         onexception)),
 
-                                                     #endregion
+                                                 #endregion
 
-                                                     #region OnSOAPFault
+                                                 #region OnSOAPFault
 
-                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                         SendSOAPError(timestamp, soapclient, httpresponse.Content);
+                                                     SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                  Acknowledgement.SystemError(
-                                                                                                      httpresponse.Content.ToString()
-                                                                                                  ),
-                                                                                                  IsFault: true);
+                                                     return new HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>(
 
-                                                     },
+                                                                httpresponse,
 
-                                                     #endregion
+                                                                new Acknowledgement<MobileRemoteStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
 
-                                                     #region OnHTTPError
+                                                                IsFault: true
 
-                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                            );
 
-                                                         SendHTTPError(timestamp, soapclient, httpresponse);
+                                                 },
 
-                                                         return new HTTPResponse<Acknowledgement>(httpresponse,
-                                                                                                  Acknowledgement.SystemError(
-                                                                                                      httpresponse.HTTPStatusCode.ToString(),
-                                                                                                      httpresponse.HTTPBody.      ToUTF8String()
-                                                                                                  ),
-                                                                                                  IsFault: true);
+                                                 #endregion
 
-                                                     },
+                                                 #region OnHTTPError
 
-                                                     #endregion
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                     #region OnException
+                                                     SendHTTPError(timestamp, this, httpresponse);
 
-                                                     OnException: (timestamp, sender, exception) => {
+                                                     return new HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>(
 
-                                                         SendException(timestamp, sender, exception);
+                                                                httpresponse,
 
-                                                         return HTTPResponse<Acknowledgement>.ExceptionThrown(Acknowledgement.ServiceNotAvailable(
-                                                                                                                  exception.Message,
-                                                                                                                  exception.StackTrace,
-                                                                                                                  SessionId
-                                                                                                              ),
-                                                                                                              Exception: exception);
+                                                                new Acknowledgement<MobileRemoteStopRequest>(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
 
-                                                     }
+                                                                IsFault: true
 
-                                                     #endregion
+                                                            );
 
-                                                    );
+                                                 },
 
+                                                 #endregion
 
-                #region Send OnMobileRemoteStopResponse event
+                                                 #region OnException
 
-                try
-                {
+                                                 OnException: (timestamp, sender, exception) => {
 
-                    OnMobileRemoteStopResponse?.Invoke(DateTime.Now,
-                                                       Timestamp.Value,
-                                                       this,
-                                                       ClientId,
-                                                       EventTrackingId,
-                                                       SessionId,
-                                                       RequestTimeout,
-                                                       result.Content,
-                                                       DateTime.Now - Timestamp.Value);
+                                                     SendException(timestamp, sender, exception);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(MobileClient) + "." + nameof(OnMobileRemoteStopResponse));
-                }
+                                                     return HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>.ExceptionThrown(
 
-                #endregion
+                                                            new Acknowledgement<MobileRemoteStopRequest>(
+                                                                Request,
+                                                                StatusCodes.ServiceNotAvailable,
+                                                                exception.Message,
+                                                                exception.StackTrace
+                                                            ),
 
+                                                            Exception: exception
 
-                return result;
+                                                        );
+
+                                                 }
+
+                                                 #endregion
+
+                                                );
 
             }
+
+            if (result == null)
+                result = HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>.OK(
+                             new Acknowledgement<MobileRemoteStopRequest>(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnMobileRemoteStopResponse event
+
+            var Endtime = DateTime.Now;
+
+            try
+            {
+
+                if (OnMobileRemoteStopResponse != null)
+                    await Task.WhenAll(OnMobileRemoteStopResponse.GetInvocationList().
+                                       Cast<OnMobileRemoteStopResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.SessionId,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(MobileClient) + "." + nameof(OnMobileRemoteStopResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

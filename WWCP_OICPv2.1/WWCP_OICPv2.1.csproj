@@ -106,6 +106,8 @@
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Messages\IResponse.cs" />
+    <Compile Include="Messages\Mobile\MobileRemoteStopRequest.cs" />
+    <Compile Include="Messages\Mobile\MobileRemoteStartRequest.cs" />
     <Compile Include="Messages\Mobile\MobileAuthorizeStartRequest.cs" />
     <Compile Include="MobileClient\IMobileClientExtentions.cs" />
     <Compile Include="MobileClient\IMobileClient.cs" />
@@ -128,7 +130,6 @@
     <Compile Include="IO\OICPNS.cs" />
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="MobileClient\MobileClient.cs" />
-    <Compile Include="Messages\Mobile\MobileClient_XMLMethods.cs" />
     <Compile Include="DataTypes\Enums\ActionTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
     <Compile Include="DataTypes\Enums\PlugTypes.cs" />

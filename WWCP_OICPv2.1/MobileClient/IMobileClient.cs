@@ -42,37 +42,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-
         Task<HTTPResponse<MobileAuthorizationStart>>
-            MobileAuthorizeStart(MobileAuthorizeStartRequest Request);
+            MobileAuthorizeStart(MobileAuthorizeStartRequest  Request);
 
-        //Task<HTTPResponse<EVSEStatus>>
-        //    PullEVSEStatus(PullEVSEStatusRequest Request);
+        Task<HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>>
+            MobileRemoteStart   (MobileRemoteStartRequest     Request);
 
-        //Task<HTTPResponse<EVSEStatusById>>
-        //    PullEVSEStatusById(PullEVSEStatusByIdRequest Request);
-
-
-        //Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
-        //    PushAuthenticationData(PushAuthenticationDataRequest Request);
-
-
-        //Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
-        //    AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request);
-
-        //Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
-        //    AuthorizeRemoteReservationStop (AuthorizeRemoteReservationStopRequest   Request);
-
-
-        //Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
-        //    AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request);
-
-        //Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
-        //    AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request);
-
-
-        //Task<HTTPResponse<GetChargeDetailRecordsResponse>>
-        //    GetChargeDetailRecords(GetChargeDetailRecordsRequest Request);
+        Task<HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>>
+            MobileRemoteStop    (MobileRemoteStopRequest      Request);
 
     }
 

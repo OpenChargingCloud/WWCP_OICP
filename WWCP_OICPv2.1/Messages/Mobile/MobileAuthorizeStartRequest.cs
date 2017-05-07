@@ -300,7 +300,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        /// <param name="CustomMobileAuthorizeStartRequestSerializer">A delegate to serialize custom eRoamingPullEvseData XML elements.</param>
+        /// <param name="CustomMobileAuthorizeStartRequestSerializer">A delegate to serialize custom MobileAuthorizeStart XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestSerializer = null)
         {
 

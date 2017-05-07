@@ -170,6 +170,69 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #endregion
 
 
+        #region MobileAuthorizeStart(SessionId, ...)
+
+        /// <summary>
+        /// Create a new task starting a remote charging session.
+        /// </summary>
+        /// <param name="SessionId">A charging session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>>
+
+            MobileRemoteStart(this IMobileClient  IMobileClient,
+                              Session_Id          SessionId,
+
+                              DateTime?           Timestamp           = null,
+                              CancellationToken?  CancellationToken   = null,
+                              EventTracking_Id    EventTrackingId     = null,
+                              TimeSpan?           RequestTimeout      = null)
+
+
+                => IMobileClient.MobileRemoteStart(new MobileRemoteStartRequest(SessionId,
+
+                                                                                Timestamp,
+                                                                                CancellationToken,
+                                                                                EventTrackingId,
+                                                                                RequestTimeout ?? IMobileClient.RequestTimeout));
+
+        #endregion
+
+        #region MobileAuthorizeStop (SessionId, ...)
+
+        /// <summary>
+        /// Create a new task stopping a remote charging session.
+        /// </summary>
+        /// <param name="SessionId">A charging session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>>
+
+            MobileRemoteStop(this IMobileClient  IMobileClient,
+                             Session_Id          SessionId,
+
+                             DateTime?           Timestamp           = null,
+                             CancellationToken?  CancellationToken   = null,
+                             EventTracking_Id    EventTrackingId     = null,
+                             TimeSpan?           RequestTimeout      = null)
+
+
+                => IMobileClient.MobileRemoteStop(new MobileRemoteStopRequest(SessionId,
+
+                                                                              Timestamp,
+                                                                              CancellationToken,
+                                                                              EventTrackingId,
+                                                                              RequestTimeout ?? IMobileClient.RequestTimeout));
+
+        #endregion
+
+
     }
 
 }
