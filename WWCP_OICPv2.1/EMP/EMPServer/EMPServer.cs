@@ -75,11 +75,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region Properties
 
         /// <summary>
+        /// The identification of this HTTP/SOAP service.
+        /// </summary>
+        public String  ServiceId           { get; }
+
+        /// <summary>
         /// The HTTP/SOAP/XML URI for OICP authorization requests.
         /// </summary>
         public String  AuthorizationURI    { get; }
 
         #endregion
+
+        #region Custom request/response mappers
 
         public CustomXMLParserDelegate<CPO.AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   { get; set; }
         public CustomXMLParserDelegate<CPO.AuthorizeStopRequest>   CustomAuthorizeStopRequestParser    { get; set; }
@@ -88,7 +95,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public CustomXMLParserDelegate<ChargeDetailRecord>         CustomChargeDetailRecordParser      { get; set; }
 
 
-        public OnExceptionDelegate                              OnException                         { get; set; }
+        public OnExceptionDelegate                                 OnException                         { get; set; }
+
+        #endregion
 
         #region Events
 
@@ -183,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, TCPPort = default, URIPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region EMPServer(HTTPServerName, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP API.
@@ -191,18 +200,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public EMPServer(String          HTTPServerName            = DefaultHTTPServerName,
-                         IPPort          TCPPort                   = null,
-                         String          URIPrefix                 = DefaultURIPrefix,
-                         String          AuthorizationURI          = DefaultAuthorizationURI,
-                         HTTPContentType ContentType               = null,
-                         Boolean         RegisterHTTPRootService   = true,
-                         DNSClient       DNSClient                 = null,
-                         Boolean         AutoStart                 = false)
+        public EMPServer(String           HTTPServerName            = DefaultHTTPServerName,
+                         IPPort           TCPPort                   = null,
+                         String           URIPrefix                 = DefaultURIPrefix,
+                         String           AuthorizationURI          = DefaultAuthorizationURI,
+                         HTTPContentType  ContentType               = null,
+                         Boolean          RegisterHTTPRootService   = true,
+                         DNSClient        DNSClient                 = null,
+                         Boolean          AutoStart                 = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
@@ -214,6 +224,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
+            this.ServiceId         = nameof(EMPServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
 
             RegisterURITemplates();
@@ -225,22 +236,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region EMPServer(SOAPServer, URIPrefix = default)
+        #region EMPServer(SOAPServer, URIPrefix = default, AuthorizationURI = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
-        public EMPServer(SOAPServer SOAPServer,
-                         String     URIPrefix          = DefaultURIPrefix,
-                         String     AuthorizationURI   = DefaultAuthorizationURI)
+        /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
+        public EMPServer(SOAPServer  SOAPServer,
+                         String      URIPrefix          = DefaultURIPrefix,
+                         String      AuthorizationURI   = DefaultAuthorizationURI)
 
             : base(SOAPServer,
                    URIPrefix)
 
         {
 
+            this.ServiceId         = nameof(EMPServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
 
             RegisterURITemplates();
@@ -319,7 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Select(e => e(StartTime,
                                                               AuthorizeStartRequest.Timestamp.Value,
                                                               this,
-                                                              nameof(EMPServer),   // ClientId
+                                                              ServiceId,
                                                               AuthorizeStartRequest.EventTrackingId,
                                                               AuthorizeStartRequest.OperatorId,
                                                               AuthorizeStartRequest.UID,
@@ -377,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Cast<OnAuthorizeStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             nameof(EMPServer),   // ClientId
+                                                             ServiceId,
                                                              AuthorizeStartRequest.EventTrackingId,
                                                              AuthorizeStartRequest.OperatorId,
                                                              AuthorizeStartRequest.UID,
@@ -500,7 +513,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Select(e => e(StartTime,
                                                              AuthorizeStopRequest.Timestamp.Value,
                                                              this,
-                                                             nameof(EMPServer),   // ClientId
+                                                             ServiceId,
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.SessionId,
                                                              AuthorizeStopRequest.PartnerSessionId,
@@ -557,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Cast<OnAuthorizeStopResponseHandler>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             nameof(EMPServer),   // ClientId
+                                                             ServiceId,
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.SessionId,
                                                              AuthorizeStopRequest.PartnerSessionId,
@@ -678,7 +691,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Select(e => e(StartTime,
                                                              SendChargeDetailRecordRequest.Timestamp.Value,
                                                              this,
-                                                             nameof(EMPServer),   // ClientId
+                                                             ServiceId,
                                                              SendChargeDetailRecordRequest.EventTrackingId,
                                                              SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                              SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -729,7 +742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                Cast<OnChargeDetailRecordResponseHandler>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             nameof(EMPServer),   // ClientId
+                                                             ServiceId,
                                                              SendChargeDetailRecordRequest.EventTrackingId,
                                                              SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                              SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,

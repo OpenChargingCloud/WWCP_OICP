@@ -79,7 +79,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Properties
 
-        public String  ServerId            { get; }
+        /// <summary>
+        /// The identification of this HTTP/SOAP service.
+        /// </summary>
+        public String  ServiceId           { get; }
 
         /// <summary>
         /// The HTTP/SOAP/XML URI for OICP authorization requests.
@@ -91,7 +94,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public String  ReservationURI      { get; }
 
+        #endregion
 
+        #region Custom request/response mappers
 
         public CustomXMLParserDelegate<Identification>                              CustomIdentificationParser                             { get; set; }
 
@@ -261,6 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
+            this.ServiceId         = nameof(CPOServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
 
@@ -292,6 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
+            this.ServiceId         = nameof(CPOServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
 
@@ -371,7 +378,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Select(e => e(StartTime,
                                                              AuthorizeRemoteReservationStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerProductId,
@@ -429,7 +436,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerProductId,
@@ -551,7 +558,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Select(e => e(StartTime,
                                                              AuthorizeRemoteReservationStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStopRequest.EVSEId,
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
@@ -607,7 +614,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStopRequest.EVSEId,
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
@@ -729,7 +736,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Select(e => e(StartTime,
                                                               AuthorizeRemoteStartRequest.Timestamp.Value,
                                                               this,
-                                                              ServerId,
+                                                              ServiceId,
                                                               AuthorizeRemoteStartRequest.EventTrackingId,
                                                               AuthorizeRemoteStartRequest.EVSEId,
                                                               AuthorizeRemoteStartRequest.PartnerProductId,
@@ -787,7 +794,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteStartRequest.EventTrackingId,
                                                              AuthorizeRemoteStartRequest.EVSEId,
                                                              AuthorizeRemoteStartRequest.PartnerProductId,
@@ -909,7 +916,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Select(e => e(StartTime,
                                                              AuthorizeRemoteStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteStopRequest.EventTrackingId,
                                                              AuthorizeRemoteStopRequest.EVSEId,
                                                              AuthorizeRemoteStopRequest.SessionId,
@@ -965,7 +972,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServerId,
+                                                             ServiceId,
                                                              AuthorizeRemoteStopRequest.EventTrackingId,
                                                              AuthorizeRemoteStopRequest.EVSEId,
                                                              AuthorizeRemoteStopRequest.SessionId,
