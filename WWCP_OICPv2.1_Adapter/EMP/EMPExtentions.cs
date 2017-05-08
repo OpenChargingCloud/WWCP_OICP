@@ -95,6 +95,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                                 QueryTimeout                      = null,
 
                                               String                                    ServerName                        = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
+                                              String                                    ServiceId                         = null,
                                               IPPort                                    ServerTCPPort                     = null,
                                               String                                    ServerURIPrefix                   = OICPv2_1.EMP.EMPServer.DefaultURIPrefix,
                                               String                                    ServerAuthorizationURI            = OICPv2_1.EMP.EMPServer.DefaultAuthorizationURI,
@@ -164,6 +165,7 @@ namespace org.GraphDefined.WWCP
                                                                      QueryTimeout,
 
                                                                      ServerName,
+                                                                     ServiceId,
                                                                      ServerTCPPort,
                                                                      ServerURIPrefix,
                                                                      ServerAuthorizationURI,
@@ -256,6 +258,7 @@ namespace org.GraphDefined.WWCP
                                               String                                    HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                                 QueryTimeout                      = null,
 
+                                              String                                    ServiceId                         = null,
                                               String                                    ServerURIPrefix                   = null,
                                               String                                    ServerAuthorizationURI            = OICPv2_1.EMP.EMPServer.DefaultAuthorizationURI,
 
@@ -329,6 +332,7 @@ namespace org.GraphDefined.WWCP
                                                                                                 LogfileCreator),
 
                                                                      new OICPv2_1.EMP.EMPServer(SOAPServer,
+                                                                                                ServiceId,
                                                                                                 ServerURIPrefix,
                                                                                                 ServerAuthorizationURI),
 

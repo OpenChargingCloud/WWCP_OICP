@@ -192,12 +192,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region EMPServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
@@ -206,6 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public EMPServer(String           HTTPServerName            = DefaultHTTPServerName,
+                         String           ServiceId                 = null,
                          IPPort           TCPPort                   = null,
                          String           URIPrefix                 = DefaultURIPrefix,
                          String           AuthorizationURI          = DefaultAuthorizationURI,
@@ -224,7 +226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            this.ServiceId         = nameof(EMPServer);
+            this.ServiceId         = ServiceId        ?? nameof(EMPServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
 
             RegisterURITemplates();
@@ -236,15 +238,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region EMPServer(SOAPServer, URIPrefix = default, AuthorizationURI = default)
+        #region EMPServer(SOAPServer, ServiceId = null, URIPrefix = default, AuthorizationURI = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         public EMPServer(SOAPServer  SOAPServer,
+                         String      ServiceId          = null,
                          String      URIPrefix          = DefaultURIPrefix,
                          String      AuthorizationURI   = DefaultAuthorizationURI)
 
@@ -253,7 +257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            this.ServiceId         = nameof(EMPServer);
+            this.ServiceId         = ServiceId        ?? nameof(EMPServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
 
             RegisterURITemplates();

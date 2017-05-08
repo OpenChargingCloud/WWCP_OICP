@@ -76,14 +76,84 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region Properties
 
-        ///// <summary>
-        ///// The attached e-mobility roaming network.
-        ///// </summary>
-        //public RoamingNetwork  RoamingNetwork           { get; }
+        /// <summary>
+        /// The identification of this HTTP/SOAP service.
+        /// </summary>
+        public String           ServiceId               { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// </summary>
+        public String           EVSEDataURI             { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// </summary>
+        public String           EVSEStatusURI           { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// </summary>
+        public String           AuthenticationDataURI   { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// </summary>
+        public String           ReservationURI          { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public String           AuthorizationURI        { get; }
+
+        #endregion
+
+        #region Custom request/response mappers
+
+        public CustomXMLParserDelegate<EMP.PullEVSEDataRequest>  CustomPullEVSEDataRequestParser        { get; set; }
+
+        public CustomXMLSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer       { get; set; }
+        public CustomXMLSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer         { get; set; }
+
+
+        public OnExceptionDelegate                               OnException                            { get; set; }
 
         #endregion
 
         #region Events
+
+        #region OnPullEVSEData
+
+        /// <summary>
+        /// An event sent whenever a authorize start SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                OnPullEVSEDataSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a authorize start request was received.
+        /// </summary>
+        public event OnPullEVSEDataRequestDelegate    OnPullEVSEDataRequest;
+
+        /// <summary>
+        /// An event sent whenever a authorize start command was received.
+        /// </summary>
+        public event OnPullEVSEDataDelegate           OnPullEVSEData;
+
+        /// <summary>
+        /// An event sent whenever a authorize start response was sent.
+        /// </summary>
+        public event OnPullEVSEDataResponseDelegate   OnPullEVSEDataResponse;
+
+        /// <summary>
+        /// An event sent whenever a authorize start SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                 OnPullEVSEDataSOAPResponse;
+
+        #endregion
+
+
+
+
 
         #region OnPushEvseData
 
@@ -182,107 +252,182 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         protected void RegisterURITemplates()
         {
 
-            #region / - AddCDRsRequest
+            #region /EVSEData - PullEVSEDataRequest
 
-            //SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-            //                                URIPrefix + "/",
-            //                                "PushEvseData",
-            //                                XML => XML.Descendants(OICPNS.EVSEData + "eRoamingPushEvseData").FirstOrDefault(),
-            //                                async (Request, PushEVSEDataXML) => {
-
-            //    #region Send OnPushEvseDataSOAPRequest event
-
-            //    try
-            //    {
-
-            //        OnPushEvseDataSOAPRequest?.Invoke(DateTime.Now,
-            //                                          this.SOAPServer,
-            //                                          Request);
-
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        e.Log(nameof(CentralServer) + "." + nameof(OnPushEvseDataSOAPRequest));
-            //    }
-
-            //    #endregion
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + EVSEDataURI,
+                                            "PullEVSEData",
+                                            XML => XML.Descendants(OICPNS.Reservation + "eRoamingPullEvseData").FirstOrDefault(),
+                                            async (HTTPRequest, eRoamingPullEvseDataXML) => {
 
 
-            //    var ActionType        = PushEVSEDataXML.ElementValueOrFail(OICPNS.EVSEData + "ActionType", "No ActionType XML tag provided!");
-            //    var OperatorEvseData  = OperatorEVSEData.Parse(PushEVSEDataXML.ElementsOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!"));
+                EMP.PullEVSEDataRequest PullEVSEDataRequest  = null;
+                EVSEData                EVSEData             = null;
+
+                #region Send OnPullEVSEDataSOAPRequest event
+
+                var StartTime = DateTime.Now;
+
+                try
+                {
+
+                    if (OnPullEVSEDataSOAPRequest != null)
+                        await Task.WhenAll(OnPullEVSEDataSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnPullEVSEDataSOAPRequest));
+                }
+
+                #endregion
 
 
-            //    var _AddCDRsRequest = AddCDRsRequest.Parse(AddCDRsXML);
+                if (EMP.PullEVSEDataRequest.TryParse(eRoamingPullEvseDataXML,
+                                                     out PullEVSEDataRequest,
+                                                     CustomPullEVSEDataRequestParser,
+                                                     OnException,
 
-            //    AddCDRsResponse response = null;
+                                                     HTTPRequest.Timestamp,
+                                                     HTTPRequest.CancellationToken,
+                                                     HTTPRequest.EventTrackingId,
+                                                     HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnPullEVSEDataRequest event
+
+                    try
+                    {
+
+                        if (OnPullEVSEDataRequest != null)
+                            await Task.WhenAll(OnPullEVSEDataRequest.GetInvocationList().
+                                               Cast<OnPullEVSEDataRequestDelegate>().
+                                               Select(e => e(StartTime,
+                                                             PullEVSEDataRequest.Timestamp.Value,
+                                                             this,
+                                                             ServiceId,
+                                                             PullEVSEDataRequest.EventTrackingId,
+                                                             PullEVSEDataRequest.ProviderId,
+                                                             PullEVSEDataRequest.SearchCenter,
+                                                             PullEVSEDataRequest.DistanceKM,
+                                                             PullEVSEDataRequest.LastCall,
+                                                             PullEVSEDataRequest.GeoCoordinatesResponseFormat,
+                                                             PullEVSEDataRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnPullEVSEDataRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (OnPullEVSEData != null)
+                    {
+
+                        var results = await Task.WhenAll(OnPullEVSEData.GetInvocationList().
+                                                             Cast<OnPullEVSEDataDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           PullEVSEDataRequest))).
+                                                             ConfigureAwait(false);
+
+                        EVSEData = results.FirstOrDefault();
+
+                    }
+
+                    //if (EVSEData == null)
+                    //    EVSEData = EVSEData.SystemError(
+                    //                         PullEVSEDataRequest,
+                    //                         "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                    //                         null,
+                    //                         PullEVSEDataRequest.SessionId,
+                    //                         PullEVSEDataRequest.PartnerSessionId
+                    //                     );
+
+                    #endregion
+
+                    #region Send OnPullEVSEDataResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        if (OnPullEVSEDataResponse != null)
+                            await Task.WhenAll(OnPullEVSEDataResponse.GetInvocationList().
+                                               Cast<OnPullEVSEDataResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             ServiceId,
+                                                             PullEVSEDataRequest.EventTrackingId,
+                                                             PullEVSEDataRequest.ProviderId,
+                                                             PullEVSEDataRequest.SearchCenter,
+                                                             PullEVSEDataRequest.DistanceKM,
+                                                             PullEVSEDataRequest.LastCall,
+                                                             PullEVSEDataRequest.GeoCoordinatesResponseFormat,
+                                                             PullEVSEDataRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             EVSEData,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnPullEVSEDataResponse));
+                    }
+
+                    #endregion
+
+                }
 
 
-            //    #region Call async subscribers
+                #region Create SOAPResponse
 
-            //    if (response == null)
-            //    {
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(EVSEData.ToXML(CustomOperatorEVSEDataSerializer: CustomOperatorEVSEDataSerializer,
+                                                                        CustomEVSEDataRecordSerializer:   CustomEVSEDataRecordSerializer)).ToUTF8Bytes()
+                };
 
-            //        var results = OnPushEvseDataRequest?.
-            //                          GetInvocationList()?.
-            //                          SafeSelect(subscriber => (subscriber as OnPushEVSEDataRequestDelegate)
-            //                              (DateTime.Now,
-            //                               this,
-            //                               Request.CancellationToken,
-            //                               Request.EventTrackingId,
-            //                               _AddCDRsRequest.CDRInfos,
-            //                               DefaultRequestTimeout)).
-            //                          ToArray();
+                #endregion
 
-            //        if (results.Length > 0)
-            //        {
+                #region Send OnPullEVSEDataSOAPResponse event
 
-            //            await Task.WhenAll(results);
+                try
+                {
 
-            //            response = results.FirstOrDefault()?.Result;
+                    if (OnPullEVSEDataSOAPResponse != null)
+                        await Task.WhenAll(OnPullEVSEDataSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
 
-            //        }
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnPullEVSEDataSOAPResponse));
+                }
 
-            //        if (results.Length == 0 || response == null)
-            //            response = AddCDRsResponse.Server(_AddCDRsRequest, "Could not process the incoming AddCDRs request!");
+                #endregion
 
-            //    }
+                return HTTPResponse;
 
-            //    #endregion
-
-            //    #region Create SOAPResponse
-
-            //    var HTTPResponse = new HTTPResponseBuilder(Request) {
-            //        HTTPStatusCode  = HTTPStatusCode.OK,
-            //        Server          = SOAPServer.DefaultServerName,
-            //        Date            = DateTime.Now,
-            //        ContentType     = SOAPServer.SOAPContentType,
-            //        Content         = SOAP.Encapsulation(response.ToXML()).ToUTF8Bytes()
-            //    };
-
-            //    #endregion
-
-
-            //    #region Send OnPushEvseDataSOAPResponse event
-
-            //    try
-            //    {
-
-            //        OnPushEvseDataSOAPResponse?.Invoke(HTTPResponse.Timestamp,
-            //                                           this.SOAPServer,
-            //                                           Request,
-            //                                           HTTPResponse);
-
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        e.Log(nameof(CentralServer) + "." + nameof(OnPushEvseDataSOAPResponse));
-            //    }
-
-            //    #endregion
-
-            //    return HTTPResponse;
-
-            //});
+            });
 
             #endregion
 

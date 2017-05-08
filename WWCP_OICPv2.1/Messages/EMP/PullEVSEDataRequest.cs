@@ -116,9 +116,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.0"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/v2.0"
+        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         //
         //    <soapenv:Header/>
         //    <soapenv:Body>
@@ -168,7 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEDataXML,  ..., OnException = null)
+        #region (static) Parse(PullEVSEDataXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull EVSE data request.
@@ -176,9 +176,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PullEVSEDataXML">The XML to parse.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static PullEVSEDataRequest Parse(XElement                                      PullEVSEDataXML,
                                                 CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
-                                                OnExceptionDelegate                           OnException                       = null)
+                                                OnExceptionDelegate                           OnException                       = null,
+
+                                                DateTime?                                     Timestamp                         = null,
+                                                CancellationToken?                            CancellationToken                 = null,
+                                                EventTracking_Id                              EventTrackingId                   = null,
+                                                TimeSpan?                                     RequestTimeout                    = null)
+
         {
 
             PullEVSEDataRequest _PullEVSEData;
@@ -186,7 +197,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (TryParse(PullEVSEDataXML,
                          out _PullEVSEData,
                          CustomPullEVSEDataRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _PullEVSEData;
 
             return null;
@@ -195,7 +212,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PullEVSEDataText, ..., OnException = null)
+        #region (static) Parse(PullEVSEDataText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP pull EVSE data request.
@@ -203,9 +220,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PullEVSEDataText">The text to parse.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static PullEVSEDataRequest Parse(String                                        PullEVSEDataText,
                                                 CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
-                                                OnExceptionDelegate                           OnException                       = null)
+                                                OnExceptionDelegate                           OnException                       = null,
+
+                                                DateTime?                                     Timestamp                         = null,
+                                                CancellationToken?                            CancellationToken                 = null,
+                                                EventTracking_Id                              EventTrackingId                   = null,
+                                                TimeSpan?                                     RequestTimeout                    = null)
+
         {
 
             PullEVSEDataRequest _PullEVSEData;
@@ -213,7 +241,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (TryParse(PullEVSEDataText,
                          out _PullEVSEData,
                          CustomPullEVSEDataRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _PullEVSEData;
 
@@ -223,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEDataXML,  out PullEVSEData, ..., OnException = null)
+        #region (static) TryParse(PullEVSEDataXML,  out PullEVSEData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull EVSE data request.
@@ -232,10 +265,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PullEVSEData">The parsed pull EVSE data request.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                      PullEVSEDataXML,
                                        out PullEVSEDataRequest                       PullEVSEData,
                                        CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
-                                       OnExceptionDelegate                           OnException                       = null)
+                                       OnExceptionDelegate                           OnException                       = null,
+
+                                       DateTime?                                     Timestamp                         = null,
+                                       CancellationToken?                            CancellationToken                 = null,
+                                       EventTracking_Id                              EventTrackingId                   = null,
+                                       TimeSpan?                                     RequestTimeout                    = null)
+
         {
 
             try
@@ -304,7 +348,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                           DateTime.Parse),
 
                                                        PullEVSEDataXML.MapValueOrFail    (OICPNS.EVSEData + "GeoCoordinatesResponseFormat",
-                                                                                          s => (GeoCoordinatesResponseFormats) Enum.Parse(typeof(GeoCoordinatesResponseFormats), s))
+                                                                                          s => (GeoCoordinatesResponseFormats) Enum.Parse(typeof(GeoCoordinatesResponseFormats), s)),
+
+                                                       Timestamp,
+                                                       CancellationToken,
+                                                       EventTrackingId,
+                                                       RequestTimeout
 
                                                   );
 
@@ -330,7 +379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PullEVSEDataText, out PullEVSEData, ..., OnException = null)
+        #region (static) TryParse(PullEVSEDataText, out PullEVSEData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP pull EVSE data request.
@@ -339,10 +388,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="PullEVSEData">The parsed pull EVSE data request.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                        PullEVSEDataText,
                                        out PullEVSEDataRequest                       PullEVSEData,
                                        CustomXMLParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null,
-                                       OnExceptionDelegate                           OnException                       = null)
+                                       OnExceptionDelegate                           OnException                       = null,
+
+                                       DateTime?                                     Timestamp                         = null,
+                                       CancellationToken?                            CancellationToken                 = null,
+                                       EventTracking_Id                              EventTrackingId                   = null,
+                                       TimeSpan?                                     RequestTimeout                    = null)
+
         {
 
             try
@@ -351,7 +411,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 if (TryParse(XDocument.Parse(PullEVSEDataText).Root,
                              out PullEVSEData,
                              CustomPullEVSEDataRequestParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

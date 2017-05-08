@@ -26,11 +26,70 @@ using org.GraphDefined.WWCP.OICPv2_1.CPO;
 using org.GraphDefined.WWCP.OICPv2_1.EMP;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1.Central
 {
+
+    // EMP
+
+    #region OnPullEVSEData    (Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEDataRequestDelegate (DateTime                         LogTimestamp,
+                                       DateTime                         RequestTimestamp,
+                                       CentralServer                    Sender,
+                                       String                           SenderId,
+                                       EventTracking_Id                 EventTrackingId,
+                                       Provider_Id                      ProviderId,
+                                       GeoCoordinate?                   SearchCenter,
+                                       Single                           DistanceKM,
+                                       DateTime?                        LastCall,
+                                       GeoCoordinatesResponseFormats?   GeoCoordinatesResponseFormat,
+                                       TimeSpan                         RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PullEVSEData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<EVSEData>
+
+        OnPullEVSEDataDelegate(DateTime             Timestamp,
+                               CentralServer        Sender,
+                               PullEVSEDataRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEDataResponseDelegate(DateTime                         Timestamp,
+                                       CentralServer                    Sender,
+                                       String                           SenderId,
+                                       EventTracking_Id                 EventTrackingId,
+                                       Provider_Id                      ProviderId,
+                                       GeoCoordinate?                   SearchCenter,
+                                       Single                           DistanceKM,
+                                       DateTime?                        LastCall,
+                                       GeoCoordinatesResponseFormats?   GeoCoordinatesResponseFormat,
+                                       TimeSpan                         RequestTimeout,
+                                       EVSEData                         Result,
+                                       TimeSpan                         Duration);
+
+    #endregion
+
+
+
 
     // CPO event delegates...
 

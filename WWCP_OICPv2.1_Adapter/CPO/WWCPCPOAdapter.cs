@@ -1050,6 +1050,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
@@ -1091,6 +1092,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               TimeSpan?                                          RequestTimeout                                  = null,
 
                               String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
+                              String                                             ServiceId                                       = null,
                               IPPort                                             ServerTCPPort                                   = null,
                               String                                             ServerURIPrefix                                 = CPOServer.DefaultURIPrefix,
                               String                                             ServerAuthorizationURI                          = CPOServer.DefaultAuthorizationURI,
@@ -1143,6 +1145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   RequestTimeout,
 
                                   ServerName,
+                                  ServiceId,
                                   ServerTCPPort,
                                   ServerURIPrefix,
                                   ServerAuthorizationURI,

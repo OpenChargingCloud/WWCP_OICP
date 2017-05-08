@@ -966,6 +966,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               TimeSpan?                            RequestTimeout                    = null,
 
                               String                               ServerName                        = EMPServer.DefaultHTTPServerName,
+                              String                               ServiceId                         = null,
                               IPPort                               ServerTCPPort                     = null,
                               String                               ServerURIPrefix                   = EMPServer.DefaultURIPrefix,
                               String                               ServerAuthorizationURI            = EMPServer.DefaultAuthorizationURI,
@@ -1015,6 +1016,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   RequestTimeout,
 
                                   ServerName,
+                                  ServiceId,
                                   ServerTCPPort,
                                   ServerURIPrefix,
                                   ServerAuthorizationURI,

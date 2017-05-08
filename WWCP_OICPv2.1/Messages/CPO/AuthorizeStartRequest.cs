@@ -174,7 +174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (AuthorizeStartXML,  ..., OnException = null)
+        #region (static) Parse   (AuthorizeStartXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize start request.
@@ -183,10 +183,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStartRequest Parse(XElement                                     AuthorizeStartXML,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeStartRequest Parse(XElement                                        AuthorizeStartXML,
                                                   CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                                   CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
-                                                  OnExceptionDelegate                          OnException                         = null)
+                                                  OnExceptionDelegate                             OnException                         = null,
+
+                                                  DateTime?                                       Timestamp                           = null,
+                                                  CancellationToken?                              CancellationToken                   = null,
+                                                  EventTracking_Id                                EventTrackingId                     = null,
+                                                  TimeSpan?                                       RequestTimeout                      = null)
+
         {
 
             AuthorizeStartRequest _AuthorizeStart;
@@ -195,7 +206,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          out _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _AuthorizeStart;
 
@@ -205,7 +221,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (AuthorizeStartText, ..., OnException = null)
+        #region (static) Parse   (AuthorizeStartText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize start request.
@@ -214,10 +230,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStartRequest Parse(String                                       AuthorizeStartText,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeStartRequest Parse(String                                          AuthorizeStartText,
                                                   CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                                   CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
-                                                  OnExceptionDelegate                          OnException                         = null)
+                                                  OnExceptionDelegate                             OnException                         = null,
+
+                                                  DateTime?                                       Timestamp                           = null,
+                                                  CancellationToken?                              CancellationToken                   = null,
+                                                  EventTracking_Id                                EventTrackingId                     = null,
+                                                  TimeSpan?                                       RequestTimeout                      = null)
+
         {
 
             AuthorizeStartRequest _AuthorizeStart;
@@ -226,7 +253,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          out _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _AuthorizeStart;
 
@@ -236,7 +268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStartXML,  out AuthorizeStart, ..., OnException = null)
+        #region (static) TryParse(AuthorizeStartXML,  out AuthorizeStart, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize start request.
@@ -246,16 +278,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                     AuthorizeStartXML,
-                                       out AuthorizeStartRequest                    AuthorizeStart,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                        AuthorizeStartXML,
+                                       out AuthorizeStartRequest                       AuthorizeStart,
                                        CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
-                                       OnExceptionDelegate                          OnException                         = null,
+                                       OnExceptionDelegate                             OnException                         = null,
 
-                                       DateTime?                                    Timestamp                           = null,
-                                       CancellationToken?                           CancellationToken                   = null,
-                                       EventTracking_Id                             EventTrackingId                     = null,
-                                       TimeSpan?                                    RequestTimeout                      = null)
+                                       DateTime?                                       Timestamp                           = null,
+                                       CancellationToken?                              CancellationToken                   = null,
+                                       EventTracking_Id                                EventTrackingId                     = null,
+                                       TimeSpan?                                       RequestTimeout                      = null)
         {
 
             try
@@ -325,7 +362,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStartText, out AuthorizeStart, ..., OnException = null)
+        #region (static) TryParse(AuthorizeStartText, out AuthorizeStart, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize start request.
@@ -335,11 +372,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                       AuthorizeStartText,
-                                       out AuthorizeStartRequest                    AuthorizeStart,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                          AuthorizeStartText,
+                                       out AuthorizeStartRequest                       AuthorizeStart,
                                        CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
-                                       OnExceptionDelegate                          OnException                         = null)
+                                       OnExceptionDelegate                             OnException                         = null,
+
+                                       DateTime?                                       Timestamp                           = null,
+                                       CancellationToken?                              CancellationToken                   = null,
+                                       EventTracking_Id                                EventTrackingId                     = null,
+                                       TimeSpan?                                       RequestTimeout                      = null)
+
         {
 
             try
@@ -349,7 +397,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              out AuthorizeStart,
                              CustomAuthorizeStartRequestParser,
                              CustomIdentificationParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 
@@ -366,7 +419,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region ToXML(CustomAuthorizeStartRequestSerializer = null)
+        #region ToXML(CustomAuthorizeStartRequestSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.

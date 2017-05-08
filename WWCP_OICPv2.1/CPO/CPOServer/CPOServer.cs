@@ -98,14 +98,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Custom request/response mappers
 
-        public CustomXMLParserDelegate<Identification>                              CustomIdentificationParser                             { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>                       CustomAuthorizeRemoteReservationStartRequestParser               { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>                        CustomAuthorizeRemoteReservationStopRequestParser                { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStartRequest>                                  CustomAuthorizeRemoteStartRequestParser                          { get; set; }
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStopRequest>                                   CustomAuthorizeRemoteStopRequestParser                           { get; set; }
 
-        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                { get; set; }
-        public CustomXMLParserDelegate<EMP.AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                 { get; set; }
-        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser     { get; set; }
-        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser      { get; set; }
+        public CustomXMLParserDelegate<Identification>                                                   CustomIdentificationParser                                       { get; set; }
 
-        public OnExceptionDelegate                         OnException { get; set; }
+        public OnExceptionDelegate                                                                       OnException                                                      { get; set; }
+
+
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>  CustomAuthorizeRemoteReservationStartAcknowledgementSerializer   { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>   CustomAuthorizeRemoteReservationStopAcknowledgementSerializer    { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>             CustomAuthorizeRemoteStartAcknowledgementSerializer              { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>              CustomAuthorizeRemoteStopAcknowledgementSerializer               { get; set; }
+
+        public CustomXMLSerializerDelegate<StatusCode>                                                   CustomStatusCodeSerializer                                       { get; set; }
 
         #endregion
 
@@ -232,12 +240,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Constructor(s)
 
-        #region CPOServer(HTTPServerName, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
@@ -246,15 +255,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public CPOServer(String          HTTPServerName           = DefaultHTTPServerName,
-                         IPPort          TCPPort                  = null,
-                         String          URIPrefix                = DefaultURIPrefix,
-                         String          AuthorizationURI         = DefaultAuthorizationURI,
-                         String          ReservationURI           = DefaultReservationURI,
-                         HTTPContentType ContentType              = null,
-                         Boolean         RegisterHTTPRootService  = true,
-                         DNSClient       DNSClient                = null,
-                         Boolean         AutoStart                = false)
+        public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
+                         String           ServiceId                 = null,
+                         IPPort           TCPPort                   = null,
+                         String           URIPrefix                 = DefaultURIPrefix,
+                         String           AuthorizationURI          = DefaultAuthorizationURI,
+                         String           ReservationURI            = DefaultReservationURI,
+                         HTTPContentType  ContentType               = null,
+                         Boolean          RegisterHTTPRootService   = true,
+                         DNSClient        DNSClient                 = null,
+                         Boolean          AutoStart                 = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
@@ -266,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            this.ServiceId         = nameof(CPOServer);
+            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
 
@@ -279,26 +289,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region CPOServer(SOAPServer, URIPrefix = default, AuthorizationURI = default, ReservationURI = default)
+        #region CPOServer(SOAPServer, ServiceId = null, URIPrefix = default, AuthorizationURI = default, ReservationURI = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
         public CPOServer(SOAPServer  SOAPServer,
-                         String      URIPrefix         = DefaultURIPrefix,
-                         String      AuthorizationURI  = DefaultAuthorizationURI,
-                         String      ReservationURI    = DefaultReservationURI)
+                         String      ServiceId          = null,
+                         String      URIPrefix          = DefaultURIPrefix,
+                         String      AuthorizationURI   = DefaultAuthorizationURI,
+                         String      ReservationURI     = DefaultReservationURI)
 
             : base(SOAPServer,
                    URIPrefix ?? DefaultURIPrefix)
 
         {
 
-            this.ServiceId         = nameof(CPOServer);
+            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
 
@@ -467,7 +479,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStartAcknowledgementSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
                 };
 
                 #endregion
@@ -643,7 +656,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStopAcknowledgementSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
                 };
 
                 #endregion
@@ -825,7 +839,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStartAcknowledgementSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
                 };
 
                 #endregion
@@ -1001,7 +1016,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Server          = SOAPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStopAcknowledgementSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
                 };
 
                 #endregion

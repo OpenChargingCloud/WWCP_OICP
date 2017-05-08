@@ -162,7 +162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (AuthorizeStopXML,  ..., OnException = null)
+        #region (static) Parse   (AuthorizeStopXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP authorize stop request.
@@ -171,10 +171,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStopRequest Parse(XElement                                    AuthorizeStopXML,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeStopRequest Parse(XElement                                       AuthorizeStopXML,
                                                  CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
                                                  CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
-                                                 OnExceptionDelegate                         OnException                        = null)
+                                                 OnExceptionDelegate                            OnException                        = null,
+
+                                                 DateTime?                                      Timestamp                          = null,
+                                                 CancellationToken?                             CancellationToken                  = null,
+                                                 EventTracking_Id                               EventTrackingId                    = null,
+                                                 TimeSpan?                                      RequestTimeout                     = null)
         {
 
             AuthorizeStopRequest _AuthorizeStop;
@@ -183,7 +193,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          out _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _AuthorizeStop;
 
@@ -193,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse   (AuthorizeStopText, ..., OnException = null)
+        #region (static) Parse   (AuthorizeStopText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP authorize stop request.
@@ -202,10 +217,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static AuthorizeStopRequest Parse(String                                      AuthorizeStopText,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static AuthorizeStopRequest Parse(String                                         AuthorizeStopText,
                                                  CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                                  CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
-                                                 OnExceptionDelegate                         OnException                        = null)
+                                                 OnExceptionDelegate                            OnException                        = null,
+
+                                                 DateTime?                                      Timestamp                          = null,
+                                                 CancellationToken?                             CancellationToken                  = null,
+                                                 EventTracking_Id                               EventTrackingId                    = null,
+                                                 TimeSpan?                                      RequestTimeout                     = null)
         {
 
             AuthorizeStopRequest _AuthorizeStop;
@@ -214,7 +239,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          out _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _AuthorizeStop;
 
@@ -224,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStopXML,  out AuthorizeStop, ..., OnException = null)
+        #region (static) TryParse(AuthorizeStopXML,  out AuthorizeStop, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP authorize stop request.
@@ -234,16 +264,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                    AuthorizeStopXML,
-                                       out AuthorizeStopRequest                    AuthorizeStop,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                       AuthorizeStopXML,
+                                       out AuthorizeStopRequest                       AuthorizeStop,
                                        CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
-                                       OnExceptionDelegate                         OnException                        = null,
+                                       OnExceptionDelegate                            OnException                        = null,
 
-                                       DateTime?                                   Timestamp                          = null,
-                                       CancellationToken?                          CancellationToken                  = null,
-                                       EventTracking_Id                            EventTrackingId                    = null,
-                                       TimeSpan?                                   RequestTimeout                     = null)
+                                       DateTime?                                      Timestamp                          = null,
+                                       CancellationToken?                             CancellationToken                  = null,
+                                       EventTracking_Id                               EventTrackingId                    = null,
+                                       TimeSpan?                                      RequestTimeout                     = null)
         {
 
             try
@@ -288,6 +323,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                  );
 
+
+                if (CustomAuthorizeStopRequestParser != null)
+                    AuthorizeStop = CustomAuthorizeStopRequestParser(AuthorizeStopXML,
+                                                                     AuthorizeStop);
+
                 return true;
 
             }
@@ -305,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(AuthorizeStopText, out AuthorizeStop, ..., OnException = null)
+        #region (static) TryParse(AuthorizeStopText, out AuthorizeStop, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP authorize stop request.
@@ -315,11 +355,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                      AuthorizeStopText,
-                                       out AuthorizeStopRequest                    AuthorizeStop,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                         AuthorizeStopText,
+                                       out AuthorizeStopRequest                       AuthorizeStop,
                                        CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
-                                       OnExceptionDelegate                         OnException                        = null)
+                                       OnExceptionDelegate                            OnException                        = null,
+
+                                       DateTime?                                      Timestamp                          = null,
+                                       CancellationToken?                             CancellationToken                  = null,
+                                       EventTracking_Id                               EventTrackingId                    = null,
+                                       TimeSpan?                                      RequestTimeout                     = null)
+
         {
 
             try
@@ -329,7 +380,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              out AuthorizeStop,
                              CustomAuthorizeStopRequestParser,
                              CustomIdentificationParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 
