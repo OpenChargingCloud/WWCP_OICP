@@ -88,7 +88,6 @@
     <Compile Include="Messages\ABuilder.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
-    <Compile Include="Messages\CPO\PushEVSEDataResponse.cs" />
     <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />

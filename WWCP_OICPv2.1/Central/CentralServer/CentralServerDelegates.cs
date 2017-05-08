@@ -35,7 +35,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     // EMP
 
-    #region OnPullEVSEData    (Request|Response)Handler
+    #region OnPullEVSEData      (Request|Response)Handler
 
     /// <summary>
     /// A delegate called whenever a PullEVSEData request was received.
@@ -88,6 +88,103 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
+    #region OnPullEVSEStatus    (Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEStatus request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEStatusRequestDelegate (DateTime                         LogTimestamp,
+                                         DateTime                         RequestTimestamp,
+                                         CentralServer                    Sender,
+                                         String                           SenderId,
+                                         EventTracking_Id                 EventTrackingId,
+                                         Provider_Id                      ProviderId,
+                                         GeoCoordinate?                   SearchCenter,
+                                         Single                           DistanceKM,
+                                         EVSEStatusTypes?                 EVSEStatusFilter,
+                                         TimeSpan                         RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PullEVSEStatus request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<EVSEStatus>
+
+        OnPullEVSEStatusDelegate(DateTime               Timestamp,
+                                 CentralServer          Sender,
+                                 PullEVSEStatusRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEStatus response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEStatusResponseDelegate(DateTime                         Timestamp,
+                                         CentralServer                    Sender,
+                                         String                           SenderId,
+                                         EventTracking_Id                 EventTrackingId,
+                                         Provider_Id                      ProviderId,
+                                         GeoCoordinate?                   SearchCenter,
+                                         Single                           DistanceKM,
+                                         EVSEStatusTypes?                 EVSEStatusFilter,
+                                         TimeSpan                         RequestTimeout,
+                                         EVSEStatus                       Result,
+                                         TimeSpan                         Duration);
+
+    #endregion
+
+    #region OnPullEVSEStatusById(Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEStatusById request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEStatusByIdRequestDelegate (DateTime                LogTimestamp,
+                                             DateTime                RequestTimestamp,
+                                             CentralServer           Sender,
+                                             String                  SenderId,
+                                             EventTracking_Id        EventTrackingId,
+                                             Provider_Id             ProviderId,
+                                             IEnumerable<EVSE_Id>    EVSEIds,
+                                             TimeSpan                RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PullEVSEStatusById request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<EVSEStatusById>
+
+        OnPullEVSEStatusByIdDelegate(DateTime                   Timestamp,
+                                     CentralServer              Sender,
+                                     PullEVSEStatusByIdRequest  Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEStatusById response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEStatusByIdResponseDelegate(DateTime                Timestamp,
+                                             CentralServer           Sender,
+                                             String                  SenderId,
+                                             EventTracking_Id        EventTrackingId,
+                                             Provider_Id             ProviderId,
+                                             IEnumerable<EVSE_Id>    EVSEIds,
+                                             TimeSpan                RequestTimeout,
+                                             EVSEStatusById          Result,
+                                             TimeSpan                Duration);
+
+    #endregion
 
 
 

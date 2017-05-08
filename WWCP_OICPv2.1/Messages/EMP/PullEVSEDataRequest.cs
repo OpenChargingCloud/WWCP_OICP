@@ -76,6 +76,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for representing geo coordinates.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PullEVSEDataRequest(Provider_Id                     ProviderId,
                                    GeoCoordinate?                  SearchCenter                   = null,
                                    Single                          DistanceKM                     = 0f,
