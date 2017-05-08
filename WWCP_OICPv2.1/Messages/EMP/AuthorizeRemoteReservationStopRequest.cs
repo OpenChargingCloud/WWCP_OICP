@@ -139,14 +139,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteReservationStopRequest
 
-            Parse(XElement                                                     AuthorizeRemoteReservationStopXML,
+            Parse(XElement                                                        AuthorizeRemoteReservationStopXML,
                   CustomXMLParserDelegate<AuthorizeRemoteReservationStopRequest>  CustomAuthorizeRemoteReservationStopRequestParser   = null,
-                  OnExceptionDelegate                                          OnException                                         = null,
+                  OnExceptionDelegate                                             OnException                                         = null,
 
-                  DateTime?                                                    Timestamp                                           = null,
-                  CancellationToken?                                           CancellationToken                                   = null,
-                  EventTracking_Id                                             EventTrackingId                                     = null,
-                  TimeSpan?                                                    RequestTimeout                                      = null)
+                  DateTime?                                                       Timestamp                                           = null,
+                  CancellationToken?                                              CancellationToken                                   = null,
+                  EventTracking_Id                                                EventTrackingId                                     = null,
+                  TimeSpan?                                                       RequestTimeout                                      = null)
 
         {
 
@@ -185,14 +185,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteReservationStopRequest
 
-            Parse(String                                                       AuthorizeRemoteReservationStopText,
+            Parse(String                                                          AuthorizeRemoteReservationStopText,
                   CustomXMLParserDelegate<AuthorizeRemoteReservationStopRequest>  CustomAuthorizeRemoteReservationStopRequestParser   = null,
-                  OnExceptionDelegate                                          OnException                                         = null,
+                  OnExceptionDelegate                                             OnException                                         = null,
 
-                  DateTime?                                                    Timestamp                                           = null,
-                  CancellationToken?                                           CancellationToken                                   = null,
-                  EventTracking_Id                                             EventTrackingId                                     = null,
-                  TimeSpan?                                                    RequestTimeout                                      = null)
+                  DateTime?                                                       Timestamp                                           = null,
+                  CancellationToken?                                              CancellationToken                                   = null,
+                  EventTracking_Id                                                EventTrackingId                                     = null,
+                  TimeSpan?                                                       RequestTimeout                                      = null)
 
         {
 
@@ -230,15 +230,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(XElement                                                     AuthorizeRemoteReservationStopXML,
-                                       out AuthorizeRemoteReservationStopRequest                    AuthorizeRemoteReservationStop,
+        public static Boolean TryParse(XElement                                                        AuthorizeRemoteReservationStopXML,
+                                       out AuthorizeRemoteReservationStopRequest                       AuthorizeRemoteReservationStop,
                                        CustomXMLParserDelegate<AuthorizeRemoteReservationStopRequest>  CustomAuthorizeRemoteReservationStopRequestParser   = null,
-                                       OnExceptionDelegate                                          OnException                                         = null,
+                                       OnExceptionDelegate                                             OnException                                         = null,
 
-                                       DateTime?                                                    Timestamp                                           = null,
-                                       CancellationToken?                                           CancellationToken                                   = null,
-                                       EventTracking_Id                                             EventTrackingId                                     = null,
-                                       TimeSpan?                                                    RequestTimeout                                      = null)
+                                       DateTime?                                                       Timestamp                                           = null,
+                                       CancellationToken?                                              CancellationToken                                   = null,
+                                       EventTracking_Id                                                EventTrackingId                                     = null,
+                                       TimeSpan?                                                       RequestTimeout                                      = null)
         {
 
             try
@@ -302,15 +302,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="AuthorizeRemoteReservationStop">The parsed authorize remote reservation stop request.</param>
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                                       AuthorizeRemoteReservationStopText,
-                                       out AuthorizeRemoteReservationStopRequest                    AuthorizeRemoteReservationStop,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                                          AuthorizeRemoteReservationStopText,
+                                       out AuthorizeRemoteReservationStopRequest                       AuthorizeRemoteReservationStop,
                                        CustomXMLParserDelegate<AuthorizeRemoteReservationStopRequest>  CustomAuthorizeRemoteReservationStopRequestParser   = null,
-                                       OnExceptionDelegate                                          OnException                                         = null,
+                                       OnExceptionDelegate                                             OnException                                         = null,
 
-                                       DateTime?                                                    Timestamp                                           = null,
-                                       CancellationToken?                                           CancellationToken                                   = null,
-                                       EventTracking_Id                                             EventTrackingId                                     = null,
-                                       TimeSpan?                                                    RequestTimeout                                      = null)
+                                       DateTime?                                                       Timestamp                                           = null,
+                                       CancellationToken?                                              CancellationToken                                   = null,
+                                       EventTracking_Id                                                EventTrackingId                                     = null,
+                                       TimeSpan?                                                       RequestTimeout                                      = null)
 
         {
 
@@ -351,18 +356,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeRemoteReservationStopRequest>  CustomAuthorizeRemoteReservationStopRequestSerializer   = null)
         {
 
-            var XML= new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
+            var XML = new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
 
-                                      new XElement(OICPNS.Reservation + "SessionID",               SessionId.       ToString()),
+                                       new XElement(OICPNS.Reservation + "SessionID",               SessionId.       ToString()),
 
-                                      PartnerSessionId.HasValue
-                                          ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
-                                          : null,
+                                       PartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
+                                           : null,
 
-                                      new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
-                                      new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString())
+                                       new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
+                                       new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString())
 
-                                 );
+                                  );
 
             return CustomAuthorizeRemoteReservationStopRequestSerializer != null
                        ? CustomAuthorizeRemoteReservationStopRequestSerializer(this, XML)

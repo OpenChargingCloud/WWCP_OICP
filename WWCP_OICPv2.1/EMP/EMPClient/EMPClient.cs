@@ -589,6 +589,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   { get; set; }
 
 
+        public CustomXMLSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer       { get; set; }
+        public CustomXMLSerializerDelegate<Identification>                          CustomIdentificationSerializer                               { get; set; }
+
+
         public CustomXMLParserDelegate<StatusCode>                      CustomStatusCodeParser                       { get; set; }
 
         #endregion
@@ -1804,7 +1808,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request, SOAP.Encapsulation(Request.ToXML())),
+                result = await _OICPClient.Query(_CustomAuthorizeRemoteReservationStartSOAPRequestMapper(Request,
+                                                                                                         SOAP.Encapsulation(Request.ToXML(CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                                                                          CustomIdentificationSerializer))),
                                                  "eRoamingAuthorizeRemoteReservationStart",
                                                  RequestLogDelegate:   OnAuthorizeRemoteReservationStartSOAPRequest,
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
@@ -2163,7 +2169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region AuthorizeRemoteStart     (Request)
+        #region AuthorizeRemoteStart(Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -2376,7 +2382,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStop      (Request)
+        #region AuthorizeRemoteStop (Request)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.

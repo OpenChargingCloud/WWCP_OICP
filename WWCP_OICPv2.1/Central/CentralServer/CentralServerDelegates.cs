@@ -187,6 +187,109 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     #endregion
 
 
+    #region OnPushAuthenticationData(Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a PushAuthenticationData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataRequestDelegate (DateTime                                          LogTimestamp,
+                                                 DateTime                                          RequestTimestamp,
+                                                 CentralServer                                     Sender,
+                                                 String                                            SenderId,
+                                                 EventTracking_Id                                  EventTrackingId,
+                                                 ProviderAuthenticationData                        ProviderAuthenticationData,
+                                                 ActionTypes                                       OICPAction,
+                                                 TimeSpan                                          RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PushAuthenticationData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<PushAuthenticationDataRequest>>
+
+        OnPushAuthenticationDataDelegate        (DateTime                                          Timestamp,
+                                                 CentralServer                                     Sender,
+                                                 PushAuthenticationDataRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PushAuthenticationData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataResponseDelegate(DateTime                                          Timestamp,
+                                                 CentralServer                                     Sender,
+                                                 String                                            SenderId,
+                                                 EventTracking_Id                                  EventTrackingId,
+                                                 ProviderAuthenticationData                        ProviderAuthenticationData,
+                                                 ActionTypes                                       OICPAction,
+                                                 TimeSpan                                          RequestTimeout,
+                                                 Acknowledgement<PushAuthenticationDataRequest>    Result,
+                                                 TimeSpan                                          Duration);
+
+    #endregion
+
+
+    #region OnAuthorizeRemoteReservationStart(Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartRequestDelegate (DateTime                                                   LogTimestamp,
+                                                          DateTime                                                   RequestTimestamp,
+                                                          CentralServer                                              Sender,
+                                                          String                                                     SenderId,
+                                                          EventTracking_Id                                           EventTrackingId,
+                                                          Provider_Id                                                ProviderId,
+                                                          EVSE_Id                                                    EVSEId,
+                                                          EVCO_Id                                                    EVCOId,
+                                                          Session_Id?                                                SessionId,
+                                                          PartnerSession_Id?                                         PartnerSessionId,
+                                                          PartnerProduct_Id?                                         PartnerProductId,
+                                                          TimeSpan                                                   RequestTimeout);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteReservationStart request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteReservationStartRequest>>
+
+        OnAuthorizeRemoteReservationStartDelegate        (DateTime                                                   Timestamp,
+                                                          CentralServer                                              Sender,
+                                                          AuthorizeRemoteReservationStartRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                   Timestamp,
+                                                          CentralServer                                              Sender,
+                                                          String                                                     SenderId,
+                                                          EventTracking_Id                                           EventTrackingId,
+                                                          Provider_Id                                                ProviderId,
+                                                          EVSE_Id                                                    EVSEId,
+                                                          EVCO_Id                                                    EVCOId,
+                                                          Session_Id?                                                SessionId,
+                                                          PartnerSession_Id?                                         PartnerSessionId,
+                                                          PartnerProduct_Id?                                         PartnerProductId,
+                                                          TimeSpan                                                   RequestTimeout,
+                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>    Result,
+                                                          TimeSpan                                                   Duration);
+
+    #endregion
+
 
     // CPO event delegates...
 

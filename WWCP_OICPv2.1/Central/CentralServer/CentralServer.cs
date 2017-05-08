@@ -110,23 +110,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #region Custom request/response mappers
 
-        public CustomXMLParserDelegate<EMP.PullEVSEDataRequest>        CustomPullEVSEDataRequestParser          { get; set; }
-        public CustomXMLSerializerDelegate<OperatorEVSEData>           CustomOperatorEVSEDataSerializer         { get; set; }
-        public CustomXMLSerializerDelegate<EVSEDataRecord>             CustomEVSEDataRecordSerializer           { get; set; }
+        // EMP
+        public CustomXMLParserDelegate<EMP.PullEVSEDataRequest>                                          CustomPullEVSEDataRequestParser                                   { get; set; }
+        public CustomXMLSerializerDelegate<OperatorEVSEData>                                             CustomOperatorEVSEDataSerializer                                  { get; set; }
+        public CustomXMLSerializerDelegate<EVSEDataRecord>                                               CustomEVSEDataRecordSerializer                                    { get; set; }
 
-        public CustomXMLParserDelegate<EMP.PullEVSEStatusRequest>      CustomPullEVSEStatusRequestParser        { get; set; }
-        public CustomXMLSerializerDelegate<EMP.EVSEStatus>             CustomEVSEStatusSerializer               { get; set; }
-        public CustomXMLSerializerDelegate<OperatorEVSEStatus>         CustomOperatorEVSEStatusSerializer       { get; set; }
-        public CustomXMLSerializerDelegate<EVSEStatusRecord>           CustomEVSEStatusRecordSerializer         { get; set; }
+        public CustomXMLParserDelegate<EMP.PullEVSEStatusRequest>                                        CustomPullEVSEStatusRequestParser                                 { get; set; }
+        public CustomXMLSerializerDelegate<EMP.EVSEStatus>                                               CustomEVSEStatusSerializer                                        { get; set; }
+        public CustomXMLSerializerDelegate<OperatorEVSEStatus>                                           CustomOperatorEVSEStatusSerializer                                { get; set; }
+        public CustomXMLSerializerDelegate<EVSEStatusRecord>                                             CustomEVSEStatusRecordSerializer                                  { get; set; }
 
-        public CustomXMLParserDelegate<EMP.PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser    { get; set; }
-        public CustomXMLSerializerDelegate<EMP.EVSEStatusById>         CustomEVSEStatusByIdSerializer           { get; set; }
+        public CustomXMLParserDelegate<EMP.PullEVSEStatusByIdRequest>                                    CustomPullEVSEStatusByIdRequestParser                             { get; set; }
+        public CustomXMLSerializerDelegate<EMP.EVSEStatusById>                                           CustomEVSEStatusByIdSerializer                                    { get; set; }
 
-        public OnExceptionDelegate                                     OnException                              { get; set; }
+        public CustomXMLParserDelegate<EMP.PushAuthenticationDataRequest>                                CustomPushAuthenticationDataRequestParser                         { get; set; }
+        public CustomXMLParserDelegate<ProviderAuthenticationData>                                       CustomProviderAuthenticationDataParser                            { get; set; }
+        public CustomXMLParserDelegate<Identification>                                                   CustomAuthorizationIdentificationParser                           { get; set; }
+        public CustomXMLSerializerDelegate<EMP.PushAuthenticationDataRequest>                            CustomPushAuthenticationDataRequestSerializer                     { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.PushAuthenticationDataRequest>>           CustomPushAuthenticationDataResponseSerializer             { get; set; }
+        public CustomXMLSerializerDelegate<StatusCode>                                                   CustomStatusCodeSerializer                                        { get; set; }
+
+        public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>                       CustomAuthorizeRemoteReservationStartRequestParser                { get; set; }
+        public CustomXMLParserDelegate<Identification>                                                   CustomIdentificationParser                                        { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>  CustomAuthorizeRemoteReservationStartResponseSerializer    { get; set; }
+
+        // CPO
+
+
+        // Mobile
+
+
+        public OnExceptionDelegate                                             OnException                                      { get; set; }
 
         #endregion
 
         #region Events
+
+        // EMP
 
         #region OnPullEVSEData
 
@@ -216,7 +236,67 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #endregion
 
 
+        #region OnPushAuthenticationData
 
+        /// <summary>
+        /// An event sent whenever a PushAuthenticationData SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                          OnPushAuthenticationDataSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a PushAuthenticationData request was received.
+        /// </summary>
+        public event OnPushAuthenticationDataRequestDelegate    OnPushAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event sent whenever a PushAuthenticationData command was received.
+        /// </summary>
+        public event OnPushAuthenticationDataDelegate           OnPushAuthenticationData;
+
+        /// <summary>
+        /// An event sent whenever a PushAuthenticationData response was sent.
+        /// </summary>
+        public event OnPushAuthenticationDataResponseDelegate   OnPushAuthenticationDataResponse;
+
+        /// <summary>
+        /// An event sent whenever a PushAuthenticationData SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                           OnPushAuthenticationDataSOAPResponse;
+
+        #endregion
+
+
+        #region OnAuthorizeRemoteReservationStart
+
+        /// <summary>
+        /// An event sent whenever a AuthorizeRemoteReservationStart SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                                   OnAuthorizeRemoteReservationStartSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a AuthorizeRemoteReservationStart request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartRequestDelegate    OnAuthorizeRemoteReservationStartRequest;
+
+        /// <summary>
+        /// An event sent whenever a AuthorizeRemoteReservationStart command was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartDelegate           OnAuthorizeRemoteReservationStart;
+
+        /// <summary>
+        /// An event sent whenever a AuthorizeRemoteReservationStart response was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartResponseDelegate   OnAuthorizeRemoteReservationStartResponse;
+
+        /// <summary>
+        /// An event sent whenever a AuthorizeRemoteReservationStart SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                                    OnAuthorizeRemoteReservationStartSOAPResponse;
+
+        #endregion
+
+
+        // CPO
 
         #region OnPushEvseData
 
@@ -236,6 +316,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         //public event OnPushEvseDataDelegate  OnPushEvseDataRequest;
 
         #endregion
+
+
+        // Mobile
 
         #endregion
 
@@ -315,13 +398,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         protected void RegisterURITemplates()
         {
 
-            #region /EVSEData   - PullEVSEDataRequest
+            // EMP
+
+            #region /EVSEData           - PullEVSEDataRequest
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + EVSEDataURI,
                                             "PullEVSEData",
                                             XML => XML.Descendants(OICPNS.EVSEData + "eRoamingPullEvseData").FirstOrDefault(),
-                                            async (HTTPRequest, eRoamingPullEvseDataXML) => {
+                                            async (HTTPRequest, PullEvseDataXML) => {
 
 
                 EMP.PullEVSEDataRequest PullEVSEDataRequest  = null;
@@ -351,7 +436,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                 #endregion
 
 
-                if (EMP.PullEVSEDataRequest.TryParse(eRoamingPullEvseDataXML,
+                if (EMP.PullEVSEDataRequest.TryParse(PullEvseDataXML,
                                                      out PullEVSEDataRequest,
                                                      CustomPullEVSEDataRequestParser,
                                                      OnException,
@@ -494,13 +579,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #endregion
 
-            #region /EVSEStatus - PullEVSEStatusRequest
+            #region /EVSEStatus         - PullEVSEStatusRequest
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + EVSEStatusURI,
                                             "PullEVSEStatus",
                                             XML => XML.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus").FirstOrDefault(),
-                                            async (HTTPRequest, eRoamingPullEvseStatusXML) => {
+                                            async (HTTPRequest, PullEvseStatusXML) => {
 
 
                 EMP.PullEVSEStatusRequest PullEVSEStatusRequest  = null;
@@ -530,7 +615,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                 #endregion
 
 
-                if (EMP.PullEVSEStatusRequest.TryParse(eRoamingPullEvseStatusXML,
+                if (EMP.PullEVSEStatusRequest.TryParse(PullEvseStatusXML,
                                                        out PullEVSEStatusRequest,
                                                        CustomPullEVSEStatusRequestParser,
                                                        OnException,
@@ -671,13 +756,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #endregion
 
-            #region /EVSEStatus - PullEVSEStatusByIdRequest
+            #region /EVSEStatus         - PullEVSEStatusByIdRequest
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + EVSEStatusURI,
                                             "PullEVSEStatusById",
                                             XML => XML.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById").FirstOrDefault(),
-                                            async (HTTPRequest, eRoamingPullEvseStatusByIdXML) => {
+                                            async (HTTPRequest, PullEvseStatusByIdXML) => {
 
 
                 EMP.PullEVSEStatusByIdRequest PullEVSEStatusByIdRequest  = null;
@@ -707,7 +792,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                 #endregion
 
 
-                if (EMP.PullEVSEStatusByIdRequest.TryParse(eRoamingPullEvseStatusByIdXML,
+                if (EMP.PullEVSEStatusByIdRequest.TryParse(PullEvseStatusByIdXML,
                                                            out PullEVSEStatusByIdRequest,
                                                            CustomPullEVSEStatusByIdRequestParser,
                                                            OnException,
@@ -844,6 +929,371 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #endregion
 
+
+            #region /AuthenticationData - PushAuthenticationDataRequest
+
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + AuthenticationDataURI,
+                                            "PushAuthenticationData",
+                                            XML => XML.Descendants(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData").FirstOrDefault(),
+                                            async (HTTPRequest, PushAuthenticationDataXML) => {
+
+
+                EMP.PushAuthenticationDataRequest                   PushAuthenticationDataRequest  = null;
+                Acknowledgement<EMP.PushAuthenticationDataRequest>  Acknowledgement                = null;
+
+                #region Send OnPushAuthenticationDataSOAPRequest event
+
+                var StartTime = DateTime.Now;
+
+                try
+                {
+
+                    if (OnPushAuthenticationDataSOAPRequest != null)
+                        await Task.WhenAll(OnPushAuthenticationDataSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnPushAuthenticationDataSOAPRequest));
+                }
+
+                #endregion
+
+
+                if (EMP.PushAuthenticationDataRequest.TryParse(PushAuthenticationDataXML,
+                                                               out PushAuthenticationDataRequest,
+                                                               CustomPushAuthenticationDataRequestParser,
+                                                               CustomProviderAuthenticationDataParser,
+                                                               CustomAuthorizationIdentificationParser,
+                                                               OnException,
+
+                                                               HTTPRequest.Timestamp,
+                                                               HTTPRequest.CancellationToken,
+                                                               HTTPRequest.EventTrackingId,
+                                                               HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnPushAuthenticationDataRequest event
+
+                    try
+                    {
+
+                        if (OnPushAuthenticationDataRequest != null)
+                            await Task.WhenAll(OnPushAuthenticationDataRequest.GetInvocationList().
+                                               Cast<OnPushAuthenticationDataRequestDelegate>().
+                                               Select(e => e(StartTime,
+                                                             PushAuthenticationDataRequest.Timestamp.Value,
+                                                             this,
+                                                             ServiceId,
+                                                             PushAuthenticationDataRequest.EventTrackingId,
+                                                             PushAuthenticationDataRequest.ProviderAuthenticationData,
+                                                             PushAuthenticationDataRequest.OICPAction,
+                                                             PushAuthenticationDataRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnPushAuthenticationDataRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (OnPushAuthenticationData != null)
+                    {
+
+                        var results = await Task.WhenAll(OnPushAuthenticationData.GetInvocationList().
+                                                             Cast<OnPushAuthenticationDataDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           PushAuthenticationDataRequest))).
+                                                             ConfigureAwait(false);
+
+                        Acknowledgement = results.FirstOrDefault();
+
+                    }
+
+                    //if (EVSEData == null)
+                    //    EVSEData = EVSEData.SystemError(
+                    //                         PushAuthenticationDataRequest,
+                    //                         "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                    //                         null,
+                    //                         PushAuthenticationDataRequest.SessionId,
+                    //                         PushAuthenticationDataRequest.PartnerSessionId
+                    //                     );
+
+                    #endregion
+
+                    #region Send OnPushAuthenticationDataResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        if (OnPushAuthenticationDataResponse != null)
+                            await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
+                                               Cast<OnPushAuthenticationDataResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             ServiceId,
+                                                             PushAuthenticationDataRequest.EventTrackingId,
+                                                             PushAuthenticationDataRequest.ProviderAuthenticationData,
+                                                             PushAuthenticationDataRequest.OICPAction,
+                                                             PushAuthenticationDataRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             Acknowledgement,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnPushAuthenticationDataResponse));
+                    }
+
+                    #endregion
+
+                }
+
+
+                #region Create SOAPResponse
+
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomPushAuthenticationDataResponseSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                };
+
+                #endregion
+
+                #region Send OnPushAuthenticationDataSOAPResponse event
+
+                try
+                {
+
+                    if (OnPushAuthenticationDataSOAPResponse != null)
+                        await Task.WhenAll(OnPushAuthenticationDataSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnPushAuthenticationDataSOAPResponse));
+                }
+
+                #endregion
+
+                return HTTPResponse;
+
+            });
+
+            #endregion
+
+
+            #region /Reservation        - AuthorizeRemoteReservationStartRequest
+
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + ReservationURI,
+                                            "AuthorizeRemoteReservationStart",
+                                            XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart").FirstOrDefault(),
+                                            async (HTTPRequest, PullEvseDataXML) => {
+
+
+                EMP.AuthorizeRemoteReservationStartRequest                   AuthorizeRemoteReservationStartRequest  = null;
+                Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>  Acknowledgement                         = null;
+
+                #region Send OnAuthorizeRemoteReservationStartSOAPRequest event
+
+                var StartTime = DateTime.Now;
+
+                try
+                {
+
+                    if (OnAuthorizeRemoteReservationStartSOAPRequest != null)
+                        await Task.WhenAll(OnAuthorizeRemoteReservationStartSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPRequest));
+                }
+
+                #endregion
+
+
+                if (EMP.AuthorizeRemoteReservationStartRequest.TryParse(PullEvseDataXML,
+                                                                        out AuthorizeRemoteReservationStartRequest,
+                                                                        CustomAuthorizeRemoteReservationStartRequestParser,
+                                                                        CustomIdentificationParser,
+                                                                        OnException,
+
+                                                                        HTTPRequest.Timestamp,
+                                                                        HTTPRequest.CancellationToken,
+                                                                        HTTPRequest.EventTrackingId,
+                                                                        HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnAuthorizeRemoteReservationStartRequest event
+
+                    try
+                    {
+
+                        if (OnAuthorizeRemoteReservationStartRequest != null)
+                            await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
+                                               Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
+                                               Select(e => e(StartTime,
+                                                             AuthorizeRemoteReservationStartRequest.Timestamp.Value,
+                                                             this,
+                                                             ServiceId,
+                                                             AuthorizeRemoteReservationStartRequest.EventTrackingId,
+                                                             AuthorizeRemoteReservationStartRequest.ProviderId,
+                                                             AuthorizeRemoteReservationStartRequest.EVSEId,
+                                                             AuthorizeRemoteReservationStartRequest.EVCOId,
+                                                             AuthorizeRemoteReservationStartRequest.SessionId,
+                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.PartnerProductId,
+                                                             AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (OnAuthorizeRemoteReservationStart != null)
+                    {
+
+                        var results = await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
+                                                             Cast<OnAuthorizeRemoteReservationStartDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           AuthorizeRemoteReservationStartRequest))).
+                                                             ConfigureAwait(false);
+
+                        Acknowledgement = results.FirstOrDefault();
+
+                    }
+
+                    //if (EVSEData == null)
+                    //    EVSEData = EVSEData.SystemError(
+                    //                         AuthorizeRemoteReservationStartRequest,
+                    //                         "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                    //                         null,
+                    //                         AuthorizeRemoteReservationStartRequest.SessionId,
+                    //                         AuthorizeRemoteReservationStartRequest.PartnerSessionId
+                    //                     );
+
+                    #endregion
+
+                    #region Send OnAuthorizeRemoteReservationStartResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        if (OnAuthorizeRemoteReservationStartResponse != null)
+                            await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
+                                               Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             ServiceId,
+                                                             AuthorizeRemoteReservationStartRequest.EventTrackingId,
+                                                             AuthorizeRemoteReservationStartRequest.ProviderId,
+                                                             AuthorizeRemoteReservationStartRequest.EVSEId,
+                                                             AuthorizeRemoteReservationStartRequest.EVCOId,
+                                                             AuthorizeRemoteReservationStartRequest.SessionId,
+                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.PartnerProductId,
+                                                             AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             Acknowledgement,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                    }
+
+                    #endregion
+
+                }
+
+
+                #region Create SOAPResponse
+
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStartResponseSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                };
+
+                #endregion
+
+                #region Send OnAuthorizeRemoteReservationStartSOAPResponse event
+
+                try
+                {
+
+                    if (OnAuthorizeRemoteReservationStartSOAPResponse != null)
+                        await Task.WhenAll(OnAuthorizeRemoteReservationStartSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPResponse));
+                }
+
+                #endregion
+
+                return HTTPResponse;
+
+            });
+
+            #endregion
+
+
+            // CPO
+
+
+
+            // Mobile
 
             #region /RNs/{RoamingNetworkId}
 

@@ -63,6 +63,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ProviderAuthenticationData">The e-mobility provider authentication data.</param>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="OICPAction">An optional OICP action.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PushAuthenticationDataRequest(ProviderAuthenticationData  ProviderAuthenticationData,
                                              ActionTypes                 OICPAction          = ActionTypes.fullLoad,
 
@@ -155,26 +160,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PushAuthenticationDataRequestXML,  OnException = null)
+        #region (static) Parse(PushAuthenticationDataRequestXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PushAuthenticationDataRequest Parse(XElement             PushAuthenticationDataRequestXML,
-            CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                                          OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PushAuthenticationDataRequest
+
+            Parse(XElement                                                PushAuthenticationDataRequestXML,
+                  CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
+                  CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
+                  CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                  OnExceptionDelegate                                     OnException                                 = null,
+
+                  DateTime?                                               Timestamp                                   = null,
+                  CancellationToken?                                      CancellationToken                           = null,
+                  EventTracking_Id                                        EventTrackingId                             = null,
+                  TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             PushAuthenticationDataRequest _PushAuthenticationDataRequest;
 
             if (TryParse(PushAuthenticationDataRequestXML,
                          out _PushAuthenticationDataRequest,
+                         CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _PushAuthenticationDataRequest;
 
@@ -184,26 +212,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(PushAuthenticationDataRequestText, OnException = null)
+        #region (static) Parse(PushAuthenticationDataRequestText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PushAuthenticationDataRequest Parse(String               PushAuthenticationDataRequestText,
-            CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                                          OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PushAuthenticationDataRequest
+
+            Parse(String                                                  PushAuthenticationDataRequestText,
+                  CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
+                  CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
+                  CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                  OnExceptionDelegate                                     OnException                                 = null,
+
+                  DateTime?                                               Timestamp                                   = null,
+                  CancellationToken?                                      CancellationToken                           = null,
+                  EventTracking_Id                                        EventTrackingId                             = null,
+                  TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             PushAuthenticationDataRequest _PushAuthenticationDataRequest;
 
             if (TryParse(PushAuthenticationDataRequestText,
                          out _PushAuthenticationDataRequest,
+                         CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _PushAuthenticationDataRequest;
 
@@ -213,20 +264,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PushAuthenticationDataRequestXML,  out PushAuthenticationDataRequest, OnException = null)
+        #region (static) TryParse(PushAuthenticationDataRequestXML,  out PushAuthenticationDataRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                          PushAuthenticationDataRequestXML,
-                                       out PushAuthenticationDataRequest                 PushAuthenticationDataRequest,
-                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                                PushAuthenticationDataRequestXML,
+                                       out PushAuthenticationDataRequest                       PushAuthenticationDataRequest,
+                                       CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
+                                       CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                                       OnExceptionDelegate                                     OnException                                 = null,
 
-                                       OnExceptionDelegate                               OnException                               = null)
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
@@ -248,9 +313,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                     OnException),
 
                                                     PushAuthenticationDataRequestXML.MapValueOrFail(OICPNS.AuthenticationData + "ActionType",
-                                                                                                    XML_IO.AsActionType)
+                                                                                                    XML_IO.AsActionType),
 
-                                                );
+                                                    Timestamp,
+                                                    CancellationToken,
+                                                    EventTrackingId,
+                                                    RequestTimeout);
+
+
+                if (CustomPushAuthenticationDataRequestParser != null)
+                    PushAuthenticationDataRequest = CustomPushAuthenticationDataRequestParser(PushAuthenticationDataRequestXML,
+                                                                                              PushAuthenticationDataRequest);
 
                 return true;
 
@@ -269,19 +342,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(PushAuthenticationDataRequestText, out PushAuthenticationDataRequest, OnException = null)
+        #region (static) TryParse(PushAuthenticationDataRequestText, out PushAuthenticationDataRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                             PushAuthenticationDataRequestText,
-                                       out PushAuthenticationDataRequest  PushAuthenticationDataRequest,
-                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                       OnExceptionDelegate                OnException  = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                                  PushAuthenticationDataRequestText,
+                                       out PushAuthenticationDataRequest                       PushAuthenticationDataRequest,
+                                       CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
+                                       CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                                       OnExceptionDelegate                                     OnException                                 = null,
+
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
@@ -289,9 +377,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (TryParse(XDocument.Parse(PushAuthenticationDataRequestText).Root,
                              out PushAuthenticationDataRequest,
+                             CustomPushAuthenticationDataRequestParser,
                              CustomProviderAuthenticationDataParser,
                              CustomAuthorizationIdentificationParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 
@@ -308,20 +402,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region ToXML()
+        #region ToXML(CustomPushAuthenticationDataRequestSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        public XElement ToXML()
+        /// <param name="CustomPushAuthenticationDataRequestSerializer">A delegate to customize the serialization of PushAuthenticationDataRequest requests.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestSerializer   = null)
+        {
 
-            => new XElement(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData",
+            var XML = new XElement(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData",
 
-                   new XElement(OICPNS.AuthenticationData + "ActionType",  XML_IO.AsText(OICPAction)),
+                          new XElement(OICPNS.AuthenticationData + "ActionType",  XML_IO.AsText(OICPAction)),
 
-                   ProviderAuthenticationData.ToXML()
+                          ProviderAuthenticationData.ToXML()
 
-               );
+
+                      );
+
+            return CustomPushAuthenticationDataRequestSerializer != null
+                       ? CustomPushAuthenticationDataRequestSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
