@@ -576,24 +576,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        public CustomXMLParserDelegate<OperatorEVSEData>                CustomOperatorEVSEDataParser                 { get; set; }
-        public CustomXMLParserDelegate<EVSEDataRecord>                  CustomEVSEDataRecordParser                   { get; set; }
+        public CustomXMLParserDelegate<OperatorEVSEData>                            CustomOperatorEVSEDataParser                              { get; set; }
+        public CustomXMLParserDelegate<EVSEDataRecord>                              CustomEVSEDataRecordParser                                { get; set; }
 
-        public CustomXMLParserDelegate<EVSEStatus>                      CustomEVSEStatusParser                       { get; set; }
-        public CustomXMLParserDelegate<OperatorEVSEStatus>              CustomOperatorEVSEStatusParser               { get; set; }
-        public CustomXMLParserDelegate<EVSEStatusById>                  CustomEVSEStatusByIdParser                   { get; set; }
-        public CustomXMLParserDelegate<EVSEStatusRecord>                CustomEVSEStatusRecordParser                 { get; set; }
+        public CustomXMLParserDelegate<EVSEStatus>                                  CustomEVSEStatusParser                                    { get; set; }
+        public CustomXMLParserDelegate<OperatorEVSEStatus>                          CustomOperatorEVSEStatusParser                            { get; set; }
+        public CustomXMLParserDelegate<EVSEStatusById>                              CustomEVSEStatusByIdParser                                { get; set; }
+        public CustomXMLParserDelegate<EVSEStatusRecord>                            CustomEVSEStatusRecordParser                              { get; set; }
 
-        public CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   { get; set; }
-        public CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               { get; set; }
-        public CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   { get; set; }
-
-
-        public CustomXMLSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer       { get; set; }
-        public CustomXMLSerializerDelegate<Identification>                          CustomIdentificationSerializer                               { get; set; }
+        public CustomXMLParserDelegate<GetChargeDetailRecordsResponse>              CustomGetChargeDetailRecordsResponseParser                { get; set; }
+        public CustomXMLParserDelegate<ChargeDetailRecord>                          CustomChargeDetailRecordParser                            { get; set; }
+        public CustomXMLParserDelegate<Identification>                              CustomIdentificationParser                                { get; set; }
 
 
-        public CustomXMLParserDelegate<StatusCode>                      CustomStatusCodeParser                       { get; set; }
+        public CustomXMLSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer    { get; set; }
+        public CustomXMLSerializerDelegate<Identification>                          CustomIdentificationSerializer                            { get; set; }
+
+
+        public CustomXMLParserDelegate<StatusCode>                                  CustomStatusCodeParser                                    { get; set; }
 
         #endregion
 
@@ -2167,7 +2167,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
         #endregion
-
 
         #region AuthorizeRemoteStart(Request)
 

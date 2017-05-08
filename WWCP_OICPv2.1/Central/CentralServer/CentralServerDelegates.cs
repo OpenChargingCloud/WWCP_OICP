@@ -290,6 +290,112 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
+    #region OnAuthorizeRemoteReservationStop (Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopRequestDelegate (DateTime                                                  LogTimestamp,
+                                                         DateTime                                                  RequestTimestamp,
+                                                         CentralServer                                             Sender,
+                                                         String                                                    SenderId,
+                                                         EventTracking_Id                                          EventTrackingId,
+                                                         Session_Id                                                SessionId,
+                                                         Provider_Id                                               ProviderId,
+                                                         EVSE_Id                                                   EVSEId,
+                                                         PartnerSession_Id?                                        PartnerSessionId,
+                                                         TimeSpan                                                  RequestTimeout);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteReservationStop request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteReservationStopRequest>>
+
+        OnAuthorizeRemoteReservationStopDelegate        (DateTime                                                  Timestamp,
+                                                         CentralServer                                             Sender,
+                                                         AuthorizeRemoteReservationStopRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                  Timestamp,
+                                                         CentralServer                                             Sender,
+                                                         String                                                    SenderId,
+                                                         EventTracking_Id                                          EventTrackingId,
+                                                         Session_Id                                                SessionId,
+                                                         Provider_Id                                               ProviderId,
+                                                         EVSE_Id                                                   EVSEId,
+                                                         PartnerSession_Id?                                        PartnerSessionId,
+                                                         TimeSpan                                                  RequestTimeout,
+                                                         Acknowledgement<AuthorizeRemoteReservationStopRequest>    Result,
+                                                         TimeSpan                                                  Duration);
+
+    #endregion
+
+    #region OnAuthorizeRemoteStart(Request|Response)Handler
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStartRequestDelegate (DateTime                                        LogTimestamp,
+                                               DateTime                                        RequestTimestamp,
+                                               CentralServer                                   Sender,
+                                               String                                          SenderId,
+                                               EventTracking_Id                                EventTrackingId,
+                                               Provider_Id                                     ProviderId,
+                                               EVSE_Id                                         EVSEId,
+                                               EVCO_Id                                         EVCOId,
+                                               Session_Id?                                     SessionId,
+                                               PartnerSession_Id?                              PartnerSessionId,
+                                               PartnerProduct_Id?                              PartnerProductId,
+                                               TimeSpan                                        RequestTimeout);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteStart request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteStartRequest>>
+
+        OnAuthorizeRemoteStartDelegate        (DateTime                                        Timestamp,
+                                               CentralServer                                   Sender,
+                                               AuthorizeRemoteStartRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStartResponseDelegate(DateTime                                        Timestamp,
+                                               CentralServer                                   Sender,
+                                               String                                          SenderId,
+                                               EventTracking_Id                                EventTrackingId,
+                                               Provider_Id                                     ProviderId,
+                                               EVSE_Id                                         EVSEId,
+                                               EVCO_Id                                         EVCOId,
+                                               Session_Id?                                     SessionId,
+                                               PartnerSession_Id?                              PartnerSessionId,
+                                               PartnerProduct_Id?                              PartnerProductId,
+                                               TimeSpan                                        RequestTimeout,
+                                               Acknowledgement<AuthorizeRemoteStartRequest>    Result,
+                                               TimeSpan                                        Duration);
+
+    #endregion
+
 
     // CPO event delegates...
 
