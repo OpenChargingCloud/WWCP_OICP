@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 using org.GraphDefined.WWCP.OICPv2_1.CPO;
 using org.GraphDefined.WWCP.OICPv2_1.EMP;
+using org.GraphDefined.WWCP.OICPv2_1.Mobile;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
@@ -796,23 +797,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     // Mobile event delegates...
 
-    #region OnMobileAuthorizeStart      (Request|Response)Delegate
+    #region OnMobileAuthorizeStart(Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a MobileAuthorizeStart request was received.
     /// </summary>
     public delegate Task
 
-        OnMobileAuthorizeStartRequestDelegate (DateTime                              LogTimestamp,
-                                               DateTime                              RequestTimestamp,
-                                               CentralServer                         Sender,
-                                               String                                SenderId,
-                                               EventTracking_Id                      EventTrackingId,
-                                               EVSE_Id                               EVSEId,
-                                               QRCodeIdentification                  QRCodeIdentification,
-                                               PartnerProduct_Id?                    PartnerProductId,
-                                               Boolean?                              GetNewSession,
-                                               TimeSpan                              RequestTimeout);
+        OnMobileAuthorizeStartRequestDelegate (DateTime                       LogTimestamp,
+                                               DateTime                       RequestTimestamp,
+                                               CentralServer                  Sender,
+                                               String                         SenderId,
+                                               EventTracking_Id               EventTrackingId,
+                                               EVSE_Id                        EVSEId,
+                                               QRCodeIdentification           QRCodeIdentification,
+                                               PartnerProduct_Id?             PartnerProductId,
+                                               Boolean?                       GetNewSession,
+                                               TimeSpan                       RequestTimeout);
 
 
     /// <summary>
@@ -821,11 +822,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="Request">The request.</param>
-    public delegate Task<Mobile.MobileAuthorizationStart>
+    public delegate Task<MobileAuthorizationStart>
 
-        OnMobileAuthorizeStartDelegate        (DateTime                              Timestamp,
-                                               CentralServer                         Sender,
-                                               Mobile.MobileAuthorizeStartRequest    Request);
+        OnMobileAuthorizeStartDelegate        (DateTime                       Timestamp,
+                                               CentralServer                  Sender,
+                                               MobileAuthorizeStartRequest    Request);
 
 
     /// <summary>
@@ -833,17 +834,107 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     /// </summary>
     public delegate Task
 
-        OnMobileAuthorizeStartResponseDelegate(DateTime                              Timestamp,
-                                               CentralServer                         Sender,
-                                               String                                SenderId,
-                                               EventTracking_Id                      EventTrackingId,
-                                               EVSE_Id                               EVSEId,
-                                               QRCodeIdentification                  QRCodeIdentification,
-                                               PartnerProduct_Id?                    PartnerProductId,
-                                               Boolean?                              GetNewSession,
-                                               TimeSpan                              RequestTimeout,
-                                               Mobile.MobileAuthorizationStart       Result,
-                                               TimeSpan                              Duration);
+        OnMobileAuthorizeStartResponseDelegate(DateTime                       Timestamp,
+                                               CentralServer                  Sender,
+                                               String                         SenderId,
+                                               EventTracking_Id               EventTrackingId,
+                                               EVSE_Id                        EVSEId,
+                                               QRCodeIdentification           QRCodeIdentification,
+                                               PartnerProduct_Id?             PartnerProductId,
+                                               Boolean?                       GetNewSession,
+                                               TimeSpan                       RequestTimeout,
+                                               MobileAuthorizationStart       Result,
+                                               TimeSpan                       Duration);
+
+    #endregion
+
+    #region OnMobileRemoteStart   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a MobileRemoteStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnMobileRemoteStartRequestDelegate (DateTime                                     LogTimestamp,
+                                            DateTime                                     RequestTimestamp,
+                                            CentralServer                                Sender,
+                                            String                                       SenderId,
+                                            EventTracking_Id                             EventTrackingId,
+                                            Session_Id                                   SessionId,
+                                            TimeSpan                                     RequestTimeout);
+
+
+    /// <summary>
+    /// Send a MobileRemoteStart request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<MobileRemoteStartRequest>>
+
+        OnMobileRemoteStartDelegate        (DateTime                                     Timestamp,
+                                            CentralServer                                Sender,
+                                            MobileRemoteStartRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a MobileRemoteStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnMobileRemoteStartResponseDelegate(DateTime                                     Timestamp,
+                                            CentralServer                                Sender,
+                                            String                                       SenderId,
+                                            EventTracking_Id                             EventTrackingId,
+                                            Session_Id                                   SessionId,
+                                            TimeSpan                                     RequestTimeout,
+                                            Acknowledgement<MobileRemoteStartRequest>    Result,
+                                            TimeSpan                                     Duration);
+
+    #endregion
+
+    #region OnMobileRemoteStop    (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a MobileRemoteStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnMobileRemoteStopRequestDelegate (DateTime                                    LogTimestamp,
+                                           DateTime                                    RequestTimestamp,
+                                           CentralServer                               Sender,
+                                           String                                      SenderId,
+                                           EventTracking_Id                            EventTrackingId,
+                                           Session_Id                                  SessionId,
+                                           TimeSpan                                    RequestTimeout);
+
+
+    /// <summary>
+    /// Send a MobileRemoteStop request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<MobileRemoteStopRequest>>
+
+        OnMobileRemoteStopDelegate        (DateTime                                    Timestamp,
+                                           CentralServer                               Sender,
+                                           MobileRemoteStopRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a MobileRemoteStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnMobileRemoteStopResponseDelegate(DateTime                                    Timestamp,
+                                           CentralServer                               Sender,
+                                           String                                      SenderId,
+                                           EventTracking_Id                            EventTrackingId,
+                                           Session_Id                                  SessionId,
+                                           TimeSpan                                    RequestTimeout,
+                                           Acknowledgement<MobileRemoteStopRequest>    Result,
+                                           TimeSpan                                    Duration);
 
     #endregion
 

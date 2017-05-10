@@ -49,6 +49,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// Create a new MobileRemoteStop request.
         /// </summary>
         /// <param name="SessionId">A charging session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public MobileRemoteStopRequest(Session_Id          SessionId,
 
                                         DateTime?           Timestamp           = null,
@@ -89,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) Parse(MobileRemoteStopXML,  ..., OnException = null)
+        #region (static) Parse(MobileRemoteStopXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP mobile remote stop request.
@@ -97,9 +102,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileRemoteStopXML">The XML to parse.</param>
         /// <param name="CustomMobileRemoteStopRequestParser">A delegate to parse custom MobileRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static MobileRemoteStopRequest Parse(XElement                                          MobileRemoteStopXML,
-                                                    CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
-                                                    OnExceptionDelegate                               OnException                           = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static MobileRemoteStopRequest
+
+            Parse(XElement                                          MobileRemoteStopXML,
+                  CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
+                  OnExceptionDelegate                               OnException                           = null,
+
+                  DateTime?                                         Timestamp                             = null,
+                  CancellationToken?                                CancellationToken                     = null,
+                  EventTracking_Id                                  EventTrackingId                       = null,
+                  TimeSpan?                                         RequestTimeout                        = null)
+
         {
 
             MobileRemoteStopRequest _MobileRemoteStop;
@@ -107,7 +125,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             if (TryParse(MobileRemoteStopXML,
                          out _MobileRemoteStop,
                          CustomMobileRemoteStopRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _MobileRemoteStop;
 
@@ -117,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) Parse(MobileRemoteStopText, ..., OnException = null)
+        #region (static) Parse(MobileRemoteStopText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP mobile remote stop request.
@@ -125,9 +148,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileRemoteStopText">The text to parse.</param>
         /// <param name="CustomMobileRemoteStopRequestParser">A delegate to parse custom MobileRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static MobileRemoteStopRequest Parse(String                                            MobileRemoteStopText,
-                                                    CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
-                                                    OnExceptionDelegate                               OnException                           = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static MobileRemoteStopRequest
+
+            Parse(String                                            MobileRemoteStopText,
+                  CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
+                  OnExceptionDelegate                               OnException                           = null,
+
+                  DateTime?                                         Timestamp                             = null,
+                  CancellationToken?                                CancellationToken                     = null,
+                  EventTracking_Id                                  EventTrackingId                       = null,
+                  TimeSpan?                                         RequestTimeout                        = null)
+
         {
 
             MobileRemoteStopRequest _MobileRemoteStop;
@@ -135,7 +171,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             if (TryParse(MobileRemoteStopText,
                          out _MobileRemoteStop,
                          CustomMobileRemoteStopRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _MobileRemoteStop;
 
@@ -145,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) TryParse(MobileRemoteStopXML,  out MobileRemoteStop, ..., OnException = null)
+        #region (static) TryParse(MobileRemoteStopXML,  out MobileRemoteStop, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP mobile remote stop request.
@@ -154,10 +195,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileRemoteStop">The parsed mobile remote stop request.</param>
         /// <param name="CustomMobileRemoteStopRequestParser">A delegate to parse custom MobileRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                          MobileRemoteStopXML,
                                        out MobileRemoteStopRequest                       MobileRemoteStop,
                                        CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
-                                       OnExceptionDelegate                               OnException                           = null)
+                                       OnExceptionDelegate                               OnException                           = null,
+
+                                       DateTime?                                         Timestamp                             = null,
+                                       CancellationToken?                                CancellationToken                     = null,
+                                       EventTracking_Id                                  EventTrackingId                       = null,
+                                       TimeSpan?                                         RequestTimeout                        = null)
         {
 
             try
@@ -172,9 +223,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                 MobileRemoteStop = new MobileRemoteStopRequest(
 
                                        MobileRemoteStopXML.MapValueOrFail(OICPNS.MobileAuthorization + "SessionID",
-                                                                           Session_Id.Parse)
+                                                                           Session_Id.Parse),
 
-                                   );
+                                       Timestamp,
+                                       CancellationToken,
+                                       EventTrackingId,
+                                       RequestTimeout);
 
 
                 if (CustomMobileRemoteStopRequestParser != null)
@@ -198,7 +252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) TryParse(MobileRemoteStopText, out MobileRemoteStop, ..., OnException = null)
+        #region (static) TryParse(MobileRemoteStopText, out MobileRemoteStop, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP mobile remote stop request.
@@ -207,10 +261,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileRemoteStop">The parsed mobile remote stop request.</param>
         /// <param name="CustomMobileRemoteStopRequestParser">A delegate to parse custom MobileRemoteStop requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                            MobileRemoteStopText,
                                        out MobileRemoteStopRequest                       MobileRemoteStop,
                                        CustomXMLParserDelegate<MobileRemoteStopRequest>  CustomMobileRemoteStopRequestParser   = null,
-                                       OnExceptionDelegate                               OnException                           = null)
+                                       OnExceptionDelegate                               OnException                           = null,
+
+                                       DateTime?                                         Timestamp                             = null,
+                                       CancellationToken?                                CancellationToken                     = null,
+                                       EventTracking_Id                                  EventTrackingId                       = null,
+                                       TimeSpan?                                         RequestTimeout                        = null)
+
         {
 
             try
@@ -219,7 +284,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                 if (TryParse(XDocument.Parse(MobileRemoteStopText).Root,
                              out MobileRemoteStop,
                              CustomMobileRemoteStopRequestParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

@@ -214,6 +214,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         public CustomXMLSerializerDelegate<Mobile.MobileAuthorizationStart>                              CustomMobileAuthorizationStartSerializer                   { get; set; }
         public CustomXMLSerializerDelegate<Address>                                                      CustomAddressSerializer                                    { get; set; }
 
+        public CustomXMLParserDelegate<Mobile.MobileRemoteStartRequest>                                  CustomMobileRemoteStartRequestParser                       { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<Mobile.MobileRemoteStartRequest>>             CustomMobileRemoteStartResponseSerializer                  { get; set; }
+
+        public CustomXMLParserDelegate<Mobile.MobileRemoteStopRequest>                                   CustomMobileRemoteStopRequestParser                        { get; set; }
+        public CustomXMLSerializerDelegate<Acknowledgement<Mobile.MobileRemoteStopRequest>>              CustomMobileRemoteStopResponseSerializer                   { get; set; }
+
         #endregion
 
         public OnExceptionDelegate                                                                       OnException                                                { get; set; }
@@ -698,6 +704,64 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// An event sent whenever a MobileAuthorizeStart SOAP response was sent.
         /// </summary>
         public event AccessLogHandler                         OnMobileAuthorizeStartSOAPResponse;
+
+        #endregion
+
+        #region OnMobileRemoteStart
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStart SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                     OnMobileRemoteStartSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStart request was received.
+        /// </summary>
+        public event OnMobileRemoteStartRequestDelegate    OnMobileRemoteStartRequest;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStart command was received.
+        /// </summary>
+        public event OnMobileRemoteStartDelegate           OnMobileRemoteStart;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStart response was sent.
+        /// </summary>
+        public event OnMobileRemoteStartResponseDelegate   OnMobileRemoteStartResponse;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStart SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                      OnMobileRemoteStartSOAPResponse;
+
+        #endregion
+
+        #region OnMobileRemoteStop
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStop SOAP request was received.
+        /// </summary>
+        public event RequestLogHandler                    OnMobileRemoteStopSOAPRequest;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStop request was received.
+        /// </summary>
+        public event OnMobileRemoteStopRequestDelegate    OnMobileRemoteStopRequest;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStop command was received.
+        /// </summary>
+        public event OnMobileRemoteStopDelegate           OnMobileRemoteStop;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStop response was sent.
+        /// </summary>
+        public event OnMobileRemoteStopResponseDelegate   OnMobileRemoteStopResponse;
+
+        /// <summary>
+        /// An event sent whenever a MobileRemoteStop SOAP response was sent.
+        /// </summary>
+        public event AccessLogHandler                     OnMobileRemoteStopSOAPResponse;
 
         #endregion
 
@@ -3475,7 +3539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #region Mobile methods
 
-            #region /EVSEData           - MobileAuthorizeStart
+            #region /MobileAuthorization - MobileAuthorizeStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + MobileAuthorizationURI,
@@ -3653,347 +3717,345 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
             #endregion
 
+            #region /MobileAuthorization - MobileRemoteStart
+
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + MobileAuthorizationURI,
+                                            "MobileRemoteStart",
+                                            XML => XML.Descendants(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStart").FirstOrDefault(),
+                                            async (HTTPRequest, PushEvseDataXML) => {
 
 
+                Mobile.MobileRemoteStartRequest                   MobileRemoteStartRequest  = null;
+                Acknowledgement<Mobile.MobileRemoteStartRequest>  Acknowledgement           = null;
 
+                #region Send OnMobileRemoteStartSOAPRequest event
 
-            #endregion
-
-            #region /RNs/{RoamingNetworkId}
-
-            #region Generic OICPServerDelegate
-
-            HTTPDelegate OICPServerDelegate = async Request => {
-
-                //var _EventTrackingId = EventTracking_Id.New;
-                //Log.WriteLine("Event tracking: " + _EventTrackingId);
-
-                #region Parse XML request body... or fail!
-
-                var XMLRequest = Request.ParseXMLRequestBody();
-                if (XMLRequest.HasErrors)
-                {
-
-                    //Log.WriteLine("Invalid XML request!");
-                    //Log.WriteLine(HTTPRequest.Content.ToUTF8String());
-
-                    //SOAPServer.GetEventSource(Semantics.DebugLog).
-                    //    SubmitSubEvent("InvalidXMLRequest",
-                    //                   new JObject(
-                    //                       new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
-                    //                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                    //                       new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                    //                       new JProperty("XMLRequest",    Request.HTTPBody.ToUTF8String()) //ToDo: Handle errors!
-                    //                   ).ToString().
-                    //                     Replace(Environment.NewLine, ""));
-
-                    return XMLRequest.Error;
-
-                }
-
-                #endregion
-
-                //ToDo: Check SOAP header/body XML tags!
+                var StartTime = DateTime.Now;
 
                 try
                 {
 
-                    #region Get and verify XML/SOAP request...
-
-                    IEnumerable<XElement> PushEVSEDataXMLs;
-                    IEnumerable<XElement> PullEVSEDataXMLs;
-                    IEnumerable<XElement> GetEVSEByIdXMLs;
-
-                    IEnumerable<XElement> PushAuthorizationStartXMLs;
-                    IEnumerable<XElement> PullAuthorizationStartXMLs;
-                    IEnumerable<XElement> PullAuthorizationStartByIdXMLs;
-
-
-                    // EvseDataBinding
-                    PushEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingPushEvseData");
-                    PullEVSEDataXMLs        = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingPullEvseData");
-                    GetEVSEByIdXMLs         = XMLRequest.Data.Root.Descendants(OICPNS.EVSEData   + "eRoamingGetEvseById");
-
-                    // EvseStatusBinding
-                    PushAuthorizationStartXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPushEvseStatus");
-                    PullAuthorizationStartXMLs      = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus");
-                    PullAuthorizationStartByIdXMLs  = XMLRequest.Data.Root.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById");
-
-                    if (!PushEVSEDataXMLs.      Any() &&
-                        !PullEVSEDataXMLs.      Any() &&
-                        !GetEVSEByIdXMLs.       Any() &&
-
-                        !PushAuthorizationStartXMLs.    Any() &&
-                        !PullAuthorizationStartXMLs.    Any() &&
-                        !PullAuthorizationStartByIdXMLs.Any())
-                    {
-                        throw new Exception("Unkown XML/SOAP request!");
-                    }
-
-                    if (PushEVSEDataXMLs.       Count() > 1)
-                        throw new Exception("Multiple PushEvseData XML tags within a single request are not supported!");
-
-                    if (PullEVSEDataXMLs.       Count() > 1)
-                        throw new Exception("Multiple PullEVSEData XML tags within a single request are not supported!");
-
-                    if (GetEVSEByIdXMLs.        Count() > 1)
-                        throw new Exception("Multiple GetEVSEById XML tags within a single request are not supported!");
-
-
-                    if (PushAuthorizationStartXMLs.     Count() > 1)
-                        throw new Exception("Multiple PushAuthorizationStart XML tags within a single request are not supported!");
-
-                    if (PullAuthorizationStartXMLs.     Count() > 1)
-                        throw new Exception("Multiple PullAuthorizationStart XML tags within a single request are not supported!");
-
-                    if (PullAuthorizationStartByIdXMLs. Count() > 1)
-                        throw new Exception("Multiple PullAuthorizationStartBy XML tags within a single request are not supported!");
-
-                    #endregion
-
-                    #region PushEVSEData
-
-                    var PushEVSEDataXML = PushEVSEDataXMLs.FirstOrDefault();
-                    if (PushEVSEDataXML != null)
-                    {
-
-                        #region Parse request parameters
-
-                        var ActionType        = PushEVSEDataXML.ElementValueOrFail(OICPNS.EVSEData + "ActionType", "No ActionType XML tag provided!");
-                        var OperatorEvseData  = OperatorEVSEData.Parse(PushEVSEDataXML.ElementOrFail(OICPNS.EVSEData + "OperatorEvseData", "No OperatorEvseData XML tags provided!"));
-
-                        #endregion
-
-                        #region HTTPResponse
-
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
-
-                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                         new XElement(OICPNS.CommonTypes + "Code",            "000"),
-                                                                         new XElement(OICPNS.CommonTypes + "Description",     "Success"),
-                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
-                                                                     )
-
-                                                                )).ToUTF8Bytes()
-                        };
-
-                        #endregion
-
-                    }
-
-                    #endregion
-
-                    #region PullEVSEData
-
-                    var PullEVSEDataXML = PullEVSEDataXMLs.FirstOrDefault();
-                    if (PullEVSEDataXML != null)
-                    {
-                    }
-
-                    #endregion
-
-                    #region GetEVSEById
-
-                    var GetEVSEByIdXML = GetEVSEByIdXMLs.FirstOrDefault();
-                    if (GetEVSEByIdXML != null)
-                    {
-                    }
-
-                    #endregion
-
-
-                    #region PushAuthorizationStart
-
-                    var PushAuthorizationStartXML = PushAuthorizationStartXMLs.FirstOrDefault();
-                    if (PushAuthorizationStartXML != null)
-                    {
-
-                        #region Parse request parameters
-
-                        String                  ActionType;
-                        IEnumerable<XElement>   OperatorEvseStatusXML;
-
-                        ActionType             = PushAuthorizationStartXML.ElementValueOrFail(OICPNS.EVSEStatus + "ActionType",         "No ActionType XML tag provided!");
-                        OperatorEvseStatusXML  = PushAuthorizationStartXML.ElementsOrFail    (OICPNS.EVSEStatus + "OperatorEvseStatus", "No OperatorEvseStatus XML tags provided!");
-
-                        foreach (var SingleOperatorEvseStatusXML in OperatorEvseStatusXML)
-                        {
-
-                            Operator_Id         OperatorId;
-                            String                  OperatorName;
-                            IEnumerable<XElement>   AuthorizationStartRecordsXML;
-
-                            if (!Operator_Id.TryParse(SingleOperatorEvseStatusXML.ElementValueOrFail(OICPNS.EVSEStatus + "OperatorID", "No OperatorID XML tag provided!"), out OperatorId))
-                                throw new ApplicationException("Invalid OperatorID XML tag provided!");
-
-                            OperatorName          = SingleOperatorEvseStatusXML.ElementValueOrDefault(OICPNS.EVSEStatus + "OperatorName",     "");
-                            AuthorizationStartRecordsXML  = SingleOperatorEvseStatusXML.ElementsOrFail       (OICPNS.EVSEStatus + "EvseStatusRecord", "No EvseStatusRecord XML tags provided!");
-
-                            foreach (var AuthorizationStartRecordXML in AuthorizationStartRecordsXML)
-                            {
-
-                                EVSE_Id  EVSEId;
-                                String   AuthorizationStart;
-
-                                if (!EVSE_Id.TryParse(AuthorizationStartRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseId", "No EvseId XML tag provided!"), out EVSEId))
-                                    throw new ApplicationException("Invalid EvseId XML tag provided!");
-
-                                AuthorizationStart = AuthorizationStartRecordXML.ElementValueOrFail(OICPNS.EVSEStatus + "EvseStatus", "No EvseStatus XML tag provided!");
-
-                            }
-
-                        }
-
-                        #endregion
-
-                        #region HTTPResponse
-
-                        return new HTTPResponseBuilder(Request) {
-                            HTTPStatusCode  = HTTPStatusCode.OK,
-                            ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                            Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
-
-                                                                     new XElement(OICPNS.CommonTypes + "Result", "true"),
-
-                                                                     new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                         new XElement(OICPNS.CommonTypes + "Code",            "000"),
-                                                                         new XElement(OICPNS.CommonTypes + "Description",     "Success"),
-                                                                         new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
-                                                                     )
-
-                                                                )).ToUTF8Bytes()
-                        };
-
-                        #endregion
-
-                    }
-
-                    #endregion
-
-                    #region PullAuthorizationStart
-
-                    var PullAuthorizationStartXML = PullAuthorizationStartXMLs.FirstOrDefault();
-                    if (PullAuthorizationStartXML != null)
-                    {
-
-                    }
-
-                    #endregion
-
-                    #region PullAuthorizationStartById
-
-                    var PullAuthorizationStartByIdXML = PullAuthorizationStartByIdXMLs.FirstOrDefault();
-                    if (PullAuthorizationStartByIdXML != null)
-                    {
-
-                    }
-
-                    #endregion
-
-
-                    #region HTTPResponse: Unkown XML/SOAP message
-
-                    return new HTTPResponseBuilder(Request) {
-                        HTTPStatusCode  = HTTPStatusCode.OK,
-                        ContentType     = HTTPContentType.XMLTEXT_UTF8,
-                        Content         = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
-
-                                                                 new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                 new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                     new XElement(OICPNS.CommonTypes + "Code",            ""),
-                                                                     new XElement(OICPNS.CommonTypes + "Description",     "Unkown XML/SOAP message"),
-                                                                     new XElement(OICPNS.CommonTypes + "AdditionalInfo",  "")
-                                                                 ),
-
-                                                                 new XElement(OICPNS.CommonTypes + "SessionID", "")
-                                                                 //new XElement(NS.OICPv1_2CommonTypes + "PartnerSessionID", SessionID),
-
-                                                            )).ToUTF8Bytes()
-                    };
-
-                    #endregion
+                    if (OnMobileRemoteStartSOAPRequest != null)
+                        await Task.WhenAll(OnMobileRemoteStartSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StartTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
 
                 }
-
-                #region Catch exceptions...
-
                 catch (Exception e)
                 {
-
-                    //Log.WriteLine("Invalid XML request!");
-
-                    //SOAPServer.GetEventSource(Semantics.DebugLog).
-                    //    SubmitSubEvent("InvalidXMLRequest",
-                    //                   new JObject(
-                    //                       new JProperty("@context",      "http://wwcp.graphdefined.org/contexts/InvalidXMLRequest.jsonld"),
-                    //                       new JProperty("Timestamp",     DateTime.Now.ToIso8601()),
-                    //                       new JProperty("RemoteSocket",  Request.RemoteSocket.ToString()),
-                    //                       new JProperty("Exception",     e.Message),
-                    //                       new JProperty("XMLRequest",    XMLRequest.ToString())
-                    //                   ).ToString().
-                    //                     Replace(Environment.NewLine, ""));
-
-                    return new HTTPResponseBuilder(Request) {
-
-                        HTTPStatusCode = HTTPStatusCode.OK,
-                        ContentType    = HTTPContentType.XMLTEXT_UTF8,
-                        Content        = SOAP.Encapsulation(new XElement(OICPNS.CommonTypes + "Acknowledgement",
-
-                                                                new XElement(OICPNS.CommonTypes + "Result", "false"),
-
-                                                                new XElement(OICPNS.CommonTypes + "StatusCode",
-                                                                    new XElement(OICPNS.CommonTypes + "Code",           "022"),
-                                                                    new XElement(OICPNS.CommonTypes + "Description",    "Request led to an exception!"),
-                                                                    new XElement(OICPNS.CommonTypes + "AdditionalInfo", e.Message)
-                                                                )
-
-                                                            )).ToUTF8Bytes()
-
-                    };
-
+                    e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStartSOAPRequest));
                 }
 
                 #endregion
 
-            };
+
+                if (Mobile.MobileRemoteStartRequest.TryParse(PushEvseDataXML,
+                                                             out MobileRemoteStartRequest,
+                                                             CustomMobileRemoteStartRequestParser,
+                                                             OnException,
+
+                                                             HTTPRequest.Timestamp,
+                                                             HTTPRequest.CancellationToken,
+                                                             HTTPRequest.EventTrackingId,
+                                                             HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnMobileRemoteStartRequest event
+
+                    try
+                    {
+
+                        if (OnMobileRemoteStartRequest != null)
+                            await Task.WhenAll(OnMobileRemoteStartRequest.GetInvocationList().
+                                               Cast<OnMobileRemoteStartRequestDelegate>().
+                                               Select(e => e(StartTime,
+                                                             MobileRemoteStartRequest.Timestamp.Value,
+                                                             this,
+                                                             ServiceId,
+                                                             MobileRemoteStartRequest.EventTrackingId,
+                                                             MobileRemoteStartRequest.SessionId,
+                                                             MobileRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStartRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (OnMobileRemoteStart != null)
+                    {
+
+                        var results = await Task.WhenAll(OnMobileRemoteStart.GetInvocationList().
+                                                             Cast<OnMobileRemoteStartDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           MobileRemoteStartRequest))).
+                                                             ConfigureAwait(false);
+
+                        Acknowledgement = results.FirstOrDefault();
+
+                    }
+
+                    //if (EVSEData == null)
+                    //    EVSEData = EVSEData.SystemError(
+                    //                         MobileRemoteStartRequest,
+                    //                         "Could not process the incoming RemoteRemoteReservationStart request!",
+                    //                         null,
+                    //                         MobileRemoteStartRequest.SessionId,
+                    //                         MobileRemoteStartRequest.PartnerSessionId
+                    //                     );
+
+                    #endregion
+
+                    #region Send OnMobileRemoteStartResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        if (OnMobileRemoteStartResponse != null)
+                            await Task.WhenAll(OnMobileRemoteStartResponse.GetInvocationList().
+                                               Cast<OnMobileRemoteStartResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             ServiceId,
+                                                             MobileRemoteStartRequest.EventTrackingId,
+                                                             MobileRemoteStartRequest.SessionId,
+                                                             MobileRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             Acknowledgement,
+                                                             EndTime - StartTime))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStartResponse));
+                    }
+
+                    #endregion
+
+                }
+
+
+                #region Create SOAPResponse
+
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomMobileRemoteStartResponseSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                };
+
+                #endregion
+
+                #region Send OnMobileRemoteStartSOAPResponse event
+
+                try
+                {
+
+                    if (OnMobileRemoteStartSOAPResponse != null)
+                        await Task.WhenAll(OnMobileRemoteStartSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStartSOAPResponse));
+                }
+
+                #endregion
+
+                return HTTPResponse;
+
+            });
 
             #endregion
 
-            #region Register SOAP-XML Request via GET
+            #region /MobileAuthorization - MobileRemoteStop
 
-            SOAPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}",
-                                         HTTPContentType.XMLTEXT_UTF8,
-                                         HTTPDelegate: OICPServerDelegate);
+            SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
+                                            URIPrefix + MobileAuthorizationURI,
+                                            "MobileRemoteStop",
+                                            XML => XML.Descendants(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStop").FirstOrDefault(),
+                                            async (HTTPRequest, PushEvseDataXML) => {
 
-            SOAPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}",
-                                         HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: OICPServerDelegate);
 
-            #endregion
+                Mobile.MobileRemoteStopRequest                   MobileRemoteStopRequest  = null;
+                Acknowledgement<Mobile.MobileRemoteStopRequest>  Acknowledgement           = null;
 
-            #region Register SOAP-XML Request via POST
+                #region Send OnMobileRemoteStopSOAPRequest event
 
-            SOAPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URIPrefix + "/RNs/{RoamingNetwork}",
-                                         HTTPContentType.XMLTEXT_UTF8,
-                                         HTTPDelegate: OICPServerDelegate);
+                var StopTime = DateTime.Now;
 
-            SOAPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URIPrefix + "/RNs/{RoamingNetwork}",
-                                         HTTPContentType.XML_UTF8,
-                                         HTTPDelegate: OICPServerDelegate);
+                try
+                {
+
+                    if (OnMobileRemoteStopSOAPRequest != null)
+                        await Task.WhenAll(OnMobileRemoteStopSOAPRequest.GetInvocationList().
+                                           Cast<RequestLogHandler>().
+                                           Select(e => e(StopTime,
+                                                         SOAPServer,
+                                                         HTTPRequest))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStopSOAPRequest));
+                }
+
+                #endregion
+
+
+                if (Mobile.MobileRemoteStopRequest.TryParse(PushEvseDataXML,
+                                                            out MobileRemoteStopRequest,
+                                                            CustomMobileRemoteStopRequestParser,
+                                                            OnException,
+
+                                                            HTTPRequest.Timestamp,
+                                                            HTTPRequest.CancellationToken,
+                                                            HTTPRequest.EventTrackingId,
+                                                            HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                {
+
+                    #region Send OnMobileRemoteStopRequest event
+
+                    try
+                    {
+
+                        if (OnMobileRemoteStopRequest != null)
+                            await Task.WhenAll(OnMobileRemoteStopRequest.GetInvocationList().
+                                               Cast<OnMobileRemoteStopRequestDelegate>().
+                                               Select(e => e(StopTime,
+                                                             MobileRemoteStopRequest.Timestamp.Value,
+                                                             this,
+                                                             ServiceId,
+                                                             MobileRemoteStopRequest.EventTrackingId,
+                                                             MobileRemoteStopRequest.SessionId,
+                                                             MobileRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStopRequest));
+                    }
+
+                    #endregion
+
+                    #region Call async subscribers
+
+                    if (OnMobileRemoteStop != null)
+                    {
+
+                        var results = await Task.WhenAll(OnMobileRemoteStop.GetInvocationList().
+                                                             Cast<OnMobileRemoteStopDelegate>().
+                                                             Select(e => e(DateTime.Now,
+                                                                           this,
+                                                                           MobileRemoteStopRequest))).
+                                                             ConfigureAwait(false);
+
+                        Acknowledgement = results.FirstOrDefault();
+
+                    }
+
+                    //if (EVSEData == null)
+                    //    EVSEData = EVSEData.SystemError(
+                    //                         MobileRemoteStopRequest,
+                    //                         "Could not process the incoming RemoteRemoteReservationStop request!",
+                    //                         null,
+                    //                         MobileRemoteStopRequest.SessionId,
+                    //                         MobileRemoteStopRequest.PartnerSessionId
+                    //                     );
+
+                    #endregion
+
+                    #region Send OnMobileRemoteStopResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        if (OnMobileRemoteStopResponse != null)
+                            await Task.WhenAll(OnMobileRemoteStopResponse.GetInvocationList().
+                                               Cast<OnMobileRemoteStopResponseDelegate>().
+                                               Select(e => e(EndTime,
+                                                             this,
+                                                             ServiceId,
+                                                             MobileRemoteStopRequest.EventTrackingId,
+                                                             MobileRemoteStopRequest.SessionId,
+                                                             MobileRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                             Acknowledgement,
+                                                             EndTime - StopTime))).
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStopResponse));
+                    }
+
+                    #endregion
+
+                }
+
+
+                #region Create SOAPResponse
+
+                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                    HTTPStatusCode  = HTTPStatusCode.OK,
+                    Server          = SOAPServer.DefaultServerName,
+                    Date            = DateTime.Now,
+                    ContentType     = HTTPContentType.XMLTEXT_UTF8,
+                    Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomMobileRemoteStopResponseSerializer,
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                };
+
+                #endregion
+
+                #region Send OnMobileRemoteStopSOAPResponse event
+
+                try
+                {
+
+                    if (OnMobileRemoteStopSOAPResponse != null)
+                        await Task.WhenAll(OnMobileRemoteStopSOAPResponse.GetInvocationList().
+                                           Cast<AccessLogHandler>().
+                                           Select(e => e(HTTPResponse.Timestamp,
+                                                         SOAPServer,
+                                                         HTTPRequest,
+                                                         HTTPResponse))).
+                                           ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    e.Log(nameof(CentralServer) + "." + nameof(OnMobileRemoteStopSOAPResponse));
+                }
+
+                #endregion
+
+                return HTTPResponse;
+
+            });
 
             #endregion
 
