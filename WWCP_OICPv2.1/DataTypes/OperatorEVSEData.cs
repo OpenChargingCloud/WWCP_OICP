@@ -198,7 +198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(OperatorEVSEDataXML,  CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse   (OperatorEVSEDataXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP operator EVSE data request.
@@ -206,11 +206,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorEVSEDataXML">The XML to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static OperatorEVSEData Parse(XElement                                OperatorEVSEDataXML,
-                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                             OnExceptionDelegate                     OnException                   = null)
+        public static OperatorEVSEData Parse(XElement                                   OperatorEVSEDataXML,
+                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
+                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
+                                             CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                             OnExceptionDelegate                        OnException                    = null)
         {
 
             OperatorEVSEData _OperatorEVSEData;
@@ -219,6 +221,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          out _OperatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
+                         CustomAddressParser,
                          OnException))
 
                 return _OperatorEVSEData;
@@ -229,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse(OperatorEVSEDataText, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse   (OperatorEVSEDataText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP operator EVSE data request.
@@ -237,11 +240,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorEVSEDataText">The text to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static OperatorEVSEData Parse(String                                  OperatorEVSEDataText,
-                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                             OnExceptionDelegate                     OnException                   = null)
+        public static OperatorEVSEData Parse(String                                     OperatorEVSEDataText,
+                                             CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
+                                             CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
+                                             CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                             OnExceptionDelegate                        OnException                    = null)
         {
 
             OperatorEVSEData _OperatorEVSEData;
@@ -250,6 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          out _OperatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
+                         CustomAddressParser,
                          OnException))
 
                 return _OperatorEVSEData;
@@ -260,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(OperatorEVSEDataXML,  out OperatorEVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(OperatorEVSEDataXML,  out OperatorEVSEData, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP operator EVSE data request.
@@ -269,12 +275,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorEVSEData">The parsed operator EVSE data request.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                OperatorEVSEDataXML,
-                                       out OperatorEVSEData                    OperatorEVSEData,
-                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                     OnException                   = null)
+        public static Boolean TryParse(XElement                                   OperatorEVSEDataXML,
+                                       out OperatorEVSEData                       OperatorEVSEData,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
+                                       CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                       OnExceptionDelegate                        OnException                    = null)
         {
 
             try
@@ -289,9 +297,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 OperatorEVSEData = new OperatorEVSEData(
 
                                        OperatorEVSEDataXML.MapElements          (OICPNS.EVSEData + "EvseDataRecord",
-                                                                                 (EvseDataRecordXML, onexception) => EVSEDataRecord.Parse(EvseDataRecordXML,
-                                                                                                                                          CustomEVSEDataRecordParser,
-                                                                                                                                          onexception),
+                                                                                 (xml, e) => EVSEDataRecord.Parse(xml,
+                                                                                                                  CustomEVSEDataRecordParser,
+                                                                                                                  CustomAddressParser,
+                                                                                                                  e),
                                                                                  OnException).
                                                                                  Where(operatorevsedata => operatorevsedata != null),
 
@@ -301,6 +310,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OperatorEVSEDataXML.ElementValueOrDefault(OICPNS.EVSEData + "OperatorName")
 
                                    );
+
+
+                if (CustomOperatorEVSEDataParser != null)
+                    OperatorEVSEData = CustomOperatorEVSEDataParser(OperatorEVSEDataXML,
+                                                                    OperatorEVSEData);
 
                 return true;
 
@@ -319,7 +333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(OperatorEVSEDataText, out OperatorEVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(OperatorEVSEDataText, out OperatorEVSEData, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP operator EVSE data request.
@@ -328,12 +342,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="OperatorEVSEData">The parsed operator EVSE data request.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                  OperatorEVSEDataText,
-                                       out OperatorEVSEData                    OperatorEVSEData,
-                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                     OnException                   = null)
+        public static Boolean TryParse(String                                     OperatorEVSEDataText,
+                                       out OperatorEVSEData                       OperatorEVSEData,
+                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
+                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
+                                       CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                       OnExceptionDelegate                        OnException                    = null)
         {
 
             try
@@ -343,6 +359,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                              out OperatorEVSEData,
                              CustomOperatorEVSEDataParser,
                              CustomEVSEDataRecordParser,
+                             CustomAddressParser,
                              OnException))
 
                     return true;

@@ -19,9 +19,9 @@
 
 using System;
 using System.Xml.Linq;
+using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Threading;
 
 #endregion
 
@@ -134,14 +134,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteStopRequest
 
-            Parse(XElement                                          AuthorizeRemoteStopRequestXML,
+            Parse(XElement                                             AuthorizeRemoteStopRequestXML,
                   CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
-                  OnExceptionDelegate                               OnException                              = null,
+                  OnExceptionDelegate                                  OnException                              = null,
 
-                  DateTime?                                         Timestamp                                = null,
-                  CancellationToken?                                CancellationToken                        = null,
-                  EventTracking_Id                                  EventTrackingId                          = null,
-                  TimeSpan?                                         RequestTimeout                           = null)
+                  DateTime?                                            Timestamp                                = null,
+                  CancellationToken?                                   CancellationToken                        = null,
+                  EventTracking_Id                                     EventTrackingId                          = null,
+                  TimeSpan?                                            RequestTimeout                           = null)
 
         {
 
@@ -180,14 +180,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteStopRequest
 
-            Parse(String                                            AuthorizeRemoteStopRequestText,
+            Parse(String                                               AuthorizeRemoteStopRequestText,
                   CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
-                  OnExceptionDelegate                               OnException                              = null,
+                  OnExceptionDelegate                                  OnException                              = null,
 
-                  DateTime?                                         Timestamp                                = null,
-                  CancellationToken?                                CancellationToken                        = null,
-                  EventTracking_Id                                  EventTrackingId                          = null,
-                  TimeSpan?                                         RequestTimeout                           = null)
+                  DateTime?                                            Timestamp                                = null,
+                  CancellationToken?                                   CancellationToken                        = null,
+                  EventTracking_Id                                     EventTrackingId                          = null,
+                  TimeSpan?                                            RequestTimeout                           = null)
 
         {
 
@@ -225,15 +225,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(XElement                                          AuthorizeRemoteStopRequestXML,
-                                       out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
+        public static Boolean TryParse(XElement                                             AuthorizeRemoteStopRequestXML,
+                                       out AuthorizeRemoteStopRequest                       AuthorizeRemoteStopRequest,
                                        CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
-                                       OnExceptionDelegate                               OnException                              = null,
+                                       OnExceptionDelegate                                  OnException                              = null,
 
-                                       DateTime?                                         Timestamp                                = null,
-                                       CancellationToken?                                CancellationToken                        = null,
-                                       EventTracking_Id                                  EventTrackingId                          = null,
-                                       TimeSpan?                                         RequestTimeout                           = null)
+                                       DateTime?                                            Timestamp                                = null,
+                                       CancellationToken?                                   CancellationToken                        = null,
+                                       EventTracking_Id                                     EventTrackingId                          = null,
+                                       TimeSpan?                                            RequestTimeout                           = null)
         {
 
             try
@@ -302,15 +302,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(String                                            AuthorizeRemoteStopRequestText,
-                                       out AuthorizeRemoteStopRequest                    AuthorizeRemoteStopRequest,
+        public static Boolean TryParse(String                                               AuthorizeRemoteStopRequestText,
+                                       out AuthorizeRemoteStopRequest                       AuthorizeRemoteStopRequest,
                                        CustomXMLParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null,
-                                       OnExceptionDelegate                               OnException                              = null,
+                                       OnExceptionDelegate                                  OnException                              = null,
 
-                                       DateTime?                                         Timestamp                                = null,
-                                       CancellationToken?                                CancellationToken                        = null,
-                                       EventTracking_Id                                  EventTrackingId                          = null,
-                                       TimeSpan?                                         RequestTimeout                           = null)
+                                       DateTime?                                            Timestamp                                = null,
+                                       CancellationToken?                                   CancellationToken                        = null,
+                                       EventTracking_Id                                     EventTrackingId                          = null,
+                                       TimeSpan?                                            RequestTimeout                           = null)
         {
 
             try

@@ -691,7 +691,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
                               : null,
 
-                          PartnerSessionId != null
+                          PartnerSessionId.HasValue
                               ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
                               : null,
 

@@ -79,6 +79,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeStartRequest(Operator_Id         OperatorId,
                                      UID                 UID,
                                      EVSE_Id?            EVSEId              = null,   // OICP v2.1: Optional

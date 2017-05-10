@@ -135,47 +135,298 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) ParseXML(eRoamingChargeDetailRecordsXML, OnException = null)
+        #region (static) Parse   (Request, GetChargeDetailRecordsResponseXML,  ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the givem XML as an OICP charge detail records.
+        /// Parse the given XML representation of an OICP EVSE statuses request.
         /// </summary>
-        /// <param name="ChargeDetailRecordsXML">A XML representation of an enumeration of OICP charge detail records.</param>
+        /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
+        /// <param name="GetChargeDetailRecordsResponseXML">The XML to parse.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
+        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static GetChargeDetailRecordsResponse ParseXML(GetChargeDetailRecordsRequest                         Request,
-                                                              XElement                                              ChargeDetailRecordsXML,
-                                                              CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
-                                                              CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
-                                                              CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
-                                                              OnExceptionDelegate                                   OnException                                  = null)
+        public static GetChargeDetailRecordsResponse
+
+            Parse(GetChargeDetailRecordsRequest                            Request,
+                  XElement                                                 GetChargeDetailRecordsResponseXML,
+                  CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
+                  CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
+                  CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                  OnExceptionDelegate                                      OnException                                  = null)
+
         {
 
-            if (ChargeDetailRecordsXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecords")
-                throw new Exception("Invalid eRoamingChargeDetailRecords XML!");
+            GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse;
 
-            var GetChargeDetailRecordsResponse =  new GetChargeDetailRecordsResponse(
+            if (TryParse(Request,
+                         GetChargeDetailRecordsResponseXML,
+                         out _GetChargeDetailRecordsResponse,
+                         CustomGetChargeDetailRecordsResponseParser,
+                         CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
+                         OnException))
 
-                                                      Request,
+                return _GetChargeDetailRecordsResponse;
 
-                                                      ChargeDetailRecordsXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
-                                                                                         (XML, e) => ChargeDetailRecord.Parse(XML,
-                                                                                                                              CustomChargeDetailRecordParser,
-                                                                                                                              CustomIdentificationParser,
-                                                                                                                              e),
-                                                                                         OnException)
-
-                                                  );
-
-
-            return CustomGetChargeDetailRecordsResponseParser != null
-                       ? CustomGetChargeDetailRecordsResponseParser(ChargeDetailRecordsXML,
-                                                                    GetChargeDetailRecordsResponse)
-                       : GetChargeDetailRecordsResponse;
+            return null;
 
         }
 
         #endregion
 
+        #region (static) Parse   (Request, GetChargeDetailRecordsResponseText, ..., OnException = null, ...)
+
+        /// <summary>
+        /// Parse the given text representation of an OICP EVSE statuses request.
+        /// </summary>
+        /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
+        /// <param name="GetChargeDetailRecordsResponseText">The text to parse.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
+        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static GetChargeDetailRecordsResponse
+
+            Parse(GetChargeDetailRecordsRequest                            Request,
+                  String                                                   GetChargeDetailRecordsResponseText,
+                  CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
+                  CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
+                  CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                  OnExceptionDelegate                                      OnException                                  = null)
+
+        {
+
+            GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse;
+
+            if (TryParse(Request,
+                         GetChargeDetailRecordsResponseText,
+                         out _GetChargeDetailRecordsResponse,
+                         CustomGetChargeDetailRecordsResponseParser,
+                         CustomChargeDetailRecordParser,
+                         CustomIdentificationParser,
+                         OnException))
+
+                return _GetChargeDetailRecordsResponse;
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, GetChargeDetailRecordsResponseXML,  out GetChargeDetailRecordsResponse, ..., OnException = null, ...)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OICP EVSE statuses request.
+        /// </summary>
+        /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
+        /// <param name="GetChargeDetailRecordsResponseXML">The XML to parse.</param>
+        /// <param name="GetChargeDetailRecordsResponse">The parsed GetChargeDetailRecordsResponse request.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
+        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(GetChargeDetailRecordsRequest                            Request,
+                                       XElement                                                 GetChargeDetailRecordsResponseXML,
+                                       out GetChargeDetailRecordsResponse                       GetChargeDetailRecordsResponse,
+                                       CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
+                                       CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
+                                       CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                                       OnExceptionDelegate                                      OnException                                  = null)
+        {
+
+            try
+            {
+
+                if (GetChargeDetailRecordsResponseXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecords")
+                {
+                    GetChargeDetailRecordsResponse = null;
+                    return false;
+                }
+
+                GetChargeDetailRecordsResponse =  new GetChargeDetailRecordsResponse(
+
+                                                      Request,
+
+                                                      GetChargeDetailRecordsResponseXML.MapElements(OICPNS.Authorization + "eRoamingChargeDetailRecord",
+                                                                                                    (XML, e) => ChargeDetailRecord.Parse(XML,
+                                                                                                                                         CustomChargeDetailRecordParser,
+                                                                                                                                         CustomIdentificationParser,
+                                                                                                                                         e),
+                                                                                                    OnException)
+
+                                                  );
+
+
+                if (CustomGetChargeDetailRecordsResponseParser != null)
+                    GetChargeDetailRecordsResponse = CustomGetChargeDetailRecordsResponseParser(GetChargeDetailRecordsResponseXML,
+                                                                                                GetChargeDetailRecordsResponse);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+
+                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsResponseXML, e);
+
+                GetChargeDetailRecordsResponse = null;
+                return false;
+
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Request, GetChargeDetailRecordsResponseText, out GetChargeDetailRecordsResponse, ..., OnException = null, ...)
+
+        /// <summary>
+        /// Try to parse the given text representation of an OICP EVSE statuses request.
+        /// </summary>
+        /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
+        /// <param name="GetChargeDetailRecordsResponseText">The text to parse.</param>
+        /// <param name="GetChargeDetailRecordsResponse">The parsed EVSE statuses request.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
+        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(GetChargeDetailRecordsRequest                            Request,
+                                       String                                                   GetChargeDetailRecordsResponseText,
+                                       out GetChargeDetailRecordsResponse                       GetChargeDetailRecordsResponse,
+                                       CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
+                                       CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
+                                       CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                                       OnExceptionDelegate                                      OnException                                  = null)
+        {
+
+            try
+            {
+
+                if (TryParse(Request,
+                             XDocument.Parse(GetChargeDetailRecordsResponseText).Root,
+                             out GetChargeDetailRecordsResponse,
+                             CustomGetChargeDetailRecordsResponseParser,
+                             CustomChargeDetailRecordParser,
+                             CustomIdentificationParser,
+                             OnException))
+
+                    return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsResponseText, e);
+            }
+
+            GetChargeDetailRecordsResponse = null;
+            return false;
+
+        }
+
+        #endregion
+
+        #region ToXML(CustomGetChargeDetailRecordsResponseSerializer = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a XML representation of this object.
+        /// </summary>
+        /// <param name="CustomGetChargeDetailRecordsResponseSerializer">A delegate to customize the serialization of GetChargeDetailRecords responses.</param>
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public XElement ToXML(CustomXMLSerializerDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseSerializer   = null,
+                              CustomXMLSerializerDelegate<ChargeDetailRecord>              CustomChargeDetailRecordSerializer               = null,
+                              CustomXMLSerializerDelegate<Identification>                  CustomIdentificationSerializer                   = null)
+
+        {
+
+            var XML = new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecords",
+
+                          ChargeDetailRecords.Any()
+                                  ? ChargeDetailRecords.Select(cdr => cdr.ToXML(CustomChargeDetailRecordSerializer: CustomChargeDetailRecordSerializer,
+                                                                                CustomIdentificationSerializer:     CustomIdentificationSerializer))
+                                  : null
+
+                      );
+
+
+            return CustomGetChargeDetailRecordsResponseSerializer != null
+                       ? CustomGetChargeDetailRecordsResponseSerializer(this, XML)
+                       : XML;
+
+        }
+
+        #endregion
+
+
+        #region Operator overloading
+
+        #region Operator == (GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse2)
+
+        /// <summary>
+        /// Compares two results for equality.
+        /// </summary>
+        /// <param name="GetChargeDetailRecordsResponse1">A GetChargeDetailRecords response.</param>
+        /// <param name="GetChargeDetailRecordsResponse2">Another GetChargeDetailRecords response.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) GetChargeDetailRecordsResponse1 == null) || ((Object) GetChargeDetailRecordsResponse2 == null))
+                return false;
+
+            return GetChargeDetailRecordsResponse1.Equals(GetChargeDetailRecordsResponse2);
+
+        }
+
+        #endregion
+
+        #region Operator != (GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse2)
+
+        /// <summary>
+        /// Compares two results for inequality.
+        /// </summary>
+        /// <param name="GetChargeDetailRecordsResponse1">A GetChargeDetailRecords response.</param>
+        /// <param name="GetChargeDetailRecordsResponse2">Another GetChargeDetailRecords response.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse2)
+
+            => !(GetChargeDetailRecordsResponse1 == GetChargeDetailRecordsResponse2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<GetChargeDetailRecordsResponse> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            var GetChargeDetailRecordsResponse = Object as GetChargeDetailRecordsResponse;
+            if ((Object) GetChargeDetailRecordsResponse == null)
+                return false;
+
+            return Equals(GetChargeDetailRecordsResponse);
+
+        }
+
+        #endregion
 
         #region Equals(GetChargeDetailRecordsResponse)
 
@@ -191,12 +442,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 return false;
 
             return (!ChargeDetailRecords.Any() && !GetChargeDetailRecordsResponse.ChargeDetailRecords.Any()) ||
-                    (ChargeDetailRecords.Any() && GetChargeDetailRecordsResponse.ChargeDetailRecords.Any() && ChargeDetailRecords.Count().Equals(GetChargeDetailRecordsResponse.ChargeDetailRecords.Count())) &&
+                    (ChargeDetailRecords.Any() &&  GetChargeDetailRecordsResponse.ChargeDetailRecords.Any() && ChargeDetailRecords.Count().Equals(GetChargeDetailRecordsResponse.ChargeDetailRecords.Count())) &&
 
                     (StatusCode != null && GetChargeDetailRecordsResponse.StatusCode != null) ||
                     (StatusCode == null && GetChargeDetailRecordsResponse.StatusCode == null && StatusCode.Equals(GetChargeDetailRecordsResponse.StatusCode));
 
         }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return (ChargeDetailRecords.Any()
+                           ? ChargeDetailRecords.GetHashCode() * 5
+                           : 0) ^
+
+                       StatusCode.GetHashCode();
+
+            }
+        }
+
+        #endregion
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a string representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat(ChargeDetailRecords.Count() + " charge detail record(s)",
+                             StatusCode.HasValue
+                                 ? " -> " + StatusCode.Value.Code
+                                 : "");
 
         #endregion
 
@@ -256,7 +545,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             /// <summary>
             /// Create a new GetChargeDetailRecords response builder.
             /// </summary>
-            /// <param name="GetChargeDetailRecords">An GetChargeDetailRecords response.</param>
+            /// <param name="GetChargeDetailRecords">A GetChargeDetailRecords response.</param>
             /// <param name="CustomData">Optional custom data.</param>
             public Builder(GetChargeDetailRecordsResponse       GetChargeDetailRecords,
                            IReadOnlyDictionary<String, Object>  CustomData  = null)

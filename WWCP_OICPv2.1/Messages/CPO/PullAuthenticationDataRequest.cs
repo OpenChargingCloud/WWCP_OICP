@@ -51,6 +51,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP PullAuthenticationData XML/SOAP request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PullAuthenticationDataRequest(Operator_Id         OperatorId,
 
                                              DateTime?           Timestamp           = null,
@@ -81,7 +86,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         //
         //    <soapenv:Body>
         //       <AuthenticationData:eRoamingPullAuthenticationData>
+        //
         //          <AuthenticationData:OperatorID>DE*GEF</AuthenticationData:OperatorID>
+        //
         //       </AuthenticationData:eRoamingPullAuthenticationData>
         //    </soapenv:Body>
         //
@@ -89,20 +96,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(PullAuthenticationDataXML,  OnException = null)
+        #region (static) Parse(PullAuthenticationDataXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataXML">The XML to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullAuthenticationDataRequest Parse(XElement             PullAuthenticationDataXML,
-                                                          OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PullAuthenticationDataRequest
+
+            Parse(XElement                                                PullAuthenticationDataXML,
+                  CustomXMLParserDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestParser   = null,
+                  OnExceptionDelegate                                     OnException                                 = null,
+
+                  DateTime?                                               Timestamp                                   = null,
+                  CancellationToken?                                      CancellationToken                           = null,
+                  EventTracking_Id                                        EventTrackingId                             = null,
+                  TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             PullAuthenticationDataRequest _PullAuthenticationData;
 
-            if (TryParse(PullAuthenticationDataXML, out _PullAuthenticationData, OnException))
+            if (TryParse(PullAuthenticationDataXML,
+                         out _PullAuthenticationData,
+                         CustomPullAuthenticationDataRequestParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _PullAuthenticationData;
 
             return null;
@@ -111,20 +141,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(PullAuthenticationDataText, OnException = null)
+        #region (static) Parse(PullAuthenticationDataText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataText">The text to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PullAuthenticationDataRequest Parse(String               PullAuthenticationDataText,
-                                                          OnExceptionDelegate  OnException = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PullAuthenticationDataRequest
+
+            Parse(String                                                  PullAuthenticationDataText,
+                  CustomXMLParserDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestParser   = null,
+                  OnExceptionDelegate                                     OnException                                 = null,
+
+                  DateTime?                                               Timestamp                                   = null,
+                  CancellationToken?                                      CancellationToken                           = null,
+                  EventTracking_Id                                        EventTrackingId                             = null,
+                  TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             PullAuthenticationDataRequest _PullAuthenticationData;
 
-            if (TryParse(PullAuthenticationDataText, out _PullAuthenticationData, OnException))
+            if (TryParse(PullAuthenticationDataText,
+                         out _PullAuthenticationData,
+                         CustomPullAuthenticationDataRequestParser,
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
+
                 return _PullAuthenticationData;
 
             return null;
@@ -133,28 +186,57 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(PullAuthenticationDataXML,  out PullAuthenticationData, OnException = null)
+        #region (static) TryParse(PullAuthenticationDataXML,  out PullAuthenticationData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataXML">The XML to parse.</param>
         /// <param name="PullAuthenticationData">The parsed pull authentication data request.</param>
+        /// <param name="CustomPullAuthenticationDataRequestParser">A delegate to customize the deserialization of PullAuthenticationDataRequest requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                           PullAuthenticationDataXML,
-                                       out PullAuthenticationDataRequest  PullAuthenticationData,
-                                       OnExceptionDelegate                OnException  = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                                PullAuthenticationDataXML,
+                                       out PullAuthenticationDataRequest                       PullAuthenticationData,
+                                       CustomXMLParserDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestParser   = null,
+                                       OnExceptionDelegate                                     OnException                                 = null,
+
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
             {
 
+                if (PullAuthenticationDataXML.Name != OICPNS.AuthenticationData + "eRoamingPullAuthenticationData")
+                {
+                    PullAuthenticationData = null;
+                    return false;
+                }
+
                 PullAuthenticationData = new PullAuthenticationDataRequest(
 
                                              PullAuthenticationDataXML.MapValueOrFail(OICPNS.EVSEStatus + "OperatorEvseStatus",
-                                                                                      Operator_Id.Parse)
+                                                                                      Operator_Id.Parse),
+
+                                             Timestamp,
+                                             CancellationToken,
+                                             EventTrackingId,
+                                             RequestTimeout
 
                                          );
+
+
+                if (CustomPullAuthenticationDataRequestParser != null)
+                    PullAuthenticationData = CustomPullAuthenticationDataRequestParser(PullAuthenticationDataXML,
+                                                                                       PullAuthenticationData);
 
                 return true;
 
@@ -173,17 +255,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(PullAuthenticationDataText, out PullAuthenticationData, OnException = null)
+        #region (static) TryParse(PullAuthenticationDataText, out PullAuthenticationData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataText">The text to parse.</param>
         /// <param name="PullAuthenticationData">The parsed pull authentication data request.</param>
+        /// 
+        /// 
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                             PullAuthenticationDataText,
-                                       out PullAuthenticationDataRequest  PullAuthenticationData,
-                                       OnExceptionDelegate                OnException  = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                                  PullAuthenticationDataText,
+                                       out PullAuthenticationDataRequest                       PullAuthenticationData,
+                                       CustomXMLParserDelegate<PullAuthenticationDataRequest>  CustomPullAuthenticationDataRequestParser   = null,
+                                       OnExceptionDelegate                                     OnException                                 = null,
+
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
@@ -191,7 +287,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 if (TryParse(XDocument.Parse(PullAuthenticationDataText).Root,
                              out PullAuthenticationData,
-                             OnException))
+                             CustomPullAuthenticationDataRequestParser,
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

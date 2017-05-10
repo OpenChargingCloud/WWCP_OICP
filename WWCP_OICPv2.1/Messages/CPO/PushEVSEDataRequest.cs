@@ -75,6 +75,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="OperatorEVSEData">An operator EVSE data.</param>
         /// <param name="Action">The server-side data management operation.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PushEVSEDataRequest(OperatorEVSEData    OperatorEVSEData,
                                    ActionTypes         Action              = ActionTypes.fullLoad,
 
@@ -138,7 +143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(PushEVSEDataXML,  CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse(PushEVSEDataXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP push EVSE data request.
@@ -147,15 +152,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PushEVSEDataRequest Parse(XElement                                PushEVSEDataXML,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PushEVSEDataRequest Parse(XElement                                   PushEVSEDataXML,
                                                 CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
                                                 CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                                OnExceptionDelegate                     OnException                   = null,
+                                                OnExceptionDelegate                        OnException                   = null,
 
-                                                DateTime?                               Timestamp                     = null,
-                                                CancellationToken?                      CancellationToken             = null,
-                                                EventTracking_Id                        EventTrackingId               = null,
-                                                TimeSpan?                               RequestTimeout                = null)
+                                                DateTime?                                  Timestamp                     = null,
+                                                CancellationToken?                         CancellationToken             = null,
+                                                EventTracking_Id                           EventTrackingId               = null,
+                                                TimeSpan?                                  RequestTimeout                = null)
 
         {
 
@@ -180,7 +190,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) Parse(PushEVSEDataText, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse(PushEVSEDataText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP push EVSE data request.
@@ -189,15 +199,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static PushEVSEDataRequest Parse(String                                  PushEVSEDataText,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static PushEVSEDataRequest Parse(String                                     PushEVSEDataText,
                                                 CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
                                                 CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                                OnExceptionDelegate                     OnException                   = null,
+                                                OnExceptionDelegate                        OnException                   = null,
 
-                                                DateTime?                               Timestamp                     = null,
-                                                CancellationToken?                      CancellationToken             = null,
-                                                EventTracking_Id                        EventTrackingId               = null,
-                                                TimeSpan?                               RequestTimeout                = null)
+                                                DateTime?                                  Timestamp                     = null,
+                                                CancellationToken?                         CancellationToken             = null,
+                                                EventTracking_Id                           EventTrackingId               = null,
+                                                TimeSpan?                                  RequestTimeout                = null)
         {
 
             PushEVSEDataRequest _PushEVSEData;
@@ -221,7 +236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(PushEVSEDataXML,  out PushEVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(PushEVSEDataXML,  out PushEVSEData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP push EVSE data request.
@@ -231,16 +246,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                PushEVSEDataXML,
-                                       out PushEVSEDataRequest                 PushEVSEData,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(XElement                                   PushEVSEDataXML,
+                                       out PushEVSEDataRequest                    PushEVSEData,
                                        CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
                                        CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                     OnException                   = null,
+                                       OnExceptionDelegate                        OnException                   = null,
 
-                                       DateTime?                               Timestamp                     = null,
-                                       CancellationToken?                      CancellationToken             = null,
-                                       EventTracking_Id                        EventTrackingId               = null,
-                                       TimeSpan?                               RequestTimeout                = null)
+                                       DateTime?                                  Timestamp                     = null,
+                                       CancellationToken?                         CancellationToken             = null,
+                                       EventTracking_Id                           EventTrackingId               = null,
+                                       TimeSpan?                                  RequestTimeout                = null)
         {
 
             try
@@ -285,7 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region (static) TryParse(PushEVSEDataText, out PushEVSEData, CustomOperatorEVSEDataParser = null, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(PushEVSEDataText, out PushEVSEData, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP push EVSE data request.
@@ -295,16 +315,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                  PushEVSEDataText,
-                                       out PushEVSEDataRequest                 PushEVSEData,
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Boolean TryParse(String                                     PushEVSEDataText,
+                                       out PushEVSEDataRequest                    PushEVSEData,
                                        CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
                                        CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                     OnException                   = null,
+                                       OnExceptionDelegate                        OnException                   = null,
 
-                                       DateTime?                               Timestamp                     = null,
-                                       CancellationToken?                      CancellationToken             = null,
-                                       EventTracking_Id                        EventTrackingId               = null,
-                                       TimeSpan?                               RequestTimeout                = null)
+                                       DateTime?                                  Timestamp                     = null,
+                                       CancellationToken?                         CancellationToken             = null,
+                                       EventTracking_Id                           EventTrackingId               = null,
+                                       TimeSpan?                                  RequestTimeout                = null)
         {
 
             try
@@ -348,10 +373,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
-                              XName                                          OperatorEVSEDataXName                 = null,
+                              XName                                             OperatorEVSEDataXName                 = null,
                               CustomXMLSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
-                              XName                                          EVSEDataRecordXName                   = null,
-                              Boolean                                        IncludeEVSEDataRecordMetadata         = true,
+                              XName                                             EVSEDataRecordXName                   = null,
+                              Boolean                                           IncludeEVSEDataRecordMetadata         = true,
                               CustomXMLSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null)
 
         {

@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -33,9 +32,9 @@ using org.GraphDefined.Vanaheimr.Aegir;
 namespace org.GraphDefined.WWCP.OICPv2_1.Central
 {
 
-    // EMP
+    // EMP event delegates...
 
-    #region OnPullEVSEData      (Request|Response)Handler
+    #region OnPullEVSEData      (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEData request was received.
@@ -88,7 +87,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
-    #region OnPullEVSEStatus    (Request|Response)Handler
+    #region OnPullEVSEStatus    (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatus request was received.
@@ -139,7 +138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
-    #region OnPullEVSEStatusById(Request|Response)Handler
+    #region OnPullEVSEStatusById(Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusById request was received.
@@ -187,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     #endregion
 
 
-    #region OnPushAuthenticationData(Request|Response)Handler
+    #region OnPushAuthenticationData(Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PushAuthenticationData request was received.
@@ -235,7 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     #endregion
 
 
-    #region OnAuthorizeRemoteReservationStart(Request|Response)Handler
+    #region OnAuthorizeRemoteReservationStart(Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a AuthorizeRemoteReservationStart request was received.
@@ -290,7 +289,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
-    #region OnAuthorizeRemoteReservationStop (Request|Response)Handler
+    #region OnAuthorizeRemoteReservationStop (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a AuthorizeRemoteReservationStop request was received.
@@ -341,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
-    #region OnAuthorizeRemoteStart(Request|Response)Handler
+    #region OnAuthorizeRemoteStart           (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a AuthorizeRemoteStart request was received.
@@ -396,38 +395,457 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
     #endregion
 
+    #region OnAuthorizeRemoteStop            (Request|Response)Delegate
 
-    // CPO event delegates...
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStop request was received.
+    /// </summary>
+    public delegate Task
 
-    #region OnPushEvseData
+        OnAuthorizeRemoteStopRequestDelegate (DateTime                                       LogTimestamp,
+                                              DateTime                                       RequestTimestamp,
+                                              CentralServer                                  Sender,
+                                              String                                         SenderId,
+                                              EventTracking_Id                               EventTrackingId,
+                                              Session_Id                                     SessionId,
+                                              Provider_Id                                    ProviderId,
+                                              EVSE_Id                                        EVSEId,
+                                              PartnerSession_Id?                             PartnerSessionId,
+                                              TimeSpan                                       RequestTimeout);
 
-    ///// <summary>
-    ///// Add charge detail records.
-    ///// </summary>
-    ///// <param name="Timestamp">The timestamp of the request.</param>
-    ///// <param name="Sender">The sender of the request.</param>
-    ///// <param name="CancellationToken">A token to cancel this task.</param>
-    ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    ///// 
-    ///// <param name="CDRInfos">An enumeration of charge detail records.</param>
-    ///// 
-    ///// <param name="QueryTimeout">An optional timeout for this request.</param>
-    //public delegate Task<PushEVSEDataResponse>
 
-    //    OnPushEvseDataDelegate(DateTime               Timestamp,
-    //                           CentralServer          Sender,
-    //                           CancellationToken      CancellationToken,
-    //                           EventTracking_Id       EventTrackingId,
+    /// <summary>
+    /// Send a AuthorizeRemoteStop request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteStopRequest>>
 
-    //                           //IEnumerable<CDRInfo>   CDRInfos,
+        OnAuthorizeRemoteStopDelegate        (DateTime                                       Timestamp,
+                                              CentralServer                                  Sender,
+                                              AuthorizeRemoteStopRequest                     Request);
 
-    //                           TimeSpan?              QueryTimeout = null);
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStopResponseDelegate(DateTime                                       Timestamp,
+                                              CentralServer                                  Sender,
+                                              String                                         SenderId,
+                                              EventTracking_Id                               EventTrackingId,
+                                              Session_Id                                     SessionId,
+                                              Provider_Id                                    ProviderId,
+                                              EVSE_Id                                        EVSEId,
+                                              PartnerSession_Id?                             PartnerSessionId,
+                                              TimeSpan                                       RequestTimeout,
+                                              Acknowledgement<AuthorizeRemoteStopRequest>    Result,
+                                              TimeSpan                                       Duration);
 
     #endregion
 
 
+    #region OnGetChargeDetailRecords(Request|Response)Delegate
 
-    // EMP event delegates...
+    /// <summary>
+    /// A delegate called whenever a GetChargeDetailRecords request was received.
+    /// </summary>
+    public delegate Task
+
+        OnGetChargeDetailRecordsRequestDelegate (DateTime                          LogTimestamp,
+                                                 DateTime                          RequestTimestamp,
+                                                 CentralServer                     Sender,
+                                                 String                            SenderId,
+                                                 EventTracking_Id                  EventTrackingId,
+                                                 Provider_Id                       ProviderId,
+                                                 DateTime                          From,
+                                                 DateTime                          To,
+                                                 TimeSpan                          RequestTimeout);
+
+
+    /// <summary>
+    /// Send a GetChargeDetailRecords request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<GetChargeDetailRecordsResponse>
+
+        OnGetChargeDetailRecordsDelegate        (DateTime                          Timestamp,
+                                                 CentralServer                     Sender,
+                                                 GetChargeDetailRecordsRequest     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a GetChargeDetailRecords response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnGetChargeDetailRecordsResponseDelegate(DateTime                          Timestamp,
+                                                 CentralServer                     Sender,
+                                                 String                            SenderId,
+                                                 EventTracking_Id                  EventTrackingId,
+                                                 Provider_Id                       ProviderId,
+                                                 DateTime                          From,
+                                                 DateTime                          To,
+                                                 TimeSpan                          RequestTimeout,
+                                                 GetChargeDetailRecordsResponse    Result,
+                                                 TimeSpan                          Duration);
+
+    #endregion
+
+
+    // CPO event delegates...
+
+    #region OnPushEVSEData      (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEDataRequestDelegate (DateTime                                LogTimestamp,
+                                       DateTime                                RequestTimestamp,
+                                       CentralServer                           Sender,
+                                       String                                  SenderId,
+                                       EventTracking_Id                        EventTrackingId,
+                                       OperatorEVSEData                        OperatorEVSEData,
+                                       ActionTypes                             Action,
+                                       TimeSpan                                RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PushEVSEData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<PushEVSEDataRequest>>
+
+        OnPushEVSEDataDelegate        (DateTime                                Timestamp,
+                                       CentralServer                           Sender,
+                                       PushEVSEDataRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEDataResponseDelegate(DateTime                                Timestamp,
+                                       CentralServer                           Sender,
+                                       String                                  SenderId,
+                                       EventTracking_Id                        EventTrackingId,
+                                       OperatorEVSEData                        OperatorEVSEData,
+                                       ActionTypes                             Action,
+                                       TimeSpan                                RequestTimeout,
+                                       Acknowledgement<PushEVSEDataRequest>    Result,
+                                       TimeSpan                                Duration);
+
+    #endregion
+
+    #region OnPushEVSEStatus    (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEStatus request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEStatusRequestDelegate (DateTime                                  LogTimestamp,
+                                         DateTime                                  RequestTimestamp,
+                                         CentralServer                             Sender,
+                                         String                                    SenderId,
+                                         EventTracking_Id                          EventTrackingId,
+                                         OperatorEVSEStatus                        OperatorEVSEStatus,
+                                         ActionTypes                               Action,
+                                         TimeSpan                                  RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PushEVSEStatus request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<PushEVSEStatusRequest>>
+
+        OnPushEVSEStatusDelegate        (DateTime                                  Timestamp,
+                                         CentralServer                             Sender,
+                                         PushEVSEStatusRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEStatus response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEStatusResponseDelegate(DateTime                                  Timestamp,
+                                         CentralServer                             Sender,
+                                         String                                    SenderId,
+                                         EventTracking_Id                          EventTrackingId,
+                                         OperatorEVSEStatus                        OperatorEVSEStatus,
+                                         ActionTypes                               Action,
+                                         TimeSpan                                  RequestTimeout,
+                                         Acknowledgement<PushEVSEStatusRequest>    Result,
+                                         TimeSpan                                  Duration);
+
+    #endregion
+
+
+    #region OnAuthorizeStart        (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStartRequestDelegate (DateTime                LogTimestamp,
+                                         DateTime                RequestTimestamp,
+                                         CentralServer           Sender,
+                                         String                  SenderId,
+                                         EventTracking_Id        EventTrackingId,
+                                         Operator_Id             OperatorId,
+                                         UID                     UID,
+                                         EVSE_Id?                EVSEId,
+                                         PartnerProduct_Id?      PartnerProductId,
+                                         Session_Id?             SessionId,
+                                         PartnerSession_Id?      PartnerSessionId,
+                                         TimeSpan                RequestTimeout);
+
+
+    /// <summary>
+    /// Send a AuthorizeStart request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<AuthorizationStart>
+
+        OnAuthorizeStartDelegate        (DateTime                Timestamp,
+                                         CentralServer           Sender,
+                                         AuthorizeStartRequest   Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStartResponseDelegate(DateTime                Timestamp,
+                                         CentralServer           Sender,
+                                         String                  SenderId,
+                                         EventTracking_Id        EventTrackingId,
+                                         Operator_Id             OperatorId,
+                                         UID                     UID,
+                                         EVSE_Id?                EVSEId,
+                                         PartnerProduct_Id?      PartnerProductId,
+                                         Session_Id?             SessionId,
+                                         PartnerSession_Id?      PartnerSessionId,
+                                         TimeSpan                RequestTimeout,
+                                         AuthorizationStart      Result,
+                                         TimeSpan                Duration);
+
+    #endregion
+
+    #region OnAuthorizeStop         (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStopRequestDelegate (DateTime                LogTimestamp,
+                                        DateTime                RequestTimestamp,
+                                        CentralServer           Sender,
+                                        String                  SenderId,
+                                        EventTracking_Id        EventTrackingId,
+                                        Operator_Id             OperatorId,
+                                        Session_Id              SessionId,
+                                        UID                     UID,
+                                        EVSE_Id?                EVSEId,
+                                        PartnerSession_Id?      PartnerSessionId,
+                                        TimeSpan                RequestTimeout);
+
+
+    /// <summary>
+    /// Send a AuthorizeStop request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<AuthorizationStop>
+
+        OnAuthorizeStopDelegate        (DateTime                Timestamp,
+                                        CentralServer           Sender,
+                                        AuthorizeStopRequest    Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeStopResponseDelegate(DateTime                Timestamp,
+                                        CentralServer           Sender,
+                                        String                  SenderId,
+                                        EventTracking_Id        EventTrackingId,
+                                        Operator_Id             OperatorId,
+                                        Session_Id              SessionId,
+                                        UID                     UID,
+                                        EVSE_Id?                EVSEId,
+                                        PartnerSession_Id?      PartnerSessionId,
+                                        TimeSpan                RequestTimeout,
+                                        AuthorizationStop       Result,
+                                        TimeSpan                Duration);
+
+    #endregion
+
+    #region OnSendChargeDetailRecord(Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a SendChargeDetailRecord request was received.
+    /// </summary>
+    public delegate Task
+
+        OnSendChargeDetailRecordRequestDelegate (DateTime                                          LogTimestamp,
+                                                 DateTime                                          RequestTimestamp,
+                                                 CentralServer                                     Sender,
+                                                 String                                            SenderId,
+                                                 EventTracking_Id                                  EventTrackingId,
+                                                 ChargeDetailRecord                                ChargeDetailRecord,
+                                                 TimeSpan                                          RequestTimeout);
+
+
+    /// <summary>
+    /// Send a SendChargeDetailRecord request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<SendChargeDetailRecordRequest>>
+
+        OnSendChargeDetailRecordDelegate        (DateTime                                          Timestamp,
+                                                 CentralServer                                     Sender,
+                                                 SendChargeDetailRecordRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a SendChargeDetailRecord response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnSendChargeDetailRecordResponseDelegate(DateTime                                          Timestamp,
+                                                 CentralServer                                     Sender,
+                                                 String                                            SenderId,
+                                                 EventTracking_Id                                  EventTrackingId,
+                                                 ChargeDetailRecord                                ChargeDetailRecord,
+                                                 TimeSpan                                          RequestTimeout,
+                                                 Acknowledgement<SendChargeDetailRecordRequest>    Result,
+                                                 TimeSpan                                          Duration);
+
+    #endregion
+
+
+    #region OnPullAuthenticationData(Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullAuthenticationData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullAuthenticationDataRequestDelegate (DateTime                         LogTimestamp,
+                                                 DateTime                         RequestTimestamp,
+                                                 CentralServer                    Sender,
+                                                 String                           SenderId,
+                                                 EventTracking_Id                 EventTrackingId,
+                                                 Operator_Id                      OperatorId,
+                                                 TimeSpan                         RequestTimeout);
+
+
+    /// <summary>
+    /// Send a PullAuthenticationData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<AuthenticationData>
+
+        OnPullAuthenticationDataDelegate        (DateTime                         Timestamp,
+                                                 CentralServer                    Sender,
+                                                 PullAuthenticationDataRequest    Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullAuthenticationData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullAuthenticationDataResponseDelegate(DateTime                         Timestamp,
+                                                 CentralServer                    Sender,
+                                                 String                           SenderId,
+                                                 EventTracking_Id                 EventTrackingId,
+                                                 Operator_Id                      OperatorId,
+                                                 TimeSpan                         RequestTimeout,
+                                                 AuthenticationData               Result,
+                                                 TimeSpan                         Duration);
+
+    #endregion
+
+
+    // Mobile event delegates...
+
+    #region OnMobileAuthorizeStart      (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a MobileAuthorizeStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnMobileAuthorizeStartRequestDelegate (DateTime                              LogTimestamp,
+                                               DateTime                              RequestTimestamp,
+                                               CentralServer                         Sender,
+                                               String                                SenderId,
+                                               EventTracking_Id                      EventTrackingId,
+                                               EVSE_Id                               EVSEId,
+                                               QRCodeIdentification                  QRCodeIdentification,
+                                               PartnerProduct_Id?                    PartnerProductId,
+                                               Boolean?                              GetNewSession,
+                                               TimeSpan                              RequestTimeout);
+
+
+    /// <summary>
+    /// Send a MobileAuthorizeStart request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Mobile.MobileAuthorizationStart>
+
+        OnMobileAuthorizeStartDelegate        (DateTime                              Timestamp,
+                                               CentralServer                         Sender,
+                                               Mobile.MobileAuthorizeStartRequest    Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a MobileAuthorizeStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnMobileAuthorizeStartResponseDelegate(DateTime                              Timestamp,
+                                               CentralServer                         Sender,
+                                               String                                SenderId,
+                                               EventTracking_Id                      EventTrackingId,
+                                               EVSE_Id                               EVSEId,
+                                               QRCodeIdentification                  QRCodeIdentification,
+                                               PartnerProduct_Id?                    PartnerProductId,
+                                               Boolean?                              GetNewSession,
+                                               TimeSpan                              RequestTimeout,
+                                               Mobile.MobileAuthorizationStart       Result,
+                                               TimeSpan                              Duration);
+
+    #endregion
 
 
 }

@@ -73,6 +73,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="UID">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeStopRequest(Operator_Id         OperatorId,
                                     Session_Id          SessionId,
                                     UID                 UID,

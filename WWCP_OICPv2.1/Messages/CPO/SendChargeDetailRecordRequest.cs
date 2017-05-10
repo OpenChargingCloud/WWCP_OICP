@@ -49,6 +49,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP SendChargeDetailRecord XML/SOAP request.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to upload.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public SendChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
 
                                              DateTime?           Timestamp           = null,
@@ -79,9 +84,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // <soapenv:Envelope xmlns:soapenv        = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/v2.0"
+        //                   xmlns:CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         //
         //    <soapenv:Header/>
         //
@@ -105,15 +110,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="SendChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static SendChargeDetailRecordRequest Parse(XElement                                  SendChargeDetailRecordXML,
+        public static SendChargeDetailRecordRequest Parse(XElement                                     SendChargeDetailRecordXML,
                                                           CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                                          OnExceptionDelegate                       OnException                      = null,
+                                                          OnExceptionDelegate                          OnException                      = null,
 
-                                                          DateTime?                                 Timestamp                        = null,
-                                                          CancellationToken?                        CancellationToken                = null,
-                                                          EventTracking_Id                          EventTrackingId                  = null,
-                                                          TimeSpan?                                 RequestTimeout                   = null)
+                                                          DateTime?                                    Timestamp                        = null,
+                                                          CancellationToken?                           CancellationToken                = null,
+                                                          EventTracking_Id                             EventTrackingId                  = null,
+                                                          TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
@@ -146,15 +151,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static SendChargeDetailRecordRequest Parse(String                                    SendChargeDetailRecordText,
+        public static SendChargeDetailRecordRequest Parse(String                                       SendChargeDetailRecordText,
                                                           CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                                          OnExceptionDelegate                       OnException                      = null,
+                                                          OnExceptionDelegate                          OnException                      = null,
 
-                                                          DateTime?                                 Timestamp                        = null,
-                                                          CancellationToken?                        CancellationToken                = null,
-                                                          EventTracking_Id                          EventTrackingId                  = null,
-                                                          TimeSpan?                                 RequestTimeout                   = null)
+                                                          DateTime?                                    Timestamp                        = null,
+                                                          CancellationToken?                           CancellationToken                = null,
+                                                          EventTracking_Id                             EventTrackingId                  = null,
+                                                          TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
@@ -188,16 +193,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                  SendChargeDetailRecordXML,
-                                       out SendChargeDetailRecordRequest         SendChargeDetailRecord,
+        public static Boolean TryParse(XElement                                     SendChargeDetailRecordXML,
+                                       out SendChargeDetailRecordRequest            SendChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       OnExceptionDelegate                       OnException                      = null,
+                                       OnExceptionDelegate                          OnException                      = null,
 
-                                       DateTime?                                 Timestamp                        = null,
-                                       CancellationToken?                        CancellationToken                = null,
-                                       EventTracking_Id                          EventTrackingId                  = null,
-                                       TimeSpan?                                 RequestTimeout                   = null)
+                                       DateTime?                                    Timestamp                        = null,
+                                       CancellationToken?                           CancellationToken                = null,
+                                       EventTracking_Id                             EventTrackingId                  = null,
+                                       TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
@@ -242,16 +247,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                    SendChargeDetailRecordText,
-                                       out SendChargeDetailRecordRequest         SendChargeDetailRecord,
+        public static Boolean TryParse(String                                       SendChargeDetailRecordText,
+                                       out SendChargeDetailRecordRequest            SendChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       OnExceptionDelegate                       OnException                      = null,
+                                       OnExceptionDelegate                          OnException                      = null,
 
-                                       DateTime?                                 Timestamp                        = null,
-                                       CancellationToken?                        CancellationToken                = null,
-                                       EventTracking_Id                          EventTrackingId                  = null,
-                                       TimeSpan?                                 RequestTimeout                   = null)
+                                       DateTime?                                    Timestamp                        = null,
+                                       CancellationToken?                           CancellationToken                = null,
+                                       EventTracking_Id                             EventTrackingId                  = null,
+                                       TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
@@ -292,7 +297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomChargeDetailRecordSerializer">A delegate to customize the serialization of SendChargeDetailRecord requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(XName                                         XName                                = null,
+        public XElement ToXML(XName                                            XName                                = null,
                               CustomXMLSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
                               CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 

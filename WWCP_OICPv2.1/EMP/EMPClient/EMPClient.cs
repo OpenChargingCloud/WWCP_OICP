@@ -576,8 +576,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
+        public CustomXMLParserDelegate<EVSEData>                                    CustomEVSEDataParser                                      { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEData>                            CustomOperatorEVSEDataParser                              { get; set; }
         public CustomXMLParserDelegate<EVSEDataRecord>                              CustomEVSEDataRecordParser                                { get; set; }
+        public CustomXMLParserDelegate<Address>                                     CustomAddressParser                                       { get; set; }
 
         public CustomXMLParserDelegate<EVSEStatus>                                  CustomEVSEStatusParser                                    { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEStatus>                          CustomOperatorEVSEStatusParser                            { get; set; }
@@ -1054,8 +1056,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  #region OnSuccess
 
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEData.Parse(xml,
+                                                                                                                                 CustomEVSEDataParser,
                                                                                                                                  CustomOperatorEVSEDataParser,
                                                                                                                                  CustomEVSEDataRecordParser,
+                                                                                                                                 CustomAddressParser,
                                                                                                                                  e)),
 
                                                  #endregion
@@ -2168,7 +2172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStart(Request)
+        #region AuthorizeRemoteStart           (Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -2381,7 +2385,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStop (Request)
+        #region AuthorizeRemoteStop            (Request)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -2673,12 +2677,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
                                                                                                       (request, xml, onexception)
-                                                                                                          => GetChargeDetailRecordsResponse.ParseXML(request,
-                                                                                                                                                     xml,
-                                                                                                                                                     CustomGetChargeDetailRecordsParser,
-                                                                                                                                                     CustomChargeDetailRecordParser,
-                                                                                                                                                     CustomIdentificationParser,
-                                                                                                                                                     onexception)),
+                                                                                                          => GetChargeDetailRecordsResponse.Parse(request,
+                                                                                                                                                  xml,
+                                                                                                                                                  CustomGetChargeDetailRecordsParser,
+                                                                                                                                                  CustomChargeDetailRecordParser,
+                                                                                                                                                  CustomIdentificationParser,
+                                                                                                                                                  onexception)),
 
                                                  #endregion
 

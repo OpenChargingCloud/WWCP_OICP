@@ -671,6 +671,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Return a XML-representation of this object.
         /// </summary>
         /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
+        /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom StatusCode XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
                               CustomXMLSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
         {

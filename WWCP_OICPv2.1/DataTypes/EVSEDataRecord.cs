@@ -416,17 +416,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (EVSEDataRecordXML,  CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse   (EVSEDataRecordXML,  ..., OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordXML">The XML to parse.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEDataRecord Parse(XElement                                EVSEDataRecordXML,
-                                             CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
-                                             OnExceptionDelegate                     OnException       = null)
+        public static EVSEDataRecord Parse(XElement                                 EVSEDataRecordXML,
+                                           CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null,
+                                           CustomXMLParserDelegate<Address>         CustomAddressParser          = null,
+                                           OnExceptionDelegate                      OnException                  = null)
         {
 
             EVSEDataRecord _EVSEDataRecord;
@@ -434,6 +436,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(EVSEDataRecordXML,
                          out _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
+                         CustomAddressParser,
                          OnException))
 
                 return _EVSEDataRecord;
@@ -444,17 +447,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) Parse   (EVSEDataRecordText, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) Parse   (EVSEDataRecordText, ..., OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEDataRecord Parse(String                                  EVSEDataRecordText,
-                                             CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
-                                             OnExceptionDelegate                     OnException       = null)
+        public static EVSEDataRecord Parse(String                                   EVSEDataRecordText,
+                                           CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null,
+                                           CustomXMLParserDelegate<Address>         CustomAddressParser          = null,
+                                           OnExceptionDelegate                      OnException                  = null)
         {
 
             EVSEDataRecord _EVSEDataRecord;
@@ -462,6 +467,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(EVSEDataRecordText,
                          out _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
+                         CustomAddressParser,
                          OnException))
 
                 return _EVSEDataRecord;
@@ -472,19 +478,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(EVSEDataRecordXML,  out EVSEDataRecord, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(EVSEDataRecordXML,  out EVSEDataRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordXML">The XML to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                              EVSEDataRecordXML,
-                                       out EVSEDataRecord                    EVSEDataRecord,
-                                       CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
-                                       OnExceptionDelegate                   OnException                 = null)
+        public static Boolean TryParse(XElement                                 EVSEDataRecordXML,
+                                       out EVSEDataRecord                       EVSEDataRecord,
+                                       CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null,
+                                       CustomXMLParserDelegate<Address>         CustomAddressParser          = null,
+                                       OnExceptionDelegate                      OnException                  = null)
         {
 
             try
@@ -512,30 +520,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
                                                           v => _ChargingStationName.Add(Languages.eng, v));
-
-                #endregion
-
-                #region Address
-
-                var AddressXML  = EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "Address", "Missing 'Address'-XML tag!");
-
-                var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
-
-                Country _Country;
-                if (!Country.TryParse(_CountryTXT, out _Country))
-                {
-
-                    if (_CountryTXT.ToUpper() == "UNKNOWN")
-                        _Country = Country.unknown;
-
-                    else
-                        throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
-
-                }
-
-                // Currently not used OICP address information!
-                //var _Region       = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Region",     "").Trim();
-                //var _Timezone     = AddressXML.       ElementValueOrDefault(OICPNS.OICPv2_0CommonTypes + "Timezone",   "").Trim();
 
                 #endregion
 
@@ -605,13 +589,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
                     _ChargingStationName,
 
-                    new Address(AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street", "Missing 'Street'-XML tag!").Trim(),
-                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
-                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
-                                                     AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
-                                                     "",
-                                                     I18NString.Create(Languages.unknown, AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City", "Missing 'City'-XML tag!").Trim()),
-                                                     _Country),
+                    EVSEDataRecordXML.MapElementOrFail(OICPNS.EVSEData + "Address",
+                                                       (xml, e) => Address.Parse(xml,
+                                                                                 CustomAddressParser,
+                                                                                 e),
+                                                       OnException),
 
                     XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
@@ -702,19 +684,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region (static) TryParse(EVSEDataRecordText, out EVSEDataRecord, CustomEVSEDataRecordParser = null, OnException = null)
+        #region (static) TryParse(EVSEDataRecordText, out EVSEDataRecord, ..., OnException = null)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom XML elements.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                EVSEDataRecordText,
-                                       out EVSEDataRecord                    EVSEDataRecord,
-                                       CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser  = null,
-                                       OnExceptionDelegate                   OnException                 = null)
+        public static Boolean TryParse(String                                   EVSEDataRecordText,
+                                       out EVSEDataRecord                       EVSEDataRecord,
+                                       CustomXMLParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null,
+                                       CustomXMLParserDelegate<Address>         CustomAddressParser          = null,
+                                       OnExceptionDelegate                      OnException                  = null)
         {
 
             try
@@ -723,6 +707,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (TryParse(XDocument.Parse(EVSEDataRecordText).Root,
                              out EVSEDataRecord,
                              CustomEVSEDataRecordParser,
+                             CustomAddressParser,
                              OnException))
 
                     return true;
@@ -740,7 +725,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region ToXML(XName = null, IncludeMetadata = false, CustomEVSEDataRecordSerializer = null)
+        #region ToXML(XName = null, IncludeMetadata = false, CustomEVSEDataRecordSerializer = null, CustomAddressSerializer = null)
 
         /// <summary>
         /// Return an XML representation of this EVSE data record.
@@ -748,9 +733,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="XName">The XML name to use.</param>
         /// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        public XElement ToXML(XName                                     XName                           = null,
-                              Boolean                                   IncludeMetadata                 = false,
-                              CustomXMLSerializerDelegate<EVSEDataRecord>  CustomEVSEDataRecordSerializer  = null)
+        /// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>
+        public XElement ToXML(XName                                        XName                           = null,
+                              Boolean                                      IncludeMetadata                 = false,
+                              CustomXMLSerializerDelegate<EVSEDataRecord>  CustomEVSEDataRecordSerializer  = null,
+                              CustomXMLSerializerDelegate<Address>         CustomAddressSerializer         = null)
 
         {
 
@@ -769,30 +756,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
                           new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
 
-                          new XElement(OICPNS.EVSEData + "Address",
-                              new XElement(OICPNS.CommonTypes + "Country",        Address.Country.Alpha3Code),
-                              new XElement(OICPNS.CommonTypes + "City",           Address.City.FirstText()),
-                              new XElement(OICPNS.CommonTypes + "Street",         Address.Street), // OICP v2.1 requires at least 5 characters!
-
-                              Address.PostalCode. IsNotNullOrEmpty()
-                                  ? new XElement(OICPNS.CommonTypes + "PostalCode", Address.PostalCode)
-                                  : null,
-
-                              Address.HouseNumber.IsNotNullOrEmpty()
-                                  ? new XElement(OICPNS.CommonTypes + "HouseNum",   Address.HouseNumber)
-                                  : null,
-
-                              Address.FloorLevel. IsNotNullOrEmpty()
-                                  ? new XElement(OICPNS.CommonTypes + "Floor",      Address.FloorLevel)
-                                  : null
-
-                              // <!--Optional:-->
-                              // <v11:Region>?</v11:Region>
-
-                              // <!--Optional:-->
-                              // <v11:TimeZone>?</v11:TimeZone>
-
-                          ),
+                          Address.ToXML(OICPNS.EVSEData + "Address",
+                                        CustomAddressSerializer),
 
                           new XElement(OICPNS.EVSEData + "GeoCoordinates",
                               new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!

@@ -1166,7 +1166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region AuthorizeStart(Request)
+        #region AuthorizeStart        (Request)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -1363,7 +1363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AuthorizeStop (Request)
+        #region AuthorizeStop         (Request)
 
         /// <summary>
         /// Create an OICP authorize stop request.

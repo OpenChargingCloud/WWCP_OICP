@@ -20,6 +20,7 @@
 using System;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Xml.Linq;
 
 #endregion
 
@@ -35,29 +36,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
-        /// The name of the street.
+        /// The city.
         /// </summary>
-        public String      Street           { get; }
-
-        /// <summary>
-        /// The house number.
-        /// </summary>
-        public String      HouseNumber      { get; }
-
-        /// <summary>
-        /// The floor level.
-        /// </summary>
-        public String      FloorLevel       { get; }
-
-        /// <summary>
-        /// The postal code.
-        /// </summary>
-        public String      PostalCode       { get; }
-
-        /// <summary>
-        /// The postal code sub.
-        /// </summary>
-        public String      PostalCodeSub    { get; }
+        public Country     Country          { get; }
 
         /// <summary>
         /// The city.
@@ -65,114 +46,79 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public I18NString  City             { get; }
 
         /// <summary>
-        /// The city.
+        /// The name of the street.
         /// </summary>
-        public Country     Country          { get; }
+        public String      Street           { get; }
 
         /// <summary>
-        /// An optional text/comment to describe the address.
+        /// The optional postal code.
         /// </summary>
-        public I18NString  Comment          { get; }
+        public String      PostalCode       { get; }
+
+        /// <summary>
+        /// The optional house number.
+        /// </summary>
+        public String      HouseNumber      { get; }
+
+        /// <summary>
+        /// The optional floor level.
+        /// </summary>
+        public String      FloorLevel       { get; }
+
+        /// <summary>
+        /// The optional region.
+        /// </summary>
+        public String      Region           { get; }
+
+        /// <summary>
+        /// The optional timezone.
+        /// </summary>
+        public String      Timezone         { get; }
 
         #endregion
 
         #region Constructor(s)
 
-        #region Address()
-
         /// <summary>
         /// Create a new address.
         /// </summary>
-        public Address()
-        {
-
-            this.FloorLevel     = "";
-            this.HouseNumber    = "";
-            this.Street         = "";
-            this.PostalCode     = "";
-            this.PostalCodeSub  = "";
-            this.City           = new I18NString();
-            this.Country        = Country.unknown;
-            this.Comment        = new I18NString();
-
-        }
-
-        #endregion
-
-        #region Address(Country, PostalCode, City, Street, HouseNumber)
-
-        /// <summary>
-        /// Create a new minimal address.
-        /// </summary>
         /// <param name="Country">The country.</param>
-        /// <param name="PostalCode">The postal code</param>
         /// <param name="City">The city.</param>
         /// <param name="Street">The name of the street.</param>
-        /// <param name="HouseNumber">The house number.</param>
+        /// <param name="PostalCode">An optional postal code</param>
+        /// <param name="HouseNumber">An optional house number.</param>
+        /// <param name="FloorLevel">An optional floor level.</param>
+        /// <param name="Region">An optional region.</param>
+        /// <param name="Timezone">An optional timezone.</param>
         public Address(Country     Country,
-                       String      PostalCode,
                        I18NString  City,
                        String      Street,
-                       String      HouseNumber)
+                       String      PostalCode   = null,
+                       String      HouseNumber  = null,
+                       String      FloorLevel   = null,
+                       String      Region       = null,
+                       String      Timezone     = null)
+
         {
 
-            this.FloorLevel     = "";
-            this.HouseNumber    = HouseNumber;
+            this.Country        = Country;
+            this.City           = City;
             this.Street         = Street;
             this.PostalCode     = PostalCode;
-            this.PostalCodeSub  = "";
-            this.City           = City;
-            this.Country        = Country;
-            this.Comment        = new I18NString();
+            this.HouseNumber    = HouseNumber;
+            this.FloorLevel     = FloorLevel;
+            this.Region         = Region;
+            this.Timezone       = Timezone;
 
         }
 
         #endregion
 
-        #region Address(Street, HouseNumber, FloorLevel, PostalCode, PostalCodeSub, City, Country, FreeText = null)
+
+        #region (static) Create(Country, City, Street, ...)
 
         /// <summary>
         /// Create a new address.
-        /// </summary>
-        /// <param name="Street">The name of the street.</param>
-        /// <param name="HouseNumber">The house number.</param>
-        /// <param name="FloorLevel">The floor level.</param>
-        /// <param name="PostalCode">The postal code</param>
-        /// <param name="PostalCodeSub">The postal code sub</param>
-        /// <param name="City">The city.</param>
-        /// <param name="Country">The country.</param>
-        /// <param name="Comment">An optional text/comment to describe the address.</param>
-        public Address(String      Street,
-                       String      HouseNumber,
-                       String      FloorLevel,
-                       String      PostalCode,
-                       String      PostalCodeSub,
-                       I18NString  City,
-                       Country     Country,
-                       I18NString  Comment = null)
-
-        {
-
-            this.Street         = Street;
-            this.HouseNumber    = HouseNumber;
-            this.FloorLevel     = FloorLevel;
-            this.PostalCode     = PostalCode;
-            this.PostalCodeSub  = PostalCodeSub;
-            this.City           = City;
-            this.Country        = Country;
-            this.Comment        = Comment ?? new I18NString();
-
-        }
-
-        #endregion
-
-        #endregion
-
-
-        #region (static) Create(Country, PostalCode, City, Street, HouseNumber)
-
-        /// <summary>
-        /// Create a new minimal address.
         /// </summary>
         /// <param name="Country">The country.</param>
         /// <param name="PostalCode">The postal code</param>
@@ -183,13 +129,152 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                      String      PostalCode,
                                      I18NString  City,
                                      String      Street,
-                                     String      HouseNumber)
+                                     String      HouseNumber  = null,
+                                     String      FloorLevel   = null,
+                                     String      Region       = null,
+                                     String      Timezone     = null)
 
             => new Address(Country,
-                           PostalCode,
                            City,
                            Street,
-                           HouseNumber);
+                           PostalCode,
+                           HouseNumber,
+                           FloorLevel,
+                           Region,
+                           Timezone);
+
+        #endregion
+
+
+        #region Documentation
+
+        // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEData     = "http://www.hubject.com/b2b/services/evsedata/EVSEData/v2.1"
+        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/EVSEData/v2.0">
+        //
+        // [...]
+        //
+        //    <EVSEData:Address>
+        //
+        //       <CommonTypes:Country>?</CommonTypes:Country>
+        //       <CommonTypes:City>?</CommonTypes:City>
+        //       <CommonTypes:Street>?</CommonTypes:Street>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:PostalCode>?</CommonTypes:PostalCode>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:HouseNum>?</CommonTypes:HouseNum>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:Floor>?</CommonTypes:Floor>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:Region>?</CommonTypes:Region>
+        //
+        //       <!--Optional:-->
+        //       <CommonTypes:TimeZone>?</CommonTypes:TimeZone>
+        //
+        //    </EVSEData:Address>
+        //
+        // [...]
+        //
+        // </soapenv:Envelope>
+
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="AddressXML"></param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="OnException"></param>
+        /// <returns></returns>
+        public static Address Parse(XElement                          AddressXML,
+                                    CustomXMLParserDelegate<Address>  CustomAddressParser   = null,
+                                    OnExceptionDelegate               OnException           = null)
+        {
+
+            var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+
+                Country _Country;
+                if (!Country.TryParse(_CountryTXT, out _Country))
+                {
+
+                    if (_CountryTXT.ToUpper() == "UNKNOWN")
+                        _Country = Country.unknown;
+
+                    else
+                        throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
+
+                }
+
+            var _Address = new Address(_Country,
+
+                                       I18NString.Create(Languages.unknown,
+                                                         AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City").Trim()),
+
+                                       AddressXML.ElementValueOrFail   (OICPNS.CommonTypes + "Street").        Trim(),
+
+                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
+                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",   "").Trim(),
+                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor",      "").Trim(),
+                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Region",     "").Trim(),
+                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "TimeZone",   "").Trim()
+                                       );
+
+            if (CustomAddressParser != null)
+                _Address = CustomAddressParser(AddressXML,
+                                               _Address);
+
+            return _Address;
+
+        }
+
+        #region ToXML(XName = null, CustomAddressSerializer = null)
+
+        /// <summary>
+        /// Return an XML representation of this EVSE data record.
+        /// </summary>
+        /// <param name="XName">The XML name to use.</param>
+        /// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>
+        public XElement ToXML(XName                                 XName                     = null,
+                              CustomXMLSerializerDelegate<Address>  CustomAddressSerializer   = null)
+        {
+
+            var XML = new XElement(XName ?? OICPNS.EVSEData + "Address",
+
+                          new XElement(OICPNS.CommonTypes + "Country",        Country.Alpha3Code),
+                          new XElement(OICPNS.CommonTypes + "City",           City.FirstText()),
+                          new XElement(OICPNS.CommonTypes + "Street",         Street), // OICP v2.1 requires at least 5 characters!
+
+                          PostalCode. IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "PostalCode", PostalCode)
+                              : null,
+
+                          HouseNumber.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "HouseNum",   HouseNumber)
+                              : null,
+
+                          FloorLevel. IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "Floor",      FloorLevel)
+                              : null,
+
+                          Region. IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "Region",     Region)
+                              : null,
+
+                          Timezone. IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "TimeZone",   Timezone)
+                              : null
+
+                      );
+
+            return CustomAddressSerializer != null
+                       ? CustomAddressSerializer(this, XML)
+                       : XML;
+
+        }
 
         #endregion
 
@@ -230,7 +315,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Address2">Another address.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Address Address1, Address Address2)
-
             => !(Address1 == Address2);
 
         #endregion
@@ -252,12 +336,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (Object == null)
                 return false;
 
-            // Check if the given object is an Address.
             var Address = Object as Address;
             if ((Object) Address == null)
                 return false;
 
-            return this.Equals(Address);
+            return Equals(Address);
 
         }
 
@@ -276,13 +359,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if ((Object) Address == null)
                 return false;
 
-            return Street.        Equals(Address.Street) &&
-                   HouseNumber.   Equals(Address.HouseNumber) &&
-                   FloorLevel.    Equals(Address.FloorLevel) &&
-                   PostalCode.    Equals(Address.PostalCode) &&
-                   PostalCodeSub. Equals(Address.PostalCodeSub) &&
-                   City.          Equals(Address.City) &&
-                   Country.       Equals(Address.Country);
+            return Country.       Equals(Address.Country) &&
+                   City.          Equals(Address.City)    &&
+                   Street.        Equals(Address.Street)  &&
+
+                   ((PostalCode  == null && Address.PostalCode  == null) ||
+                    (PostalCode  != null && Address.PostalCode  != null && PostalCode. Equals(Address.PostalCode))) &&
+
+                   ((HouseNumber == null && Address.HouseNumber == null) ||
+                    (HouseNumber != null && Address.HouseNumber != null && HouseNumber.Equals(Address.HouseNumber))) &&
+
+                   ((FloorLevel  == null && Address.FloorLevel  == null) ||
+                    (FloorLevel  != null && Address.FloorLevel  != null && FloorLevel. Equals(Address.FloorLevel))) &&
+
+                   ((Region      == null && Address.Region      == null) ||
+                    (Region      != null && Address.Region      != null && Region.     Equals(Address.Region))) &&
+
+                   ((Timezone    == null && Address.Timezone    == null) ||
+                    (Timezone    != null && Address.Timezone    != null && Timezone.   Equals(Address.Timezone)));
 
         }
 
@@ -301,13 +395,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             unchecked
             {
 
-                return Street.        GetHashCode() * 41 ^
-                       HouseNumber.   GetHashCode() * 37 ^
-                       FloorLevel.    GetHashCode() * 31 ^
-                       PostalCode.    GetHashCode() * 23 ^
-                       PostalCodeSub. GetHashCode() * 17 ^
-                       City.          GetHashCode() * 11 ^
-                       Country.       GetHashCode();
+                return Country.       GetHashCode() * 19 ^
+                       City.          GetHashCode() * 17 ^
+                       Street.        GetHashCode() * 13 ^
+
+                       (PostalCode.IsNotNullOrEmpty()
+                            ? PostalCode. GetHashCode() * 11
+                            : 0) ^
+
+                       (HouseNumber.IsNotNullOrEmpty()
+                            ? HouseNumber.GetHashCode() * 7
+                            : 0) ^
+
+                       (FloorLevel.IsNotNullOrEmpty()
+                            ? FloorLevel. GetHashCode() * 5
+                            : 0) ^
+
+                       (Region.IsNotNullOrEmpty()
+                            ? Region.     GetHashCode() * 3
+                            : 0) ^
+
+                       (Timezone.IsNotNullOrEmpty()
+                            ? Timezone.   GetHashCode()
+                            : 0);
 
             }
         }
@@ -321,16 +431,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => Street                          + " " +
-               HouseNumber                     + " " +
-               FloorLevel                      + ", " +
-               PostalCode                      + " " +
-               PostalCodeSub                   + " " +
-               City                            + ", " +
-               Country.CountryName.FirstText() + " / " +
-               Comment;
+            => String.Concat(Country.CountryName.FirstText(), ", ",
+                             City, ", ",
+                             Street,
+
+                             PostalCode.IsNotNullOrEmpty()
+                                 ? ", " + PostalCode
+                                 : "",
+
+                             HouseNumber.IsNotNullOrEmpty()
+                                 ? ", " + HouseNumber
+                                 : "",
+
+                             FloorLevel.IsNotNullOrEmpty()
+                                 ? ", " + FloorLevel
+                                 : "",
+
+                             Region.IsNotNullOrEmpty()
+                                 ? ", " + Region
+                                 : "",
+
+                             Timezone.IsNotNullOrEmpty()
+                                 ? ", " + Timezone
+                                 : "");
 
         #endregion
+
 
     }
 

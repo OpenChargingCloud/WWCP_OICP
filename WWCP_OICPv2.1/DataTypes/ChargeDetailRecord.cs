@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// An identification.
         /// </summary>
         [Optional]
-        public Identification  Identification          { get; }
+        public Identification               Identification          { get; }
 
         /// <summary>
         /// An unqiue identification for the consumed charging product.
@@ -165,7 +165,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                   Session_Id                          SessionId,
                                   DateTime                            SessionStart,
                                   DateTime                            SessionEnd,
-                                  Identification         Identification,
+                                  Identification                      Identification,
                                   PartnerProduct_Id?                  PartnerProductId       = null,
                                   PartnerSession_Id?                  PartnerSessionId       = null,
                                   DateTime?                           ChargingStart          = null,
@@ -307,10 +307,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static ChargeDetailRecord Parse(XElement                                  ChargeDetailRecordXML,
+        public static ChargeDetailRecord Parse(XElement                                     ChargeDetailRecordXML,
                                                CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                               OnExceptionDelegate                       OnException                      = null)
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
@@ -338,10 +338,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static ChargeDetailRecord Parse(String                                    ChargeDetailRecordText,
+        public static ChargeDetailRecord Parse(String                                       ChargeDetailRecordText,
                                                CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                               OnExceptionDelegate                       OnException                      = null)
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
             ChargeDetailRecord _ChargeDetailRecord;
@@ -370,11 +370,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                  ChargeDetailRecordXML,
-                                       out ChargeDetailRecord                    ChargeDetailRecord,
+        public static Boolean TryParse(XElement                                     ChargeDetailRecordXML,
+                                       out ChargeDetailRecord                       ChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -470,11 +470,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                    ChargeDetailRecordText,
-                                       out ChargeDetailRecord                    ChargeDetailRecord,
+        public static Boolean TryParse(String                                       ChargeDetailRecordText,
+                                       out ChargeDetailRecord                       ChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       OnExceptionDelegate                       OnException                      = null)
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -509,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(XName                                         XName                                = null,
+        public XElement ToXML(XName                                            XName                                = null,
                               CustomXMLSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
                               CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
 

@@ -766,14 +766,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="WWCPAddress">A WWCP address.</param>
         public static Address ToOICP(this WWCP.Address WWCPAddress)
 
-            => new Address(WWCPAddress.Street,
-                           WWCPAddress.HouseNumber,
-                           WWCPAddress.FloorLevel,
-                           WWCPAddress.PostalCode,
-                           WWCPAddress.PostalCodeSub,
+            => new Address(WWCPAddress.Country,
                            WWCPAddress.City,
-                           WWCPAddress.Country,
-                           WWCPAddress.Comment);
+                           WWCPAddress.Street,
+                           WWCPAddress.PostalCode,
+                           WWCPAddress.HouseNumber,
+                           WWCPAddress.FloorLevel);
 
 
         /// <summary>
@@ -786,10 +784,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 OICPAddress.HouseNumber,
                                 OICPAddress.FloorLevel,
                                 OICPAddress.PostalCode,
-                                OICPAddress.PostalCodeSub,
+                                null,
                                 OICPAddress.City,
-                                OICPAddress.Country,
-                                OICPAddress.Comment);
+                                OICPAddress.Country);
 
         #endregion
 

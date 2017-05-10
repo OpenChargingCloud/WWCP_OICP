@@ -67,6 +67,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="EVCOIdWithPIN">The EVCO identification with its PIN.</param>
         /// <param name="ProductId">An optional charging product identification.</param>
         /// <param name="GetNewSession">Whether to start a new charging session or not.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public MobileAuthorizeStartRequest(EVSE_Id               EVSEId,
                                            QRCodeIdentification  QRCodeIdentification,
                                            PartnerProduct_Id?    PartnerProductId    = null,
@@ -135,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) Parse(MobileAuthorizeStartXML,  ..., OnException = null)
+        #region (static) Parse(MobileAuthorizeStartXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP mobile authorize start request.
@@ -143,9 +148,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileAuthorizeStartXML">The XML to parse.</param>
         /// <param name="CustomMobileAuthorizeStartRequestParser">A delegate to parse custom MobileAuthorizeStart requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static MobileAuthorizeStartRequest Parse(XElement                                              MobileAuthorizeStartXML,
-                                                        CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
-                                                        OnExceptionDelegate                                   OnException                               = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static MobileAuthorizeStartRequest
+
+            Parse(XElement                                              MobileAuthorizeStartXML,
+                  CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
+                  OnExceptionDelegate                                   OnException                               = null,
+
+                  DateTime?                                             Timestamp                                 = null,
+                  CancellationToken?                                    CancellationToken                         = null,
+                  EventTracking_Id                                      EventTrackingId                           = null,
+                  TimeSpan?                                             RequestTimeout                            = null)
+
         {
 
             MobileAuthorizeStartRequest _MobileAuthorizeStart;
@@ -153,7 +171,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             if (TryParse(MobileAuthorizeStartXML,
                          out _MobileAuthorizeStart,
                          CustomMobileAuthorizeStartRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _MobileAuthorizeStart;
 
@@ -163,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) Parse(MobileAuthorizeStartText, ..., OnException = null)
+        #region (static) Parse(MobileAuthorizeStartText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP mobile authorize start request.
@@ -171,9 +194,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileAuthorizeStartText">The text to parse.</param>
         /// <param name="CustomMobileAuthorizeStartRequestParser">A delegate to parse custom MobileAuthorizeStart requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static MobileAuthorizeStartRequest Parse(String                                                MobileAuthorizeStartText,
-                                                        CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
-                                                        OnExceptionDelegate                                   OnException                               = null)
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static MobileAuthorizeStartRequest
+
+            Parse(String                                                MobileAuthorizeStartText,
+                  CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
+                  OnExceptionDelegate                                   OnException                               = null,
+
+                  DateTime?                                             Timestamp                                 = null,
+                  CancellationToken?                                    CancellationToken                         = null,
+                  EventTracking_Id                                      EventTrackingId                           = null,
+                  TimeSpan?                                             RequestTimeout                            = null)
+
         {
 
             MobileAuthorizeStartRequest _MobileAuthorizeStart;
@@ -181,7 +217,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             if (TryParse(MobileAuthorizeStartText,
                          out _MobileAuthorizeStart,
                          CustomMobileAuthorizeStartRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _MobileAuthorizeStart;
 
@@ -191,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) TryParse(MobileAuthorizeStartXML,  out MobileAuthorizeStart, ..., OnException = null)
+        #region (static) TryParse(MobileAuthorizeStartXML,  out MobileAuthorizeStart, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP mobile authorize start request.
@@ -200,10 +241,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileAuthorizeStart">The parsed mobile authorize start request.</param>
         /// <param name="CustomMobileAuthorizeStartRequestParser">A delegate to parse custom MobileAuthorizeStart requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                              MobileAuthorizeStartXML,
                                        out MobileAuthorizeStartRequest                       MobileAuthorizeStart,
                                        CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
-                                       OnExceptionDelegate                                   OnException                               = null)
+                                       OnExceptionDelegate                                   OnException                               = null,
+
+                                       DateTime?                                             Timestamp                                 = null,
+                                       CancellationToken?                                    CancellationToken                         = null,
+                                       EventTracking_Id                                      EventTrackingId                           = null,
+                                       TimeSpan?                                             RequestTimeout                            = null)
+
         {
 
             try
@@ -231,9 +283,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                                                                ? new Boolean?(true)
                                                                                                : s == "false"
                                                                                                      ? new Boolean?(false)
-                                                                                                     : null)
+                                                                                                     : null),
 
-                                       );
+                                           Timestamp,
+                                           CancellationToken,
+                                           EventTrackingId,
+                                           RequestTimeout);
 
 
                 if (CustomMobileAuthorizeStartRequestParser != null)
@@ -257,7 +312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region (static) TryParse(MobileAuthorizeStartText, out MobileAuthorizeStart, ..., OnException = null)
+        #region (static) TryParse(MobileAuthorizeStartText, out MobileAuthorizeStart, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP mobile authorize start request.
@@ -266,10 +321,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="MobileAuthorizeStart">The parsed mobile authorize start request.</param>
         /// <param name="CustomMobileAuthorizeStartRequestParser">A delegate to parse custom MobileAuthorizeStart requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                                MobileAuthorizeStartText,
                                        out MobileAuthorizeStartRequest                       MobileAuthorizeStart,
                                        CustomXMLParserDelegate<MobileAuthorizeStartRequest>  CustomMobileAuthorizeStartRequestParser   = null,
-                                       OnExceptionDelegate                                   OnException                               = null)
+                                       OnExceptionDelegate                                   OnException                               = null,
+
+                                       DateTime?                                             Timestamp                                 = null,
+                                       CancellationToken?                                    CancellationToken                         = null,
+                                       EventTracking_Id                                      EventTrackingId                           = null,
+                                       TimeSpan?                                             RequestTimeout                            = null)
+
         {
 
             try
@@ -278,7 +344,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                 if (TryParse(XDocument.Parse(MobileAuthorizeStartText).Root,
                              out MobileAuthorizeStart,
                              CustomMobileAuthorizeStartRequestParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

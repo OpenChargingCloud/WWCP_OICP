@@ -18,10 +18,8 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -63,6 +61,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="From">The starting time.</param>
         /// <param name="To">The end time.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public GetChargeDetailRecordsRequest(Provider_Id         ProviderId,
                                              DateTime            From,
                                              DateTime            To,
@@ -107,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(GetChargeDetailRecordsRequestXML,  ..., OnException = null)
+        #region (static) Parse(GetChargeDetailRecordsRequestXML,  ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given XML representation of an OICP get charge detail records request.
@@ -115,9 +118,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="GetChargeDetailRecordsRequestXML">The XML to parse.</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static GetChargeDetailRecordsRequest Parse(XElement                                                GetChargeDetailRecordsRequestXML,
                                                           CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
-                                                          OnExceptionDelegate                                     OnException                                 = null)
+                                                          OnExceptionDelegate                                     OnException                                 = null,
+
+                                                          DateTime?                                               Timestamp                                   = null,
+                                                          CancellationToken?                                      CancellationToken                           = null,
+                                                          EventTracking_Id                                        EventTrackingId                             = null,
+                                                          TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             GetChargeDetailRecordsRequest _GetChargeDetailRecordsRequest;
@@ -125,7 +139,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (TryParse(GetChargeDetailRecordsRequestXML,
                          out _GetChargeDetailRecordsRequest,
                          CustomGetChargeDetailRecordsRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _GetChargeDetailRecordsRequest;
 
@@ -135,7 +154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) Parse(GetChargeDetailRecordsRequestText, ..., OnException = null)
+        #region (static) Parse(GetChargeDetailRecordsRequestText, ..., OnException = null, ...)
 
         /// <summary>
         /// Parse the given text representation of an OICP get charge detail records request.
@@ -143,9 +162,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="GetChargeDetailRecordsRequestText">The text to parse.</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static GetChargeDetailRecordsRequest Parse(String                                                  GetChargeDetailRecordsRequestText,
                                                           CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
-                                                          OnExceptionDelegate                                     OnException                                 = null)
+                                                          OnExceptionDelegate                                     OnException                                 = null,
+
+                                                          DateTime?                                               Timestamp                                   = null,
+                                                          CancellationToken?                                      CancellationToken                           = null,
+                                                          EventTracking_Id                                        EventTrackingId                             = null,
+                                                          TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             GetChargeDetailRecordsRequest _GetChargeDetailRecordsRequest;
@@ -153,7 +183,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (TryParse(GetChargeDetailRecordsRequestText,
                          out _GetChargeDetailRecordsRequest,
                          CustomGetChargeDetailRecordsRequestParser,
-                         OnException))
+                         OnException,
+
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout))
 
                 return _GetChargeDetailRecordsRequest;
 
@@ -163,7 +198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(GetChargeDetailRecordsRequestXML,  out GetChargeDetailRecordsRequest, ..., OnException = null)
+        #region (static) TryParse(GetChargeDetailRecordsRequestXML,  out GetChargeDetailRecordsRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given XML representation of an OICP get charge detail records request.
@@ -172,10 +207,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="GetChargeDetailRecordsRequest">The parsed get charge detail records request.</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                                GetChargeDetailRecordsRequestXML,
                                        out GetChargeDetailRecordsRequest                       GetChargeDetailRecordsRequest,
                                        CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
-                                       OnExceptionDelegate                                     OnException                                 = null)
+                                       OnExceptionDelegate                                     OnException                                 = null,
+
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
@@ -190,9 +236,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                                     DateTime.Parse),
 
                                                     GetChargeDetailRecordsRequestXML.MapValueOrFail(OICPNS.Authorization + "To",
-                                                                                                    DateTime.Parse)
+                                                                                                    DateTime.Parse),
 
-                                                );
+                                                    Timestamp,
+                                                    CancellationToken,
+                                                    EventTrackingId,
+                                                    RequestTimeout);
 
 
                 if (CustomGetChargeDetailRecordsRequestParser != null)
@@ -216,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region (static) TryParse(GetChargeDetailRecordsRequestText, out GetChargeDetailRecordsRequest, ..., OnException = null)
+        #region (static) TryParse(GetChargeDetailRecordsRequestText, out GetChargeDetailRecordsRequest, ..., OnException = null, ...)
 
         /// <summary>
         /// Try to parse the given text representation of an OICP get charge detail records request.
@@ -225,10 +274,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="GetChargeDetailRecordsRequest">The parsed get charge detail records request.</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                                  GetChargeDetailRecordsRequestText,
                                        out GetChargeDetailRecordsRequest                       GetChargeDetailRecordsRequest,
                                        CustomXMLParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null,
-                                       OnExceptionDelegate                                     OnException                                 = null)
+                                       OnExceptionDelegate                                     OnException                                 = null,
+
+                                       DateTime?                                               Timestamp                                   = null,
+                                       CancellationToken?                                      CancellationToken                           = null,
+                                       EventTracking_Id                                        EventTrackingId                             = null,
+                                       TimeSpan?                                               RequestTimeout                              = null)
+
         {
 
             try
@@ -237,7 +297,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 if (TryParse(XDocument.Parse(GetChargeDetailRecordsRequestText).Root,
                              out GetChargeDetailRecordsRequest,
                              CustomGetChargeDetailRecordsRequestParser,
-                             OnException))
+                             OnException,
+
+                             Timestamp,
+                             CancellationToken,
+                             EventTrackingId,
+                             RequestTimeout))
 
                     return true;
 

@@ -19,11 +19,12 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+
 using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Hermod;
+
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
 
 #endregion
 
@@ -38,19 +39,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static JObject ToJSON(this Address Address)
 
             => JSONObject.Create(
-                   new JProperty("Street",         Address.Street),
-                   new JProperty("HouseNumber",    Address.HouseNumber),
-                   new JProperty("FloorLevel",     Address.FloorLevel),
-                   new JProperty("PostalCode",     Address.PostalCode),
-                   new JProperty("PostalCodeSub",  Address.PostalCodeSub),
-                   new JProperty("City",           Address.City.   ToJSON()),
+
                    new JProperty("Country",        Address.Country.Alpha3Code),
-                   new JProperty("Comment",        Address.Comment.ToJSON())
+                   new JProperty("City",           Address.City.   ToJSON()),
+                   new JProperty("Street",         Address.Street),
+
+                   Address.PostalCode.IsNotNullOrEmpty()
+                       ? new JProperty("PostalCode",     Address.PostalCode)
+                       : null,
+
+                   Address.HouseNumber.IsNotNullOrEmpty()
+                       ? new JProperty("HouseNumber",    Address.HouseNumber)
+                       : null,
+
+                   Address.FloorLevel.IsNotNullOrEmpty()
+                       ? new JProperty("FloorLevel",     Address.FloorLevel)
+                       : null,
+
+                   Address.Region.IsNotNullOrEmpty()
+                       ? new JProperty("Region",         Address.Region)
+                       : null,
+
+                   Address.Timezone.IsNotNullOrEmpty()
+                       ? new JProperty("Timezone",       Address.Timezone)
+                       : null
+
                );
 
         #endregion
 
-        #region Address
+        #region GeoCoordinate
 
         public static JObject ToJSON(this GeoCoordinate GeoCoordinate)
 

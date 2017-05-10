@@ -300,7 +300,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 if (CustomEVSEStatusParser != null)
-                    EVSEStatus = CustomEVSEStatusParser(EVSEStatusXML, EVSEStatus);
+                    EVSEStatus = CustomEVSEStatusParser(EVSEStatusXML,
+                                                        EVSEStatus);
 
                 return true;
 
@@ -420,8 +421,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Compares two results for equality.
         /// </summary>
-        /// <param name="EVSEStatus1">An EVSE data.</param>
-        /// <param name="EVSEStatus2">Another EVSE data.</param>
+        /// <param name="EVSEStatus1">An EVSE status.</param>
+        /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EVSEStatus EVSEStatus1, EVSEStatus EVSEStatus2)
         {
@@ -445,8 +446,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// Compares two results for inequality.
         /// </summary>
-        /// <param name="EVSEStatus1">An EVSE data.</param>
-        /// <param name="EVSEStatus2">Another EVSE data.</param>
+        /// <param name="EVSEStatus1">An EVSE status.</param>
+        /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EVSEStatus EVSEStatus1, EVSEStatus EVSEStatus2)
 
@@ -497,8 +498,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             return (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
                     (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
 
-                    (StatusCode != null && EVSEStatus.StatusCode != null) ||
-                    (StatusCode == null && EVSEStatus.StatusCode == null && StatusCode.Equals(EVSEStatus.StatusCode));
+                    (StatusCode == null && EVSEStatus.StatusCode == null) ||
+                    (StatusCode != null && EVSEStatus.StatusCode != null && StatusCode.Equals(EVSEStatus.StatusCode));
 
         }
 
