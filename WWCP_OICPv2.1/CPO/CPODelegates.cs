@@ -24,34 +24,28 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 {
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML representation of EVSE data records before sending them upstream.
-    /// </summary>
-    /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    /// <param name="XML">The XML representation of an EVSE data record.</param>
-    public delegate XElement  EVSEDataRecord2XMLDelegate    (EVSEDataRecord      EVSEDataRecord,
-                                                             XElement            XML);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML representation of EVSE data records before sending them upstream.
+    ///// </summary>
+    ///// <param name="EVSEDataRecord">An EVSE data record.</param>
+    ///// <param name="XML">The XML representation of an EVSE data record.</param>
+    //public delegate XElement  EVSEDataRecord2XMLDelegate    (EVSEDataRecord      EVSEDataRecord,
+    //                                                         XElement            XML);
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML representation of EVSE status records before sending them upstream.
-    /// </summary>
-    /// <param name="EVSEStatusRecord">An EVSE status record.</param>
-    /// <param name="XML">The XML representation of an EVSE status record.</param>
-    public delegate XElement  EVSEStatusRecord2XMLDelegate  (EVSEStatusRecord    EVSEStatusRecord,
-                                                             XElement            XML);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML representation of EVSE status records before sending them upstream.
+    ///// </summary>
+    ///// <param name="EVSEStatusRecord">An EVSE status record.</param>
+    ///// <param name="XML">The XML representation of an EVSE status record.</param>
+    //public delegate XElement  EVSEStatusRecord2XMLDelegate  (EVSEStatusRecord    EVSEStatusRecord,
+    //                                                         XElement            XML);
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML representation of charge detail records before sending them upstream.
-    /// </summary>
-    /// <param name="ChargeDetailRecord">A charge detail record.</param>
-    /// <param name="XML">The XML representation of a charge detail record.</param>
-    public delegate XElement  ChargeDetailRecord2XMLDelegate(ChargeDetailRecord  ChargeDetailRecord,
-                                                             XElement            XML);
-
-    /// <summary>
-    /// A delegate for post-processing XML before sending it upstream.
-    /// </summary>
-    /// <param name="XML">A XML element to process.</param>
-    public delegate XElement  XMLPostProcessingDelegate     (XElement            XML);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML representation of charge detail records before sending them upstream.
+    ///// </summary>
+    ///// <param name="ChargeDetailRecord">A charge detail record.</param>
+    ///// <param name="XML">The XML representation of a charge detail record.</param>
+    //public delegate XElement  ChargeDetailRecord2XMLDelegate(ChargeDetailRecord  ChargeDetailRecord,
+    //                                                         XElement            XML);
 
 }

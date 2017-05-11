@@ -24,34 +24,34 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML deserialization of EVSE data records before processing them further.
-    /// </summary>
-    /// <param name="XML">The XML representation of an EVSE data record.</param>
-    /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord      XML2EVSEDataRecordDelegate    (XElement            XML,
-                                                                       EVSEDataRecord      EVSEDataRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML deserialization of EVSE data records before processing them further.
+    ///// </summary>
+    ///// <param name="XML">The XML representation of an EVSE data record.</param>
+    ///// <param name="EVSEDataRecord">An EVSE data record.</param>
+    //public delegate EVSEDataRecord      XML2EVSEDataRecordDelegate    (XElement            XML,
+    //                                                                   EVSEDataRecord      EVSEDataRecord);
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML deserialization of EVSE status records before processing them further.
-    /// </summary>
-    /// <param name="XML">The XML representation of an EVSE status record.</param>
-    /// <param name="EVSEStatusRecord">An EVSE status record.</param>
-    public delegate EVSEStatusRecord    XML2EVSEStatusRecordDelegate  (XElement            XML,
-                                                                       EVSEStatusRecord    EVSEStatusRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML deserialization of EVSE status records before processing them further.
+    ///// </summary>
+    ///// <param name="XML">The XML representation of an EVSE status record.</param>
+    ///// <param name="EVSEStatusRecord">An EVSE status record.</param>
+    //public delegate EVSEStatusRecord    XML2EVSEStatusRecordDelegate  (XElement            XML,
+    //                                                                   EVSEStatusRecord    EVSEStatusRecord);
 
-    /// <summary>
-    /// A delegate which allows you to modify the XML deserialization of charge detail records before processing them further.
-    /// </summary>
-    /// <param name="XML">The XML representation of a charge detail record.</param>
-    /// <param name="ChargeDetailRecord">A charge detail record.</param>
-    public delegate ChargeDetailRecord  XML2ChargeDetailRecordDelegate(XElement            XML,
-                                                                       ChargeDetailRecord  ChargeDetailRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the XML deserialization of charge detail records before processing them further.
+    ///// </summary>
+    ///// <param name="XML">The XML representation of a charge detail record.</param>
+    ///// <param name="ChargeDetailRecord">A charge detail record.</param>
+    //public delegate ChargeDetailRecord  XML2ChargeDetailRecordDelegate(XElement            XML,
+    //                                                                   ChargeDetailRecord  ChargeDetailRecord);
 
-    /// <summary>
-    /// A delegate for pre-processing XML before parsing it further.
-    /// </summary>
-    /// <param name="XML">A XML element to process.</param>
-    public delegate XElement            XMLPreProcessingDelegate      (XElement            XML);
+    ///// <summary>
+    ///// A delegate for pre-processing XML before parsing it further.
+    ///// </summary>
+    ///// <param name="XML">A XML element to process.</param>
+    //public delegate XElement            XMLPreProcessingDelegate      (XElement            XML);
 
 }

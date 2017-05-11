@@ -59,11 +59,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate      _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-        private        readonly  EVSEDataRecord2XMLDelegate                             _EVSEDataRecord2XML;
+        //private        readonly  EVSEDataRecord2XMLDelegate                             _EVSEDataRecord2XML;
 
-        private        readonly  EVSEStatusRecord2XMLDelegate                           _EVSEStatusRecord2XML;
+        //private        readonly  EVSEStatusRecord2XMLDelegate                           _EVSEStatusRecord2XML;
 
-        private        readonly  ChargeDetailRecord2XMLDelegate                         _ChargeDetailRecord2XML;
+        //private        readonly  ChargeDetailRecord2XMLDelegate                         _ChargeDetailRecord2XML;
 
         private        readonly  ChargingStationOperatorNameSelectorDelegate            _OperatorNameSelector;
 
@@ -446,9 +446,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
+                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
@@ -485,9 +485,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._EVSE2EVSEDataRecord                            = EVSE2EVSEDataRecord;
             this._EVSEStatusUpdate2EVSEStatusRecord              = EVSEStatusUpdate2EVSEStatusRecord;
             this._WWCPChargeDetailRecord2OICPChargeDetailRecord  = WWCPChargeDetailRecord2OICPChargeDetailRecord;
-            this._EVSEDataRecord2XML                             = EVSEDataRecord2XML;
-            this._EVSEStatusRecord2XML                           = EVSEStatusRecord2XML;
-            this._ChargeDetailRecord2XML                         = ChargeDetailRecord2XML;
+            //this._EVSEDataRecord2XML                             = EVSEDataRecord2XML;
+            //this._EVSEStatusRecord2XML                           = EVSEStatusRecord2XML;
+            //this._ChargeDetailRecord2XML                         = ChargeDetailRecord2XML;
             this.DefaultOperatorId                               = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
             this.DefaultOperatorIdFormat                         = DefaultOperatorIdFormat;
             this.DefaultOperatorName                             = DefaultOperatorNameSelector(DefaultOperator.Name);
@@ -984,9 +984,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
+                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
@@ -1012,9 +1012,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    EVSE2EVSEDataRecord,
                    EVSEStatusUpdate2EVSEStatusRecord,
                    WWCPChargeDetailRecord2OICPChargeDetailRecord,
-                   EVSEDataRecord2XML,
-                   EVSEStatusRecord2XML,
-                   ChargeDetailRecord2XML,
+                   //EVSEDataRecord2XML,
+                   //EVSEStatusRecord2XML,
+                   //ChargeDetailRecord2XML,
 
                    DefaultOperator,
                    DefaultOperatorIdFormat,
@@ -1108,9 +1108,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
+                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
+                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
+                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
@@ -1163,9 +1163,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    EVSE2EVSEDataRecord,
                    EVSEStatusUpdate2EVSEStatusRecord,
                    WWCPChargeDetailRecord2OICPChargeDetailRecord,
-                   EVSEDataRecord2XML,
-                   EVSEStatusRecord2XML,
-                   ChargeDetailRecord2XML,
+                   //EVSEDataRecord2XML,
+                   //EVSEStatusRecord2XML,
+                   //ChargeDetailRecord2XML,
 
                    DefaultOperator,
                    DefaultOperatorIdFormat,

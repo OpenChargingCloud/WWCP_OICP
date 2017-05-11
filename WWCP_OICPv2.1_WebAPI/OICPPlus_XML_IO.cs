@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         public static XElement ToXML(this IEnumerable<EVSEDataRecord>  EVSEDataRecords,
                                      RoamingNetwork                    RoamingNetwork,
                                      XMLNamespacesDelegate             XMLNamespaces       = null,
-                                     EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML  = null,
+                                     //EVSEDataRecord2XMLDelegate        EVSEDataRecord2XML  = null,
                                      XMLPostProcessingDelegate         XMLPostProcessing   = null)
         {
 
@@ -63,8 +63,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
             var _EVSEDataRecords = EVSEDataRecords.ToArray();
 
-            if (EVSEDataRecord2XML == null)
-                EVSEDataRecord2XML = (evsedatarecord, xml) => xml;
+            //if (EVSEDataRecord2XML == null)
+            //    EVSEDataRecord2XML = (evsedatarecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -103,7 +103,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                              // <EvseDataRecord> ... </EvseDataRecord>
                                                                              group.Where (evsedatarecord => evsedatarecord != null).
-                                                                                   Select(evsedatarecord => EVSEDataRecord2XML(evsedatarecord, evsedatarecord.ToXML())).
+                                                                                   //Select(evsedatarecord => EVSEDataRecord2XML(evsedatarecord, evsedatarecord.ToXML())).
                                                                                    ToArray()
 
                                                                          )
@@ -135,7 +135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         public static XElement ToXML(this IEnumerable<EVSE>        EVSEs,
                                      RoamingNetwork                RoamingNetwork,
                                      XMLNamespacesDelegate         XMLNamespaces         = null,
-                                     EVSEStatusRecord2XMLDelegate  EVSEStatusRecord2XML  = null,
+                                     //EVSEStatusRecord2XMLDelegate  EVSEStatusRecord2XML  = null,
                                      XMLPostProcessingDelegate     XMLPostProcessing     = null)
         {
 
@@ -144,8 +144,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             if (EVSEs == null)
                 throw new ArgumentNullException(nameof(EVSEs),  "The given enumeration of EVSEs must not be null!");
 
-            if (EVSEStatusRecord2XML == null)
-                EVSEStatusRecord2XML = (evsestatusrecord, xml) => xml;
+            //if (EVSEStatusRecord2XML == null)
+            //    EVSEStatusRecord2XML = (evsestatusrecord, xml) => xml;
 
             if (XMLPostProcessing == null)
                 XMLPostProcessing = xml => xml;
@@ -197,7 +197,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                 // <EvseStatusRecord> ... </EvseStatusRecord>
                                                                 group.Where (evsestatusrecord => evsestatusrecord != null).
-                                                                      Select(evsestatusrecord => EVSEStatusRecord2XML(evsestatusrecord, evsestatusrecord.ToXML())).
+                                                                      //Select(evsestatusrecord => EVSEStatusRecord2XML(evsestatusrecord, evsestatusrecord.ToXML())).
                                                                       ToArray()
 
                                                             )

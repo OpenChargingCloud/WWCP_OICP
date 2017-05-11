@@ -166,8 +166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         private readonly XMLNamespacesDelegate                      XMLNamespaces;
         private readonly EVSE2EVSEDataRecordDelegate                EVSE2EVSEDataRecord;
         private readonly EVSEStatusUpdate2EVSEStatusRecordDelegate  EVSEStatusUpdate2EVSEStatusRecord;
-        private readonly EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML;
-        private readonly EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML;
+        //private readonly EVSEDataRecord2XMLDelegate                 EVSEDataRecord2XML;
+        //private readonly EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML;
         private readonly XMLPostProcessingDelegate                  XMLPostProcessing;
 
         #endregion
@@ -295,8 +295,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                           XMLNamespacesDelegate                        XMLNamespaces                       = null,
                           EVSE2EVSEDataRecordDelegate                  EVSE2EVSEDataRecord                 = null,
                           EVSEStatusUpdate2EVSEStatusRecordDelegate    EVSEStatusUpdate2EVSEStatusRecord   = null,
-                          EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
-                          EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
+                          //EVSEDataRecord2XMLDelegate                   EVSEDataRecord2XML                  = null,
+                          //EVSEStatusRecord2XMLDelegate                 EVSEStatusRecord2XML                = null,
                           XMLPostProcessingDelegate                    XMLPostProcessing                   = null)
         {
 
@@ -322,8 +322,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             this.XMLNamespaces                      = XMLNamespaces;
             this.EVSE2EVSEDataRecord                = EVSE2EVSEDataRecord;
             this.EVSEStatusUpdate2EVSEStatusRecord  = EVSEStatusUpdate2EVSEStatusRecord;
-            this.EVSEDataRecord2XML                 = EVSEDataRecord2XML;
-            this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
+            //this.EVSEDataRecord2XML                 = EVSEDataRecord2XML;
+            //this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
             this.XMLPostProcessing                  = XMLPostProcessing;
 
             RegisterURITemplates();
@@ -421,7 +421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                                                                     }).
                                                                     Where(evsedatarecord => evsedatarecord != null).
-                                                                    ToXML(_RoamingNetwork, XMLNamespaces, EVSEDataRecord2XML, XMLPostProcessing).
+                                                                    ToXML(_RoamingNetwork, XMLNamespaces, XMLPostProcessing: XMLPostProcessing).
                                                                     ToUTF8Bytes(),
                         X_ExpectedTotalNumberOfItems  = _ExpectedCount
                     }.AsImmutable());
@@ -525,8 +525,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                             Take   (take).
                                                             ToXML  (_RoamingNetwork,
                                                                     XMLNamespaces,
-                                                                    EVSEStatusRecord2XML,
-                                                                    XMLPostProcessing).
+                                                                    //EVSEStatusRecord2XML,
+                                                                    XMLPostProcessing: XMLPostProcessing).
                                                             ToUTF8Bytes(),
                         X_ExpectedTotalNumberOfItems  = _ExpectedCount
                     }.AsImmutable());
