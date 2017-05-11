@@ -28,13 +28,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// An abstract generic OICP request message.
+    /// An abstract generic OICP request.
     /// </summary>
     /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
-    public abstract class ARequest<T> : IRequest,
-                                        IEquatable<T>
+    public abstract class ARequest<TRequest> : IRequest,
+                                               IEquatable<TRequest>
 
-        where T : class
+        where TRequest : class, IRequest
 
     {
 
@@ -52,22 +52,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        public DateTime?           Timestamp           { get; }
+        public DateTime?                Timestamp                  { get; }
+
+        /// <summary>
+        /// An optional token source to cancel this request.
+        /// </summary>
+        public CancellationTokenSource  CancellationTokenSource    { get; }
 
         /// <summary>
         /// An optional token to cancel this request.
         /// </summary>
-        public CancellationToken?  CancellationToken   { get; }
+        public CancellationToken?       CancellationToken          { get; }
 
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
-        public EventTracking_Id    EventTrackingId     { get; }
+        public EventTracking_Id         EventTrackingId            { get; }
 
         /// <summary>
         /// An optional timeout for this request.
         /// </summary>
-        public TimeSpan?           RequestTimeout      { get; }
+        public TimeSpan?                RequestTimeout             { get; }
 
         #endregion
 
@@ -80,16 +85,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public ARequest(DateTime?                                 Timestamp           = null,
-                        CancellationToken?                        CancellationToken   = null,
-                        EventTracking_Id                          EventTrackingId     = null,
-                        TimeSpan?                                 RequestTimeout      = null)
+        public ARequest(DateTime?           Timestamp           = null,
+                        CancellationToken?  CancellationToken   = null,
+                        EventTracking_Id    EventTrackingId     = null,
+                        TimeSpan?           RequestTimeout      = null)
         {
 
-            this.Timestamp          = Timestamp.        HasValue ? Timestamp            : DateTime.Now;
-            this.CancellationToken  = CancellationToken.HasValue ? CancellationToken    : new CancellationTokenSource().Token;
-            this.EventTrackingId    = EventTrackingId != null    ? EventTrackingId      : EventTracking_Id.New;
-            this.RequestTimeout     = RequestTimeout.   HasValue ? RequestTimeout.Value : DefaultRequestTimeout;
+            this.Timestamp                = Timestamp         ?? DateTime.Now;
+            this.CancellationTokenSource  = CancellationToken == null ? new CancellationTokenSource() : null;
+            this.CancellationToken        = CancellationToken ?? CancellationTokenSource.Token;
+            this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;
+            this.RequestTimeout           = RequestTimeout    ?? DefaultRequestTimeout;
 
         }
 
@@ -99,12 +105,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region IEquatable<ARequest> Members
 
         /// <summary>
-        /// Compare two requests for equality.
+        /// Compare two abstract requests for equality.
         /// </summary>
-        /// <param name="ARequest">Another abstract generic OICP request.</param>
-        public abstract Boolean Equals(T ARequest);
+        /// <param name="ARequest">Another abstract OICP request.</param>
+        public abstract Boolean Equals(TRequest ARequest);
 
         #endregion
+
 
     }
 

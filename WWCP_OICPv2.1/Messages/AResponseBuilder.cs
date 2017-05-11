@@ -150,7 +150,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region (abstract) ToImmutable
+
+        /// <summary>
+        /// Return an immutable response.
+        /// </summary>
         public abstract TResponse ToImmutable { get; }
+
+        #endregion
 
     }
 
