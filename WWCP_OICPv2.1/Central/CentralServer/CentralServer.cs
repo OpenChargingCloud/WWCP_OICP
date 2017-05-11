@@ -19,11 +19,7 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -222,7 +218,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
         #endregion
 
-        public OnExceptionDelegate                                                                       OnException                                                { get; set; }
+        public OnExceptionDelegate  OnException    { get; set; }
 
         #endregion
 

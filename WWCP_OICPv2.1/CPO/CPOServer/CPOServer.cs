@@ -177,7 +177,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-
         #region OnAuthorizeRemoteStart
 
         /// <summary>
@@ -331,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         protected void RegisterURITemplates()
         {
 
-            #region /Reservation - AuthorizeRemoteReservationStart
+            #region /Reservation   - AuthorizeRemoteReservationStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + ReservationURI,
@@ -513,7 +512,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region /Reservation - AuthorizeRemoteReservationStop
+            #region /Reservation   - AuthorizeRemoteReservationStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + ReservationURI,
@@ -689,7 +688,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             });
 
             #endregion
-
 
             #region /Authorization - AuthorizeRemoteStart
 

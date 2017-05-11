@@ -51,6 +51,7 @@
     <Compile Include="Central\CentralClient\ICentralClient.cs" />
     <Compile Include="Central\CentralClient\ICentralClientExtentions.cs" />
     <Compile Include="Central\CentralServer\CentralServerDelegates.cs" />
+    <Compile Include="Central\CentralServer\CentralServerLogger.cs" />
     <Compile Include="CPO\CPOClient\ICPOClient.cs" />
     <Compile Include="CPO\CPOClient\ICPOClientExtentions.cs" />
     <Compile Include="CPO\CPOClient\CPOClient.cs" />
