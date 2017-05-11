@@ -30,6 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     /// <summary>
     /// An abstract generic OICP request message.
     /// </summary>
+    /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
     public abstract class ARequest<T> : IRequest,
                                         IEquatable<T>
 

@@ -24,6 +24,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public enum ActionTypes
     {
 
+        /// <summary>
+        /// Unknown action.
+        /// </summary>
         Unknown,
 
         /// <summary>

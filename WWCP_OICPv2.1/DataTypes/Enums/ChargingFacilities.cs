@@ -25,14 +25,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// OICP charging facilities
+    /// OICP charging facilities.
     /// </summary>
     [Flags]
     public enum ChargingFacilities
     {
 
         /// <summary>
-        /// Unspecified
+        /// Unspecified charging facilities.
         /// </summary>
         Unspecified                             = 0,
 

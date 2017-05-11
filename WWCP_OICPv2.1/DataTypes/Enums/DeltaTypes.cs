@@ -18,13 +18,30 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// OICP delta type for e.g. EVSE data records.
+    /// </summary>
     public enum DeltaTypes
     {
 
+        /// <summary>
+        /// Unknown delta type.
+        /// </summary>
         Unknown,
 
+        /// <summary>
+        /// Updated record.
+        /// </summary>
         update,
+
+        /// <summary>
+        /// Inserted record.
+        /// </summary>
         insert,
+
+        /// <summary>
+        /// Deleted record.
+        /// </summary>
         delete
 
     }

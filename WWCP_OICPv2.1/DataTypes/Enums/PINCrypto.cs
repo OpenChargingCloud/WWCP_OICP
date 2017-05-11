@@ -18,11 +18,27 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// PIN crypto for (remote) authentication.
+    /// </summary>
     public enum PINCrypto
     {
+
+        /// <summary>
+        /// The PIN is unencrypted.
+        /// </summary>
         none,
+
+        /// <summary>
+        /// The PIN is hashed via MD5.
+        /// </summary>
         MD5,
+
+        /// <summary>
+        /// The PIN is hashed via SHA-1.
+        /// </summary>
         SHA1
+
     }
 
 }

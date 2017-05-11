@@ -68,6 +68,7 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
+    <Compile Include="Messages\AResponse - Copy.cs" />
     <Compile Include="Messages\EMP\EVSEStatus.cs" />
     <Compile Include="DataTypes\ICustomData.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />

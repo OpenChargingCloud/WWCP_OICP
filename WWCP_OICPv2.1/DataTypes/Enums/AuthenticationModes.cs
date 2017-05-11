@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     {
 
         /// <summary>
-        /// Unknown.
+        /// Unknown authentication mode.
         /// </summary>
-        Unknown              =  0,
+        Unknown             =  0,
 
         /// <summary>
         /// Using MiFare classic RFID cards.
