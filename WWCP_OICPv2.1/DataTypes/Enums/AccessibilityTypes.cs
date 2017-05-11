@@ -18,12 +18,30 @@
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
+    /// <summary>
+    /// The accessibility of an EVSE.
+    /// </summary>
     public enum AccessibilityTypes
     {
 
+        /// <summary>
+        /// Unknown accessibility.
+        /// </summary>
         Unspecified,
+
+        /// <summary>
+        /// Free for everyone.
+        /// </summary>
         Free_publicly_accessible,
+
+        /// <summary>
+        /// Limited access, e.g. only for customers or employees.
+        /// </summary>
         Restricted_access,
+
+        /// <summary>
+        /// Free for everyone who pays.
+        /// </summary>
         Paying_publicly_accessible
 
     }
