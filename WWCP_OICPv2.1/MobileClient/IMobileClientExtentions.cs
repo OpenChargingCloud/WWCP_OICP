@@ -20,11 +20,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Aegir;
 
 #endregion
 
@@ -40,7 +38,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStart(EVSEId, EVCOId, PIN,                       PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
+        /// Authorize for starting a remote charging session (later).
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="EVCOId">The eMA identification.</param>
@@ -83,7 +81,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStart(EVSEId, EVCOId, HashedPIN, Function, Salt, PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
+        /// Authorize for starting a remote charging session (later).
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="EVCOId">The eMA identification.</param>
@@ -132,7 +130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStart(EVSEId, QRCodeIdentification,              PartnerProductId = null, GetNewSession = null, ...)
 
         /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
+        /// Authorize for starting a remote charging session (later).
         /// </summary>
         /// <param name="EVSEId">The EVSE identification.</param>
         /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
@@ -173,7 +171,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStart(SessionId, ...)
 
         /// <summary>
-        /// Create a new task starting a remote charging session.
+        /// Start a remote charging session.
         /// </summary>
         /// <param name="SessionId">A charging session identification.</param>
         /// 
@@ -204,7 +202,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStop (SessionId, ...)
 
         /// <summary>
-        /// Create a new task stopping a remote charging session.
+        /// Stop a remote charging session.
         /// </summary>
         /// <param name="SessionId">A charging session identification.</param>
         /// 

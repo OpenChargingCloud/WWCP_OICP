@@ -452,17 +452,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileAuthorizeStart(Request)
 
         /// <summary>
-        /// Create a new task sending a MobileAuthorizeStart request.
+        /// Authorize for starting a remote charging session (later).
         /// </summary>
-        /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="EVCOIdWithPIN">The eMA identification with its PIN.</param>
-        /// <param name="PartnerProductId">The optional charging product identification.</param>
-        /// <param name="GetNewSession">Optionaly start or start not an new charging session.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">A MobileAuthorizeStart request.</param>
         public async Task<HTTPResponse<MobileAuthorizationStart>>
 
             MobileAuthorizeStart(MobileAuthorizeStartRequest Request)
@@ -658,14 +650,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileRemoteStart   (Request)
 
         /// <summary>
-        /// Create a new task starting a remote charging session.
+        /// Start a remote charging session.
         /// </summary>
-        /// <param name="SessionId">A charging session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">A MobileRemoteStart request.</param>
         public async Task<HTTPResponse<Acknowledgement<MobileRemoteStartRequest>>>
 
             MobileRemoteStart(MobileRemoteStartRequest  Request)
@@ -871,14 +858,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #region MobileRemoteStop    (Request)
 
         /// <summary>
-        /// Create a new task stopping a remote charging session.
+        /// Stop a remote charging session.
         /// </summary>
-        /// <param name="SessionId">A charging session identification.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Request">A MobileRemoteStop request.</param>
         public async Task<HTTPResponse<Acknowledgement<MobileRemoteStopRequest>>>
 
             MobileRemoteStop(MobileRemoteStopRequest Request)

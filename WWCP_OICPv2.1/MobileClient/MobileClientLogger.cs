@@ -53,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             /// <summary>
             /// The attached OICP Mobile client.
             /// </summary>
-            public MobileClient MobileClient { get; }
+            public IMobileClient  MobileClient   { get; }
 
             #endregion
 
@@ -67,7 +67,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             /// <param name="MobileClient">A OICP Mobile client.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public MobileClientLogger(MobileClient            MobileClient,
+            public MobileClientLogger(IMobileClient           MobileClient,
                                       String                  Context         = DefaultContext,
                                       LogfileCreatorDelegate  LogfileCreator  = null)
 
@@ -108,7 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public MobileClientLogger(MobileClient                MobileClient,
+            public MobileClientLogger(IMobileClient               MobileClient,
                                       String                      Context,
 
                                       HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
