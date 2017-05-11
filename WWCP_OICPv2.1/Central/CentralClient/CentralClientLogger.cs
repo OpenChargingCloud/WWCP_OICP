@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             /// <summary>
             /// The attached OICP Central client.
             /// </summary>
-            public CentralClient CentralClient { get; }
+            public ICentralClient CentralClient { get; }
 
             #endregion
 
@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             /// <param name="CentralClient">A OICP Central client.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public CentralClientLogger(CentralClient           CentralClient,
+            public CentralClientLogger(ICentralClient          CentralClient,
                                        String                  Context         = DefaultContext,
                                        LogfileCreatorDelegate  LogfileCreator  = null)
 
@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public CentralClientLogger(CentralClient               CentralClient,
+            public CentralClientLogger(ICentralClient              CentralClient,
                                        String                      Context,
 
                                        HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,

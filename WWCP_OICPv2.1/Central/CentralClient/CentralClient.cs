@@ -64,9 +64,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #region Properties
 
         /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// </summary>
+        public String               ReservationURI      { get; }
+
+        /// <summary>
+        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// </summary>
+        public String               AuthorizationURI    { get; }
+
+
+        /// <summary>
         /// The attached OICP Central client (HTTP/SOAP client) logger.
         /// </summary>
-        public CentralClientLogger Logger { get; }
+        public CentralClientLogger  Logger              { get; }
 
         #endregion
 
@@ -757,7 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #region AuthorizeRemoteReservationStart(Request)
 
         /// <summary>
-        /// Create an authorize remote start request.
+        /// Reserve an EVSE at an operator.
         /// </summary>
         /// <param name="Request">A AuthorizeRemoteReservationStart request.</param>
         public async Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>>
@@ -817,7 +828,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingReservation_V1.0",
+                                                    URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -975,7 +986,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #region AuthorizeRemoteReservationStop (Request)
 
         /// <summary>
-        /// Delete a reservation at the given EVSE.
+        /// Delete a reservation of an EVSE at an operator.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
         public async Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>>
@@ -1033,7 +1044,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/eRoamingReservation_V1.0",
+                                                    URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1188,15 +1199,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #region AuthorizeRemoteStart(Request)
 
         /// <summary>
-        /// Create an OICP authorize remote start request.
+        /// Start a remote charging session at the given EVSE.
         /// </summary>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="EVCOId">An e-mobility contract indentification.</param>
-        /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="ChargingProductId">An optional charging product identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="RequestTimeout">An optional timeout for this query.</param>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
         public async Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>>
 
             AuthorizeRemoteStart(EMP.AuthorizeRemoteStartRequest Request)
@@ -1254,7 +1259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/Authorization",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1413,13 +1418,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         #region AuthorizeRemoteStop (Request)
 
         /// <summary>
-        /// Create an OICP remote authorize stop request.
+        /// Stop a remote charging session at the given EVSE.
         /// </summary>
-        /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
-        /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        /// <param name="RequestTimeout">An optional timeout for this query.</param>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
         public async Task<HTTPResponse<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>>
 
             AuthorizeRemoteStop(EMP.AuthorizeRemoteStopRequest Request)
@@ -1475,7 +1476,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/Authorization",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1693,7 +1694,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/Authorization",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -1888,7 +1889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/Authorization",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
@@ -2075,7 +2076,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             using (var _OICPClient = new SOAPClient(Hostname,
                                                     RemotePort,
                                                     HTTPVirtualHost,
-                                                    URIPrefix + "/Authorization",
+                                                    URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCert,
                                                     UserAgent,
