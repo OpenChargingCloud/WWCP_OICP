@@ -96,6 +96,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private                 UInt64                                                  _ServiceRunId;
         private                 UInt64                                                  _StatusRunId;
+        private                 IncludeEVSEIdDelegate                                   _IncludeEVSEIds;
         private                 IncludeEVSEDelegate                                     _IncludeEVSEs;
 
         public readonly static  TimeSpan                                                DefaultRequestTimeout  = TimeSpan.FromSeconds(30);
@@ -453,6 +454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
@@ -494,7 +496,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._OperatorNameSelector                           = OperatorNameSelector;
 
 
-            this._IncludeEVSEs                                   = IncludeEVSEs;
+            this._IncludeEVSEIds                                 = IncludeEVSEIds != null ? IncludeEVSEIds : evseid => true;
+            this._IncludeEVSEs                                   = IncludeEVSEs   != null ? IncludeEVSEs   : evse   => true;
 
             this._ServiceCheckEvery                              = (UInt32) (ServiceCheckEvery.HasValue
                                                                                 ? ServiceCheckEvery.Value. TotalMilliseconds
@@ -991,6 +994,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
@@ -1019,6 +1023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DefaultOperator,
                    DefaultOperatorIdFormat,
                    OperatorNameSelector,
+                   IncludeEVSEIds,
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -1115,6 +1120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+                              IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
@@ -1170,6 +1176,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DefaultOperator,
                    DefaultOperatorIdFormat,
                    OperatorNameSelector,
+                   IncludeEVSEIds,
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -1207,7 +1214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        private async Task<WWCP.Acknowledgement>
+        private async Task<Acknowledgement>
 
             PushEVSEData(IEnumerable<EVSE>    EVSEs,
                          ActionTypes          ServerAction,
@@ -1243,7 +1250,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var Warnings = new List<String>();
 
-            var _EVSEs = EVSEs.Where (evse => evse != null && _IncludeEVSEs(evse)).
+            var _EVSEs = EVSEs.Where (evse => evse != null          &&
+                                              _IncludeEVSEs  (evse) &&
+                                              _IncludeEVSEIds(evse.Id)).
+
                                Select(evse => {
 
                                    try
@@ -1264,7 +1274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                Where(evsedatarecord => evsedatarecord != null).
                                ToArray();
 
-            WWCP.Acknowledgement result;
+            Acknowledgement result;
 
             #endregion
 
@@ -1318,29 +1328,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 if (response.Content.Result)
-                    result = new WWCP.Acknowledgement(ResultType.True,
-                                                      response.Content.StatusCode.Description,
-                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
-                                                          : Warnings,
-                                                      Runtime);
+                    result = new Acknowledgement(ResultType.True,
+                                                 response.Content.StatusCode.Description,
+                                                 response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                     ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                     : Warnings,
+                                                 Runtime);
 
                 else
-                    result = new WWCP.Acknowledgement(ResultType.False,
-                                                      response.Content.StatusCode.Description,
-                                                      response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                          ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
-                                                          : Warnings,
-                                                      Runtime);
+                    result = new Acknowledgement(ResultType.False,
+                                                 response.Content.StatusCode.Description,
+                                                 response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                     ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                     : Warnings,
+                                                 Runtime);
 
             }
             else
-                result = new WWCP.Acknowledgement(ResultType.False,
-                                                  response.HTTPStatusCode.ToString(),
-                                                  response.HTTPBody != null
-                                                      ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                      : Warnings.AddAndReturnList("No HTTP body received!"),
-                                                  Runtime);
+                result = new Acknowledgement(ResultType.False,
+                                             response.HTTPStatusCode.ToString(),
+                                             response.HTTPBody != null
+                                                 ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                 : Warnings.AddAndReturnList("No HTTP body received!"),
+                                             Runtime);
 
 
             #region Send OnPushEVSEDataResponse event
@@ -1388,7 +1398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<WWCP.Acknowledgement>
+        public async Task<Acknowledgement>
 
             PushEVSEStatus(IEnumerable<EVSEStatusUpdate>  EVSEStatusUpdates,
                            ActionTypes                    ServerAction,
@@ -1425,8 +1435,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var Warnings = new List<String>();
 
             var _EVSEStatus = EVSEStatusUpdates.
-                                  Where       (evsestatusupdate => _IncludeEVSEs(RoamingNetwork.GetEVSEbyId(evsestatusupdate.Id))).
-                                  ToLookup    (evsestatusupdate => evsestatusupdate.Id,
+                                  Where       (evsestatusupdate => _IncludeEVSEs  (evsestatusupdate.EVSE) &&
+                                                                   _IncludeEVSEIds(evsestatusupdate.EVSE.Id)).
+                                  ToLookup    (evsestatusupdate => evsestatusupdate.EVSE.Id,
                                                evsestatusupdate => evsestatusupdate).
                                   ToDictionary(group            => group.Key,
                                                group            => group.AsEnumerable().OrderByDescending(item => item.NewStatus.Timestamp)).
@@ -1454,7 +1465,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   Where(evsestatusrecord => evsestatusrecord != null).
                                   ToArray();
 
-            WWCP.Acknowledgement result = null;
+            Acknowledgement result = null;
 
             #endregion
 
@@ -1508,7 +1519,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 if (response.Content.Result)
-                    result = new WWCP.Acknowledgement(ResultType.True,
+                    result = new Acknowledgement(ResultType.True,
                                                       response.Content.StatusCode.Description,
                                                       response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                           ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
@@ -1516,7 +1527,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                       Runtime);
 
                 else
-                    result = new WWCP.Acknowledgement(ResultType.False,
+                    result = new Acknowledgement(ResultType.False,
                                                       response.Content.StatusCode.Description,
                                                       response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                           ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
@@ -1525,7 +1536,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             else
-                result = new WWCP.Acknowledgement(ResultType.False,
+                result = new Acknowledgement(ResultType.False,
                                                   response.HTTPStatusCode.ToString(),
                                                   response.HTTPBody != null
                                                       ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
@@ -1581,15 +1592,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.SetStaticData(EVSE                EVSE,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -1641,21 +1652,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
 
             }
 
             #endregion
 
-            return await PushEVSEData(new EVSE[] { EVSE },
-                                      ActionTypes.fullLoad,
+            return PushEVSEData(new EVSE[] { EVSE },
+                                ActionTypes.fullLoad,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
@@ -1673,15 +1682,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.AddStaticData(EVSE                EVSE,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -1733,21 +1742,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
 
             }
 
             #endregion
 
-            return await PushEVSEData(new EVSE[] { EVSE },
-                                      ActionTypes.insert,
+            return PushEVSEData(new EVSE[] { EVSE },
+                                ActionTypes.insert,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
@@ -1769,18 +1776,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.UpdateStaticData(EVSE                EVSE,
-                                             String              PropertyName,
-                                             Object              OldValue,
-                                             Object              NewValue,
-                                             TransmissionTypes   TransmissionType,
+                                       String              PropertyName,
+                                       Object              OldValue,
+                                       Object              NewValue,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -1832,21 +1839,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
 
             }
 
             #endregion
 
-            return await PushEVSEData(new EVSE[] { EVSE },
-                                      ActionTypes.update,
+            return PushEVSEData(new EVSE[] { EVSE },
+                                ActionTypes.update,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
@@ -1864,15 +1869,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.DeleteStaticData(EVSE                EVSE,
-                                             TransmissionTypes   TransmissionType,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -1924,22 +1929,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.True);
+                return Task.FromResult(new Acknowledgement(ResultType.True));
 
             }
 
             #endregion
 
+            return PushEVSEData(new EVSE[] { EVSE },
+                                ActionTypes.delete,
 
-            return await PushEVSEData(new EVSE[] { EVSE },
-                                      ActionTypes.delete,
-
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
@@ -1952,223 +1954,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Set the given enumeration of EVSEs as new static EVSE data at the OICP server.
         /// </summary>
         /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.SetStaticData(IEnumerable<EVSE>   EVSEs,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEs == null)
-                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
-
-            #endregion
-
-            return await PushEVSEData(EVSEs,
-                                      ActionTypes.fullLoad,
-
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
-
-        }
-
-        #endregion
-
-        #region AddStaticData   (EVSEs, ...)
-
-        /// <summary>
-        /// Add the given enumeration of EVSEs to the static EVSE data at the OICP server.
-        /// </summary>
-        /// <param name="EVSEs">An enumeration of EVSEs.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
-
-            ISendData.AddStaticData(IEnumerable<EVSE>   EVSEs,
-
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
             #region Initial checks
 
-            if (EVSEs == null)
-                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
+            if (EVSEs == null || !EVSEs.Any())
+                return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
             #endregion
-
-            return await PushEVSEData(EVSEs,
-                                      ActionTypes.insert,
-
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
-
-        }
-
-        #endregion
-
-        #region UpdateStaticData(EVSEs, ...)
-
-        /// <summary>
-        /// Update the given enumeration of EVSEs within the static EVSE data at the OICP server.
-        /// </summary>
-        /// <param name="EVSEs">An enumeration of EVSEs.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
-
-            ISendData.UpdateStaticData(IEnumerable<EVSE>   EVSEs,
-
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEs == null)
-                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
-
-            #endregion
-
-            return await PushEVSEData(EVSEs,
-                                      ActionTypes.update,
-
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
-
-        }
-
-        #endregion
-
-        #region DeleteStaticData(EVSEs, ...)
-
-        /// <summary>
-        /// Delete the given enumeration of EVSEs from the static EVSE data at the OICP server.
-        /// </summary>
-        /// <param name="EVSEs">An enumeration of EVSEs.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
-
-            ISendData.DeleteStaticData(IEnumerable<EVSE>   EVSEs,
-
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
-
-        {
-
-            #region Initial checks
-
-            if (EVSEs == null)
-                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
-
-            #endregion
-
-            return await PushEVSEData(EVSEs,
-                                      ActionTypes.delete,
-
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
-
-        }
-
-        #endregion
-
-
-        #region UpdateEVSEAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
-
-        /// <summary>
-        /// Update the given enumeration of EVSE admin status updates.
-        /// </summary>
-        /// <param name="AdminStatusUpdates">An enumeration of EVSE admin status updates.</param>
-        /// <param name="TransmissionType">Whether to send the EVSE admin status updates directly or enqueue it for a while.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
-
-            ISendStatus.UpdateAdminStatus(IEnumerable<EVSEAdminStatusUpdate>  AdminStatusUpdates,
-                                                 TransmissionTypes                   TransmissionType,
-
-                                                 DateTime?                           Timestamp,
-                                                 CancellationToken?                  CancellationToken,
-                                                 EventTracking_Id                    EventTrackingId,
-                                                 TimeSpan?                           RequestTimeout)
-
-
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
-
-        #endregion
-
-        #region UpdateEVSEStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
-
-        /// <summary>
-        /// Update the given enumeration of EVSE status updates.
-        /// </summary>
-        /// <param name="StatusUpdates">An enumeration of EVSE status updates.</param>
-        /// <param name="TransmissionType">Whether to send the EVSE status updates directly or enqueue it for a while.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
-
-            ISendStatus.UpdateStatus(IEnumerable<EVSEStatusUpdate>  StatusUpdates,
-                                            TransmissionTypes              TransmissionType,
-
-                                            DateTime?                      Timestamp,
-                                            CancellationToken?             CancellationToken,
-                                            EventTracking_Id               EventTrackingId,
-                                            TimeSpan?                      RequestTimeout)
-
-        {
 
             #region Enqueue, if requested...
 
@@ -2196,37 +2005,461 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-
-                lock (StatusCheckLock)
+                lock (ServiceCheckLock)
                 {
 
-                    //if (_IncludeEVSEs == null ||
-                    //   (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
-                    //{
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                                                            _IncludeEVSEIds(evse.Id)).
+                                              ToArray();
 
-                        EVSEStatusChangesFastQueue.AddRange(StatusUpdates);
-                        StatusCheckTimer.Change(_StatusCheckEvery, Timeout.Infinite);
+                    if (FilteredEVSEs.Any())
+                    {
 
-                    //}
+                        foreach (var EVSE in FilteredEVSEs)
+                            EVSEsToAddQueue.Add(EVSE);
+
+                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
+
+                    }
+
+                    return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
                 }
-
-                return new WWCP.Acknowledgement(ResultType.True);
 
             }
 
             #endregion
 
+            return PushEVSEData(EVSEs,
+                                ActionTypes.fullLoad,
 
-            return await PushEVSEStatus(StatusUpdates,
-                                        ActionTypes.update,
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
-                                        Timestamp,
-                                        CancellationToken,
-                                        EventTrackingId,
-                                        RequestTimeout).
+        }
 
-                                        ConfigureAwait(false);
+        #endregion
+
+        #region AddStaticData   (EVSEs, ...)
+
+        /// <summary>
+        /// Add the given enumeration of EVSEs to the static EVSE data at the OICP server.
+        /// </summary>
+        /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<Acknowledgement>
+
+            ISendData.AddStaticData(IEnumerable<EVSE>   EVSEs,
+                                    TransmissionTypes   TransmissionType,
+
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEs == null || !EVSEs.Any())
+                return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                                                            _IncludeEVSEIds(evse.Id)).
+                                              ToArray();
+
+                    if (FilteredEVSEs.Any())
+                    {
+
+                        foreach (var EVSE in FilteredEVSEs)
+                            EVSEsToAddQueue.Add(EVSE);
+
+                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
+
+                    }
+
+                    return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+                }
+
+            }
+
+            #endregion
+
+            return PushEVSEData(EVSEs,
+                                ActionTypes.insert,
+
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
+
+        }
+
+        #endregion
+
+        #region UpdateStaticData(EVSEs, ...)
+
+        /// <summary>
+        /// Update the given enumeration of EVSEs within the static EVSE data at the OICP server.
+        /// </summary>
+        /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<Acknowledgement>
+
+            ISendData.UpdateStaticData(IEnumerable<EVSE>   EVSEs,
+                                       TransmissionTypes   TransmissionType,
+
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEs == null || !EVSEs.Any())
+                return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                                                            _IncludeEVSEIds(evse.Id)).
+                                              ToArray();
+
+                    if (FilteredEVSEs.Any())
+                    {
+
+                        foreach (var EVSE in FilteredEVSEs)
+                            EVSEsToUpdateQueue.Add(EVSE);
+
+                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
+
+                    }
+
+                    return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+                }
+
+            }
+
+            #endregion
+
+            return PushEVSEData(EVSEs,
+                                ActionTypes.update,
+
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
+
+        }
+
+        #endregion
+
+        #region DeleteStaticData(EVSEs, ...)
+
+        /// <summary>
+        /// Delete the given enumeration of EVSEs from the static EVSE data at the OICP server.
+        /// </summary>
+        /// <param name="EVSEs">An enumeration of EVSEs.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<Acknowledgement>
+
+            ISendData.DeleteStaticData(IEnumerable<EVSE>   EVSEs,
+                                       TransmissionTypes   TransmissionType,
+
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEs == null || !EVSEs.Any())
+                return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (ServiceCheckLock)
+                {
+
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                                                            _IncludeEVSEIds(evse.Id)).
+                                              ToArray();
+
+                    if (FilteredEVSEs.Any())
+                    {
+
+                        foreach (var EVSE in FilteredEVSEs)
+                            EVSEsToRemoveQueue.Add(EVSE);
+
+                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+
+                        return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
+
+                    }
+
+                    return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+                }
+
+            }
+
+            #endregion
+
+            return PushEVSEData(EVSEs,
+                                ActionTypes.delete,
+
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
+
+        }
+
+        #endregion
+
+
+        #region UpdateEVSEAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+
+        /// <summary>
+        /// Update the given enumeration of EVSE admin status updates.
+        /// </summary>
+        /// <param name="AdminStatusUpdates">An enumeration of EVSE admin status updates.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE admin status updates directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<Acknowledgement>
+
+            ISendStatus.UpdateAdminStatus(IEnumerable<EVSEAdminStatusUpdate>  AdminStatusUpdates,
+                                          TransmissionTypes                   TransmissionType,
+
+                                          DateTime?                           Timestamp,
+                                          CancellationToken?                  CancellationToken,
+                                          EventTracking_Id                    EventTrackingId,
+                                          TimeSpan?                           RequestTimeout)
+
+
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+        #endregion
+
+        #region UpdateEVSEStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+
+        /// <summary>
+        /// Update the given enumeration of EVSE status updates.
+        /// </summary>
+        /// <param name="StatusUpdates">An enumeration of EVSE status updates.</param>
+        /// <param name="TransmissionType">Whether to send the EVSE status updates directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        Task<Acknowledgement>
+
+            ISendStatus.UpdateStatus(IEnumerable<EVSEStatusUpdate>  StatusUpdates,
+                                     TransmissionTypes              TransmissionType,
+
+                                     DateTime?                      Timestamp,
+                                     CancellationToken?             CancellationToken,
+                                     EventTracking_Id               EventTrackingId,
+                                     TimeSpan?                      RequestTimeout)
+
+        {
+
+            #region Initial checks
+
+            if (StatusUpdates == null || !StatusUpdates.Any())
+                return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+            #endregion
+
+            #region Enqueue, if requested...
+
+            if (TransmissionType == TransmissionTypes.Enqueued)
+            {
+
+                #region Send OnEnqueueSendCDRRequest event
+
+                //try
+                //{
+
+                //    OnEnqueueSendCDRRequest?.Invoke(DateTime.Now,
+                //                                    Timestamp.Value,
+                //                                    this,
+                //                                    EventTrackingId,
+                //                                    RoamingNetwork.Id,
+                //                                    ChargeDetailRecord,
+                //                                    RequestTimeout);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //}
+
+                #endregion
+
+                lock (StatusCheckLock)
+                {
+
+                    var FilteredUpdates = StatusUpdates.Where(statusupdate => _IncludeEVSEs  (statusupdate.EVSE) &&
+                                                                              _IncludeEVSEIds(statusupdate.EVSE.Id)).
+                                                        ToArray();
+
+                    if (FilteredUpdates.Length > 0)
+                    {
+
+                        foreach (var Update in FilteredUpdates)
+                        {
+
+                            // Delay the status update until the EVSE data had been uploaded!
+                            if (EVSEsToAddQueue.Any(evse => evse == Update.EVSE))
+                                EVSEStatusChangesDelayedQueue.Add(Update);
+
+                            else
+                                EVSEStatusChangesFastQueue.Add(Update);
+
+                        }
+
+                        StatusCheckTimer.Change(_StatusCheckEvery, Timeout.Infinite);
+
+                        return Task.FromResult(new Acknowledgement(ResultType.Enqueued));
+
+                    }
+
+                    return Task.FromResult(new Acknowledgement(ResultType.NoOperation));
+
+                }
+
+            }
+
+            #endregion
+
+            return PushEVSEStatus(StatusUpdates,
+                                  ActionTypes.update,
+
+                                  Timestamp,
+                                  CancellationToken,
+                                  EventTrackingId,
+                                  RequestTimeout);
 
         }
 
@@ -2248,7 +2481,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.SetStaticData(ChargingStation     ChargingStation,
                                           TransmissionTypes   TransmissionType,
@@ -2313,7 +2546,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -2345,7 +2578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.AddStaticData(ChargingStation     ChargingStation,
                                           TransmissionTypes   TransmissionType,
@@ -2410,7 +2643,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -2445,7 +2678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.UpdateStaticData(ChargingStation     ChargingStation,
                                              String              PropertyName,
@@ -2513,7 +2746,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -2544,7 +2777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.DeleteStaticData(ChargingStation     ChargingStation,
 
@@ -2588,7 +2821,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.SetStaticData(IEnumerable<ChargingStation>  ChargingStations,
 
@@ -2631,7 +2864,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.AddStaticData(IEnumerable<ChargingStation>  ChargingStations,
 
@@ -2674,7 +2907,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.UpdateStaticData(IEnumerable<ChargingStation>  ChargingStations,
 
@@ -2717,7 +2950,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.DeleteStaticData(IEnumerable<ChargingStation>  ChargingStations,
 
@@ -2762,7 +2995,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<ChargingStationAdminStatusUpdate>  AdminStatusUpdates,
                                                  TransmissionTypes                              TransmissionType,
@@ -2773,7 +3006,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                      RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2789,7 +3022,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateStatus(IEnumerable<ChargingStationStatusUpdate>  StatusUpdates,
                                             TransmissionTypes                         TransmissionType,
@@ -2800,7 +3033,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             TimeSpan?                                 RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -2820,7 +3053,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.SetStaticData(ChargingPool        ChargingPool,
                                           TransmissionTypes   TransmissionType,
@@ -2885,7 +3118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -2917,7 +3150,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.AddStaticData(ChargingPool        ChargingPool,
                                           TransmissionTypes   TransmissionType,
@@ -2982,7 +3215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -3017,7 +3250,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.UpdateStaticData(ChargingPool        ChargingPool,
                                              String              PropertyName,
@@ -3085,7 +3318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
-                return new WWCP.Acknowledgement(ResultType.Enqueued);
+                return new Acknowledgement(ResultType.Enqueued);
 
             }
 
@@ -3116,7 +3349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.DeleteStaticData(ChargingPool        ChargingPool,
 
@@ -3160,7 +3393,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.SetStaticData(IEnumerable<ChargingPool>  ChargingPools,
 
@@ -3203,7 +3436,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.AddStaticData(IEnumerable<ChargingPool>  ChargingPools,
 
@@ -3246,7 +3479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.UpdateStaticData(IEnumerable<ChargingPool>  ChargingPools,
 
@@ -3289,7 +3522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.Acknowledgement>
+        async Task<Acknowledgement>
 
             ISendData.DeleteStaticData(IEnumerable<ChargingPool>  ChargingPools,
 
@@ -3334,7 +3567,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<ChargingPoolAdminStatusUpdate>  AdminStatusUpdates,
                                                  TransmissionTypes                           TransmissionType,
@@ -3345,7 +3578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                   RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3361,7 +3594,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateStatus(IEnumerable<ChargingPoolStatusUpdate>  StatusUpdates,
                                             TransmissionTypes                      TransmissionType,
@@ -3372,7 +3605,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             TimeSpan?                              RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3391,7 +3624,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.SetStaticData(ChargingStationOperator  ChargingStationOperator,
 
@@ -3432,7 +3665,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.AddStaticData(ChargingStationOperator  ChargingStationOperator,
 
@@ -3473,7 +3706,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.UpdateStaticData(ChargingStationOperator  ChargingStationOperator,
 
@@ -3514,7 +3747,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.DeleteStaticData(ChargingStationOperator  ChargingStationOperator,
 
@@ -3556,7 +3789,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.SetStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
@@ -3597,7 +3830,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.AddStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
@@ -3638,7 +3871,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.UpdateStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
@@ -3679,7 +3912,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.DeleteStaticData(IEnumerable<ChargingStationOperator>  ChargingStationOperators,
 
@@ -3722,7 +3955,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<ChargingStationOperatorAdminStatusUpdate>  AdminStatusUpdates,
                                           TransmissionTypes                                      TransmissionType,
@@ -3733,7 +3966,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           TimeSpan?                                              RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3749,7 +3982,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateStatus(IEnumerable<ChargingStationOperatorStatusUpdate>  StatusUpdates,
                                      TransmissionTypes                                 TransmissionType,
@@ -3760,7 +3993,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                      TimeSpan?                                         RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3779,7 +4012,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.SetStaticData(RoamingNetwork      RoamingNetwork,
 
@@ -3820,7 +4053,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.AddStaticData(RoamingNetwork      RoamingNetwork,
 
@@ -3861,7 +4094,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.UpdateStaticData(RoamingNetwork      RoamingNetwork,
 
@@ -3902,7 +4135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendData.DeleteStaticData(RoamingNetwork      RoamingNetwork,
 
@@ -3945,7 +4178,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<RoamingNetworkAdminStatusUpdate>  AdminStatusUpdates,
                                           TransmissionTypes                             TransmissionType,
@@ -3956,7 +4189,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           TimeSpan?                                     RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -3972,7 +4205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.Acknowledgement>
+        Task<Acknowledgement>
 
             ISendStatus.UpdateStatus(IEnumerable<RoamingNetworkStatusUpdate>  StatusUpdates,
                                      TransmissionTypes                        TransmissionType,
@@ -3983,7 +4216,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                      TimeSpan?                                RequestTimeout)
 
 
-                => Task.FromResult(new WWCP.Acknowledgement(ResultType.NoOperation));
+                => Task.FromResult(new Acknowledgement(ResultType.NoOperation));
 
         #endregion
 
@@ -5402,7 +5635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             //var EVSEStatusQueueCopy = new AsyncLocal<List<EVSEStatusChange>>();
 
             var EVSEsToAddQueueCopy                = new ThreadLocal<HashSet<EVSE>>();
-            var EVSEDataQueueCopy                  = new ThreadLocal<HashSet<EVSE>>();
+            var EVSEsToUpdateQueueCopy                  = new ThreadLocal<HashSet<EVSE>>();
             var EVSEStatusChangesDelayedQueueCopy  = new ThreadLocal<List<EVSEStatusUpdate>>();
             var EVSEsToRemoveQueueCopy             = new ThreadLocal<HashSet<EVSE>>();
             var ChargeDetailRecordQueueCopy        = new ThreadLocal<List<WWCP.ChargeDetailRecord>>();
@@ -5429,11 +5662,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     EVSEsToAddQueue.Clear();
 
                     // Copy 'EVSEs to update', remove originals...
-                    EVSEDataQueueCopy.Value                  = new HashSet<EVSE>                (EVSEsToUpdateQueue);
+                    EVSEsToUpdateQueueCopy.Value             = new HashSet<EVSE>                (EVSEsToUpdateQueue);
                     EVSEsToUpdateQueue.Clear();
 
-                    //// Copy 'EVSE status changes', remove originals...
+                    // Copy 'EVSE status changes', remove originals...
                     EVSEStatusChangesDelayedQueueCopy.Value  = new List<EVSEStatusUpdate>       (EVSEStatusChangesDelayedQueue);
+                    EVSEStatusChangesDelayedQueueCopy.Value.AddRange(EVSEsToAddQueueCopy.Value.SafeSelect(evse => new EVSEStatusUpdate(evse, evse.Status, evse.Status)));
                     EVSEStatusChangesDelayedQueue.Clear();
 
                     // Copy 'EVSEs to remove', remove originals...
@@ -5477,7 +5711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             // Upload status changes...
             if (EVSEsToAddQueueCopy.              Value != null ||
-                EVSEDataQueueCopy.                Value != null ||
+                EVSEsToUpdateQueueCopy.           Value != null ||
                 EVSEStatusChangesDelayedQueueCopy.Value != null ||
                 EVSEsToRemoveQueueCopy.           Value != null ||
                 ChargeDetailRecordQueueCopy.      Value != null)
@@ -5492,9 +5726,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 if (EVSEsToAddQueueCopy.Value.Count > 0)
                 {
 
-                    var EVSEsToAddTask = _ServiceRunId == 1
-                                             ? (this as IReceiveData).SetStaticData(EVSEsToAddQueueCopy.Value, EventTrackingId: EventTrackingId)
-                                             : (this as IReceiveData).AddStaticData(EVSEsToAddQueueCopy.Value, EventTrackingId: EventTrackingId);
+                    var EVSEsToAddTask = PushEVSEData(EVSEsToAddQueueCopy.Value,
+                                                      _ServiceRunId == 1
+                                                          ? ActionTypes.fullLoad
+                                                          : ActionTypes.update,
+                                                      EventTrackingId: EventTrackingId);
 
                     EVSEsToAddTask.Wait();
 
@@ -5504,11 +5740,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #region Send changed EVSE data
 
-                if (EVSEDataQueueCopy.Value.Count > 0)
+                if (EVSEsToUpdateQueueCopy.Value.Count > 0)
                 {
 
                     // Surpress EVSE data updates for all newly added EVSEs
-                    var EVSEsWithoutNewEVSEs = EVSEDataQueueCopy.Value.
+                    var EVSEsWithoutNewEVSEs = EVSEsToUpdateQueueCopy.Value.
                                                    Where(evse => !EVSEsToAddQueueCopy.Value.Contains(evse)).
                                                    ToArray();
 
@@ -5516,7 +5752,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     if (EVSEsWithoutNewEVSEs.Length > 0)
                     {
 
-                        var PushEVSEDataTask = (this as IReceiveData).UpdateStaticData(EVSEsWithoutNewEVSEs, EventTrackingId: EventTrackingId);
+                        var PushEVSEDataTask = PushEVSEData(EVSEsWithoutNewEVSEs,
+                                                            ActionTypes.update,
+                                                            EventTrackingId: EventTrackingId);
 
                         PushEVSEDataTask.Wait();
 
@@ -5553,7 +5791,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     if (EVSEsToRemove.Length > 0)
                     {
 
-                        var EVSEsToRemoveTask = (this as IReceiveData).DeleteStaticData(EVSEsToRemove, EventTrackingId: EventTrackingId);
+                        var EVSEsToRemoveTask = PushEVSEData(EVSEsToRemove,
+                                                             ActionTypes.delete,
+                                                             EventTrackingId: EventTrackingId);
 
                         EVSEsToRemoveTask.Wait();
 
@@ -5631,10 +5871,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     _StatusRunId++;
 
                     // Copy 'EVSE status changes', remove originals...
-                    EVSEStatusFastQueueCopy.Value = new List<EVSEStatusUpdate>(EVSEStatusChangesFastQueue.Where(evsestatuschange => !EVSEsToAddQueue.Any(evse => evse.Id == evsestatuschange.Id)));
+                    EVSEStatusFastQueueCopy.Value = new List<EVSEStatusUpdate>(EVSEStatusChangesFastQueue.Where(evsestatuschange => !EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)));
 
                     // Add all evse status changes of EVSE *NOT YET UPLOADED* into the delayed queue...
-                    var EVSEStatusChangesDelayed = EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse.Id == evsestatuschange.Id)).ToArray();
+                    var EVSEStatusChangesDelayed = EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)).ToArray();
 
                     if (EVSEStatusChangesDelayed.Length > 0)
                         EVSEStatusChangesDelayedQueue.AddRange(EVSEStatusChangesDelayed);

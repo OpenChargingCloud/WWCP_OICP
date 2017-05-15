@@ -68,8 +68,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
         public OperatorEVSEStatus(IEnumerable<EVSEStatusRecord>        EVSEStatusRecords,
                                   Operator_Id                          OperatorId,
-                                  String                               OperatorName  = null,
-                                  IReadOnlyDictionary<String, Object>  CustomData    = null)
+                                  String                               OperatorName   = null,
+                                  IReadOnlyDictionary<String, Object>  CustomData     = null)
 
             : base(CustomData)
 
@@ -129,10 +129,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static OperatorEVSEStatus Parse(XElement                                  OperatorEVSEStatusXML,
-                                               CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                               CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                               OnExceptionDelegate                       OnException                     = null)
+        public static OperatorEVSEStatus Parse(XElement                                     OperatorEVSEStatusXML,
+                                               CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                               CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
             OperatorEVSEStatus _OperatorEVSEStatus;
@@ -160,10 +160,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static OperatorEVSEStatus Parse(String                                    OperatorEVSEStatusText,
-                                               CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                               CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                               OnExceptionDelegate                       OnException                     = null)
+        public static OperatorEVSEStatus Parse(String                                       OperatorEVSEStatusText,
+                                               CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                               CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                               OnExceptionDelegate                          OnException                      = null)
         {
 
             OperatorEVSEStatus _OperatorEVSEStatus;
@@ -192,11 +192,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                  OperatorEVSEStatusXML,
-                                       out OperatorEVSEStatus                    OperatorEVSEStatus,
-                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                       OnExceptionDelegate                       OnException                     = null)
+        public static Boolean TryParse(XElement                                     OperatorEVSEStatusXML,
+                                       out OperatorEVSEStatus                       OperatorEVSEStatus,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -255,11 +255,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSEStatusRecord XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                    OperatorEVSEStatusText,
-                                       out OperatorEVSEStatus                    OperatorEVSEStatus,
-                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                       OnExceptionDelegate                       OnException                     = null)
+        public static Boolean TryParse(String                                       OperatorEVSEStatusText,
+                                       out OperatorEVSEStatus                       OperatorEVSEStatus,
+                                       CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -295,19 +295,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom OperatorEVSEStatus XML elements.</param>
         /// <param name="EVSEStatusRecordXName">The EVSEStatusRecord XML name to use.</param>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord XML elements.</param>
-        public XElement ToXML(XName                                         OperatorEVSEStatusXName             = null,
-                              CustomXMLSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer  = null,
-                              XName                                         EVSEStatusRecordXName               = null,
-                              CustomXMLSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer    = null)
+        public XElement ToXML(XName                                            OperatorEVSEStatusXName              = null,
+                              CustomXMLSerializerDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusSerializer   = null,
+                              XName                                            EVSEStatusRecordXName                = null,
+                              CustomXMLSerializerDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordSerializer     = null)
 
         {
 
-            var xml = new XElement(OperatorEVSEStatusXName ?? OICPNS.EVSEData + "OperatorEvseStatus",
+            var xml = new XElement(OperatorEVSEStatusXName ?? OICPNS.EVSEStatus + "OperatorEvseStatus",
 
-                          new XElement(OICPNS.EVSEData + "OperatorID",          OperatorId.ToString()),
+                          new XElement(OICPNS.EVSEStatus + "OperatorID",          OperatorId.ToString()),
 
                           OperatorName.IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.EVSEData + "OperatorName",  OperatorName)
+                              ? new XElement(OICPNS.EVSEStatus + "OperatorName",  OperatorName)
                               : null,
 
                           EVSEStatusRecords.Any()
