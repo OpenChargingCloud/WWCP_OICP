@@ -19,11 +19,9 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using org.GraphDefined.WWCP.OICPv2_1;
 using org.GraphDefined.WWCP.OICPv2_1.EMP;
 using org.GraphDefined.WWCP.OICPv2_1.CPO;
 
@@ -114,14 +112,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEData(EMP.EMPClient HubjectEMP)
+        public async Task TestPullEVSEData(EMPClient HubjectEMP)
         {
 
             var response = await HubjectEMP.
-                                     PullEVSEData(ProviderId:      Provider_Id.Parse("DE-GDF"),
-                                                  SearchCenter:    new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                                     Longitude.Parse(10.142533)),
-                                                  DistanceKM:      100,
+                                     PullEVSEData(Provider_Id.Parse("DE-GDF"),
+                                                  new GeoCoordinate(Latitude. Parse(49.731102),
+                                                                    Longitude.Parse(10.142533)),
+                                                  100,
                                                   RequestTimeout:  TimeSpan.FromSeconds(120)).
                                      ConfigureAwait(false);
 
@@ -184,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEStatus(EMP.EMPClient HubjectEMP)
+        public async Task TestPullEVSEStatus(EMPClient HubjectEMP)
         {
 
             var req4 = HubjectEMP.
