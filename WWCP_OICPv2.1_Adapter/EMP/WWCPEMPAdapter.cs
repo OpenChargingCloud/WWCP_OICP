@@ -481,6 +481,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
+                DebugX.Log("AuthToken: " + AuthToken.ToString());
 
                 var response = await RoamingNetwork.AuthorizeStart(AuthToken,
                                                                    EVSEId,
@@ -491,8 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                    Timestamp,
                                                                    Request.CancellationToken,
                                                                    Request.EventTrackingId,
-                                                                   Request.RequestTimeout).
-                                                    ConfigureAwait(false);
+                                                                   Request.RequestTimeout);
 
 
                 #region Send OnAuthorizeEVSEStartResponse event
