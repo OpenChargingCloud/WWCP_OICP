@@ -112,41 +112,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         }
 
-        public async Task TestPullEVSEData(EMPClient HubjectEMP)
-        {
+        //public async Task TestPullEVSEData(EMPClient HubjectEMP)
+        //{
 
-            var response = await HubjectEMP.
-                                     PullEVSEData(Provider_Id.Parse("DE-GDF"),
-                                                  new GeoCoordinate(Latitude. Parse(49.731102),
-                                                                    Longitude.Parse(10.142533)),
-                                                  100,
-                                                  RequestTimeout:  TimeSpan.FromSeconds(120)).
-                                     ConfigureAwait(false);
+        //    var response = await HubjectEMP.
+        //                             PullEVSEData(Provider_Id.Parse("DE-GDF"),
+        //                                          new GeoCoordinate(Latitude. Parse(49.731102),
+        //                                                            Longitude.Parse(10.142533)),
+        //                                          100,
+        //                                          RequestTimeout:  TimeSpan.FromSeconds(120)).
+        //                             ConfigureAwait(false);
 
-            var eRoamingEVSEData = response.Content;
+        //    var eRoamingEVSEData = response.Content;
 
-            if (eRoamingEVSEData.StatusCode.Value.HasResult)
-            {
+        //    if (eRoamingEVSEData.StatusCode.Value.HasResult)
+        //    {
 
-                Console.WriteLine(eRoamingEVSEData.
-                                      OperatorEVSEData.
-                                      Select(evsedata => "'" + evsedata.OperatorName +
-                                                         "' has " +
-                                                         evsedata.EVSEDataRecords.Count() +
-                                                         " EVSEs").
-                                      AggregateWith(Environment.NewLine) +
-                                      Environment.NewLine);
+        //        Console.WriteLine(eRoamingEVSEData.
+        //                              OperatorEVSEData.
+        //                              Select(evsedata => "'" + evsedata.OperatorName +
+        //                                                 "' has " +
+        //                                                 evsedata.EVSEDataRecords.Count() +
+        //                                                 " EVSEs").
+        //                              AggregateWith(Environment.NewLine) +
+        //                              Environment.NewLine);
 
-            }
+        //    }
 
-            else
-            {
-                Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Code);
-                Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Description);
-                Console.WriteLine(eRoamingEVSEData.StatusCode.Value.AdditionalInfo);
-            }
+        //    else
+        //    {
+        //        Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Code);
+        //        Console.WriteLine(eRoamingEVSEData.StatusCode.Value.Description);
+        //        Console.WriteLine(eRoamingEVSEData.StatusCode.Value.AdditionalInfo);
+        //    }
 
-        }
+        //}
 
         public async Task TestPushEVSEStatus(CPOClient HubjectCPO)
         {
