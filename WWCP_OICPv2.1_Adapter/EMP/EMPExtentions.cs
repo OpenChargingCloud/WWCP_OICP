@@ -119,7 +119,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                   DisablePullStatus                 = false,
                                               TimeSpan?                                 PullStatusServiceRequestTimeout   = null,
 
-                                              IRemoteEMobilityProvider                  DefaultProvider                   = null,
+                                              eMobilityProvider                         DefaultProvider                   = null,
                                               GeoCoordinate?                            DefaultSearchCenter               = null,
                                               UInt64?                                   DefaultDistanceKM                 = null,
 
@@ -278,7 +278,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                   DisablePullStatus                 = false,
                                               TimeSpan?                                 PullStatusServiceRequestTimeout   = null,
 
-                                              IRemoteEMobilityProvider                  DefaultProvider                   = null,
+                                              eMobilityProvider                         DefaultProvider                   = null,
                                               GeoCoordinate?                            DefaultSearchCenter               = null,
                                               UInt64?                                   DefaultDistanceKM                 = null,
 
