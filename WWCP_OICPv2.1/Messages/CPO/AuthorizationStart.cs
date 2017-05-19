@@ -770,7 +770,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
 
 
-                          StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer),
+                          StatusCode.ToXML(OICPNS.Authorization + "StatusCode",
+                                           CustomStatusCodeSerializer),
 
                           AuthorizationStopIdentifications.Any()
                               ? new XElement(OICPNS.Authorization + "AuthorizationStopIdentifications",
