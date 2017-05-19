@@ -38,7 +38,7 @@ namespace org.GraphDefined.WWCP
     public static class CPOExtentions
     {
 
-        #region CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
+        #region CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -89,7 +89,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static ICSORoamingProvider
 
-            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
+            CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
 
@@ -226,7 +226,7 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
+        #region CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -272,7 +272,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static ICSORoamingProvider
 
-            CreateOICPv2_1_CPORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
+            CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
                                               SOAPServer                                                      SOAPServer,
