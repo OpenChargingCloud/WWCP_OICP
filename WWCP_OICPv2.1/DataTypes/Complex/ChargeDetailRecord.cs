@@ -405,10 +405,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                          Identification,
 
-                                         ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerProductID",
+                                         ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "PartnerProductID",
                                                                                      PartnerProduct_Id.Parse),
 
-                                         ChargeDetailRecordXML.MapValueOrDefault    (OICPNS.Authorization + "PartnerSessionID",
+                                         ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "PartnerSessionID",
                                                                                      PartnerSession_Id.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ChargingStart",

@@ -77,7 +77,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                                                                 "</soapenv:Envelope>").ToUTF8Bytes();
                                                                    }),
 
-                                             Timeout:            TimeSpan.FromSeconds(10),
+                                             RequestTimeout:     TimeSpan.FromSeconds(10),
                                              CancellationToken:  new CancellationTokenSource().Token);
 
 
