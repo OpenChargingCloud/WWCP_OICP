@@ -1348,6 +1348,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => Auth_Token.Parse(UID.ToString());
 
 
+        public static AuthInfo ToWWCP(this Identification Identification)
+        {
+
+            if (Identification.RFIDId.HasValue)
+                return AuthInfo.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
+
+            if (Identification.QRCodeIdentification.HasValue)
+                return AuthInfo.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP(),
+                                                         Identification.QRCodeIdentification.Value.PIN);
+
+            if (Identification.PlugAndChargeIdentification.HasValue)
+                return AuthInfo.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP());
+
+            if (Identification.RemoteIdentification.HasValue)
+                return AuthInfo.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP());
+
+            return null;
+
+        }
+
+
         #region ToOICP(AuthInfo)
 
         /// <summary>
@@ -1386,29 +1407,53 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
         public static WWCP.ChargeDetailRecord ToWWCP(this ChargeDetailRecord ChargeDetailRecord)
+        {
 
-            => new WWCP.ChargeDetailRecord(ChargeDetailRecord.SessionId.ToWWCP(),
-                                           EVSEId:                ChargeDetailRecord.EVSEId.ToWWCP(),
-                                           ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
-                                                                      ? new ChargingProduct(ChargeDetailRecord.PartnerProductId.Value.ToWWCP())
-                                                                      : null,
-                                           SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart, ChargeDetailRecord.SessionEnd),
-                                           EnergyMeteringValues:  new List<Timestamped<Single>> {
+            var CustomData = new Dictionary<String, Object>();
 
-                                                                      new Timestamped<Single>(
-                                                                          ChargeDetailRecord.ChargingStart.  Value,
-                                                                          ChargeDetailRecord.MeterValueStart.Value
-                                                                      ),
+            if (ChargeDetailRecord.PartnerSessionId.HasValue)
+                CustomData.Add("Hubject.PartnerSessionId",  ChargeDetailRecord.PartnerSessionId.ToString());
 
-                                                                      new Timestamped<Single>(
-                                                                          ChargeDetailRecord.ChargingEnd.  Value,
-                                                                          ChargeDetailRecord.MeterValueEnd.Value
-                                                                      )
+            if (ChargeDetailRecord.HubOperatorId.HasValue)
+                CustomData.Add("Hubject.HubOperatorId",     ChargeDetailRecord.HubOperatorId.   ToString());
 
-                                                                  },
-                                           //MeterValuesInBetween
-                                           //ConsumedEnergy
-                                           MeteringSignature:  ChargeDetailRecord.MeteringSignature);
+            if (ChargeDetailRecord.HubProviderId.HasValue)
+                CustomData.Add("Hubject.HubProviderId",     ChargeDetailRecord.HubProviderId.   ToString());
+
+
+            var CDR = new  WWCP.ChargeDetailRecord(SessionId:             ChargeDetailRecord.SessionId.ToWWCP(),
+                                                   EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
+                                                   ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
+                                                                              ? new ChargingProduct(ChargeDetailRecord.PartnerProductId.Value.ToWWCP())
+                                                                              : null,
+                                                   SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart,
+                                                                                               ChargeDetailRecord.SessionEnd),
+                                                   IdentificationStart:   ChargeDetailRecord.Identification.ToWWCP(),
+                                                   EnergyMeteringValues:  new List<Timestamped<Single>> {
+
+                                                                              new Timestamped<Single>(
+                                                                                  ChargeDetailRecord.ChargingStart.  Value,
+                                                                                  ChargeDetailRecord.MeterValueStart.Value
+                                                                              ),
+
+                                                                              // Meter values in between...
+
+                                                                              new Timestamped<Single>(
+                                                                                  ChargeDetailRecord.ChargingEnd.  Value,
+                                                                                  ChargeDetailRecord.MeterValueEnd.Value
+                                                                              )
+
+                                                                          },
+                                                   //ConsumedEnergy:      Will be calculated!
+                                                   MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+
+                                                   CustomData:            CustomData
+
+                                                  );
+
+            return CDR;
+
+        }
 
         #endregion
 
