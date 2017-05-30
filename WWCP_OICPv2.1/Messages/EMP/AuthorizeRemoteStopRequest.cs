@@ -239,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             try
             {
 
-                if (AuthorizeRemoteStopRequestXML.Name != OICPNS.Reservation + "eRoamingAuthorizeRemoteStop")
+                if (AuthorizeRemoteStopRequestXML.Name != OICPNS.Authorization + "eRoamingAuthorizeRemoteStop")
                 {
                     AuthorizeRemoteStopRequest = null;
                     return false;
@@ -247,16 +247,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 AuthorizeRemoteStopRequest = new AuthorizeRemoteStopRequest(
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Reservation + "SessionID",
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "SessionID",
                                                                                                   Session_Id.Parse),
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Reservation + "ProviderID",
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "ProviderID",
                                                                                                   Provider_Id.Parse),
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "EVSEID",
                                                                                                   EVSE_Id.Parse),
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Reservation + "PartnerSessionID",
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
                                                                                                   PartnerSession_Id.Parse),
 
                                                  Timestamp,

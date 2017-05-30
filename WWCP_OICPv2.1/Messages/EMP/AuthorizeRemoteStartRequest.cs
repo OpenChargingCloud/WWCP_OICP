@@ -305,13 +305,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             try
             {
 
-                if (AuthorizeRemoteStartRequestXML.Name != OICPNS.Reservation + "eRoamingAuthorizeRemoteStart")
+                if (AuthorizeRemoteStartRequestXML.Name != OICPNS.Authorization + "eRoamingAuthorizeRemoteStart")
                 {
                     AuthorizeRemoteStartRequest = null;
                     return false;
                 }
 
-                var _AuthorizationIdentification = AuthorizeRemoteStartRequestXML.MapElementOrFail(OICPNS.Reservation + "Identification",
+                var _AuthorizationIdentification = AuthorizeRemoteStartRequestXML.MapElementOrFail(OICPNS.Authorization + "Identification",
                                                                                                    (xml, e) => Identification.Parse(xml,
                                                                                                                                     CustomIdentificationParser,
                                                                                                                                     e),
@@ -326,10 +326,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 AuthorizeRemoteStartRequest = new AuthorizeRemoteStartRequest(
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Reservation + "ProviderID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Authorization + "ProviderID",
                                                                                                     Provider_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Authorization + "EVSEID",
                                                                                                     EVSE_Id.Parse),
 
                                                   _AuthorizationIdentification.QRCodeIdentification.HasValue
@@ -340,13 +340,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                       ? _AuthorizationIdentification.RemoteIdentification.Value
                                                                       : default(EVCO_Id),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Reservation + "SessionID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                                     Session_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Reservation + "PartnerSessionID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
                                                                                                     PartnerSession_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Reservation + "PartnerProductID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerProductID",
                                                                                                     PartnerProduct_Id.Parse),
 
                                                   Timestamp,
