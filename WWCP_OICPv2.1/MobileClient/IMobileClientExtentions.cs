@@ -168,7 +168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         #endregion
 
 
-        #region MobileAuthorizeStart(SessionId, ...)
+        #region MobileRemoteStart(SessionId, ...)
 
         /// <summary>
         /// Start a remote charging session.
@@ -199,7 +199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         #endregion
 
-        #region MobileAuthorizeStop (SessionId, ...)
+        #region MobileRemoteStop (SessionId, ...)
 
         /// <summary>
         /// Stop a remote charging session.
