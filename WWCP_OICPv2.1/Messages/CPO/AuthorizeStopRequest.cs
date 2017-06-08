@@ -433,7 +433,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.          ToString())
                                           : null,
 
-                                      Identification.FromRFIDId(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
+                                      Identification.FromUID(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
 
                                   );
 

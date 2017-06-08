@@ -42,9 +42,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public Operator_Id         OperatorId          { get; }
 
         /// <summary>
-        /// A (RFID) user identification.
+        /// An user identification.
         /// </summary>
-        public UID                 UID                 { get; }
+        public Identification      Identification      { get; }
 
         /// <summary>
         /// An optional EVSE identification.
@@ -74,7 +74,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// Create an OICP AuthorizeStart XML/SOAP request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
-        /// <param name="UID">A (RFID) user identification.</param>
+        /// <param name="Identification">An user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
@@ -85,11 +85,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeStartRequest(Operator_Id         OperatorId,
-                                     UID                 UID,
-                                     EVSE_Id?            EVSEId              = null,   // OICP v2.1: Optional
-                                     PartnerProduct_Id?  PartnerProductId    = null,   // OICP v2.1: Optional [100]
-                                     Session_Id?         SessionId           = null,   // OICP v2.1: Optional
-                                     PartnerSession_Id?  PartnerSessionId    = null,   // OICP v2.1: Optional [50]
+                                     Identification      Identification,
+                                     EVSE_Id?            EVSEId              = null,
+                                     PartnerProduct_Id?  PartnerProductId    = null,   // OICP v2.1: [max 100]
+                                     Session_Id?         SessionId           = null,
+                                     PartnerSession_Id?  PartnerSessionId    = null,   // OICP v2.1: [max 50]
 
                                      DateTime?           Timestamp           = null,
                                      CancellationToken?  CancellationToken   = null,
@@ -104,7 +104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         {
 
             this.OperatorId        = OperatorId;
-            this.UID               = UID;
+            this.Identification    = Identification;
             this.EVSEId            = EVSEId;
             this.PartnerProductId  = PartnerProductId;
             this.SessionId         = SessionId;
@@ -309,22 +309,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     return false;
                 }
 
-                var UID = AuthorizeStartXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-                                                             (xml, e) => Identification.Parse(xml,
-                                                                                              CustomIdentificationParser,
-                                                                                              e),
-                                                             OnException).RFIDId;
-
-                if (!UID.HasValue)
-                    throw new Exception("No UID/RFID identification found in request!");
-
-
                 AuthorizeStart = new AuthorizeStartRequest(
 
                                      AuthorizeStartXML.MapValueOrFail    (OICPNS.Authorization + "OperatorID",
                                                                           Operator_Id.Parse),
 
-                                     UID.Value,
+                                     AuthorizeStartXML.MapElementOrFail  (OICPNS.Authorization + "Identification",
+                                                                          (xml, e) => Identification.Parse(xml,
+                                                                                                           CustomIdentificationParser,
+                                                                                                           e),
+                                                                          OnException),
 
                                      AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
                                                                           EVSE_Id.Parse),
@@ -446,7 +440,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                            ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.    ToString())
                                            : null,
 
-                                       Identification.FromRFIDId(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
+                                       Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
    
                                        PartnerProductId.HasValue
                                            ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
@@ -544,8 +538,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if ((Object) AuthorizeStart == null)
                 return false;
 
-            return OperatorId.Equals(AuthorizeStart.OperatorId) &&
-                   UID.       Equals(AuthorizeStart.UID)        &&
+            return OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
+                   Identification.Equals(AuthorizeStart.Identification) &&
 
                    ((!EVSEId.          HasValue && !AuthorizeStart.EVSEId.          HasValue) ||
                      (EVSEId.          HasValue &&  AuthorizeStart.EVSEId.          HasValue && EVSEId.          Value.Equals(AuthorizeStart.EVSEId.          Value))) &&
@@ -576,8 +570,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             unchecked
             {
 
-                return OperatorId.GetHashCode() * 19 ^
-                       UID.       GetHashCode() * 17 ^
+                return OperatorId.    GetHashCode() * 19 ^
+                       Identification.GetHashCode() * 17 ^
 
                        (EVSEId           != null
                             ? EVSEId.          GetHashCode() * 11
@@ -607,7 +601,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat(UID,
+            => String.Concat(Identification,
 
                              EVSEId.HasValue
                                  ? " at " + EVSEId

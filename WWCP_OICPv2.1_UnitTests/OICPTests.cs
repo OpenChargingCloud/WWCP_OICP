@@ -122,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                                      PartnerProductId:      PartnerProduct_Id.Parse("AC1"),
                                                                      SessionStart:          DateTime.Now,
                                                                      SessionEnd:            DateTime.Now - TimeSpan.FromHours(3),
-                                                                     Identification:        Identification.FromRFIDId(UserId),
+                                                                     Identification:        Identification.FromUID(UserId),
                                                                      PartnerSessionId:      PartnerSession_Id.Parse("081508150815-0815-0815-0815-0815081508150815"),
                                                                      ChargingStart:         DateTime.Now,
                                                                      ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),

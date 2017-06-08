@@ -1348,21 +1348,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             => Auth_Token.Parse(UID.ToString());
 
 
-        public static AuthInfo ToWWCP(this Identification Identification)
+        public static AuthIdentification ToWWCP(this Identification Identification)
         {
 
             if (Identification.RFIDId.HasValue)
-                return AuthInfo.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
+                return AuthIdentification.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
 
             if (Identification.QRCodeIdentification.HasValue)
-                return AuthInfo.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP(),
+                return AuthIdentification.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP(),
                                                          Identification.QRCodeIdentification.Value.PIN);
 
             if (Identification.PlugAndChargeIdentification.HasValue)
-                return AuthInfo.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP());
+                return AuthIdentification.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP());
 
             if (Identification.RemoteIdentification.HasValue)
-                return AuthInfo.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP());
+                return AuthIdentification.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP());
 
             return null;
 
@@ -1375,11 +1375,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new identification for authorization based on the given WWCP AuthInfo.
         /// </summary>
         /// <param name="AuthInfo">A WWCP auth info.</param>
-        public static Identification ToOICP(this AuthInfo AuthInfo)
+        public static Identification ToOICP(this AuthIdentification AuthInfo)
         {
 
             if (AuthInfo.AuthToken                   != null)
-                return Identification.FromRFIDId                     (AuthInfo.AuthToken.ToOICP());
+                return Identification.FromUID                     (AuthInfo.AuthToken.ToOICP());
 
             if (AuthInfo.QRCodeIdentification        != null)
                 return Identification.FromQRCodeIdentification       (new QRCodeIdentification(AuthInfo.QRCodeIdentification.eMAId.ToOICP(),

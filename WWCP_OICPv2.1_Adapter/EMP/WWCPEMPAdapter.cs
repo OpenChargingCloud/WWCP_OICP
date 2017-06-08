@@ -443,13 +443,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Map parameter values
 
-                var OperatorId  = Request.OperatorId.      ToWWCP();
-                var AuthToken   = Request.UID.             ToWWCP();
-                var EVSEId      = Request.EVSEId.Value.    ToWWCP().Value;
-                var ProductId   = Request.PartnerProductId.HasValue
-                                      ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
-                                      : null;
-                var SessionId   = Request.SessionId.       ToWWCP();
+                var OperatorId      = Request.OperatorId.    ToWWCP();
+                var Identification  = Request.Identification.ToWWCP();
+                var EVSEId          = Request.EVSEId.Value.  ToWWCP().Value;
+                var ProductId       = Request.PartnerProductId.HasValue
+                                          ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
+                                          : null;
+                var SessionId       = Request.SessionId.     ToWWCP();
 
                 #endregion
 
@@ -467,7 +467,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         Request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         OperatorId,
-                                                        AuthToken,
+                                                        Identification,
                                                         EVSEId,
                                                         ProductId,
                                                         SessionId,
@@ -481,9 +481,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-                DebugX.Log("AuthToken: " + AuthToken.ToString());
+                DebugX.Log("AuthIdentification: " + Identification);
 
-                var response = await RoamingNetwork.AuthorizeStart(AuthToken,
+                var response = await RoamingNetwork.AuthorizeStart(Identification,
                                                                    EVSEId,
                                                                    ProductId,
                                                                    SessionId,
@@ -509,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          Request.EventTrackingId,
                                                          RoamingNetwork.Id,
                                                          OperatorId,
-                                                         AuthToken,
+                                                         Identification,
                                                          EVSEId,
                                                          ProductId,
                                                          SessionId,
@@ -540,7 +540,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                      "Ready to charge!",
                                                                      null,
                                                                      response.ListOfAuthStopTokens.
-                                                                         SafeSelect(token => Identification.FromRFIDId(token.ToOICP()))
+                                                                         SafeSelect(token => OICPv2_1.Identification.FromUID(token.ToOICP()))
                                                                     );
 
                         case AuthStartEVSEResultType.NotAuthorized:

@@ -139,7 +139,7 @@
     <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
-    <Compile Include="DataTypes\Complex\AuthorizationIdentification.cs" />
+    <Compile Include="DataTypes\Complex\Identification.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />

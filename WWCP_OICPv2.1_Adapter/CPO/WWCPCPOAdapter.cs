@@ -4226,12 +4226,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region AuthorizeStart/-Stop  directly...
 
-        #region AuthorizeStart(AuthToken,                    ChargingProduct = null, SessionId = null, OperatorId = null, ...)
+        #region AuthorizeStart(AuthIdentification,                    ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
         /// Create an authorize start request.
         /// </summary>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="AuthIdentification">An user identification.</param>
         /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
@@ -4242,7 +4242,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<AuthStartResult>
 
-            AuthorizeStart(Auth_Token                   AuthToken,
+            AuthorizeStart(AuthIdentification           AuthIdentification,
                            ChargingProduct              ChargingProduct     = null,
                            ChargingSession_Id?          SessionId           = null,
                            ChargingStationOperator_Id?  OperatorId          = null,
@@ -4255,8 +4255,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (AuthToken == null)
-                throw new ArgumentNullException(nameof(AuthToken),   "The given authentication token must not be null!");
+            if (AuthIdentification == null)
+                throw new ArgumentNullException(nameof(AuthIdentification),   "The given authentication token must not be null!");
 
 
             if (!Timestamp.HasValue)
@@ -4287,7 +4287,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 EventTrackingId,
                                                 RoamingNetwork.Id,
                                                 OperatorId,
-                                                AuthToken,
+                                                AuthIdentification,
                                                 ChargingProduct,
                                                 SessionId,
                                                 RequestTimeout);
@@ -4309,7 +4309,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
                 Endtime  = DateTime.Now;
                 Runtime  = Endtime - StartTime;
-                result   = AuthStartResult.OutOfService(Id, SessionId, Runtime);
+                result   = AuthStartResult.OutOfService(Id,
+                                                        SessionId,
+                                                        Runtime);
             }
 
             else
