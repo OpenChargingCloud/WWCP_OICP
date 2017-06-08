@@ -591,10 +591,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Map parameter values
 
-                var SessionId   = Request.SessionId.   ToWWCP();
-                var AuthToken   = Request.UID.         ToWWCP();
-                var EVSEId      = Request.EVSEId.Value.ToWWCP().Value;
-                var OperatorId  = Request.OperatorId.  ToWWCP();
+                var SessionId            = Request.SessionId.   ToWWCP();
+                var AuthIdentification   = WWCP.AuthIdentification.FromAuthToken(Request.UID.ToWWCP());
+                var EVSEId               = Request.EVSEId.Value.ToWWCP().Value;
+                var OperatorId           = Request.OperatorId.  ToWWCP();
 
                 #endregion
 
@@ -614,7 +614,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        OperatorId,
                                                        EVSEId,
                                                        SessionId,
-                                                       AuthToken,
+                                                       AuthIdentification,
                                                        Request.RequestTimeout);
 
                 }
@@ -627,7 +627,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 var response = await RoamingNetwork.AuthorizeStop(SessionId,
-                                                                  AuthToken,
+                                                                  AuthIdentification,
                                                                   EVSEId,
                                                                   OperatorId,
 
@@ -654,7 +654,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         OperatorId,
                                                         EVSEId,
                                                         SessionId,
-                                                        AuthToken,
+                                                        AuthIdentification,
                                                         Request.RequestTimeout,
                                                         response,
                                                         EndTime - StartTime);
