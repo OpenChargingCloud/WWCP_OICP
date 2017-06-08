@@ -290,34 +290,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 CPO.AuthorizationStart    AuthorizationStart     = null;
 
 
-                AuthorizeStartXML = System.Xml.Linq.XDocument.Parse("<soapenv:Envelope xmlns:cmn=\"http://www.hubject.com/b2b/services/commontypes/v2.0\"" +
-        "                  xmlns:fn=\"http://www.w3.org/2005/xpath-functions\"" +
-        "                  xmlns:isns=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
-        "                  xmlns:sbp=\"http://www.inubit.com/eMobility/SBP\"" +
-        "                  xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
-        "                  xmlns:tns=\"http://www.hubject.com/b2b/services/authorization/v2.0\">" +
-        " " +
-        "<soapenv:Body>" +
-        "    <tns:eRoamingAuthorizeStart>" +
-        "        <tns:SessionID>86c99609-0a88-1296-5738-7d15fd8fa02d</tns:SessionID>" +
-        "        <tns:OperatorID>+49*822</tns:OperatorID>" +
-        "        <tns:EVSEID>+49*822*696208619*1</tns:EVSEID>" +
-        "        <tns:Identification>" +
+        //        AuthorizeStartXML = System.Xml.Linq.XDocument.Parse("<soapenv:Envelope xmlns:cmn=\"http://www.hubject.com/b2b/services/commontypes/v2.0\"" +
+        //"                  xmlns:fn=\"http://www.w3.org/2005/xpath-functions\"" +
+        //"                  xmlns:isns=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
+        //"                  xmlns:sbp=\"http://www.inubit.com/eMobility/SBP\"" +
+        //"                  xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
+        //"                  xmlns:tns=\"http://www.hubject.com/b2b/services/authorization/v2.0\">" +
+        //" " +
+        //"<soapenv:Body>" +
+        //"    <tns:eRoamingAuthorizeStart>" +
+        //"        <tns:SessionID>86c99609-0a88-1296-5738-7d15fd8fa02d</tns:SessionID>" +
+        //"        <tns:OperatorID>+49*822</tns:OperatorID>" +
+        //"        <tns:EVSEID>+49*822*696208619*1</tns:EVSEID>" +
+        //"        <tns:Identification>" +
 
-        //"            <cmn:RFIDmifarefamilyIdentification>" +
-        //"                <cmn:UID>04635E82E52280</cmn:UID>" +
-        //"            </cmn:RFIDmifarefamilyIdentification>" +
+        ////"            <cmn:RFIDmifarefamilyIdentification>" +
+        ////"                <cmn:UID>04635E82E52280</cmn:UID>" +
+        ////"            </cmn:RFIDmifarefamilyIdentification>" +
 
-        "            <cmn:QRCodeIdentification>" +
-        "                <cmn:EVCOID>DE-HEL-234567-1</cmn:EVCOID>" +
-        "                <cmn:PIN>1234</cmn:PIN>" +
-        "            </cmn:QRCodeIdentification>" +
+        //"            <cmn:QRCodeIdentification>" +
+        //"                <cmn:EVCOID>DE-HEL-234567-1</cmn:EVCOID>" +
+        //"                <cmn:PIN>1234</cmn:PIN>" +
+        //"            </cmn:QRCodeIdentification>" +
 
-        "        </tns:Identification>" +
-        "    </tns:eRoamingAuthorizeStart>" +
-        "</soapenv:Body>" +
-        " " +
-        "</soapenv:Envelope>").Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault();
+        //"        </tns:Identification>" +
+        //"    </tns:eRoamingAuthorizeStart>" +
+        //"</soapenv:Body>" +
+        //" " +
+        //"</soapenv:Envelope>").Root.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault();
 
 
 
