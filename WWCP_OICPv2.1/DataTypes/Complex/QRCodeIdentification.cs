@@ -61,19 +61,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        #region QRCodeIdentification(EVCOId, PIN)
+        #region QRCodeIdentification(EVCOId, PIN = null)
 
         /// <summary>
         /// Create a new QR code identification with pin.
         /// </summary>
         /// <param name="EVCOId">An QR code identification.</param>
-        /// <param name="PIN">A pin.</param>
+        /// <param name="PIN">A optional pin.</param>
         public QRCodeIdentification(EVCO_Id  EVCOId,
-                                    String   PIN)
+                                    String   PIN  = null)
         {
 
             this.EVCOId    = EVCOId;
-            this.PIN       = PIN;
+            this.PIN       = PIN ?? "";
             this.Function  = PINCrypto.none;
             this.Salt      = "";
 
@@ -120,7 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         // 
         //       <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
         // 
-        //       <!--You have a CHOICE of the next 2 items at this level-->
+        //       <!--You have a CHOICE of nothing or one of the next 2 items at this level-->
         //       <CommonTypes:PIN>?</CommonTypes:PIN>
         // 
         //       <CommonTypes:HashedPIN>
@@ -144,8 +144,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="QRCodeIdentificationXML">The XML to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static QRCodeIdentification Parse(XElement             QRCodeIdentificationXML,
-                                                 OnExceptionDelegate  OnException = null)
+        public static QRCodeIdentification? Parse(XElement             QRCodeIdentificationXML,
+                                                  OnExceptionDelegate  OnException = null)
         {
 
             QRCodeIdentification _QRCodeIdentification;
@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(QRCodeIdentificationXML, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
-            return default(QRCodeIdentification);
+            return null;
 
         }
 
@@ -166,8 +166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="QRCodeIdentificationText">The text to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static QRCodeIdentification Parse(String               QRCodeIdentificationText,
-                                                 OnExceptionDelegate  OnException = null)
+        public static QRCodeIdentification? Parse(String               QRCodeIdentificationText,
+                                                  OnExceptionDelegate  OnException = null)
         {
 
             QRCodeIdentification _QRCodeIdentification;
@@ -175,7 +175,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (TryParse(QRCodeIdentificationText, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
-            return default(QRCodeIdentification);
+            return null;
 
         }
 
@@ -204,64 +204,51 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return false;
                 }
 
-                #region Parse EVCOId
-
-                var EVCOId        = QRCodeIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "EVCOID",
-                                                                                  EVCO_Id.Parse);
-
-                #endregion
+                var EVCOId        = QRCodeIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "EVCOID", EVCO_Id.Parse);
+                var PIN           = QRCodeIdentificationXML.ElementValueOrDefault(OICPNS.CommonTypes + "PIN");
+                var HashedPINXML  = QRCodeIdentificationXML.Element              (OICPNS.CommonTypes + "HashedPIN");
 
                 #region Parse a PIN
 
-                var PIN           = QRCodeIdentificationXML.ElementValueOrDefault(OICPNS.CommonTypes + "PIN");
                 if (PIN != null && PIN.Trim().IsNotNullOrEmpty())
-                {
+
                     QRCodeIdentification = new QRCodeIdentification(EVCOId, PIN.Trim());
-                    return true;
-                }
 
                 #endregion
 
                 #region Parse a hashed PIN
 
-                var HashedPINXML  = QRCodeIdentificationXML.Element(OICPNS.CommonTypes + "HashedPIN");
-                if (HashedPINXML != null)
-                {
-
-                    var Value     = HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Value");
-
-                    var Function  = HashedPINXML.MapValueOrFail    (OICPNS.CommonTypes + "Function",
-                                                                    text => {
-
-                                                                        switch (text.ToUpper())
-                                                                        {
-
-                                                                            case "MD5":
-                                                                                return PINCrypto.MD5;
-
-                                                                            case "SHA-1":
-                                                                                return PINCrypto.SHA1;
-
-                                                                        }
-
-                                                                        throw new Exception("Unknown PIN crypto '" + text + "'!");
-
-                                                                    });
-
-                    var Salt      = HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Salt");
-
+                else if (HashedPINXML != null)
 
                     QRCodeIdentification = new QRCodeIdentification(EVCOId,
-                                                                    Value,
-                                                                    Function,
-                                                                    Salt);
 
-                }
+                                                                    HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Value"),
+
+                                                                    HashedPINXML.MapValueOrFail    (OICPNS.CommonTypes + "Function",
+                                                                                                    text => {
+
+                                                                                                        switch (text.ToUpper())
+                                                                                                        {
+
+                                                                                                            case "MD5":
+                                                                                                                return PINCrypto.MD5;
+
+                                                                                                            case "SHA-1":
+                                                                                                                return PINCrypto.SHA1;
+
+                                                                                                        }
+
+                                                                                                        throw new Exception("Unknown PIN crypto '" + text + "'!");
+
+                                                                                                    }),
+
+                                                                    HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Salt"));
 
                 #endregion
 
+                else
+                    QRCodeIdentification = new QRCodeIdentification(EVCOId);
 
-                QRCodeIdentification = default(QRCodeIdentification);
                 return true;
 
             }
@@ -331,9 +318,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        ? new XElement(OICPNS.CommonTypes + "PIN", PIN)
 
                        : new XElement(OICPNS.CommonTypes + "HashedPIN",
-                             new XElement(OICPNS.CommonTypes + "Value",      PIN),
-                             new XElement(OICPNS.CommonTypes + "Function",   Function == PINCrypto.MD5 ? "MD5" : "SHA-1"),
-                             new XElement(OICPNS.CommonTypes + "Salt",       Salt))
+                             new XElement(OICPNS.CommonTypes + "Value",     PIN),
+                             new XElement(OICPNS.CommonTypes + "Function",  Function == PINCrypto.MD5 ? "MD5" : "SHA-1"),
+                             new XElement(OICPNS.CommonTypes + "Salt",      Salt))
 
                    );
 
@@ -581,10 +568,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             => String.Concat(EVCOId.ToString(),
                              Function != PINCrypto.none
-                                 ? " -" + Function.ToString()
+                                 ? " -" + Function
                                  : "",
                              "-> ",
-                             PIN );
+                             PIN ?? "");
 
         #endregion
 
