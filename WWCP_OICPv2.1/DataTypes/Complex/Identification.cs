@@ -83,17 +83,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region (static) FromRFIDId                     (RFIDId,                      CustomData = null)
+        #region (static) FromRFIDId                     (UID,                         CustomData = null)
 
         /// <summary>
         /// Create a new identification.
         /// </summary>
-        /// <param name="RFIDId">A RFDID identification.</param>
+        /// <param name="UID">An user identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromRFIDId(UID                                  RFIDId,
-                                                IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromUID(UID                                  UID,
+                                             IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(RFIDId:     RFIDId,
+            => new Identification(RFIDId:     UID,
                                   CustomData: CustomData);
 
         #endregion

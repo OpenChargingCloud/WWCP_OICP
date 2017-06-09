@@ -310,6 +310,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         // Server methods (logging)
 
+        #region OnAuthorizeStartRequest/-Response
+
+        /// <summary>
+        /// An event sent whenever an 'authorize start' request was received.
+        /// </summary>
+        public event WWCP.OnAuthorizeStartRequestDelegate   OnAuthorizeStartRequest;
+
+        /// <summary>
+        /// An event sent whenever a response to an 'authorize start' request was sent.
+        /// </summary>
+        public event WWCP.OnAuthorizeStartResponseDelegate  OnAuthorizeStartResponse;
+
+        #endregion
+
         #region OnAuthorizeEVSEStartRequest/-Response
 
         /// <summary>
@@ -443,141 +457,270 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Map parameter values
 
-                var OperatorId  = Request.OperatorId.      ToWWCP();
-                var AuthToken   = Request.UID.             ToWWCP();
-                var EVSEId      = Request.EVSEId.Value.    ToWWCP().Value;
-                var ProductId   = Request.PartnerProductId.HasValue
-                                      ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
-                                      : null;
-                var SessionId   = Request.SessionId.       ToWWCP();
+                var OperatorId      = Request.OperatorId.    ToWWCP();
+                var Identification  = Request.Identification.ToWWCP();
+                var EVSEId          = Request.EVSEId.HasValue
+                                          ? Request.EVSEId.Value.ToWWCP()
+                                          : new WWCP.EVSE_Id?();
+                var ProductId       = Request.PartnerProductId.HasValue
+                                          ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
+                                          : null;
+                var SessionId       = Request.SessionId.     ToWWCP();
 
                 #endregion
 
-                #region Send OnAuthorizeEVSEStartRequest event
 
                 var StartTime = DateTime.Now;
 
-                try
+                if (EVSEId.HasValue)
                 {
 
-                    OnAuthorizeEVSEStartRequest?.Invoke(StartTime,
+                    #region Send OnAuthorizeEVSEStartRequest event
+
+                    try
+                    {
+
+                        OnAuthorizeEVSEStartRequest?.Invoke(StartTime,
+                                                            Timestamp,
+                                                            this,
+                                                            Id.ToString(),
+                                                            Request.EventTrackingId,
+                                                            RoamingNetwork.Id,
+                                                            OperatorId,
+                                                            Identification,
+                                                            EVSEId.Value,
+                                                            ProductId,
+                                                            SessionId,
+                                                            Request.RequestTimeout);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStartRequest));
+                    }
+
+                    #endregion
+
+                    var response = await RoamingNetwork.AuthorizeStart(Identification,
+                                                                       EVSEId.Value,
+                                                                       ProductId,
+                                                                       SessionId,
+                                                                       OperatorId,
+
+                                                                       Timestamp,
+                                                                       Request.CancellationToken,
+                                                                       Request.EventTrackingId,
+                                                                       Request.RequestTimeout);
+
+
+                    #region Send OnAuthorizeEVSEStartResponse event
+
+                    var EndTime = DateTime.Now;
+
+                    try
+                    {
+
+                        OnAuthorizeEVSEStartResponse?.Invoke(EndTime,
+                                                             Timestamp,
+                                                             this,
+                                                             Id.ToString(),
+                                                             Request.EventTrackingId,
+                                                             RoamingNetwork.Id,
+                                                             OperatorId,
+                                                             Identification,
+                                                             EVSEId.Value,
+                                                             ProductId,
+                                                             SessionId,
+                                                             Request.RequestTimeout,
+                                                             response,
+                                                             EndTime - StartTime);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStartResponse));
+                    }
+
+                    #endregion
+
+                    #region Map response
+
+                    if (response != null)
+                    {
+                        switch (response.Result)
+                        {
+
+                            case AuthStartEVSEResultType.Authorized:
+                                return CPO.AuthorizationStart.Authorized(Request,
+                                                                         response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
+                                                                         default(PartnerSession_Id?),
+                                                                         DefaultProviderId,//    response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
+                                                                         "Ready to charge!",
+                                                                         null,
+                                                                         response.ListOfAuthStopTokens.
+                                                                             SafeSelect(token => OICPv2_1.Identification.FromUID(token.ToOICP()))
+                                                                        );
+
+                            case AuthStartEVSEResultType.NotAuthorized:
+                                return CPO.AuthorizationStart.NotAuthorized(Request,
+                                                                            StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                                                                            "RFID Authentication failed - invalid UID");
+
+                            case AuthStartEVSEResultType.InvalidSessionId:
+                                return CPO.AuthorizationStart.SessionIsInvalid(Request,
+                                                                               SessionId:         Request.SessionId,
+                                                                               PartnerSessionId:  Request.PartnerSessionId);
+
+                            case AuthStartEVSEResultType.CommunicationTimeout:
+                                return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
+
+                            case AuthStartEVSEResultType.StartChargingTimeout:
+                                return CPO.AuthorizationStart.NoEVConnectedToEVSE(Request);
+
+                            case AuthStartEVSEResultType.Reserved:
+                                return CPO.AuthorizationStart.EVSEAlreadyReserved(Request);
+
+                            case AuthStartEVSEResultType.UnknownEVSE:
+                                return CPO.AuthorizationStart.UnknownEVSEID(Request);
+
+                            case AuthStartEVSEResultType.OutOfService:
+                                return CPO.AuthorizationStart.EVSEOutOfService(Request);
+
+                        }
+                    }
+
+                    #endregion
+
+
+                    return CPO.AuthorizationStart.ServiceNotAvailable(
+                           Request,
+                           SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
+                           ProviderId: response?.ProviderId.ToOICP()
+                       );
+
+                }
+
+                else
+                {
+
+                    #region Send OnAuthorizeStartRequest event
+
+                    try
+                    {
+
+                        OnAuthorizeStartRequest?.Invoke(StartTime,
                                                         Timestamp,
                                                         this,
                                                         Id.ToString(),
                                                         Request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         OperatorId,
-                                                        AuthToken,
-                                                        EVSEId,
+                                                        Identification,
                                                         ProductId,
                                                         SessionId,
                                                         Request.RequestTimeout);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStartRequest));
-                }
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartRequest));
+                    }
 
-                #endregion
+                    #endregion
 
-                DebugX.Log("AuthToken: " + AuthToken.ToString());
+                    var response = await RoamingNetwork.AuthorizeStart(Identification,
+                                                                       ProductId,
+                                                                       SessionId,
+                                                                       OperatorId,
 
-                var response = await RoamingNetwork.AuthorizeStart(AuthToken,
-                                                                   EVSEId,
-                                                                   ProductId,
-                                                                   SessionId,
-                                                                   OperatorId,
-
-                                                                   Timestamp,
-                                                                   Request.CancellationToken,
-                                                                   Request.EventTrackingId,
-                                                                   Request.RequestTimeout);
+                                                                       Timestamp,
+                                                                       Request.CancellationToken,
+                                                                       Request.EventTrackingId,
+                                                                       Request.RequestTimeout);
 
 
-                #region Send OnAuthorizeEVSEStartResponse event
+                    #region Send OnAuthorizeStartResponse event
 
-                var EndTime = DateTime.Now;
+                    var EndTime = DateTime.Now;
 
-                try
-                {
+                    try
+                    {
 
-                    OnAuthorizeEVSEStartResponse?.Invoke(EndTime,
+                        OnAuthorizeStartResponse?.Invoke(EndTime,
                                                          Timestamp,
                                                          this,
                                                          Id.ToString(),
                                                          Request.EventTrackingId,
                                                          RoamingNetwork.Id,
                                                          OperatorId,
-                                                         AuthToken,
-                                                         EVSEId,
+                                                         Identification,
                                                          ProductId,
                                                          SessionId,
                                                          Request.RequestTimeout,
                                                          response,
                                                          EndTime - StartTime);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStartResponse));
-                }
-
-                                                           #endregion
-
-                #region Map response
-
-                if (response != null)
-                {
-                    switch (response.Result)
-                    {
-
-                        case AuthStartEVSEResultType.Authorized:
-                            return CPO.AuthorizationStart.Authorized(Request,
-                                                                     response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
-                                                                     default(PartnerSession_Id?),
-                                                                     DefaultProviderId,//    response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
-                                                                     "Ready to charge!",
-                                                                     null,
-                                                                     response.ListOfAuthStopTokens.
-                                                                         SafeSelect(token => Identification.FromRFIDId(token.ToOICP()))
-                                                                    );
-
-                        case AuthStartEVSEResultType.NotAuthorized:
-                            return CPO.AuthorizationStart.NotAuthorized(Request,
-                                                                        StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                                        "RFID Authentication failed - invalid UID");
-
-                        case AuthStartEVSEResultType.InvalidSessionId:
-                            return CPO.AuthorizationStart.SessionIsInvalid(Request,
-                                                                           SessionId:         Request.SessionId,
-                                                                           PartnerSessionId:  Request.PartnerSessionId);
-
-                        case AuthStartEVSEResultType.CommunicationTimeout:
-                            return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
-
-                        case AuthStartEVSEResultType.StartChargingTimeout:
-                            return CPO.AuthorizationStart.NoEVConnectedToEVSE(Request);
-
-                        case AuthStartEVSEResultType.Reserved:
-                            return CPO.AuthorizationStart.EVSEAlreadyReserved(Request);
-
-                        case AuthStartEVSEResultType.UnknownEVSE:
-                            return CPO.AuthorizationStart.UnknownEVSEID(Request);
-
-                        case AuthStartEVSEResultType.OutOfService:
-                            return CPO.AuthorizationStart.EVSEOutOfService(Request);
-
                     }
-                }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartResponse));
+                    }
 
-                return CPO.AuthorizationStart.ServiceNotAvailable(
+                    #endregion
+
+                    #region Map response
+
+                    if (response != null)
+                    {
+                        switch (response.Result)
+                        {
+
+                            case AuthStartResultType.Authorized:
+                                return CPO.AuthorizationStart.Authorized(Request,
+                                                                         response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
+                                                                         default(PartnerSession_Id?),
+                                                                         DefaultProviderId,//    response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
+                                                                         "Ready to charge!",
+                                                                         null,
+                                                                         response.ListOfAuthStopTokens.
+                                                                             SafeSelect(token => OICPv2_1.Identification.FromUID(token.ToOICP()))
+                                                                        );
+
+                            case AuthStartResultType.NotAuthorized:
+                                return CPO.AuthorizationStart.NotAuthorized(Request,
+                                                                            StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                                                                            "RFID Authentication failed - invalid UID");
+
+                            case AuthStartResultType.InvalidSessionId:
+                                return CPO.AuthorizationStart.SessionIsInvalid(Request,
+                                                                               SessionId:         Request.SessionId,
+                                                                               PartnerSessionId:  Request.PartnerSessionId);
+
+                            case AuthStartResultType.CommunicationTimeout:
+                                return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
+
+                            case AuthStartResultType.StartChargingTimeout:
+                                return CPO.AuthorizationStart.NoEVConnectedToEVSE(Request);
+
+                            case AuthStartResultType.Reserved:
+                                return CPO.AuthorizationStart.EVSEAlreadyReserved(Request);
+
+                            case AuthStartResultType.OutOfService:
+                                return CPO.AuthorizationStart.EVSEOutOfService(Request);
+
+                        }
+                    }
+
+                    #endregion
+
+
+                    return CPO.AuthorizationStart.ServiceNotAvailable(
                            Request,
                            SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
                            ProviderId: response?.ProviderId.ToOICP()
                        );
 
-                #endregion
+                }
 
             };
 
@@ -591,10 +734,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Map parameter values
 
-                var SessionId   = Request.SessionId.   ToWWCP();
-                var AuthToken   = Request.UID.         ToWWCP();
-                var EVSEId      = Request.EVSEId.Value.ToWWCP().Value;
-                var OperatorId  = Request.OperatorId.  ToWWCP();
+                var SessionId            = Request.SessionId.   ToWWCP();
+                var AuthIdentification   = WWCP.AuthIdentification.FromAuthToken(Request.UID.ToWWCP());
+                var EVSEId               = Request.EVSEId.Value.ToWWCP().Value;
+                var OperatorId           = Request.OperatorId.  ToWWCP();
 
                 #endregion
 
@@ -614,7 +757,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        OperatorId,
                                                        EVSEId,
                                                        SessionId,
-                                                       AuthToken,
+                                                       AuthIdentification,
                                                        Request.RequestTimeout);
 
                 }
@@ -627,7 +770,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 var response = await RoamingNetwork.AuthorizeStop(SessionId,
-                                                                  AuthToken,
+                                                                  AuthIdentification,
                                                                   EVSEId,
                                                                   OperatorId,
 
@@ -654,7 +797,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         OperatorId,
                                                         EVSEId,
                                                         SessionId,
-                                                        AuthToken,
+                                                        AuthIdentification,
                                                         Request.RequestTimeout,
                                                         response,
                                                         EndTime - StartTime);

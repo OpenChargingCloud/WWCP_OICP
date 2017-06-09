@@ -358,7 +358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 => ICPOClient.AuthorizeStart(new AuthorizeStartRequest(OperatorId,
-                                                                       UID,
+                                                                       Identification.FromUID(UID),
                                                                        EVSEId,
                                                                        PartnerProductId,
                                                                        SessionId,

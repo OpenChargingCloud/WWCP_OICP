@@ -269,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                 var result = await HubjectEMP.
                     PushAuthenticationData(Enumeration.Create(  // ([A-Za-z]{2} \-? [A-Za-z0-9]{3} \-? C[A-Za-z0-9]{8}[\*|\-]?[\d|X])
 
-                                               Identification.FromRFIDId(UID.Parse("08152305")),
+                                               Identification.FromUID(UID.Parse("08152305")),
 
                                                Identification.FromQRCodeIdentification
                                                    (EVCO_Id.Parse("DE-GDF-C123ABC56-X"),
