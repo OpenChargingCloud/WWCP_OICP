@@ -271,7 +271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.ValueAddedServices         = ValueAddedServices;
             this.Accessibility              = Accessibility;
             this.HotlinePhoneNumber         = HotlinePhoneNumber;
-            this.AdditionalInfo             = AdditionalInfo ?? new I18NString();
+            this.AdditionalInfo             = AdditionalInfo.SubstringMax(200) ?? new I18NString();
             this.GeoChargingPointEntrance   = GeoChargingPointEntrance;
             this.IsOpen24Hours              = IsOpen24Hours;
             this.OpeningTime                = OpeningTime;
