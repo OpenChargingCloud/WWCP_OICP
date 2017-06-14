@@ -69,7 +69,6 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
-    <Compile Include="IO\Helpers.cs" />
     <Compile Include="Messages\AResponseBuilder.cs" />
     <Compile Include="Messages\Delegates.cs" />
     <Compile Include="Messages\EMP\EVSEStatus.cs" />
