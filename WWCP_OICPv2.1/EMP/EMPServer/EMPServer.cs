@@ -805,7 +805,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes()
-
                 };
 
                 #endregion

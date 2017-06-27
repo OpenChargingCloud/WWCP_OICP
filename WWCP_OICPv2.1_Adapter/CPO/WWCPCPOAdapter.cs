@@ -108,6 +108,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         IId ISendAuthorizeStartStop.AuthId
             => Id;
 
+        IId ISend2RemoteChargeDetailRecords.Id
+            => Id;
+
+        IEnumerable<IId> ISend2RemoteChargeDetailRecords.Ids
+            => Ids.Cast<IId>();
+
         /// <summary>
         /// The offical (multi-language) name of the roaming provider.
         /// </summary>
