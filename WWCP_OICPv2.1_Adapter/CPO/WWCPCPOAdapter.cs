@@ -418,6 +418,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+
+        public delegate void FlushStatusQueuesDelegate(WWCPCPOAdapter Sender, TimeSpan Every);
+
+        public event FlushStatusQueuesDelegate FlushStatusQueuesEvent;
+
         #endregion
 
         #region Constructor(s)
@@ -5869,7 +5874,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public async Task FlushStatusQueues()
         {
 
-            DebugX.Log("FlushStatusQueues, as every " + _StatusCheckEvery + "ms!");
+            FlushStatusQueuesEvent?.Invoke(this, TimeSpan.FromMilliseconds(_ServiceCheckEvery));
+
 
             #region Make a thread local copy of all data
 
