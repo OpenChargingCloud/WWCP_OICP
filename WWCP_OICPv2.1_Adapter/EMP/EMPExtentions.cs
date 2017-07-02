@@ -74,7 +74,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static IEMPRoamingProvider
+        public static OICPv2_1.EMP.WWCPEMPAdapter
 
             CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               EMPRoamingProvider_Id                     Id,
@@ -200,7 +200,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator);
+                                                Configurator) as OICPv2_1.EMP.WWCPEMPAdapter;
 
         }
 
@@ -237,7 +237,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static IEMPRoamingProvider
+        public static OICPv2_1.EMP.WWCPEMPAdapter
 
             CreateOICPv2_1_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               EMPRoamingProvider_Id                     Id,
@@ -360,7 +360,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator);
+                                                Configurator) as OICPv2_1.EMP.WWCPEMPAdapter;
 
         }
 
