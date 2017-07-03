@@ -593,10 +593,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                     return CPO.AuthorizationStart.ServiceNotAvailable(
-                           Request,
-                           SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
-                           ProviderId: response?.ProviderId.ToOICP()
-                       );
+                               Request,
+                               SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
+                               ProviderId: response?.ProviderId.ToOICP()
+                           );
 
                 }
 
@@ -687,9 +687,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                         );
 
                             case AuthStartResultType.NotAuthorized:
+                                if (Request.Identification.RFIDId != null)
+                                    return CPO.AuthorizationStart.NotAuthorized(Request,
+                                                                                StatusCodes.RFIDAuthenticationfailed_InvalidUID,
+                                                                                "RFID Authentication failed - Invalid UID!");
+
+                                if (Request.Identification.QRCodeIdentification != null)
+                                    return CPO.AuthorizationStart.NotAuthorized(Request,
+                                                                                StatusCodes.QRCodeAuthenticationFailed_InvalidCredentials,
+                                                                                "QR-Code Authentication failed - Invalid credentials!");
+
                                 return CPO.AuthorizationStart.NotAuthorized(Request,
-                                                                            StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                                            "RFID Authentication failed - invalid UID");
+                                                                            StatusCodes.NoPositiveAuthenticationResponse,
+                                                                            "No positive authentication response!");
+
 
                             case AuthStartResultType.InvalidSessionId:
                                 return CPO.AuthorizationStart.SessionIsInvalid(Request,

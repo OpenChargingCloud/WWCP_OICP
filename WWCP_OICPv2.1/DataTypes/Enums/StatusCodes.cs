@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         SystemError                                      = 021,
         DataError                                        = 022,
 
-        QRCodeAuthenticationFfailed_InvalidCredentials   = 101,
+        QRCodeAuthenticationFailed_InvalidCredentials    = 101,
         RFIDAuthenticationfailed_InvalidUID              = 102,
         RFIDAuthenticationfailed_CardNotReadable         = 103,
         PLCAuthenticationfailed_InvalidEVCOID            = 105,
