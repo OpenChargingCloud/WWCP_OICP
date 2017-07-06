@@ -479,7 +479,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStartAcknowledgementSerializer,
-                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes(),
+                    Connection      = "close"
                 };
 
                 #endregion
@@ -656,7 +657,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStopAcknowledgementSerializer,
-                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes(),
+                    Connection      = "close"
                 };
 
                 #endregion
@@ -841,7 +843,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStartAcknowledgementSerializer,
-                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes(),
+                    Connection      = "close"
                 };
 
                 #endregion
@@ -1018,7 +1021,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStopAcknowledgementSerializer,
-                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes()
+                                                                               CustomStatusCodeSerializer)).ToUTF8Bytes(),
+                    Connection      = "close"
                 };
 
                 #endregion
