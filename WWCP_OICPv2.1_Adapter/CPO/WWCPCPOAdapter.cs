@@ -5638,6 +5638,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     while (e.InnerException != null)
                         e = e.InnerException;
 
+                    DebugX.Log("A exception occured during ServiceCheck: " + e.Message + Environment.NewLine + e.StackTrace);
+
                     OnWWCPCPOAdapterException?.Invoke(DateTime.Now,
                                                       this,
                                                       e);
@@ -5863,9 +5865,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!DisablePushStatus)
             {
 
-                FlushStatusQueues().Wait();
+                try
+                {
 
-                //ToDo: Handle errors!
+                    FlushStatusQueues().Wait();
+
+                }
+                catch (Exception e)
+                {
+
+                    while (e.InnerException != null)
+                        e = e.InnerException;
+
+                    DebugX.Log("A exception occured during StatusCheck: " + e.Message + Environment.NewLine + e.StackTrace);
+
+                }
 
             }
 
