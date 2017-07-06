@@ -419,6 +419,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
+        public delegate void FlushServiceQueuesDelegate(WWCPCPOAdapter Sender, TimeSpan Every);
+
+        public event FlushServiceQueuesDelegate FlushServiceQueuesEvent;
+
+
         public delegate void FlushStatusQueuesDelegate(WWCPCPOAdapter Sender, TimeSpan Every);
 
         public event FlushStatusQueuesDelegate FlushStatusQueuesEvent;
@@ -507,8 +512,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._OperatorNameSelector                           = OperatorNameSelector;
 
 
-            this._IncludeEVSEIds                                 = IncludeEVSEIds != null ? IncludeEVSEIds : evseid => true;
-            this._IncludeEVSEs                                   = IncludeEVSEs   != null ? IncludeEVSEs   : evse   => true;
+            this._IncludeEVSEIds                                 = IncludeEVSEIds ?? (evseid => true);
+            this._IncludeEVSEs                                   = IncludeEVSEs   ?? (evse   => true);
 
             this._ServiceCheckEvery                              = (UInt32) (ServiceCheckEvery.HasValue
                                                                                 ? ServiceCheckEvery.Value. TotalMilliseconds
@@ -5653,7 +5658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public async Task FlushServiceQueues()
         {
 
-            DebugX.Log("FlushServiceQueues, as every " + _ServiceCheckEvery + "ms!");
+            FlushServiceQueuesEvent?.Invoke(this, TimeSpan.FromMilliseconds(_ServiceCheckEvery));
 
             #region Make a thread local copy of all data
 
