@@ -609,37 +609,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP Authorization requests.</param>
         /// <param name="AuthenticationDataURI">The HTTP/SOAP/XML URI for OICP AuthenticationData requests.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public CPOClient(String                               ClientId,
                          String                               Hostname,
-                         IPPort                               RemotePort                  = null,
-                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                         X509Certificate                      ClientCert                  = null,
-                         String                               HTTPVirtualHost             = null,
-                         String                               URIPrefix                   = DefaultURIPrefix,
-                         String                               EVSEDataURI                 = DefaultEVSEDataURI,
-                         String                               EVSEStatusURI               = DefaultEVSEStatusURI,
-                         String                               AuthorizationURI            = DefaultAuthorizationURI,
-                         String                               AuthenticationDataURI       = DefaultAuthenticationDataURI,
-                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                         TimeSpan?                            QueryTimeout                = null,
-                         DNSClient                            DNSClient                   = null,
-                         String                               LoggingContext              = CPOClientLogger.DefaultContext,
-                         LogfileCreatorDelegate               LogfileCreator              = null)
+                         IPPort                               RemotePort                   = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
+                         X509Certificate                      ClientCert                   = null,
+                         String                               HTTPVirtualHost              = null,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
+                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
+                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                            RequestTimeout               = null,
+                         DNSClient                            DNSClient                    = null,
+                         String                               LoggingContext               = CPOClientLogger.DefaultContext,
+                         LogfileCreatorDelegate               LogfileCreator               = null)
 
             : base(ClientId,
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
                    DNSClient)
 
         {
@@ -687,6 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          String                               Hostname,
                          IPPort                               RemotePort                   = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
                          X509Certificate                      ClientCert                   = null,
                          String                               HTTPVirtualHost              = null,
                          String                               URIPrefix                    = DefaultURIPrefix,
@@ -702,6 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
@@ -801,8 +805,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + EVSEDataURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -815,7 +821,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1014,8 +1020,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1028,7 +1036,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1231,8 +1239,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1243,7 +1253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1427,8 +1437,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1439,7 +1451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1615,8 +1627,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1627,7 +1641,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1829,8 +1843,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthenticationDataURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1841,7 +1857,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
