@@ -44,12 +44,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                           EVSEStatusRecord         EVSEStatusRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP charge detail records to charge detail records.
+    /// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
     /// </summary>
     /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
     /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
     public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
                                                                                           ChargeDetailRecord       OCIPChargeDetailRecord);
+
+    /// <summary>
+    /// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
+    /// </summary>
+    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
+    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
+    public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       OICPChargeDetailRecord,
+                                                                                               WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
 
 
     #region OnPushEVSEDataWWCPRequest/-Response
