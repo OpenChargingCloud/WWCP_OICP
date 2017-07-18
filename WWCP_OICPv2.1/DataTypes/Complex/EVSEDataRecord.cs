@@ -181,6 +181,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Id">A unique EVSE identification.</param>
         /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
         /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
+        /// 
         /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
         /// <param name="Address">The address of this EVSE.</param>
@@ -202,10 +203,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+        /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
         public EVSEDataRecord(EVSE_Id                              Id,
                               DeltaTypes?                          DeltaType,
                               DateTime?                            LastUpdate,
+
                               String                               ChargingStationId           = null,
                               I18NString                           ChargingStationName         = null,
                               Address                              Address                     = null,

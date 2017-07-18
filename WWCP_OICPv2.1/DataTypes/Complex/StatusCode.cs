@@ -130,10 +130,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OnExceptionDelegate                  OnException              = null)
         {
 
-            StatusCode _StatusCode;
-
             if (TryParse(StatusCodeXML,
-                         out _StatusCode,
+                         out StatusCode _StatusCode,
                          CustomStatusCodeParser,
                          OnException))
 
@@ -158,10 +156,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OnExceptionDelegate                  OnException              = null)
         {
 
-            StatusCode _StatusCode;
-
             if (TryParse(StatusCodeText,
-                         out _StatusCode,
+                         out StatusCode _StatusCode,
                          CustomStatusCodeParser,
                          OnException))
 
