@@ -238,7 +238,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, ProviderAuthenticationDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, ProviderAuthenticationDataXML, e);
 
                 ProviderAuthenticationData = null;
                 return false;
@@ -278,7 +278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, ProviderAuthenticationDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, ProviderAuthenticationDataText, e);
             }
 
             ProviderAuthenticationData = null;

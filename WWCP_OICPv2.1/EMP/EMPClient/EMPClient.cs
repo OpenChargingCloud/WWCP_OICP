@@ -29,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using static org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPClient;
 
 #endregion
 
@@ -576,6 +577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
+        public CustomXMLParserDelegate<PullEVSEDataResponse>                        CustomPullEVSEDataResponseParser                          { get; set; }
         public CustomXMLParserDelegate<EVSEData>                                    CustomEVSEDataParser                                      { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEData>                            CustomOperatorEVSEDataParser                              { get; set; }
         public CustomXMLParserDelegate<EVSEDataRecord>                              CustomEVSEDataRecordParser                                { get; set; }
@@ -820,6 +822,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+
+        public event OnDataReadDelegate OnDataRead;
+
         #endregion
 
         #region Constructor(s)
@@ -978,7 +983,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
-        public async Task<HTTPResponse<EVSEData>>
+        public async Task<HTTPResponse<PullEVSEDataResponse>>
 
             PullEVSEData(PullEVSEDataRequest  Request)
 
@@ -995,7 +1000,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEData request must not be null!");
 
 
-            HTTPResponse<EVSEData> result = null;
+            HTTPResponse<PullEVSEDataResponse> result = null;
 
             #endregion
 
@@ -1043,30 +1048,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     DNSClient))
             {
 
-                _OICPClient.OnDataRead += async (TimeSpan, BytesRead, BytesExpected) => {
-                                                                                            Console.WriteLine(((Int32) TimeSpan.TotalMilliseconds) + "ms -> " +
-                                                                                            BytesRead + " bytes read" +
-                                                                                            (BytesExpected.HasValue ? " of " + BytesExpected + " bytes expected" : "") +
-                                                                                            "!");
-                                                                                        };
+                _OICPClient.OnDataRead += OnDataRead;
 
                 result = await _OICPClient.Query(_CustomPullEVSEDataSOAPRequestMapper(Request,
                                                                                       SOAP.Encapsulation(Request.ToXML())),
-                                                 "eRoamingPullEVSEData",
+                                                 "eRoamingPullEvseData",
                                                  RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEData.Parse(xml,
-                                                                                                                                 CustomEVSEDataParser,
-                                                                                                                                 CustomOperatorEVSEDataParser,
-                                                                                                                                 CustomEVSEDataRecordParser,
-                                                                                                                                 CustomAddressParser,
-                                                                                                                                 e)),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) => PullEVSEDataResponse.Parse(request,
+                                                                                                                                                                xml,
+                                                                                                                                                                CustomPullEVSEDataResponseParser,
+                                                                                                                                                                CustomEVSEDataParser,
+                                                                                                                                                                CustomOperatorEVSEDataParser,
+                                                                                                                                                                CustomEVSEDataRecordParser,
+                                                                                                                                                                CustomAddressParser,
+                                                                                                                                                                CustomStatusCodeParser,
+                                                                                                                                                                onexception)),
 
                                                  #endregion
 
@@ -1074,10 +1078,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                     return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                               IsFault: true);
+                                                     return new HTTPResponse<PullEVSEDataResponse>(
+
+                                                                httpresponse,
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -1089,11 +1104,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                     return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                       new EVSEData(StatusCodes.DataError,
-                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                       IsFault: true);
+                                                     return new HTTPResponse<PullEVSEDataResponse>(
+
+                                                                httpresponse,
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -1105,10 +1129,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<EVSEData>.ExceptionThrown(new EVSEData(StatusCodes.ServiceNotAvailable,
-                                                                                                                exception.Message,
-                                                                                                                exception.StackTrace),
-                                                                                                   Exception: exception);
+                                                     return HTTPResponse<PullEVSEDataResponse>.ExceptionThrown(
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.ServiceNotAvailable,
+                                                                    exception.Message,
+                                                                    exception.StackTrace
+                                                                ),
+
+                                                                Exception: exception
+
+                                                            );
 
                                                  }
 
@@ -1119,8 +1151,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
 
             if (result == null)
-                result = HTTPResponse<EVSEData>.ClientError(
-                             new EVSEData(
+                result = HTTPResponse<PullEVSEDataResponse>.ClientError(
+                             new PullEVSEDataResponse(
+                                 Request,
                                  StatusCodes.SystemError,
                                  "HTTP request failed!"
                              )
@@ -1244,12 +1277,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 result = await _OICPClient.Query(_CustomPullEVSEStatusSOAPRequestMapper(Request,
                                                                                         SOAP.Encapsulation(Request.ToXML())),
-                                                 "eRoamingPullEVSEStatus",
+                                                 "eRoamingPullEvseStatus",
                                                  RequestLogDelegate:   OnPullEVSEStatusSOAPRequest,
                                                  ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1435,7 +1468,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1618,7 +1651,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1834,7 +1867,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2050,7 +2083,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2266,7 +2299,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2479,7 +2512,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2693,7 +2726,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 

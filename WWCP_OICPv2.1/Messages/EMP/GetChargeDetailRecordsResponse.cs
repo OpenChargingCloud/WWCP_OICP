@@ -269,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsResponseXML, e);
+                OnException?.Invoke(DateTime.UtcNow, GetChargeDetailRecordsResponseXML, e);
 
                 GetChargeDetailRecordsResponse = null;
                 return false;
@@ -317,7 +317,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, GetChargeDetailRecordsResponseText, e);
+                OnException?.Invoke(DateTime.UtcNow, GetChargeDetailRecordsResponseText, e);
             }
 
             GetChargeDetailRecordsResponse = null;

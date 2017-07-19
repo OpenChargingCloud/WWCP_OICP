@@ -324,7 +324,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, IdentificationXML, e);
+                OnException?.Invoke(DateTime.UtcNow, IdentificationXML, e);
 
                 Identification = null;
                 return false;
@@ -363,7 +363,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, IdentificationText, e);
+                OnException?.Invoke(DateTime.UtcNow, IdentificationText, e);
             }
 
             Identification = null;

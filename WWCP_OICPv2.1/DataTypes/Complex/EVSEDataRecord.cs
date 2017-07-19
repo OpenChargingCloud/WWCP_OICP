@@ -676,7 +676,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, EVSEDataRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordXML, e);
 
                 EVSEDataRecord = null;
                 return false;
@@ -718,7 +718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEDataRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordText, e);
             }
 
             EVSEDataRecord = null;

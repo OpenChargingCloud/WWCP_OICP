@@ -352,7 +352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 DebugX.Log(e.Message + Environment.NewLine + e.StackTrace);
 
-                OnException?.Invoke(DateTime.Now, AuthorizeStartXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeStartXML, e);
 
                 AuthorizeStart = null;
                 return false;
@@ -410,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizeStartText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeStartText, e);
             }
 
             AuthorizeStart = null;

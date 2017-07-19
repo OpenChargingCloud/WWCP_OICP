@@ -234,7 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusXML, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEStatusXML, e);
 
                 OperatorEVSEStatus = null;
                 return false;
@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusText, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEStatusText, e);
             }
 
             OperatorEVSEStatus = null;

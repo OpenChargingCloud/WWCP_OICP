@@ -227,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, SendChargeDetailRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, SendChargeDetailRecordXML, e);
 
                 SendChargeDetailRecord = null;
                 return false;
@@ -279,7 +279,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, SendChargeDetailRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, SendChargeDetailRecordText, e);
             }
 
             SendChargeDetailRecord = null;

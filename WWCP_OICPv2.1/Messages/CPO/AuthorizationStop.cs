@@ -617,7 +617,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizationStopXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizationStopXML, e);
 
                 AuthorizationStop = null;
                 return false;
@@ -662,7 +662,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizationStopText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizationStopText, e);
             }
 
             AuthorizationStop = null;

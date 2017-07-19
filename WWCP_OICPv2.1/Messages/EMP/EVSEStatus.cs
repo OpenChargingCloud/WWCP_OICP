@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, EVSEStatusXML, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEStatusXML, e);
 
                 EVSEStatus = null;
                 return false;
@@ -360,7 +360,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEStatusText, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEStatusText, e);
             }
 
             EVSEStatus = null;

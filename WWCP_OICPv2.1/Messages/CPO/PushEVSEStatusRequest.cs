@@ -298,7 +298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PushEVSEStatusXML, e);
+                OnException?.Invoke(DateTime.UtcNow, PushEVSEStatusXML, e);
 
                 PushEVSEStatus = null;
                 return false;
@@ -356,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, PushEVSEStatusText, e);
+                OnException?.Invoke(DateTime.UtcNow, PushEVSEStatusText, e);
             }
 
             PushEVSEStatus = null;

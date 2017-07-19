@@ -42,25 +42,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public IEnumerable<OperatorEVSEData>  OperatorEVSEData   { get; }
 
-        /// <summary>
-        /// The status code for this request.
-        /// (Not defined by OICP!)
-        /// </summary>
-        public StatusCode?                    StatusCode         { get; }
-
         #endregion
 
         #region Constructor(s)
-
-        #region EVSEData(OperatorEVSEData, StatusCode  = null)
 
         /// <summary>
         /// Create a new group of OICP operator EVSE data records or a status code.
         /// </summary>
         /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
-        /// <param name="StatusCode">An optional status code for this request.</param>
-        public EVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData,
-                        StatusCode?                    StatusCode  = null)
+        public EVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData)
         {
 
             #region Initial checks
@@ -71,32 +61,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             this.OperatorEVSEData  = OperatorEVSEData;
-            this.StatusCode        = StatusCode;
 
         }
-
-        #endregion
-
-        #region EVSEData(Code, Description = null, AdditionalInfo = null)
-
-        /// <summary>
-        /// Create a new group of OICP operator EVSE data records or a status code.
-        /// </summary>
-        /// <param name="Code">The result code of the operation.</param>
-        /// <param name="Description">An optional description of the result code.</param>
-        /// <param name="AdditionalInfo">An optional additional information.</param>
-        public EVSEData(StatusCodes  Code,
-                        String       Description     = null,
-                        String       AdditionalInfo  = null)
-
-            : this(new OperatorEVSEData[0],
-                   new StatusCode(Code,
-                                  Description,
-                                  AdditionalInfo))
-
-        { }
-
-        #endregion
 
         #endregion
 
@@ -195,10 +161,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                      OnExceptionDelegate                        OnException                    = null)
         {
 
-            EVSEData _EVSEData;
-
             if (TryParse(EVSEDataXML,
-                         out _EVSEData,
+                         out EVSEData _EVSEData,
                          CustomEVSEDataParser,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
@@ -232,10 +196,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                      OnExceptionDelegate                        OnException                    = null)
         {
 
-            EVSEData _EVSEData;
-
             if (TryParse(EVSEDataText,
-                         out _EVSEData,
+                         out EVSEData _EVSEData,
                          CustomEVSEDataParser,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
@@ -303,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, EVSEDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataXML, e);
 
                 EVSEData = null;
                 return false;
@@ -351,7 +313,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataText, e);
             }
 
             EVSEData = null;
@@ -484,10 +446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return false;
 
             return (!OperatorEVSEData.Any() && !EVSEData.OperatorEVSEData.Any()) ||
-                    (OperatorEVSEData.Any() &&  EVSEData.OperatorEVSEData.Any() && OperatorEVSEData.Count().Equals(EVSEData.OperatorEVSEData.Count())) &&
-
-                    (StatusCode != null && EVSEData.StatusCode != null) ||
-                    (StatusCode == null && EVSEData.StatusCode == null && StatusCode.Equals(EVSEData.StatusCode));
+                    (OperatorEVSEData.Any() &&  EVSEData.OperatorEVSEData.Any() && OperatorEVSEData.Count().Equals(EVSEData.OperatorEVSEData.Count()));
 
         }
 
@@ -506,11 +465,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             unchecked
             {
 
-                return (OperatorEVSEData.Any()
-                           ? OperatorEVSEData.GetHashCode() * 5
-                           : 0) ^
-
-                       StatusCode.GetHashCode();
+                return OperatorEVSEData.GetHashCode();
 
             }
         }
@@ -524,11 +479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEData.Count() + " operator EVSE data record(s)",
-
-                             StatusCode.HasValue
-                                 ? " -> " + StatusCode.Value.Code
-                                 : "");
+            => String.Concat(OperatorEVSEData.Count(), " operator EVSE data record(s)");
 
         #endregion
 

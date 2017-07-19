@@ -1824,7 +1824,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="Request">An PullEVSEData request.</param>
-        public Task<HTTPResponse<EVSEData>>
+        public Task<HTTPResponse<PullEVSEDataResponse>>
 
             PullEVSEData(PullEVSEDataRequest Request)
 

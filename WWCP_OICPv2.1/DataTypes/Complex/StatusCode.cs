@@ -211,7 +211,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, StatusCodeXML, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeXML, e);
 
                 return null;
 
@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeText, e);
             }
 
             return null;
@@ -313,7 +313,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeText, e);
             }
 
             StatusCode = default(StatusCode);

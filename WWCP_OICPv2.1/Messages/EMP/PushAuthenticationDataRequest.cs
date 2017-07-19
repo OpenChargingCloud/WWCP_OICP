@@ -331,7 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PushAuthenticationDataRequestXML, e);
+                OnException?.Invoke(DateTime.UtcNow, PushAuthenticationDataRequestXML, e);
 
                 PushAuthenticationDataRequest = null;
                 return false;
@@ -392,7 +392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, PushAuthenticationDataRequestText, e);
+                OnException?.Invoke(DateTime.UtcNow, PushAuthenticationDataRequestText, e);
             }
 
             PushAuthenticationDataRequest = null;

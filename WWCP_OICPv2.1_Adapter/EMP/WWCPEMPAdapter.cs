@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         }
 
-        public DateTime? LastPullDataRun { get; private set; }
+        public DateTime? TimestampOfLastPullDataRun { get; private set; }
 
         #endregion
 
@@ -1284,7 +1284,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 var Warnings  = new List<String>();
                 EVSE _EVSE    = null;
 
-                foreach (var evseoperator in result.Content.OperatorEVSEData)
+                foreach (var evseoperator in result.Content.EVSEData.OperatorEVSEData)
                     foreach (var evse in evseoperator.EVSEDataRecords)
                     {
 
@@ -1311,7 +1311,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
 
             return new EVSEDataPull(new EVSE[0],
-                                    result.HTTPStatusCode.ToString() +
+                                    result.HTTPStatusCode +
                                     (result.ContentLength.HasValue && result.ContentLength.Value > 0
                                          ? Environment.NewLine + result.HTTPBody.ToUTF8String()
                                          : ""));
@@ -2687,41 +2687,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 try
                 {
+
                     var TimestampBeforeLastPullDataRun = DateTime.Now;
 
-                    //var PullEVSEDataTask  = EMPRoaming.PullEVSEData(DefaultProviderId.Value,
-                    //                                                DefaultSearchCenter,
-                    //                                                DefaultDistanceKM.HasValue ? DefaultDistanceKM.Value : 0,
-                    //                                                LastPullDataRun,
-                    //
-                    //                                                CancellationToken:  new CancellationTokenSource().Token,
-                    //                                                EventTrackingId:    EventTracking_Id.New,
-                    //                                                RequestTimeout:     PullDataServiceRequestTimeout);
-                    //
-                    //PullEVSEDataTask.Wait();
+                    var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
+                                                                      DefaultSearchCenter,
+                                                                      DefaultDistanceKM ?? 0,
+                                                                      TimestampOfLastPullDataRun,
+                    
+                                                                      CancellationToken:  new CancellationTokenSource().Token,
+                                                                      EventTrackingId:    EventTracking_Id.New,
+                                                                      RequestTimeout:     PullDataServiceRequestTimeout);
+
+                    //var PullEVSEData = new {
+                    //    Content = PullEVSEDataResponse.Parse(null,
+                    //                                         XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar +
+                    //                                                                          "PullEvseDataResponse_2017-07-19b.xml", Encoding.UTF8)).Root)
+                    //};
 
                     var DownloadTime = DateTime.Now;
 
-                    LastPullDataRun = TimestampBeforeLastPullDataRun;
+                    TimestampOfLastPullDataRun = TimestampBeforeLastPullDataRun;
 
                     #region Everything is ok!
 
-                    //if (PullEVSEDataTask.Result                    != null   &&
-                    //    PullEVSEDataTask.Result.Content            != null   &&
-                    //    PullEVSEDataTask.Result.Content.StatusCode != null   &&
-                    //    PullEVSEDataTask.Result.Content.StatusCode.HasResult &&
-                    //    PullEVSEDataTask.Result.Content.StatusCode.Code == StatusCodes.Success)
-                    //{
-                    //
-                    //    var OperatorEVSEData = PullEVSEDataTask.Result.Content.OperatorEVSEData;
+                    if (PullEVSEData                    != null     &&
+                        PullEVSEData.Content            != null     &&
+                        PullEVSEData.Content.StatusCode != null     &&
+                        PullEVSEData.Content.StatusCode.HasResult() &&
+                        PullEVSEData.Content.StatusCode.Value.Code == StatusCodes.Success)
+                    {
 
-                        var SOAPXML = XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "PullEVSEData_TestData001.xml", Encoding.UTF8)).
-                                                      Root.
-                                                      Element(Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
-                                                      Descendants().
-                                                      FirstOrDefault();
+                        var OperatorEVSEData = PullEVSEData.Content.EVSEData.OperatorEVSEData;
 
-                        var OperatorEVSEData = EVSEData.Parse(SOAPXML).OperatorEVSEData;
+                        //var SOAPXML = XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "PullEVSEData_TestData001.xml", Encoding.UTF8)).
+                        //                              Root.
+                        //                              Element(Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
+                        //                              Descendants().
+                        //                              FirstOrDefault();
+
+                        //var OperatorEVSEData = EVSEData.Parse(SOAPXML).OperatorEVSEData;
 
                         if (OperatorEVSEData != null && OperatorEVSEData.Any())
                         {
@@ -3107,7 +3112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         }
 
-                    //}
+                    }
 
                     #endregion
 

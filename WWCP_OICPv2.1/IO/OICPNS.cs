@@ -65,10 +65,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public static readonly XNamespace MobileAuthorization  = "http://www.hubject.com/b2b/services/mobileauthorization/v2.0";
 
-        /// <summary>
-        /// The namespace for EVSE Serach within the Open Intercharge Protocol (OICP) Version 2.0.
-        /// </summary>
-        public static readonly XNamespace EVSESearch           = "http://www.hubject.com/b2b/services/evsesearch/v2.0";
+        ///// <summary>
+        ///// The namespace for EVSE Serach within the Open Intercharge Protocol (OICP) Version 2.0.
+        ///// </summary>
+        //public static readonly XNamespace EVSESearch           = "http://www.hubject.com/b2b/services/evsesearch/v2.0";
 
     }
 

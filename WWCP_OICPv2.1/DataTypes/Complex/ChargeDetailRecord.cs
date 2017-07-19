@@ -445,7 +445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, ChargeDetailRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordXML, e);
 
                 ChargeDetailRecord = null;
                 return false;
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, ChargeDetailRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordText, e);
             }
 
             ChargeDetailRecord = null;

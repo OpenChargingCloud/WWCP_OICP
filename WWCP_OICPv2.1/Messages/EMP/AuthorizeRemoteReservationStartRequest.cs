@@ -366,7 +366,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteReservationStartXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteReservationStartXML, e);
 
                 AuthorizeRemoteReservationStart = null;
                 return false;
@@ -424,7 +424,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteReservationStartText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteReservationStartText, e);
             }
 
             AuthorizeRemoteReservationStart = null;

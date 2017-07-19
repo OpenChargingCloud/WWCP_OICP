@@ -333,7 +333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthenticationDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthenticationDataXML, e);
 
                 AuthenticationData = null;
                 return false;
@@ -384,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthenticationDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthenticationDataText, e);
             }
 
             AuthenticationData = default(AuthenticationData);

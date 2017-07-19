@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<HTTPResponse<EVSEData>>
+        public static Task<HTTPResponse<PullEVSEDataResponse>>
 
             PullEVSEData(this IEMPClient                 IEMPClient,
                          Provider_Id                     ProviderId,

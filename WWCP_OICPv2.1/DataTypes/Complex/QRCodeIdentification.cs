@@ -255,7 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, QRCodeIdentificationXML, e);
+                OnException?.Invoke(DateTime.UtcNow, QRCodeIdentificationXML, e);
 
                 QRCodeIdentification = default(QRCodeIdentification);
                 return false;
@@ -291,7 +291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, QRCodeIdentificationText, e);
+                OnException?.Invoke(DateTime.UtcNow, QRCodeIdentificationText, e);
             }
 
             QRCodeIdentification = default(QRCodeIdentification);

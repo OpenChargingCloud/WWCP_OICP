@@ -244,7 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PullAuthenticationDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, PullAuthenticationDataXML, e);
 
                 PullAuthenticationData = null;
                 return false;
@@ -300,7 +300,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, PullAuthenticationDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, PullAuthenticationDataText, e);
             }
 
             PullAuthenticationData = null;

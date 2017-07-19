@@ -43,7 +43,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        Task<HTTPResponse<EVSEData>>
+        Task<HTTPResponse<PullEVSEDataResponse>>
             PullEVSEData(PullEVSEDataRequest Request);
 
         Task<HTTPResponse<EVSEStatus>>
