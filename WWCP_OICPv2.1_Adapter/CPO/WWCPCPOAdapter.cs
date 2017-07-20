@@ -419,12 +419,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        public delegate void FlushServiceQueuesDelegate(WWCPCPOAdapter Sender, TimeSpan Every);
+        public delegate void FlushServiceQueuesDelegate(DateTime Timestamp, WWCPCPOAdapter Sender, TimeSpan Every);
 
         public event FlushServiceQueuesDelegate FlushServiceQueuesEvent;
 
 
-        public delegate void FlushStatusQueuesDelegate(WWCPCPOAdapter Sender, TimeSpan Every);
+        public delegate void FlushStatusQueuesDelegate(DateTime Timestamp, WWCPCPOAdapter Sender, TimeSpan Every);
 
         public event FlushStatusQueuesDelegate FlushStatusQueuesEvent;
 
@@ -5660,7 +5660,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public async Task FlushServiceQueues()
         {
 
-            FlushServiceQueuesEvent?.Invoke(this, TimeSpan.FromMilliseconds(_ServiceCheckEvery));
+            FlushServiceQueuesEvent?.Invoke(DateTime.UtcNow,
+                                            this,
+                                            TimeSpan.FromMilliseconds(_ServiceCheckEvery));
 
             #region Make a thread local copy of all data
 
@@ -5669,7 +5671,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             //var EVSEStatusQueueCopy = new AsyncLocal<List<EVSEStatusChange>>();
 
             var EVSEsToAddQueueCopy                = new ThreadLocal<HashSet<EVSE>>();
-            var EVSEsToUpdateQueueCopy                  = new ThreadLocal<HashSet<EVSE>>();
+            var EVSEsToUpdateQueueCopy             = new ThreadLocal<HashSet<EVSE>>();
             var EVSEStatusChangesDelayedQueueCopy  = new ThreadLocal<List<EVSEStatusUpdate>>();
             var EVSEsToRemoveQueueCopy             = new ThreadLocal<HashSet<EVSE>>();
             var ChargeDetailRecordQueueCopy        = new ThreadLocal<List<WWCP.ChargeDetailRecord>>();
@@ -5895,7 +5897,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public async Task FlushStatusQueues()
         {
 
-            FlushStatusQueuesEvent?.Invoke(this, TimeSpan.FromMilliseconds(_ServiceCheckEvery));
+            FlushStatusQueuesEvent?.Invoke(DateTime.UtcNow,
+                                           this,
+                                           TimeSpan.FromMilliseconds(_ServiceCheckEvery));
 
 
             #region Make a thread local copy of all data
