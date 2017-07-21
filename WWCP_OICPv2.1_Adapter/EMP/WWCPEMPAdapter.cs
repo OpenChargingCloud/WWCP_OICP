@@ -470,7 +470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #endregion
 
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 if (EVSEId.HasValue)
                 {
@@ -515,7 +515,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Send OnAuthorizeEVSEStartResponse event
 
-                    var EndTime = DateTime.Now;
+                    var EndTime = DateTime.UtcNow;
 
                     try
                     {
@@ -641,7 +641,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region Send OnAuthorizeStartResponse event
 
-                    var EndTime = DateTime.Now;
+                    var EndTime = DateTime.UtcNow;
 
                     try
                     {
@@ -754,7 +754,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Send OnAuthorizeEVSEStopRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -794,7 +794,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Send OnAuthorizeEVSEStopResponse event
 
-                var EndTime = DateTime.Now;
+                var EndTime = DateTime.UtcNow;
 
                 try
                 {
@@ -881,7 +881,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Send OnChargeDetailRecordRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -915,7 +915,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Send OnChargeDetailRecordResponse event
 
-                var EndTime = DateTime.Now;
+                var EndTime = DateTime.UtcNow;
 
                 try
                 {
@@ -1248,7 +1248,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -1352,7 +1352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -1367,7 +1367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            //var StartTime = DateTime.Now;
+            //var StartTime = DateTime.UtcNow;
 
             //try
             //{
@@ -1576,7 +1576,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            //var StartTime = DateTime.Now;
+            //var StartTime = DateTime.UtcNow;
 
             //try
             //{
@@ -1640,7 +1640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            //var Endtime = DateTime.Now;
+            //var Endtime = DateTime.UtcNow;
             //
             //try
             //{
@@ -1714,7 +1714,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -1732,7 +1732,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnReserveEVSERequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1852,10 +1852,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 result = ReservationResult.Success(response.Content.SessionId != null
                                                    ? new ChargingReservation(ReservationId:            ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
                                                                                                            "*R" + response.Content.SessionId.ToString()),
-                                                                             Timestamp:                DateTime.Now,
-                                                                             StartTime:                DateTime.Now,
+                                                                             Timestamp:                DateTime.UtcNow,
+                                                                             StartTime:                DateTime.UtcNow,
                                                                              Duration:                 Duration.HasValue ? Duration.Value : DefaultReservationTime,
-                                                                             EndTime:                  DateTime.Now + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
+                                                                             EndTime:                  DateTime.UtcNow + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
                                                                              ConsumedReservationTime:  TimeSpan.FromSeconds(0),
                                                                              ReservationLevel:         ChargingReservationLevel.EVSE,
                                                                              ProviderId:               ProviderId,
@@ -1879,7 +1879,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnReserveEVSEResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -1952,7 +1952,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -1967,7 +1967,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnCancelReservationRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2063,7 +2063,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -2081,7 +2081,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnRemoteStartEVSERequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2203,7 +2203,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             ConfigureAwait(false);
 
 
-            var Now     = DateTime.Now;
+            var Now     = DateTime.UtcNow;
             var Runtime = Now - Timestamp.Value;
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&
@@ -2224,7 +2224,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnRemoteStartEVSEResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2358,7 +2358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -2376,7 +2376,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnRemoteStopEVSERequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2432,7 +2432,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnRemoteStopEVSEResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2528,11 +2528,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (!To.HasValue)
-                To = DateTime.Now;
+                To = DateTime.UtcNow;
 
 
             if (!Timestamp.HasValue)
-                Timestamp = DateTime.Now;
+                Timestamp = DateTime.UtcNow;
 
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
@@ -2550,7 +2550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2620,7 +2620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2682,13 +2682,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
                 DebugX.LogT("[" + Id + "] 'Pull data service' started at " + StartTime.ToIso8601());
 
                 try
                 {
 
-                    var TimestampBeforeLastPullDataRun = DateTime.Now;
+                    var TimestampBeforeLastPullDataRun = DateTime.UtcNow;
 
                     var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
                                                                       DefaultSearchCenter,
@@ -2705,7 +2705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     //                                                                          "PullEvseDataResponse_2017-07-19b.xml", Encoding.UTF8)).Root)
                     //};
 
-                    var DownloadTime = DateTime.Now;
+                    var DownloadTime = DateTime.UtcNow;
 
                     TimestampOfLastPullDataRun = TimestampBeforeLastPullDataRun;
 
@@ -3163,7 +3163,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     #endregion
 
 
-                    var EndTime = DateTime.Now;
+                    var EndTime = DateTime.UtcNow;
                     DebugX.LogT("[" + Id + "] 'Pull data service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
 
                 }
@@ -3220,7 +3220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
                 DebugX.LogT("[" + Id + "] 'Pull status service' started at " + StartTime.ToIso8601());
 
                 try
@@ -3236,7 +3236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     PullEVSEStatusTask.Wait();
 
-                    var DownloadTime = DateTime.Now;
+                    var DownloadTime = DateTime.UtcNow;
 
                     #region Everything is ok!
 
@@ -3403,7 +3403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     #endregion
 
 
-                    var EndTime = DateTime.Now;
+                    var EndTime = DateTime.UtcNow;
 
                     DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
 
