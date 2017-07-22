@@ -948,8 +948,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                TransmissionRetry++ < MaxNumberOfRetries);
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
+                   TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnPushEVSEDataResponse event
@@ -1188,7 +1188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                    TransmissionRetry++ < MaxNumberOfRetries);
 
 
@@ -1411,7 +1411,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                 TransmissionRetry++ < MaxNumberOfRetries);
 
 
@@ -1632,7 +1632,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                    TransmissionRetry++ < MaxNumberOfRetries);
 
 
@@ -1876,7 +1876,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                    TransmissionRetry++ < MaxNumberOfRetries);
 
 
@@ -2089,7 +2089,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                              );
 
             }
-            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                    TransmissionRetry++ < MaxNumberOfRetries);
 
 

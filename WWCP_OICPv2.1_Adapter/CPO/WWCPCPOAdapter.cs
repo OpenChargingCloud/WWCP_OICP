@@ -40,7 +40,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCPOAdapter : ABaseEMobilityEntity<CSORoamingProvider_Id>,
+    public class WWCPCPOAdapter : AWWCPCPOAdapter,
                                   ICSORoamingProvider,
                                   IEquatable <WWCPCPOAdapter>,
                                   IComparable<WWCPCPOAdapter>,
@@ -71,22 +71,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         public  static readonly  ChargingStationOperatorNameSelectorDelegate            DefaultOperatorNameSelector  = I18N => I18N.FirstText();
 
-                /// <summary>
-        /// The default service check intervall.
-        /// </summary>
-        public  readonly static TimeSpan                                                DefaultServiceCheckEvery     = TimeSpan.FromSeconds(31);
-
-        /// <summary>
-        /// The default status check intervall.
-        /// </summary>
-        public  readonly static TimeSpan                                                DefaultStatusCheckEvery      = TimeSpan.FromSeconds(3);
-
-
-        private readonly        Object                                                  ServiceCheckLock;
-        private readonly        Timer                                                   ServiceCheckTimer;
-        private readonly        Object                                                  StatusCheckLock;
-        private readonly        Timer                                                   StatusCheckTimer;
-
         private readonly        HashSet<EVSE>                                           EVSEsToAddQueue;
         private readonly        HashSet<EVSE>                                           EVSEsToUpdateQueue;
         private readonly        List<EVSEStatusUpdate>                                  EVSEStatusChangesFastQueue;
@@ -94,8 +78,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private readonly        HashSet<EVSE>                                           EVSEsToRemoveQueue;
         private readonly        List<WWCP.ChargeDetailRecord>                           ChargeDetailRecordQueue;
 
-        private                 UInt64                                                  _ServiceRunId;
-        private                 UInt64                                                  _StatusRunId;
         private                 IncludeEVSEIdDelegate                                   _IncludeEVSEIds;
         private                 IncludeEVSEDelegate                                     _IncludeEVSEs;
 
@@ -113,13 +95,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         IEnumerable<IId> ISend2RemoteChargeDetailRecords.Ids
             => Ids.Cast<IId>();
-
-        /// <summary>
-        /// The offical (multi-language) name of the roaming provider.
-        /// </summary>
-        [Mandatory]
-        public I18NString Name { get; }
-
 
         /// <summary>
         /// The wrapped CPO roaming object.
@@ -160,90 +135,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             => CPORoaming.DNSClient;
 
 
-        #region ServiceCheckEvery
-
-        private UInt32 _ServiceCheckEvery;
-
-        /// <summary>
-        /// The service check intervall.
-        /// </summary>
-        public TimeSpan ServiceCheckEvery
-        {
-
-            get
-            {
-                return TimeSpan.FromSeconds(_ServiceCheckEvery);
-            }
-
-            set
-            {
-                _ServiceCheckEvery = (UInt32) value.TotalSeconds;
-            }
-
-        }
-
-        #endregion
-
-        #region StatusCheckEvery
-
-        private UInt32 _StatusCheckEvery;
-
-        /// <summary>
-        /// The status check intervall.
-        /// </summary>
-        public TimeSpan StatusCheckEvery
-        {
-
-            get
-            {
-                return TimeSpan.FromSeconds(_StatusCheckEvery);
-            }
-
-            set
-            {
-                _StatusCheckEvery = (UInt32)value.TotalSeconds;
-            }
-
-        }
-
-        #endregion
-
-
-        #region DisablePushData
-
-        /// <summary>
-        /// This service can be disabled, e.g. for debugging reasons.
-        /// </summary>
-        public Boolean  DisablePushData                  { get; set; }
-
-        #endregion
-
-        #region DisablePushStatus
-
-        /// <summary>
-        /// This service can be disabled, e.g. for debugging reasons.
-        /// </summary>
-        public Boolean  DisablePushStatus                { get; set; }
-
-        #endregion
-
-        #region DisableAuthentication
-
-        /// <summary>
-        /// This service can be disabled, e.g. for debugging reasons.
-        /// </summary>
-        public Boolean  DisableAuthentication            { get; set; }
-
-        #endregion
-
-        #region DisableSendChargeDetailRecords
-
-        /// <summary>
-        /// This service can be disabled, e.g. for debugging reasons.
-        /// </summary>
-        public Boolean  DisableSendChargeDetailRecords   { get; set; }
-
-        #endregion
 
 
         /// <summary>
@@ -407,27 +298,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-
-        #region OnWWCPCPOAdapterException
-
-        public delegate Task OnWWCPCPOAdapterExceptionDelegate(DateTime        Timestamp,
-                                                               WWCPCPOAdapter  Sender,
-                                                               Exception       Exception);
-
-        public event OnWWCPCPOAdapterExceptionDelegate OnWWCPCPOAdapterException;
-
-        #endregion
-
-
-        public delegate void FlushServiceQueuesDelegate(DateTime Timestamp, WWCPCPOAdapter Sender, TimeSpan Every);
-
-        public event FlushServiceQueuesDelegate FlushServiceQueuesEvent;
-
-
-        public delegate void FlushStatusQueuesDelegate(DateTime Timestamp, WWCPCPOAdapter Sender, TimeSpan Every);
-
-        public event FlushStatusQueuesDelegate FlushStatusQueuesEvent;
-
         #endregion
 
         #region Constructor(s)
@@ -472,8 +342,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
+                              TimeSpan?                                          CDRCheckEvery                                   = null,
 
                               Boolean                                            DisablePushData                                 = false,
                               Boolean                                            DisablePushStatus                               = false,
@@ -481,7 +353,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               Boolean                                            DisableSendChargeDetailRecords                  = false)
 
             : base(Id,
-                   RoamingNetwork)
+                   Name,
+                   RoamingNetwork,
+
+                   ServiceCheckEvery,
+                   StatusCheckEvery,
+                   CDRCheckEvery,
+
+                   DisablePushData,
+                   DisablePushStatus,
+                   DisableAuthentication,
+                   DisableSendChargeDetailRecords)
 
         {
 
@@ -495,10 +377,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            this.Name = Name;
-            this._IRemotePushData                                = this as IReceiveData;
-            this._IRemotePushStatus                              = this as IReceiveStatus;
-
             this.CPORoaming                                      = CPORoaming;
             this._EVSE2EVSEDataRecord                            = EVSE2EVSEDataRecord;
             this._EVSEStatusUpdate2EVSEStatusRecord              = EVSEStatusUpdate2EVSEStatusRecord;
@@ -511,28 +389,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.DefaultOperatorName                             = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                           = OperatorNameSelector;
 
-
             this._IncludeEVSEIds                                 = IncludeEVSEIds ?? (evseid => true);
             this._IncludeEVSEs                                   = IncludeEVSEs   ?? (evse   => true);
-
-            this._ServiceCheckEvery                              = (UInt32) (ServiceCheckEvery.HasValue
-                                                                                ? ServiceCheckEvery.Value. TotalMilliseconds
-                                                                                : DefaultServiceCheckEvery.TotalMilliseconds);
-
-            this.ServiceCheckLock                                = new Object();
-            this.ServiceCheckTimer                               = new Timer(ServiceCheck, null, 0, _ServiceCheckEvery);
-
-            this._StatusCheckEvery                               = (UInt32) (StatusCheckEvery.HasValue
-                                                                                ? StatusCheckEvery.Value.  TotalMilliseconds
-                                                                                : DefaultStatusCheckEvery. TotalMilliseconds);
-
-            this.StatusCheckLock                                 = new Object();
-            this.StatusCheckTimer                                = new Timer(StatusCheck, null, 0, _StatusCheckEvery);
-
-            this.DisablePushData                                 = DisablePushData;
-            this.DisablePushStatus                               = DisablePushStatus;
-            this.DisableAuthentication                           = DisableAuthentication;
-            this.DisableSendChargeDetailRecords                  = DisableSendChargeDetailRecords;
 
             this.EVSEsToAddQueue                                 = new HashSet<EVSE>();
             this.EVSEsToUpdateQueue                              = new HashSet<EVSE>();
@@ -540,7 +398,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.EVSEStatusChangesDelayedQueue                   = new List<EVSEStatusUpdate>();
             this.EVSEsToRemoveQueue                              = new HashSet<EVSE>();
             this.ChargeDetailRecordQueue                         = new List<WWCP.ChargeDetailRecord>();
-
 
             // Link events...
 
@@ -1014,6 +871,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
+                              TimeSpan?                                          CDRCheckEvery                                   = null,
 
                               Boolean                                            DisablePushData                                 = false,
                               Boolean                                            DisablePushStatus                               = false,
@@ -1043,6 +901,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
+                   CDRCheckEvery,
 
                    DisablePushData,
                    DisablePushStatus,
@@ -1143,6 +1002,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
+                              TimeSpan?                                          CDRCheckEvery                                   = null,
 
                               Boolean                                            DisablePushData                                 = false,
                               Boolean                                            DisablePushStatus                               = false,
@@ -1201,6 +1061,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    IncludeEVSEs,
                    ServiceCheckEvery,
                    StatusCheckEvery,
+                   CDRCheckEvery,
 
                    DisablePushData,
                    DisablePushStatus,
@@ -1766,7 +1627,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock (DataAndStatusLock)
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1775,7 +1636,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -1856,7 +1717,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock (DataAndStatusLock)
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1865,7 +1726,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -1922,8 +1783,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (EVSE == null)
-                throw new ArgumentNullException(nameof(EVSE), "The given EVSE must not be null!");
+            if (EVSE         == null)
+                throw new ArgumentNullException(nameof(EVSE),          "The given EVSE must not be null!");
+
+            if (PropertyName == null)
+                throw new ArgumentNullException(nameof(PropertyName),  "The given EVSE property name must not be null!");
 
             #endregion
 
@@ -1953,16 +1817,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock (DataAndStatusLock)
                 {
 
                     if (_IncludeEVSEs == null ||
                        (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
                     {
 
+                        if (EVSEsUpdateLog.TryGetValue(EVSE, out List<PropertyUpdateInfos> PropertyUpdateInfo))
+                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+
+                        else
+                        {
+
+                            var List = new List<PropertyUpdateInfos>();
+                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            EVSEsUpdateLog.Add(EVSE, List);
+
+                        }
+
                         EVSEsToUpdateQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -2043,7 +1919,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock (DataAndStatusLock)
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -2052,7 +1928,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToRemoveQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -2077,7 +1953,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region SetStaticData   (EVSEs, ...)
+        #region SetStaticData   (EVSEs, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Set the given enumeration of EVSEs as new static EVSE data at the OICP server.
@@ -2134,7 +2010,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
@@ -2147,7 +2023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         return Task.FromResult(new PushDataResult(ResultTypes.Enqueued));
 
@@ -2173,7 +2049,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (EVSEs, ...)
+        #region AddStaticData   (EVSEs, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Add the given enumeration of EVSEs to the static EVSE data at the OICP server.
@@ -2230,7 +2106,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
@@ -2243,7 +2119,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         return Task.FromResult(new PushDataResult(ResultTypes.Enqueued));
 
@@ -2269,7 +2145,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(EVSEs, ...)
+        #region UpdateStaticData(EVSEs, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSEs within the static EVSE data at the OICP server.
@@ -2326,7 +2202,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
@@ -2339,7 +2215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToUpdateQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         return Task.FromResult(new PushDataResult(ResultTypes.Enqueued));
 
@@ -2365,7 +2241,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(EVSEs, ...)
+        #region DeleteStaticData(EVSEs, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Delete the given enumeration of EVSEs from the static EVSE data at the OICP server.
@@ -2422,7 +2298,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
@@ -2435,7 +2311,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToRemoveQueue.Add(EVSE);
 
-                        ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         return Task.FromResult(new PushDataResult(ResultTypes.Enqueued));
 
@@ -2462,7 +2338,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateEVSEAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSE admin status updates.
@@ -2489,7 +2365,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateEVSEStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSE status updates.
@@ -2546,7 +2422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (StatusCheckLock)
+                lock (DataAndStatusLock)
                 {
 
                     var FilteredUpdates = StatusUpdates.Where(statusupdate => _IncludeEVSEs  (statusupdate.EVSE) &&
@@ -2568,7 +2444,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         }
 
-                        StatusCheckTimer.Change(_StatusCheckEvery, Timeout.Infinite);
+                        StatusCheckTimer.Change(_FlushEVSEFastStatusEvery, Timeout.Infinite);
 
                         return Task.FromResult(new PushStatusResult(ResultTypes.Enqueued));
 
@@ -2613,12 +2489,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.SetStaticData(ChargingStation     ChargingStation,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -2655,7 +2531,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     foreach (var evse in ChargingStation)
@@ -2667,7 +2543,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -2710,12 +2586,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.AddStaticData(ChargingStation     ChargingStation,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -2752,7 +2628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     foreach (var evse in ChargingStation)
@@ -2764,7 +2640,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -2810,15 +2686,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.UpdateStaticData(ChargingStation     ChargingStation,
-                                             String              PropertyName,
-                                             Object              OldValue,
-                                             Object              NewValue,
-                                             TransmissionTypes   TransmissionType,
+                                       String              PropertyName,
+                                       Object              OldValue,
+                                       Object              NewValue,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -2855,21 +2731,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
+
+                    var AddData = false;
 
                     foreach (var evse in ChargingStation)
                     {
-
                         if (_IncludeEVSEs == null ||
                            (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
                         {
-
                             EVSEsToUpdateQueue.Add(evse);
-
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
-
+                            AddData = true;
                         }
+                    }
+
+                    if (AddData)
+                    {
+
+                        if (ChargingStationsUpdateLog.TryGetValue(ChargingStation, out List<PropertyUpdateInfos> PropertyUpdateInfo))
+                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+
+                        else
+                        {
+                            var List = new List<PropertyUpdateInfos>();
+                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            ChargingStationsUpdateLog.Add(ChargingStation, List);
+                        }
+
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -2895,25 +2785,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingStation, ...)
+        #region DeleteStaticData(ChargingStation, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given charging station from the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStation">A charging station.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.DeleteStaticData(ChargingStation     ChargingStation,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -2924,40 +2816,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingStation.EVSEs,
-                                      ActionTypes.delete,
+            return PushEVSEData(ChargingStation.EVSEs,
+                                ActionTypes.delete,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
 
-        #region SetStaticData   (ChargingStations, ...)
+        #region SetStaticData   (ChargingStations, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Set the EVSE data of the given enumeration of charging stations as new static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStations">An enumeration of charging stations.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.SetStaticData(IEnumerable<ChargingStation>  ChargingStations,
+                                    TransmissionTypes             TransmissionType,
 
-                                          DateTime?                     Timestamp,
-                                          CancellationToken?            CancellationToken,
-                                          EventTracking_Id              EventTrackingId,
-                                          TimeSpan?                     RequestTimeout)
+                                    DateTime?                     Timestamp,
+                                    CancellationToken?            CancellationToken,
+                                    EventTracking_Id              EventTrackingId,
+                                    TimeSpan?                     RequestTimeout)
 
         {
 
@@ -2968,39 +2860,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.fullLoad,
+            return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                ActionTypes.fullLoad,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region AddStaticData   (ChargingStations, ...)
+        #region AddStaticData   (ChargingStations, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Add the EVSE data of the given enumeration of charging stations to the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStations">An enumeration of charging stations.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.AddStaticData(IEnumerable<ChargingStation>  ChargingStations,
+                                    TransmissionTypes             TransmissionType,
 
-                                          DateTime?                     Timestamp,
-                                          CancellationToken?            CancellationToken,
-                                          EventTracking_Id              EventTrackingId,
-                                          TimeSpan?                     RequestTimeout)
+
+                                    DateTime?                     Timestamp,
+                                    CancellationToken?            CancellationToken,
+                                    EventTracking_Id              EventTrackingId,
+                                    TimeSpan?                     RequestTimeout)
 
         {
 
@@ -3011,39 +2904,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.insert,
+            return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                ActionTypes.insert,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region UpdateStaticData(ChargingStations, ...)
+        #region UpdateStaticData(ChargingStations, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the EVSE data of the given enumeration of charging stations within the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStations">An enumeration of charging stations.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.UpdateStaticData(IEnumerable<ChargingStation>  ChargingStations,
+                                       TransmissionTypes             TransmissionType,
 
-                                             DateTime?                     Timestamp,
-                                             CancellationToken?            CancellationToken,
-                                             EventTracking_Id              EventTrackingId,
-                                             TimeSpan?                     RequestTimeout)
+                                       DateTime?                     Timestamp,
+                                       CancellationToken?            CancellationToken,
+                                       EventTracking_Id              EventTrackingId,
+                                       TimeSpan?                     RequestTimeout)
 
         {
 
@@ -3054,39 +2947,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.update,
+            return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                ActionTypes.update,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region DeleteStaticData(ChargingStations, ...)
+        #region DeleteStaticData(ChargingStations, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given enumeration of charging stations from the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingStations">An enumeration of charging stations.</param>
+        /// <param name="TransmissionType">Whether to send the charging station update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.DeleteStaticData(IEnumerable<ChargingStation>  ChargingStations,
+                                       TransmissionTypes             TransmissionType,
 
-                                             DateTime?                     Timestamp,
-                                             CancellationToken?            CancellationToken,
-                                             EventTracking_Id              EventTrackingId,
-                                             TimeSpan?                     RequestTimeout)
+                                       DateTime?                     Timestamp,
+                                       CancellationToken?            CancellationToken,
+                                       EventTracking_Id              EventTrackingId,
+                                       TimeSpan?                     RequestTimeout)
 
         {
 
@@ -3097,22 +2990,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.delete,
+            return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                ActionTypes.delete,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
 
-        #region UpdateChargingStationAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station admin status updates.
@@ -3127,19 +3018,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         Task<PushStatusResult>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<ChargingStationAdminStatusUpdate>  AdminStatusUpdates,
-                                                 TransmissionTypes                              TransmissionType,
+                                          TransmissionTypes                              TransmissionType,
 
-                                                 DateTime?                                      Timestamp,
-                                                 CancellationToken?                             CancellationToken,
-                                                 EventTracking_Id                               EventTrackingId,
-                                                 TimeSpan?                                      RequestTimeout)
+                                          DateTime?                                      Timestamp,
+                                          CancellationToken?                             CancellationToken,
+                                          EventTracking_Id                               EventTrackingId,
+                                          TimeSpan?                                      RequestTimeout)
 
 
                 => Task.FromResult(new PushStatusResult(ResultTypes.NoOperation));
 
         #endregion
 
-        #region UpdateChargingStationStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station status updates.
@@ -3154,12 +3045,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         Task<PushStatusResult>
 
             ISendStatus.UpdateStatus(IEnumerable<ChargingStationStatusUpdate>  StatusUpdates,
-                                            TransmissionTypes                         TransmissionType,
+                                     TransmissionTypes                         TransmissionType,
 
-                                            DateTime?                                 Timestamp,
-                                            CancellationToken?                        CancellationToken,
-                                            EventTracking_Id                          EventTrackingId,
-                                            TimeSpan?                                 RequestTimeout)
+                                     DateTime?                                 Timestamp,
+                                     CancellationToken?                        CancellationToken,
+                                     EventTracking_Id                          EventTrackingId,
+                                     TimeSpan?                                 RequestTimeout)
 
 
                 => Task.FromResult(new PushStatusResult(ResultTypes.NoOperation));
@@ -3185,12 +3076,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.SetStaticData(ChargingPool        ChargingPool,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -3227,7 +3118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     foreach (var evse in ChargingPool.EVSEs)
@@ -3239,7 +3130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -3282,12 +3173,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.AddStaticData(ChargingPool        ChargingPool,
-                                          TransmissionTypes   TransmissionType,
+                                    TransmissionTypes   TransmissionType,
 
-                                          DateTime?           Timestamp,
-                                          CancellationToken?  CancellationToken,
-                                          EventTracking_Id    EventTrackingId,
-                                          TimeSpan?           RequestTimeout)
+                                    DateTime?           Timestamp,
+                                    CancellationToken?  CancellationToken,
+                                    EventTracking_Id    EventTrackingId,
+                                    TimeSpan?           RequestTimeout)
 
         {
 
@@ -3324,7 +3215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     foreach (var evse in ChargingPool.EVSEs)
@@ -3336,7 +3227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -3382,15 +3273,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<PushDataResult>
 
             ISendData.UpdateStaticData(ChargingPool        ChargingPool,
-                                             String              PropertyName,
-                                             Object              OldValue,
-                                             Object              NewValue,
-                                             TransmissionTypes   TransmissionType,
+                                       String              PropertyName,
+                                       Object              OldValue,
+                                       Object              NewValue,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -3427,21 +3318,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
+
+                    var AddData = false;
 
                     foreach (var evse in ChargingPool.EVSEs)
                     {
-
                         if (_IncludeEVSEs == null ||
                            (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
                         {
-
                             EVSEsToUpdateQueue.Add(evse);
-
-                            ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
-
+                            AddData = true;
                         }
+                    }
+
+                    if (AddData)
+                    {
+
+                        if (ChargingPoolsUpdateLog.TryGetValue(ChargingPool, out List<PropertyUpdateInfos> PropertyUpdateInfo))
+                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+
+                        else
+                        {
+                            var List = new List<PropertyUpdateInfos>();
+                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            ChargingPoolsUpdateLog.Add(ChargingPool, List);
+                        }
+
+                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -3467,25 +3372,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingPool, ...)
+        #region DeleteStaticData(ChargingPool, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given charging pool from the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPool">A charging pool.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.DeleteStaticData(ChargingPool        ChargingPool,
+                                       TransmissionTypes   TransmissionType,
 
-                                             DateTime?           Timestamp,
-                                             CancellationToken?  CancellationToken,
-                                             EventTracking_Id    EventTrackingId,
-                                             TimeSpan?           RequestTimeout)
+                                       DateTime?           Timestamp,
+                                       CancellationToken?  CancellationToken,
+                                       EventTracking_Id    EventTrackingId,
+                                       TimeSpan?           RequestTimeout)
 
         {
 
@@ -3496,40 +3403,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingPool.EVSEs,
-                                      ActionTypes.delete,
+            return PushEVSEData(ChargingPool.EVSEs,
+                                ActionTypes.delete,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
 
-        #region SetStaticData   (ChargingPools, ...)
+        #region SetStaticData   (ChargingPools, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Set the EVSE data of the given enumeration of charging pools as new static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPools">An enumeration of charging pools.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.SetStaticData(IEnumerable<ChargingPool>  ChargingPools,
+                                    TransmissionTypes          TransmissionType,
 
-                                          DateTime?                  Timestamp,
-                                          CancellationToken?         CancellationToken,
-                                          EventTracking_Id           EventTrackingId,
-                                          TimeSpan?                  RequestTimeout)
+                                    DateTime?                  Timestamp,
+                                    CancellationToken?         CancellationToken,
+                                    EventTracking_Id           EventTrackingId,
+                                    TimeSpan?                  RequestTimeout)
 
         {
 
@@ -3540,39 +3447,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.fullLoad,
+            return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                ActionTypes.fullLoad,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region AddStaticData   (ChargingPools, ...)
+        #region AddStaticData   (ChargingPools, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Add the EVSE data of the given enumeration of charging pools to the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPools">An enumeration of charging pools.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.AddStaticData(IEnumerable<ChargingPool>  ChargingPools,
+                                    TransmissionTypes          TransmissionType,
 
-                                          DateTime?                  Timestamp,
-                                          CancellationToken?         CancellationToken,
-                                          EventTracking_Id           EventTrackingId,
-                                          TimeSpan?                  RequestTimeout)
+                                    DateTime?                  Timestamp,
+                                    CancellationToken?         CancellationToken,
+                                    EventTracking_Id           EventTrackingId,
+                                    TimeSpan?                  RequestTimeout)
 
         {
 
@@ -3583,39 +3490,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.insert,
+            return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                ActionTypes.insert,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region UpdateStaticData(ChargingPools, ...)
+        #region UpdateStaticData(ChargingPools, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the EVSE data of the given enumeration of charging pools within the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPools">An enumeration of charging pools.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.UpdateStaticData(IEnumerable<ChargingPool>  ChargingPools,
+                                       TransmissionTypes          TransmissionType,
 
-                                             DateTime?                  Timestamp,
-                                             CancellationToken?         CancellationToken,
-                                             EventTracking_Id           EventTrackingId,
-                                             TimeSpan?                  RequestTimeout)
+                                       DateTime?                  Timestamp,
+                                       CancellationToken?         CancellationToken,
+                                       EventTracking_Id           EventTrackingId,
+                                       TimeSpan?                  RequestTimeout)
 
         {
 
@@ -3626,39 +3533,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.update,
+            return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                ActionTypes.update,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
-        #region DeleteStaticData(ChargingPools, ...)
+        #region DeleteStaticData(ChargingPools, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given enumeration of charging pools from the static EVSE data at the OICP server.
         /// </summary>
         /// <param name="ChargingPools">An enumeration of charging pools.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<PushDataResult>
+        Task<PushDataResult>
 
             ISendData.DeleteStaticData(IEnumerable<ChargingPool>  ChargingPools,
+                                       TransmissionTypes          TransmissionType,
 
-                                             DateTime?                  Timestamp,
-                                             CancellationToken?         CancellationToken,
-                                             EventTracking_Id           EventTrackingId,
-                                             TimeSpan?                  RequestTimeout)
+                                       DateTime?                  Timestamp,
+                                       CancellationToken?         CancellationToken,
+                                       EventTracking_Id           EventTrackingId,
+                                       TimeSpan?                  RequestTimeout)
 
         {
 
@@ -3669,22 +3576,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.delete,
+            return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                ActionTypes.delete,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
-
-                                      ConfigureAwait(false);
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout);
 
         }
 
         #endregion
 
 
-        #region UpdateChargingPoolAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of charging pool admin status updates.
@@ -3699,19 +3604,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         Task<PushStatusResult>
 
             ISendStatus.UpdateAdminStatus(IEnumerable<ChargingPoolAdminStatusUpdate>  AdminStatusUpdates,
-                                                 TransmissionTypes                           TransmissionType,
+                                          TransmissionTypes                           TransmissionType,
 
-                                                 DateTime?                                   Timestamp,
-                                                 CancellationToken?                          CancellationToken,
-                                                 EventTracking_Id                            EventTrackingId,
-                                                 TimeSpan?                                   RequestTimeout)
+                                          DateTime?                                   Timestamp,
+                                          CancellationToken?                          CancellationToken,
+                                          EventTracking_Id                            EventTrackingId,
+                                          TimeSpan?                                   RequestTimeout)
 
 
                 => Task.FromResult(new PushStatusResult(ResultTypes.NoOperation));
 
         #endregion
 
-        #region UpdateChargingPoolStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
 
         /// <summary>
         /// Update the given enumeration of charging pool status updates.
@@ -3726,12 +3631,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         Task<PushStatusResult>
 
             ISendStatus.UpdateStatus(IEnumerable<ChargingPoolStatusUpdate>  StatusUpdates,
-                                            TransmissionTypes                      TransmissionType,
+                                     TransmissionTypes                      TransmissionType,
 
-                                            DateTime?                              Timestamp,
-                                            CancellationToken?                     CancellationToken,
-                                            EventTracking_Id                       EventTrackingId,
-                                            TimeSpan?                              RequestTimeout)
+                                     DateTime?                              Timestamp,
+                                     CancellationToken?                     CancellationToken,
+                                     EventTracking_Id                       EventTrackingId,
+                                     TimeSpan?                              RequestTimeout)
 
 
                 => Task.FromResult(new PushStatusResult(ResultTypes.NoOperation));
@@ -5863,12 +5768,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (ServiceCheckLock)
+                lock(DataAndStatusLock)
                 {
 
                     ChargeDetailRecordQueue.AddRange(ChargeDetailRecords);
 
-                    ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                    FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                 }
 
@@ -6001,97 +5906,232 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         // -----------------------------------------------------------------------------------------------------
 
 
-        #region (timer) ServiceCheck(State)
+        #region (timer) FlushEVSEDataAndStatus()
 
-        private void ServiceCheck(Object State)
+        protected override async Task FlushEVSEDataAndStatusQueues()
         {
 
-            if (!DisablePushData)
+            #region Get a copy of all current EVSE data and delayed status
+
+            var EVSEsToAddQueueCopy                = new HashSet<EVSE>();
+            var EVSEsToUpdateQueueCopy             = new HashSet<EVSE>();
+            var EVSEStatusChangesDelayedQueueCopy  = new List<EVSEStatusUpdate>();
+            var EVSEsToRemoveQueueCopy             = new HashSet<EVSE>();
+            var EVSEsUpdateLogCopy                 = new Dictionary<EVSE,            PropertyUpdateInfos[]>();
+            var ChargingStationsUpdateLogCopy      = new Dictionary<ChargingStation, PropertyUpdateInfos[]>();
+            var ChargingPoolsUpdateLogCopy         = new Dictionary<ChargingPool,    PropertyUpdateInfos[]>();
+
+            lock (DataAndStatusLock)
             {
 
-                try
+                // Copy 'EVSEs to add', remove originals...
+                EVSEsToAddQueueCopy                      = new HashSet<EVSE>                (EVSEsToAddQueue);
+                EVSEsToAddQueue.Clear();
+
+                // Copy 'EVSEs to update', remove originals...
+                EVSEsToUpdateQueueCopy                   = new HashSet<EVSE>                (EVSEsToUpdateQueue);
+                EVSEsToUpdateQueue.Clear();
+
+                // Copy 'EVSE status changes', remove originals...
+                EVSEStatusChangesDelayedQueueCopy        = new List<EVSEStatusUpdate>       (EVSEStatusChangesDelayedQueue);
+                EVSEStatusChangesDelayedQueueCopy.AddRange(EVSEsToAddQueueCopy.SafeSelect(evse => new EVSEStatusUpdate(evse, evse.Status, evse.Status)));
+                EVSEStatusChangesDelayedQueue.Clear();
+
+                // Copy 'EVSEs to remove', remove originals...
+                EVSEsToRemoveQueueCopy                   = new HashSet<EVSE>                (EVSEsToRemoveQueue);
+                EVSEsToRemoveQueue.Clear();
+
+                // Copy EVSE property updates
+                EVSEsUpdateLog.           ForEach(_ => EVSEsUpdateLogCopy.           Add(_.Key, _.Value.ToArray()));
+                EVSEsUpdateLog.Clear();
+
+                // Copy charging station property updates
+                ChargingStationsUpdateLog.ForEach(_ => ChargingStationsUpdateLogCopy.Add(_.Key, _.Value.ToArray()));
+                ChargingStationsUpdateLog.Clear();
+
+                // Copy charging pool property updates
+                ChargingPoolsUpdateLog.   ForEach(_ => ChargingPoolsUpdateLogCopy.   Add(_.Key, _.Value.ToArray()));
+                ChargingPoolsUpdateLog.Clear();
+
+
+                // Stop the timer. Will be rescheduled by next EVSE data/status change...
+                FlushEVSEDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+            }
+
+            #endregion
+
+
+            // Use events to check if something went wrong!
+            var EventTrackingId = EventTracking_Id.New;
+
+            #region Send new EVSE data
+
+            if (EVSEsToAddQueueCopy.Count > 0)
+            {
+
+                var EVSEsToAddTask = PushEVSEData(EVSEsToAddQueueCopy,
+                                                  _FlushEVSEDataRunId == 1
+                                                      ? ActionTypes.fullLoad
+                                                      : ActionTypes.update,
+                                                  EventTrackingId: EventTrackingId);
+
+                EVSEsToAddTask.Wait();
+
+            }
+
+            #endregion
+
+            #region Send changed EVSE data
+
+            if (EVSEsToUpdateQueueCopy.Count > 0)
+            {
+
+                // Surpress EVSE data updates for all newly added EVSEs
+                var EVSEsWithoutNewEVSEs = EVSEsToUpdateQueueCopy.
+                                               Where(evse => !EVSEsToAddQueueCopy.Contains(evse)).
+                                               ToArray();
+
+
+                if (EVSEsWithoutNewEVSEs.Length > 0)
                 {
 
-                    FlushServiceQueues().Wait();
+                    var PushEVSEDataTask = PushEVSEData(EVSEsWithoutNewEVSEs,
+                                                        ActionTypes.update,
+                                                        EventTrackingId: EventTrackingId);
 
-                }
-                catch (Exception e)
-                {
-
-                    while (e.InnerException != null)
-                        e = e.InnerException;
-
-                    DebugX.Log("A exception occured during ServiceCheck: " + e.Message + Environment.NewLine + e.StackTrace);
-
-                    OnWWCPCPOAdapterException?.Invoke(DateTime.UtcNow,
-                                                      this,
-                                                      e);
+                    PushEVSEDataTask.Wait();
 
                 }
 
             }
 
+            #endregion
+
+            #region Send changed EVSE status
+
+            if (!DisablePushStatus &&
+                EVSEStatusChangesDelayedQueueCopy.Count > 0)
+            {
+
+                var PushEVSEStatusTask = PushEVSEStatus(EVSEStatusChangesDelayedQueueCopy,
+                                                        _FlushEVSEDataRunId == 1
+                                                            ? ActionTypes.fullLoad
+                                                            : ActionTypes.update,
+                                                        EventTrackingId: EventTrackingId);
+
+                PushEVSEStatusTask.Wait();
+
+            }
+
+            #endregion
+
+            #region Send removed charging stations
+
+            if (EVSEsToRemoveQueueCopy.Count > 0)
+            {
+
+                var EVSEsToRemove = EVSEsToRemoveQueueCopy.ToArray();
+
+                if (EVSEsToRemove.Length > 0)
+                {
+
+                    var EVSEsToRemoveTask = PushEVSEData(EVSEsToRemove,
+                                                         ActionTypes.delete,
+                                                         EventTrackingId: EventTrackingId);
+
+                    EVSEsToRemoveTask.Wait();
+
+                }
+
+            }
+
+            #endregion
+
         }
 
-        public async Task FlushServiceQueues()
+        #endregion
+
+        #region (timer) FlushEVSEFastStatus()
+
+        protected override async Task FlushEVSEFastStatusQueues()
         {
 
-            FlushServiceQueuesEvent?.Invoke(DateTime.UtcNow,
-                                            this,
-                                            TimeSpan.FromMilliseconds(_ServiceCheckEvery));
+            #region Get a copy of all current EVSE data and delayed status
+
+            var EVSEStatusFastQueueCopy = new List<EVSEStatusUpdate>();
+
+            lock (DataAndStatusLock)
+            {
+
+                // Copy 'EVSE status changes', remove originals...
+                EVSEStatusFastQueueCopy = new List<EVSEStatusUpdate>(EVSEStatusChangesFastQueue.Where(evsestatuschange => !EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)));
+
+                // Add all evse status changes of EVSE *NOT YET UPLOADED* into the delayed queue...
+                var EVSEStatusChangesDelayed = EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)).ToArray();
+
+                if (EVSEStatusChangesDelayed.Length > 0)
+                    EVSEStatusChangesDelayedQueue.AddRange(EVSEStatusChangesDelayed);
+
+                EVSEStatusChangesFastQueue.Clear();
+
+                // Stop the timer. Will be rescheduled by next EVSE status change...
+                StatusCheckTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+            }
+
+            #endregion
+
+
+            // Use events to check if something went wrong!
+            var EventTrackingId = EventTracking_Id.New;
+
+            #region Send changed EVSE status
+
+            if (EVSEStatusFastQueueCopy.Count > 0)
+            {
+
+                var _PushEVSEStatus = await PushEVSEStatus(EVSEStatusFastQueueCopy,
+                                                           ActionTypes.update,
+                                                           EventTrackingId: EventTrackingId).
+                                            ConfigureAwait(false);
+
+            }
+
+            #endregion
+
+        }
+
+        #endregion
+
+        #region (timer) FlushChargeDetailRecords()
+
+        protected override async Task FlushChargeDetailRecordsQueues()
+        {
 
             #region Make a thread local copy of all data
 
-            //ToDo: AsyncLocal is currently not implemented in Mono!
-            //var EVSEDataQueueCopy   = new AsyncLocal<HashSet<EVSE>>();
-            //var EVSEStatusQueueCopy = new AsyncLocal<List<EVSEStatusChange>>();
-
-            var EVSEsToAddQueueCopy                = new ThreadLocal<HashSet<EVSE>>();
-            var EVSEsToUpdateQueueCopy             = new ThreadLocal<HashSet<EVSE>>();
-            var EVSEStatusChangesDelayedQueueCopy  = new ThreadLocal<List<EVSEStatusUpdate>>();
-            var EVSEsToRemoveQueueCopy             = new ThreadLocal<HashSet<EVSE>>();
             var ChargeDetailRecordQueueCopy        = new ThreadLocal<List<WWCP.ChargeDetailRecord>>();
 
-            if (Monitor.TryEnter(ServiceCheckLock))
+            if (Monitor.TryEnter(FlushEVSEDataAndStatusLock))
             {
 
                 try
                 {
 
-                    if (EVSEsToAddQueue.               Count == 0 &&
-                        EVSEsToUpdateQueue.            Count == 0 &&
-                        EVSEStatusChangesDelayedQueue. Count == 0 &&
-                        EVSEsToRemoveQueue.            Count == 0 &&
-                        ChargeDetailRecordQueue.       Count == 0)
+                    if (ChargeDetailRecordQueue.       Count == 0)
                     {
                         return;
                     }
 
-                    _ServiceRunId++;
-
-                    // Copy 'EVSEs to add', remove originals...
-                    EVSEsToAddQueueCopy.Value                = new HashSet<EVSE>                (EVSEsToAddQueue);
-                    EVSEsToAddQueue.Clear();
-
-                    // Copy 'EVSEs to update', remove originals...
-                    EVSEsToUpdateQueueCopy.Value             = new HashSet<EVSE>                (EVSEsToUpdateQueue);
-                    EVSEsToUpdateQueue.Clear();
-
-                    // Copy 'EVSE status changes', remove originals...
-                    EVSEStatusChangesDelayedQueueCopy.Value  = new List<EVSEStatusUpdate>       (EVSEStatusChangesDelayedQueue);
-                    EVSEStatusChangesDelayedQueueCopy.Value.AddRange(EVSEsToAddQueueCopy.Value.SafeSelect(evse => new EVSEStatusUpdate(evse, evse.Status, evse.Status)));
-                    EVSEStatusChangesDelayedQueue.Clear();
-
-                    // Copy 'EVSEs to remove', remove originals...
-                    EVSEsToRemoveQueueCopy.Value             = new HashSet<EVSE>                (EVSEsToRemoveQueue);
-                    EVSEsToRemoveQueue.Clear();
+                    _FlushEVSEDataRunId++;
 
                     // Copy 'EVSEs to remove', remove originals...
                     ChargeDetailRecordQueueCopy.Value        = new List<WWCP.ChargeDetailRecord>(ChargeDetailRecordQueue);
                     ChargeDetailRecordQueue.Clear();
 
                     // Stop the timer. Will be rescheduled by next EVSE data/status change...
-                    ServiceCheckTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    FlushEVSEDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
                 }
                 catch (Exception e)
@@ -6106,7 +6146,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 finally
                 {
-                    Monitor.Exit(ServiceCheckLock);
+                    Monitor.Exit(FlushEVSEDataAndStatusLock);
                 }
 
             }
@@ -6115,105 +6155,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             {
 
                 Console.WriteLine("ServiceCheckLock missed!");
-                ServiceCheckTimer.Change(_ServiceCheckEvery, Timeout.Infinite);
+                FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
             }
 
             #endregion
 
+
             // Upload status changes...
-            if (EVSEsToAddQueueCopy.              Value != null ||
-                EVSEsToUpdateQueueCopy.           Value != null ||
-                EVSEStatusChangesDelayedQueueCopy.Value != null ||
-                EVSEsToRemoveQueueCopy.           Value != null ||
-                ChargeDetailRecordQueueCopy.      Value != null)
+            if (ChargeDetailRecordQueueCopy.Value != null)
             {
 
                 // Use the events to evaluate if something went wrong!
 
                 var EventTrackingId = EventTracking_Id.New;
-
-                #region Send new EVSE data
-
-                if (EVSEsToAddQueueCopy.Value.Count > 0)
-                {
-
-                    var EVSEsToAddTask = PushEVSEData(EVSEsToAddQueueCopy.Value,
-                                                      _ServiceRunId == 1
-                                                          ? ActionTypes.fullLoad
-                                                          : ActionTypes.update,
-                                                      EventTrackingId: EventTrackingId);
-
-                    EVSEsToAddTask.Wait();
-
-                }
-
-                #endregion
-
-                #region Send changed EVSE data
-
-                if (EVSEsToUpdateQueueCopy.Value.Count > 0)
-                {
-
-                    // Surpress EVSE data updates for all newly added EVSEs
-                    var EVSEsWithoutNewEVSEs = EVSEsToUpdateQueueCopy.Value.
-                                                   Where(evse => !EVSEsToAddQueueCopy.Value.Contains(evse)).
-                                                   ToArray();
-
-
-                    if (EVSEsWithoutNewEVSEs.Length > 0)
-                    {
-
-                        var PushEVSEDataTask = PushEVSEData(EVSEsWithoutNewEVSEs,
-                                                            ActionTypes.update,
-                                                            EventTrackingId: EventTrackingId);
-
-                        PushEVSEDataTask.Wait();
-
-                    }
-
-                }
-
-                #endregion
-
-                #region Send changed EVSE status
-
-                if (EVSEStatusChangesDelayedQueueCopy.Value.Count > 0)
-                {
-
-                    var PushEVSEStatusTask = PushEVSEStatus(EVSEStatusChangesDelayedQueueCopy.Value,
-                                                            _ServiceRunId == 1
-                                                                ? ActionTypes.fullLoad
-                                                                : ActionTypes.update,
-                                                            EventTrackingId: EventTrackingId);
-
-                    PushEVSEStatusTask.Wait();
-
-                }
-
-                #endregion
-
-                #region Send removed charging stations
-
-                if (EVSEsToRemoveQueueCopy.Value.Count > 0)
-                {
-
-                    var EVSEsToRemove = EVSEsToRemoveQueueCopy.Value.ToArray();
-
-                    if (EVSEsToRemove.Length > 0)
-                    {
-
-                        var EVSEsToRemoveTask = PushEVSEData(EVSEsToRemove,
-                                                             ActionTypes.delete,
-                                                             EventTrackingId: EventTrackingId);
-
-                        EVSEsToRemoveTask.Wait();
-
-                    }
-
-                }
-
-                #endregion
 
                 #region Send charge detail records
 
@@ -6225,7 +6180,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                        DateTime.UtcNow,
                                                                        new CancellationTokenSource().Token,
                                                                        EventTrackingId,
-                                                                       DefaultRequestTimeout).ConfigureAwait(false);
+                                                                       DefaultRequestTimeout).
+                                               ConfigureAwait(false);
 
                     //ToDo: Send results events...
                     //ToDo: Read to queue if it could not be sent...
@@ -6235,143 +6191,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 #endregion
 
             }
-
-            return;
-
-        }
-
-        #endregion
-
-        #region (timer) StatusCheck(State)
-
-        private void StatusCheck(Object State)
-        {
-
-            if (!DisablePushStatus)
-            {
-
-                try
-                {
-
-                    FlushStatusQueues().Wait();
-
-                }
-                catch (Exception e)
-                {
-
-                    while (e.InnerException != null)
-                        e = e.InnerException;
-
-                    DebugX.Log("A exception occured during StatusCheck: " + e.Message + Environment.NewLine + e.StackTrace);
-
-                }
-
-            }
-
-        }
-
-        public async Task FlushStatusQueues()
-        {
-
-            FlushStatusQueuesEvent?.Invoke(DateTime.UtcNow,
-                                           this,
-                                           TimeSpan.FromMilliseconds(_ServiceCheckEvery));
-
-
-            #region Make a thread local copy of all data
-
-            //ToDo: AsyncLocal is currently not implemented in Mono!
-            //var EVSEStatusQueueCopy = new AsyncLocal<List<EVSEStatusChange>>();
-
-            var EVSEStatusFastQueueCopy = new ThreadLocal<List<EVSEStatusUpdate>>();
-
-            if (Monitor.TryEnter(StatusCheckLock,
-                                 TimeSpan.FromMinutes(5)))
-            {
-
-                try
-                {
-
-                    if (EVSEStatusChangesFastQueue.Count == 0)
-                        return;
-
-                    _StatusRunId++;
-
-                    // Copy 'EVSE status changes', remove originals...
-                    EVSEStatusFastQueueCopy.Value = new List<EVSEStatusUpdate>(EVSEStatusChangesFastQueue.Where(evsestatuschange => !EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)));
-
-                    // Add all evse status changes of EVSE *NOT YET UPLOADED* into the delayed queue...
-                    var EVSEStatusChangesDelayed = EVSEStatusChangesFastQueue.Where(evsestatuschange => EVSEsToAddQueue.Any(evse => evse == evsestatuschange.EVSE)).ToArray();
-
-                    if (EVSEStatusChangesDelayed.Length > 0)
-                        EVSEStatusChangesDelayedQueue.AddRange(EVSEStatusChangesDelayed);
-
-                    EVSEStatusChangesFastQueue.Clear();
-
-                    // Stop the timer. Will be rescheduled by next EVSE status change...
-                    StatusCheckTimer.Change(Timeout.Infinite, Timeout.Infinite);
-
-                }
-                catch (Exception e)
-                {
-
-                    while (e.InnerException != null)
-                        e = e.InnerException;
-
-                    DebugX.LogT(nameof(WWCPCPOAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
-
-                }
-
-                finally
-                {
-                    Monitor.Exit(StatusCheckLock);
-                }
-
-            }
-
-            else
-            {
-
-                Console.WriteLine("StatusCheckLock missed!");
-                StatusCheckTimer.Change(_StatusCheckEvery, Timeout.Infinite);
-
-            }
-
-            #endregion
-
-            // Upload status changes...
-            if (EVSEStatusFastQueueCopy.Value != null)
-            {
-
-                var EventTrackingId = EventTracking_Id.New;
-
-                // Use the events to evaluate if something went wrong!
-
-                #region Send changed EVSE status
-
-                if (EVSEStatusFastQueueCopy.Value.Count > 0)
-                {
-
-                    //lock (StatusCheckLock)
-                    //{
-                    //    _StatusRunId++;
-                    //}
-
-                    var PushEVSEStatusTask = PushEVSEStatus(EVSEStatusFastQueueCopy.Value,
-                                                            _StatusRunId == 1
-                                                                ? ActionTypes.fullLoad
-                                                                : ActionTypes.update,
-                                                            EventTrackingId: EventTrackingId);
-
-                    PushEVSEStatusTask.Wait();
-
-                }
-
-                #endregion
-
-            }
-
-            return;
 
         }
 

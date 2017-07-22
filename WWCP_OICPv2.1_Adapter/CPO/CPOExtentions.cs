@@ -137,6 +137,7 @@ namespace org.GraphDefined.WWCP
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
+                                              TimeSpan?                                                       CDRCheckEvery                                   = null,
 
                                               Boolean                                                         DisablePushData                                 = false,
                                               Boolean                                                         DisablePushStatus                               = false,
@@ -212,6 +213,7 @@ namespace org.GraphDefined.WWCP
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
+                                                                     CDRCheckEvery,
 
                                                                      DisablePushData,
                                                                      DisablePushStatus,
@@ -321,6 +323,7 @@ namespace org.GraphDefined.WWCP
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
+                                              TimeSpan?                                                       CDRCheckEvery                                   = null,
 
                                               Boolean                                                         DisablePushData                                 = false,
                                               Boolean                                                         DisablePushStatus                               = false,
@@ -399,6 +402,7 @@ namespace org.GraphDefined.WWCP
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
+                                                                     CDRCheckEvery,
 
                                                                      DisablePushData,
                                                                      DisablePushStatus,
