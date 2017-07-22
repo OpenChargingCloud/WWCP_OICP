@@ -90,9 +90,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
                                                               TimeSpan?                        RequestTimeout,
-                                                              WWCP.Acknowledgement             Result,
+                                                              PushDataResult                  Result,
                                                               TimeSpan                         Runtime);
 
     #endregion
@@ -127,9 +126,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
                                                               TimeSpan?                        RequestTimeout,
-                                                              WWCP.Acknowledgement             Result,
+                                                              PushStatusResult                 Result,
                                                               TimeSpan                         Runtime);
 
     #endregion

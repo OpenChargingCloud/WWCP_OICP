@@ -1012,7 +1012,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1168,7 +1168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1233,7 +1233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1364,7 +1364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1428,7 +1428,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1549,7 +1549,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1612,7 +1612,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1759,7 +1759,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1822,7 +1822,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1976,7 +1976,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -2042,7 +2042,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2192,7 +2192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2256,7 +2256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2405,7 +2405,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2471,7 +2471,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2621,7 +2621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2686,7 +2686,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2817,7 +2817,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {

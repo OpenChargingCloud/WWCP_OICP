@@ -772,14 +772,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped PushEVSEData request must not be null!");
 
 
-            Byte                                               NumberOfRetries  = 0;
-            HTTPResponse<Acknowledgement<PushEVSEDataRequest>> result           = null;
+            Byte                                               TransmissionRetry  = 0;
+            HTTPResponse<Acknowledgement<PushEVSEDataRequest>> result             = null;
 
             #endregion
 
             #region Send OnPushEVSEDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -832,7 +832,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     NumberOfRetry:        NumberOfRetries,
+                                                     NumberOfRetry:        TransmissionRetry,
 
                                                      #region OnSuccess
 
@@ -875,6 +875,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
                                                          SendHTTPError(timestamp, this, httpresponse);
+
+
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+
+                                                             return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(httpresponse,
+                                                                                                                           new Acknowledgement<PushEVSEDataRequest>(
+                                                                                                                               Request,
+                                                                                                                               StatusCodes.ServiceNotAvailable,
+                                                                                                                               httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                               httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                                           ),
+                                                                                                                           IsFault: true);
+
 
                                                          return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(
 
@@ -933,12 +949,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                NumberOfRetries++ < MaxNumberOfRetries);
+                TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnPushEVSEDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -996,14 +1012,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped PushEVSEStatus request must not be null!");
 
 
-            Byte                                                 NumberOfRetries  = 0;
-            HTTPResponse<Acknowledgement<PushEVSEStatusRequest>> result           = null;
+            Byte                                                 TransmissionRetry  = 0;
+            HTTPResponse<Acknowledgement<PushEVSEStatusRequest>> result             = null;
 
             #endregion
 
             #region Send OnPushEVSEStatusRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1056,7 +1072,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     NumberOfRetry:        NumberOfRetries,
+                                                     NumberOfRetry:        TransmissionRetry,
 
                                                      #region OnSuccess
 
@@ -1099,6 +1115,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
                                                          SendHTTPError(timestamp, this, httpresponse);
+
+
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+
+                                                             return new HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>(httpresponse,
+                                                                                                                             new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                                                                 Request,
+                                                                                                                                 StatusCodes.ServiceNotAvailable,
+                                                                                                                                 httpresponse.HTTPStatusCode.ToString(),
+                                                                                                                                 httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                                             ),
+                                                                                                                             IsFault: true);
+
 
                                                          return new HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>(
 
@@ -1157,12 +1189,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                   NumberOfRetries++ < MaxNumberOfRetries);
+                   TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnPushEVSEStatusResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1221,14 +1253,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStart request must not be null!");
 
 
-            Byte                             NumberOfRetries  = 0;
-            HTTPResponse<AuthorizationStart> result           = null;
+            Byte                             TransmissionRetry  = 0;
+            HTTPResponse<AuthorizationStart> result             = null;
 
             #endregion
 
             #region Send OnAuthorizeStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1282,7 +1314,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     NumberOfRetry:        NumberOfRetries,
+                                                     NumberOfRetry:        TransmissionRetry,
 
                                                      #region OnSuccess
 
@@ -1319,11 +1351,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
+
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+
+                                                             return new HTTPResponse<AuthorizationStart>(httpresponse,
+                                                                                                         AuthorizationStart.ServiceNotAvailable(
+                                                                                                             Request,
+                                                                                                             httpresponse.HTTPStatusCode.ToString(),
+                                                                                                             httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                         ),
+                                                                                                         IsFault: true);
+
+
                                                          return new HTTPResponse<AuthorizationStart>(httpresponse,
                                                                                                      AuthorizationStart.DataError(
                                                                                                          Request,
                                                                                                          httpresponse.HTTPStatusCode.ToString(),
-                                                                                                         httpresponse.HTTPBody.ToUTF8String()
+                                                                                                         httpresponse.HTTPBody.      ToUTF8String()
                                                                                                      ),
                                                                                                      IsFault: true);
 
@@ -1365,12 +1412,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                   NumberOfRetries++ < MaxNumberOfRetries);
+                TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnAuthorizeStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1431,14 +1478,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStop request must not be null!");
 
 
-            Byte                             NumberOfRetries  = 0;
-            HTTPResponse<AuthorizationStop>  result           = null;
+            Byte                             TransmissionRetry  = 0;
+            HTTPResponse<AuthorizationStop>  result             = null;
 
             #endregion
 
             #region Send OnAuthorizeStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1491,7 +1538,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     NumberOfRetry:        NumberOfRetries,
+                                                     NumberOfRetry:        TransmissionRetry,
 
                                                      #region OnSuccess
 
@@ -1524,6 +1571,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
                                                          SendHTTPError(timestamp, this, httpresponse);
+
+
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+
+                                                             return new HTTPResponse<AuthorizationStop>(httpresponse,
+                                                                                                        AuthorizationStop.ServiceNotAvailable(
+                                                                                                            Request,
+                                                                                                            httpresponse.HTTPStatusCode.ToString(),
+                                                                                                            httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                        ),
+                                                                                                        IsFault: true);
+
 
                                                          return new HTTPResponse<AuthorizationStop>(httpresponse,
                                                                                                     AuthorizationStop.DataError(
@@ -1571,12 +1633,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                   NumberOfRetries++ < MaxNumberOfRetries);
+                   TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnAuthorizeStopResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1636,14 +1698,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped SendChargeDetailRecord request must not be null!");
 
 
-            Byte                                                         NumberOfRetries  = 0;
-            HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> result           = null;
+            Byte                                                         TransmissionRetry  = 0;
+            HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> result             = null;
 
             #endregion
 
             #region Send OnSendChargeDetailRecord event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1692,7 +1754,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      CancellationToken:    Request.CancellationToken,
                                                      EventTrackingId:      Request.EventTrackingId,
                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     NumberOfRetry:        NumberOfRetries,
+                                                     NumberOfRetry:        TransmissionRetry,
 
                                                      #region OnSuccess
 
@@ -1739,6 +1801,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                          DebugX.Log("e:" + httpresponse.EntirePDU);
 
                                                          SendHTTPError(timestamp, this, httpresponse);
+
+
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+
+                                                             return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(httpresponse,
+                                                                                                        new Acknowledgement<SendChargeDetailRecordRequest>(
+                                                                                                            Request,
+                                                                                                            StatusCodes.ServiceNotAvailable,
+                                                                                                            httpresponse.HTTPStatusCode.ToString(),
+                                                                                                            httpresponse.HTTPBody.ToUTF8String()
+                                                                                                        ),
+                                                                                                        IsFault: true);
+
 
                                                          return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(
 
@@ -1799,12 +1877,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
-                   NumberOfRetries++ < MaxNumberOfRetries);
+                   TransmissionRetry++ < MaxNumberOfRetries);
 
 
             #region Send OnChargeDetailRecordSent event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1861,13 +1939,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped PullAuthenticationData request must not be null!");
 
 
-            HTTPResponse<AuthenticationData> result = null;
+            Byte                              TransmissionRetry  = 0;
+            HTTPResponse<AuthenticationData>  result             = null;
 
             #endregion
 
             #region Send OnPullAuthenticationData event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1893,90 +1972,130 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
-                                                    HTTPVirtualHost,
-                                                    URIPrefix + AuthenticationDataURI,
-                                                    RemoteCertificateValidator,
-                                                    LocalCertificateSelector,
-                                                    ClientCert,
-                                                    UserAgent,
-                                                    RequestTimeout,
-                                                    DNSClient))
+            do
             {
 
-                result = await _OICPClient.Query(_CustomPullAuthenticationDataSOAPRequestMapper(Request,
-                                                                                                SOAP.Encapsulation(Request.ToXML(CustomPullAuthenticationDataRequestSerializer))),
-                                                 "eRoamingPullAuthenticationData",
-                                                 RequestLogDelegate:   OnPullAuthenticationDataSOAPRequest,
-                                                 ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
-                                                 CancellationToken:    Request.CancellationToken,
-                                                 EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        RemotePort,
+                                                        HTTPVirtualHost,
+                                                        URIPrefix + AuthenticationDataURI,
+                                                        RemoteCertificateValidator,
+                                                        LocalCertificateSelector,
+                                                        ClientCert,
+                                                        UserAgent,
+                                                        RequestTimeout,
+                                                        DNSClient))
+                {
 
-                                                 #region OnSuccess
+                    result = await _OICPClient.Query(_CustomPullAuthenticationDataSOAPRequestMapper(Request,
+                                                                                                    SOAP.Encapsulation(Request.ToXML(CustomPullAuthenticationDataRequestSerializer))),
+                                                     "eRoamingPullAuthenticationData",
+                                                     RequestLogDelegate:   OnPullAuthenticationDataSOAPRequest,
+                                                     ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
+                                                     CancellationToken:    Request.CancellationToken,
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     NumberOfRetry:        TransmissionRetry,
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                      (request, xml, onexception) =>
-                                                                                                      AuthenticationData.Parse(request,
-                                                                                                                               xml,
-                                                                                                                               CustomAuthenticationDataParser,
-                                                                                                                               CustomProviderAuthenticationDataParser,
-                                                                                                                               CustomAuthorizationIdentificationParser,
-                                                                                                                               CustomStatusCodeParser,
-                                                                                                                               onexception)),
+                                                     #region OnSuccess
 
-                                                 #endregion
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                          (request, xml, onexception) =>
+                                                                                                          AuthenticationData.Parse(request,
+                                                                                                                                   xml,
+                                                                                                                                   CustomAuthenticationDataParser,
+                                                                                                                                   CustomProviderAuthenticationDataParser,
+                                                                                                                                   CustomAuthorizationIdentificationParser,
+                                                                                                                                   CustomStatusCodeParser,
+                                                                                                                                   onexception)),
 
-                                                 #region OnSOAPFault
+                                                     #endregion
 
-                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnSOAPFault
 
-                                                     SendSOAPError(timestamp, this, httpresponse.Content);
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthenticationData>(httpresponse,
-                                                                                                 IsFault: true);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                 },
+                                                         return new HTTPResponse<AuthenticationData>(httpresponse,
+                                                                                                     IsFault: true);
 
-                                                 #endregion
+                                                     },
 
-                                                 #region OnHTTPError
+                                                     #endregion
 
-                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnHTTPError
 
-                                                     SendHTTPError(timestamp, this, httpresponse);
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthenticationData>(httpresponse,
-                                                                                                 IsFault: true);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                 },
 
-                                                 #endregion
+                                                         if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
+                                                             httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
 
-                                                 #region OnException
+                                                             return new HTTPResponse<AuthenticationData>(httpresponse,
+                                                                                                         new AuthenticationData(
+                                                                                                             Request,
+                                                                                                             StatusCodes.ServiceNotAvailable,
+                                                                                                             httpresponse.HTTPStatusCode.ToString(),
+                                                                                                             httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                         ),
+                                                                                                         IsFault: true);
 
-                                                 OnException: (timestamp, sender, exception) => {
 
-                                                     SendException(timestamp, sender, exception);
+                                                         return new HTTPResponse<AuthenticationData>(httpresponse,
+                                                                                                     new AuthenticationData(
+                                                                                                         Request,
+                                                                                                         StatusCodes.DataError,
+                                                                                                         httpresponse.HTTPStatusCode.ToString(),
+                                                                                                         httpresponse.HTTPBody.ToUTF8String()
+                                                                                                     ),
+                                                                                                     IsFault: true);
 
-                                                     return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(Request,
-                                                                                                                                    StatusCodes.SystemError,
-                                                                                                                                    exception.Message,
-                                                                                                                                    exception.StackTrace),
-                                                                                                             Exception: exception);
+                                                     },
 
-                                                 }
+                                                     #endregion
 
-                                                 #endregion
+                                                     #region OnException
 
-                                                ).ConfigureAwait(false);
+                                                     OnException: (timestamp, sender, exception) => {
+
+                                                         SendException(timestamp, sender, exception);
+
+                                                         return HTTPResponse<AuthenticationData>.ExceptionThrown(new AuthenticationData(Request,
+                                                                                                                                        StatusCodes.SystemError,
+                                                                                                                                        exception.Message,
+                                                                                                                                        exception.StackTrace),
+                                                                                                                 Exception: exception);
+
+                                                     }
+
+                                                     #endregion
+
+                                                    ).ConfigureAwait(false);
+
+                }
+
+                if (result == null)
+                    result = HTTPResponse<AuthenticationData>.OK(
+                                 new AuthenticationData(
+                                     Request,
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             );
 
             }
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                   TransmissionRetry++ < MaxNumberOfRetries);
+
 
             #region Send OnAuthenticationDataPulled event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {

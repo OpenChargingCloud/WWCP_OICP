@@ -1554,7 +1554,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<WWCP.Acknowledgement>
+        public async Task<WWCP.PushDataResult>
 
             PushAuthenticationData(IEnumerable<Identification>  AuthorizationIdentifications,
                                    ActionType                   Action              = ActionType.fullLoad,
@@ -1570,10 +1570,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (AuthorizationIdentifications.IsNullOrEmpty())
-                return new WWCP.Acknowledgement(ResultType.NoOperation);
+                return new WWCP.PushDataResult(ResultTypes.NoOperation);
 
 
-            WWCP.Acknowledgement result = null;
+            WWCP.PushDataResult result = null;
 
             #endregion
 
@@ -1619,9 +1619,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 response.Content        != null)
             {
 
-                result = new WWCP.Acknowledgement(response.Content.Result
-                                                      ? ResultType.True
-                                                      : ResultType.False,
+                result = new WWCP.PushDataResult(response.Content.Result
+                                                      ? ResultTypes.True
+                                                      : ResultTypes.False,
                                                   response.Content.StatusCode.Description,
                                                   response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                       ? new String[] { response.Content.StatusCode.AdditionalInfo }
@@ -1630,7 +1630,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
 
             else
-                result = new WWCP.Acknowledgement(ResultType.False,
+                result = new WWCP.PushDataResult(ResultTypes.False,
                                                   response.Content != null
                                                       ? response.Content.StatusCode.Description
                                                       : null,
