@@ -56,7 +56,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName"> An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -105,7 +106,8 @@ namespace org.GraphDefined.WWCP
                                               String                                                          AuthorizationURI                                = OICPv2_1.CPO.CPOClient.DefaultAuthorizationURI,
                                               String                                                          AuthenticationDataURI                           = OICPv2_1.CPO.CPOClient.DefaultAuthenticationDataURI,
                                               String                                                          HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                                       QueryTimeout                                    = null,
+                                              TimeSpan?                                                       RequestTimeout                                  = null,
+                                              Byte?                                                           MaxNumberOfRetries                              = OICPv2_1.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
                                               String                                                          ServerName                                      = OICPv2_1.CPO.CPOServer.DefaultHTTPServerName,
                                               String                                                          ServiceId                                       = null,
@@ -179,7 +181,8 @@ namespace org.GraphDefined.WWCP
                                                                      AuthorizationURI,
                                                                      AuthenticationDataURI,
                                                                      HTTPUserAgent,
-                                                                     QueryTimeout,
+                                                                     RequestTimeout,
+                                                                     MaxNumberOfRetries,
 
                                                                      ServerName,
                                                                      ServiceId,
@@ -249,7 +252,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
@@ -291,7 +295,8 @@ namespace org.GraphDefined.WWCP
                                               String                                                          AuthorizationURI                                = OICPv2_1.CPO.CPOClient.DefaultAuthorizationURI,
                                               String                                                          AuthenticationDataURI                           = OICPv2_1.CPO.CPOClient.DefaultAuthenticationDataURI,
                                               String                                                          HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                                       QueryTimeout                                    = null,
+                                              TimeSpan?                                                       RequestTimeout                                  = null,
+                                              Byte?                                                           MaxNumberOfRetries                              = OICPv2_1.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
                                               String                                                          ServerURIPrefix                                 = null,
                                               String                                                          ServiceId                                       = null,
@@ -365,7 +370,8 @@ namespace org.GraphDefined.WWCP
                                                                                                 AuthorizationURI,
                                                                                                 AuthenticationDataURI,
                                                                                                 HTTPUserAgent,
-                                                                                                QueryTimeout,
+                                                                                                RequestTimeout,
+                                                                                                MaxNumberOfRetries,
                                                                                                 DNSClient,
                                                                                                 ClientLoggingContext,
                                                                                                 LogfileCreator),

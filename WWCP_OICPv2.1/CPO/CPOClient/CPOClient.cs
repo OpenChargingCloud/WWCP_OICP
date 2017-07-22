@@ -610,6 +610,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="AuthenticationDataURI">The HTTP/SOAP/XML URI for OICP AuthenticationData requests.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
@@ -627,6 +628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
+                         Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          DNSClient                            DNSClient                    = null,
                          String                               LoggingContext               = CPOClientLogger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null)
@@ -642,6 +644,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -682,7 +685,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPOClient(String                               ClientId,
                          CPOClientLogger                      Logger,
@@ -698,7 +702,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
-                         TimeSpan?                            QueryTimeout                 = null,
+                         TimeSpan?                            RequestTimeout               = null,
+                         Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
@@ -711,7 +716,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -821,7 +827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1036,7 +1042,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPushEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1197,6 +1203,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStart request must not be null!");
 
 
+            var NumberOfReties = 0;
             HTTPResponse<AuthorizationStart> result = null;
 
             #endregion
@@ -1234,103 +1241,112 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
-                                                    HTTPVirtualHost,
-                                                    URIPrefix + AuthorizationURI,
-                                                    RemoteCertificateValidator,
-                                                    LocalCertificateSelector,
-                                                    ClientCert,
-                                                    UserAgent,
-                                                    RequestTimeout,
-                                                    DNSClient))
+            do
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request,
-                                                                                        SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStartRequestSerializer))),
-                                                 "eRoamingAuthorizeStart",
-                                                 RequestLogDelegate:   OnAuthorizeStartSOAPRequest,
-                                                 ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
-                                                 CancellationToken:    Request.CancellationToken,
-                                                 EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        RemotePort,
+                                                        HTTPVirtualHost,
+                                                        URIPrefix + AuthorizationURI,
+                                                        RemoteCertificateValidator,
+                                                        LocalCertificateSelector,
+                                                        ClientCert,
+                                                        UserAgent,
+                                                        RequestTimeout,
+                                                        DNSClient))
+                {
 
-                                                 #region OnSuccess
+                    result = await _OICPClient.Query(_CustomAuthorizeStartSOAPRequestMapper(Request,
+                                                                                            SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStartRequestSerializer))),
+                                                     "eRoamingAuthorizeStart",
+                                                     RequestLogDelegate:   OnAuthorizeStartSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeStartSOAPResponse,
+                                                     CancellationToken:    Request.CancellationToken,
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                      (request, xml, onexception) => AuthorizationStart.Parse(request,
-                                                                                                                                                              xml,
-                                                                                                                                                              CustomAuthorizationStartParser,
-                                                                                                                                                              CustomIdentificationParser,
-                                                                                                                                                              CustomStatusCodeParser,
-                                                                                                                                                              onexception)),
+                                                     #region OnSuccess
 
-                                                 #endregion
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                          (request, xml, onexception) => AuthorizationStart.Parse(request,
+                                                                                                                                                                  xml,
+                                                                                                                                                                  CustomAuthorizationStartParser,
+                                                                                                                                                                  CustomIdentificationParser,
+                                                                                                                                                                  CustomStatusCodeParser,
+                                                                                                                                                                  onexception)),
 
-                                                 #region OnSOAPFault
+                                                     #endregion
 
-                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnSOAPFault
 
-                                                     SendSOAPError(timestamp, this, httpresponse.Content);
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthorizationStart>(httpresponse,
-                                                                                                 AuthorizationStart.DataError(
-                                                                                                     Request,
-                                                                                                     httpresponse.Content.ToString()
-                                                                                                 ),
-                                                                                                 IsFault: true);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                 },
+                                                         return new HTTPResponse<AuthorizationStart>(httpresponse,
+                                                                                                     AuthorizationStart.DataError(
+                                                                                                         Request,
+                                                                                                         httpresponse.Content.ToString()
+                                                                                                     ),
+                                                                                                     IsFault: true);
 
-                                                 #endregion
+                                                     },
 
-                                                 #region OnHTTPError
+                                                     #endregion
 
-                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnHTTPError
 
-                                                     SendHTTPError(timestamp, this, httpresponse);
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthorizationStart>(httpresponse,
-                                                                                                 AuthorizationStart.DataError(
-                                                                                                     Request,
-                                                                                                     httpresponse.HTTPStatusCode.ToString(),
-                                                                                                     httpresponse.HTTPBody.ToUTF8String()
-                                                                                                 ),
-                                                                                                 IsFault: true);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                 },
+                                                         return new HTTPResponse<AuthorizationStart>(httpresponse,
+                                                                                                     AuthorizationStart.DataError(
+                                                                                                         Request,
+                                                                                                         httpresponse.HTTPStatusCode.ToString(),
+                                                                                                         httpresponse.HTTPBody.ToUTF8String()
+                                                                                                     ),
+                                                                                                     IsFault: true);
 
-                                                 #endregion
+                                                     },
 
-                                                 #region OnException
+                                                     #endregion
 
-                                                 OnException: (timestamp, sender, exception) => {
+                                                     #region OnException
 
-                                                     SendException(timestamp, sender, exception);
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                     return HTTPResponse<AuthorizationStart>.ExceptionThrown(AuthorizationStart.SystemError(
-                                                                                                                 Request,
-                                                                                                                 exception.Message,
-                                                                                                                 exception.StackTrace
-                                                                                                             ),
-                                                                                                             Exception: exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                 }
+                                                         return HTTPResponse<AuthorizationStart>.ExceptionThrown(AuthorizationStart.SystemError(
+                                                                                                                     Request,
+                                                                                                                     exception.Message,
+                                                                                                                     exception.StackTrace
+                                                                                                                 ),
+                                                                                                                 Exception: exception);
 
-                                                 #endregion
+                                                     }
 
-                                                ).ConfigureAwait(false);
+                                                     #endregion
+
+                                                    ).ConfigureAwait(false);
+
+                }
+
+                if (result == null)
+                    result = HTTPResponse<AuthorizationStart>.OK(
+                                 AuthorizationStart.SystemError(
+                                     Request,
+                                     "HTTP request failed!",
+                                     "",
+                                     Request?.SessionId,
+                                     Request?.PartnerSessionId
+                                 )
+                             );
 
             }
-
-          //  if (result == null)
-          //      result = HTTPResponse<AuthorizationStart>.OK(
-          //                   new AuthorizationStart(
-          //                       Request,
-          //                       StatusCodes.SystemError,
-          //                       "HTTP request failed!"
-          //                   )
-          //               );
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                   NumberOfReties++ < MaxNumberOfRetries);
 
 
             #region Send OnAuthorizeStartResponse event
@@ -1396,6 +1412,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStop request must not be null!");
 
 
+            var NumberOfReties = 0;
             HTTPResponse<AuthorizationStop> result = null;
 
             #endregion
@@ -1432,100 +1449,109 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
-                                                    HTTPVirtualHost,
-                                                    URIPrefix + AuthorizationURI,
-                                                    RemoteCertificateValidator,
-                                                    LocalCertificateSelector,
-                                                    ClientCert,
-                                                    UserAgent,
-                                                    RequestTimeout,
-                                                    DNSClient))
+            do
             {
 
-                result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request,
-                                                                                       SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStopRequestSerializer))),
-                                                 "eRoamingAuthorizeStop",
-                                                 RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
-                                                 ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
-                                                 CancellationToken:    Request.CancellationToken,
-                                                 EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        RemotePort,
+                                                        HTTPVirtualHost,
+                                                        URIPrefix + AuthorizationURI,
+                                                        RemoteCertificateValidator,
+                                                        LocalCertificateSelector,
+                                                        ClientCert,
+                                                        UserAgent,
+                                                        RequestTimeout,
+                                                        DNSClient))
+                {
 
-                                                 #region OnSuccess
+                    result = await _OICPClient.Query(_CustomAuthorizeStopSOAPRequestMapper(Request,
+                                                                                           SOAP.Encapsulation(Request.ToXML(CustomAuthorizeStopRequestSerializer))),
+                                                     "eRoamingAuthorizeStop",
+                                                     RequestLogDelegate:   OnAuthorizeStopSOAPRequest,
+                                                     ResponseLogDelegate:  OnAuthorizeStopSOAPResponse,
+                                                     CancellationToken:    Request.CancellationToken,
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                      (request, xml, onexception) => AuthorizationStop.Parse(request,
-                                                                                                                                                             xml,
-                                                                                                                                                             CustomAuthorizationStopParser,
-                                                                                                                                                             CustomStatusCodeParser,
-                                                                                                                                                             onexception)),
+                                                     #region OnSuccess
 
-                                                 #endregion
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                          (request, xml, onexception) => AuthorizationStop.Parse(request,
+                                                                                                                                                                 xml,
+                                                                                                                                                                 CustomAuthorizationStopParser,
+                                                                                                                                                                 CustomStatusCodeParser,
+                                                                                                                                                                 onexception)),
 
-                                                 #region OnSOAPFault
+                                                     #endregion
 
-                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnSOAPFault
 
-                                                     SendSOAPError(timestamp, this, httpresponse.Content);
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                AuthorizationStop.DataError(Request,
-                                                                                                                            httpresponse.Content.ToString()),
-                                                                                                IsFault: true);
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                 },
+                                                         return new HTTPResponse<AuthorizationStop>(httpresponse,
+                                                                                                    AuthorizationStop.DataError(Request,
+                                                                                                                                httpresponse.Content.ToString()),
+                                                                                                    IsFault: true);
 
-                                                 #endregion
+                                                     },
 
-                                                 #region OnHTTPError
+                                                     #endregion
 
-                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnHTTPError
 
-                                                     SendHTTPError(timestamp, this, httpresponse);
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
 
-                                                     return new HTTPResponse<AuthorizationStop>(httpresponse,
-                                                                                                AuthorizationStop.DataError(
-                                                                                                    Request,
-                                                                                                    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                    httpresponse.HTTPBody.      ToUTF8String()
-                                                                                                ),
-                                                                                                IsFault: true);
+                                                         SendHTTPError(timestamp, this, httpresponse);
 
-                                                 },
+                                                         return new HTTPResponse<AuthorizationStop>(httpresponse,
+                                                                                                    AuthorizationStop.DataError(
+                                                                                                        Request,
+                                                                                                        httpresponse.HTTPStatusCode.ToString(),
+                                                                                                        httpresponse.HTTPBody.      ToUTF8String()
+                                                                                                    ),
+                                                                                                    IsFault: true);
 
-                                                 #endregion
+                                                     },
 
-                                                 #region OnException
+                                                     #endregion
 
-                                                 OnException: (timestamp, sender, exception) => {
+                                                     #region OnException
 
-                                                     SendException(timestamp, sender, exception);
+                                                     OnException: (timestamp, sender, exception) => {
 
-                                                     return HTTPResponse<AuthorizationStop>.ExceptionThrown(AuthorizationStop.SystemError(
-                                                                                                                Request,
-                                                                                                                exception.Message,
-                                                                                                                exception.StackTrace
-                                                                                                            ),
-                                                                                                            Exception: exception);
+                                                         SendException(timestamp, sender, exception);
 
-                                                 }
+                                                         return HTTPResponse<AuthorizationStop>.ExceptionThrown(AuthorizationStop.SystemError(
+                                                                                                                    Request,
+                                                                                                                    exception.Message,
+                                                                                                                    exception.StackTrace
+                                                                                                                ),
+                                                                                                                Exception: exception);
 
-                                                 #endregion
+                                                     }
 
-                                                ).ConfigureAwait(false);
+                                                     #endregion
+
+                                                    ).ConfigureAwait(false);
+
+                }
+
+                if (result == null)
+                    result = HTTPResponse<AuthorizationStop>.OK(
+                                 AuthorizationStop.SystemError(
+                                     Request,
+                                     "HTTP request failed!",
+                                     "",
+                                     Request?.SessionId,
+                                     Request?.PartnerSessionId
+                                 )
+                             );
 
             }
-
-       //     if (result == null)
-       //         result = HTTPResponse<AuthorizationStop>.OK(
-       //                      new AuthorizationStop(
-       //                          Request,
-       //                          StatusCodes.SystemError,
-       //                          "HTTP request failed!"
-       //                      )
-       //                  );
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                   NumberOfReties++ < MaxNumberOfRetries);
 
 
             #region Send OnAuthorizeStopResponse event
@@ -1590,6 +1616,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 throw new ArgumentNullException(nameof(Request), "The mapped SendChargeDetailRecord request must not be null!");
 
 
+            var NumberOfReties = 0;
             HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> result = null;
 
             #endregion
@@ -1622,129 +1649,136 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
-                                                    HTTPVirtualHost,
-                                                    URIPrefix + AuthorizationURI,
-                                                    RemoteCertificateValidator,
-                                                    LocalCertificateSelector,
-                                                    ClientCert,
-                                                    UserAgent,
-                                                    RequestTimeout,
-                                                    DNSClient))
+            do
             {
 
-                result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request,
-                                                                                                SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomSendChargeDetailRecordRequestSerializer))),
-                                                 "eRoamingChargeDetailRecord",
-                                                 RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
-                                                 ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
-                                                 CancellationToken:    Request.CancellationToken,
-                                                 EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                using (var _OICPClient = new SOAPClient(Hostname,
+                                                        RemotePort,
+                                                        HTTPVirtualHost,
+                                                        URIPrefix + AuthorizationURI,
+                                                        RemoteCertificateValidator,
+                                                        LocalCertificateSelector,
+                                                        ClientCert,
+                                                        UserAgent,
+                                                        RequestTimeout,
+                                                        DNSClient))
+                {
 
-                                                 #region OnSuccess
+                    result = await _OICPClient.Query(_CustomSendChargeDetailRecordSOAPRequestMapper(Request,
+                                                                                                    SOAP.Encapsulation(Request.ToXML(CustomChargeDetailRecordSerializer: CustomSendChargeDetailRecordRequestSerializer))),
+                                                     "eRoamingChargeDetailRecord",
+                                                     RequestLogDelegate:   OnSendChargeDetailRecordSOAPRequest,
+                                                     ResponseLogDelegate:  OnSendChargeDetailRecordSOAPResponse,
+                                                     CancellationToken:    Request.CancellationToken,
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
-                                                                                                      (request, xml, onexception) =>
-                                                                                                      Acknowledgement<SendChargeDetailRecordRequest>.Parse(request,
-                                                                                                                                                           xml,
-                                                                                                                                                           CustomSendChargeDetailRecordParser,
-                                                                                                                                                           CustomStatusCodeParser,
-                                                                                                                                                           onexception)),
+                                                     #region OnSuccess
 
-                                                 #endregion
+                                                     OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                          (request, xml, onexception) =>
+                                                                                                          Acknowledgement<SendChargeDetailRecordRequest>.Parse(request,
+                                                                                                                                                               xml,
+                                                                                                                                                               CustomSendChargeDetailRecordParser,
+                                                                                                                                                               CustomStatusCodeParser,
+                                                                                                                                                               onexception)),
 
-                                                 #region OnSOAPFault
+                                                     #endregion
 
-                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+                                                     #region OnSOAPFault
 
-                                                     DebugX.Log("e:" + httpresponse.EntirePDU);
+                                                     OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     SendSOAPError(timestamp, this, httpresponse.Content);
+                                                         DebugX.Log("e:" + httpresponse.EntirePDU);
 
-                                                     return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(
+                                                         SendSOAPError(timestamp, this, httpresponse.Content);
 
-                                                                httpresponse,
+                                                         return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(
+
+                                                                    httpresponse,
+
+                                                                    new Acknowledgement<SendChargeDetailRecordRequest>(
+                                                                        Request,
+                                                                        StatusCodes.DataError,
+                                                                        httpresponse.Content.ToString()
+                                                                    ),
+
+                                                                    IsFault: true
+
+                                                                );
+
+                                                     },
+
+                                                     #endregion
+
+                                                     #region OnHTTPError
+
+                                                     OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                         DebugX.Log("e:" + httpresponse.EntirePDU);
+
+                                                         SendHTTPError(timestamp, this, httpresponse);
+
+                                                         return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(
+
+                                                                    httpresponse,
+
+                                                                    new Acknowledgement<SendChargeDetailRecordRequest>(
+                                                                        Request,
+                                                                        StatusCodes.DataError,
+                                                                        httpresponse.HTTPStatusCode.ToString(),
+                                                                        httpresponse.HTTPBody.ToUTF8String()
+                                                                    ),
+
+                                                                    IsFault: true
+
+                                                                );
+
+                                                     },
+
+                                                     #endregion
+
+                                                     #region OnException
+
+                                                     OnException: (timestamp, sender, exception) => {
+
+                                                         DebugX.Log("e:" + exception.Message);
+
+                                                         SendException(timestamp, sender, exception);
+
+                                                         return HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>.ExceptionThrown(
 
                                                                 new Acknowledgement<SendChargeDetailRecordRequest>(
                                                                     Request,
-                                                                    StatusCodes.DataError,
-                                                                    httpresponse.Content.ToString()
+                                                                    StatusCodes.ServiceNotAvailable,
+                                                                    exception.Message,
+                                                                    exception.StackTrace
                                                                 ),
 
-                                                                IsFault: true
+                                                                Exception: exception
 
                                                             );
 
-                                                 },
+                                                     }
 
-                                                 #endregion
+                                                     #endregion
 
-                                                 #region OnHTTPError
+                                                    ).ConfigureAwait(false);
 
-                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+                }
 
-                                                     DebugX.Log("e:" + httpresponse.EntirePDU);
-
-                                                     SendHTTPError(timestamp, this, httpresponse);
-
-                                                     return new HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>(
-
-                                                                httpresponse,
-
-                                                                new Acknowledgement<SendChargeDetailRecordRequest>(
-                                                                    Request,
-                                                                    StatusCodes.DataError,
-                                                                    httpresponse.HTTPStatusCode.ToString(),
-                                                                    httpresponse.HTTPBody.ToUTF8String()
-                                                                ),
-
-                                                                IsFault: true
-
-                                                            );
-
-                                                 },
-
-                                                 #endregion
-
-                                                 #region OnException
-
-                                                 OnException: (timestamp, sender, exception) => {
-
-                                                     DebugX.Log("e:" + exception.Message);
-
-                                                     SendException(timestamp, sender, exception);
-
-                                                     return HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>.ExceptionThrown(
-
-                                                            new Acknowledgement<SendChargeDetailRecordRequest>(
-                                                                Request,
-                                                                StatusCodes.ServiceNotAvailable,
-                                                                exception.Message,
-                                                                exception.StackTrace
-                                                            ),
-
-                                                            Exception: exception
-
-                                                        );
-
-                                                 }
-
-                                                 #endregion
-
-                                                ).ConfigureAwait(false);
+                if (result == null)
+                    result = HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>.OK(
+                                 new Acknowledgement<SendChargeDetailRecordRequest>(
+                                     Request,
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             );
 
             }
-
-            if (result == null)
-                result = HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>.OK(
-                             new Acknowledgement<SendChargeDetailRecordRequest>(
-                                 Request,
-                                 StatusCodes.SystemError,
-                                 "HTTP request failed!"
-                             )
-                         );
+            while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout ||
+                   NumberOfReties++ < MaxNumberOfRetries);
 
 
             #region Send OnChargeDetailRecordSent event
@@ -1857,7 +1891,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  ResponseLogDelegate:  OnPullAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 

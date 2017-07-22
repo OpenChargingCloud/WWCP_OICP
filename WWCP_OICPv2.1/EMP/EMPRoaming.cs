@@ -1727,6 +1727,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -1756,6 +1757,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
                           String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
+                          Byte?                                MaxNumberOfRetries              = EMPClient.DefaultMaxNumberOfRetries,
 
                           String                               ServerName                      = EMPServer.DefaultHTTPServerName,
                           String                               ServiceId                       = null,
@@ -1787,6 +1789,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  AuthorizationURI,
                                  HTTPUserAgent,
                                  RequestTimeout,
+                                 MaxNumberOfRetries,
                                  DNSClient,
                                  ClientLoggingContext,
                                  LogfileCreator),

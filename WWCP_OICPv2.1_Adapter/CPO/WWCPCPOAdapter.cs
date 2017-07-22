@@ -1069,6 +1069,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -1112,6 +1113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               String                                             AuthenticationDataURI                           = CPOClient.DefaultAuthenticationDataURI,
                               String                                             HTTPUserAgent                                   = CPOClient.DefaultHTTPUserAgent,
                               TimeSpan?                                          RequestTimeout                                  = null,
+                              Byte?                                              MaxNumberOfRetries                              = CPOClient.DefaultMaxNumberOfRetries,
 
                               String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
                               String                                             ServiceId                                       = null,
@@ -1167,6 +1169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   AuthenticationDataURI,
                                   HTTPUserAgent,
                                   RequestTimeout,
+                                  MaxNumberOfRetries,
 
                                   ServerName,
                                   ServiceId,

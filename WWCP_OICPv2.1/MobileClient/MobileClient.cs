@@ -330,7 +330,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
@@ -344,7 +345,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             String                               URIPrefix                    = DefaultURIPrefix,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
-                            TimeSpan?                            QueryTimeout                 = null,
+                            TimeSpan?                            RequestTimeout               = null,
+                            Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                             DNSClient                            DNSClient                    = null,
                             String                               LoggingContext               = MobileClientLogger.DefaultContext,
                             LogfileCreatorDelegate               LogfileCreator               = null)
@@ -359,7 +361,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -399,6 +402,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public MobileClient(String                               ClientId,
                             MobileClientLogger                   Logger,
@@ -412,6 +416,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
+                            Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                             DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
@@ -425,6 +430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {

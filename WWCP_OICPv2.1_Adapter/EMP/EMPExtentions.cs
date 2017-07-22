@@ -57,7 +57,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
@@ -93,7 +94,8 @@ namespace org.GraphDefined.WWCP
                                               String                                    ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
                                               String                                    AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
                                               String                                    HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                 QueryTimeout                      = null,
+                                              TimeSpan?                                 RequestTimeout                    = null,
+                                              Byte?                                     MaxNumberOfRetries                = OICPv2_1.EMP.EMPClient.DefaultMaxNumberOfRetries,
 
                                               String                                    ServerName                        = OICPv2_1.EMP.EMPServer.DefaultHTTPServerName,
                                               String                                    ServiceId                         = null,
@@ -164,7 +166,8 @@ namespace org.GraphDefined.WWCP
                                                                      ReservationURI,
                                                                      AuthorizationURI,
                                                                      HTTPUserAgent,
-                                                                     QueryTimeout,
+                                                                     RequestTimeout,
+                                                                     MaxNumberOfRetries,
 
                                                                      ServerName,
                                                                      ServiceId,
@@ -227,7 +230,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
@@ -259,7 +263,8 @@ namespace org.GraphDefined.WWCP
                                               String                                    ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
                                               String                                    AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
                                               String                                    HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                 QueryTimeout                      = null,
+                                              TimeSpan?                                 RequestTimeout                    = null,
+                                              Byte?                                     MaxNumberOfRetries                = OICPv2_1.EMP.EMPClient.DefaultMaxNumberOfRetries,
 
                                               String                                    ServiceId                         = null,
                                               String                                    ServerURIPrefix                   = null,
@@ -330,7 +335,8 @@ namespace org.GraphDefined.WWCP
                                                                                                 ReservationURI,
                                                                                                 AuthorizationURI,
                                                                                                 HTTPUserAgent,
-                                                                                                QueryTimeout,
+                                                                                                RequestTimeout,
+                                                                                                MaxNumberOfRetries,
                                                                                                 DNSClient,
                                                                                                 ClientLoggingContext,
                                                                                                 LogfileCreator),
