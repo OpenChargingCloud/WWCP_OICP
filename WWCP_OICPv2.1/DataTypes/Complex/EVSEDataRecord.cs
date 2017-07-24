@@ -773,12 +773,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               XML_IO.AsString(Plug)))
                           ),
 
-                          ChargingFacilities.ToEnumeration().NotNullAny()
+                          ChargingFacilities.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
                                     ChargingFacilities.ToEnumeration().Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   XML_IO.AsString(ChargingFacility))))
                               : null,
 
-                          ChargingModes.ToEnumeration().NotNullAny()
+                          ChargingModes.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ChargingModes",
                                     ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", XML_IO.AsString(ChargingMode))))
                               : null,
@@ -794,13 +794,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
                               : null,
 
-                          PaymentOptions.ToEnumeration().NotNullAny()
+                          PaymentOptions.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "PaymentOptions",
                                     PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      XML_IO.AsString(PaymentOption)))
                                 )
                               : null,
 
-                          ValueAddedServices.ToEnumeration().NotNullAny()
+                          ValueAddedServices.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
                                     ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", XML_IO.AsString(ValueAddedService)))
                                 )

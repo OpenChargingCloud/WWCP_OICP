@@ -93,6 +93,7 @@ namespace org.GraphDefined.WWCP
             CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
+                                              I18NString                                                      Description,
 
                                               String                                                          RemoteHostname,
                                               IPPort                                                          RemoteTCPPort                                   = null,
@@ -168,6 +169,7 @@ namespace org.GraphDefined.WWCP
 
             var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                      Name,
+                                                                     Description,
                                                                      RoamingNetwork,
 
                                                                      RemoteHostname,
@@ -283,6 +285,7 @@ namespace org.GraphDefined.WWCP
             CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
+                                              I18NString                                                      Description,
                                               SOAPServer                                                      SOAPServer,
 
                                               String                                                          RemoteHostname,
@@ -358,6 +361,7 @@ namespace org.GraphDefined.WWCP
 
             var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                      Name,
+                                                                     Description,
                                                                      RoamingNetwork,
 
                                                                      new OICPv2_1.CPO.CPOClient(Id.ToString(),

@@ -44,7 +44,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
     public class WWCPEMPAdapter : ABaseEMobilityEntity<EMPRoamingProvider_Id>,
-                                  IEMPRoamingProvider
+                                  IEMPRoamingProvider,
+                                  ISendAuthenticationData
     {
 
         #region Data
@@ -905,6 +906,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 var response = await RoamingNetwork.SendChargeDetailRecords(CDRs,
+                                                                            TransmissionTypes.Direct,
 
                                                                             ChargeDetailRecordRequest.Timestamp,
                                                                             ChargeDetailRecordRequest.CancellationToken,
@@ -943,47 +945,54 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 if (response != null)
                 {
-                    switch (response.Status)
+
+                    if (response.Result == SendCDRsResultTypes.Success)
+                        return Acknowledgement<CPO.SendChargeDetailRecordRequest>.Success(
+                                   ChargeDetailRecordRequest,
+                                   ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                   ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId,
+                                   "Charge detail record forwarded!"
+                               );
+
+                    var FailedCDR = response.RejectedChargeDetailRecords.FirstOrDefault();
+
+                    if (FailedCDR != null)
                     {
+                        switch (FailedCDR.Result)
+                        {
 
-                        case SendCDRsResultType.Forwarded:
-                            return Acknowledgement<CPO.SendChargeDetailRecordRequest>.Success(
-                                       ChargeDetailRecordRequest,
-                                       ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                       ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId,
-                                       "Charge detail record forwarded!"
-                                   );
+                            //case SendCDRResultTypes.NotForwared:
+                            //    return Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
+                            //               ChargeDetailRecordRequest,
+                            //               "Communication to EVSE failed!",
+                            //               SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                            //               PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                            //           );
 
-                        case SendCDRsResultType.NotForwared:
-                            return Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
-                                       ChargeDetailRecordRequest,
-                                       "Communication to EVSE failed!",
-                                       SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                       PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
-                                   );
+                            case SendCDRResultTypes.InvalidSessionId:
+                                return Acknowledgement<CPO.SendChargeDetailRecordRequest>.SessionIsInvalid(
+                                           ChargeDetailRecordRequest,
+                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                       );
 
-                        case SendCDRsResultType.InvalidSessionId:
-                            return Acknowledgement<CPO.SendChargeDetailRecordRequest>.SessionIsInvalid(
-                                       ChargeDetailRecordRequest,
-                                       SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                       PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
-                                   );
+                            case SendCDRResultTypes.UnknownEVSE:
+                                return Acknowledgement<CPO.SendChargeDetailRecordRequest>.UnknownEVSEID(
+                                           ChargeDetailRecordRequest,
+                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                       );
 
-                        case SendCDRsResultType.UnknownEVSE:
-                            return Acknowledgement<CPO.SendChargeDetailRecordRequest>.UnknownEVSEID(
-                                       ChargeDetailRecordRequest,
-                                       SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                       PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
-                                   );
+                            case SendCDRResultTypes.Error:
+                                return Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
+                                           ChargeDetailRecordRequest,
+                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                       );
 
-                        case SendCDRsResultType.Error:
-                            return Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
-                                       ChargeDetailRecordRequest,
-                                       SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                       PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
-                                   );
-
+                        }
                     }
+
                 }
 
                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.ServiceNotAvailable(
@@ -1554,7 +1563,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<WWCP.PushDataResult>
+        public async Task<PushAuthenticationDataResult>
 
             PushAuthenticationData(IEnumerable<Identification>  AuthorizationIdentifications,
                                    ActionType                   Action              = ActionType.fullLoad,
@@ -1570,10 +1579,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region Initial checks
 
             if (AuthorizationIdentifications.IsNullOrEmpty())
-                return new WWCP.PushDataResult(ResultTypes.NoOperation);
+                return PushAuthenticationDataResult.NoOperation(Id, this);
 
 
-            WWCP.PushDataResult result = null;
+            PushAuthenticationDataResult result = null;
 
             #endregion
 
@@ -1619,26 +1628,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 response.Content        != null)
             {
 
-                result = new WWCP.PushDataResult(response.Content.Result
-                                                      ? ResultTypes.True
-                                                      : ResultTypes.False,
-                                                  response.Content.StatusCode.Description,
-                                                  response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                      ? new String[] { response.Content.StatusCode.AdditionalInfo }
-                                                      : null);
+                result = response.Content.Result
+
+                             ? PushAuthenticationDataResult.Success(Id,
+                                                                    this,
+                                                                    response.Content.StatusCode.Description,
+                                                                    response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                        ? new String[] { response.Content.StatusCode.AdditionalInfo }
+                                                                        : null)
+
+                             : PushAuthenticationDataResult.Error(Id,
+                                                                  this,
+                                                                  null,
+                                                                  response.Content.StatusCode.Description,
+                                                                  response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                      ? new String[] { response.Content.StatusCode.AdditionalInfo }
+                                                                      : null);
 
             }
 
             else
-                result = new WWCP.PushDataResult(ResultTypes.False,
-                                                  response.Content != null
-                                                      ? response.Content.StatusCode.Description
-                                                      : null,
-                                                  response.Content != null
-                                                      ? response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                            ? new String[] { response.Content.StatusCode.AdditionalInfo }
-                                                            : null
-                                                      : null);
+                result = PushAuthenticationDataResult.Error(Id,
+                                                            this,
+                                                            null,
+                                                            response.Content != null
+                                                                ? response.Content.StatusCode.Description
+                                                                : null,
+                                                            response.Content != null
+                                                                ? response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                      ? new String[] { response.Content.StatusCode.AdditionalInfo }
+                                                                      : null
+                                                                : null);
 
 
             #region Send OnPushAuthenticationDataResponse event
