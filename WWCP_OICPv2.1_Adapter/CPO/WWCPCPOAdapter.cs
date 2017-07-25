@@ -4523,6 +4523,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     EVSEId,
                                                     ChargingProduct,
                                                     SessionId,
+                                                    new ISendAuthorizeStartStop[0],
                                                     RequestTimeout);
 
             }
@@ -4619,6 +4620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      EVSEId,
                                                      ChargingProduct,
                                                      SessionId,
+                                                     new ISendAuthorizeStartStop[0],
                                                      RequestTimeout,
                                                      result,
                                                      Runtime);

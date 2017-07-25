@@ -492,6 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                             EVSEId.Value,
                                                             ProductId,
                                                             SessionId,
+                                                            new ISendAuthorizeStartStop[0],
                                                             Request.RequestTimeout);
 
                     }
@@ -532,6 +533,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              EVSEId.Value,
                                                              ProductId,
                                                              SessionId,
+                                                             new ISendAuthorizeStartStop[0],
                                                              Request.RequestTimeout,
                                                              response,
                                                              EndTime - StartTime);
