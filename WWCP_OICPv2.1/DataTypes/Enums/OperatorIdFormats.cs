@@ -19,21 +19,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current OICP version.
+    /// The different formats of charging station operator identifications.
     /// </summary>
-    public static class Version
+    public enum OperatorIdFormats
     {
 
         /// <summary>
-        /// The current OICP version.
+        /// The old DIN format.
         /// </summary>
-#if OICPv2_1
-        public const string Number = "v2.1";
-#endif
+        DIN,
 
-#if OICPv2_2
-        public const string Number = "v2.2";
-#endif
+        /// <summary>
+        /// The new ISO format.
+        /// </summary>
+        ISO,
+
+        /// <summary>
+        /// The new ISO format with a '*' as separator.
+        /// </summary>
+        ISO_STAR
 
     }
 

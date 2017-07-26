@@ -69,7 +69,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The identification of the charging station hosting this EVSE.
         /// </summary>
-        public String               ChargingStationId           { get; }
+        public ChargingStation_Id?  ChargingStationId           { get; }
+
+        /// <summary>
+        /// The identification of the charging pool hosting this EVSE.
+        /// </summary>
+        public ChargingPool_Id?     ChargingPoolId              { get; }
 
         /// <summary>
         /// The multi-language name of the charging station hosting this EVSE.
@@ -183,6 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
         /// 
         /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
+        /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
         /// <param name="Address">The address of this EVSE.</param>
         /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
@@ -209,7 +215,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               DeltaTypes?                          DeltaType,
                               DateTime?                            LastUpdate,
 
-                              String                               ChargingStationId           = null,
+                              ChargingStation_Id?                  ChargingStationId           = null,
+                              ChargingPool_Id?                     ChargingPoolId              = null,
                               I18NString                           ChargingStationName         = null,
                               Address                              Address                     = null,
                               GeoCoordinate?                       GeoCoordinate               = null,
@@ -262,6 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.LastUpdate                 = LastUpdate;
 
             this.ChargingStationId          = ChargingStationId;
+            this.ChargingPoolId             = ChargingPoolId;
             this.ChargingStationName        = ChargingStationName ?? new I18NString();
             this.Address                    = Address;
             this.GeoCoordinate              = GeoCoordinate;
@@ -589,7 +597,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     _LastUpdate,
 
-                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingStationId",
+                                                         ChargingStation_Id.Parse),
+
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingPoolId",
+                                                         ChargingPool_Id.Parse),
+
                     _ChargingStationName,
 
                     EVSEDataRecordXML.MapElementOrFail(OICPNS.EVSEData + "Address",
@@ -639,9 +652,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     XML_IO.AsAccessibilityType(EVSEDataRecordXML.
                                                    ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
                                                    Trim()),
-
+#if OICPv2_1
                     EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum").
                                       Trim(),
+#endif
+
+#if OICPv2_2
+                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum"),
+#endif
 
                     _AdditionalInfo,
 
@@ -807,6 +825,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
 
                           new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
+
+#if OICPv2_1
                           new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
                           AdditionalInfo.has(Languages.deu)
@@ -816,6 +836,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           AdditionalInfo.has(Languages.eng)
                               ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
                               : null,
+#endif
+
+#if OICPv2_2
+                          HotlinePhoneNumber.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "HotlinePhoneNum", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
+                              : null,
+
+                          AdditionalInfo.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "AdditionalInfo",
+                                             AdditionalInfo.
+                                                 Select(info => new XElement(OICPNS.EVSEData + "InfoText",
+                                                                             new XAttribute("lang", info.Language), //ToDo: ISO 639-3 codes for languages is not what OICP expects!
+                                                                             info.Text)))
+                              : null,
+#endif
 
                           GeoChargingPointEntrance != null
                               ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
@@ -1089,6 +1124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    LastUpdate,
 
                    ChargingStationId,
+                   ChargingPoolId,
                    ChargingStationName,
                    Address,
                    GeoCoordinate,
@@ -1148,7 +1184,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <summary>
             /// The identification of the charging station hosting this EVSE.
             /// </summary>
-            public String               ChargingStationId           { get; set; }
+            public ChargingStation_Id?  ChargingStationId           { get; set; }
+
+            /// <summary>
+            /// The identification of the charging pool hosting this EVSE.
+            /// </summary>
+            public ChargingPool_Id?     ChargingPoolId              { get; set; }
 
             /// <summary>
             /// The multi-language name of the charging station hosting this EVSE.
@@ -1286,7 +1327,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            DeltaTypes?                 DeltaType                  = null,
                            DateTime?                   LastUpdate                 = null,
 
-                           String                      ChargingStationId          = null,
+                           ChargingStation_Id?         ChargingStationId          = null,
+                           ChargingPool_Id?            ChargingPoolId             = null,
                            I18NString                  ChargingStationName        = null,
                            Address                     Address                    = null,
                            GeoCoordinate?              GeoCoordinate              = null,
@@ -1342,6 +1384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 this.LastUpdate                = LastUpdate;
 
                 this.ChargingStationId         = ChargingStationId;
+                this.ChargingPoolId            = ChargingPoolId;
                 this.ChargingStationName       = ChargingStationName ?? new I18NString();
                 this.Address                   = Address;
                 this.GeoCoordinate             = GeoCoordinate;
@@ -1379,6 +1422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       DeltaType,
                                       LastUpdate,
                                       ChargingStationId,
+                                      ChargingPoolId,
                                       ChargingStationName,
                                       Address,
                                       GeoCoordinate,

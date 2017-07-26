@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The regular expression for parsing a RFID card identification.
         /// </summary>
-        public static readonly Regex UID_RegEx  = new Regex(@"^([A-F0-9]{8})$ | ^([A-F0-9]{14})$ | ^([A-F0-9]{20})$",
+        public static readonly Regex UID_RegEx  = new Regex("^([A-F0-9]{8})$ | ^([A-F0-9]{14})$ | ^([A-F0-9]{20})$",
                                                             RegexOptions.IgnorePatternWhitespace);
 
         #endregion

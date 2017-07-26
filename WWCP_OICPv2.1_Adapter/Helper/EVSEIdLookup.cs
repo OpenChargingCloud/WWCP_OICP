@@ -63,7 +63,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        public EVSEIdLookup(ChargingStationOperator_Id                OperatorId,
+        public EVSEIdLookup(ChargingStationOperator_Id     OperatorId,
                             IEnumerable<ChargingPoolInfo>  ChargingPoolInfos)
         {
 

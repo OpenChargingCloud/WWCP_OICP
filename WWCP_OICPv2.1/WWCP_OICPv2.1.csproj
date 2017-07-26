@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;OICPv2_2</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
@@ -69,6 +69,10 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
+    <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />
+    <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
+    <Compile Include="DataTypes\Enums\ProviderIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
     <Compile Include="Messages\AResponseBuilder.cs" />
     <Compile Include="Messages\Delegates.cs" />
     <Compile Include="Messages\EMP\EVSEStatus.cs" />

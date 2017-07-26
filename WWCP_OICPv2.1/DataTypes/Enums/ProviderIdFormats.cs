@@ -19,21 +19,38 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The current OICP version.
+    /// The different formats of e-mobility provider identifications.
     /// </summary>
-    public static class Version
+    public enum ProviderIdFormats
     {
 
         /// <summary>
-        /// The current OICP version.
+        /// The old DIN format.
+        /// (Only used in combination with eMAIds!)
         /// </summary>
-#if OICPv2_1
-        public const string Number = "v2.1";
-#endif
+        DIN,
 
-#if OICPv2_2
-        public const string Number = "v2.2";
-#endif
+        /// <summary>
+        /// The old DIN format with a '*' as separator.
+        /// </summary>
+        DIN_STAR,
+
+        /// <summary>
+        /// The old DIN format with a '-' as separator.
+        /// (Only used in combination with eMAIds!)
+        /// </summary>
+        DIN_HYPHEN,
+
+
+        /// <summary>
+        /// The new ISO format.
+        /// </summary>
+        ISO,
+
+        /// <summary>
+        /// The new ISO format with a '-' as separator.
+        /// </summary>
+        ISO_HYPHEN
 
     }
 

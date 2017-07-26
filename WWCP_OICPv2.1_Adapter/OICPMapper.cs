@@ -137,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (!_EVSEId.HasValue)
                     return null;
 
-                var _ChargingStationId  = ChargingStation_Id.Create(_EVSEId.Value);
+                var _ChargingStationId  = WWCP.ChargingStation_Id.Create(_EVSEId.Value);
 
                 var CustomData = new Dictionary<String, Object>();
                 CustomData.Add("OICP.EVSEDataRecord", EVSEDataRecord);
@@ -215,7 +215,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 _EVSEDataRecord = new EVSEDataRecord(_EVSEId.Value,
                                                      new DeltaTypes?(),
                                                      new DateTime?(),
-                                                     EVSE.ChargingStation.Id.ToString(),
+                                                     ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
+                                                     ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
                                                      EVSE.ChargingStation.Name,
                                                      EVSE.ChargingStation.Address.ToOICP(),
                                                      EVSE.ChargingStation.GeoLocation,

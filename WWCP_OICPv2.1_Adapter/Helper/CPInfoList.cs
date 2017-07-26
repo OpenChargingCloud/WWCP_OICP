@@ -43,33 +43,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        #region OperatorId
+        /// <summary>
+        /// The charging station operator identification.
+        /// </summary>
+        public ChargingStationOperator_Id  OperatorId   { get; }
 
-        private readonly ChargingStationOperator_Id _OperatorId;
 
-        public ChargingStationOperator_Id OperatorId
-        {
-            get
-            {
-                return _OperatorId;
-            }
-        }
+        private readonly Dictionary<WWCP.ChargingPool_Id, ChargingPoolInfo> _ChargingPools;
 
-        #endregion
-
-        #region ChargingPools
-
-        private readonly Dictionary<ChargingPool_Id, ChargingPoolInfo> _ChargingPools;
-
+        /// <summary>
+        /// All charging pools.
+        /// </summary>
         public IEnumerable<ChargingPoolInfo> ChargingPools
-        {
-            get
-            {
-                return _ChargingPools.Select(v => v.Value);
-            }
-        }
-
-        #endregion
+            => _ChargingPools.Select(v => v.Value);
 
         #endregion
 
@@ -85,8 +71,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            this._OperatorId     = OperatorId;
-            this._ChargingPools  = new Dictionary<ChargingPool_Id, ChargingPoolInfo>();
+            this.OperatorId      = OperatorId;
+            this._ChargingPools  = new Dictionary<WWCP.ChargingPool_Id, ChargingPoolInfo>();
 
         }
 
@@ -95,11 +81,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region AddOrUpdateCPInfo(ChargingPoolId, Address, PoolLocation, ChargingStationXMLId, EVSEId)
 
-        public void AddOrUpdateCPInfo(ChargingPool_Id  ChargingPoolId,
-                                      Address          Address,
-                                      GeoCoordinate?   PoolLocation,
-                                      String           ChargingStationXMLId,
-                                      EVSE_Id          EVSEId)
+        public void AddOrUpdateCPInfo(WWCP.ChargingPool_Id  ChargingPoolId,
+                                      Address               Address,
+                                      GeoCoordinate?        PoolLocation,
+                                      String                ChargingStationXMLId,
+                                      EVSE_Id               EVSEId)
         {
 
             ChargingPoolInfo _ChargingPoolInfo = null;
@@ -115,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 _ChargingPoolInfo = new ChargingPoolInfo(this, ChargingPoolId, Address, PoolLocation);
                 _ChargingPoolInfo.AddOrUpdateCSInfo(ChargingStationXMLId.IsNotNullOrEmpty()
                                                         ? ChargingStationXMLId
-                                                        : ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
+                                                        : WWCP.ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
                                                     EVSEId);
 
                 _ChargingPools.Add(_ChargingPoolInfo.PoolId, _ChargingPoolInfo);
@@ -160,9 +146,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          SelectMany(cpinfo => cpinfo.ChargingStations).
                          ForEach   (csinfo => {
 
-                             csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
-                                                                         // Replace invalid characters BEFORE grouping!
-                                                                         InvalidCharactersRegEx.Replace(csinfo.StationXMLId.ToUpper(), "").Substring(30));
+                             csinfo.StationId = WWCP.ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
+                                                                              // Replace invalid characters BEFORE grouping!
+                                                                              InvalidCharactersRegEx.Replace(csinfo.StationXMLId.ToUpper(), "").Substring(30));
 
                          });
                 }
@@ -176,12 +162,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                          SelectMany(cpinfo => cpinfo.ChargingStations).
                          ForEach   (csinfo => {
 
-                             csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
-                                                                         new SHA1CryptoServiceProvider().
-                                                                             ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
-                                                                                         ToHexString().
-                                                                                         SubstringMax(50).
-                                                                                         ToUpper());
+                             csinfo.StationId = WWCP.ChargingStation_Id.Parse(csinfo.ChargePoolInfo.PoolId.OperatorId,
+                                                                              new SHA1CryptoServiceProvider().
+                                                                                  ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
+                                                                                              ToHexString().
+                                                                                              SubstringMax(50).
+                                                                                              ToUpper());
 
                           });
 
@@ -198,12 +184,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     if (csinfo.StationId == null)
                     {
 
-                        csinfo.StationId = ChargingStation_Id.Parse(csinfo.ChargePoolInfo.CPInfoList.OperatorId,
-                                                                    new SHA1CryptoServiceProvider().
-                                                                        ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
-                                                                                    ToHexString().
-                                                                                    Substring(0, 12).
-                                                                                    ToUpper());
+                        csinfo.StationId = WWCP.ChargingStation_Id.Parse(csinfo.ChargePoolInfo.CPInfoList.OperatorId,
+                                                                         new SHA1CryptoServiceProvider().
+                                                                             ComputeHash(Encoding.UTF8.GetBytes(csinfo.Select(evseid => evseid.ToString()).Aggregate())).
+                                                                                         ToHexString().
+                                                                                         Substring(0, 12).
+                                                                                         ToUpper());
 
                     }
                 });
@@ -225,7 +211,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            return new EVSEIdLookup(_OperatorId, this);
+            return new EVSEIdLookup(OperatorId, this);
 
         }
 

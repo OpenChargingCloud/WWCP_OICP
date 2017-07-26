@@ -28,30 +28,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The different formats of charging station operator identifications.
-    /// </summary>
-    public enum OperatorIdFormats
-    {
-
-        /// <summary>
-        /// The old DIN format.
-        /// </summary>
-        DIN,
-
-        /// <summary>
-        /// The new ISO format.
-        /// </summary>
-        ISO,
-
-        /// <summary>
-        /// The new ISO format with a '*' as separator.
-        /// </summary>
-        ISO_STAR
-
-    }
-
-
-    /// <summary>
     /// The unique identification of an OICP charging station operator.
     /// </summary>
     public struct Operator_Id : IId,

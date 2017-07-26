@@ -195,7 +195,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                     OnExceptionDelegate               OnException           = null)
         {
 
-            var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+            try
+            {
+
+                var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
                 Country _Country;
                 if (!Country.TryParse(_CountryTXT, out _Country))
@@ -209,25 +212,35 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 }
 
-            var _Address = new Address(_Country,
+                var _Address = new Address(_Country,
 
-                                       I18NString.Create(Languages.unknown,
-                                                         AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City").Trim()),
+                                           I18NString.Create(Languages.unknown,
+                                                             AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City").Trim()),
 
-                                       AddressXML.ElementValueOrFail   (OICPNS.CommonTypes + "Street").        Trim(),
+                                           AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street").Trim(),
 
-                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
-                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",   "").Trim(),
-                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor",      "").Trim(),
-                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Region",     "").Trim(),
-                                       AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "TimeZone",   "").Trim()
-                                       );
+                                           AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
+                                           AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
+                                           AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
+                                           AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Region", "").Trim(),
+                                           AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "TimeZone", "").Trim()
+                                           );
 
-            if (CustomAddressParser != null)
-                _Address = CustomAddressParser(AddressXML,
-                                               _Address);
+                if (CustomAddressParser != null)
+                    _Address = CustomAddressParser(AddressXML,
+                                                   _Address);
 
-            return _Address;
+                return _Address;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.UtcNow,
+                                    AddressXML,
+                                    e);
+            }
+
+            return null;
 
         }
 

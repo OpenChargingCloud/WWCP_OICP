@@ -1240,6 +1240,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
+        /// <param name="OperatorIdFilter">Only return EVSEs belonging to the given optional enumeration of EVSE operators.</param>
+        /// <param name="CountryCodeFilter">An optional enumeration of countries whose EVSE's a provider wants to retrieve.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -1247,15 +1249,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<EVSEDataPull>
 
-            PullEVSEData(DateTime?              LastCall            = null,
-                         GeoCoordinate?         SearchCenter       = null,
-                         Single                 DistanceKM         = 0f,
-                         eMobilityProvider_Id?  ProviderId         = null,
+            PullEVSEData(DateTime?                                LastCall            = null,
+                         GeoCoordinate?                           SearchCenter        = null,
+                         Single                                   DistanceKM          = 0f,
+                         eMobilityProvider_Id?                    ProviderId          = null,
+                         IEnumerable<ChargingStationOperator_Id>  OperatorIdFilter    = null,
+                         IEnumerable<Country>                     CountryCodeFilter   = null,
 
-                         DateTime?              Timestamp          = null,
-                         CancellationToken?     CancellationToken  = null,
-                         EventTracking_Id       EventTrackingId    = null,
-                         TimeSpan?              RequestTimeout     = null)
+                         DateTime?                                Timestamp           = null,
+                         CancellationToken?                       CancellationToken   = null,
+                         EventTracking_Id                         EventTrackingId     = null,
+                         TimeSpan?                                RequestTimeout      = null)
 
         {
 
@@ -1282,6 +1286,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        DistanceKM,
                                                        LastCall,
                                                        GeoCoordinatesResponseFormats.DecimalDegree,
+                                                       OperatorIdFilter != null
+                                                           ? OperatorIdFilter.Select(csoid => csoid.ToOICP())
+                                                           : null,
+                                                       CountryCodeFilter,
 
                                                        Timestamp,
                                                        CancellationToken,
@@ -1719,15 +1727,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         async Task<ReservationResult>
 
             IReserveRemoteStartStop.Reserve(WWCP.EVSE_Id                      EVSEId,
-                                            DateTime?                         ReservationStartTime,  // = null,
-                                            TimeSpan?                         Duration,              // = null,
-                                            ChargingReservation_Id?           ReservationId,         // = null,
-                                            eMobilityProvider_Id?             ProviderId,            // = null,
-                                            eMobilityAccount_Id?              eMAId,                 // = null,
-                                            ChargingProduct                   ChargingProduct,       // = null,
-                                            IEnumerable<Auth_Token>           AuthTokens,            // = null,
-                                            IEnumerable<eMobilityAccount_Id>  eMAIds,                // = null,
-                                            IEnumerable<UInt32>               PINs,                  // = null,
+                                            DateTime?                         ReservationStartTime,
+                                            TimeSpan?                         Duration,
+                                            ChargingReservation_Id?           ReservationId,
+                                            eMobilityProvider_Id?             ProviderId,
+                                            AuthIdentification                Identification,
+                                            ChargingProduct                   ChargingProduct,
+                                            IEnumerable<Auth_Token>           AuthTokens,
+                                            IEnumerable<eMobilityAccount_Id>  eMAIds,
+                                            IEnumerable<UInt32>               PINs,
 
                                             DateTime?                         Timestamp,
                                             CancellationToken?                CancellationToken,
@@ -1772,7 +1780,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              ReservationStartTime,
                                              Duration,
                                              ProviderId,
-                                             eMAId,
+                                             Identification,
                                              ChargingProduct,
                                              AuthTokens,
                                              eMAIds,
@@ -1838,13 +1846,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Add the eMAId to the list of valid eMAIds
 
-            if (eMAIds == null && eMAId.HasValue)
-                eMAIds = new List<eMobilityAccount_Id> { eMAId.Value };
+            if (eMAIds == null && Identification.RemoteIdentification.HasValue)
+                eMAIds = new List<eMobilityAccount_Id> { Identification.RemoteIdentification.Value };
 
-            if (eMAIds != null && eMAId.HasValue && !eMAIds.Contains(eMAId.Value))
+            if (eMAIds != null && Identification.RemoteIdentification.HasValue && !eMAIds.Contains(Identification.RemoteIdentification.Value))
             {
                 var _eMAIds = new List<eMobilityAccount_Id>(eMAIds);
-                _eMAIds.Add(eMAId.Value);
+                _eMAIds.Add(Identification.RemoteIdentification.Value);
                 eMAIds = _eMAIds;
             }
 
@@ -1855,7 +1863,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              ProviderId:         ProviderId.HasValue
                                                                                      ? ProviderId.Value.ToOICP()
                                                                                      : DefaultProviderId.Value,
-                                                             EVCOId:             eMAId.     Value.ToOICP(),
+                                                             Identification:     Identification.ToOICP(),
+                                                             Duration:           Duration,
                                                              SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                                              PartnerSessionId:   null,
                                                              PartnerProductId:   PartnerProduct_Id.Parse(PartnerProductIdElements.
@@ -1884,7 +1893,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                              ConsumedReservationTime:  TimeSpan.FromSeconds(0),
                                                                              ReservationLevel:         ChargingReservationLevel.EVSE,
                                                                              ProviderId:               ProviderId,
-                                                                             eMAId:                    eMAId,
+                                                                             Identification:           Identification,
                                                                              RoamingNetwork:           RoamingNetwork,
                                                                              ChargingPoolId:           null,
                                                                              ChargingStationId:        null,
@@ -1919,7 +1928,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               ReservationStartTime,
                                               Duration,
                                               ProviderId,
-                                              eMAId,
+                                              Identification,
                                               ChargingProduct,
                                               AuthTokens,
                                               eMAIds,
@@ -2301,7 +2310,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<RemoteStartChargingStationResult>
 
-            IReserveRemoteStartStop.RemoteStart(ChargingStation_Id       ChargingStationId,
+            IReserveRemoteStartStop.RemoteStart(WWCP.ChargingStation_Id  ChargingStationId,
                                                 ChargingProduct          ChargingProduct,  // = null,
                                                 ChargingReservation_Id?  ReservationId,    // = null,
                                                 ChargingSession_Id?      SessionId,        // = null,
@@ -2507,16 +2516,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<RemoteStopChargingStationResult>
 
-            IReserveRemoteStartStop.RemoteStop(ChargingStation_Id     ChargingStationId,
-                                               ChargingSession_Id     SessionId,
-                                               ReservationHandling?   ReservationHandling,
-                                               eMobilityProvider_Id?  ProviderId,         // = null,
-                                               eMobilityAccount_Id?   eMAId,              // = null,
+            IReserveRemoteStartStop.RemoteStop(WWCP.ChargingStation_Id  ChargingStationId,
+                                               ChargingSession_Id       SessionId,
+                                               ReservationHandling?     ReservationHandling,
+                                               eMobilityProvider_Id?    ProviderId,         // = null,
+                                               eMobilityAccount_Id?     eMAId,              // = null,
 
-                                               DateTime?              Timestamp,
-                                               CancellationToken?     CancellationToken,
-                                               EventTracking_Id       EventTrackingId,
-                                               TimeSpan?              RequestTimeout)
+                                               DateTime?                Timestamp,
+                                               CancellationToken?       CancellationToken,
+                                               EventTracking_Id         EventTrackingId,
+                                               TimeSpan?                RequestTimeout)
 
 
                 => Task.FromResult(RemoteStopChargingStationResult.OutOfService(SessionId));
@@ -2809,12 +2818,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                 try
                                                 {
                                                                                   // Generate a stable charging pool identification
-                                                    _CPInfoList.AddOrUpdateCPInfo(ChargingPool_Id.Generate(CurrentEVSEDataRecord.Id.OperatorId.ToWWCP().Value,
-                                                                                                           CurrentEVSEDataRecord.Address.      ToWWCP(),
-                                                                                                           CurrentEVSEDataRecord.GeoCoordinate),
+                                                    _CPInfoList.AddOrUpdateCPInfo(WWCP.ChargingPool_Id.Generate(CurrentEVSEDataRecord.Id.OperatorId.ToWWCP().Value,
+                                                                                                                CurrentEVSEDataRecord.Address.      ToWWCP(),
+                                                                                                                CurrentEVSEDataRecord.GeoCoordinate),
                                                                                   CurrentEVSEDataRecord.Address,
                                                                                   CurrentEVSEDataRecord.GeoCoordinate,
-                                                                                  CurrentEVSEDataRecord.ChargingStationId,
+                                                                                  CurrentEVSEDataRecord.ChargingStationId.ToString(),
                                                                                   CurrentEVSEDataRecord.Id);
 
                                                 } catch (Exception e)
@@ -2988,7 +2997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                         // Update via events!
                                                         _ChargingStation.Name                       = CurrentEVSEDataRecord.ChargingStationName;
-                                                        _ChargingStation.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
+                                                        _ChargingStation.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId.ToString();
                                                         _ChargingStation.Description                = CurrentEVSEDataRecord.AdditionalInfo;
                                                         _ChargingStation.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                         _ChargingStation.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
@@ -3015,7 +3024,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                                                     station.DataSource                 = Id.ToString();
                                                                                     station.Name                       = CurrentEVSEDataRecord.ChargingStationName;
-                                                                                    station.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId;
+                                                                                    station.HubjectStationId           = CurrentEVSEDataRecord.ChargingStationId.ToString();
                                                                                     station.Description                = CurrentEVSEDataRecord.AdditionalInfo;
                                                                                     station.AuthenticationModes        = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                     station.PaymentOptions             = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));

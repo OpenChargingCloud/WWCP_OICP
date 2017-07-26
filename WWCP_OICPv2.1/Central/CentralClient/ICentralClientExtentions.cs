@@ -37,14 +37,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     public static class ICentralClientExtentions
     {
 
-        #region AuthorizeRemoteReservationStart(ProviderId, EVSEId, EVCOId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
+        #region AuthorizeRemoteReservationStart(ProviderId, EVSEId, Identification, Duration = null, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
 
         /// <summary>
         /// Create an OICP AuthorizeRemoteReservationStart XML/SOAP request.
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="Identification">An identification, e.g. an electric vehicle contract identification.</param>
+        /// <param name="Duration">The duration of the reservation (max. 99 minutes).</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
@@ -58,7 +59,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             AuthorizeRemoteReservationStart(this ICentralClient   ICentralClient,
                                             Provider_Id           ProviderId,
                                             EVSE_Id               EVSEId,
-                                            EVCO_Id               EVCOId,
+                                            Identification        Identification,
+                                            TimeSpan?             Duration            = null,
                                             Session_Id?           SessionId           = null,
                                             PartnerSession_Id?    PartnerSessionId    = null,
                                             PartnerProduct_Id?    PartnerProductId    = null,
@@ -71,7 +73,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 => ICentralClient.AuthorizeRemoteReservationStart(new EMP.AuthorizeRemoteReservationStartRequest(ProviderId,
                                                                                                                  EVSEId,
-                                                                                                                 EVCOId,
+                                                                                                                 Identification,
+                                                                                                                 Duration,
                                                                                                                  SessionId,
                                                                                                                  PartnerSessionId,
                                                                                                                  PartnerProductId,

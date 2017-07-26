@@ -83,6 +83,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
+        //ToDo: Implement new RFIDIdentification complex type!
+
         #region (static) FromRFIDId                     (UID,                         CustomData = null)
 
         /// <summary>

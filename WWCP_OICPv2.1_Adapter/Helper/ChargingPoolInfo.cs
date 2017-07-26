@@ -35,13 +35,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Properties
 
-        public CPInfoList       CPInfoList    { get; }
+        public CPInfoList            CPInfoList     { get; }
 
-        public ChargingPool_Id  PoolId        { get; }
+        public WWCP.ChargingPool_Id  PoolId         { get; }
 
-        public Address          Address       { get; }
+        public Address               Address        { get; }
 
-        public GeoCoordinate?   GeoLocation   { get; }
+        public GeoCoordinate?        GeoLocation    { get; }
 
         #region ChargingStations
 
@@ -56,10 +56,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Constructor(s)
 
-        public ChargingPoolInfo(CPInfoList       CPInfoList,
-                                ChargingPool_Id  PoolId,
-                                Address          Address,
-                                GeoCoordinate?   GeoLocation)
+        public ChargingPoolInfo(CPInfoList            CPInfoList,
+                                WWCP.ChargingPool_Id  PoolId,
+                                Address               Address,
+                                GeoCoordinate?        GeoLocation)
         {
 
             #region Initial checks
@@ -115,7 +115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 ? _ChargingStations.
                                       FirstOrDefault(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId)
                                 : _ChargingStations.
-                                      FirstOrDefault(CSInfo => CSInfo.StationId    == ChargingStation_Id.Create(EVSEId.ToWWCP().Value));
+                                      FirstOrDefault(CSInfo => CSInfo.StationId    == WWCP.ChargingStation_Id.Create(EVSEId.ToWWCP().Value));
 
             if (ChargingStationXMLId.IsNullOrEmpty())
             {
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (ExCSInfos == null)
                 AddCSInfo(ChargingStationXMLId.IsNotNullOrEmpty()
                               ? ChargingStationXMLId
-                              : ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
+                              : WWCP.ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
                           EVSEId);
 
             else
