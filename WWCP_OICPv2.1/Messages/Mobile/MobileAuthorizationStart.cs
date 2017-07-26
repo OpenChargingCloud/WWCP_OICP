@@ -24,6 +24,7 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -283,11 +284,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizationStart _MobileAuthorizationStart;
-
             if (TryParse(Request,
                          MobileAuthorizationStartXML,
-                         out _MobileAuthorizationStart,
+                         out MobileAuthorizationStart _MobileAuthorizationStart,
                          CustomMobileAuthorizationStartParser,
                          CustomAddressParser,
                          CustomStatusCodeParser,
@@ -323,11 +322,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizationStart _MobileAuthorizationStart;
-
             if (TryParse(Request,
                          MobileAuthorizationStartText,
-                         out _MobileAuthorizationStart,
+                         out MobileAuthorizationStart _MobileAuthorizationStart,
                          CustomMobileAuthorizationStartParser,
                          CustomAddressParser,
                          CustomStatusCodeParser,

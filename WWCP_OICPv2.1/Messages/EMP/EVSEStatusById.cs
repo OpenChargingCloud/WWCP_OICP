@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -176,11 +177,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                            OnExceptionDelegate                        OnException                    = null)
         {
 
-            EVSEStatusById _EVSEStatusById;
-
             if (TryParse(Request,
                          EVSEStatusByIdXML,
-                         out _EVSEStatusById,
+                         out EVSEStatusById _EVSEStatusById,
                          CustomEVSEStatusByIdParser,
                          CustomEVSEStatusRecordParser,
                          CustomStatusCodeParser,
@@ -213,11 +212,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                            OnExceptionDelegate                        OnException                    = null)
         {
 
-            EVSEStatusById _EVSEStatusById;
-
             if (TryParse(Request,
                          EVSEStatusByIdText,
-                         out _EVSEStatusById,
+                         out EVSEStatusById _EVSEStatusById,
                          CustomEVSEStatusByIdParser,
                          CustomEVSEStatusRecordParser,
                          CustomStatusCodeParser,

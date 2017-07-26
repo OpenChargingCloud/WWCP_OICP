@@ -18,12 +18,11 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -190,10 +189,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PushAuthenticationDataRequest _PushAuthenticationDataRequest;
-
             if (TryParse(PushAuthenticationDataRequestXML,
-                         out _PushAuthenticationDataRequest,
+                         out PushAuthenticationDataRequest _PushAuthenticationDataRequest,
                          CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,
@@ -242,10 +239,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PushAuthenticationDataRequest _PushAuthenticationDataRequest;
-
             if (TryParse(PushAuthenticationDataRequestText,
-                         out _PushAuthenticationDataRequest,
+                         out PushAuthenticationDataRequest _PushAuthenticationDataRequest,
                          CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,

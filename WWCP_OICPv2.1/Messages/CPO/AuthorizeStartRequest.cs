@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -205,10 +206,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            AuthorizeStartRequest _AuthorizeStart;
-
             if (TryParse(AuthorizeStartXML,
-                         out _AuthorizeStart,
+                         out AuthorizeStartRequest _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -252,10 +251,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            AuthorizeStartRequest _AuthorizeStart;
-
             if (TryParse(AuthorizeStartText,
-                         out _AuthorizeStart,
+                         out AuthorizeStartRequest _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
                          OnException,

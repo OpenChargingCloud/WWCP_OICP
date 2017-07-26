@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -504,11 +505,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                               OnExceptionDelegate                         OnException                     = null)
         {
 
-            AuthorizationStop _AuthorizationStop;
-
             if (TryParse(Request,
                          AuthorizationStopXML,
-                         out _AuthorizationStop,
+                         out AuthorizationStop _AuthorizationStop,
                          CustomAuthorizationStopParser,
                          CustomStatusCodeParser,
                          OnException))
@@ -538,11 +537,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                               OnExceptionDelegate                         OnException                     = null)
         {
 
-            AuthorizationStop _AuthorizationStop;
-
             if (TryParse(Request,
                          AuthorizationStopText,
-                         out _AuthorizationStop,
+                         out AuthorizationStop _AuthorizationStop,
                          CustomAuthorizationStopParser,
                          CustomStatusCodeParser,
                          OnException))

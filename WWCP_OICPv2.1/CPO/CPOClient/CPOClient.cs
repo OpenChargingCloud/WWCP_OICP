@@ -807,7 +807,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            do
+            #region No EVSE data to push?
+
+            if (!Request.EVSEDataRecords.Any())
+            {
+
+                result = HTTPResponse<Acknowledgement<PushEVSEDataRequest>>.OK(
+                             Acknowledgement<PushEVSEDataRequest>.Success(Request,
+                                                                          StatusCodeDescription: "No EVSE data to push")
+                         );
+
+            }
+
+            #endregion
+
+            else do
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
@@ -876,21 +890,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                          SendHTTPError(timestamp, this, httpresponse);
 
-
                                                          if (httpresponse.HTTPStatusCode == HTTPStatusCode.ServiceUnavailable ||
                                                              httpresponse.HTTPStatusCode == HTTPStatusCode.Unauthorized       ||
                                                              httpresponse.HTTPStatusCode == HTTPStatusCode.Forbidden          ||
                                                              httpresponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                                                         {
 
-                                                             return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(httpresponse,
-                                                                                                                           new Acknowledgement<PushEVSEDataRequest>(
-                                                                                                                               Request,
-                                                                                                                               StatusCodes.ServiceNotAvailable,
-                                                                                                                               httpresponse.HTTPStatusCode.ToString(),
-                                                                                                                               httpresponse.HTTPBody.      ToUTF8String()
-                                                                                                                           ),
-                                                                                                                           IsFault: true);
+                                                             return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(
 
+                                                                 httpresponse,
+
+                                                                 new Acknowledgement<PushEVSEDataRequest>(
+                                                                     Request,
+                                                                     StatusCodes.ServiceNotAvailable,
+                                                                     httpresponse.HTTPStatusCode.ToString(),
+                                                                     httpresponse.HTTPBody.      ToUTF8String()
+                                                                 ),
+
+                                                                 IsFault: true);
+
+                                                         }
 
                                                          return new HTTPResponse<Acknowledgement<PushEVSEDataRequest>>(
 
@@ -934,12 +953,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      #endregion
 
-                                                    ).ConfigureAwait(false);
+                                                    );
 
                 }
 
                 if (result == null)
-                    result = HTTPResponse<Acknowledgement<PushEVSEDataRequest>>.OK(
+                    result = HTTPResponse<Acknowledgement<PushEVSEDataRequest>>.ClientError(
                                  new Acknowledgement<PushEVSEDataRequest>(
                                      Request,
                                      StatusCodes.SystemError,
@@ -1047,7 +1066,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            do
+            #region No EVSE status to push?
+
+            if (!Request.EVSEStatusRecords.Any())
+            {
+
+                result = HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>.OK(
+                             Acknowledgement<PushEVSEStatusRequest>.Success(Request,
+                                                                            StatusCodeDescription: "No EVSE status to push")
+                         );
+
+            }
+
+            #endregion
+
+            else do
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
@@ -1174,7 +1207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      #endregion
 
-                                                    ).ConfigureAwait(false);
+                                                    );
 
                 }
 

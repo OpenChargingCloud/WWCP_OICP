@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -217,15 +218,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="IdentificationXML">The XML to parse.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(XElement                              IdentificationXML,
+        public static Identification Parse(XElement                                 IdentificationXML,
                                            CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                           OnExceptionDelegate                   OnException                  = null)
+                                           OnExceptionDelegate                      OnException                  = null)
         {
 
-            Identification _Identification;
-
             if (TryParse(IdentificationXML,
-                         out _Identification,
+                         out Identification _Identification,
                          CustomIdentificationParser,
                          OnException))
 
@@ -245,15 +244,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="IdentificationText">The text to parse.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(String                                IdentificationText,
+        public static Identification Parse(String                                   IdentificationText,
                                            CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                           OnExceptionDelegate                   OnException                  = null)
+                                           OnExceptionDelegate                      OnException                  = null)
         {
 
-            Identification _Identification;
-
             if (TryParse(IdentificationText,
-                         out _Identification,
+                         out Identification _Identification,
                          CustomIdentificationParser,
                          OnException))
 

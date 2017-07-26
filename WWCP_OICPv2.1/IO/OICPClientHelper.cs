@@ -42,9 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #endregion
 
-            StatusCode _StatusCode;
-
-            if (StatusCode.TryParse(XML, out _StatusCode))
+            if (StatusCode.TryParse(XML, out StatusCode _StatusCode))
             {
                 OICPException = new OICPException(_StatusCode);
                 OnError(DateTime.Now, XML, OICPException);

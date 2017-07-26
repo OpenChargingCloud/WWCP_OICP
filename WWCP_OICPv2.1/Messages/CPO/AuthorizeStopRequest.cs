@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -192,10 +193,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                      RequestTimeout                     = null)
         {
 
-            AuthorizeStopRequest _AuthorizeStop;
-
             if (TryParse(AuthorizeStopXML,
-                         out _AuthorizeStop,
+                         out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -238,10 +237,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                      RequestTimeout                     = null)
         {
 
-            AuthorizeStopRequest _AuthorizeStop;
-
             if (TryParse(AuthorizeStopText,
-                         out _AuthorizeStop,
+                         out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
                          OnException,

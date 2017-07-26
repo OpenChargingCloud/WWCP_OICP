@@ -148,9 +148,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                   OnExceptionDelegate  OnException = null)
         {
 
-            QRCodeIdentification _QRCodeIdentification;
+            if (TryParse(QRCodeIdentificationXML,
+                         out QRCodeIdentification _QRCodeIdentification,
+                         OnException))
 
-            if (TryParse(QRCodeIdentificationXML, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
             return null;
@@ -170,9 +171,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                   OnExceptionDelegate  OnException = null)
         {
 
-            QRCodeIdentification _QRCodeIdentification;
+            if (TryParse(QRCodeIdentificationText,
+                         out QRCodeIdentification _QRCodeIdentification,
+                         OnException))
 
-            if (TryParse(QRCodeIdentificationText, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
             return null;

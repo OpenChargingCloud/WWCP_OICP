@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -157,11 +158,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse;
-
             if (TryParse(Request,
                          GetChargeDetailRecordsResponseXML,
-                         out _GetChargeDetailRecordsResponse,
+                         out GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse,
                          CustomGetChargeDetailRecordsResponseParser,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
@@ -197,11 +196,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse;
-
             if (TryParse(Request,
                          GetChargeDetailRecordsResponseText,
-                         out _GetChargeDetailRecordsResponse,
+                         out GetChargeDetailRecordsResponse _GetChargeDetailRecordsResponse,
                          CustomGetChargeDetailRecordsResponseParser,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,

@@ -18,9 +18,10 @@
 #region Usings
 
 using System;
+using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Xml.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -200,8 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
 
-                Country _Country;
-                if (!Country.TryParse(_CountryTXT, out _Country))
+                if (!Country.TryParse(_CountryTXT, out Country _Country))
                 {
 
                     if (_CountryTXT.ToUpper() == "UNKNOWN")

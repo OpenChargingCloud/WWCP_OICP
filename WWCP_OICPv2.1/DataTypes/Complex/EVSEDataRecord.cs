@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -442,10 +443,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordXML,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -473,10 +472,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordText,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -517,8 +514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 #region XML Attribute: LastUpdate
 
-                DateTime _LastUpdate;
-                DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate);
+                DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out DateTime _LastUpdate);
 
                 #endregion
 
@@ -541,6 +537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            Trim();
 
                 Single _MaxCapacity = 0.0f;
+
                 if (_MaxCapacity_kWh.IsNotNullOrEmpty())
                     Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
 

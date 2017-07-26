@@ -24,6 +24,7 @@ using System.Threading;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -170,10 +171,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            PushEVSEStatusRequest _PushEVSEStatus;
-
             if (TryParse(PushEVSEStatusXML,
-                         out _PushEVSEStatus,
+                         out PushEVSEStatusRequest _PushEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException,
@@ -217,10 +216,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            PushEVSEStatusRequest _PushEVSEStatus;
-
             if (TryParse(PushEVSEStatusText,
-                         out _PushEVSEStatus,
+                         out PushEVSEStatusRequest _PushEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException,
