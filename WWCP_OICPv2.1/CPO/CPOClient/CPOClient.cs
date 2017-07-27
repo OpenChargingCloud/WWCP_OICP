@@ -1324,6 +1324,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
+            DebugX.LogT("OICP.CPOClient AuthStart Request: " + Request.Identification);
+
             do
             {
 
@@ -1428,7 +1430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                                                      #endregion
 
-                                                    ).ConfigureAwait(false);
+                                                    );
 
                 }
 
@@ -1446,6 +1448,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             while (result.HTTPStatusCode == HTTPStatusCode.RequestTimeout &&
                 TransmissionRetry++ < MaxNumberOfRetries);
+
+            DebugX.LogT("OICP.CPOClient AuthStart Response: " + Request.Identification + " => " + result.Content);
 
 
             #region Send OnAuthorizeStartResponse event
