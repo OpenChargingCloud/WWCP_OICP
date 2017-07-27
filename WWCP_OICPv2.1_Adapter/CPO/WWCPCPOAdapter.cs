@@ -1602,7 +1602,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.SetStaticData(EVSE                EVSE,
                                     TransmissionTypes   TransmissionType,
@@ -1647,7 +1647,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1656,25 +1658,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
                 }
+                finally
+                {
+                    DataAndStatusLock.Release();
+                }
 
-                return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                return PushEVSEDataResult.Enqueued(Id, this);
 
             }
 
             #endregion
 
-            return PushEVSEData(new EVSE[] { EVSE },
-                                ActionTypes.fullLoad,
+            return await PushEVSEData(new EVSE[] { EVSE },
+                                      ActionTypes.fullLoad,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -1692,7 +1698,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.AddStaticData(EVSE                EVSE,
                                     TransmissionTypes   TransmissionType,
@@ -1737,7 +1743,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1746,25 +1754,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
                 }
+                finally
+                {
+                    DataAndStatusLock.Release();
+                }
 
-                return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                return PushEVSEDataResult.Enqueued(Id, this);
 
             }
 
             #endregion
 
-            return PushEVSEData(new EVSE[] { EVSE },
-                                ActionTypes.insert,
+            return await PushEVSEData(new EVSE[] { EVSE },
+                                      ActionTypes.insert,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -1786,7 +1798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.UpdateStaticData(EVSE                EVSE,
                                        String              PropertyName,
@@ -1837,7 +1849,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1858,25 +1872,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToUpdateQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
                 }
+                finally
+                {
+                    DataAndStatusLock.Release();
+                }
 
-                return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                return PushEVSEDataResult.Enqueued(Id, this);
 
             }
 
             #endregion
 
-            return PushEVSEData(new EVSE[] { EVSE },
-                                ActionTypes.update,
+            return await PushEVSEData(new EVSE[] { EVSE },
+                                      ActionTypes.update,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -1894,7 +1912,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.DeleteStaticData(EVSE                EVSE,
                                        TransmissionTypes   TransmissionType,
@@ -1939,7 +1957,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     if (_IncludeEVSEs == null ||
@@ -1948,25 +1968,29 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToRemoveQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
                 }
+                finally
+                {
+                    DataAndStatusLock.Release();
+                }
 
-                return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                return PushEVSEDataResult.Enqueued(Id, this);
 
             }
 
             #endregion
 
-            return PushEVSEData(new EVSE[] { EVSE },
-                                ActionTypes.delete,
+            return await PushEVSEData(new EVSE[] { EVSE },
+                                      ActionTypes.delete,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -1985,7 +2009,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.SetStaticData(IEnumerable<EVSE>   EVSEs,
                                     TransmissionTypes   TransmissionType,
@@ -2000,7 +2024,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (EVSEs == null || !EVSEs.Any())
-                return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                return PushEVSEDataResult.NoOperation(Id, this);
 
             #endregion
 
@@ -2030,10 +2054,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
                                                             _IncludeEVSEIds(evse.Id)).
                                               ToArray();
 
@@ -2043,27 +2069,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
-                        return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                        return PushEVSEDataResult.Enqueued(Id, this);
 
                     }
 
-                    return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                    return PushEVSEDataResult.NoOperation(Id, this);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
             }
 
             #endregion
 
-            return PushEVSEData(EVSEs,
-                                ActionTypes.fullLoad,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+            return await PushEVSEData(EVSEs,
+                                      ActionTypes.fullLoad,
+
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -2081,7 +2112,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.AddStaticData(IEnumerable<EVSE>   EVSEs,
                                     TransmissionTypes   TransmissionType,
@@ -2096,7 +2127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (EVSEs == null || !EVSEs.Any())
-                return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                return PushEVSEDataResult.NoOperation(Id, this);
 
             #endregion
 
@@ -2126,10 +2157,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
                                                             _IncludeEVSEIds(evse.Id)).
                                               ToArray();
 
@@ -2139,27 +2172,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
-                        return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                        return PushEVSEDataResult.Enqueued(Id, this);
 
                     }
 
-                    return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                    return PushEVSEDataResult.NoOperation(Id, this);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
             }
 
             #endregion
 
-            return PushEVSEData(EVSEs,
-                                ActionTypes.insert,
+            return await PushEVSEData(EVSEs,
+                                      ActionTypes.insert,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -2177,7 +2214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.UpdateStaticData(IEnumerable<EVSE>   EVSEs,
                                        TransmissionTypes   TransmissionType,
@@ -2192,7 +2229,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (EVSEs == null || !EVSEs.Any())
-                return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                return PushEVSEDataResult.NoOperation(Id, this);
 
             #endregion
 
@@ -2222,10 +2259,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
                                                             _IncludeEVSEIds(evse.Id)).
                                               ToArray();
 
@@ -2235,27 +2274,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToUpdateQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
-                        return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                        return PushEVSEDataResult.Enqueued(Id, this);
 
                     }
 
-                    return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                    return PushEVSEDataResult.NoOperation(Id, this);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
             }
 
             #endregion
 
-            return PushEVSEData(EVSEs,
-                                ActionTypes.update,
+            return await PushEVSEData(EVSEs,
+                                      ActionTypes.update,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -2273,7 +2316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushEVSEDataResult>
+        async Task<PushEVSEDataResult>
 
             ISendData.DeleteStaticData(IEnumerable<EVSE>   EVSEs,
                                        TransmissionTypes   TransmissionType,
@@ -2288,7 +2331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (EVSEs == null || !EVSEs.Any())
-                return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                return PushEVSEDataResult.NoOperation(Id, this);
 
             #endregion
 
@@ -2318,10 +2361,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs  (evse) &&
+                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
                                                             _IncludeEVSEIds(evse.Id)).
                                               ToArray();
 
@@ -2331,27 +2376,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToRemoveQueue.Add(EVSE);
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
-                        return Task.FromResult(PushEVSEDataResult.Enqueued(Id, this));
+                        return PushEVSEDataResult.Enqueued(Id, this);
 
                     }
 
-                    return Task.FromResult(PushEVSEDataResult.NoOperation(Id, this));
+                    return PushEVSEDataResult.NoOperation(Id, this);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
             }
 
             #endregion
 
-            return PushEVSEData(EVSEs,
-                                ActionTypes.delete,
+            return await PushEVSEData(EVSEs,
+                                      ActionTypes.delete,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                      Timestamp,
+                                      CancellationToken,
+                                      EventTrackingId,
+                                      RequestTimeout);
 
         }
 
@@ -2397,7 +2446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<PushStatusResult>
+        async Task<PushStatusResult>
 
             ISendStatus.UpdateStatus(IEnumerable<EVSEStatusUpdate>  StatusUpdates,
                                      TransmissionTypes              TransmissionType,
@@ -2412,7 +2461,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Initial checks
 
             if (StatusUpdates == null || !StatusUpdates.Any())
-                return Task.FromResult(PushStatusResult.NoOperation(Id, this));
+                return PushStatusResult.NoOperation(Id, this);
 
             #endregion
 
@@ -2442,7 +2491,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock (DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     var FilteredUpdates = StatusUpdates.Where(statusupdate => _IncludeEVSEs  (statusupdate.EVSE) &&
@@ -2464,27 +2515,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         }
 
-                        StatusCheckTimer.Change(_FlushEVSEFastStatusEvery, Timeout.Infinite);
+                        FlushEVSEFastStatusTimer.Change(_FlushEVSEFastStatusEvery, Timeout.Infinite);
 
-                        return Task.FromResult(PushStatusResult.Enqueued(Id, this));
+                        return PushStatusResult.Enqueued(Id, this);
 
                     }
 
-                    return Task.FromResult(PushStatusResult.NoOperation(Id, this));
+                    return PushStatusResult.NoOperation(Id, this);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
             }
 
             #endregion
 
-            return PushEVSEStatus(StatusUpdates,
-                                  ActionTypes.update,
+            return await PushEVSEStatus(StatusUpdates,
+                                        ActionTypes.update,
 
-                                  Timestamp,
-                                  CancellationToken,
-                                  EventTrackingId,
-                                  RequestTimeout);
+                                        Timestamp,
+                                        CancellationToken,
+                                        EventTrackingId,
+                                        RequestTimeout);
 
         }
 
@@ -2551,7 +2606,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     foreach (var evse in ChargingStation)
@@ -2563,7 +2618,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -2648,7 +2703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     foreach (var evse in ChargingStation)
@@ -2660,7 +2715,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -2751,7 +2806,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     var AddData = false;
@@ -2779,7 +2834,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingStationsUpdateLog.Add(ChargingStation, List);
                         }
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -3138,7 +3193,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     foreach (var evse in ChargingPool.EVSEs)
@@ -3150,7 +3205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -3235,7 +3290,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     foreach (var evse in ChargingPool.EVSEs)
@@ -3247,7 +3302,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                         }
 
@@ -3338,7 +3393,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
                 {
 
                     var AddData = false;
@@ -3366,7 +3421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingPoolsUpdateLog.Add(ChargingPool, List);
                         }
 
-                        FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
 
                     }
 
@@ -5735,15 +5790,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<SendCDRsResult>
+        async Task<SendCDRsResult>
 
-            SendChargeDetailRecords(IEnumerable<WWCP.ChargeDetailRecord>  ChargeDetailRecords,
-                                    TransmissionTypes                     TransmissionType    = TransmissionTypes.Enqueued,
+            ISendChargeDetailRecords.SendChargeDetailRecords(IEnumerable<WWCP.ChargeDetailRecord>  ChargeDetailRecords,
+                                                             TransmissionTypes                     TransmissionType    = TransmissionTypes.Enqueued,
 
-                                    DateTime?                             Timestamp           = null,
-                                    CancellationToken?                    CancellationToken   = null,
-                                    EventTracking_Id                      EventTrackingId     = null,
-                                    TimeSpan?                             RequestTimeout      = null)
+                                                             DateTime?                             Timestamp           = null,
+                                                             CancellationToken?                    CancellationToken   = null,
+                                                             EventTracking_Id                      EventTrackingId     = null,
+                                                             TimeSpan?                             RequestTimeout      = null)
 
         {
 
@@ -5794,13 +5849,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                lock(DataAndStatusLock)
+                await DataAndStatusLock.WaitAsync();
+
+                try
                 {
 
                     ChargeDetailRecordQueue.AddRange(ChargeDetailRecords);
 
-                    FlushEVSEDataTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
+                    FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
 
+                }
+                finally
+                {
+                    DataAndStatusLock.Release();
                 }
 
                 return SendCDRsResult.Enqueued(Id, this);
@@ -5949,7 +6010,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var ChargingStationsUpdateLogCopy      = new Dictionary<ChargingStation, PropertyUpdateInfos[]>();
             var ChargingPoolsUpdateLogCopy         = new Dictionary<ChargingPool,    PropertyUpdateInfos[]>();
 
-            lock (DataAndStatusLock)
+            await DataAndStatusLock.WaitAsync();
+
+            try
             {
 
                 // Copy 'EVSEs to add', remove originals...
@@ -5983,12 +6046,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 // Stop the timer. Will be rescheduled by next EVSE data/status change...
-                FlushEVSEDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                FlushEVSEDataAndStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
+            }
+            finally
+            {
+                DataAndStatusLock.Release();
             }
 
             #endregion
-
 
             // Use events to check if something went wrong!
             var EventTrackingId = EventTracking_Id.New;
@@ -6094,7 +6160,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var EVSEStatusFastQueueCopy = new List<EVSEStatusUpdate>();
 
-            lock (DataAndStatusLock)
+            await DataAndStatusLock.WaitAsync();
+
+            try
             {
 
                 // Copy 'EVSE status changes', remove originals...
@@ -6109,12 +6177,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 EVSEStatusChangesFastQueue.Clear();
 
                 // Stop the timer. Will be rescheduled by next EVSE status change...
-                StatusCheckTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                FlushEVSEFastStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
+            }
+            finally
+            {
+                DataAndStatusLock.Release();
             }
 
             #endregion
-
 
             // Use events to check if something went wrong!
             var EventTrackingId = EventTracking_Id.New;
@@ -6126,8 +6197,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 var _PushEVSEStatus = await PushEVSEStatus(EVSEStatusFastQueueCopy,
                                                            ActionTypes.update,
-                                                           EventTrackingId: EventTrackingId).
-                                            ConfigureAwait(false);
+                                                           EventTrackingId: EventTrackingId);
 
             }
 
@@ -6147,86 +6217,76 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Make a thread local copy of all data
 
-            var ChargeDetailRecordQueueCopy        = new ThreadLocal<List<WWCP.ChargeDetailRecord>>();
+            var ChargeDetailRecordQueueCopy = new List<WWCP.ChargeDetailRecord>();
 
-            if (Monitor.TryEnter(FlushEVSEDataAndStatusLock))
+            await DataAndStatusLock.WaitAsync();
+
+            try
             {
 
-                try
-                {
+                //_FlushEVSEDataRunId++;
 
-                    if (ChargeDetailRecordQueue.       Count == 0)
-                    {
-                        return;
-                    }
+                // Copy 'EVSEs to remove', remove originals...
+                ChargeDetailRecordQueueCopy = new List<WWCP.ChargeDetailRecord>(ChargeDetailRecordQueue);
+                ChargeDetailRecordQueue.Clear();
 
-                    _FlushEVSEDataRunId++;
+                // Stop the timer. Will be rescheduled by the next CDR...
+                FlushChargeDetailRecordsTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
-                    // Copy 'EVSEs to remove', remove originals...
-                    ChargeDetailRecordQueueCopy.Value        = new List<WWCP.ChargeDetailRecord>(ChargeDetailRecordQueue);
-                    ChargeDetailRecordQueue.Clear();
+            }
+            catch (Exception e)
+            {
 
-                    // Stop the timer. Will be rescheduled by next EVSE data/status change...
-                    FlushEVSEDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                while (e.InnerException != null)
+                    e = e.InnerException;
 
-                }
-                catch (Exception e)
-                {
-
-                    while (e.InnerException != null)
-                        e = e.InnerException;
-
-                    DebugX.LogT(nameof(WWCPCPOAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
-
-                }
-
-                finally
-                {
-                    Monitor.Exit(FlushEVSEDataAndStatusLock);
-                }
+                DebugX.LogT(nameof(WWCPCPOAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
 
             }
 
-            else
+            finally
             {
-
-                Console.WriteLine("ServiceCheckLock missed!");
-                FlushEVSEDataTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
-
+                DataAndStatusLock.Release();
             }
 
             #endregion
 
+            // Use the events to evaluate if something went wrong!
+            var EventTrackingId = EventTracking_Id.New;
 
-            // Upload status changes...
-            if (ChargeDetailRecordQueueCopy.Value != null)
+            #region Send charge detail records
+
+            if (ChargeDetailRecordQueueCopy.Count > 0)
             {
 
-                // Use the events to evaluate if something went wrong!
-
-                var EventTrackingId = EventTracking_Id.New;
-
-                #region Send charge detail records
-
-                if (ChargeDetailRecordQueueCopy.Value.Count > 0)
+                foreach (var cdr in ChargeDetailRecordQueueCopy)
                 {
 
-                    var SendCDRResults = await SendChargeDetailRecords(ChargeDetailRecordQueueCopy.Value,
-                                                                       TransmissionTypes.Direct,
-                                                                       DateTime.UtcNow,
-                                                                       new CancellationTokenSource().Token,
-                                                                       EventTrackingId,
-                                                                       DefaultRequestTimeout).
-                                               ConfigureAwait(false);
+                    try
+                    {
 
-                    //ToDo: Send results events...
-                    //ToDo: Read to queue if it could not be sent...
+                        var _cdr = cdr.ToOICP();
+
+                        await CPORoaming.SendChargeDetailRecord(_cdr,
+                                                                DateTime.UtcNow,
+                                                                new CancellationTokenSource().Token,
+                                                                EventTrackingId,
+                                                                DefaultRequestTimeout);
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.LogT("Could not send charge detail record: " + cdr.SessionId);
+                    }
 
                 }
 
-                #endregion
+                //ToDo: Send results events...
+                //ToDo: Read to queue if it could not be sent...
 
             }
+
+            #endregion
 
         }
 
