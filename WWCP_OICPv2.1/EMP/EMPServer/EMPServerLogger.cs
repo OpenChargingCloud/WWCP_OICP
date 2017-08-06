@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// <summary>
     /// An OICP EMP server logger.
     /// </summary>
-    public class EMPServerLogger : HTTPLogger
+    public class EMPServerLogger : HTTPServerLogger
     {
 
         #region Data

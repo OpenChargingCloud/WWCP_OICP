@@ -46,6 +46,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public EMPClient        EMPClient           { get; }
 
+        public IPPort RemotePort
+            => EMPClient?.RemotePort;
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator
+            => EMPClient?.RemoteCertificateValidator;
+
         /// <summary>
         /// The EMP server part.
         /// </summary>
@@ -1967,6 +1973,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        public void Dispose()
+        { }
 
     }
 

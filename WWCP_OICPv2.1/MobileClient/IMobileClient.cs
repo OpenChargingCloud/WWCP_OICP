@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
     /// <summary>
     /// The common interface of all OICP Mobile clients.
     /// </summary>
-    public interface IMobileClient
+    public interface IMobileClient : IHTTPClient
     {
 
         #region Properties

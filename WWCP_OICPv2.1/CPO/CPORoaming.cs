@@ -47,6 +47,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public CPOClient        CPOClient         { get; }
 
+        public IPPort RemotePort
+            => CPOClient?.RemotePort;
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator
+            => CPOClient?.RemoteCertificateValidator;
+
         /// <summary>
         /// The CPO server.
         /// </summary>
@@ -58,15 +64,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public CPOServerLogger  CPOServerLogger   { get; }
 
         /// <summary>
+        /// The default request timeout for this client.
+        /// </summary>
+        public TimeSpan?        RequestTimeout    { get; }
+
+
+        /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
             => CPOServer.DNSClient;
-
-        /// <summary>
-        /// The default request timeout for this client.
-        /// </summary>
-        public TimeSpan?        RequestTimeout    { get; }
 
         #endregion
 
@@ -1286,6 +1293,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+        public void Dispose()
+        { }
 
     }
 

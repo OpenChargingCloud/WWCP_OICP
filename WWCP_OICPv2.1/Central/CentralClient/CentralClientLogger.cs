@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// An OICP Central client (HTTP/SOAP client) logger.
         /// </summary>
-        public class CentralClientLogger : HTTPLogger
+        public class CentralClientLogger : HTTPClientLogger
         {
 
             #region Data
@@ -129,7 +129,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                                        LogfileCreatorDelegate      LogfileCreator              = null)
 
-                : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : base(CentralClient,
+                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                        LogHTTPRequest_toConsole,
                        LogHTTPResponse_toConsole,
