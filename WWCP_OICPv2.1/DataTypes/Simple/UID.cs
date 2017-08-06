@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The unique identification of an OICP RFID card.
+    /// The unique identification of an OICP user.
     /// </summary>
     public struct UID : IId,
                         IEquatable <UID>,
@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
 
         /// <summary>
-        /// The regular expression for parsing a RFID card identification.
+        /// The regular expression for parsing an user identification.
         /// </summary>
         public static readonly Regex UID_RegEx  = new Regex("^([A-F0-9]{8})$ | ^([A-F0-9]{14})$ | ^([A-F0-9]{20})$",
                                                             RegexOptions.IgnorePatternWhitespace);
@@ -68,6 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new RFID card identification.
         /// based on the given string.
         /// </summary>
+        /// <param name="Text">The value of the RFID identification.</param>
         private UID(String Text)
         {
             InternalId = Text;
@@ -95,7 +96,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             var MatchCollection = UID_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a RFID card identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Illegal text representation of an user identification: '" + Text + "'!", nameof(Text));
 
             return new UID(Text);
 

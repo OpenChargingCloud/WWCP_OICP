@@ -807,6 +807,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
+            // Apply EVSE filter!
+
             #region No EVSE data to push?
 
             if (!Request.EVSEDataRecords.Any())
