@@ -550,8 +550,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 : base(GetChargeDetailRecords?.Request,
                        GetChargeDetailRecords.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? GetChargeDetailRecords.CustomValues.Concat(CustomData)
-                                 : GetChargeDetailRecords.CustomValues
+                                 ? GetChargeDetailRecords.CustomData.Concat(CustomData)
+                                 : GetChargeDetailRecords.CustomData
                            : CustomData)
 
             {
@@ -599,7 +599,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => new GetChargeDetailRecordsResponse(Request,
                                                       ChargeDetailRecords,
                                                       StatusCode,
-                                                      ImmutableCustomData);
+                                                      CustomData);
 
 
 

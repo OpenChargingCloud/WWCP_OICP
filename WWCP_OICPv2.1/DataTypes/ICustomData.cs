@@ -29,7 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         Boolean HasCustomData { get; }
 
-        void AddCustomData(string Key, object Value);
+        void SetCustomData(string Key, object Value);
 
         object GetCustomData(string Key);
 

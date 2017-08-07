@@ -722,8 +722,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 : base(Acknowledgement?.Request,
                        Acknowledgement.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? Acknowledgement.CustomValues.Concat(CustomData)
-                                 : Acknowledgement.CustomValues
+                                 ? Acknowledgement.CustomData.Concat(CustomData)
+                                 : Acknowledgement.CustomData
                            : CustomData)
 
             {
@@ -753,7 +753,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  StatusCode,
                                                  SessionId,
                                                  PartnerSessionId,
-                                                 ImmutableCustomData);
+                                                 CustomData);
 
         }
 

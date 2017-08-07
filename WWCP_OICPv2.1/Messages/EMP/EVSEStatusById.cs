@@ -578,8 +578,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 : base(EVSEStatusById?.Request,
                        EVSEStatusById.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? EVSEStatusById.CustomValues.Concat(CustomData)
-                                 : EVSEStatusById.CustomValues
+                                 ? EVSEStatusById.CustomData.Concat(CustomData)
+                                 : EVSEStatusById.CustomData
                            : CustomData)
 
             {
@@ -627,7 +627,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => new EVSEStatusById(Request,
                                       EVSEStatusRecords,
                                       StatusCode,
-                                      ImmutableCustomData);
+                                      CustomData);
 
         }
 

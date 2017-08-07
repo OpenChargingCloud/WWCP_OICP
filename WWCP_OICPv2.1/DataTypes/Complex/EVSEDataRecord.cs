@@ -1142,11 +1142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    ClearingHouseId,
                    IsHubjectCompatible,
                    DynamicInfoAvailable,
-
-                   CustomValues != null
-                       ? CustomValues.ToDictionary(kvp => kvp.Key,
-                                                  kvp => kvp.Value)
-                       : null);
+                   CustomData);
 
         #endregion
 
@@ -1439,7 +1435,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       HubOperatorId,
                                       ClearingHouseId,
                                       IsHubjectCompatible,
-                                      DynamicInfoAvailable);
+                                      DynamicInfoAvailable,
+                                      CustomData);
 
             #endregion
 

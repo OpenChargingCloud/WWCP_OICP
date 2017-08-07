@@ -1446,7 +1446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             EVSEStatusList.Add(new WWCP.EVSEStatus(EVSEId.Value,
                                                                    OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
                                                                    result.Timestamp,
-                                                                   evsestatusrecord.CustomValues));
+                                                                   evsestatusrecord.CustomData));
 
                         else
                             Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");

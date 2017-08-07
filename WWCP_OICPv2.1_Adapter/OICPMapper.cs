@@ -195,59 +195,70 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord ToOICP(this WWCP.EVSE                   EVSE,
-                                            CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
+        public static EVSEDataRecord ToOICP(this EVSE                        EVSE,
+                                            CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord   = null,
+                                            DeltaTypes?                      DeltaType             = null,
+                                            DateTime?                        LastUpdate            = null,
+                                            HubOperator_Id?                  HubOperatorId         = null,
+                                            ClearingHouse_Id?                ClearingHouseId       = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord = null;
+            #region Verify EVSE identification
 
-            try
-            {
+            var _EVSEId = EVSE.Id.ToOICP();
 
-                var _EVSEId = EVSE.Id.ToOICP();
+            if (!_EVSEId.HasValue)
+                throw new OICPException(
+                          new StatusCode(StatusCodes.DataError,
+                                         "Invalid EVSE identification!",
+                                         EVSE.Id.ToString()));
 
-                if (!_EVSEId.HasValue)
-                    return null;
+            #endregion
 
-                var CustomData = new Dictionary<String, Object>();
+            #region Copy custom data and add WWCP EVSE as "WWCP.EVSE"...
+
+            var CustomData = new Dictionary<String, Object>();
+            EVSE.CustomData.ForEach(kvp => CustomData.Add(kvp.Key, kvp.Value));
+
+            if (!CustomData.ContainsKey("WWCP.EVSE"))
                 CustomData.Add("WWCP.EVSE", EVSE);
+            else
+                CustomData["WWCP.EVSE"] = EVSE;
 
-                _EVSEDataRecord = new EVSEDataRecord(_EVSEId.Value,
-                                                     new DeltaTypes?(),
-                                                     new DateTime?(),
-                                                     ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
-                                                     ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
-                                                     EVSE.ChargingStation.Name,
-                                                     EVSE.ChargingStation.Address.ToOICP(),
-                                                     EVSE.ChargingStation.GeoLocation,
-                                                     EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
-                                                     AsChargingFacilities(EVSE).Reduce(),
-                                                     EVSE.ChargingModes.AsOICPChargingMode(),
-                                                     EVSE.ChargingStation.AuthenticationModes.
-                                                                              Select(mode => AsOICPAuthenticationMode(mode)).
-                                                                              Where(mode => mode != AuthenticationModes.Unknown).
-                                                                              Reduce(),
-                                                     null, // MaxCapacity [kWh]
-                                                     EVSE.ChargingStation.PaymentOptions.SafeSelect(option => AsOICPPaymentOption(option)).Reduce(),
-                                                     ValueAddedServices.None,
-                                                     EVSE.ChargingStation.Accessibility.ToOICP(),
-                                                     EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
-                                                     EVSE.ChargingStation.Description, // AdditionalInfo
-                                                     EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                                     EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
-                                                     EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.ToString()    : null,
-                                                     null, // HubOperatorId
-                                                     null, // ClearingHouseId
-                                                     EVSE.ChargingStation.IsHubjectCompatible,
-                                                     EVSE.ChargingStation.DynamicInfoAvailable,
+            #endregion
 
-                                                     CustomData);
 
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
+            var _EVSEDataRecord  = new EVSEDataRecord(_EVSEId.Value,
+                                                      DeltaType  ?? new DeltaTypes ?(),
+                                                      LastUpdate ?? new DateTime?(),
+                                                      ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
+                                                      ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
+                                                      EVSE.ChargingStation.Name,
+                                                      EVSE.ChargingStation.Address.ToOICP(),
+                                                      EVSE.ChargingStation.GeoLocation,
+                                                      EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
+                                                      AsChargingFacilities(EVSE).Reduce(),
+                                                      EVSE.ChargingModes.AsOICPChargingMode(),
+                                                      EVSE.ChargingStation.AuthenticationModes.
+                                                                               Select(mode => AsOICPAuthenticationMode(mode)).
+                                                                               Where(mode => mode != AuthenticationModes.Unknown).
+                                                                               Reduce(),
+                                                      null, // MaxCapacity [kWh]
+                                                      EVSE.ChargingStation.PaymentOptions.SafeSelect(option => AsOICPPaymentOption(option)).Reduce(),
+                                                      ValueAddedServices.None,
+                                                      EVSE.ChargingStation.Accessibility.ToOICP(),
+                                                      EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
+                                                      EVSE.ChargingStation.Description, // AdditionalInfo
+                                                      EVSE.ChargingStation.ChargingPool.EntranceLocation,
+                                                      EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
+                                                      EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.ToString()    : null,
+                                                      HubOperatorId,
+                                                      ClearingHouseId,
+                                                      EVSE.ChargingStation.IsHubjectCompatible,
+                                                      EVSE.ChargingStation.DynamicInfoAvailable,
+
+                                                      CustomData);
+
 
             return EVSE2EVSEDataRecord != null
                        ? EVSE2EVSEDataRecord(EVSE, _EVSEDataRecord)

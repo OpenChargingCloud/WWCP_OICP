@@ -617,8 +617,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 : base(PullEVSEData?.Request,
                        PullEVSEData.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? PullEVSEData.CustomValues.Concat(CustomData)
-                                 : PullEVSEData.CustomValues
+                                 ? PullEVSEData.CustomData.Concat(CustomData)
+                                 : PullEVSEData.CustomData
                            : CustomData)
 
             {
@@ -661,7 +661,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => new PullEVSEDataResponse(Request,
                                             EVSEData,
                                             StatusCode,
-                                            ImmutableCustomData);
+                                            CustomData);
 
 
 

@@ -900,8 +900,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 : base(AuthorizationStart?.Request,
                        AuthorizationStart.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? AuthorizationStart.CustomValues.Concat(CustomData)
-                                 : AuthorizationStart.CustomValues
+                                 ? AuthorizationStart.CustomData.Concat(CustomData)
+                                 : AuthorizationStart.CustomData
                            : CustomData)
 
             {
@@ -942,7 +942,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           PartnerSessionId,
                                           ProviderId,
                                           AuthorizationStopIdentifications,
-                                          ImmutableCustomData);
+                                          CustomData);
 
         }
 

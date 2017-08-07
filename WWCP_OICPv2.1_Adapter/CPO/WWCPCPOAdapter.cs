@@ -1116,10 +1116,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Initial checks
 
-            if (EVSEs == null)
-                throw new ArgumentNullException(nameof(EVSEs), "The given enumeration of EVSEs must not be null!");
-
-
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.UtcNow;
 
@@ -1132,37 +1128,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
-            #endregion
-
-            #region Get effective number of EVSE status to upload
-
-            var Warnings = new List<String>();
-
-            var _EVSEs = EVSEs.Where (evse => evse != null          &&
-                                              _IncludeEVSEs  (evse) &&
-                                              _IncludeEVSEIds(evse.Id)).
-
-                               Select(evse => {
-
-                                   try
-                                   {
-
-                                       return evse.ToOICP(_EVSE2EVSEDataRecord);
-
-                                   }
-                                   catch (Exception e)
-                                   {
-                                       DebugX.  Log(e.Message);
-                                       Warnings.Add(e.Message);
-                                   }
-
-                                   return null;
-
-                               }).
-                               Where(evsedatarecord => evsedatarecord != null).
-                               ToArray();
 
             PushEVSEDataResult result;
+
+            #endregion
+
+            #region Get effective number of EVSEs/EVSEDataRecords to upload
+
+            var Warnings         = new List<String>();
+            var EVSEDataRecords  = new List<EVSEDataRecord>();
+
+            if (EVSEs.IsNeitherNullNorEmpty())
+                foreach (var evse in EVSEs.Where(evse => evse != null          &&
+                                                         _IncludeEVSEs  (evse) &&
+                                                         _IncludeEVSEIds(evse.Id)))
+                {
+
+                    try
+                    {
+
+                        // WWCP EVSE will be added as custom data "WWCP.EVSE"...
+                        EVSEDataRecords.Add(evse.ToOICP(_EVSE2EVSEDataRecord));
+
+                    }
+                    catch (Exception e)
+                    {
+                        DebugX.Log(e.Message);
+                        Warnings.Add(e.Message);
+                    }
+
+                }
 
             #endregion
 
@@ -1180,8 +1175,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                   EventTrackingId,
                                                   RoamingNetwork.Id,
                                                   ServerAction,
-                                                  _EVSEs.ULongCount(),
-                                                  _EVSEs,
+                                                  EVSEDataRecords.ULongCount(),
+                                                  EVSEDataRecords,
                                                   Warnings.Where(warning => warning.IsNotNullOrEmpty()),
                                                   RequestTimeout);
 
@@ -1194,171 +1189,211 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #endregion
 
 
-            var response = await CPORoaming.
-                                     PushEVSEData(_EVSEs,
-                                                  DefaultOperatorId,
-                                                  DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
-                                                  ServerAction,
-                                                  null,
+            DateTime Endtime;
+            TimeSpan Runtime;
 
-                                                  Timestamp,
-                                                  CancellationToken,
-                                                  EventTrackingId,
-                                                  RequestTimeout);
-
-
-            var Endtime = DateTime.UtcNow;
-            var Runtime = Endtime - StartTime;
-
-            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                response.Content        != null)
+            if (EVSEDataRecords.Count > 0)
             {
 
-                // Success...
-                if (response.Content.Result)
-                    result = PushEVSEDataResult.Success(Id,
-                                                    this,
-                                                    response.Content.StatusCode.Description,
-                                                    response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                        ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
-                                                        : Warnings,
-                                                    Runtime);
+                var response = await CPORoaming.
+                                         PushEVSEData(EVSEDataRecords,
+                                                      DefaultOperatorId,
+                                                      DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                      ServerAction,
+                                                      null,
+
+                                                      Timestamp,
+                                                      CancellationToken,
+                                                      EventTrackingId,
+                                                      RequestTimeout);
 
 
-                // Operation failed... maybe the systems are out of sync?!
-                // Try an automatic fullLoad in order to repair...
-                else
+                if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                    response.Content != null)
                 {
 
-                    if (ServerAction == ActionTypes.insert ||
-                        ServerAction == ActionTypes.update ||
-                        ServerAction == ActionTypes.delete)
+                    // Success...
+                    if (response.Content.Result)
                     {
-
-                        #region Add warnings...
-
-                        Warnings.Add(ServerAction.ToString() + " of " + _EVSEs.Length + " EVSEs failed!");
-                        Warnings.Add(response.Content.StatusCode.Code.ToString());
-                        Warnings.Add(response.Content.StatusCode.Description);
-
-                        if (response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
-                            Warnings.Add(response.Content.StatusCode.AdditionalInfo);
-
-                        Warnings.Add("Will try to fix this issue via a 'fullLoad' of all EVSEs!");
-
-                        #endregion
-
-                        #region Get all EVSEs from the roaming network
-
-                        var FullLoadEVSEs     = RoamingNetwork.EVSEs.Where (evse => evse != null  &&
-                                                                            _IncludeEVSEs  (evse) &&
-                                                                            _IncludeEVSEIds(evse.Id)).
-                                                    Select(evse => {
-
-                                                        try
-                                                        {
-
-                                                            return evse.ToOICP(_EVSE2EVSEDataRecord);
-
-                                                        }
-                                                        catch (Exception e)
-                                                        {
-                                                            DebugX.  Log(e.Message);
-                                                            Warnings.Add(e.Message);
-                                                        }
-
-                                                        return null;
-
-                                                    }).
-                                                    Where(evsedatarecord => evsedatarecord != null).
-                                                    ToArray();
-
-                        #endregion
-
-                        #region Send request
-
-                        var FullLoadResponse  = await CPORoaming.
-                                                          PushEVSEData(FullLoadEVSEs,
-                                                                       DefaultOperatorId,
-                                                                       DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
-                                                                       ActionTypes.fullLoad,
-                                                                       null,
-
-                                                                       Timestamp,
-                                                                       CancellationToken,
-                                                                       EventTrackingId,
-                                                                       RequestTimeout).
-                                                          ConfigureAwait(false);
-
-                        #endregion
-
-                        #region Result mapping
 
                         Endtime  = DateTime.UtcNow;
                         Runtime  = Endtime - StartTime;
+                        result   = PushEVSEDataResult.Success(Id,
+                                                              this,
+                                                              response.Content.StatusCode.Description,
+                                                              response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                  ? Warnings.AddAndReturnList(response.Content.StatusCode.AdditionalInfo)
+                                                                  : Warnings,
+                                                              Runtime);
 
-                        if (FullLoadResponse.HTTPStatusCode == HTTPStatusCode.OK &&
-                            FullLoadResponse.Content != null)
+                    }
+
+                    // Operation failed... maybe the systems are out of sync?!
+                    // Try an automatic fullLoad in order to repair...
+                    else
+                    {
+
+                        if (ServerAction == ActionTypes.insert ||
+                            ServerAction == ActionTypes.update ||
+                            ServerAction == ActionTypes.delete)
                         {
 
-                            if (FullLoadResponse.Content.Result)
-                                result = PushEVSEDataResult.Success(Id,
-                                                                this,
-                                                                FullLoadResponse.Content.StatusCode.Description,
-                                                                FullLoadResponse.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                    ? Warnings.AddAndReturnList(FullLoadResponse.Content.StatusCode.AdditionalInfo)
-                                                                    : Warnings,
-                                                                Runtime);
+                            #region Add warnings...
+
+                            Warnings.Add(ServerAction.ToString() + " of " + EVSEDataRecords.Count + " EVSEs failed!");
+                            Warnings.Add(response.Content.StatusCode.Code.ToString());
+                            Warnings.Add(response.Content.StatusCode.Description);
+
+                            if (response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
+                                Warnings.Add(response.Content.StatusCode.AdditionalInfo);
+
+                            Warnings.Add("Will try to fix this issue via a 'fullLoad' of all EVSEs!");
+
+                            #endregion
+
+                            #region Get all EVSEs from the roaming network
+
+                            var FullLoadEVSEs = RoamingNetwork.EVSEs.Where(evse => evse != null &&
+                                                                           _IncludeEVSEs(evse) &&
+                                                                           _IncludeEVSEIds(evse.Id)).
+                                                        Select(evse =>
+                                                        {
+
+                                                            try
+                                                            {
+
+                                                                return evse.ToOICP(_EVSE2EVSEDataRecord);
+
+                                                            }
+                                                            catch (Exception e)
+                                                            {
+                                                                DebugX.Log(e.Message);
+                                                                Warnings.Add(e.Message);
+                                                            }
+
+                                                            return null;
+
+                                                        }).
+                                                        Where(evsedatarecord => evsedatarecord != null).
+                                                        ToArray();
+
+                            #endregion
+
+                            #region Send request
+
+                            var FullLoadResponse = await CPORoaming.
+                                                              PushEVSEData(FullLoadEVSEs,
+                                                                           DefaultOperatorId,
+                                                                           DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                                           ActionTypes.fullLoad,
+                                                                           null,
+
+                                                                           Timestamp,
+                                                                           CancellationToken,
+                                                                           EventTrackingId,
+                                                                           RequestTimeout).
+                                                              ConfigureAwait(false);
+
+                            #endregion
+
+                            #region Result mapping
+
+                            Endtime = DateTime.UtcNow;
+                            Runtime = Endtime - StartTime;
+
+                            if (FullLoadResponse.HTTPStatusCode == HTTPStatusCode.OK &&
+                                FullLoadResponse.Content != null)
+                            {
+
+                                if (FullLoadResponse.Content.Result)
+                                    result = PushEVSEDataResult.Success(Id,
+                                                                    this,
+                                                                    FullLoadResponse.Content.StatusCode.Description,
+                                                                    FullLoadResponse.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                        ? Warnings.AddAndReturnList(FullLoadResponse.Content.StatusCode.AdditionalInfo)
+                                                                        : Warnings,
+                                                                    Runtime);
+
+                                else
+                                    result = PushEVSEDataResult.Error(Id,
+                                                                  this,
+                                                                  EVSEs,
+                                                                  FullLoadResponse.Content.StatusCode.Description,
+                                                                  FullLoadResponse.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                      ? Warnings.AddAndReturnList(FullLoadResponse.Content.StatusCode.AdditionalInfo)
+                                                                      : Warnings,
+                                                                  Runtime);
+
+                            }
 
                             else
                                 result = PushEVSEDataResult.Error(Id,
                                                               this,
                                                               EVSEs,
-                                                              FullLoadResponse.Content.StatusCode.Description,
-                                                              FullLoadResponse.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                  ? Warnings.AddAndReturnList(FullLoadResponse.Content.StatusCode.AdditionalInfo)
-                                                                  : Warnings,
+                                                              FullLoadResponse.HTTPStatusCode.ToString(),
+                                                              FullLoadResponse.HTTPBody != null
+                                                                  ? Warnings.AddAndReturnList(FullLoadResponse.HTTPBody.ToUTF8String())
+                                                                  : Warnings.AddAndReturnList("No HTTP body received!"),
                                                               Runtime);
+
+                            #endregion
 
                         }
 
+                        // Or a 'fullLoad' Operation failed...
                         else
-                            result = PushEVSEDataResult.Error(Id,
-                                                          this,
-                                                          EVSEs,
-                                                          FullLoadResponse.HTTPStatusCode.ToString(),
-                                                          FullLoadResponse.HTTPBody != null
-                                                              ? Warnings.AddAndReturnList(FullLoadResponse.HTTPBody.ToUTF8String())
-                                                              : Warnings.AddAndReturnList("No HTTP body received!"),
-                                                          Runtime);
+                        {
 
-                        #endregion
+                            Endtime  = DateTime.UtcNow;
+                            Runtime  = Endtime - StartTime;
+                            result   = PushEVSEDataResult.Error(Id,
+                                                                this,
+                                                                EVSEs,
+                                                                response.HTTPStatusCode.ToString(),
+                                                                response.HTTPBody != null
+                                                                    ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                                    : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                                Runtime);
+
+                        }
 
                     }
 
-                    // Or a 'fullLoad' Operation failed...
-                    else
-                        result = PushEVSEDataResult.Error(Id,
-                                                      this,
-                                                      EVSEs,
-                                                      response.HTTPStatusCode.ToString(),
-                                                      response.HTTPBody != null
-                                                          ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                          : Warnings.AddAndReturnList("No HTTP body received!"),
-                                                      Runtime);
+                }
+                else
+                {
+
+                    Endtime  = DateTime.UtcNow;
+                    Runtime  = Endtime - StartTime;
+                    result   = PushEVSEDataResult.Error(Id,
+                                                        this,
+                                                        EVSEs,
+                                                        response.HTTPStatusCode.ToString(),
+                                                        response.HTTPBody != null
+                                                            ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
+                                                            : Warnings.AddAndReturnList("No HTTP body received!"),
+                                                        Runtime);
 
                 }
 
             }
+
+            #region ...or no EVSEs to push...
+
             else
-                result = PushEVSEDataResult.Error(Id,
-                                              this,
-                                              EVSEs,
-                                              response.HTTPStatusCode.ToString(),
-                                              response.HTTPBody != null
-                                                  ? Warnings.AddAndReturnList(response.HTTPBody.ToUTF8String())
-                                                  : Warnings.AddAndReturnList("No HTTP body received!"),
-                                              Runtime);
+            {
+
+                Endtime  = DateTime.UtcNow;
+                Runtime  = Endtime - StartTime;
+                result   = PushEVSEDataResult.NoOperation(Id,
+                                                          this,
+                                                          "No EVSEDataRecords to push!",
+                                                          Warnings,
+                                                          DateTime.UtcNow - StartTime);
+
+            }
+
+            #endregion
 
 
             #region Send OnPushEVSEDataResponse event
@@ -1373,8 +1408,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                    EventTrackingId,
                                                    RoamingNetwork.Id,
                                                    ServerAction,
-                                                   _EVSEs.ULongCount(),
-                                                   _EVSEs,
+                                                   EVSEDataRecords.ULongCount(),
+                                                   EVSEDataRecords,
                                                    RequestTimeout,
                                                    result,
                                                    Runtime);
@@ -1437,7 +1472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Get effective number of EVSE status to upload
+            #region Get effective number of EVSEStatus/EVSEStatusRecords to upload
 
             var Warnings = new List<String>();
 

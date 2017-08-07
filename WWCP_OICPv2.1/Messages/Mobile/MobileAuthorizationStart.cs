@@ -809,8 +809,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                 : base(MobileAuthorizationStart?.Request,
                        MobileAuthorizationStart.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? MobileAuthorizationStart.CustomValues.Concat(CustomData)
-                                 : MobileAuthorizationStart.CustomValues
+                                 ? MobileAuthorizationStart.CustomData.Concat(CustomData)
+                                 : MobileAuthorizationStart.CustomData
                            : CustomData)
 
             {

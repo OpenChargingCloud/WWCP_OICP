@@ -606,8 +606,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 : base(EVSEStatus?.Request,
                        EVSEStatus.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? EVSEStatus.CustomValues.Concat(CustomData)
-                                 : EVSEStatus.CustomValues
+                                 ? EVSEStatus.CustomData.Concat(CustomData)
+                                 : EVSEStatus.CustomData
                            : CustomData)
 
             {
@@ -655,7 +655,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => new EVSEStatus(Request,
                                   OperatorEVSEStatus,
                                   StatusCode,
-                                  ImmutableCustomData);
+                                  CustomData);
 
         }
 
