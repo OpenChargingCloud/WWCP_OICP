@@ -72,7 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private readonly        List<EVSEStatusUpdate>                                  EVSEStatusChangesFastQueue;
         private readonly        List<EVSEStatusUpdate>                                  EVSEStatusChangesDelayedQueue;
         private readonly        HashSet<EVSE>                                           EVSEsToRemoveQueue;
-        private readonly        List<WWCP.ChargeDetailRecord>                           ChargeDetailRecordQueue;
+        private readonly        List<ChargeDetailRecord>                                OICP_ChargeDetailRecords_Queue;
 
         private                 IncludeEVSEIdDelegate                                   _IncludeEVSEIds;
         private                 IncludeEVSEDelegate                                     _IncludeEVSEs;
@@ -397,7 +397,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.EVSEStatusChangesFastQueue                       = new List<EVSEStatusUpdate>();
             this.EVSEStatusChangesDelayedQueue                    = new List<EVSEStatusUpdate>();
             this.EVSEsToRemoveQueue                               = new HashSet<EVSE>();
-            this.ChargeDetailRecordQueue                          = new List<WWCP.ChargeDetailRecord>();
+            this.OICP_ChargeDetailRecords_Queue                   = new List<ChargeDetailRecord>();
 
 
             // Link incoming OICP events...
@@ -1628,7 +1628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region (Set/Add/Update/Delete) EVSE(s)...
 
-        #region SetStaticData   (EVSE, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (EVSE, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the given EVSE as new static EVSE data at the OICP server.
@@ -1661,7 +1661,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -1724,7 +1724,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (EVSE, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (EVSE, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given EVSE to the static EVSE data at the OICP server.
@@ -1757,7 +1757,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -1820,7 +1820,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(EVSE, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(EVSE, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the static data of the given EVSE.
@@ -1863,7 +1863,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -1938,7 +1938,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(EVSE, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(EVSE, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the static data of the given EVSE.
@@ -1971,7 +1971,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2035,7 +2035,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region SetStaticData   (EVSEs, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the given enumeration of EVSEs as new static EVSE data at the OICP server.
@@ -2068,7 +2068,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2138,7 +2138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (EVSEs, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given enumeration of EVSEs to the static EVSE data at the OICP server.
@@ -2171,7 +2171,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2240,7 +2240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(EVSEs, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSEs within the static EVSE data at the OICP server.
@@ -2273,7 +2273,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2342,7 +2342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(EVSEs, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the given enumeration of EVSEs from the static EVSE data at the OICP server.
@@ -2375,7 +2375,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2445,7 +2445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSE admin status updates.
@@ -2472,7 +2472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSE status updates.
@@ -2505,7 +2505,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2587,7 +2587,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region (Set/Add/Update/Delete) Charging station(s)...
 
-        #region SetStaticData   (ChargingStation, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (ChargingStation, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the EVSE data of the given charging station as new static EVSE data at the OICP server.
@@ -2620,7 +2620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2684,7 +2684,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingStation, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (ChargingStation, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the EVSE data of the given charging station to the static EVSE data at the OICP server.
@@ -2717,7 +2717,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2781,7 +2781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingStation, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(ChargingStation, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the EVSE data of the given charging station within the static EVSE data at the OICP server.
@@ -2820,7 +2820,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -2898,7 +2898,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingStation, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(ChargingStation, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given charging station from the static EVSE data at the OICP server.
@@ -2942,7 +2942,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region SetStaticData   (ChargingStations, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (ChargingStations, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the EVSE data of the given enumeration of charging stations as new static EVSE data at the OICP server.
@@ -2985,7 +2985,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingStations, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (ChargingStations, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the EVSE data of the given enumeration of charging stations to the static EVSE data at the OICP server.
@@ -3029,7 +3029,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingStations, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(ChargingStations, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the EVSE data of the given enumeration of charging stations within the static EVSE data at the OICP server.
@@ -3072,7 +3072,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingStations, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(ChargingStations, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given enumeration of charging stations from the static EVSE data at the OICP server.
@@ -3116,7 +3116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station admin status updates.
@@ -3143,7 +3143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station status updates.
@@ -3174,7 +3174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region (Set/Add/Update/Delete) Charging pool(s)...
 
-        #region SetStaticData   (ChargingPool, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (ChargingPool, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the EVSE data of the given charging pool as new static EVSE data at the OICP server.
@@ -3207,7 +3207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -3271,7 +3271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingPool, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (ChargingPool, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the EVSE data of the given charging pool to the static EVSE data at the OICP server.
@@ -3304,7 +3304,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -3368,7 +3368,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingPool, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(ChargingPool, PropertyName = null, OldValue = null, NewValue = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the EVSE data of the given charging pool within the static EVSE data at the OICP server.
@@ -3407,7 +3407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Enqueue, if requested...
 
-            if (TransmissionType == TransmissionTypes.Enqueued)
+            if (TransmissionType == TransmissionTypes.Enqueue)
             {
 
                 #region Send OnEnqueueSendCDRRequest event
@@ -3485,7 +3485,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingPool, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(ChargingPool, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given charging pool from the static EVSE data at the OICP server.
@@ -3529,7 +3529,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region SetStaticData   (ChargingPools, TransmissionType = Enqueued, ...)
+        #region SetStaticData   (ChargingPools, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the EVSE data of the given enumeration of charging pools as new static EVSE data at the OICP server.
@@ -3572,7 +3572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region AddStaticData   (ChargingPools, TransmissionType = Enqueued, ...)
+        #region AddStaticData   (ChargingPools, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the EVSE data of the given enumeration of charging pools to the static EVSE data at the OICP server.
@@ -3615,7 +3615,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStaticData(ChargingPools, TransmissionType = Enqueued, ...)
+        #region UpdateStaticData(ChargingPools, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the EVSE data of the given enumeration of charging pools within the static EVSE data at the OICP server.
@@ -3658,7 +3658,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region DeleteStaticData(ChargingPools, TransmissionType = Enqueued, ...)
+        #region DeleteStaticData(ChargingPools, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the EVSE data of the given enumeration of charging pools from the static EVSE data at the OICP server.
@@ -3702,7 +3702,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateAdminStatus(AdminStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging pool admin status updates.
@@ -3729,7 +3729,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateStatus     (StatusUpdates,      TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging pool status updates.
@@ -4090,7 +4090,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateChargingStationOperatorAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateChargingStationOperatorAdminStatus(AdminStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station operator admin status updates.
@@ -4117,7 +4117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateChargingStationOperatorStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateChargingStationOperatorStatus     (StatusUpdates,      TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of charging station operator status updates.
@@ -4313,7 +4313,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
 
-        #region UpdateRoamingNetworkAdminStatus(AdminStatusUpdates, TransmissionType = Enqueued, ...)
+        #region UpdateRoamingNetworkAdminStatus(AdminStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of roaming network admin status updates.
@@ -4340,7 +4340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region UpdateRoamingNetworkStatus     (StatusUpdates,      TransmissionType = Enqueued, ...)
+        #region UpdateRoamingNetworkStatus     (StatusUpdates,      TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of roaming network status updates.
@@ -5816,7 +5816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region SendChargeDetailRecords(ChargeDetailRecords, TransmissionType = Enqueued, ...)
+        #region SendChargeDetailRecords(ChargeDetailRecords, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Send charge detail records to an OICP server.
@@ -5831,12 +5831,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         async Task<SendCDRsResult>
 
             ISendChargeDetailRecords.SendChargeDetailRecords(IEnumerable<WWCP.ChargeDetailRecord>  ChargeDetailRecords,
-                                                             TransmissionTypes                     TransmissionType    = TransmissionTypes.Enqueued,
+                                                             TransmissionTypes                     TransmissionType,
 
-                                                             DateTime?                             Timestamp           = null,
-                                                             CancellationToken?                    CancellationToken   = null,
-                                                             EventTracking_Id                      EventTrackingId     = null,
-                                                             TimeSpan?                             RequestTimeout      = null)
+                                                             DateTime?                             Timestamp,
+                                                             CancellationToken?                    CancellationToken,
+                                                             EventTracking_Id                      EventTrackingId,
+                                                             TimeSpan?                             RequestTimeout)
 
         {
 
@@ -5857,6 +5857,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            DateTime        Endtime;
+            TimeSpan        Runtime;
+            SendCDRsResult  result;
 
             #endregion
 
@@ -5884,11 +5889,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            DateTime        Endtime  = DateTime.UtcNow;
-            TimeSpan        Runtime  = Endtime - StartTime;
-            SendCDRsResult  result;
 
-            #region if DisableSendChargeDetailRecords...
+            #region if disabled => 'AdminDown'...
 
             if (DisableSendChargeDetailRecords)
             {
@@ -5899,76 +5901,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                     this,
                                                     ChargeDetailRecords,
                                                     Runtime: Runtime);
-
-            }
-
-            #endregion
-
-            #region else if enqueuing is requested...
-
-            else if (TransmissionType == TransmissionTypes.Enqueued)
-            {
-
-                var LockTaken = await FlushOICPChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
-
-                try
-                {
-
-                    if (LockTaken)
-                    {
-
-                        #region Send OnEnqueueSendCDRRequest event
-
-                        try
-                        {
-
-                            OnEnqueueSendCDRsRequest?.Invoke(DateTime.UtcNow,
-                                                             Timestamp.Value,
-                                                             this,
-                                                             Id.ToString(),
-                                                             EventTrackingId,
-                                                             RoamingNetwork.Id,
-                                                             ChargeDetailRecords,
-                                                             RequestTimeout);
-
-                        }
-                        catch (Exception e)
-                        {
-                            e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
-                        }
-
-                        #endregion
-
-                        ChargeDetailRecordQueue.AddRange(ChargeDetailRecords);
-
-                        FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
-
-                    }
-
-                    else
-                    {
-                        Endtime  = DateTime.UtcNow;
-                        Runtime  = Endtime - StartTime;
-                        result   = SendCDRsResult.Timeout(Id,
-                                                          this,
-                                                          "Could not enqueue charge detail records!",
-                                                          ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
-                                                          Runtime: Runtime);
-                    }
-
-                    Endtime  = DateTime.UtcNow;
-                    Runtime  = Endtime - StartTime;
-                    result   = SendCDRsResult.Enqueued(Id,
-                                                       this,
-                                                       "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
-                                                       Runtime: Runtime);
-
-                }
-                finally
-                {
-                    if (LockTaken)
-                        FlushOICPChargeDetailRecordsLock.Release();
-                }
 
             }
 
@@ -5985,48 +5917,133 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     if (LockTaken)
                     {
 
-                        HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
-                        var SendCDRsResults = new Dictionary<WWCP.ChargeDetailRecord, SendCDRResultTypes>();
+                        var SendCDRsResults = new List<SendCDRResult>();
 
-                        foreach (var _ChargeDetailRecord in ChargeDetailRecords)
+                        #region if enqueuing is requested...
+
+                        if (TransmissionType == TransmissionTypes.Enqueue)
                         {
 
-                            response = await CPORoaming.SendChargeDetailRecord(_ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+                            #region Send OnEnqueueSendCDRRequest event
 
-                                                                               Timestamp,
-                                                                               CancellationToken,
-                                                                               EventTrackingId,
-                                                                               RequestTimeout);
-
-                            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                                response.Content        != null              &&
-                                response.Content.Result)
+                            try
                             {
-                                SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Success);
+
+                                OnEnqueueSendCDRsRequest?.Invoke(DateTime.UtcNow,
+                                                                 Timestamp.Value,
+                                                                 this,
+                                                                 Id.ToString(),
+                                                                 EventTrackingId,
+                                                                 RoamingNetwork.Id,
+                                                                 ChargeDetailRecords,
+                                                                 RequestTimeout);
+
+                            }
+                            catch (Exception e)
+                            {
+                                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
                             }
 
-                            else
-                                SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Error);
+                            #endregion
+
+                            foreach (var ChargeDetailRecord in ChargeDetailRecords)
+                            {
+
+                                try
+                                {
+
+                                    OICP_ChargeDetailRecords_Queue.Add(ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord));
+                                    SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
+                                                                          SendCDRResultTypes.Enqueued));
+
+                                }
+                                catch (Exception e)
+                                {
+                                    SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
+                                                                          SendCDRResultTypes.CouldNotConvertCDRFormat,
+                                                                          e.Message));
+                                }
+
+                            }
+
+                            Endtime  = DateTime.UtcNow;
+                            Runtime  = Endtime - StartTime;
+                            result   = SendCDRsResult.Enqueued(Id,
+                                                               this,
+                                                               "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
+                                                               SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
+                                                               Runtime: Runtime);
+
+                            FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
 
                         }
 
-                        Endtime  = DateTime.UtcNow;
-                        Runtime  = Endtime - StartTime;
+                        #endregion
 
-                        if      (SendCDRsResults.All(cdrresult => cdrresult.Value == SendCDRResultTypes.Success))
-                            result = SendCDRsResult.Success(Id,
-                                                            this,
-                                                            Runtime: Runtime);
+                        #region ...or send at once!
 
                         else
-                            result = SendCDRsResult.Error(Id,
-                                                          this,
-                                                          SendCDRsResults.
-                                                              Where (cdrresult => cdrresult.Value != SendCDRResultTypes.Success).
-                                                              Select(cdrresult => cdrresult.Key),
-                                                          Runtime: Runtime);
+                        {
+
+                            HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
+
+                            foreach (var _ChargeDetailRecord in ChargeDetailRecords)
+                            {
+
+                                try
+                                {
+
+                                    response = await CPORoaming.SendChargeDetailRecord(_ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout);
+
+                                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                                        response.Content != null &&
+                                        response.Content.Result)
+                                    {
+                                        SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord, SendCDRResultTypes.Success));
+                                    }
+
+                                    else
+                                        SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord, SendCDRResultTypes.Error));
+
+                                }
+                                catch (Exception e)
+                                {
+                                    SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord,
+                                                                          SendCDRResultTypes.CouldNotConvertCDRFormat,
+                                                                          e.Message));
+                                }
+
+                            }
+
+                            Endtime  = DateTime.UtcNow;
+                            Runtime  = Endtime - StartTime;
+
+                            if      (SendCDRsResults.All(cdrresult => cdrresult.Result == SendCDRResultTypes.Success))
+                                result = SendCDRsResult.Success(Id,
+                                                                this,
+                                                                Runtime: Runtime);
+
+                            else
+                                result = SendCDRsResult.Error(Id,
+                                                              this,
+                                                              SendCDRsResults.
+                                                                  Where (cdrresult => cdrresult.Result != SendCDRResultTypes.Success).
+                                                                  Select(cdrresult => cdrresult.ChargeDetailRecord),
+                                                              Runtime: Runtime);
+
+
+                        }
+
+                        #endregion
 
                     }
+
+                    #region Could not get the lock for toooo long!
 
                     else
                     {
@@ -6035,10 +6052,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         Runtime  = Endtime - StartTime;
                         result   = SendCDRsResult.Timeout(Id,
                                                           this,
-                                                          "Could not send charge detail records!",
+                                                          "Could not " + (TransmissionType == TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!",
                                                           ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
                                                           Runtime: Runtime);
+
                     }
+
+                    #endregion
 
                 }
                 finally
@@ -6305,7 +6325,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #region (timer) FlushChargeDetailRecords()
 
         protected override Boolean SkipFlushChargeDetailRecordsQueues()
-            => ChargeDetailRecordQueue.Count == 0;
+            => OICP_ChargeDetailRecords_Queue.Count == 0;
 
         protected override async Task FlushChargeDetailRecordsQueues()
         {
@@ -6313,7 +6333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Make a thread local copy of all data
 
             var LockTaken                    = await FlushOICPChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(30));
-            var ChargeDetailRecordQueueCopy  = new List<WWCP.ChargeDetailRecord>();
+            var ChargeDetailRecordQueueCopy  = new List<ChargeDetailRecord>();
 
             try
             {
@@ -6322,8 +6342,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 {
 
                     // Copy CDRs, empty original queue...
-                    ChargeDetailRecordQueueCopy.AddRange(ChargeDetailRecordQueue);
-                    ChargeDetailRecordQueue.Clear();
+                    ChargeDetailRecordQueueCopy.AddRange(OICP_ChargeDetailRecords_Queue);
+                    OICP_ChargeDetailRecords_Queue.Clear();
 
                     //// Stop the timer. Will be rescheduled by the next CDR...
                     //FlushChargeDetailRecordsTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -6356,32 +6376,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if (ChargeDetailRecordQueueCopy.Count > 0)
             {
 
-                var EventTrackingId = EventTracking_Id.New;
+                var EventTrackingId  = EventTracking_Id.New;
+                var results          = new List<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>();
 
-                foreach (var cdr in ChargeDetailRecordQueueCopy)
-                {
+                foreach (var chargedetailrecord in ChargeDetailRecordQueueCopy)
+                    results.Add(await CPORoaming.SendChargeDetailRecord(chargedetailrecord,
+                                                                        DateTime.UtcNow,
+                                                                        new CancellationTokenSource().Token,
+                                                                        EventTrackingId,
+                                                                        DefaultRequestTimeout));
 
-                    try
-                    {
-
-                        var _cdr = cdr.ToOICP();
-
-                        await CPORoaming.SendChargeDetailRecord(_cdr,
-                                                                DateTime.UtcNow,
-                                                                new CancellationTokenSource().Token,
-                                                                EventTrackingId,
-                                                                DefaultRequestTimeout);
-
-                    }
-                    catch (Exception e)
-                    {
-                        DebugX.LogT("Could not send charge detail record: " + cdr.SessionId);
-                    }
-
-                }
-
-                //ToDo: Send results events...
-                //ToDo: Read to queue if it could not be sent...
+                //ToDo: Send SendCDRs results events...
+                //ToDo: Re-add to queue if it could not be send...
 
             }
 
