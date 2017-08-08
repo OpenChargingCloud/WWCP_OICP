@@ -5987,13 +5987,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
 
-                            foreach (var _ChargeDetailRecord in ChargeDetailRecords)
+                            foreach (var ChargeDetailRecord in ChargeDetailRecords)
                             {
 
                                 try
                                 {
 
-                                    response = await CPORoaming.SendChargeDetailRecord(_ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+                                    response = await CPORoaming.SendChargeDetailRecord(ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
 
                                                                                        Timestamp,
                                                                                        CancellationToken,
@@ -6001,19 +6001,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                                        RequestTimeout);
 
                                     if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                                        response.Content != null &&
+                                        response.Content        != null              &&
                                         response.Content.Result)
                                     {
-                                        SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord, SendCDRResultTypes.Success));
+                                        SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
+                                                                              SendCDRResultTypes.Success));
                                     }
 
                                     else
-                                        SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord, SendCDRResultTypes.Error));
+                                        SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
+                                                                              SendCDRResultTypes.Error,
+                                                                              response.HTTPBodyAsUTF8String));
 
                                 }
                                 catch (Exception e)
                                 {
-                                    SendCDRsResults.Add(new SendCDRResult(_ChargeDetailRecord,
+                                    SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                           SendCDRResultTypes.CouldNotConvertCDRFormat,
                                                                           e.Message));
                                 }
