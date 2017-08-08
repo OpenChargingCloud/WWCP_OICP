@@ -77,6 +77,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         private                 IncludeEVSEIdDelegate                                   _IncludeEVSEIds;
         private                 IncludeEVSEDelegate                                     _IncludeEVSEs;
 
+
+        protected readonly      SemaphoreSlim                                           FlushOICPChargeDetailRecordsLock      = new SemaphoreSlim(1, 1);
+
         public readonly static  TimeSpan                                                DefaultRequestTimeout  = TimeSpan.FromSeconds(30);
 
         #endregion
@@ -5857,54 +5860,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-            #region Enqueue, if requested...
-
-            if (TransmissionType == TransmissionTypes.Enqueued)
-            {
-
-                #region Send OnEnqueueSendCDRRequest event
-
-                try
-                {
-
-                    OnEnqueueSendCDRsRequest?.Invoke(DateTime.UtcNow,
-                                                     Timestamp.Value,
-                                                     this,
-                                                     Id.ToString(),
-                                                     EventTrackingId,
-                                                     RoamingNetwork.Id,
-                                                     ChargeDetailRecords,
-                                                     RequestTimeout);
-
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
-                }
-
-                #endregion
-
-                await DataAndStatusLock.WaitAsync();
-
-                try
-                {
-
-                    ChargeDetailRecordQueue.AddRange(ChargeDetailRecords);
-
-                    FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
-
-                }
-                finally
-                {
-                    DataAndStatusLock.Release();
-                }
-
-                return SendCDRsResult.Enqueued(Id, this);
-
-            }
-
-            #endregion
-
             #region Send OnSendCDRsRequest event
 
             var StartTime = DateTime.UtcNow;
@@ -5929,10 +5884,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #endregion
 
-
-            DateTime        Endtime;
-            TimeSpan        Runtime;
+            DateTime        Endtime  = DateTime.UtcNow;
+            TimeSpan        Runtime  = Endtime - StartTime;
             SendCDRsResult  result;
+
+            #region if DisableSendChargeDetailRecords...
 
             if (DisableSendChargeDetailRecords)
             {
@@ -5946,46 +5902,150 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             }
 
-            else
+            #endregion
+
+            #region else if enqueuing is requested...
+
+            else if (TransmissionType == TransmissionTypes.Enqueued)
             {
 
-                HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
-                var SendCDRsResults = new Dictionary<WWCP.ChargeDetailRecord, SendCDRResultTypes>();
+                var LockTaken = await FlushOICPChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
 
-                foreach (var _ChargeDetailRecord in ChargeDetailRecords)
+                try
                 {
 
-                    response = await CPORoaming.SendChargeDetailRecord(_ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
-
-                                                                       Timestamp,
-                                                                       CancellationToken,
-                                                                       EventTrackingId,
-                                                                       RequestTimeout);
-
-                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                        response.Content        != null              &&
-                        response.Content.Result)
+                    if (LockTaken)
                     {
-                        SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Success);
+
+                        #region Send OnEnqueueSendCDRRequest event
+
+                        try
+                        {
+
+                            OnEnqueueSendCDRsRequest?.Invoke(DateTime.UtcNow,
+                                                             Timestamp.Value,
+                                                             this,
+                                                             Id.ToString(),
+                                                             EventTrackingId,
+                                                             RoamingNetwork.Id,
+                                                             ChargeDetailRecords,
+                                                             RequestTimeout);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
+                        }
+
+                        #endregion
+
+                        ChargeDetailRecordQueue.AddRange(ChargeDetailRecords);
+
+                        FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
+
                     }
 
                     else
-                        SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Error);
+                    {
+                        Endtime  = DateTime.UtcNow;
+                        Runtime  = Endtime - StartTime;
+                        result   = SendCDRsResult.Timeout(Id,
+                                                          this,
+                                                          "Could not enqueue charge detail records!",
+                                                          ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
+                                                          Runtime: Runtime);
+                    }
+
+                    Endtime  = DateTime.UtcNow;
+                    Runtime  = Endtime - StartTime;
+                    result   = SendCDRsResult.Enqueued(Id,
+                                                       this,
+                                                       "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
+                                                       Runtime: Runtime);
 
                 }
+                finally
+                {
+                    if (LockTaken)
+                        FlushOICPChargeDetailRecordsLock.Release();
+                }
 
-                Endtime  = DateTime.UtcNow;
-                Runtime  = Endtime - StartTime;
+            }
 
-                if      (SendCDRsResults.All(cdrresult => cdrresult.Value == SendCDRResultTypes.Success))
-                    result = SendCDRsResult.Success(Id, this);
+            #endregion
 
-                else
-                    result = SendCDRsResult.Error  (Id,
-                                                    this,
-                                                    SendCDRsResults.
-                                                        Where (cdrresult => cdrresult.Value != SendCDRResultTypes.Success).
-                                                        Select(cdrresult => cdrresult.Key));
+            else
+            {
+
+                var LockTaken = await FlushOICPChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
+
+                try
+                {
+
+                    if (LockTaken)
+                    {
+
+                        HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
+                        var SendCDRsResults = new Dictionary<WWCP.ChargeDetailRecord, SendCDRResultTypes>();
+
+                        foreach (var _ChargeDetailRecord in ChargeDetailRecords)
+                        {
+
+                            response = await CPORoaming.SendChargeDetailRecord(_ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+
+                                                                               Timestamp,
+                                                                               CancellationToken,
+                                                                               EventTrackingId,
+                                                                               RequestTimeout);
+
+                            if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                                response.Content        != null              &&
+                                response.Content.Result)
+                            {
+                                SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Success);
+                            }
+
+                            else
+                                SendCDRsResults.Add(_ChargeDetailRecord, SendCDRResultTypes.Error);
+
+                        }
+
+                        Endtime  = DateTime.UtcNow;
+                        Runtime  = Endtime - StartTime;
+
+                        if      (SendCDRsResults.All(cdrresult => cdrresult.Value == SendCDRResultTypes.Success))
+                            result = SendCDRsResult.Success(Id,
+                                                            this,
+                                                            Runtime: Runtime);
+
+                        else
+                            result = SendCDRsResult.Error(Id,
+                                                          this,
+                                                          SendCDRsResults.
+                                                              Where (cdrresult => cdrresult.Value != SendCDRResultTypes.Success).
+                                                              Select(cdrresult => cdrresult.Key),
+                                                          Runtime: Runtime);
+
+                    }
+
+                    else
+                    {
+
+                        Endtime  = DateTime.UtcNow;
+                        Runtime  = Endtime - StartTime;
+                        result   = SendCDRsResult.Timeout(Id,
+                                                          this,
+                                                          "Could not send charge detail records!",
+                                                          ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
+                                                          Runtime: Runtime);
+                    }
+
+                }
+                finally
+                {
+                    if (LockTaken)
+                        FlushOICPChargeDetailRecordsLock.Release();
+                }
 
             }
 
@@ -6252,21 +6312,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Make a thread local copy of all data
 
-            var ChargeDetailRecordQueueCopy = new List<WWCP.ChargeDetailRecord>();
-
-            await DataAndStatusLock.WaitAsync();
+            var LockTaken                    = await FlushOICPChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(30));
+            var ChargeDetailRecordQueueCopy  = new List<WWCP.ChargeDetailRecord>();
 
             try
             {
 
-                //_FlushEVSEDataRunId++;
+                if (LockTaken)
+                {
 
-                // Copy 'EVSEs to remove', remove originals...
-                ChargeDetailRecordQueueCopy = new List<WWCP.ChargeDetailRecord>(ChargeDetailRecordQueue);
-                ChargeDetailRecordQueue.Clear();
+                    // Copy CDRs, empty original queue...
+                    ChargeDetailRecordQueueCopy.AddRange(ChargeDetailRecordQueue);
+                    ChargeDetailRecordQueue.Clear();
 
-                // Stop the timer. Will be rescheduled by the next CDR...
-                FlushChargeDetailRecordsTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    //// Stop the timer. Will be rescheduled by the next CDR...
+                    //FlushChargeDetailRecordsTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+                }
 
             }
             catch (Exception e)
@@ -6281,18 +6343,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             finally
             {
-                DataAndStatusLock.Release();
+                if (LockTaken)
+                    FlushOICPChargeDetailRecordsLock.Release();
             }
 
             #endregion
 
             // Use the events to evaluate if something went wrong!
-            var EventTrackingId = EventTracking_Id.New;
 
             #region Send charge detail records
 
             if (ChargeDetailRecordQueueCopy.Count > 0)
             {
+
+                var EventTrackingId = EventTracking_Id.New;
 
                 foreach (var cdr in ChargeDetailRecordQueueCopy)
                 {

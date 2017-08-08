@@ -1518,7 +1518,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                           ChargeDetailRecord.IdentificationStart.ToOICP(),
                           ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id>("OICP.PartnerSessionId"),
+                          ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
                           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
                           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
                           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
@@ -1526,8 +1526,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
                           ChargeDetailRecord.ConsumedEnergy,
                           ChargeDetailRecord.MeteringSignature,
-                          ChargeDetailRecord.GetCustomDataAs<HubOperator_Id>("OICP.HubOperatorId"),
-                          ChargeDetailRecord.GetCustomDataAs<HubProvider_Id>("OICP.HubProviderId"),
+                          ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
+                          ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
                           CustomData
                       );
 
