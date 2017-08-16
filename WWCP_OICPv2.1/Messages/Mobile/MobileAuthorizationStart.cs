@@ -509,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                               ? StatusCode.Value.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer)
                               : null,
 
-                          TermsOfUse.IsNotNullOrEmpty()
+                          TermsOfUse.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "TermsOfUse",        TermsOfUse.FirstText())
                               : null,
 
@@ -525,7 +525,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                               CustomAddressSerializer)
                               : null,
 
-                          AdditionalInfo.IsNotNullOrEmpty()
+                          AdditionalInfo.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "AdditionalInfo",        AdditionalInfo.FirstText())
                               : null,
 
@@ -533,7 +533,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                           //    ? new XElement(OICPNS.MobileAuthorization + "EnAdditionalInfo",      AdditionalInfo.FirstText())
                           //    : null
 
-                          ChargingStationName.IsNotNullOrEmpty()
+                          ChargingStationName.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "ChargingStationName",   ChargingStationName.FirstText())
                               : null
 
