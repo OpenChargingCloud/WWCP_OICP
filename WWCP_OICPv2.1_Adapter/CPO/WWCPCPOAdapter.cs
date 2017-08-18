@@ -6389,12 +6389,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                         EventTrackingId,
                                                                         DefaultRequestTimeout));
 
-                //ToDo: Send SendCDRs results events...
-                //ToDo: Re-add to queue if it could not be send...
-
             }
 
             #endregion
+
+            //ToDo: Send FlushChargeDetailRecordsQueues result event...
+            //ToDo: Re-add to queue if it could not be send...
 
         }
 
