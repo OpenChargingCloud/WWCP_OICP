@@ -1138,7 +1138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSEs/EVSEDataRecords to upload
 
-            var Warnings         = new List<String>();
+            var Warnings         = new List<Warning>();
             var EVSEDataRecords  = new List<EVSEDataRecord>();
 
             if (EVSEs.IsNeitherNullNorEmpty())
@@ -1157,7 +1157,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     catch (Exception e)
                     {
                         DebugX.Log(e.Message);
-                        Warnings.Add(e.Message);
+                        Warnings.Add(Warning.Create(e.Message, evse));
                     }
 
                 }
@@ -1243,14 +1243,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             #region Add warnings...
 
-                            Warnings.Add(ServerAction.ToString() + " of " + EVSEDataRecords.Count + " EVSEs failed!");
-                            Warnings.Add(response.Content.StatusCode.Code.ToString());
-                            Warnings.Add(response.Content.StatusCode.Description);
+                            Warnings.Add(Warning.Create(ServerAction.ToString() + " of " + EVSEDataRecords.Count + " EVSEs failed!"));
+                            Warnings.Add(Warning.Create(response.Content.StatusCode.Code.ToString()));
+                            Warnings.Add(Warning.Create(response.Content.StatusCode.Description));
 
                             if (response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
-                                Warnings.Add(response.Content.StatusCode.AdditionalInfo);
+                                Warnings.Add(Warning.Create(response.Content.StatusCode.AdditionalInfo));
 
-                            Warnings.Add("Will try to fix this issue via a 'fullLoad' of all EVSEs!");
+                            Warnings.Add(Warning.Create("Will try to fix this issue via a 'fullLoad' of all EVSEs!"));
 
                             #endregion
 
@@ -1271,7 +1271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                             catch (Exception e)
                                                             {
                                                                 DebugX.Log(e.Message);
-                                                                Warnings.Add(e.Message);
+                                                                Warnings.Add(Warning.Create(e.Message, evse));
                                                             }
 
                                                             return null;
@@ -1477,7 +1477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             #region Get effective number of EVSEStatus/EVSEStatusRecords to upload
 
-            var Warnings = new List<String>();
+            var Warnings = new List<Warning>();
 
             var _EVSEStatus = EVSEStatusUpdates.
                                   Where       (evsestatusupdate => _IncludeEVSEs  (evsestatusupdate.EVSE) &&
@@ -1491,6 +1491,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                       try
                                       {
 
+                                          var _EVSEId = evsestatusupdate.Key.ToOICP();
+
+                                          if (!_EVSEId.HasValue)
+                                              throw new InvalidEVSEIdentificationException(evsestatusupdate.Key.ToString());
+
                                           // Only push the current status of the latest status update!
                                           return new EVSEStatusRecord(
                                                      evsestatusupdate.Key.ToOICP().Value,
@@ -1501,7 +1506,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                       catch (Exception e)
                                       {
                                           DebugX.  Log(e.Message);
-                                          Warnings.Add(e.Message);
+                                          Warnings.Add(Warning.Create(e.Message, evsestatusupdate));
                                       }
 
                                       return null;
@@ -6177,7 +6182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             // Use events to check if something went wrong!
             var EventTrackingId = EventTracking_Id.New;
 
-            Thread.Sleep(30000);
+            //Thread.Sleep(30000);
 
             #region Send new EVSE data
 
@@ -6191,6 +6196,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                   EventTrackingId: EventTrackingId);
 
                 EVSEsToAddTask.Wait();
+
+                if (EVSEsToAddTask.Result.Warnings.Any())
+                {
+
+                    SendOnWarnings(DateTime.UtcNow,
+                                   nameof(WWCPCPOAdapter) + Id,
+                                   "EVSEsToAddTask",
+                                   EVSEsToAddTask.Result.Warnings);
+
+                }
 
             }
 
@@ -6216,6 +6231,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                     PushEVSEDataTask.Wait();
 
+                    if (PushEVSEDataTask.Result.Warnings.Any())
+                    {
+
+                        SendOnWarnings(DateTime.UtcNow,
+                                       nameof(WWCPCPOAdapter) + Id,
+                                       "PushEVSEDataTask",
+                                       PushEVSEDataTask.Result.Warnings);
+
+                    }
+
                 }
 
             }
@@ -6236,6 +6261,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 PushEVSEStatusTask.Wait();
 
+                if (PushEVSEStatusTask.Result.Warnings.Any())
+                {
+
+                    SendOnWarnings(DateTime.UtcNow,
+                                   nameof(WWCPCPOAdapter) + Id,
+                                   "PushEVSEStatusTask",
+                                   PushEVSEStatusTask.Result.Warnings);
+
+                }
+
             }
 
             #endregion
@@ -6255,6 +6290,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                          EventTrackingId: EventTrackingId);
 
                     EVSEsToRemoveTask.Wait();
+
+                    if (EVSEsToRemoveTask.Result.Warnings.Any())
+                    {
+
+                        SendOnWarnings(DateTime.UtcNow,
+                                       nameof(WWCPCPOAdapter) + Id,
+                                       "EVSEsToRemoveTask",
+                                       EVSEsToRemoveTask.Result.Warnings);
+
+                    }
 
                 }
 
@@ -6316,6 +6361,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 var _PushEVSEStatus = await PushEVSEStatus(EVSEStatusFastQueueCopy,
                                                            ActionTypes.update,
                                                            EventTrackingId: EventTrackingId);
+
+                if (_PushEVSEStatus.Warnings.Any())
+                {
+
+                    SendOnWarnings(DateTime.UtcNow,
+                                   nameof(WWCPCPOAdapter) + Id,
+                                   "PushEVSEFastStatus",
+                                   _PushEVSEStatus.Warnings);
+
+                }
 
             }
 
@@ -6388,6 +6443,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                         new CancellationTokenSource().Token,
                                                                         EventTrackingId,
                                                                         DefaultRequestTimeout));
+
+                //var Warnings         = results.Where(result => result.Content
 
             }
 

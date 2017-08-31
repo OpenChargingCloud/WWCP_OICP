@@ -74,7 +74,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
+                                                              IEnumerable<Warning>             Warnings,
                                                               TimeSpan?                        RequestTimeout);
 
 
@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
-                                                              PushEVSEDataResult                  Result,
+                                                              PushEVSEDataResult               Result,
                                                               TimeSpan                         Runtime);
 
     #endregion
@@ -110,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
-                                                              IEnumerable<String>              Warnings,
+                                                              IEnumerable<Warning>             Warnings,
                                                               TimeSpan?                        RequestTimeout);
 
 

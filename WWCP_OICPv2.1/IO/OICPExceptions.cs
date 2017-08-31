@@ -30,15 +30,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class OICPException : ApplicationException
     {
 
-        private readonly StatusCode _StatusCode;
+        public StatusCode StatusCode { get; }
+
+        public OICPException(String Message)
+            : base(Message)
+        { }
+
+        public OICPException(String     Message,
+                             Exception  InnerException)
+            : base(Message,
+                   InnerException)
+        { }
 
         /// <summary>
         /// Create a new OICP exception for the given status code.
         /// </summary>
         /// <param name="StatusCode"></param>
-        public OICPException(StatusCode  StatusCode)
+        public OICPException(StatusCode  StatusCode,
+                             String      Message = null)
+            : base(Message)
         {
-            this._StatusCode  = StatusCode;
+            this.StatusCode  = StatusCode;
+        }
+
+    }
+
+
+
+    public class InvalidEVSEIdentificationException : OICPException
+    {
+
+        public String EVSEId { get; }
+
+        public InvalidEVSEIdentificationException(String EVSEId)
+            : base("Invalid EVSE identification '" + EVSEId + "'!")
+        {
+            this.EVSEId = EVSEId;
         }
 
     }
