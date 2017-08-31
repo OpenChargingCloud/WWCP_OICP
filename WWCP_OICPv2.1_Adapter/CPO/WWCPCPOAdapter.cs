@@ -30,6 +30,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 #endregion
 
@@ -318,6 +319,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">The attached DNS service.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
                               I18NString                                         Name,
@@ -347,6 +350,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               Boolean                                            DisableAuthentication                           = false,
                               Boolean                                            DisableSendChargeDetailRecords                  = false,
 
+                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
+                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
                               DNSClient                                          DNSClient                                       = null)
 
             : base(Id,
@@ -363,6 +368,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DisableAuthentication,
                    DisableSendChargeDetailRecords,
 
+                   PublicKeyRing,
+                   SecretKeyRing,
                    DNSClient ?? CPORoaming?.DNSClient)
 
         {
@@ -852,6 +859,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
+        /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
@@ -881,7 +892,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               Boolean                                            DisablePushData                                 = false,
                               Boolean                                            DisablePushStatus                               = false,
                               Boolean                                            DisableAuthentication                           = false,
-                              Boolean                                            DisableSendChargeDetailRecords                  = false)
+                              Boolean                                            DisableSendChargeDetailRecords                  = false,
+
+                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
+                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
+                              DNSClient                                          DNSClient                                       = null)
 
             : this(Id,
                    Name,
@@ -912,7 +927,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DisablePushData,
                    DisablePushStatus,
                    DisableAuthentication,
-                   DisableSendChargeDetailRecords)
+                   DisableSendChargeDetailRecords,
+
+                   PublicKeyRing,
+                   SecretKeyRing,
+                   DNSClient ?? CPOServer?.DNSClient)
 
         { }
 
@@ -961,6 +980,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DisableAuthentication">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
                               I18NString                                         Name,
@@ -1017,6 +1038,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               Boolean                                            DisableAuthentication                           = false,
                               Boolean                                            DisableSendChargeDetailRecords                  = false,
 
+                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
+                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
                               DNSClient                                          DNSClient                                       = null)
 
             : this(Id,
@@ -1075,7 +1098,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DisablePushData,
                    DisablePushStatus,
                    DisableAuthentication,
-                   DisableSendChargeDetailRecords)
+                   DisableSendChargeDetailRecords,
+
+                   PublicKeyRing,
+                   SecretKeyRing,
+                   DNSClient)
 
         {
 

@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 #endregion
 
@@ -87,6 +88,9 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
+        /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_1.CPO.WWCPCPOAdapter
 
@@ -147,6 +151,9 @@ namespace org.GraphDefined.WWCP
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
+
+                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
+                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -222,6 +229,8 @@ namespace org.GraphDefined.WWCP
                                                                      DisableAuthentication,
                                                                      DisableSendChargeDetailRecords,
 
+                                                                     PublicKeyRing,
+                                                                     SecretKeyRing,
                                                                      DNSClient);
 
 
@@ -279,6 +288,9 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
+        /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_1.CPO.WWCPCPOAdapter
 
@@ -335,6 +347,9 @@ namespace org.GraphDefined.WWCP
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
+
+                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
+                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -411,7 +426,11 @@ namespace org.GraphDefined.WWCP
                                                                      DisablePushData,
                                                                      DisablePushStatus,
                                                                      DisableAuthentication,
-                                                                     DisableSendChargeDetailRecords);
+                                                                     DisableSendChargeDetailRecords,
+
+                                                                     PublicKeyRing,
+                                                                     SecretKeyRing,
+                                                                     DNSClient);
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
 
