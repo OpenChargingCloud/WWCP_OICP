@@ -355,7 +355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public static EVSEStatusRecord AsOICPEVSEStatus(this WWCP.EVSEStatus EVSEStatus)
+        public static EVSEStatusRecord AsOICPEVSEStatus(this EVSEStatus EVSEStatus)
 
         {
 
@@ -367,7 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             return new EVSEStatusRecord(EVSEStatus.Id.ToOICP().Value,
-                                        AsOICPEVSEStatus(EVSEStatus.Status));
+                                        AsOICPEVSEStatus(EVSEStatus.Status.Value));
 
         }
 

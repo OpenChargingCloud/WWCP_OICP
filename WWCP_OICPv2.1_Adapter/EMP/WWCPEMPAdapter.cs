@@ -1444,8 +1444,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         if (EVSEId.HasValue)
                             EVSEStatusList.Add(new WWCP.EVSEStatus(EVSEId.Value,
-                                                                   OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
-                                                                   result.Timestamp,
+                                                                   new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                       result.Timestamp,
+                                                                       OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status)
+                                                                   ),
                                                                    evsestatusrecord.CustomData));
 
                         else
@@ -1535,8 +1537,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                         if (EVSEId.HasValue)
                             EVSEStatusList.Add(new WWCP.EVSEStatus(EVSEId.Value,
-                                                                   OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status),
-                                                                   result.Timestamp));
+                                                                   new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                       result.Timestamp,
+                                                                       OICPMapper.AsWWCPEVSEStatus(evsestatusrecord.Status)
+                                                                   )));
 
                         else
                             Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");
