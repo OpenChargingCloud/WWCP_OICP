@@ -43,14 +43,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         public GeoCoordinate?   GeoLocation   { get; }
 
-        #region ChargingStations
 
         private readonly List<ChargeStationInfo> _ChargingStations;
 
         public IEnumerable<ChargeStationInfo> ChargingStations
             => _ChargingStations;
-
-        #endregion
 
         #endregion
 

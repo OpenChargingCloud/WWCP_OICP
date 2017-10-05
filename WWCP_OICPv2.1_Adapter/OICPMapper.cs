@@ -1302,9 +1302,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static ChargingStationOperator_Id? ToWWCP(this Operator_Id OperatorId)
         {
 
-            ChargingStationOperator_Id ChargingStationOperatorId;
-
-            if (ChargingStationOperator_Id.TryParse(OperatorId.ToString(), out ChargingStationOperatorId))
+            if (ChargingStationOperator_Id.TryParse(OperatorId.ToString(), out ChargingStationOperator_Id ChargingStationOperatorId))
                 return ChargingStationOperatorId;
 
             return null;

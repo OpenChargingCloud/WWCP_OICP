@@ -434,10 +434,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordXML,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -465,10 +463,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordText,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -506,6 +502,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     EVSEDataRecord = null;
                     return false;
                 }
+
+                var EVSEId = EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!"));
 
                 #region XML Attribute: LastUpdate
 
@@ -567,7 +565,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                           _AdditionalInfo.Add(Language, I18NTokens[1].Trim());
 
                                                                       else
-                                                                          DebugX.Log("Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
+                                                                          DebugX.Log("EVSE '" + EVSEId + "': Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
 
                                                                   }
 
@@ -583,7 +581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 EVSEDataRecord = new EVSEDataRecord(
 
-                    EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
+                    EVSEId,
 
                     XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
 

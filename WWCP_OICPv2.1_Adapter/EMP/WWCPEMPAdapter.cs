@@ -138,6 +138,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public EVSEOperatorFilterDelegate EVSEOperatorFilter;
 
 
+        #region OnWWCPEMPAdapterException
+
+        public delegate Task OnWWCPEMPAdapterExceptionDelegate(DateTime        Timestamp,
+                                                               WWCPEMPAdapter  Sender,
+                                                               Exception       Exception);
+
+        public event OnWWCPEMPAdapterExceptionDelegate OnWWCPEMPAdapterException;
+
+        #endregion
+
         #region PullDataService
 
         public Boolean  DisablePullData { get; set; }
@@ -165,6 +175,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         }
 
         public DateTime? TimestampOfLastPullDataRun { get; private set; }
+
+        private static SemaphoreSlim PullEVSEDataLock = new SemaphoreSlim(1, 1);
+
+        public delegate void PullEVSEDataDelegate(DateTime Timestamp, WWCPEMPAdapter Sender, TimeSpan Every);
+
+        public event PullEVSEDataDelegate FlushServiceQueuesEvent;
 
         #endregion
 
@@ -2663,9 +2679,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (!DisablePullData)
             {
 
-                PullData().Wait();
+                try
+                {
 
-                //ToDo: Handle errors!
+                    PullData().Wait();
+
+                }
+                catch (Exception e)
+                {
+
+                    while (e.InnerException != null)
+                        e = e.InnerException;
+
+                    DebugX.Log("A exception occured during PullDataService: " + e.Message + Environment.NewLine + e.StackTrace);
+
+                    OnWWCPEMPAdapterException?.Invoke(DateTime.Now,
+                                                      this,
+                                                      e);
+
+                }
 
             }
 
@@ -2674,36 +2706,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task PullData()
         {
 
-            DebugX.LogT("[" + Id + "] 'Pull data service', as every " + _PullStatusServiceEvery + "ms!");
+            var LockTaken = await PullEVSEDataLock.WaitAsync(0);
 
-            if (Monitor.TryEnter(PullDataServiceLock,
-                                 TimeSpan.FromSeconds(30)))
+            if (LockTaken)
             {
-
-                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-
-                var StartTime = DateTime.Now;
-                DebugX.LogT("[" + Id + "] 'Pull data service' started at " + StartTime.ToIso8601());
 
                 try
                 {
 
+                    Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+
+                    FlushServiceQueuesEvent?.Invoke(DateTime.UtcNow,
+                                                    this,
+                                                    TimeSpan.FromMilliseconds(_PullDataServiceEvery));
+
+                    var StartTime = DateTime.Now;
+
                     var TimestampBeforeLastPullDataRun = DateTime.Now;
 
-                    var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
-                                                                      DefaultSearchCenter,
-                                                                      DefaultDistanceKM ?? 0,
-                                                                      TimestampOfLastPullDataRun,
-                    
-                                                                      CancellationToken:  new CancellationTokenSource().Token,
-                                                                      EventTrackingId:    EventTracking_Id.New,
-                                                                      RequestTimeout:     PullDataServiceRequestTimeout);
+                    //var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
+                    //                                                  DefaultSearchCenter,
+                    //                                                  DefaultDistanceKM ?? 0,
+                    //                                                  TimestampOfLastPullDataRun,
+                    //
+                    //                                                  CancellationToken:  new CancellationTokenSource().Token,
+                    //                                                  EventTrackingId:    EventTracking_Id.New,
+                    //                                                  RequestTimeout:     PullDataServiceRequestTimeout).
+                    //
+                    //                                     ConfigureAwait(false);
 
-                    //var PullEVSEData = new {
-                    //    Content = PullEVSEDataResponse.Parse(null,
-                    //                                         XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar +
-                    //                                                                          "PullEvseDataResponse_2017-07-19b.xml", Encoding.UTF8)).Root)
-                    //};
+                    var PullEVSEData = new {
+                        Content = PullEVSEDataResponse.Parse(null,
+                                                             XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar +
+                                                                                              "PullEvseDataResponse_2017-07-19_PROD.xml", Encoding.UTF8)).Root)
+                    };
 
                     var DownloadTime = DateTime.Now;
 
@@ -2713,29 +2749,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     if (PullEVSEData                    != null     &&
                         PullEVSEData.Content            != null     &&
-                        PullEVSEData.Content.StatusCode != null     &&
-                        PullEVSEData.Content.StatusCode.HasResult() &&
-                        PullEVSEData.Content.StatusCode.Value.Code == StatusCodes.Success)
+                        PullEVSEData.Content.StatusCode == null)
+                        //PullEVSEData.Content.StatusCode != null     &&
+                        //PullEVSEData.Content.StatusCode.HasResult() &&
+                        //PullEVSEData.Content.StatusCode.Value.Code == StatusCodes.Success)
                     {
 
-                        var OperatorEVSEData = PullEVSEData.Content.EVSEData.OperatorEVSEData;
+                        // This will parse all nested data structures!
+                        var OperatorEVSEData = PullEVSEData?.Content?.EVSEData?.OperatorEVSEData?.ToArray();
 
-                        //var SOAPXML = XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "PullEVSEData_TestData001.xml", Encoding.UTF8)).
-                        //                              Root.
-                        //                              Element(Vanaheimr.Hermod.SOAP.NS.SOAPEnvelope_v1_1 + "Body").
-                        //                              Descendants().
-                        //                              FirstOrDefault();
-
-                        //var OperatorEVSEData = EVSEData.Parse(SOAPXML).OperatorEVSEData;
-
-                        if (OperatorEVSEData != null && OperatorEVSEData.Any())
+                        if (OperatorEVSEData?.Length > 0)
                         {
 
-                            DebugX.Log("Imported " + OperatorEVSEData.Count() + " OperatorEVSEData!");
-                            DebugX.Log("Imported " + OperatorEVSEData.SelectMany(status => status.EVSEDataRecords).Count() + " EVSEDataRecords!");
+                            DebugX.Log(String.Concat("Imported data from ", OperatorEVSEData.Length, " OICP EVSE operators"));
 
                             ChargingStationOperator      WWCPChargingStationOperator     = null;
                             ChargingStationOperator_Id?  WWCPChargingStationOperatorId   = null;
+                            EVSEDataRecord[]             CurrentEVSEDataRecords          = null;
+
                             UInt64                       IllegalOperatorsIds             = 0;
                             UInt64                       OperatorsSkipped                = 0;
                             UInt64                       TotalEVSEsCreated               = 0;
@@ -2743,6 +2774,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             UInt64                       TotalEVSEsSkipped               = 0;
 
                             CPInfoList                   _CPInfoList;
+                            WWCP.EVSE_Id?  CurrentEVSEId;
+                            UInt64         EVSEsSkipped;
 
                             foreach (var CurrentOperatorEVSEData in OperatorEVSEData.OrderBy(evseoperator => evseoperator.OperatorName))
                             {
@@ -2751,29 +2784,54 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        CurrentOperatorEVSEData.OperatorId))
                                 {
 
-                                    DebugX.Log("Importing EVSE operator " + CurrentOperatorEVSEData.OperatorName + " (" + CurrentOperatorEVSEData.OperatorId.ToString() + ") with " + CurrentOperatorEVSEData.EVSEDataRecords.Count() + " EVSE data records");
-
                                     WWCPChargingStationOperatorId = CurrentOperatorEVSEData.OperatorId.ToWWCP();
 
                                     if (WWCPChargingStationOperatorId.HasValue)
                                     {
 
+                                        #region Get WWCP charging station operator...
+
                                         if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out WWCPChargingStationOperator))
+                                        {
+
+                                            DebugX.Log(String.Concat("Creating OICP EVSE operator '", CurrentOperatorEVSEData.OperatorName,
+                                                                 "' (", CurrentOperatorEVSEData.OperatorId.ToString(),
+                                                                 " => ", WWCPChargingStationOperatorId, ")"));
+
                                             WWCPChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
-                                                                                                                       I18NString.Create(Languages.unknown, CurrentOperatorEVSEData.OperatorName));
+                                                                                                                       I18NString.Create(Languages.unknown,
+                                                                                                                                         CurrentOperatorEVSEData.OperatorName));
+
+                                        }
+
+                                        #endregion
+
+                                        #region ...or create a new one!
 
                                         else
-                                            // Update name (via events)!
-                                            WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown, CurrentOperatorEVSEData.OperatorName);
+                                        {
 
-                                        WWCP.EVSE_Id?  CurrentEVSEId   = null;
-                                        UInt64         EVSEsSkipped    = 0;
+                                            DebugX.Log(String.Concat("Updating OICP EVSE operator '", CurrentOperatorEVSEData.OperatorName,
+                                                                     "' (", CurrentOperatorEVSEData.OperatorId.ToString(),
+                                                                     " => ", WWCPChargingStationOperatorId, ")"));
+
+                                            // Update name (via events)!
+                                            WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown,
+                                                                                                 CurrentOperatorEVSEData.OperatorName);
+
+                                        }
+
+                                        #endregion
+
 
                                         #region Generate a list of all charging pools/stations/EVSEs
 
-                                        _CPInfoList = new CPInfoList(WWCPChargingStationOperator.Id);
+                                        CurrentEVSEId           = null;
+                                        EVSEsSkipped            = 0;
+                                        _CPInfoList             = new CPInfoList(WWCPChargingStationOperator.Id);
+                                        CurrentEVSEDataRecords  = CurrentOperatorEVSEData.EVSEDataRecords.ToArray();
 
-                                        foreach (var CurrentEVSEDataRecord in CurrentOperatorEVSEData.EVSEDataRecords)
+                                        foreach (var CurrentEVSEDataRecord in CurrentEVSEDataRecords)
                                         {
 
                                             CurrentEVSEId = CurrentEVSEDataRecord.Id.ToWWCP();
@@ -2794,7 +2852,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                 } catch (Exception e)
                                                 {
-                                                    DebugX.Log("EMPClient PullEVSEData failed: " + e.Message);
+                                                    DebugX.Log("WWCPEMPAdapter PullEVSEData failed: " + e.Message);
                                                     EVSEsSkipped++;
                                                 }
 
@@ -2807,6 +2865,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                         }
 
                                         var EVSEIdLookup = _CPInfoList.VerifyUniquenessOfChargingStationIds();
+
+                                        DebugX.Log(String.Concat(_CPInfoList.                                                               Count(), " pools, ",
+                                                                 _CPInfoList.SelectMany(_ => _.ChargingStations).                           Count(), " stations, ",
+                                                                 _CPInfoList.SelectMany(_ => _.ChargingStations).SelectMany(_ => _.EVSEIds).Count(), " EVSEs imported. ",
+                                                                 EVSEsSkipped, " EVSEs skipped."));
 
                                         #endregion
 
@@ -2829,7 +2892,45 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                         #endregion
 
-                                        foreach (var CurrentEVSEDataRecord in CurrentOperatorEVSEData.EVSEDataRecords)
+
+                                        //foreach (var poolinfo in _CPInfoList.ChargingPools)
+                                        //{
+
+                                        //    try
+                                        //    {
+
+                                        //        foreach (var stationinfo in poolinfo)
+                                        //        {
+
+                                        //            try
+                                        //            {
+
+                                        //                foreach (var evseid in stationinfo)
+                                        //                {
+
+                                        //                    try
+                                        //                    {
+
+
+                                        //                    }
+                                        //                    catch (Exception e)
+                                        //                    { }
+
+                                        //                }
+
+                                        //            }
+                                        //            catch (Exception e)
+                                        //            { }
+
+                                        //        }
+
+                                        //    }
+                                        //    catch (Exception e)
+                                        //    { }
+
+                                        //}
+
+                                        foreach (var CurrentEVSEDataRecord in CurrentEVSEDataRecords)
                                         {
 
                                             CurrentEVSEId = CurrentEVSEDataRecord.Id.ToWWCP();
@@ -3118,49 +3219,49 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region HTTP status is not 200 - OK
 
-                    //else if (PullEVSEDataTask.Result.HTTPStatusCode != HTTPStatusCode.OK)
-                    //{
-                    //
-                    //    DebugX.Log("Importing EVSE data records failed: " +
-                    //               PullEVSEDataTask.Result.HTTPStatusCode.ToString() +
-                    //
-                    //               PullEVSEDataTask.Result.HTTPBody != null
-                    //                   ? Environment.NewLine + PullEVSEDataTask.Result.HTTPBody.ToUTF8String()
-                    //                   : "");
-                    //
-                    //}
+                        //else if (PullEVSEDataTask.Result.HTTPStatusCode != HTTPStatusCode.OK)
+                        //{
+                        //
+                        //    DebugX.Log("Importing EVSE data records failed: " +
+                        //               PullEVSEDataTask.Result.HTTPStatusCode.ToString() +
+                        //
+                        //               PullEVSEDataTask.Result.HTTPBody != null
+                        //                   ? Environment.NewLine + PullEVSEDataTask.Result.HTTPBody.ToUTF8String()
+                        //                   : "");
+                        //
+                        //}
 
-                    #endregion
+                        #endregion
 
                     #region OICP StatusCode is not 'Success'
 
-                    //else if (PullEVSEDataTask.Result.Content.StatusCode != null &&
-                    //        !PullEVSEDataTask.Result.Content.StatusCode.HasResult)
-                    //{
-                    //
-                    //    DebugX.Log("Importing EVSE data records failed: " +
-                    //               PullEVSEDataTask.Result.Content.StatusCode.Code.ToString() +
-                    //
-                    //               (PullEVSEDataTask.Result.Content.StatusCode.Description.IsNotNullOrEmpty()
-                    //                    ? ", " + PullEVSEDataTask.Result.Content.StatusCode.Description
-                    //                    : "") +
-                    //
-                    //               (PullEVSEDataTask.Result.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                    //                    ? ", " + PullEVSEDataTask.Result.Content.StatusCode.AdditionalInfo
-                    //                    : ""));
-                    //
-                    //}
+                        //else if (PullEVSEDataTask.Result.Content.StatusCode != null &&
+                        //        !PullEVSEDataTask.Result.Content.StatusCode.HasResult)
+                        //{
+                        //
+                        //    DebugX.Log("Importing EVSE data records failed: " +
+                        //               PullEVSEDataTask.Result.Content.StatusCode.Code.ToString() +
+                        //
+                        //               (PullEVSEDataTask.Result.Content.StatusCode.Description.IsNotNullOrEmpty()
+                        //                    ? ", " + PullEVSEDataTask.Result.Content.StatusCode.Description
+                        //                    : "") +
+                        //
+                        //               (PullEVSEDataTask.Result.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                        //                    ? ", " + PullEVSEDataTask.Result.Content.StatusCode.AdditionalInfo
+                        //                    : ""));
+                        //
+                        //}
 
-                    #endregion
+                        #endregion
 
                     #region Something unexpected happend!
 
-                    //else
-                    //{
-                    //    DebugX.Log("Importing EVSE data records failed unexpectedly!");
-                    //}
+                        //else
+                        //{
+                        //    DebugX.Log("Importing EVSE data records failed unexpectedly!");
+                        //}
 
-                    #endregion
+                        #endregion
 
 
                     var EndTime = DateTime.Now;
@@ -3179,15 +3280,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 finally
                 {
-                    Monitor.Exit(PullDataServiceLock);
+                    if (LockTaken)
+                        PullEVSEDataLock.Release();
                 }
 
             }
-
-            else
-                Console.WriteLine("PullDataServiceLock missed!");
-
-            return;
 
         }
 
