@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -102,7 +103,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Acknowledgement(Request, SessionId, ...)
+        #region Acknowledgement(Request, SessionId = null, ...)
 
         /// <summary>
         /// Create a new OICP 'positive' acknowledgement.
@@ -113,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         public Acknowledgement(TRequest                             Request,
-                               Session_Id                           SessionId,
+                               Session_Id?                          SessionId                  = null,
                                PartnerSession_Id?                   PartnerSessionId           = null,
                                String                               StatusCodeDescription      = null,
                                String                               StatusCodeAdditionalInfo   = null,
@@ -501,70 +502,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region Documentation
 
-        // <?xml version='1.0' encoding='UTF-8'?>
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
         //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         //
-        //   <soapenv:Body>
-        //     <CommonTypes:eRoamingAcknowledgement>
+        //    <soapenv:Header/>
         //
-        //       <CommonTypes:Result>true</CommonTypes:Result>
+        //    <soapenv:Body>
+        //       <CommonTypes:eRoamingAcknowledgement>
         //
-        //       <CommonTypes:StatusCode>
-        //         <CommonTypes:Code>000</CommonTypes:Code>
-        //         <CommonTypes:Description>Success</CommonTypes:Description>
-        //         <CommonTypes:AdditionalInfo />
-        //       </CommonTypes:StatusCode>
+        //          <CommonTypes:Result>?</CommonTypes:Result>
         //
-        //     </CommonTypes:eRoamingAcknowledgement>
-        //   </soapenv:Body>
+        //          <CommonTypes:StatusCode>
         //
-        // </soapenv:Envelope>
-
-        // <?xml version='1.0' encoding='UTF-8'?>
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //             <CommonTypes:Code>?</CommonTypes:Code>
         //
-        //   <soapenv:Body>
-        //     <CommonTypes:eRoamingAcknowledgement>
+        //             <!--Optional:-->
+        //             <CommonTypes:Description>?</CommonTypes:Description>
         //
-        //       <CommonTypes:Result>true</CommonTypes:Result>
+        //             <!--Optional:-->
+        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
         //
-        //       <CommonTypes:StatusCode>
-        //         <CommonTypes:Code>009</CommonTypes:Code>
-        //         <CommonTypes:Description>Data transaction error</CommonTypes:Description>
-        //         <CommonTypes:AdditionalInfo>The Push of data is already in progress.</CommonTypes:AdditionalInfo>
-        //       </CommonTypes:StatusCode>
+        //          </CommonTypes:StatusCode>
         //
-        //     </CommonTypes:eRoamingAcknowledgement>
-        //   </soapenv:Body>
+        //          <!--Optional:-->
+        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
         //
-        // </soapenv:Envelope>
-
-        // HTTP/1.1 200 OK
-        // Date: Tue, 31 May 2016 03:15:36 GMT
-        // Content-Type: text/xml;charset=utf-8
-        // Connection: close
-        // Transfer-Encoding: chunked
-        // 
-        // <?xml version='1.0' encoding='UTF-8'?>
-        // <soapenv:Envelope xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0"
-        //                   xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/">
+        //          <!--Optional:-->
+        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
         //
-        //   <soapenv:Body>
-        //     <CommonTypes:eRoamingAcknowledgement>
-        //
-        //       <CommonTypes:Result>true</CommonTypes:Result>
-        //
-        //       <CommonTypes:StatusCode>
-        //         <CommonTypes:Code>000</CommonTypes:Code>
-        //         <CommonTypes:Description>Success</CommonTypes:Description>
-        //       </CommonTypes:StatusCode>
-        //
-        //       <CommonTypes:SessionID>04cf39ad-0a88-1295-27dc-d593d1a076ac</CommonTypes:SessionID>
-        //
-        //     </CommonTypes:eRoamingAcknowledgement>
-        //   </soapenv:Body>
+        //       </CommonTypes:eRoamingAcknowledgement>
+        //    </soapenv:Body>
         // </soapenv:Envelope>
 
         #endregion
@@ -583,11 +550,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                       OnExceptionDelegate                                 OnException                   = null)
         {
 
-            Acknowledgement<TRequest> _Acknowledgement;
-
             if (TryParse(Request,
                          AcknowledgementXML,
-                         out _Acknowledgement,
+                         out Acknowledgement<TRequest> _Acknowledgement,
                          CustomAcknowledgementParser,
                          CustomStatusCodeParser,
                          OnException))
@@ -757,8 +722,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 : base(Acknowledgement?.Request,
                        Acknowledgement.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? Acknowledgement.CustomValues.Concat(CustomData)
-                                 : Acknowledgement.CustomValues
+                                 ? Acknowledgement.CustomData.Concat(CustomData)
+                                 : Acknowledgement.CustomData
                            : CustomData)
 
             {
@@ -788,7 +753,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                  StatusCode,
                                                  SessionId,
                                                  PartnerSessionId,
-                                                 ImmutableCustomData);
+                                                 CustomData);
 
         }
 

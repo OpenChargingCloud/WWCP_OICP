@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -821,29 +822,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public Builder ToBuilder()
 
-            => new Builder(
-
-                   EVSEId,
-                   SessionId,
-                   SessionStart,
-                   SessionEnd,
-                   Identification,
-                   PartnerProductId,
-                   PartnerSessionId,
-                   ChargingStart,
-                   ChargingEnd,
-                   MeterValueStart,
-                   MeterValueEnd,
-                   MeterValuesInBetween,
-                   ConsumedEnergy,
-                   MeteringSignature,
-                   HubOperatorId,
-                   HubProviderId,
-
-                   CustomValues != null
-                       ? CustomValues.ToDictionary(kvp => kvp.Key,
-                                             kvp => kvp.Value)
-                       : null);
+            => new Builder(EVSEId,
+                           SessionId,
+                           SessionStart,
+                           SessionEnd,
+                           Identification,
+                           PartnerProductId,
+                           PartnerSessionId,
+                           ChargingStart,
+                           ChargingEnd,
+                           MeterValueStart,
+                           MeterValueEnd,
+                           MeterValuesInBetween,
+                           ConsumedEnergy,
+                           MeteringSignature,
+                           HubOperatorId,
+                           HubProviderId,
+                           CustomData);
 
         #endregion
 
@@ -1051,7 +1046,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           ConsumedEnergy,
                                           MeteringSignature,
                                           HubOperatorId,
-                                          HubProviderId);
+                                          HubProviderId,
+                                          CustomData);
 
             #endregion
 

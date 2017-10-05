@@ -396,7 +396,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                              AuthorizeRemoteReservationStartRequest.SessionId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerSessionId,
                                                              AuthorizeRemoteReservationStartRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStartRequest.EVCOId,
+                                                             AuthorizeRemoteReservationStartRequest.Identification,
                                                              AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -454,7 +454,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                              AuthorizeRemoteReservationStartRequest.SessionId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerSessionId,
                                                              AuthorizeRemoteReservationStartRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStartRequest.EVCOId,
+                                                             AuthorizeRemoteReservationStartRequest.Identification,
                                                              AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              Acknowledgement,
                                                              EndTime - StartTime))).

@@ -21,8 +21,9 @@ using System;
 using System.Xml.Linq;
 using System.Threading;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -182,10 +183,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PullEVSEStatusRequest _PullEVSEStatus;
-
             if (TryParse(PullEVSEStatusXML,
-                         out _PullEVSEStatus,
+                         out PullEVSEStatusRequest _PullEVSEStatus,
                          CustomPullEVSEStatusRequestParser,
                          OnException,
 
@@ -226,10 +225,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PullEVSEStatusRequest _PullEVSEStatus;
-
             if (TryParse(PullEVSEStatusText,
-                         out _PullEVSEStatus,
+                         out PullEVSEStatusRequest _PullEVSEStatus,
                          CustomPullEVSEStatusRequestParser,
                          OnException,
 

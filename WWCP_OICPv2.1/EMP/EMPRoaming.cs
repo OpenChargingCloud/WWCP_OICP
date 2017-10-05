@@ -18,18 +18,15 @@
 #region Usings
 
 using System;
-using System.Threading;
+using System.Xml.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Aegir;
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Xml.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -48,6 +45,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// The EMP client part.
         /// </summary>
         public EMPClient        EMPClient           { get; }
+
+        public IPPort RemotePort
+            => EMPClient?.RemotePort;
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator
+            => EMPClient?.RemoteCertificateValidator;
 
         /// <summary>
         /// The EMP server part.
@@ -1727,6 +1730,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -1756,6 +1760,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
                           String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
+                          Byte?                                MaxNumberOfRetries              = EMPClient.DefaultMaxNumberOfRetries,
 
                           String                               ServerName                      = EMPServer.DefaultHTTPServerName,
                           String                               ServiceId                       = null,
@@ -1787,6 +1792,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  AuthorizationURI,
                                  HTTPUserAgent,
                                  RequestTimeout,
+                                 MaxNumberOfRetries,
                                  DNSClient,
                                  ClientLoggingContext,
                                  LogfileCreator),
@@ -1967,6 +1973,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        public void Dispose()
+        { }
 
     }
 

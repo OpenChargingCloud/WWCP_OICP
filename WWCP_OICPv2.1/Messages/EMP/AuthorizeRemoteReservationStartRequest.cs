@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -47,9 +48,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public EVSE_Id             EVSEId              { get; }
 
         /// <summary>
-        /// An electric vehicle contract identification.
+        /// An identification, e.g. an electric vehicle contract identification.
         /// </summary>
-        public EVCO_Id             EVCOId              { get; }
+        public Identification      Identification      { get; }
+
+        /// <summary>
+        /// The duration of the reservation (max. 99 minutes).
+        /// </summary>
+        public TimeSpan?           Duration            { get; }
 
         /// <summary>
         /// An optional charging session identification.
@@ -75,7 +81,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="Identification">An identification, e.g. an electric vehicle contract identification.</param>
+        /// <param name="Duration">The duration of the reservation (max. 99 minutes).</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
@@ -86,7 +93,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeRemoteReservationStartRequest(Provider_Id         ProviderId,
                                                       EVSE_Id             EVSEId,
-                                                      EVCO_Id             EVCOId,
+                                                      Identification      Identification,
+                                                      TimeSpan?           Duration            = null,
                                                       Session_Id?         SessionId           = null,
                                                       PartnerSession_Id?  PartnerSessionId    = null,
                                                       PartnerProduct_Id?  PartnerProductId    = null,
@@ -103,18 +111,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            this.ProviderId        = ProviderId;
-            this.EVSEId            = EVSEId;
-            this.EVCOId            = EVCOId;
-            this.SessionId         = SessionId;
-            this.PartnerSessionId  = PartnerSessionId;
-            this.PartnerProductId  = PartnerProductId;
+            this.ProviderId         = ProviderId;
+            this.EVSEId             = EVSEId;
+            this.Identification     = Identification;
+            this.Duration           = Duration;
+            this.SessionId          = SessionId;
+            this.PartnerSessionId   = PartnerSessionId;
+            this.PartnerProductId   = PartnerProductId;
 
         }
 
         #endregion
 
-
+        //ToDo: Add duration field!
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -204,10 +213,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart;
-
             if (TryParse(AuthorizeRemoteReservationStartXML,
-                         out _AuthorizeRemoteReservationStart,
+                         out AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart,
                          CustomAuthorizeRemoteReservationStartRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -253,10 +260,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart;
-
             if (TryParse(AuthorizeRemoteReservationStartText,
-                         out _AuthorizeRemoteReservationStart,
+                         out AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart,
                          CustomAuthorizeRemoteReservationStartRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -310,19 +315,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     return false;
                 }
 
-                var _AuthorizationIdentification = AuthorizeRemoteReservationStartXML.MapElementOrFail(OICPNS.Reservation + "Identification",
-                                                                                                       (xml, e) => Identification.Parse(xml,
-                                                                                                                                        CustomIdentificationParser,
-                                                                                                                                        e),
-                                                                                                       OnException);
-
-                if (!(_AuthorizationIdentification.QRCodeIdentification.       HasValue ||
-                      _AuthorizationIdentification.PlugAndChargeIdentification.HasValue ||
-                      _AuthorizationIdentification.RemoteIdentification.       HasValue))
-
-                    throw new Exception("No EVCO identification found in request!");
-
-
                 AuthorizeRemoteReservationStart = new AuthorizeRemoteReservationStartRequest(
 
                                                       AuthorizeRemoteReservationStartXML.MapValueOrFail    (OICPNS.Reservation + "ProviderID",
@@ -331,13 +323,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                       AuthorizeRemoteReservationStartXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
                                                                                                             EVSE_Id.Parse),
 
-                                                      _AuthorizationIdentification.QRCodeIdentification.HasValue
-                                                          ? _AuthorizationIdentification.QRCodeIdentification.Value.EVCOId
-                                                          : _AuthorizationIdentification.PlugAndChargeIdentification.HasValue
-                                                                ? _AuthorizationIdentification.PlugAndChargeIdentification.Value
-                                                                : _AuthorizationIdentification.RemoteIdentification.HasValue
-                                                                      ? _AuthorizationIdentification.RemoteIdentification.Value
-                                                                      : default(EVCO_Id),
+                                                      AuthorizeRemoteReservationStartXML.MapElementOrFail  (OICPNS.Reservation + "Identification",
+                                                                                                            (xml, e) => Identification.Parse(xml,
+                                                                                                                                             CustomIdentificationParser,
+                                                                                                                                             e),
+                                                                                                            OnException),
+
+                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "Duration",
+                                                                                                            TimeSpan.Parse),
 
                                                       AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "SessionID",
                                                                                                             Session_Id.Parse),
@@ -434,6 +427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        //ToDo: Add duration field!
         #region ToXML(CustomAuthorizeRemoteReservationStartRequestSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
@@ -459,8 +453,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
                                        new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString()),
 
-                                       Identification.FromRemoteIdentification(EVCOId).ToXML(OICPNS.Reservation + "Identification",
-                                                                                             CustomIdentificationSerializer),
+                                       Identification.ToXML(OICPNS.Reservation + "Identification",
+                                                            CustomIdentificationSerializer),
 
                                        PartnerProductId.HasValue
                                            ? new XElement(OICPNS.Reservation + "PartnerProductID",  PartnerProductId.ToString())
@@ -558,9 +552,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if ((Object) AuthorizeRemoteReservationStart == null)
                 return false;
 
-            return ProviderId.Equals(AuthorizeRemoteReservationStart.ProviderId) &&
-                   EVSEId.    Equals(AuthorizeRemoteReservationStart.EVSEId)     &&
-                   EVCOId.    Equals(AuthorizeRemoteReservationStart.EVCOId)     &&
+            return ProviderId.    Equals(AuthorizeRemoteReservationStart.ProviderId)     &&
+                   EVSEId.        Equals(AuthorizeRemoteReservationStart.EVSEId)         &&
+                   Identification.Equals(AuthorizeRemoteReservationStart.Identification) &&
+
+                   ((!Duration.        HasValue && !AuthorizeRemoteReservationStart.Duration.        HasValue) ||
+                     (Duration.        HasValue &&  AuthorizeRemoteReservationStart.Duration.        HasValue && Duration.        Value.Equals(AuthorizeRemoteReservationStart.Duration.        Value))) &&
 
                    ((!SessionId.       HasValue && !AuthorizeRemoteReservationStart.SessionId.       HasValue) ||
                      (SessionId.       HasValue &&  AuthorizeRemoteReservationStart.SessionId.       HasValue && SessionId.       Value.Equals(AuthorizeRemoteReservationStart.SessionId.       Value))) &&
@@ -588,9 +585,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             unchecked
             {
 
-                return ProviderId.GetHashCode() * 17 ^
-                       EVSEId.    GetHashCode() * 11 ^
-                       EVCOId.    GetHashCode() *  7 ^
+                return ProviderId.    GetHashCode() * 17 ^
+                       EVSEId.        GetHashCode() * 13 ^
+                       Identification.GetHashCode() * 11 ^
+
+                       (Duration.         HasValue
+                            ? Duration.        GetHashCode() * 7
+                            : 0) ^
 
                        (SessionId.        HasValue
                             ? SessionId.       GetHashCode() * 5
@@ -617,7 +618,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public override String ToString()
 
             => String.Concat(EVSEId,
-                             " for ", EVCOId,
+                             " for user '", Identification, "' ",
+                             Duration.HasValue ? " for " + Duration.Value.TotalMinutes + " minutes " : "",
                              " (", ProviderId, ")");
 
         #endregion

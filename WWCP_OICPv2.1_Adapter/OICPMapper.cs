@@ -137,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 if (!_EVSEId.HasValue)
                     return null;
 
-                var _ChargingStationId  = ChargingStation_Id.Create(_EVSEId.Value);
+                var _ChargingStationId  = WWCP.ChargingStation_Id.Create(_EVSEId.Value);
 
                 var CustomData = new Dictionary<String, Object>();
                 CustomData.Add("OICP.EVSEDataRecord", EVSEDataRecord);
@@ -195,62 +195,80 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord ToOICP(this WWCP.EVSE                   EVSE,
-                                            CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord = null)
+        public static EVSEDataRecord ToOICP(this EVSE                        EVSE,
+                                            CPO.EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord   = null,
+                                            DeltaTypes?                      DeltaType             = null,
+                                            DateTime?                        LastUpdate            = null,
+                                            HubOperator_Id?                  HubOperatorId         = null,
+                                            ClearingHouse_Id?                ClearingHouseId       = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord = null;
+            #region Verify EVSE identification
+
+            var _EVSEId = EVSE.Id.ToOICP();
+
+            if (!_EVSEId.HasValue)
+                throw new InvalidEVSEIdentificationException(EVSE.Id.ToString());
+
+            #endregion
 
             try
             {
 
-                var _EVSEId = EVSE.Id.ToOICP();
-
-                if (!_EVSEId.HasValue)
-                    return null;
+                #region Copy custom data and add WWCP EVSE as "WWCP.EVSE"...
 
                 var CustomData = new Dictionary<String, Object>();
-                CustomData.Add("WWCP.EVSE", EVSE);
+                EVSE.CustomData.ForEach(kvp => CustomData.Add(kvp.Key, kvp.Value));
 
-                _EVSEDataRecord = new EVSEDataRecord(_EVSEId.Value,
-                                                     new DeltaTypes?(),
-                                                     new DateTime?(),
-                                                     EVSE.ChargingStation.Id.ToString(),
-                                                     EVSE.ChargingStation.Name,
-                                                     EVSE.ChargingStation.Address.ToOICP(),
-                                                     EVSE.ChargingStation.GeoLocation,
-                                                     EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
-                                                     AsChargingFacilities(EVSE).Reduce(),
-                                                     EVSE.ChargingModes.AsOICPChargingMode(),
-                                                     EVSE.ChargingStation.AuthenticationModes.
-                                                                              Select(mode => AsOICPAuthenticationMode(mode)).
-                                                                              Where(mode => mode != AuthenticationModes.Unknown).
-                                                                              Reduce(),
-                                                     null, // MaxCapacity [kWh]
-                                                     EVSE.ChargingStation.PaymentOptions.SafeSelect(option => AsOICPPaymentOption(option)).Reduce(),
-                                                     ValueAddedServices.None,
-                                                     EVSE.ChargingStation.Accessibility.ToOICP(),
-                                                     EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
-                                                     EVSE.ChargingStation.Description, // AdditionalInfo
-                                                     EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                                     EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
-                                                     EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.ToString()    : null,
-                                                     null, // HubOperatorId
-                                                     null, // ClearingHouseId
-                                                     EVSE.ChargingStation.IsHubjectCompatible,
-                                                     EVSE.ChargingStation.DynamicInfoAvailable,
+                if (!CustomData.ContainsKey("WWCP.EVSE"))
+                    CustomData.Add("WWCP.EVSE", EVSE);
+                else
+                    CustomData["WWCP.EVSE"] = EVSE;
 
-                                                     CustomData);
+                #endregion
+
+
+                var _EVSEDataRecord  = new EVSEDataRecord(_EVSEId.Value,
+                                                          DeltaType  ?? new DeltaTypes?(),
+                                                          LastUpdate ?? new DateTime?(),
+                                                          ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
+                                                          ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
+                                                          EVSE.ChargingStation.Name,
+                                                          EVSE.ChargingStation.Address.ToOICP(),
+                                                          EVSE.ChargingStation.GeoLocation,
+                                                          EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
+                                                          AsChargingFacilities(EVSE).Reduce(),
+                                                          EVSE.ChargingModes.AsOICPChargingMode(),
+                                                          EVSE.ChargingStation.AuthenticationModes.
+                                                                                   Select(AsOICPAuthenticationMode).
+                                                                                   Where(mode => mode != AuthenticationModes.Unknown).
+                                                                                   Reduce(),
+                                                          null, // MaxCapacity [kWh]
+                                                          EVSE.ChargingStation.PaymentOptions.SafeSelect(AsOICPPaymentOption).Reduce(),
+                                                          ValueAddedServices.None,
+                                                          EVSE.ChargingStation.Accessibility.ToOICP(),
+                                                          EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
+                                                          EVSE.ChargingStation.Description, // AdditionalInfo
+                                                          EVSE.ChargingStation.ChargingPool.EntranceLocation,
+                                                          EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
+                                                          EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.ToString()    : null,
+                                                          HubOperatorId,
+                                                          ClearingHouseId,
+                                                          EVSE.ChargingStation.IsHubjectCompatible,
+                                                          EVSE.ChargingStation.DynamicInfoAvailable,
+
+                                                          CustomData);
+
+
+                return EVSE2EVSEDataRecord != null
+                           ? EVSE2EVSEDataRecord(EVSE, _EVSEDataRecord)
+                           : _EVSEDataRecord;
 
             }
             catch (Exception e)
             {
-                return null;
+                throw new EVSEToOICPException(EVSE, e);
             }
-
-            return EVSE2EVSEDataRecord != null
-                       ? EVSE2EVSEDataRecord(EVSE, _EVSEDataRecord)
-                       : _EVSEDataRecord;
 
         }
 
@@ -337,7 +355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public static EVSEStatusRecord AsOICPEVSEStatus(this WWCP.EVSEStatus EVSEStatus)
+        public static EVSEStatusRecord AsOICPEVSEStatus(this EVSEStatus EVSEStatus)
 
         {
 
@@ -349,7 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             return new EVSEStatusRecord(EVSEStatus.Id.ToOICP().Value,
-                                        AsOICPEVSEStatus(EVSEStatus.Status));
+                                        AsOICPEVSEStatus(EVSEStatus.Status.Value));
 
         }
 
@@ -772,7 +790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Maps a WWCP address to an OICP address.
         /// </summary>
         /// <param name="WWCPAddress">A WWCP address.</param>
-        public static Address ToOICP(this WWCP.Address WWCPAddress)
+        public static Address ToOICP(this Vanaheimr.Hermod.Address WWCPAddress)
 
             => new Address(WWCPAddress.Country,
                            WWCPAddress.City,
@@ -786,15 +804,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Maps an OICP address type to a WWCP address type.
         /// </summary>
         /// <param name="OICPAddress">A address type.</param>
-        public static WWCP.Address ToWWCP(this Address OICPAddress)
+        public static Vanaheimr.Hermod.Address ToWWCP(this Address OICPAddress)
 
-            => new WWCP.Address(OICPAddress.Street,
-                                OICPAddress.HouseNumber,
-                                OICPAddress.FloorLevel,
-                                OICPAddress.PostalCode,
-                                null,
-                                OICPAddress.City,
-                                OICPAddress.Country);
+            => Vanaheimr.Hermod.Address.Create(OICPAddress.Country,
+                                               OICPAddress.PostalCode,
+                                               OICPAddress.City,
+                                               OICPAddress.Street,
+                                               OICPAddress.HouseNumber,
+                                               OICPAddress.FloorLevel);
 
         #endregion
 
@@ -1505,7 +1522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           ChargeDetailRecord.SessionTime.Value.EndTime.Value,
                           ChargeDetailRecord.IdentificationStart.ToOICP(),
                           ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id>("OICP.PartnerSessionId"),
+                          ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
                           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
                           ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
                           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
@@ -1513,8 +1530,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
                           ChargeDetailRecord.ConsumedEnergy,
                           ChargeDetailRecord.MeteringSignature,
-                          ChargeDetailRecord.GetCustomDataAs<HubOperator_Id>("OICP.HubOperatorId"),
-                          ChargeDetailRecord.GetCustomDataAs<HubProvider_Id>("OICP.HubProviderId"),
+                          ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
+                          ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
                           CustomData
                       );
 

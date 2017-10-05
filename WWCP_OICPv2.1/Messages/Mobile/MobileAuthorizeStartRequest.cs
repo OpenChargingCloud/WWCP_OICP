@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -166,10 +167,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizeStartRequest _MobileAuthorizeStart;
-
             if (TryParse(MobileAuthorizeStartXML,
-                         out _MobileAuthorizeStart,
+                         out MobileAuthorizeStartRequest _MobileAuthorizeStart,
                          CustomMobileAuthorizeStartRequestParser,
                          OnException,
 
@@ -212,10 +211,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizeStartRequest _MobileAuthorizeStart;
-
             if (TryParse(MobileAuthorizeStartText,
-                         out _MobileAuthorizeStart,
+                         out MobileAuthorizeStartRequest _MobileAuthorizeStart,
                          CustomMobileAuthorizeStartRequestParser,
                          OnException,
 

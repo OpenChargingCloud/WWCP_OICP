@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     /// <summary>
     /// The common interface of all OICP Central clients.
     /// </summary>
-    public interface ICentralClient
+    public interface ICentralClient : IHTTPClient
     {
 
         #region Properties

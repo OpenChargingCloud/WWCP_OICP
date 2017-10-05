@@ -18,16 +18,15 @@
 #region Usings
 
 using System;
-using System.Threading;
+using System.Xml.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Xml.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -48,6 +47,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public CPOClient        CPOClient         { get; }
 
+        public IPPort RemotePort
+            => CPOClient?.RemotePort;
+
+        public RemoteCertificateValidationCallback RemoteCertificateValidator
+            => CPOClient?.RemoteCertificateValidator;
+
         /// <summary>
         /// The CPO server.
         /// </summary>
@@ -59,15 +64,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public CPOServerLogger  CPOServerLogger   { get; }
 
         /// <summary>
+        /// The default request timeout for this client.
+        /// </summary>
+        public TimeSpan?        RequestTimeout    { get; }
+
+
+        /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
             => CPOServer.DNSClient;
-
-        /// <summary>
-        /// The default request timeout for this client.
-        /// </summary>
-        public TimeSpan?        RequestTimeout    { get; }
 
         #endregion
 
@@ -1089,6 +1095,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -1117,6 +1124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           String                               AuthenticationDataURI           = CPOClient.DefaultAuthenticationDataURI,
                           String                               HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
+                          Byte?                                MaxNumberOfRetries              = CPOClient.DefaultMaxNumberOfRetries,
 
                           String                               ServerName                      = CPOServer.DefaultHTTPServerName,
                           String                               ServiceId                       = null,
@@ -1148,6 +1156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  AuthenticationDataURI,
                                  HTTPUserAgent,
                                  RequestTimeout,
+                                 MaxNumberOfRetries,
                                  DNSClient,
                                  ClientLoggingContext,
                                  LogfileCreator),
@@ -1284,6 +1293,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
+        public void Dispose()
+        { }
 
     }
 

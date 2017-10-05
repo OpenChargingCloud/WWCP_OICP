@@ -20,9 +20,11 @@
 using System;
 using System.Xml.Linq;
 using System.Threading;
+using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -57,6 +59,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public DateTime?                      LastCall                        { get; }
 
+        private HashSet<Operator_Id>          _OperatorIdFilter;
+
+        /// <summary>
+        /// Only return EVSEs belonging to the given optional enumeration of EVSE operators.
+        /// </summary>
+        public IEnumerable<Operator_Id>       OperatorIdFilter
+            => _OperatorIdFilter;
+
+        private HashSet<Country>              _CountryCodeFilter;
+
+        /// <summary>
+        /// An optional enumeration of countries whose EVSE's a provider wants to retrieve.
+        /// </summary>
+        public IEnumerable<Country>           CountryCodeFilter
+            => _CountryCodeFilter;
+
         /// <summary>
         /// The optional response format for representing geo coordinates.
         /// </summary>
@@ -74,8 +92,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
-        /// <param name="LastCall">An optional timestamp of the last call.</param>
+        /// <param name="LastCall">An optional timestamp of the last call. Cannot be combined with 'SearchCenter'.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for representing geo coordinates.</param>
+        /// <param name="OperatorIdFilter">Only return EVSEs belonging to the given optional enumeration of EVSE operators.</param>
+        /// <param name="CountryCodeFilter">An optional enumeration of countries whose EVSE's a provider wants to retrieve.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -86,6 +106,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                    Single                          DistanceKM                     = 0f,
                                    DateTime?                       LastCall                       = null,
                                    GeoCoordinatesResponseFormats?  GeoCoordinatesResponseFormat   = GeoCoordinatesResponseFormats.DecimalDegree,
+                                   IEnumerable<Operator_Id>        OperatorIdFilter               = null,
+                                   IEnumerable<Country>            CountryCodeFilter              = null,
 
                                    DateTime?                       Timestamp                      = null,
                                    CancellationToken?              CancellationToken              = null,
@@ -110,6 +132,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             this.SearchCenter                  = SearchCenter;
             this.DistanceKM                    = DistanceKM;
             this.LastCall                      = LastCall;
+            this._OperatorIdFilter             = OperatorIdFilter  != null ? new HashSet<Operator_Id>(OperatorIdFilter)  : new HashSet<Operator_Id>();
+            this._CountryCodeFilter            = CountryCodeFilter != null ? new HashSet<Country>    (CountryCodeFilter) : new HashSet<Country>();
             this.GeoCoordinatesResponseFormat  = GeoCoordinatesResponseFormat.HasValue
                                                      ? GeoCoordinatesResponseFormat.Value
                                                      : GeoCoordinatesResponseFormats.DecimalDegree;
@@ -118,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-
+        //ToDo: Add OperatorIdFilter and CountryCodeFilter
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -197,10 +221,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PullEVSEDataRequest _PullEVSEData;
-
             if (TryParse(PullEVSEDataXML,
-                         out _PullEVSEData,
+                         out PullEVSEDataRequest _PullEVSEData,
                          CustomPullEVSEDataRequestParser,
                          OnException,
 
@@ -241,10 +263,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            PullEVSEDataRequest _PullEVSEData;
-
             if (TryParse(PullEVSEDataText,
-                         out _PullEVSEData,
+                         out PullEVSEDataRequest _PullEVSEData,
                          CustomPullEVSEDataRequestParser,
                          OnException,
 
@@ -261,6 +281,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        //ToDo: Add OperatorIdFilter and CountryCodeFilter
         #region (static) TryParse(PullEVSEDataXML,  out PullEVSEData, ..., OnException = null, ...)
 
         /// <summary>
@@ -355,6 +376,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        PullEVSEDataXML.MapValueOrFail    (OICPNS.EVSEData + "GeoCoordinatesResponseFormat",
                                                                                           s => (GeoCoordinatesResponseFormats) Enum.Parse(typeof(GeoCoordinatesResponseFormats), s)),
 
+                                                       null,
+                                                       null,
+
                                                        Timestamp,
                                                        CancellationToken,
                                                        EventTrackingId,
@@ -438,6 +462,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        //ToDo: Add OperatorIdFilter and CountryCodeFilter
         #region ToXML(CustomPullEVSEDataRequestSerializer = null)
 
         /// <summary>
@@ -569,7 +594,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                      (SearchCenter.    HasValue &&  PullEVSEData.SearchCenter.    HasValue && SearchCenter.    Value.Equals(PullEVSEData.SearchCenter.Value))) &&
 
                    ((!LastCall.        HasValue && !PullEVSEData.LastCall.        HasValue) ||
-                     (LastCall.        HasValue &&  PullEVSEData.LastCall.        HasValue && LastCall.        Value.Equals(PullEVSEData.LastCall.    Value)));
+                     (LastCall.        HasValue &&  PullEVSEData.LastCall.        HasValue && LastCall.        Value.Equals(PullEVSEData.LastCall.    Value))) &&
+
+                   _OperatorIdFilter. SetEquals(PullEVSEData._OperatorIdFilter) &&
+                   _CountryCodeFilter.SetEquals(PullEVSEData._CountryCodeFilter);
 
         }
 
@@ -589,16 +617,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             {
 
                 return ProviderId.                  GetHashCode() * 17 ^
-                       DistanceKM.                  GetHashCode() * 11 ^
-                       GeoCoordinatesResponseFormat.GetHashCode() *  7 ^
+                       DistanceKM.                  GetHashCode() * 13 ^
+                       GeoCoordinatesResponseFormat.GetHashCode() * 11 ^
 
                        (SearchCenter.        HasValue
-                            ? SearchCenter.       GetHashCode() * 5
+                            ? SearchCenter.       GetHashCode()   *  7
                             : 0) ^
 
                        (!LastCall.HasValue
-                            ? LastCall.GetHashCode()
-                            : 0);
+                            ? LastCall.GetHashCode()              *  5
+                            : 0) ^
+
+                       _OperatorIdFilter. GetHashCode()           *  3 ^
+
+                       _CountryCodeFilter.GetHashCode();
 
             }
         }

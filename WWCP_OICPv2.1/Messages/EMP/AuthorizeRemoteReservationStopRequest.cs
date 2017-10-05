@@ -22,6 +22,7 @@ using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using System.Threading;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -150,10 +151,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop;
-
             if (TryParse(AuthorizeRemoteReservationStopXML,
-                         out _AuthorizeRemoteReservationStop,
+                         out AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop,
                          CustomAuthorizeRemoteReservationStopRequestParser,
                          OnException,
 
@@ -196,10 +195,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop;
-
             if (TryParse(AuthorizeRemoteReservationStopText,
-                         out _AuthorizeRemoteReservationStop,
+                         out AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop,
                          CustomAuthorizeRemoteReservationStopRequestParser,
                          OnException,
 

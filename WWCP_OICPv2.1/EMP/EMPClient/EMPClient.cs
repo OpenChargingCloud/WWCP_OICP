@@ -843,6 +843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
@@ -861,6 +862,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
+                         Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          DNSClient                            DNSClient                    = null,
                          String                               LoggingContext               = EMPClientLogger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null)
@@ -876,6 +878,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -918,6 +921,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public EMPClient(String                               ClientId,
                          EMPClientLogger                      Logger,
@@ -930,6 +934,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          String                               URIPrefix                    = DefaultURIPrefix,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
+                         Byte                                 MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
@@ -943,6 +948,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -1006,7 +1012,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1162,7 +1168,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1227,7 +1233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1358,7 +1364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1422,7 +1428,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1543,7 +1549,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1606,7 +1612,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1753,7 +1759,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1816,7 +1822,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1831,7 +1837,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Request.EventTrackingId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.EVCOId,
+                                                     Request.Identification,
                                                      Request.SessionId,
                                                      Request.PartnerSessionId,
                                                      Request.PartnerProductId,
@@ -1970,7 +1976,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1984,7 +1990,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Request.EventTrackingId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.EVCOId,
+                                                     Request.Identification,
                                                      Request.SessionId,
                                                      Request.PartnerSessionId,
                                                      Request.PartnerProductId,
@@ -2036,7 +2042,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2186,7 +2192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2250,7 +2256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2399,7 +2405,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2465,7 +2471,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2615,7 +2621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2680,7 +2686,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2811,7 +2817,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {

@@ -32,16 +32,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
     public class EVSEInfo
     {
 
-        public ChargingPool_Id      PoolId        { get; private set; }
-        public Address              PoolAddress   { get; private set; }
-        public GeoCoordinate?       PoolLocation  { get; private set; }
-        public ChargingStation_Id   StationId     { get; private set; }
+        public WWCP.ChargingPool_Id      PoolId        { get; }
+        public Address                   PoolAddress   { get; }
+        public GeoCoordinate?            PoolLocation  { get; }
+        public WWCP.ChargingStation_Id   StationId     { get; }
 
 
-        public EVSEInfo(ChargingPool_Id      PoolId,
-                        Address              PoolAddress,
-                        GeoCoordinate?       PoolLocation,
-                        ChargingStation_Id   StationId)
+        public EVSEInfo(WWCP.ChargingPool_Id     PoolId,
+                        Address                  PoolAddress,
+                        GeoCoordinate?           PoolLocation,
+                        WWCP.ChargingStation_Id  StationId)
         {
 
             this.PoolId        = PoolId;

@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -140,10 +141,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        OnExceptionDelegate                                  OnException                               = null)
         {
 
-            ProviderAuthenticationData _ProviderAuthenticationData;
-
             if (TryParse(ProviderAuthenticationDataXML,
-                         out _ProviderAuthenticationData,
+                         out ProviderAuthenticationData _ProviderAuthenticationData,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,
                          OnException))
@@ -171,10 +170,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                        OnExceptionDelegate                                  OnException                               = null)
         {
 
-            ProviderAuthenticationData _ProviderAuthenticationData;
-
             if (TryParse(ProviderAuthenticationDataText,
-                         out _ProviderAuthenticationData,
+                         out ProviderAuthenticationData _ProviderAuthenticationData,
                          CustomProviderAuthenticationDataParser,
                          CustomAuthorizationIdentificationParser,
                          OnException))
