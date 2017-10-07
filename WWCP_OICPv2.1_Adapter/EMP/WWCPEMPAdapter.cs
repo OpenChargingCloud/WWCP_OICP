@@ -2749,20 +2749,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             if (LockTaken)
             {
 
-<<<<<<< HEAD
-                try
-                {
-
-                    Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-
-                    FlushServiceQueuesEvent?.Invoke(DateTime.UtcNow,
-                                                    this,
-                                                    TimeSpan.FromMilliseconds(_PullDataServiceEvery));
-
-                    var StartTime = DateTime.Now;
-
-                    var TimestampBeforeLastPullDataRun = DateTime.Now;
-=======
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
                 var StartTime = DateTime.UtcNow;
@@ -2772,7 +2758,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 {
 
                     var TimestampBeforeLastPullDataRun = DateTime.UtcNow;
->>>>>>> 7cec71eb95f5b850c2f1f68dca8d694c5218d3c4
 
                     //var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
                     //                                                  DefaultSearchCenter,
