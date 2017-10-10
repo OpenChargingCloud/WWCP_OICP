@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                LogfileCreatorDelegate      LogfileCreator              = null)
 
-            : base(EMPServer.SOAPServer,
+            : base(EMPServer?.SOAPServer,
                    Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                    LogHTTPRequest_toConsole,
@@ -143,55 +143,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            #region Initial checks
-
-            if (EMPServer == null)
-                throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
-
-            #endregion
-
-            this.EMPServer = EMPServer;
+            this.EMPServer = EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
             #region Register AuthorizeStart/Stop and SendCDR log events
 
-            RegisterEvent("AuthorizeStart",
+            RegisterEvent("AuthorizeStartRequest",
                           handler => EMPServer.OnAuthorizeStartSOAPRequest += handler,
                           handler => EMPServer.OnAuthorizeStartSOAPRequest -= handler,
-                          "Authorize", "All").
+                          "AuthorizeStart", "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthorizeStarted",
+            RegisterEvent("AuthorizeStartResponse",
                           handler => EMPServer.OnAuthorizeStartSOAPResponse += handler,
                           handler => EMPServer.OnAuthorizeStartSOAPResponse -= handler,
-                          "Authorize", "All").
+                          "AuthorizeStart", "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
-            RegisterEvent("AuthorizeStop",
+            RegisterEvent("AuthorizeStopRequest",
                           handler => EMPServer.OnAuthorizeStopSOAPRequest += handler,
                           handler => EMPServer.OnAuthorizeStopSOAPRequest -= handler,
-                          "Authorize", "All").
+                          "AuthorizeStop", "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("AuthorizeStopped",
+            RegisterEvent("AuthorizeStopResponse",
                           handler => EMPServer.OnAuthorizeStopSOAPResponse += handler,
                           handler => EMPServer.OnAuthorizeStopSOAPResponse -= handler,
-                          "Authorize", "All").
+                          "AuthorizeStop", "Authorize", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
 
-            RegisterEvent("ChargeDetailRecordSend",
+            RegisterEvent("ChargeDetailRecordRequest",
                           handler => EMPServer.OnChargeDetailRecordSOAPRequest += handler,
                           handler => EMPServer.OnChargeDetailRecordSOAPRequest -= handler,
                           "CDR", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
-            RegisterEvent("ChargeDetailRecordSent",
+            RegisterEvent("ChargeDetailRecordResponse",
                           handler => EMPServer.OnChargeDetailRecordSOAPResponse += handler,
                           handler => EMPServer.OnChargeDetailRecordSOAPResponse -= handler,
                           "CDR", "All").
