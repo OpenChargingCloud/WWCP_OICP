@@ -490,9 +490,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var OperatorId      = Request.OperatorId.    ToWWCP();
                 var Identification  = Request.Identification.ToWWCP();
-                var EVSEId          = Request.EVSEId.HasValue
-                                          ? Request.EVSEId.Value.ToWWCP()
-                                          : new WWCP.EVSE_Id?();
+                var EVSEId          = Request.EVSEId?.       ToWWCP();
                 var ProductId       = Request.PartnerProductId.HasValue
                                           ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
                                           : null;
@@ -500,13 +498,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-
-                var StartTime = DateTime.UtcNow;
-
                 if (EVSEId.HasValue)
                 {
 
                     #region Send OnAuthorizeEVSEStartRequest event
+
+                    var StartTime = DateTime.UtcNow;
 
                     try
                     {
@@ -635,6 +632,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 {
 
                     #region Send OnAuthorizeStartRequest event
+
+                    var StartTime = DateTime.UtcNow;
 
                     try
                     {
@@ -775,10 +774,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Map parameter values
 
-                var SessionId            = Request.SessionId.   ToWWCP();
-                var AuthIdentification   = WWCP.AuthIdentification.FromAuthToken(Request.UID.ToWWCP());
-                var EVSEId               = Request.EVSEId.HasValue ? Request.EVSEId.Value.ToWWCP() : null;
-                var OperatorId           = Request.OperatorId.  ToWWCP();
+                var SessionId            = Request.SessionId.     ToWWCP();
+                var AuthIdentification   = Request.Identification.ToWWCP();
+                var EVSEId               = Request.EVSEId?.       ToWWCP();
+                var OperatorId           = Request.OperatorId.    ToWWCP();
 
                 #endregion
 
