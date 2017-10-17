@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -122,10 +123,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            SendChargeDetailRecordRequest _SendChargeDetailRecord;
-
             if (TryParse(SendChargeDetailRecordXML,
-                         out _SendChargeDetailRecord,
+                         out SendChargeDetailRecordRequest _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
                          OnException,
@@ -163,10 +162,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            SendChargeDetailRecordRequest _SendChargeDetailRecord;
-
             if (TryParse(SendChargeDetailRecordText,
-                         out _SendChargeDetailRecord,
+                         out SendChargeDetailRecordRequest _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
                          OnException,
@@ -227,7 +224,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, SendChargeDetailRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, SendChargeDetailRecordXML, e);
 
                 SendChargeDetailRecord = null;
                 return false;
@@ -279,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, SendChargeDetailRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, SendChargeDetailRecordText, e);
             }
 
             SendChargeDetailRecord = null;

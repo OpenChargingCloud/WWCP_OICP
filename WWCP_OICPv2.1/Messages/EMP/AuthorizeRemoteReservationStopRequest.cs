@@ -22,6 +22,7 @@ using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using System.Threading;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -150,10 +151,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop;
-
             if (TryParse(AuthorizeRemoteReservationStopXML,
-                         out _AuthorizeRemoteReservationStop,
+                         out AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop,
                          CustomAuthorizeRemoteReservationStopRequestParser,
                          OnException,
 
@@ -196,10 +195,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop;
-
             if (TryParse(AuthorizeRemoteReservationStopText,
-                         out _AuthorizeRemoteReservationStop,
+                         out AuthorizeRemoteReservationStopRequest _AuthorizeRemoteReservationStop,
                          CustomAuthorizeRemoteReservationStopRequestParser,
                          OnException,
 
@@ -282,7 +279,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteReservationStopXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteReservationStopXML, e);
 
                 AuthorizeRemoteReservationStop = null;
                 return false;
@@ -337,7 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteReservationStopText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteReservationStopText, e);
             }
 
             AuthorizeRemoteReservationStop = null;

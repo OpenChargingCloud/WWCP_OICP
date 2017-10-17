@@ -18,12 +18,11 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -121,10 +120,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            PullAuthenticationDataRequest _PullAuthenticationData;
-
             if (TryParse(PullAuthenticationDataXML,
-                         out _PullAuthenticationData,
+                         out PullAuthenticationDataRequest _PullAuthenticationData,
                          CustomPullAuthenticationDataRequestParser,
                          OnException,
 
@@ -166,10 +163,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            PullAuthenticationDataRequest _PullAuthenticationData;
-
             if (TryParse(PullAuthenticationDataText,
-                         out _PullAuthenticationData,
+                         out PullAuthenticationDataRequest _PullAuthenticationData,
                          CustomPullAuthenticationDataRequestParser,
                          OnException,
 
@@ -244,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PullAuthenticationDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, PullAuthenticationDataXML, e);
 
                 PullAuthenticationData = null;
                 return false;
@@ -300,7 +295,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, PullAuthenticationDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, PullAuthenticationDataText, e);
             }
 
             PullAuthenticationData = null;

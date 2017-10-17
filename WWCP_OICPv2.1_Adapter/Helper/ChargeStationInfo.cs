@@ -48,9 +48,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region StationId
 
-        private ChargingStation_Id? _StationId;
+        private WWCP.ChargingStation_Id? _StationId;
 
-        public ChargingStation_Id StationId
+        public WWCP.ChargingStation_Id StationId
         {
 
             get
@@ -123,25 +123,25 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 return;
 
             EVSE_Id            __EVSEId;
-            ChargingStation_Id __StationId;
+            WWCP.ChargingStation_Id __StationId;
 
 
             // 1st: Try to use the given ChargingStationId from the XML...
-            if (ChargingStation_Id.TryParse(StationXMLId, out __StationId))
+            if (WWCP.ChargingStation_Id.TryParse(StationXMLId, out __StationId))
                 _StationId = __StationId;
 
             else if (EVSE_Id.TryParse(StationXMLId, out __EVSEId))
-                _StationId = ChargingStation_Id.Parse(__EVSEId.OperatorId.ToWWCP().Value, __EVSEId.Suffix);
+                _StationId = WWCP.ChargingStation_Id.Parse(WWCP.ChargingStation_Id.Parse(__EVSEId.OperatorId.ToWWCP().Value, __EVSEId.Suffix).ToString());
 
 
             else if (StationXMLId.StartsWith(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.DIN),      StringComparison.Ordinal))
             {
 
-                if (ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.DIN) +
-                                                "S" +
-                                                StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.DIN).Length + 1),
+                if (WWCP.ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.DIN) +
+                                                     "S" +
+                                                     StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.DIN).Length + 1),
 
-                                                out __StationId))
+                                                     out __StationId))
 
                     _StationId = __StationId;
 
@@ -150,11 +150,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             else if (StationXMLId.StartsWith(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO),      StringComparison.Ordinal))
             {
 
-                if (ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO) +
-                                                "S" +
-                                                StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO).Length + 1),
+                if (WWCP.ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO) +
+                                                     "S" +
+                                                     StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO).Length + 1),
 
-                                                out __StationId))
+                                                     out __StationId))
 
                     _StationId = __StationId;
 
@@ -163,11 +163,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             else if (StationXMLId.StartsWith(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO_STAR), StringComparison.Ordinal))
             {
 
-                if (ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO_STAR) +
-                                                "S" +
-                                                StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO_STAR).Length + 2),
+                if (WWCP.ChargingStation_Id.TryParse(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO_STAR) +
+                                                     "S" +
+                                                     StationXMLId.Substring(_EVSEIds[0].OperatorId.ToWWCP().Value.ToString(WWCP.OperatorIdFormats.ISO_STAR).Length + 2),
 
-                                                out __StationId))
+                                                     out __StationId))
 
                     _StationId = __StationId;
 
@@ -176,13 +176,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             // 2nd:  Try to use a modified StationXML Id...
             if (!_StationId.HasValue && StationXMLId.IsNotNullOrEmpty())
-                _StationId = ChargingStation_Id.Parse(_EVSEIds[0].OperatorId.ToWWCP().Value,
-                                                      InvalidCharactersRegEx.Replace(MappedCharactersRegEx.Replace(StationXMLId.ToUpper(), "*"), "").SubstringMax(50));
+                _StationId = WWCP.ChargingStation_Id.Parse(_EVSEIds[0].OperatorId.ToWWCP().Value,
+                                                           InvalidCharactersRegEx.Replace(MappedCharactersRegEx.Replace(StationXMLId.ToUpper(), "*"), "").SubstringMax(50));
 
 
             // 3rd: Try to use the given EVSE Ids to find a common prefix...
             if (!_StationId.HasValue && StationXMLId.IsNullOrEmpty())
-                _StationId = ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP().Value));
+                _StationId = WWCP.ChargingStation_Id.Create(_EVSEIds.Select(evse => evse.ToWWCP().Value));
 
 
             if (!_StationId.HasValue)

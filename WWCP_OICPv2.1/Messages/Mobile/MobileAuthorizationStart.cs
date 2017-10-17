@@ -24,6 +24,7 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -283,11 +284,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizationStart _MobileAuthorizationStart;
-
             if (TryParse(Request,
                          MobileAuthorizationStartXML,
-                         out _MobileAuthorizationStart,
+                         out MobileAuthorizationStart _MobileAuthorizationStart,
                          CustomMobileAuthorizationStartParser,
                          CustomAddressParser,
                          CustomStatusCodeParser,
@@ -323,11 +322,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
         {
 
-            MobileAuthorizationStart _MobileAuthorizationStart;
-
             if (TryParse(Request,
                          MobileAuthorizationStartText,
-                         out _MobileAuthorizationStart,
+                         out MobileAuthorizationStart _MobileAuthorizationStart,
                          CustomMobileAuthorizationStartParser,
                          CustomAddressParser,
                          CustomStatusCodeParser,
@@ -428,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, MobileAuthorizationStartXML, e);
+                OnException?.Invoke(DateTime.UtcNow, MobileAuthorizationStartXML, e);
 
                 MobileAuthorizationStart = null;
                 return false;
@@ -476,7 +473,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, MobileAuthorizationStartText, e);
+                OnException?.Invoke(DateTime.UtcNow, MobileAuthorizationStartText, e);
             }
 
             MobileAuthorizationStart = null;
@@ -512,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                               ? StatusCode.Value.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer)
                               : null,
 
-                          TermsOfUse.IsNotNullOrEmpty()
+                          TermsOfUse.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "TermsOfUse",        TermsOfUse.FirstText())
                               : null,
 
@@ -528,7 +525,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                               CustomAddressSerializer)
                               : null,
 
-                          AdditionalInfo.IsNotNullOrEmpty()
+                          AdditionalInfo.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "AdditionalInfo",        AdditionalInfo.FirstText())
                               : null,
 
@@ -536,7 +533,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                           //    ? new XElement(OICPNS.MobileAuthorization + "EnAdditionalInfo",      AdditionalInfo.FirstText())
                           //    : null
 
-                          ChargingStationName.IsNotNullOrEmpty()
+                          ChargingStationName.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.MobileAuthorization + "ChargingStationName",   ChargingStationName.FirstText())
                               : null
 
@@ -812,8 +809,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                 : base(MobileAuthorizationStart?.Request,
                        MobileAuthorizationStart.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? MobileAuthorizationStart.CustomValues.Concat(CustomData)
-                                 : MobileAuthorizationStart.CustomValues
+                                 ? MobileAuthorizationStart.CustomData.Concat(CustomData)
+                                 : MobileAuthorizationStart.CustomData
                            : CustomData)
 
             {

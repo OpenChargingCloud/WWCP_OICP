@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 #endregion
 
@@ -56,7 +57,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName"> An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
@@ -86,17 +88,22 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
+        /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static ICSORoamingProvider
+        public static OICPv2_1.CPO.WWCPCPOAdapter
 
             CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
+                                              I18NString                                                      Description,
 
                                               String                                                          RemoteHostname,
                                               IPPort                                                          RemoteTCPPort                                   = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
+                                              LocalCertificateSelectionCallback                               LocalCertificateSelector                        = null,
                                               X509Certificate                                                 ClientCert                                      = null,
                                               String                                                          URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
                                               String                                                          EVSEDataURI                                     = OICPv2_1.CPO.CPOClient.DefaultEVSEDataURI,
@@ -104,7 +111,8 @@ namespace org.GraphDefined.WWCP
                                               String                                                          AuthorizationURI                                = OICPv2_1.CPO.CPOClient.DefaultAuthorizationURI,
                                               String                                                          AuthenticationDataURI                           = OICPv2_1.CPO.CPOClient.DefaultAuthenticationDataURI,
                                               String                                                          HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                                       QueryTimeout                                    = null,
+                                              TimeSpan?                                                       RequestTimeout                                  = null,
+                                              Byte?                                                           MaxNumberOfRetries                              = OICPv2_1.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
                                               String                                                          ServerName                                      = OICPv2_1.CPO.CPOServer.DefaultHTTPServerName,
                                               String                                                          ServiceId                                       = null,
@@ -134,6 +142,7 @@ namespace org.GraphDefined.WWCP
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
+                                              TimeSpan?                                                       CDRCheckEvery                                   = null,
 
                                               Boolean                                                         DisablePushData                                 = false,
                                               Boolean                                                         DisablePushStatus                               = false,
@@ -142,6 +151,9 @@ namespace org.GraphDefined.WWCP
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
+
+                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
+                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -164,11 +176,13 @@ namespace org.GraphDefined.WWCP
 
             var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                      Name,
+                                                                     Description,
                                                                      RoamingNetwork,
 
                                                                      RemoteHostname,
                                                                      RemoteTCPPort,
                                                                      RemoteCertificateValidator,
+                                                                     LocalCertificateSelector,
                                                                      ClientCert,
                                                                      RemoteHTTPVirtualHost,
                                                                      URIPrefix,
@@ -177,7 +191,8 @@ namespace org.GraphDefined.WWCP
                                                                      AuthorizationURI,
                                                                      AuthenticationDataURI,
                                                                      HTTPUserAgent,
-                                                                     QueryTimeout,
+                                                                     RequestTimeout,
+                                                                     MaxNumberOfRetries,
 
                                                                      ServerName,
                                                                      ServiceId,
@@ -207,12 +222,15 @@ namespace org.GraphDefined.WWCP
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
+                                                                     CDRCheckEvery,
 
                                                                      DisablePushData,
                                                                      DisablePushStatus,
                                                                      DisableAuthentication,
                                                                      DisableSendChargeDetailRecords,
 
+                                                                     PublicKeyRing,
+                                                                     SecretKeyRing,
                                                                      DNSClient);
 
 
@@ -220,7 +238,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator);
+                                                Configurator) as OICPv2_1.CPO.WWCPCPOAdapter;
 
         }
 
@@ -247,7 +265,8 @@ namespace org.GraphDefined.WWCP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
@@ -269,17 +288,22 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
+        /// 
+        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
+        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static ICSORoamingProvider
+        public static OICPv2_1.CPO.WWCPCPOAdapter
 
             CreateOICPv2_1_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               CSORoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
+                                              I18NString                                                      Description,
                                               SOAPServer                                                      SOAPServer,
 
                                               String                                                          RemoteHostname,
                                               IPPort                                                          RemoteTCPPort                                   = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
+                                              LocalCertificateSelectionCallback                               LocalCertificateSelector                        = null,
                                               X509Certificate                                                 ClientCert                                      = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,
                                               String                                                          URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
@@ -288,7 +312,8 @@ namespace org.GraphDefined.WWCP
                                               String                                                          AuthorizationURI                                = OICPv2_1.CPO.CPOClient.DefaultAuthorizationURI,
                                               String                                                          AuthenticationDataURI                           = OICPv2_1.CPO.CPOClient.DefaultAuthenticationDataURI,
                                               String                                                          HTTPUserAgent                                   = OICPv2_1.CPO.CPOClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                                       QueryTimeout                                    = null,
+                                              TimeSpan?                                                       RequestTimeout                                  = null,
+                                              Byte?                                                           MaxNumberOfRetries                              = OICPv2_1.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
                                               String                                                          ServerURIPrefix                                 = null,
                                               String                                                          ServiceId                                       = null,
@@ -313,6 +338,7 @@ namespace org.GraphDefined.WWCP
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
+                                              TimeSpan?                                                       CDRCheckEvery                                   = null,
 
                                               Boolean                                                         DisablePushData                                 = false,
                                               Boolean                                                         DisablePushStatus                               = false,
@@ -321,6 +347,9 @@ namespace org.GraphDefined.WWCP
 
                                               Action<OICPv2_1.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
+
+                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
+                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -347,12 +376,14 @@ namespace org.GraphDefined.WWCP
 
             var NewRoamingProvider = new OICPv2_1.CPO.WWCPCPOAdapter(Id,
                                                                      Name,
+                                                                     Description,
                                                                      RoamingNetwork,
 
                                                                      new OICPv2_1.CPO.CPOClient(Id.ToString(),
                                                                                                 RemoteHostname,
                                                                                                 RemoteTCPPort,
                                                                                                 RemoteCertificateValidator,
+                                                                                                LocalCertificateSelector,
                                                                                                 ClientCert,
                                                                                                 RemoteHTTPVirtualHost,
                                                                                                 URIPrefix,
@@ -361,7 +392,8 @@ namespace org.GraphDefined.WWCP
                                                                                                 AuthorizationURI,
                                                                                                 AuthenticationDataURI,
                                                                                                 HTTPUserAgent,
-                                                                                                QueryTimeout,
+                                                                                                RequestTimeout,
+                                                                                                MaxNumberOfRetries,
                                                                                                 DNSClient,
                                                                                                 ClientLoggingContext,
                                                                                                 LogfileCreator),
@@ -389,17 +421,22 @@ namespace org.GraphDefined.WWCP
                                                                      IncludeEVSEs,
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
+                                                                     CDRCheckEvery,
 
                                                                      DisablePushData,
                                                                      DisablePushStatus,
                                                                      DisableAuthentication,
-                                                                     DisableSendChargeDetailRecords);
+                                                                     DisableSendChargeDetailRecords,
+
+                                                                     PublicKeyRing,
+                                                                     SecretKeyRing,
+                                                                     DNSClient);
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator);
+                                                Configurator) as OICPv2_1.CPO.WWCPCPOAdapter;
 
         }
 

@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     #region OnPullEVSEData
 
     /// <summary>
-    /// A delegate called whenever a 'pull EVSE data' request will be send.
+    /// A delegate called whenever a 'PullEVSEData' request will be send.
     /// </summary>
     public delegate Task OnPullEVSEDataRequestHandler (DateTime                        LogTimestamp,
                                                        DateTime                        RequestTimestamp,
@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        TimeSpan                        RequestTimeout);
 
     /// <summary>
-    /// A delegate called whenever a response for a 'pull EVSE data' request had been received.
+    /// A delegate called whenever a response for a 'PullEVSEData' request had been received.
     /// </summary>
     public delegate Task OnPullEVSEDataResponseHandler(DateTime                        Timestamp,
                                                        IEMPClient                      Sender,
@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                        DateTime?                       LastCall,
                                                        GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
                                                        TimeSpan                        RequestTimeout,
-                                                       EVSEData                        Result,
+                                                       PullEVSEDataResponse            Result,
                                                        TimeSpan                        Duration);
 
     #endregion
@@ -169,7 +169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                           EventTracking_Id                                          EventTrackingId,
                                                                           Provider_Id                                               ProviderId,
                                                                           EVSE_Id                                                   EVSEId,
-                                                                          EVCO_Id                                                   EVCOId,
+                                                                          Identification                                            Identification,
                                                                           Session_Id?                                               SessionId,
                                                                           PartnerSession_Id?                                        PartnerSessionId,
                                                                           PartnerProduct_Id?                                        PartnerProductId,
@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                           EventTracking_Id                                          EventTrackingId,
                                                                           Provider_Id                                               ProviderId,
                                                                           EVSE_Id                                                   EVSEId,
-                                                                          EVCO_Id                                                   EVCOId,
+                                                                          Identification                                            Identification,
                                                                           Session_Id?                                               SessionId,
                                                                           PartnerSession_Id?                                        PartnerSessionId,
                                                                           PartnerProduct_Id?                                        PartnerProductId,

@@ -27,13 +27,9 @@ using System.Xml.Linq;
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public delegate T        CustomXMLParserDelegate<T>        (XElement XML,  T Data);
-
     public delegate T        CustomJObjectParserDelegate<T>    (JObject  JSON, T Data);
 
     public delegate T        CustomJArrayParserDelegate<T>     (JArray   JSON, T Data);
-
-    public delegate XElement CustomXMLSerializerDelegate<T>    (T ResponseBuilder, XElement XML);
 
     public delegate JObject  CustomJObjectSerializerDelegate<T>(T ResponseBuilder, JObject JSON);
 

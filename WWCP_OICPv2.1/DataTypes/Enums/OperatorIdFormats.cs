@@ -15,31 +15,29 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public interface ICustomDataBuilder
+    /// <summary>
+    /// The different formats of charging station operator identifications.
+    /// </summary>
+    public enum OperatorIdFormats
     {
 
-        Boolean HasCustomData { get; }
+        /// <summary>
+        /// The old DIN format.
+        /// </summary>
+        DIN,
 
-        void SetCustomData(string Key, object Value);
+        /// <summary>
+        /// The new ISO format.
+        /// </summary>
+        ISO,
 
-        object GetCustomData(string Key);
-
-        T GetCustomDataAs<T>(string Key);
-
-        void IfDefined(string Key, Action<object> ValueDelegate);
-
-        void IfDefinedAs<T>(String Key, Action<T> ValueDelegate);
-
-        bool IsDefined(string Key);
+        /// <summary>
+        /// The new ISO format with a '*' as separator.
+        /// </summary>
+        ISO_STAR
 
     }
 

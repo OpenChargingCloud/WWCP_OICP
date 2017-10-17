@@ -42,7 +42,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Free for everyone who pays.
         /// </summary>
-        Paying_publicly_accessible
+        Paying_publicly_accessible,
+
+        /// <summary>
+        /// This station is only usable for testing.
+        /// </summary>
+        Test_Station
 
     }
 

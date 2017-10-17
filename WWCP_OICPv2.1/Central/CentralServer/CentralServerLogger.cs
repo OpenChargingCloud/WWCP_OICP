@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
     /// <summary>
     /// An OICP Central server logger.
     /// </summary>
-    public class CentralServerLogger : HTTPLogger
+    public class CentralServerLogger : HTTPServerLogger
     {
 
         #region Data

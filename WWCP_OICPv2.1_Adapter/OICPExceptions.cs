@@ -19,27 +19,29 @@
 
 using System;
 
+using org.GraphDefined.WWCP;
+
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
-    public interface ICustomDataBuilder
+    public class EVSEToOICPException : OICPException
     {
 
-        Boolean HasCustomData { get; }
+        public EVSE  EVSE   { get; }
 
-        void SetCustomData(string Key, object Value);
+        public EVSEToOICPException(EVSE       EVSE,
+                                   Exception  InnerException)
 
-        object GetCustomData(string Key);
+            : base("Could not convert EVSE to an EVSERecord!",
+                   InnerException)
 
-        T GetCustomDataAs<T>(string Key);
+        {
 
-        void IfDefined(string Key, Action<object> ValueDelegate);
+            this.EVSE = EVSE;
 
-        void IfDefinedAs<T>(String Key, Action<T> ValueDelegate);
-
-        bool IsDefined(string Key);
+        }
 
     }
 

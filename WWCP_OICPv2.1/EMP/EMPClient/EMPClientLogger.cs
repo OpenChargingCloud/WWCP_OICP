@@ -37,7 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// An OICP EMP client (HTTP/SOAP client) logger.
         /// </summary>
-        public class EMPClientLogger : HTTPLogger
+        public class EMPClientLogger : HTTPClientLogger
         {
 
             #region Data
@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             /// <summary>
             /// The attached OICP EMP client.
             /// </summary>
-            public EMPClient EMPClient { get; }
+            public IEMPClient  EMPClient   { get; }
 
             #endregion
 
@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public EMPClientLogger(EMPClient                   EMPClient,
+            public EMPClientLogger(IEMPClient                  EMPClient,
                                    String                      Context,
 
                                    HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
@@ -129,7 +129,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                    LogfileCreatorDelegate      LogfileCreator              = null)
 
-                : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : base(EMPClient,
+                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                        LogHTTPRequest_toConsole,
                        LogHTTPResponse_toConsole,
@@ -152,10 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Initial checks
 
-                if (EMPClient == null)
-                    throw new ArgumentNullException(nameof(EMPClient), "The given EMP client must not be null!");
-
-                this.EMPClient = EMPClient;
+                this.EMPClient = EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMP client must not be null!");
 
                 #endregion
 

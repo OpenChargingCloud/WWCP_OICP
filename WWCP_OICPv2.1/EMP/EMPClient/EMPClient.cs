@@ -29,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using static org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPClient;
 
 #endregion
 
@@ -87,6 +88,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// An optional default e-mobility provider identification.
+        /// </summary>
+        public Provider_Id?     DefaultProviderId       { get; }
 
         /// <summary>
         /// The HTTP/SOAP/XML URI for OICP EvseData requests.
@@ -576,6 +582,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
+        public CustomXMLParserDelegate<PullEVSEDataResponse>                        CustomPullEVSEDataResponseParser                          { get; set; }
         public CustomXMLParserDelegate<EVSEData>                                    CustomEVSEDataParser                                      { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEData>                            CustomOperatorEVSEDataParser                              { get; set; }
         public CustomXMLParserDelegate<EVSEDataRecord>                              CustomEVSEDataRecordParser                                { get; set; }
@@ -820,6 +827,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+
+        public event OnDataReadDelegate OnDataRead;
+
         #endregion
 
         #region Constructor(s)
@@ -836,39 +846,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
+        /// 
+        /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
+        /// 
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public EMPClient(String                               ClientId,
                          String                               Hostname,
-                         IPPort                               RemotePort                  = null,
-                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                         X509Certificate                      ClientCert                  = null,
-                         String                               HTTPVirtualHost             = null,
-                         String                               URIPrefix                   = DefaultURIPrefix,
-                         String                               EVSEDataURI                 = DefaultEVSEDataURI,
-                         String                               EVSEStatusURI               = DefaultEVSEStatusURI,
-                         String                               AuthenticationDataURI       = DefaultAuthenticationDataURI,
-                         String                               ReservationURI              = DefaultReservationURI,
-                         String                               AuthorizationURI            = DefaultAuthorizationURI,
-                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                         TimeSpan?                            RequestTimeout              = null,
-                         DNSClient                            DNSClient                   = null,
-                         String                               LoggingContext              = EMPClientLogger.DefaultContext,
-                         LogfileCreatorDelegate               LogfileCreator              = null)
+                         IPPort                               RemotePort                   = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
+                         X509Certificate                      ClientCert                   = null,
+                         String                               HTTPVirtualHost              = null,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
+                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
+                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
+                         String                               ReservationURI               = DefaultReservationURI,
+                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+
+                         Provider_Id?                         DefaultProviderId            = null,
+
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                            RequestTimeout               = null,
+                         Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         DNSClient                            DNSClient                    = null,
+                         String                               LoggingContext               = EMPClientLogger.DefaultContext,
+                         LogfileCreatorDelegate               LogfileCreator               = null)
 
             : base(ClientId,
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -882,6 +903,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
 
             #endregion
+
+            this.DefaultProviderId      = DefaultProviderId;
 
             this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
             this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
@@ -907,33 +930,44 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// 
+        /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
+        /// 
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public EMPClient(String                               ClientId,
                          EMPClientLogger                      Logger,
                          String                               Hostname,
-                         IPPort                               RemotePort                  = null,
-                         RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                         X509Certificate                      ClientCert                  = null,
-                         String                               HTTPVirtualHost             = null,
-                         String                               URIPrefix                   = DefaultURIPrefix,
-                         String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                         TimeSpan?                            RequestTimeout              = null,
-                         DNSClient                            DNSClient                   = null)
+                         IPPort                               RemotePort                   = null,
+                         RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
+                         X509Certificate                      ClientCert                   = null,
+
+                         Provider_Id?                         DefaultProviderId            = null,
+
+                         String                               HTTPVirtualHost              = null,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                            RequestTimeout               = null,
+                         Byte                                 MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -950,6 +984,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
 
             #endregion
+
+            this.DefaultProviderId      = DefaultProviderId;
 
             this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
             this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
@@ -974,7 +1010,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
-        public async Task<HTTPResponse<EVSEData>>
+        public async Task<HTTPResponse<PullEVSEDataResponse>>
 
             PullEVSEData(PullEVSEDataRequest  Request)
 
@@ -991,13 +1027,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEData request must not be null!");
 
 
-            HTTPResponse<EVSEData> result = null;
+            HTTPResponse<PullEVSEDataResponse> result = null;
 
             #endregion
 
             #region Send OnPullEVSEDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1032,35 +1068,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + EVSEDataURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
-                _OICPClient.OnDataRead += async (TimeSpan, BytesRead, BytesExpected) => {
-                                                                                            Console.WriteLine(((Int32) TimeSpan.TotalMilliseconds) + "ms -> " +
-                                                                                            BytesRead + " bytes read" +
-                                                                                            (BytesExpected.HasValue ? " of " + BytesExpected + " bytes expected" : "") +
-                                                                                            "!");
-                                                                                        };
+                _OICPClient.OnDataRead += OnDataRead;
 
                 result = await _OICPClient.Query(_CustomPullEVSEDataSOAPRequestMapper(Request,
                                                                                       SOAP.Encapsulation(Request.ToXML())),
-                                                 "eRoamingPullEVSEData",
+                                                 "eRoamingPullEvseData",
                                                  RequestLogDelegate:   OnPullEVSEDataSOAPRequest,
                                                  ResponseLogDelegate:  OnPullEVSEDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
-                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEData.Parse(xml,
-                                                                                                                                 CustomEVSEDataParser,
-                                                                                                                                 CustomOperatorEVSEDataParser,
-                                                                                                                                 CustomEVSEDataRecordParser,
-                                                                                                                                 CustomAddressParser,
-                                                                                                                                 e)),
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent(Request,
+                                                                                                      (request, xml, onexception) => PullEVSEDataResponse.Parse(request,
+                                                                                                                                                                xml,
+                                                                                                                                                                CustomPullEVSEDataResponseParser,
+                                                                                                                                                                CustomEVSEDataParser,
+                                                                                                                                                                CustomOperatorEVSEDataParser,
+                                                                                                                                                                CustomEVSEDataRecordParser,
+                                                                                                                                                                CustomAddressParser,
+                                                                                                                                                                CustomStatusCodeParser,
+                                                                                                                                                                onexception)),
 
                                                  #endregion
 
@@ -1068,10 +1105,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                  OnSOAPFault: (timestamp, soapclient, httpresponse) => {
 
-                                                     DebugX.Log("'PullEVSEDataRequest' lead to a SOAP fault!");
+                                                     SendSOAPError(timestamp, soapclient, httpresponse.Content);
 
-                                                     return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                               IsFault: true);
+                                                     return new HTTPResponse<PullEVSEDataResponse>(
+
+                                                                httpresponse,
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.Content.ToString()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -1083,11 +1131,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendHTTPError(timestamp, soapclient, httpresponse);
 
-                                                     return new HTTPResponse<EVSEData>(httpresponse,
-                                                                                       new EVSEData(StatusCodes.DataError,
-                                                                                                    Description:    httpresponse.HTTPStatusCode.ToString(),
-                                                                                                    AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
-                                                                                       IsFault: true);
+                                                     return new HTTPResponse<PullEVSEDataResponse>(
+
+                                                                httpresponse,
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.DataError,
+                                                                    httpresponse.HTTPStatusCode.ToString(),
+                                                                    httpresponse.HTTPBody.      ToUTF8String()
+                                                                ),
+
+                                                                IsFault: true
+
+                                                            );
 
                                                  },
 
@@ -1099,10 +1156,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                      SendException(timestamp, sender, exception);
 
-                                                     return HTTPResponse<EVSEData>.ExceptionThrown(new EVSEData(StatusCodes.ServiceNotAvailable,
-                                                                                                                exception.Message,
-                                                                                                                exception.StackTrace),
-                                                                                                   Exception: exception);
+                                                     return HTTPResponse<PullEVSEDataResponse>.ExceptionThrown(
+
+                                                                new PullEVSEDataResponse(
+                                                                    Request,
+                                                                    StatusCodes.ServiceNotAvailable,
+                                                                    exception.Message,
+                                                                    exception.StackTrace
+                                                                ),
+
+                                                                Exception: exception
+
+                                                            );
 
                                                  }
 
@@ -1113,8 +1178,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
 
             if (result == null)
-                result = HTTPResponse<EVSEData>.ClientError(
-                             new EVSEData(
+                result = HTTPResponse<PullEVSEDataResponse>.ClientError(
+                             new PullEVSEDataResponse(
+                                 Request,
                                  StatusCodes.SystemError,
                                  "HTTP request failed!"
                              )
@@ -1123,7 +1189,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1188,7 +1254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1222,8 +1288,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1236,12 +1304,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 result = await _OICPClient.Query(_CustomPullEVSEStatusSOAPRequestMapper(Request,
                                                                                         SOAP.Encapsulation(Request.ToXML())),
-                                                 "eRoamingPullEVSEStatus",
+                                                 "eRoamingPullEvseStatus",
                                                  RequestLogDelegate:   OnPullEVSEStatusSOAPRequest,
                                                  ResponseLogDelegate:  OnPullEVSEStatusSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1317,7 +1385,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1381,7 +1449,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1413,8 +1481,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + EVSEStatusURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1425,7 +1495,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPullEVSEStatusByIdSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1500,7 +1570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1563,7 +1633,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1595,8 +1665,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthenticationDataURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1606,7 +1678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnPushAuthenticationDataSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1708,7 +1780,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1771,7 +1843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1786,7 +1858,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Request.EventTrackingId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.EVCOId,
+                                                     Request.Identification,
                                                      Request.SessionId,
                                                      Request.PartnerSessionId,
                                                      Request.PartnerProductId,
@@ -1807,8 +1879,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -1820,7 +1894,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1923,7 +1997,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1937,7 +2011,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                      Request.EventTrackingId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.EVCOId,
+                                                     Request.Identification,
                                                      Request.SessionId,
                                                      Request.PartnerSessionId,
                                                      Request.PartnerProductId,
@@ -1989,7 +2063,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2023,8 +2097,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + ReservationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -2034,7 +2110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2137,7 +2213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2201,7 +2277,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2237,8 +2313,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -2248,7 +2326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2348,7 +2426,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2414,7 +2492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2448,8 +2526,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -2459,7 +2539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStopSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2562,7 +2642,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -2627,7 +2707,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2660,8 +2740,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
             {
 
@@ -2671,7 +2753,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                  ResponseLogDelegate:  OnGetChargeDetailRecordsSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -2756,7 +2838,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {

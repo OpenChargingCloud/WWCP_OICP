@@ -49,19 +49,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="LastCall">An optional timestamp of the last call.</param>
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for representing geo coordinates.</param>
+        /// <param name="OperatorIdFilter">Only return EVSEs belonging to the given optional enumeration of EVSE operators.</param>
+        /// <param name="CountryCodeFilter">An optional enumeration of countries whose EVSE's a provider wants to retrieve.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<HTTPResponse<EVSEData>>
+        public static Task<HTTPResponse<PullEVSEDataResponse>>
 
             PullEVSEData(this IEMPClient                 IEMPClient,
-                         Provider_Id                     ProviderId,
+                         Provider_Id?                    ProviderId                     = null,
                          GeoCoordinate?                  SearchCenter                   = null,
                          Single                          DistanceKM                     = 0f,
                          DateTime?                       LastCall                       = null,
                          GeoCoordinatesResponseFormats?  GeoCoordinatesResponseFormat   = GeoCoordinatesResponseFormats.DecimalDegree,
+                         IEnumerable<Operator_Id>        OperatorIdFilter               = null,
+                         IEnumerable<Country>            CountryCodeFilter              = null,
 
                          DateTime?                       Timestamp                      = null,
                          CancellationToken?              CancellationToken              = null,
@@ -69,11 +73,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          TimeSpan?                       RequestTimeout                 = null)
 
 
-                => IEMPClient.PullEVSEData(new PullEVSEDataRequest(ProviderId,
+                => IEMPClient.PullEVSEData(new PullEVSEDataRequest(ProviderId ?? IEMPClient.DefaultProviderId.Value,
                                                                    SearchCenter,
                                                                    DistanceKM,
                                                                    LastCall,
                                                                    GeoCoordinatesResponseFormat,
+                                                                   OperatorIdFilter,
+                                                                   CountryCodeFilter,
 
                                                                    Timestamp,
                                                                    CancellationToken,
@@ -99,7 +105,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static Task<HTTPResponse<EVSEStatus>>
 
             PullEVSEStatus(this IEMPClient     IEMPClient,
-                           Provider_Id         ProviderId,
+                           Provider_Id?        ProviderId          = null,
                            GeoCoordinate?      SearchCenter        = null,
                            Single              DistanceKM          = 0f,
                            EVSEStatusTypes?    EVSEStatusFilter    = null,
@@ -110,7 +116,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                            TimeSpan?           RequestTimeout      = null)
 
 
-                => IEMPClient.PullEVSEStatus(new PullEVSEStatusRequest(ProviderId,
+                => IEMPClient.PullEVSEStatus(new PullEVSEStatusRequest(ProviderId ?? IEMPClient.DefaultProviderId.Value,
                                                                        SearchCenter,
                                                                        DistanceKM,
                                                                        EVSEStatusFilter,
@@ -119,6 +125,40 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                        CancellationToken,
                                                                        EventTrackingId,
                                                                        RequestTimeout ?? IEMPClient.RequestTimeout));
+
+        #endregion
+
+        #region PullEVSEStatusById(ProviderId, EVSEId, ...)
+
+        /// <summary>
+        /// Create a new task querying EVSE data from the OICP server.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<HTTPResponse<EVSEStatusById>>
+
+            PullEVSEStatusById(this IEMPClient     IEMPClient,
+                               EVSE_Id             EVSEId,
+                               Provider_Id?        ProviderId          = null,
+
+                               DateTime?           Timestamp           = null,
+                               CancellationToken?  CancellationToken   = null,
+                               EventTracking_Id    EventTrackingId     = null,
+                               TimeSpan?           RequestTimeout      = null)
+
+
+                => IEMPClient.PullEVSEStatusById(new PullEVSEStatusByIdRequest(ProviderId ?? IEMPClient.DefaultProviderId.Value,
+                                                                               new EVSE_Id[] { EVSEId },
+
+                                                                               Timestamp,
+                                                                               CancellationToken,
+                                                                               EventTrackingId,
+                                                                               RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 
@@ -137,8 +177,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static Task<HTTPResponse<EVSEStatusById>>
 
             PullEVSEStatusById(this IEMPClient       IEMPClient,
-                               Provider_Id           ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
+                               Provider_Id?          ProviderId          = null,
 
                                DateTime?             Timestamp           = null,
                                CancellationToken?    CancellationToken   = null,
@@ -146,7 +186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                TimeSpan?             RequestTimeout      = null)
 
 
-                => IEMPClient.PullEVSEStatusById(new PullEVSEStatusByIdRequest(ProviderId,
+                => IEMPClient.PullEVSEStatusById(new PullEVSEStatusByIdRequest(ProviderId ?? IEMPClient.DefaultProviderId.Value,
                                                                                EVSEIds,
 
                                                                                Timestamp,
@@ -229,14 +269,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
 
-        #region ReservationStart(ProviderId, EVSEId, eMAId, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
+        #region ReservationStart(ProviderId, EVSEId, Identification, Duration = null, SessionId = null, PartnerSessionId = null, PartnerProductId = null, ...)
 
         /// <summary>
         /// Create a reservation at the given EVSE.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
-        /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+        /// <param name="Identification">The unique identification of the e-mobility account.</param>
+        /// <param name="Duration">The duration of the reservation (max. 99 minutes).</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
@@ -250,7 +291,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             ReservationStart(this IEMPClient       IEMPClient,
                              Provider_Id           ProviderId,
                              EVSE_Id               EVSEId,
-                             EVCO_Id               EVCOId,
+                             Identification        Identification,
+                             TimeSpan?             Duration            = null,
                              Session_Id?           SessionId           = null,
                              PartnerSession_Id?    PartnerSessionId    = null,
                              PartnerProduct_Id?    PartnerProductId    = null,
@@ -262,16 +304,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
 
                 => IEMPClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
-                                                                                          EVSEId,
-                                                                                          EVCOId,
-                                                                                          SessionId,
-                                                                                          PartnerSessionId,
-                                                                                          PartnerProductId,
+                                                                                                         EVSEId,
+                                                                                                         Identification,
+                                                                                                         Duration,
+                                                                                                         SessionId,
+                                                                                                         PartnerSessionId,
+                                                                                                         PartnerProductId,
 
-                                                                                          Timestamp,
-                                                                                          CancellationToken,
-                                                                                          EventTrackingId,
-                                                                                          RequestTimeout ?? IEMPClient.RequestTimeout));
+                                                                                                         Timestamp,
+                                                                                                         CancellationToken,
+                                                                                                         EventTrackingId,
+                                                                                                         RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
 

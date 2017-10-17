@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -187,11 +188,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        OnExceptionDelegate                          OnException                      = null)
         {
 
-            EVSEStatus _EVSEStatus;
-
             if (TryParse(Request,
                          EVSEStatusXML,
-                         out _EVSEStatus,
+                         out EVSEStatus _EVSEStatus,
                          CustomEVSEStatusParser,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
@@ -227,11 +226,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        OnExceptionDelegate                          OnException                      = null)
         {
 
-            EVSEStatus _EVSEStatus;
-
             if (TryParse(Request,
                          EVSEStatusText,
-                         out _EVSEStatus,
+                         out EVSEStatus _EVSEStatus,
                          CustomEVSEStatusParser,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
@@ -309,7 +306,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, EVSEStatusXML, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEStatusXML, e);
 
                 EVSEStatus = null;
                 return false;
@@ -360,7 +357,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEStatusText, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEStatusText, e);
             }
 
             EVSEStatus = null;
@@ -609,8 +606,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 : base(EVSEStatus?.Request,
                        EVSEStatus.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? EVSEStatus.CustomValues.Concat(CustomData)
-                                 : EVSEStatus.CustomValues
+                                 ? EVSEStatus.CustomData.Concat(CustomData)
+                                 : EVSEStatus.CustomData
                            : CustomData)
 
             {
@@ -658,7 +655,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 => new EVSEStatus(Request,
                                   OperatorEVSEStatus,
                                   StatusCode,
-                                  ImmutableCustomData);
+                                  CustomData);
 
         }
 

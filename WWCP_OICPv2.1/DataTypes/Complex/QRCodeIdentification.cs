@@ -148,9 +148,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                   OnExceptionDelegate  OnException = null)
         {
 
-            QRCodeIdentification _QRCodeIdentification;
+            if (TryParse(QRCodeIdentificationXML,
+                         out QRCodeIdentification _QRCodeIdentification,
+                         OnException))
 
-            if (TryParse(QRCodeIdentificationXML, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
             return null;
@@ -170,9 +171,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                   OnExceptionDelegate  OnException = null)
         {
 
-            QRCodeIdentification _QRCodeIdentification;
+            if (TryParse(QRCodeIdentificationText,
+                         out QRCodeIdentification _QRCodeIdentification,
+                         OnException))
 
-            if (TryParse(QRCodeIdentificationText, out _QRCodeIdentification, OnException))
                 return _QRCodeIdentification;
 
             return null;
@@ -255,7 +257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, QRCodeIdentificationXML, e);
+                OnException?.Invoke(DateTime.UtcNow, QRCodeIdentificationXML, e);
 
                 QRCodeIdentification = default(QRCodeIdentification);
                 return false;
@@ -291,7 +293,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, QRCodeIdentificationText, e);
+                OnException?.Invoke(DateTime.UtcNow, QRCodeIdentificationText, e);
             }
 
             QRCodeIdentification = default(QRCodeIdentification);

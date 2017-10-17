@@ -234,7 +234,7 @@
 //            catch (Exception e)
 //            {
 
-//                OnException?.Invoke(DateTime.Now, ResultXML, e);
+//                OnException?.Invoke(DateTime.UtcNow, ResultXML, e);
 
 //                Result = null;
 //                return false;
@@ -270,7 +270,7 @@
 //            }
 //            catch (Exception e)
 //            {
-//                OnException?.Invoke(DateTime.Now, ResultText, e);
+//                OnException?.Invoke(DateTime.UtcNow, ResultText, e);
 //            }
 
 //            Result = null;

@@ -28,43 +28,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 {
 
     /// <summary>
-    /// The different formats of e-mobility provider identifications.
-    /// </summary>
-    public enum ProviderIdFormats
-    {
-
-        /// <summary>
-        /// The old DIN format.
-        /// (Only used in combination with eMAIds!)
-        /// </summary>
-        DIN,
-
-        /// <summary>
-        /// The old DIN format with a '*' as separator.
-        /// </summary>
-        DIN_STAR,
-
-        /// <summary>
-        /// The old DIN format with a '-' as separator.
-        /// (Only used in combination with eMAIds!)
-        /// </summary>
-        DIN_HYPHEN,
-
-
-        /// <summary>
-        /// The new ISO format.
-        /// </summary>
-        ISO,
-
-        /// <summary>
-        /// The new ISO format with a '-' as separator.
-        /// </summary>
-        ISO_HYPHEN
-
-    }
-
-
-    /// <summary>
     /// The unique identification of an OICP e-mobility provider.
     /// </summary>
     public struct Provider_Id : IId,

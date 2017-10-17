@@ -43,12 +43,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         private readonly String InternalId;
 
-
         /// <summary>
         /// The regular expression for parsing a partner charging session identification.
         /// </summary>
-        public static readonly Regex PartnerSessionId_RegEx  = new Regex(@"^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
-                                                                  RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex PartnerSessionId_RegEx  = new Regex("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
+                                                                         RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 

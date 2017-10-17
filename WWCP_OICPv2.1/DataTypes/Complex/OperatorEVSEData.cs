@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -215,10 +216,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                              OnExceptionDelegate                        OnException                    = null)
         {
 
-            OperatorEVSEData _OperatorEVSEData;
-
             if (TryParse(OperatorEVSEDataXML,
-                         out _OperatorEVSEData,
+                         out OperatorEVSEData _OperatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
@@ -249,10 +248,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                              OnExceptionDelegate                        OnException                    = null)
         {
 
-            OperatorEVSEData _OperatorEVSEData;
-
             if (TryParse(OperatorEVSEDataText,
-                         out _OperatorEVSEData,
+                         out OperatorEVSEData _OperatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
@@ -322,7 +319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, OperatorEVSEDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEDataXML, e);
 
                 OperatorEVSEData = null;
                 return false;
@@ -367,7 +364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, OperatorEVSEDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEDataText, e);
             }
 
             OperatorEVSEData = null;

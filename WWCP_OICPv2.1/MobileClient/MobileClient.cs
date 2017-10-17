@@ -330,34 +330,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public MobileClient(String                               ClientId,
                             String                               Hostname,
-                            IPPort                               RemotePort                  = null,
-                            RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                            X509Certificate                      ClientCert                  = null,
-                            String                               HTTPVirtualHost             = null,
-                            String                               URIPrefix                   = DefaultURIPrefix,
-                            String                               MobileAuthorizationURI      = DefaultMobileAuthorizationURI,
-                            String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                            TimeSpan?                            QueryTimeout                = null,
-                            DNSClient                            DNSClient                   = null,
-                            String                               LoggingContext              = MobileClientLogger.DefaultContext,
-                            LogfileCreatorDelegate               LogfileCreator              = null)
+                            IPPort                               RemotePort                   = null,
+                            RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                            LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
+                            X509Certificate                      ClientCert                   = null,
+                            String                               HTTPVirtualHost              = null,
+                            String                               URIPrefix                    = DefaultURIPrefix,
+                            String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
+                            String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                            TimeSpan?                            RequestTimeout               = null,
+                            Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                            DNSClient                            DNSClient                    = null,
+                            String                               LoggingContext               = MobileClientLogger.DefaultContext,
+                            LogfileCreatorDelegate               LogfileCreator               = null)
 
             : base(ClientId,
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -396,31 +401,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
-        /// <param name="QueryTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
+        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client.</param>
         public MobileClient(String                               ClientId,
                             MobileClientLogger                   Logger,
                             String                               Hostname,
-                            IPPort                               RemotePort                  = null,
-                            RemoteCertificateValidationCallback  RemoteCertificateValidator  = null,
-                            X509Certificate                      ClientCert                  = null,
-                            String                               HTTPVirtualHost             = null,
-                            String                               URIPrefix                   = DefaultURIPrefix,
-                            String                               MobileAuthorizationURI      = DefaultMobileAuthorizationURI,
-                            String                               HTTPUserAgent               = DefaultHTTPUserAgent,
-                            TimeSpan?                            QueryTimeout                = null,
-                            DNSClient                            DNSClient                   = null)
+                            IPPort                               RemotePort                   = null,
+                            RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                            LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
+                            X509Certificate                      ClientCert                   = null,
+                            String                               HTTPVirtualHost              = null,
+                            String                               URIPrefix                    = DefaultURIPrefix,
+                            String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
+                            String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                            TimeSpan?                            RequestTimeout               = null,
+                            Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                            DNSClient                            DNSClient                    = null)
 
             : base(ClientId,
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
+                   LocalCertificateSelector,
                    ClientCert,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
-                   QueryTimeout,
+                   RequestTimeout,
+                   MaxNumberOfRetries,
                    DNSClient)
 
         {
@@ -512,8 +522,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
 
             {
@@ -525,7 +537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                  ResponseLogDelegate:  OnMobileAuthorizeStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -707,8 +719,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
 
             {
@@ -720,7 +734,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                  ResponseLogDelegate:  OnMobileRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -915,8 +929,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
+                                                    LocalCertificateSelector,
                                                     ClientCert,
                                                     UserAgent,
+                                                    RequestTimeout,
                                                     DNSClient))
 
             {
@@ -928,7 +944,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                  ResponseLogDelegate:  OnMobileRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 QueryTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 

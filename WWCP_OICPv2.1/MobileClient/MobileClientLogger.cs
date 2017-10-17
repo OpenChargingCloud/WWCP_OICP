@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <summary>
         /// An OICP Mobile client (HTTP/SOAP client) logger.
         /// </summary>
-        public class MobileClientLogger : HTTPLogger
+        public class MobileClientLogger : HTTPClientLogger
         {
 
             #region Data
@@ -128,7 +128,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
                                       LogfileCreatorDelegate      LogfileCreator              = null)
 
-                : base(Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : base(MobileClient,
+                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                        LogHTTPRequest_toConsole,
                        LogHTTPResponse_toConsole,
@@ -151,10 +152,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
                 #region Initial checks
 
-                if (MobileClient == null)
-                    throw new ArgumentNullException(nameof(MobileClient),  "The given mobile client must not be null!");
-
-                this.MobileClient = MobileClient;
+                this.MobileClient = MobileClient ?? throw new ArgumentNullException(nameof(MobileClient), "The given mobile client must not be null!");
 
                 #endregion
 

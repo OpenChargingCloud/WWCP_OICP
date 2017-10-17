@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -135,10 +136,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            OperatorEVSEStatus _OperatorEVSEStatus;
-
             if (TryParse(OperatorEVSEStatusXML,
-                         out _OperatorEVSEStatus,
+                         out OperatorEVSEStatus _OperatorEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException))
@@ -166,10 +165,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            OperatorEVSEStatus _OperatorEVSEStatus;
-
             if (TryParse(OperatorEVSEStatusText,
-                         out _OperatorEVSEStatus,
+                         out OperatorEVSEStatus _OperatorEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException))
@@ -234,7 +231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusXML, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEStatusXML, e);
 
                 OperatorEVSEStatus = null;
                 return false;
@@ -276,7 +273,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, OperatorEVSEStatusText, e);
+                OnException?.Invoke(DateTime.UtcNow, OperatorEVSEStatusText, e);
             }
 
             OperatorEVSEStatus = null;

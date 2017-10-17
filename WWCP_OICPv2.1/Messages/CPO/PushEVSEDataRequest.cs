@@ -24,6 +24,7 @@ using System.Threading;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -169,10 +170,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         {
 
-            PushEVSEDataRequest _PushEVSEData;
-
             if (TryParse(PushEVSEDataXML,
-                         out _PushEVSEData,
+                         out PushEVSEDataRequest _PushEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          OnException,
@@ -215,10 +214,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                 TimeSpan?                                  RequestTimeout                = null)
         {
 
-            PushEVSEDataRequest _PushEVSEData;
-
             if (TryParse(PushEVSEDataText,
-                         out _PushEVSEData,
+                         out PushEVSEDataRequest _PushEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          OnException,
@@ -294,7 +291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, PushEVSEDataXML, e);
+                OnException?.Invoke(DateTime.UtcNow, PushEVSEDataXML, e);
 
                 PushEVSEData = null;
                 return false;
@@ -351,7 +348,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, PushEVSEDataText, e);
+                OnException?.Invoke(DateTime.UtcNow, PushEVSEDataText, e);
             }
 
             PushEVSEData = null;

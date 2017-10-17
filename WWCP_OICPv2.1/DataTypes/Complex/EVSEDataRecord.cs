@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -69,7 +70,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// The identification of the charging station hosting this EVSE.
         /// </summary>
-        public String               ChargingStationId           { get; }
+        public ChargingStation_Id?  ChargingStationId           { get; }
+
+        /// <summary>
+        /// The identification of the charging pool hosting this EVSE.
+        /// </summary>
+        public ChargingPool_Id?     ChargingPoolId              { get; }
 
         /// <summary>
         /// The multi-language name of the charging station hosting this EVSE.
@@ -181,7 +187,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="Id">A unique EVSE identification.</param>
         /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
         /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
+        /// 
         /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
+        /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
         /// <param name="Address">The address of this EVSE.</param>
         /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
@@ -202,11 +210,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
         /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+        /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
         public EVSEDataRecord(EVSE_Id                              Id,
                               DeltaTypes?                          DeltaType,
                               DateTime?                            LastUpdate,
-                              String                               ChargingStationId           = null,
+
+                              ChargingStation_Id?                  ChargingStationId           = null,
+                              ChargingPool_Id?                     ChargingPoolId              = null,
                               I18NString                           ChargingStationName         = null,
                               Address                              Address                     = null,
                               GeoCoordinate?                       GeoCoordinate               = null,
@@ -259,6 +270,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.LastUpdate                 = LastUpdate;
 
             this.ChargingStationId          = ChargingStationId;
+            this.ChargingPoolId             = ChargingPoolId;
             this.ChargingStationName        = ChargingStationName ?? new I18NString();
             this.Address                    = Address;
             this.GeoCoordinate              = GeoCoordinate;
@@ -431,10 +443,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordXML,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -462,10 +472,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            OnExceptionDelegate                      OnException                  = null)
         {
 
-            EVSEDataRecord _EVSEDataRecord;
-
             if (TryParse(EVSEDataRecordText,
-                         out _EVSEDataRecord,
+                         out EVSEDataRecord _EVSEDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
@@ -504,10 +512,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return false;
                 }
 
+                var EVSEId = EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!"));
+
                 #region XML Attribute: LastUpdate
 
-                DateTime _LastUpdate;
-                DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out _LastUpdate);
+                DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out DateTime _LastUpdate);
 
                 #endregion
 
@@ -530,6 +539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                            Trim();
 
                 Single _MaxCapacity = 0.0f;
+
                 if (_MaxCapacity_kWh.IsNotNullOrEmpty())
                     Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
 
@@ -564,7 +574,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                           _AdditionalInfo.Add(Language, I18NTokens[1].Trim());
 
                                                                       else
-                                                                          DebugX.Log("Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
+                                                                          DebugX.Log("EVSE '" + EVSEId + "': Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
 
                                                                   }
 
@@ -580,13 +590,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 EVSEDataRecord = new EVSEDataRecord(
 
-                    EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!")),
+                    EVSEId,
 
                     XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
 
                     _LastUpdate,
 
-                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "ChargingStationId", ""),
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingStationId",
+                                                         ChargingStation_Id.Parse),
+
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingPoolId",
+                                                         ChargingPool_Id.Parse),
+
                     _ChargingStationName,
 
                     EVSEDataRecordXML.MapElementOrFail(OICPNS.EVSEData + "Address",
@@ -636,9 +651,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     XML_IO.AsAccessibilityType(EVSEDataRecordXML.
                                                    ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
                                                    Trim()),
-
+#if OICPv2_1
                     EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "HotlinePhoneNum").
                                       Trim(),
+#endif
+
+#if OICPv2_2
+                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum"),
+#endif
 
                     _AdditionalInfo,
 
@@ -673,7 +693,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, EVSEDataRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordXML, e);
 
                 EVSEDataRecord = null;
                 return false;
@@ -715,7 +735,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, EVSEDataRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordText, e);
             }
 
             EVSEDataRecord = null;
@@ -770,12 +790,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               XML_IO.AsString(Plug)))
                           ),
 
-                          ChargingFacilities.ToEnumeration().NotNullAny()
+                          ChargingFacilities.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
                                     ChargingFacilities.ToEnumeration().Select(ChargingFacility   => new XElement(OICPNS.EVSEData + "ChargingFacility",   XML_IO.AsString(ChargingFacility))))
                               : null,
 
-                          ChargingModes.ToEnumeration().NotNullAny()
+                          ChargingModes.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ChargingModes",
                                     ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", XML_IO.AsString(ChargingMode))))
                               : null,
@@ -791,19 +811,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                               ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
                               : null,
 
-                          PaymentOptions.ToEnumeration().NotNullAny()
+                          PaymentOptions.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "PaymentOptions",
                                     PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      XML_IO.AsString(PaymentOption)))
                                 )
                               : null,
 
-                          ValueAddedServices.ToEnumeration().NotNullAny()
+                          ValueAddedServices.ToEnumeration().IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
                                     ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", XML_IO.AsString(ValueAddedService)))
                                 )
                               : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
 
                           new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
+
+#if OICPv2_1
                           new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
 
                           AdditionalInfo.has(Languages.deu)
@@ -813,6 +835,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           AdditionalInfo.has(Languages.eng)
                               ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
                               : null,
+#endif
+
+#if OICPv2_2
+                          HotlinePhoneNumber.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "HotlinePhoneNum", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
+                              : null,
+
+                          AdditionalInfo.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "AdditionalInfo",
+                                             AdditionalInfo.
+                                                 Select(info => new XElement(OICPNS.EVSEData + "InfoText",
+                                                                             new XAttribute("lang", info.Language), //ToDo: ISO 639-3 codes for languages is not what OICP expects!
+                                                                             info.Text)))
+                              : null,
+#endif
 
                           GeoChargingPointEntrance != null
                               ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
@@ -1086,6 +1123,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    LastUpdate,
 
                    ChargingStationId,
+                   ChargingPoolId,
                    ChargingStationName,
                    Address,
                    GeoCoordinate,
@@ -1106,11 +1144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    ClearingHouseId,
                    IsHubjectCompatible,
                    DynamicInfoAvailable,
-
-                   CustomValues != null
-                       ? CustomValues.ToDictionary(kvp => kvp.Key,
-                                                  kvp => kvp.Value)
-                       : null);
+                   CustomData);
 
         #endregion
 
@@ -1145,7 +1179,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             /// <summary>
             /// The identification of the charging station hosting this EVSE.
             /// </summary>
-            public String               ChargingStationId           { get; set; }
+            public ChargingStation_Id?  ChargingStationId           { get; set; }
+
+            /// <summary>
+            /// The identification of the charging pool hosting this EVSE.
+            /// </summary>
+            public ChargingPool_Id?     ChargingPoolId              { get; set; }
 
             /// <summary>
             /// The multi-language name of the charging station hosting this EVSE.
@@ -1283,7 +1322,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                            DeltaTypes?                 DeltaType                  = null,
                            DateTime?                   LastUpdate                 = null,
 
-                           String                      ChargingStationId          = null,
+                           ChargingStation_Id?         ChargingStationId          = null,
+                           ChargingPool_Id?            ChargingPoolId             = null,
                            I18NString                  ChargingStationName        = null,
                            Address                     Address                    = null,
                            GeoCoordinate?              GeoCoordinate              = null,
@@ -1339,6 +1379,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                 this.LastUpdate                = LastUpdate;
 
                 this.ChargingStationId         = ChargingStationId;
+                this.ChargingPoolId            = ChargingPoolId;
                 this.ChargingStationName       = ChargingStationName ?? new I18NString();
                 this.Address                   = Address;
                 this.GeoCoordinate             = GeoCoordinate;
@@ -1376,6 +1417,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       DeltaType,
                                       LastUpdate,
                                       ChargingStationId,
+                                      ChargingPoolId,
                                       ChargingStationName,
                                       Address,
                                       GeoCoordinate,
@@ -1395,7 +1437,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                       HubOperatorId,
                                       ClearingHouseId,
                                       IsHubjectCompatible,
-                                      DynamicInfoAvailable);
+                                      DynamicInfoAvailable,
+                                      CustomData);
 
             #endregion
 

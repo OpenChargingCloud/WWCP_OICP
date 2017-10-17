@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -555,11 +556,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            AuthorizationStart _AuthorizationStart;
-
             if (TryParse(Request,
                          AuthorizationStartXML,
-                         out _AuthorizationStart,
+                         out AuthorizationStart _AuthorizationStart,
                          CustomAuthorizationStartParser,
                          CustomIdentificationParser,
                          CustomStatusCodeParser,
@@ -592,11 +591,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            AuthorizationStart _AuthorizationStart;
-
             if (TryParse(Request,
                          AuthorizationStartText,
-                         out _AuthorizationStart,
+                         out AuthorizationStart _AuthorizationStart,
                          CustomAuthorizationStartParser,
                          CustomIdentificationParser,
                          CustomStatusCodeParser,
@@ -681,7 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizationStartXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizationStartXML, e);
 
                 AuthorizationStart = null;
                 return false;
@@ -729,7 +726,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizationStartText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizationStartText, e);
             }
 
             AuthorizationStart = null;
@@ -903,8 +900,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 : base(AuthorizationStart?.Request,
                        AuthorizationStart.HasCustomData
                            ? CustomData != null && CustomData.Any()
-                                 ? AuthorizationStart.CustomValues.Concat(CustomData)
-                                 : AuthorizationStart.CustomValues
+                                 ? AuthorizationStart.CustomData.Concat(CustomData)
+                                 : AuthorizationStart.CustomData
                            : CustomData)
 
             {
@@ -945,7 +942,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           PartnerSessionId,
                                           ProviderId,
                                           AuthorizationStopIdentifications,
-                                          ImmutableCustomData);
+                                          CustomData);
 
         }
 

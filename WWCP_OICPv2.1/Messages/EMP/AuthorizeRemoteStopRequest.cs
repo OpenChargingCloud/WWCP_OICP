@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -145,10 +146,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest;
-
             if (TryParse(AuthorizeRemoteStopRequestXML,
-                         out _AuthorizeRemoteStopRequest,
+                         out AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest,
                          CustomAuthorizeRemoteStopRequestParser,
                          OnException,
 
@@ -191,10 +190,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
-            AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest;
-
             if (TryParse(AuthorizeRemoteStopRequestText,
-                         out _AuthorizeRemoteStopRequest,
+                         out AuthorizeRemoteStopRequest _AuthorizeRemoteStopRequest,
                          CustomAuthorizeRemoteStopRequestParser,
                          OnException,
 
@@ -277,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteStopRequestXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteStopRequestXML, e);
 
                 AuthorizeRemoteStopRequest = null;
                 return false;
@@ -331,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizeRemoteStopRequestText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeRemoteStopRequestText, e);
             }
 
             AuthorizeRemoteStopRequest = null;

@@ -24,6 +24,7 @@ using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -130,10 +131,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OnExceptionDelegate                  OnException              = null)
         {
 
-            StatusCode _StatusCode;
-
             if (TryParse(StatusCodeXML,
-                         out _StatusCode,
+                         out StatusCode _StatusCode,
                          CustomStatusCodeParser,
                          OnException))
 
@@ -158,10 +157,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                        OnExceptionDelegate                  OnException              = null)
         {
 
-            StatusCode _StatusCode;
-
             if (TryParse(StatusCodeText,
-                         out _StatusCode,
+                         out StatusCode _StatusCode,
                          CustomStatusCodeParser,
                          OnException))
 
@@ -215,7 +212,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, StatusCodeXML, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeXML, e);
 
                 return null;
 
@@ -280,7 +277,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeText, e);
             }
 
             return null;
@@ -317,7 +314,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, StatusCodeText, e);
+                OnException?.Invoke(DateTime.UtcNow, StatusCodeText, e);
             }
 
             StatusCode = default(StatusCode);

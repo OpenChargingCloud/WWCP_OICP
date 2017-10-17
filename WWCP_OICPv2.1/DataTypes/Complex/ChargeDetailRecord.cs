@@ -21,9 +21,9 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -160,25 +160,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="MeteringSignature">An optional signature for the metering values.</param>
         /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
         /// <param name="HubProviderId">An optional identification of the hub provider.</param>
-        /// <param name="CustomData">A dictionary of customer-specific data.</param>
-        public ChargeDetailRecord(EVSE_Id                             EVSEId,
-                                  Session_Id                          SessionId,
-                                  DateTime                            SessionStart,
-                                  DateTime                            SessionEnd,
-                                  Identification                      Identification,
-                                  PartnerProduct_Id?                  PartnerProductId       = null,
-                                  PartnerSession_Id?                  PartnerSessionId       = null,
-                                  DateTime?                           ChargingStart          = null,
-                                  DateTime?                           ChargingEnd            = null,
-                                  Single?                             MeterValueStart        = null,  // xx.yyy
-                                  Single?                             MeterValueEnd          = null,  // xx.yyy
-                                  IEnumerable<Single>                 MeterValuesInBetween   = null,  // xx.yyy
-                                  Single?                             ConsumedEnergy         = null,  // xx.yyy
-                                  String                              MeteringSignature      = null,  // maxlength: 200
-                                  HubOperator_Id?                     HubOperatorId          = null,
-                                  HubProvider_Id?                     HubProviderId          = null,
+        /// 
+        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        public ChargeDetailRecord(EVSE_Id                              EVSEId,
+                                  Session_Id                           SessionId,
+                                  DateTime                             SessionStart,
+                                  DateTime                             SessionEnd,
+                                  Identification                       Identification,
+                                  PartnerProduct_Id?                   PartnerProductId       = null,
+                                  PartnerSession_Id?                   PartnerSessionId       = null,
+                                  DateTime?                            ChargingStart          = null,
+                                  DateTime?                            ChargingEnd            = null,
+                                  Single?                              MeterValueStart        = null,  // xx.yyy
+                                  Single?                              MeterValueEnd          = null,  // xx.yyy
+                                  IEnumerable<Single>                  MeterValuesInBetween   = null,  // xx.yyy
+                                  Single?                              ConsumedEnergy         = null,  // xx.yyy
+                                  String                               MeteringSignature      = null,  // maxlength: 200
+                                  HubOperator_Id?                      HubOperatorId          = null,
+                                  HubProvider_Id?                      HubProviderId          = null,
 
-                                  ReadOnlyDictionary<String, Object>  CustomData             = null)
+                                  IReadOnlyDictionary<String, Object>  CustomData             = null)
 
             : base(CustomData)
 
@@ -313,10 +314,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            ChargeDetailRecord _ChargeDetailRecord;
-
             if (TryParse(ChargeDetailRecordXML,
-                         out _ChargeDetailRecord,
+                         out ChargeDetailRecord _ChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
                          OnException))
@@ -344,10 +343,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
-            ChargeDetailRecord _ChargeDetailRecord;
-
             if (TryParse(ChargeDetailRecordText,
-                         out _ChargeDetailRecord,
+                         out ChargeDetailRecord _ChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
                          OnException))
@@ -449,7 +446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, ChargeDetailRecordXML, e);
+                OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordXML, e);
 
                 ChargeDetailRecord = null;
                 return false;
@@ -491,7 +488,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, ChargeDetailRecordText, e);
+                OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordText, e);
             }
 
             ChargeDetailRecord = null;
@@ -825,29 +822,23 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         public Builder ToBuilder()
 
-            => new Builder(
-
-                   EVSEId,
-                   SessionId,
-                   SessionStart,
-                   SessionEnd,
-                   Identification,
-                   PartnerProductId,
-                   PartnerSessionId,
-                   ChargingStart,
-                   ChargingEnd,
-                   MeterValueStart,
-                   MeterValueEnd,
-                   MeterValuesInBetween,
-                   ConsumedEnergy,
-                   MeteringSignature,
-                   HubOperatorId,
-                   HubProviderId,
-
-                   CustomValues != null
-                       ? CustomValues.ToDictionary(kvp => kvp.Key,
-                                             kvp => kvp.Value)
-                       : null);
+            => new Builder(EVSEId,
+                           SessionId,
+                           SessionStart,
+                           SessionEnd,
+                           Identification,
+                           PartnerProductId,
+                           PartnerSessionId,
+                           ChargingStart,
+                           ChargingEnd,
+                           MeterValueStart,
+                           MeterValueEnd,
+                           MeterValuesInBetween,
+                           ConsumedEnergy,
+                           MeteringSignature,
+                           HubOperatorId,
+                           HubProviderId,
+                           CustomData);
 
         #endregion
 
@@ -1055,7 +1046,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                           ConsumedEnergy,
                                           MeteringSignature,
                                           HubOperatorId,
-                                          HubProviderId);
+                                          HubProviderId,
+                                          CustomData);
 
             #endregion
 
