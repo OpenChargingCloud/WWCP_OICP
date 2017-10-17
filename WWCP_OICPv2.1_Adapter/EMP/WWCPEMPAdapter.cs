@@ -28,8 +28,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
@@ -58,26 +58,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static readonly TimeSpan DefaultReservationTime = TimeSpan.FromMinutes(15);
 
 
-        private readonly        Object                                                  PullDataServiceLock;
-        private readonly        Timer                                                   PullDataServiceTimer;
+        private readonly        Object         PullDataServiceLock;
+        private readonly        Timer          PullDataServiceTimer;
 
         /// <summary>
         /// The default status check intervall.
         /// </summary>
-        public  readonly static TimeSpan                                                DefaultPullDataServiceEvery              = TimeSpan.FromMinutes(15);
+        public  readonly static TimeSpan       DefaultPullDataServiceEvery              = TimeSpan.FromMinutes(15);
 
-        public  readonly static TimeSpan                                                DefaultPullDataServiceRequestTimeout     = TimeSpan.FromMinutes(30);
+        public  readonly static TimeSpan       DefaultPullDataServiceRequestTimeout     = TimeSpan.FromMinutes(30);
 
 
-        private readonly        Object                                                  PullStatusServiceLock;
-        private readonly        Timer                                                   PullStatusServiceTimer;
+        private readonly        Object         PullStatusServiceLock;
+        private readonly        Timer          PullStatusServiceTimer;
 
         /// <summary>
         /// The default status check intervall.
         /// </summary>
-        public  readonly static TimeSpan                                                DefaultPullStatusServiceEvery            = TimeSpan.FromMinutes(1);
+        public  readonly static TimeSpan       DefaultPullStatusServiceEvery            = TimeSpan.FromMinutes(1);
 
-        public  readonly static TimeSpan                                                DefaultPullStatusServiceRequestTimeout   = TimeSpan.FromMinutes(3);
+        public  readonly static TimeSpan       DefaultPullStatusServiceRequestTimeout   = TimeSpan.FromMinutes(3);
 
         #endregion
 
@@ -355,6 +355,20 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region OnAuthorizeStopRequest/-Response
+
+        /// <summary>
+        /// An event sent whenever an 'authorize stop' request was received.
+        /// </summary>
+        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
+
+        /// <summary>
+        /// An event sent whenever a response to an 'authorize stop' request was sent.
+        /// </summary>
+        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
+
+        #endregion
+
         #region OnAuthorizeEVSEStopRequest/-Response
 
         /// <summary>
@@ -434,34 +448,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
-            this.Name                               = Name;
-            this.EMPRoaming                         = EMPRoaming;
-            this._EVSEDataRecord2EVSE               = EVSEDataRecord2EVSE;
+            this.Name                             = Name;
+            this.EMPRoaming                       = EMPRoaming;
+            this._EVSEDataRecord2EVSE             = EVSEDataRecord2EVSE;
 
-            this.EVSEOperatorFilter                 = EVSEOperatorFilter != null ? EVSEOperatorFilter : (name, id) => true;
+            this.EVSEOperatorFilter               = EVSEOperatorFilter ?? ((name, id) => true);
 
-            this._PullDataServiceEvery              = (UInt32) (PullDataServiceEvery.HasValue
-                                                                    ? PullDataServiceEvery.Value.  TotalMilliseconds
-                                                                    : DefaultPullDataServiceEvery. TotalMilliseconds);
-            this.PullDataServiceRequestTimeout      = PullDataServiceRequestTimeout.HasValue ? PullDataServiceRequestTimeout.Value : DefaultPullDataServiceRequestTimeout;
-            this.PullDataServiceLock                = new Object();
-            this.PullDataServiceTimer               = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
-            this.DisablePullData                    = DisablePullData;
+            this._PullDataServiceEvery            = (UInt32) (PullDataServiceEvery.HasValue
+                                                                  ? PullDataServiceEvery.Value.  TotalMilliseconds
+                                                                  : DefaultPullDataServiceEvery. TotalMilliseconds);
+            this.PullDataServiceRequestTimeout    = PullDataServiceRequestTimeout ?? DefaultPullDataServiceRequestTimeout;
+            this.PullDataServiceLock              = new Object();
+            this.PullDataServiceTimer             = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
+            this.DisablePullData                  = DisablePullData;
 
 
-            this._PullStatusServiceEvery            = (UInt32) (PullStatusServiceEvery.HasValue
-                                                                    ? PullStatusServiceEvery.Value.  TotalMilliseconds
-                                                                    : DefaultPullStatusServiceEvery. TotalMilliseconds);
-            this.PullStatusServiceRequestTimeout    = PullStatusServiceRequestTimeout.HasValue ? PullStatusServiceRequestTimeout.Value : DefaultPullStatusServiceRequestTimeout;
-            this.PullStatusServiceLock              = new Object();
-            this.PullStatusServiceTimer             = new Timer(PullStatusService, null, 150000, _PullStatusServiceEvery);
-            this.DisablePullStatus                  = DisablePullStatus;
+            this._PullStatusServiceEvery          = (UInt32) (PullStatusServiceEvery.HasValue
+                                                                  ? PullStatusServiceEvery.Value.  TotalMilliseconds
+                                                                  : DefaultPullStatusServiceEvery. TotalMilliseconds);
+            this.PullStatusServiceRequestTimeout  = PullStatusServiceRequestTimeout ?? DefaultPullStatusServiceRequestTimeout;
+            this.PullStatusServiceLock            = new Object();
+            this.PullStatusServiceTimer           = new Timer(PullStatusService, null, 150000, _PullStatusServiceEvery);
+            this.DisablePullStatus                = DisablePullStatus;
 
-            this.DefaultProviderId                  = DefaultProvider != null
-                                                          ? new Provider_Id?(DefaultProvider.Id.ToOICP())
-                                                          : null;
-            this.DefaultSearchCenter                = DefaultSearchCenter;
-            this.DefaultDistanceKM                  = DefaultDistanceKM;
+            this.DefaultProviderId                = DefaultProvider != null
+                                                        ? new Provider_Id?(DefaultProvider.Id.ToOICP())
+                                                        : null;
+            this.DefaultSearchCenter              = DefaultSearchCenter;
+            this.DefaultDistanceKM                = DefaultDistanceKM;
 
 
             // Link events...
@@ -529,7 +543,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                        Request.CancellationToken,
                                                                        Request.EventTrackingId,
                                                                        Request.RequestTimeout);
-
 
                     #region Send OnAuthorizeEVSEStartResponse event
 
@@ -609,7 +622,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     }
 
                     #endregion
-
 
                     return CPO.AuthorizationStart.ServiceNotAvailable(
                                Request,
@@ -743,7 +755,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #endregion
 
-
                     return CPO.AuthorizationStart.ServiceNotAvailable(
                            Request,
                            SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
@@ -766,121 +777,232 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var SessionId            = Request.SessionId.   ToWWCP();
                 var AuthIdentification   = WWCP.AuthIdentification.FromAuthToken(Request.UID.ToWWCP());
-                var EVSEId               = Request.EVSEId.Value.ToWWCP().Value;
+                var EVSEId               = Request.EVSEId.HasValue ? Request.EVSEId.Value.ToWWCP() : null;
                 var OperatorId           = Request.OperatorId.  ToWWCP();
 
                 #endregion
 
-                #region Send OnAuthorizeEVSEStopRequest event
-
-                var StartTime = DateTime.UtcNow;
-
-                try
+                if (EVSEId.HasValue)
                 {
 
-                    OnAuthorizeEVSEStopRequest?.Invoke(StartTime,
+                    #region Send OnAuthorizeEVSEStopRequest event
+
+                    var StartTime = DateTime.UtcNow;
+
+                    try
+                    {
+
+                        OnAuthorizeEVSEStopRequest?.Invoke(StartTime,
+                                                           Timestamp,
+                                                           this,
+                                                           Id.ToString(),
+                                                           Request.EventTrackingId,
+                                                           RoamingNetwork.Id,
+                                                           OperatorId,
+                                                           EVSEId.Value,
+                                                           SessionId,
+                                                           AuthIdentification,
+                                                           Request.RequestTimeout);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStopRequest));
+                    }
+
+                    #endregion
+
+                    var response = await RoamingNetwork.AuthorizeStop(SessionId,
+                                                                      AuthIdentification,
+                                                                      EVSEId.Value,
+                                                                      OperatorId,
+
+                                                                      Request.Timestamp,
+                                                                      Request.CancellationToken,
+                                                                      Request.EventTrackingId,
+                                                                      Request.RequestTimeout);
+
+
+                    #region Send OnAuthorizeEVSEStopResponse event
+
+                    var EndTime = DateTime.UtcNow;
+
+                    try
+                    {
+
+                        OnAuthorizeEVSEStopResponse?.Invoke(EndTime,
+                                                            Timestamp,
+                                                            this,
+                                                            Id.ToString(),
+                                                            Request.EventTrackingId,
+                                                            RoamingNetwork.Id,
+                                                            OperatorId,
+                                                            EVSEId.Value,
+                                                            SessionId,
+                                                            AuthIdentification,
+                                                            Request.RequestTimeout,
+                                                            response,
+                                                            EndTime - StartTime);
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStopResponse));
+                    }
+
+                    #endregion
+
+                    #region Map response
+
+                    if (response != null)
+                    {
+                        switch (response.Result)
+                        {
+
+                            case AuthStopEVSEResultType.Authorized:
+                                return CPO.AuthorizationStop.Authorized(
+                                           Request,
+                                           response.SessionId. ToOICP(),
+                                           null,
+                                           response.ProviderId.ToOICP(),
+                                           "Ready to stop charging!"
+                                       );
+
+                            case AuthStopEVSEResultType.InvalidSessionId:
+                                return CPO.AuthorizationStop.SessionIsInvalid(Request);
+
+                            case AuthStopEVSEResultType.CommunicationTimeout:
+                                return CPO.AuthorizationStop.CommunicationToEVSEFailed(Request);
+
+                            case AuthStopEVSEResultType.StopChargingTimeout:
+                                return CPO.AuthorizationStop.NoEVConnectedToEVSE(Request);
+
+                            case AuthStopEVSEResultType.UnknownEVSE:
+                                return CPO.AuthorizationStop.UnknownEVSEID(Request);
+
+                            case AuthStopEVSEResultType.OutOfService:
+                                return CPO.AuthorizationStop.EVSEOutOfService(Request);
+
+                        }
+                    }
+
+                    #endregion
+
+                    return CPO.AuthorizationStop.ServiceNotAvailable(
+                               Request,
+                               SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
+                               ProviderId: response?.ProviderId.ToOICP()
+                           );
+
+                }
+
+                else
+                {
+
+                    #region Send OnAuthorizeStopRequest event
+
+                    var StartTime = DateTime.UtcNow;
+
+                    try
+                    {
+
+                        OnAuthorizeStopRequest?.Invoke(StartTime,
                                                        Timestamp,
                                                        this,
                                                        Id.ToString(),
                                                        Request.EventTrackingId,
                                                        RoamingNetwork.Id,
                                                        OperatorId,
-                                                       EVSEId,
                                                        SessionId,
                                                        AuthIdentification,
                                                        Request.RequestTimeout);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStopRequest));
-                }
+                    }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopRequest));
+                    }
 
-                #endregion
+                    #endregion
 
+                    var response = await RoamingNetwork.AuthorizeStop(SessionId,
+                                                                      AuthIdentification,
+                                                                      OperatorId,
 
-                var response = await RoamingNetwork.AuthorizeStop(SessionId,
-                                                                  AuthIdentification,
-                                                                  EVSEId,
-                                                                  OperatorId,
-
-                                                                  Request.Timestamp,
-                                                                  Request.CancellationToken,
-                                                                  Request.EventTrackingId,
-                                                                  Request.RequestTimeout).
-                                                    ConfigureAwait(false);
+                                                                      Request.Timestamp,
+                                                                      Request.CancellationToken,
+                                                                      Request.EventTrackingId,
+                                                                      Request.RequestTimeout);
 
 
-                #region Send OnAuthorizeEVSEStopResponse event
+                    #region Send OnAuthorizeStopResponse event
 
-                var EndTime = DateTime.UtcNow;
+                    var EndTime = DateTime.UtcNow;
 
-                try
-                {
+                    try
+                    {
 
-                    OnAuthorizeEVSEStopResponse?.Invoke(EndTime,
+                        OnAuthorizeStopResponse?.Invoke(EndTime,
                                                         Timestamp,
                                                         this,
                                                         Id.ToString(),
                                                         Request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         OperatorId,
-                                                        EVSEId,
                                                         SessionId,
                                                         AuthIdentification,
                                                         Request.RequestTimeout,
                                                         response,
                                                         EndTime - StartTime);
 
-                }
-                catch (Exception e)
-                {
-                    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeEVSEStopResponse));
-                }
-
-                #endregion
-
-                #region Map response
-
-                if (response != null)
-                {
-                    switch (response.Result)
-                    {
-
-                        case AuthStopEVSEResultType.Authorized:
-                            return CPO.AuthorizationStop.Authorized(
-                                       Request,
-                                       response.SessionId. ToOICP(),
-                                       null,
-                                       response.ProviderId.ToOICP(),
-                                       "Ready to stop charging!"
-                                   );
-
-                        case AuthStopEVSEResultType.InvalidSessionId:
-                            return CPO.AuthorizationStop.SessionIsInvalid(Request);
-
-                        case AuthStopEVSEResultType.CommunicationTimeout:
-                            return CPO.AuthorizationStop.CommunicationToEVSEFailed(Request);
-
-                        case AuthStopEVSEResultType.StopChargingTimeout:
-                            return CPO.AuthorizationStop.NoEVConnectedToEVSE(Request);
-
-                        case AuthStopEVSEResultType.UnknownEVSE:
-                            return CPO.AuthorizationStop.UnknownEVSEID(Request);
-
-                        case AuthStopEVSEResultType.OutOfService:
-                            return CPO.AuthorizationStop.EVSEOutOfService(Request);
-
                     }
+                    catch (Exception e)
+                    {
+                        e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopResponse));
+                    }
+
+                    #endregion
+
+                    #region Map response
+
+                    if (response != null)
+                    {
+                        switch (response.Result)
+                        {
+
+                            case AuthStopResultType.Authorized:
+                                return CPO.AuthorizationStop.Authorized(
+                                           Request,
+                                           response.SessionId. ToOICP(),
+                                           null,
+                                           response.ProviderId.ToOICP(),
+                                           "Ready to stop charging!"
+                                       );
+
+                            case AuthStopResultType.InvalidSessionId:
+                                return CPO.AuthorizationStop.SessionIsInvalid(Request);
+
+                            case AuthStopResultType.CommunicationTimeout:
+                                return CPO.AuthorizationStop.CommunicationToEVSEFailed(Request);
+
+                            case AuthStopResultType.StopChargingTimeout:
+                                return CPO.AuthorizationStop.NoEVConnectedToEVSE(Request);
+
+                            case AuthStopResultType.OutOfService:
+                                return CPO.AuthorizationStop.EVSEOutOfService(Request);
+
+                        }
+                    }
+
+                    #endregion
+
+                    return CPO.AuthorizationStop.ServiceNotAvailable(
+                               Request,
+                               SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
+                               ProviderId: response?.ProviderId.ToOICP()
+                           );
+
                 }
-
-                return CPO.AuthorizationStop.ServiceNotAvailable(
-                           Request,
-                           SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
-                           ProviderId: response?.ProviderId.ToOICP()
-                       );
-
-                #endregion
 
             };
 
@@ -929,8 +1051,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                             ChargeDetailRecordRequest.Timestamp,
                                                                             ChargeDetailRecordRequest.CancellationToken,
                                                                             ChargeDetailRecordRequest.EventTrackingId,
-                                                                            ChargeDetailRecordRequest.RequestTimeout).
-                                                    ConfigureAwait(false);
+                                                                            ChargeDetailRecordRequest.RequestTimeout);
 
 
                 #region Send OnChargeDetailRecordResponse event
@@ -1013,12 +1134,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 }
 
+                #endregion
+
                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.ServiceNotAvailable(
                            ChargeDetailRecordRequest,
                            SessionId: ChargeDetailRecordRequest.ChargeDetailRecord.SessionId
                        );
-
-                #endregion
 
             };
 
@@ -1915,10 +2036,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #region Add the eMAId to the list of valid eMAIds
 
-            if (eMAIds == null && Identification.RemoteIdentification.HasValue)
+            if (eMAIds == null && Identification?.RemoteIdentification.HasValue == true)
                 eMAIds = new List<eMobilityAccount_Id> { Identification.RemoteIdentification.Value };
 
-            if (eMAIds != null && Identification.RemoteIdentification.HasValue && !eMAIds.Contains(Identification.RemoteIdentification.Value))
+            if (eMAIds != null && Identification?.RemoteIdentification.HasValue == true && !eMAIds.Contains(Identification.RemoteIdentification.Value))
             {
                 var _eMAIds = new List<eMobilityAccount_Id>(eMAIds);
                 _eMAIds.Add(Identification.RemoteIdentification.Value);
@@ -1936,9 +2057,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              Duration:           Duration,
                                                              SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                                              PartnerSessionId:   null,
-                                                             PartnerProductId:   PartnerProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                              Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                              AggregateWith("|")),
+                                                             PartnerProductId:   PartnerProductIdElements.Count > 0
+                                                                                     ? PartnerProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                                   Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                                   AggregateWith("|"))
+                                                                                     : default(PartnerProduct_Id?),
 
                                                              Timestamp:          Timestamp,
                                                              CancellationToken:  CancellationToken,
@@ -3846,31 +3969,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             => "OICP" + Version.Number + " EMP Adapter " + Id;
 
         #endregion
-
-
-
-
-
-
-
-
-
-        ///// <summary>
-        ///// An event sent whenever a authorize start command was received.
-        ///// </summary>
-        //public event OnAuthorizeStartEVSEDelegate OnAuthorizeStartEVSE;
-
-
-        ///// <summary>
-        ///// An event sent whenever a authorize stop command was received.
-        ///// </summary>
-        //public event OnAuthorizeStopEVSEDelegate OnAuthorizeStopEVSE;
-
-
-        ///// <summary>
-        ///// An event sent whenever a charge detail record was received.
-        ///// </summary>
-        //public event WWCP.OnChargeDetailRecordDelegate OnChargeDetailRecord;
 
 
     }
