@@ -777,7 +777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         // EMPServer methods
 
-        #region OnAuthorizeStart(SOAP)(Request/-Response)
+        #region OnAuthorizeStart    (SOAP)(Request/-Response)
 
         /// <summary>
         /// An event sent whenever a authorize start SOAP request was received.
@@ -871,7 +871,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region OnAuthorizeStop(SOAP)(Request/-Response)
+        #region OnAuthorizeStop     (SOAP)(Request/-Response)
 
         /// <summary>
         /// An event sent whenever a authorize stop SOAP request was received.
