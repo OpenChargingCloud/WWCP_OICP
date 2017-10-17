@@ -555,7 +555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              AuthorizeStopRequest.PartnerSessionId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -612,7 +612,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                              AuthorizeStopRequest.PartnerSessionId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              AuthorizationStop,
                                                              EndTime - StartTime))).

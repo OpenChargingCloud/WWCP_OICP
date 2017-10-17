@@ -1407,7 +1407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      Request.EventTrackingId,
                                                      Request.OperatorId,
                                                      Request.SessionId,
-                                                     Request.UID,
+                                                     Request.Identification,
                                                      Request.EVSEId,
                                                      Request.PartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
@@ -1533,7 +1533,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                      Request.EventTrackingId,
                                                      Request.OperatorId,
                                                      Request.SessionId,
-                                                     Request.UID,
+                                                     Request.Identification,
                                                      Request.EVSEId,
                                                      Request.PartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,

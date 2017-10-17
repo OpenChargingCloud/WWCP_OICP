@@ -47,9 +47,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public Session_Id          SessionId           { get; }
 
         /// <summary>
-        /// A (RFID) user identification.
+        /// The user identification.
         /// </summary>
-        public UID                 UID                 { get; }
+        public Identification      Identification      { get; }
 
         /// <summary>
         /// An optional EVSE identification.
@@ -70,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
         /// <param name="SessionId">The charging session identification.</param>
-        /// <param name="UID">A (RFID) user identification.</param>
+        /// <param name="Identification">An user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerSessionId">An optional partner session identification.</param>
         /// 
@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeStopRequest(Operator_Id         OperatorId,
                                     Session_Id          SessionId,
-                                    UID                 UID,
+                                    Identification      Identification,
                                     EVSE_Id?            EVSEId              = null,
                                     PartnerSession_Id?  PartnerSessionId    = null,
 
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             this.OperatorId        = OperatorId;
             this.SessionId         = SessionId;
-            this.UID               = UID;
+            this.Identification    = Identification;
             this.EVSEId            = EVSEId;
             this.PartnerSessionId  = PartnerSessionId;
 
@@ -192,10 +192,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                      RequestTimeout                     = null)
         {
 
-            AuthorizeStopRequest _AuthorizeStop;
-
             if (TryParse(AuthorizeStopXML,
-                         out _AuthorizeStop,
+                         out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -238,10 +236,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                  TimeSpan?                                      RequestTimeout                     = null)
         {
 
-            AuthorizeStopRequest _AuthorizeStop;
-
             if (TryParse(AuthorizeStopText,
-                         out _AuthorizeStop,
+                         out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
                          OnException,
@@ -295,16 +291,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     return false;
                 }
 
-                var UID = AuthorizeStopXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-                                                            (xml, e) => Identification.Parse(xml,
-                                                                                             CustomIdentificationParser,
-                                                                                             e),
-                                                            OnException).RFIDId;
-
-                if (!UID.HasValue)
-                    throw new Exception("No UID/RFID identification found in request!");
-
-
                 AuthorizeStop = new AuthorizeStopRequest(
 
                                      AuthorizeStopXML.MapValueOrFail    (OICPNS.Authorization + "OperatorID",
@@ -313,7 +299,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                      AuthorizeStopXML.MapValueOrFail    (OICPNS.Authorization + "SessionID",
                                                                          Session_Id.Parse),
 
-                                     UID.Value,
+                                     AuthorizeStopXML.MapElementOrFail  (OICPNS.Authorization + "Identification",
+                                                                         (xml, e) => Identification.Parse(xml,
+                                                                                                          CustomIdentificationParser,
+                                                                                                          e),
+                                                                         OnException),
 
                                      AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
                                                                          EVSE_Id.Parse),
@@ -339,7 +329,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             catch (Exception e)
             {
 
-                OnException?.Invoke(DateTime.Now, AuthorizeStopXML, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeStopXML, e);
 
                 AuthorizeStop = null;
                 return false;
@@ -397,7 +387,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.Now, AuthorizeStopText, e);
+                OnException?.Invoke(DateTime.UtcNow, AuthorizeStopText, e);
             }
 
             AuthorizeStop = null;
@@ -433,7 +423,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           ? new XElement(OICPNS.Authorization + "EVSEID",            EVSEId.          ToString())
                                           : null,
 
-                                      Identification.FromUID(UID).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
+                                      Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
 
                                   );
 
@@ -527,9 +517,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             if ((Object) AuthorizeStop == null)
                 return false;
 
-            return OperatorId.Equals(AuthorizeStop.OperatorId) &&
-                   SessionId. Equals(AuthorizeStop.SessionId)  &&
-                   UID.       Equals(AuthorizeStop.UID)        &&
+            return OperatorId.    Equals(AuthorizeStop.OperatorId)     &&
+                   SessionId.     Equals(AuthorizeStop.SessionId)      &&
+                   Identification.Equals(AuthorizeStop.Identification) &&
 
                    ((!EVSEId.          HasValue && !AuthorizeStop.EVSEId.          HasValue) ||
                      (EVSEId.          HasValue &&  AuthorizeStop.EVSEId.          HasValue && EVSEId.          Value.Equals(AuthorizeStop.EVSEId.          Value))) &&
@@ -554,9 +544,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             unchecked
             {
 
-                return OperatorId.GetHashCode() * 19 ^
-                       SessionId. GetHashCode() * 17 ^
-                       UID.       GetHashCode() * 11 ^
+                return OperatorId.    GetHashCode() * 19 ^
+                       SessionId.     GetHashCode() * 17 ^
+                       Identification.GetHashCode() * 11 ^
 
                        (EVSEId           != null
                             ? EVSEId.          GetHashCode() * 7
@@ -578,7 +568,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public override String ToString()
 
-            => String.Concat(UID,
+            => String.Concat(Identification,
 
                              EVSEId.HasValue
                                  ? " at " + EVSEId

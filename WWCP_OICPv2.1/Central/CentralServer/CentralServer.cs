@@ -3069,7 +3069,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.SessionId,
-                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.EVSEId,
                                                              AuthorizeStopRequest.PartnerSessionId,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -3126,7 +3126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.SessionId,
-                                                             AuthorizeStopRequest.UID,
+                                                             AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.EVSEId,
                                                              AuthorizeStopRequest.PartnerSessionId,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,

@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        PartnerSession_Id?    PartnerSessionId,
                                        Operator_Id           OperatorId,
                                        EVSE_Id?              EVSEId,
-                                       UID                   UID,
+                                       Identification        Identification,
                                        TimeSpan              RequestTimeout);
 
 
@@ -144,7 +144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                        PartnerSession_Id?      PartnerSessionId,
                                        Operator_Id             OperatorId,
                                        EVSE_Id?                EVSEId,
-                                       UID                     UID,
+                                       Identification          Identification,
                                        TimeSpan                RequestTimeout,
                                        CPO.AuthorizationStop   Result,
                                        TimeSpan                Duration);
