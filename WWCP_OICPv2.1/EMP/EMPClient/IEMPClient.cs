@@ -36,9 +36,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region Properties
 
         /// <summary>
+        /// An optional default e-mobility provider identification.
+        /// </summary>
+        Provider_Id?     DefaultProviderId       { get; }
+
+        /// <summary>
         /// The default request timeout for this client.
         /// </summary>
-        TimeSpan?  RequestTimeout   { get; }
+        TimeSpan?        RequestTimeout          { get; }
 
         #endregion
 

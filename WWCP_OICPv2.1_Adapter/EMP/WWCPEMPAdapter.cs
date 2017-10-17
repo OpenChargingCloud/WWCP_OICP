@@ -1145,6 +1145,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               String                               AuthenticationDataURI             = EMPClient.DefaultAuthenticationDataURI,
                               String                               ReservationURI                    = EMPClient.DefaultReservationURI,
                               String                               AuthorizationURI                  = EMPClient.DefaultAuthorizationURI,
+
+                              Provider_Id?                         DefaultProviderId                 = null,
+
                               String                               HTTPUserAgent                     = EMPClient.DefaultHTTPUserAgent,
                               TimeSpan?                            RequestTimeout                    = null,
                               Byte?                                MaxNumberOfRetries                = EMPClient.DefaultMaxNumberOfRetries,
@@ -1197,6 +1200,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                   AuthenticationDataURI,
                                   ReservationURI,
                                   AuthorizationURI,
+                                  DefaultProviderId,
+
                                   HTTPUserAgent,
                                   RequestTimeout,
                                   MaxNumberOfRetries,
@@ -1485,6 +1490,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
+        #region PullEVSEStatusById(EVSEId,  ProviderId = null, ...)
+
+        /// <summary>
+        /// Check the current status of the given EVSE Ids.
+        /// </summary>
+        /// <param name="EVSEIds">An enumeration of EVSE Ids.</param>
+        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public async Task<EVSEStatusPull>
+
+            PullEVSEStatusById(WWCP.EVSE_Id           EVSEId,
+                               eMobilityProvider_Id?  ProviderId          = null,
+
+                               DateTime?              Timestamp           = null,
+                               CancellationToken?     CancellationToken   = null,
+                               EventTracking_Id       EventTrackingId     = null,
+                               TimeSpan?              RequestTimeout      = null)
+
+        {
+
+            #region Initial checks
+
+            if (EVSEId == null)
+                return new EVSEStatusPull(new WWCP.EVSEStatus[0],
+                                          new String[] { "Parameter 'EVSEId' was null!" });
+
+            #endregion
+
+            return await PullEVSEStatusById(new WWCP.EVSE_Id[] { EVSEId },
+                                            ProviderId,
+
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+        }
+
+        #endregion
+
         #region PullEVSEStatusById(EVSEIds, ProviderId = null, ...)
 
         /// <summary>
@@ -1529,10 +1578,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              ToPartitions(100))
             {
 
-                var result = await EMPRoaming.PullEVSEStatusById(ProviderId.HasValue
+                var result = await EMPRoaming.PullEVSEStatusById(evsepart,
+                                                                 ProviderId.HasValue
                                                                      ? ProviderId.Value.ToOICP()
                                                                      : DefaultProviderId.Value,
-                                                                 evsepart,
 
                                                                  Timestamp,
                                                                  CancellationToken,

@@ -46,6 +46,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// </summary>
         public EMPClient        EMPClient           { get; }
 
+        /// <summary>
+        /// An optional default e-mobility provider identification.
+        /// </summary>
+        public Provider_Id? DefaultProviderId
+            => EMPClient?.DefaultProviderId;
+
         public IPPort RemotePort
             => EMPClient?.RemotePort;
 
@@ -1758,6 +1764,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           String                               AuthenticationDataURI           = EMPClient.DefaultAuthenticationDataURI,
                           String                               ReservationURI                  = EMPClient.DefaultReservationURI,
                           String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
+                          Provider_Id?                         DefaultProviderId               = null,
                           String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
                           TimeSpan?                            RequestTimeout                  = null,
                           Byte?                                MaxNumberOfRetries              = EMPClient.DefaultMaxNumberOfRetries,
@@ -1790,6 +1797,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  AuthenticationDataURI,
                                  ReservationURI,
                                  AuthorizationURI,
+                                 DefaultProviderId,
+
                                  HTTPUserAgent,
                                  RequestTimeout,
                                  MaxNumberOfRetries,

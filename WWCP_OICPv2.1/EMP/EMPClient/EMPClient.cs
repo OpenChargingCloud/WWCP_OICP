@@ -90,6 +90,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region Properties
 
         /// <summary>
+        /// An optional default e-mobility provider identification.
+        /// </summary>
+        public Provider_Id?     DefaultProviderId       { get; }
+
+        /// <summary>
         /// The HTTP/SOAP/XML URI for OICP EvseData requests.
         /// </summary>
         public String           EVSEDataURI             { get; }
@@ -841,6 +846,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
+        /// 
+        /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
+        /// 
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
@@ -860,6 +868,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
                          String                               ReservationURI               = DefaultReservationURI,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
+
+                         Provider_Id?                         DefaultProviderId            = null,
+
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -893,6 +904,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             #endregion
 
+            this.DefaultProviderId      = DefaultProviderId;
+
             this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
             this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
             this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
@@ -917,6 +930,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// 
+        /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
+        /// 
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="URIPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
@@ -930,6 +946,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
                          X509Certificate                      ClientCert                   = null,
+
+                         Provider_Id?                         DefaultProviderId            = null,
+
                          String                               HTTPVirtualHost              = null,
                          String                               URIPrefix                    = DefaultURIPrefix,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
@@ -965,6 +984,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
 
             #endregion
+
+            this.DefaultProviderId      = DefaultProviderId;
 
             this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
             this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;

@@ -93,6 +93,8 @@ namespace org.GraphDefined.WWCP
                                               String                                    AuthenticationDataURI             = OICPv2_1.EMP.EMPClient.DefaultAuthenticationDataURI,
                                               String                                    ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
                                               String                                    AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
+                                              OICPv2_1.Provider_Id?                     DefaultProviderId                 = null,
+
                                               String                                    HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                                 RequestTimeout                    = null,
                                               Byte?                                     MaxNumberOfRetries                = OICPv2_1.EMP.EMPClient.DefaultMaxNumberOfRetries,
@@ -165,6 +167,8 @@ namespace org.GraphDefined.WWCP
                                                                      AuthenticationDataURI,
                                                                      ReservationURI,
                                                                      AuthorizationURI,
+                                                                     DefaultProviderId,
+
                                                                      HTTPUserAgent,
                                                                      RequestTimeout,
                                                                      MaxNumberOfRetries,
@@ -262,6 +266,8 @@ namespace org.GraphDefined.WWCP
                                               String                                    AuthenticationDataURI             = OICPv2_1.EMP.EMPClient.DefaultAuthenticationDataURI,
                                               String                                    ReservationURI                    = OICPv2_1.EMP.EMPClient.DefaultReservationURI,
                                               String                                    AuthorizationURI                  = OICPv2_1.EMP.EMPClient.DefaultAuthorizationURI,
+                                              OICPv2_1.Provider_Id?                     DefaultProviderId                 = null,
+
                                               String                                    HTTPUserAgent                     = OICPv2_1.EMP.EMPClient.DefaultHTTPUserAgent,
                                               TimeSpan?                                 RequestTimeout                    = null,
                                               Byte?                                     MaxNumberOfRetries                = OICPv2_1.EMP.EMPClient.DefaultMaxNumberOfRetries,
@@ -334,6 +340,8 @@ namespace org.GraphDefined.WWCP
                                                                                                 AuthenticationDataURI,
                                                                                                 ReservationURI,
                                                                                                 AuthorizationURI,
+                                                                                                DefaultProviderId,
+
                                                                                                 HTTPUserAgent,
                                                                                                 RequestTimeout,
                                                                                                 MaxNumberOfRetries,
