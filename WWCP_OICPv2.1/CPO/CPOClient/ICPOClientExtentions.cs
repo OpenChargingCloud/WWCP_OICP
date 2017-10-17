@@ -407,7 +407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                  => ICPOClient.AuthorizeStop(new AuthorizeStopRequest(OperatorId,
                                                                       SessionId,
-                                                                      UID,
+                                                                      Identification.FromUID(UID),
                                                                       EVSEId,
                                                                       PartnerSessionId,
 
