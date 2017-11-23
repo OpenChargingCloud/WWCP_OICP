@@ -555,6 +555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                 )
                               : null,
 
+                          //ToDo: According to the WSDL 3 fraction digits are possible!
                           ConsumedEnergy.HasValue
                               ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.}", ConsumedEnergy).Replace(",", "."))
                               : null,
