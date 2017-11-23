@@ -2930,22 +2930,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     var TimestampBeforeLastPullDataRun = DateTime.UtcNow;
 
-                    //var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
-                    //                                                  DefaultSearchCenter,
-                    //                                                  DefaultDistanceKM ?? 0,
-                    //                                                  TimestampOfLastPullDataRun,
-                    //
-                    //                                                  CancellationToken:  new CancellationTokenSource().Token,
-                    //                                                  EventTrackingId:    EventTracking_Id.New,
-                    //                                                  RequestTimeout:     PullDataServiceRequestTimeout).
-                    //
-                    //                                     ConfigureAwait(false);
+                    var PullEVSEData  = await EMPRoaming.PullEVSEData(DefaultProviderId.Value,
+                                                                      DefaultSearchCenter,
+                                                                      DefaultDistanceKM ?? 0,
+                                                                      TimestampOfLastPullDataRun,
 
-                    var PullEVSEData = new {
-                        Content = PullEVSEDataResponse.Parse(null,
-                                                             XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar +
-                                                                                              "PullEvseDataResponse_2017-07-19_PROD.xml", Encoding.UTF8)).Root)
-                    };
+                                                                      CancellationToken:  new CancellationTokenSource().Token,
+                                                                      EventTrackingId:    EventTracking_Id.New,
+                                                                      RequestTimeout:     PullDataServiceRequestTimeout).
+
+                                                         ConfigureAwait(false);
+
+                    //var PullEVSEData = new {
+                    //    Content = PullEVSEDataResponse.Parse(null,
+                    //                                         XDocument.Parse(File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar +
+                    //                                                                          "PullEvseDataResponse_2017-07-19_PROD.xml", Encoding.UTF8)).Root)
+                    //};
 
                     var DownloadTime = DateTime.UtcNow;
 
