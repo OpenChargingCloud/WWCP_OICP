@@ -470,6 +470,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 }
 
+                else
+                    Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.DataError(
+                                          AuthorizeRemoteReservationStartRequest,
+                                          "Could not process the incoming AuthorizeRemoteReservationStart request!"
+                                      );
+
 
                 #region Create SOAPResponse
 
@@ -647,6 +653,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     #endregion
 
                 }
+
+                else
+                    Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.DataError(
+                                          AuthorizeRemoteReservationStopRequest,
+                                          "Could not process the incoming AuthorizeRemoteReservationStop request!"
+                                      );
 
 
                 #region Create SOAPResponse
@@ -832,7 +844,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
 
                 else
-                    Acknowledgement<EMP.AuthorizeRemoteStartRequest>.DataError(AuthorizeRemoteStartRequest);
+                    Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStartRequest>.DataError(
+                                          AuthorizeRemoteStartRequest,
+                                          "Could not process the incoming AuthorizeRemoteStart request!"
+                                      );
 
 
                 #region Create SOAPResponse
@@ -1011,6 +1026,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     #endregion
 
                 }
+
+                else
+                    Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStopRequest>.DataError(
+                                          AuthorizeRemoteStopRequest,
+                                          "Could not process the incoming AuthorizeRemoteStop request!"
+                                      );
 
 
                 #region Create SOAP response

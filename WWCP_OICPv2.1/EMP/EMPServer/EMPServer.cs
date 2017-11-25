@@ -419,8 +419,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 else
-                    AuthorizationStart = CPO.AuthorizationStart.SystemError(
-                                             null,
+                    AuthorizationStart = CPO.AuthorizationStart.DataError(
+                                             AuthorizeStartRequest,
                                              "Could not process the incoming AuthorizeStart request!"
                                          );
 
@@ -605,8 +605,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 else
-                    AuthorizationStop = CPO.AuthorizationStop.SystemError(
-                                            null,
+                    AuthorizationStop = CPO.AuthorizationStop.DataError(
+                                            AuthorizeStopRequest,
                                             "Could not process the incoming AuthorizeStop request!"
                                         );
 
@@ -780,8 +780,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 }
 
                 else
-                    Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
-                                          null,
+                    Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
+                                          SendChargeDetailRecordRequest,
                                           "Could not process the incoming SendChargeDetailRecord request!"
                                       );
 
