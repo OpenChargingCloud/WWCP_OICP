@@ -85,7 +85,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a charging session identification.
@@ -112,10 +112,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a charging session identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a charging session identification.</param>
+        public static Session_Id? TryParse(String Text)
+        {
+
+            #region Initial checks
+
+            if (Text.IsNullOrEmpty())
+                return new Session_Id?();
+
+            #endregion
+
+            var MatchCollection = SessionId_RegEx.Matches(Text);
+
+            if (MatchCollection.Count != 1)
+                throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
+
+            return new Session_Id(Text);
+
+        }
+
+        #endregion
+
         #region TryParse(Text, out SessionId)
 
         /// <summary>
-        /// Parse the given string as a charging session identification.
+        /// Try to parse the given string as a charging session identification.
         /// </summary>
         /// <param name="Text">A text representation of a charging session identification.</param>
         /// <param name="SessionId">The parsed charging session identification.</param>

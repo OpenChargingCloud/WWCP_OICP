@@ -131,6 +131,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of an EVSE operator identification must not be null or empty!");
 
@@ -179,6 +182,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (CountryCode == null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
 
+            if (Suffix != null)
+                Suffix = Suffix.Trim();
+
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given charging station operator identification suffix must not be null or empty!");
 
@@ -211,9 +217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static Operator_Id? TryParse(String Text)
         {
 
-            Operator_Id _OperatorId;
-
-            if (TryParse(Text, out _OperatorId))
+            if (TryParse(Text, out Operator_Id _OperatorId))
                 return _OperatorId;
 
             return new Operator_Id?();
@@ -234,6 +238,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
             {

@@ -130,6 +130,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of an e-mobility provider identification must not be null or empty!");
 
@@ -140,9 +143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (MatchCollection.Count != 1)
                 throw new ArgumentException("Illegal text representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
 
-            Country _CountryCode;
-
-            if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out _CountryCode))
+            if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
             {
 
                 var Separator = ProviderIdFormats.ISO;
@@ -193,6 +194,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if (CountryCode == null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
 
+            if (Suffix != null)
+                Suffix = Suffix.Trim();
+
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given e-mobility provider identification suffix must not be null or empty!");
 
@@ -232,9 +236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static Provider_Id? TryParse(String Text)
         {
 
-            Provider_Id _ProviderId;
-
-            if (TryParse(Text, out _ProviderId))
+            if (TryParse(Text, out Provider_Id _ProviderId))
                 return _ProviderId;
 
             return new Provider_Id?();
@@ -256,6 +258,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
             {
                 ProviderId = default(Provider_Id);
@@ -275,9 +280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return false;
                 }
 
-                Country _CountryCode;
-
-                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out _CountryCode))
+                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
                 {
 
                     var Separator = ProviderIdFormats.ISO;
@@ -339,6 +342,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             #region Initial checks
+
+            if (Suffix != null)
+                Suffix = Suffix.Trim();
 
             if (CountryCode == null || Suffix.IsNullOrEmpty())
             {

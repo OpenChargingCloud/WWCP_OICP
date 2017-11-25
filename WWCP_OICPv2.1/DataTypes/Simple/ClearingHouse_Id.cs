@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a clearing house identification.
@@ -93,10 +93,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a clearing house identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a clearing house identification.</param>
+        public static ClearingHouse_Id? TryParse(String Text)
+        {
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            return Text.IsNullOrEmpty()
+                       ? new ClearingHouse_Id?()
+                       : new ClearingHouse_Id(Text);
+
+        }
+
+        #endregion
+
         #region TryParse(Text, out HubProviderId)
 
         /// <summary>
-        /// Parse the given string as a clearing house identification.
+        /// Try to parse the given string as a clearing house identification.
         /// </summary>
         /// <param name="Text">A text representation of a clearing house identification.</param>
         /// <param name="HubProviderId">The parsed clearing house identification.</param>

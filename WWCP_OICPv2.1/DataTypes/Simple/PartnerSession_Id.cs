@@ -43,12 +43,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         private readonly String InternalId;
 
-        /// <summary>
-        /// The regular expression for parsing a partner charging session identification.
-        /// </summary>
-        public static readonly Regex PartnerSessionId_RegEx  = new Regex("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
-                                                                         RegexOptions.IgnorePatternWhitespace);
-
         #endregion
 
         #region Properties
@@ -75,28 +69,46 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a partner charging session identification.
         /// </summary>
         /// <param name="Text">A text representation of a partner charging session identification.</param>
         public static PartnerSession_Id Parse(String Text)
-{
+        {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of a partner charging session identification must not be null or empty!");
 
             #endregion
 
-            var MatchCollection = PartnerSessionId_RegEx.Matches(Text);
-
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a partner charging session identification: '" + Text + "'!", nameof(Text));
-
             return new PartnerSession_Id(Text);
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a partner charging session identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a partner charging session identification.</param>
+        public static PartnerSession_Id? TryParse(String Text)
+        {
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            return Text.IsNullOrEmpty()
+                       ? new PartnerSession_Id?()
+                       : new PartnerSession_Id(Text);
 
         }
 
@@ -105,7 +117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region TryParse(Text, out PartnerSessionId)
 
         /// <summary>
-        /// Parse the given string as a partner charging session identification.
+        /// Try to parse the given string as a partner charging session identification.
         /// </summary>
         /// <param name="Text">A text representation of a partner charging session identification.</param>
         /// <param name="PartnerSessionId">The parsed partner charging session identification.</param>
@@ -113,6 +125,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
             {
@@ -124,14 +139,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             try
             {
-
-                var MatchCollection = PartnerSessionId_RegEx.Matches(Text);
-
-                if (MatchCollection.Count != 1)
-                {
-                    PartnerSessionId = default(PartnerSession_Id);
-                    return false;
-                }
 
                 PartnerSessionId = new PartnerSession_Id(Text);
 

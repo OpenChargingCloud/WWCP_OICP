@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a charging pool identification.
@@ -94,10 +94,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a charging pool identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a charging pool identification.</param>
+        public static ChargingPool_Id? TryParse(String Text)
+        {
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            return Text.IsNullOrEmpty()
+                       ? new ChargingPool_Id?()
+                       : new ChargingPool_Id(Text);
+
+        }
+
+        #endregion
+
         #region TryParse(Text, out HubProviderId)
 
         /// <summary>
-        /// Parse the given string as a charging pool identification.
+        /// Try to parse the given string as a charging pool identification.
         /// </summary>
         /// <param name="Text">A text representation of a charging pool identification.</param>
         /// <param name="HubProviderId">The parsed charging pool identification.</param>

@@ -130,6 +130,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text),  "The given text representation of an EVSE identification must not be null or empty!");
 
@@ -170,6 +173,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                     String       Suffix)
         {
 
+            #region Initial checks
+
+            if (Suffix != null)
+                Suffix = Suffix.Trim();
+
+            if (Suffix.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Suffix), "The given text representation of an EVSE identification suffix must not be null or empty!");
+
+            #endregion
+
             switch (OperatorId.Format)
             {
 
@@ -191,15 +204,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Parse the given string as an EVSE identification.
+        /// Try to parse the given string as an EVSE identification.
         /// </summary>
         /// <param name="Text">A text representation of an EVSE identification.</param>
         public static EVSE_Id? TryParse(String Text)
         {
 
-            EVSE_Id _EVSEId;
-
-            if (TryParse(Text, out _EVSEId))
+            if (TryParse(Text, out EVSE_Id _EVSEId))
                 return _EVSEId;
 
             return new EVSE_Id?();
@@ -211,7 +222,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region (static) TryParse(Text, out EVSEId)
 
         /// <summary>
-        /// Parse the given string as an EVSE identification.
+        /// Try to parse the given string as an EVSE identification.
         /// </summary>
         /// <param name="Text">A text representation of an EVSE identification.</param>
         /// <param name="EVSEId">The parsed EVSE identification.</param>
@@ -219,6 +230,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
             {

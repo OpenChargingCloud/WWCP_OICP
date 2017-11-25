@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a hub operator identification.
@@ -93,10 +93,30 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a hub operator identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a hub operator identification.</param>
+        public static HubOperator_Id? TryParse(String Text)
+        {
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            return Text.IsNullOrEmpty()
+                       ? new HubOperator_Id?()
+                       : new HubOperator_Id(Text);
+
+        }
+
+        #endregion
+
         #region TryParse(Text, out HubOperatorId)
 
         /// <summary>
-        /// Parse the given string as a hub operator identification.
+        /// Try to parse the given string as a hub operator identification.
         /// </summary>
         /// <param name="Text">A text representation of a hub operator identification.</param>
         /// <param name="HubOperatorId">The parsed hub operator identification.</param>

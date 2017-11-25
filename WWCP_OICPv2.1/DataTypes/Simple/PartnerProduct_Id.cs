@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region (static) Parse(Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a partner product identification.
@@ -89,6 +89,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             return new PartnerProduct_Id(Text);
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a partner product identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a partner product identification.</param>
+        public static PartnerProduct_Id? TryParse(String Text)
+        {
+
+            if (Text != null)
+                Text = Text.Trim();
+
+            return Text.IsNullOrEmpty()
+                       ? new PartnerProduct_Id?()
+                       : new PartnerProduct_Id(Text);
 
         }
 

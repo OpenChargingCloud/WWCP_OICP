@@ -77,14 +77,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a RFID card identification.
         /// </summary>
         /// <param name="Text">A text representation of a RFID card identification.</param>
         public static UID Parse(String Text)
-{
+        {
 
             #region Initial checks
 
@@ -104,10 +104,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Try to parse the given string as a RFID card identification.
+        /// </summary>
+        /// <param name="Text">A text representation of a RFID card identification.</param>
+        public static UID? TryParse(String Text)
+        {
+
+            #region Initial checks
+
+            if (Text.IsNullOrEmpty())
+                return new UID?();
+
+            #endregion
+
+            var MatchCollection = UID_RegEx.Matches(Text);
+
+            if (MatchCollection.Count != 1)
+                return new UID?();
+
+            return new UID(Text);
+
+        }
+
+        #endregion
+
         #region TryParse(Text, out UID)
 
         /// <summary>
-        /// Parse the given string as a RFID card identification.
+        /// Try to parse the given string as a RFID card identification.
         /// </summary>
         /// <param name="Text">A text representation of a RFID card identification.</param>
         /// <param name="UID">The parsed RFID card identification.</param>

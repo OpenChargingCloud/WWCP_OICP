@@ -120,6 +120,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The text representation of the electric vehicle contract identification must not be null or empty!");
 
@@ -183,6 +186,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region Initial checks
 
+            if (Suffix != null)
+                Suffix = Suffix.Trim();
+
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix), "The given electric vehicle contract identification suffix must not be null or empty!");
 
@@ -216,15 +222,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region TryParse(Text)
 
         /// <summary>
-        /// Parse the given string as an electric vehicle contract identification.
+        /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
         /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         public static EVCO_Id? TryParse(String Text)
         {
 
-            EVCO_Id _EVCOId;
-
-            if (TryParse(Text, out _EVCOId))
+            if (TryParse(Text, out EVCO_Id _EVCOId))
                 return _EVCOId;
 
             return new EVCO_Id?();
@@ -236,7 +240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region TryParse(Text, out EVCOId)
 
         /// <summary>
-        /// Parse the given string as an electric vehicle contract identification.
+        /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
         /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         /// <param name="EVCOId">The parsed electric vehicle contract identification.</param>
@@ -244,6 +248,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
             {
