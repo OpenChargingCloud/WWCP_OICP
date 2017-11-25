@@ -418,6 +418,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 }
 
+                else
+                    AuthorizationStart = CPO.AuthorizationStart.SystemError(
+                                             null,
+                                             "Could not process the incoming AuthorizeStart request!"
+                                         );
+
 
                 #region Create SOAP response
 
@@ -598,6 +604,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 }
 
+                else
+                    AuthorizationStop = CPO.AuthorizationStop.SystemError(
+                                            null,
+                                            "Could not process the incoming AuthorizeStop request!"
+                                        );
+
 
                 #region Create SOAP response
 
@@ -766,6 +778,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     #endregion
 
                 }
+
+                else
+                    Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
+                                          null,
+                                          "Could not process the incoming SendChargeDetailRecord request!"
+                                      );
 
 
                 #region Create SOAP response
