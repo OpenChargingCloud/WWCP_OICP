@@ -84,7 +84,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Events
 
-        // EMPClient logging methods
+        // EMPClient methods
 
         #region OnPullEVSEDataRequest/-Response
 

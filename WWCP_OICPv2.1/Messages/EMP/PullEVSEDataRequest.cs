@@ -134,9 +134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             this.LastCall                      = LastCall;
             this._OperatorIdFilter             = OperatorIdFilter  != null ? new HashSet<Operator_Id>(OperatorIdFilter)  : new HashSet<Operator_Id>();
             this._CountryCodeFilter            = CountryCodeFilter != null ? new HashSet<Country>    (CountryCodeFilter) : new HashSet<Country>();
-            this.GeoCoordinatesResponseFormat  = GeoCoordinatesResponseFormat.HasValue
-                                                     ? GeoCoordinatesResponseFormat.Value
-                                                     : GeoCoordinatesResponseFormats.DecimalDegree;
+            this.GeoCoordinatesResponseFormat  = GeoCoordinatesResponseFormat ?? GeoCoordinatesResponseFormats.DecimalDegree;
 
         }
 
