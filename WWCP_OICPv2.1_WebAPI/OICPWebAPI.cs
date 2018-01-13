@@ -155,12 +155,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <summary>
         /// The HTTP content type for serving OICP+ XML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusXMLContentType   = new HTTPContentType("application/vnd.OICPPlus+xml",  CharSet: "utf-8");
+        public static readonly HTTPContentType         OICPPlusXMLContentType   = new HTTPContentType("application/vnd.OICPPlus+xml", "utf-8", null, null);
 
         /// <summary>
         /// The HTTP content type for serving OICP+ HTML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application/vnd.OICPPlus+html", CharSet: "utf-8");
+        public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application/vnd.OICPPlus+html", "utf-8", null, null);
 
 
         private readonly XMLNamespacesDelegate                      XMLNamespaces;
