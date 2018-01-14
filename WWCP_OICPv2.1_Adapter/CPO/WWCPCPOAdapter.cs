@@ -56,28 +56,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate      _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-        //private        readonly  EVSEDataRecord2XMLDelegate                             _EVSEDataRecord2XML;
-
-        //private        readonly  EVSEStatusRecord2XMLDelegate                           _EVSEStatusRecord2XML;
-
-        //private        readonly  ChargeDetailRecord2XMLDelegate                         _ChargeDetailRecord2XML;
-
         private        readonly  ChargingStationOperatorNameSelectorDelegate            _OperatorNameSelector;
 
         private static readonly  Regex                                                  pattern                      = new Regex(@"\s=\s");
 
         public  static readonly  ChargingStationOperatorNameSelectorDelegate            DefaultOperatorNameSelector  = I18N => I18N.FirstText();
 
-        private readonly        HashSet<EVSE>                                           EVSEsToAddQueue;
-        private readonly        HashSet<EVSE>                                           EVSEsToUpdateQueue;
-        private readonly        List<EVSEStatusUpdate>                                  EVSEStatusChangesFastQueue;
-        private readonly        List<EVSEStatusUpdate>                                  EVSEStatusChangesDelayedQueue;
-        private readonly        HashSet<EVSE>                                           EVSEsToRemoveQueue;
         private readonly        List<ChargeDetailRecord>                                OICP_ChargeDetailRecords_Queue;
-
-        private                 IncludeEVSEIdDelegate                                   _IncludeEVSEIds;
-        private                 IncludeEVSEDelegate                                     _IncludeEVSEs;
-
 
         protected readonly      SemaphoreSlim                                           FlushOICPChargeDetailRecordsLock      = new SemaphoreSlim(1, 1);
 
@@ -309,10 +294,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// 
         /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
+        /// 
+        /// <param name="IncludeEVSEIds">Only include the EVSE matching the given delegate.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
+        /// <param name="CustomEVSEIdMapper">A delegate to customize the mapping of EVSE identifications.</param>
         /// 
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
+        /// <param name="CDRCheckEvery">The charge detail record intervall.</param>
         /// 
         /// <param name="DisablePushData">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>
@@ -331,15 +320,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
 
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
@@ -358,6 +346,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    Name,
                    Description,
                    RoamingNetwork,
+
+                   IncludeEVSEIds,
+                   IncludeEVSEs,
+                   CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -388,22 +380,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this._EVSE2EVSEDataRecord                             = EVSE2EVSEDataRecord;
             this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
             this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
-            //this._EVSEDataRecord2XML                              = EVSEDataRecord2XML;
-            //this._EVSEStatusRecord2XML                            = EVSEStatusRecord2XML;
-            //this._ChargeDetailRecord2XML                          = ChargeDetailRecord2XML;
+
             this.DefaultOperatorId                                = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
             this.DefaultOperatorName                              = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                            = OperatorNameSelector;
 
-            this._IncludeEVSEIds                                  = IncludeEVSEIds ?? (evseid => true);
-            this._IncludeEVSEs                                    = IncludeEVSEs   ?? (evse   => true);
-
-            this.EVSEsToAddQueue                                  = new HashSet<EVSE>();
-            this.EVSEsToUpdateQueue                               = new HashSet<EVSE>();
-            this.EVSEStatusChangesFastQueue                       = new List<EVSEStatusUpdate>();
-            this.EVSEStatusChangesDelayedQueue                    = new List<EVSEStatusUpdate>();
-            this.EVSEsToRemoveQueue                               = new HashSet<EVSE>();
             this.OICP_ChargeDetailRecords_Queue                   = new List<ChargeDetailRecord>();
 
 
@@ -851,7 +833,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
+        /// <param name="IncludeEVSEIds">Only include the EVSE matching the given delegate.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
+        /// <param name="CustomEVSEIdMapper">A delegate to customize the mapping of EVSE identifications.</param>
+        /// 
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
         /// 
@@ -876,15 +861,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
+
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
                               TimeSpan?                                          CDRCheckEvery                                   = null,
@@ -911,15 +896,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    EVSE2EVSEDataRecord,
                    EVSEStatusUpdate2EVSEStatusRecord,
                    WWCPChargeDetailRecord2OICPChargeDetailRecord,
-                   //EVSEDataRecord2XML,
-                   //EVSEStatusRecord2XML,
-                   //ChargeDetailRecord2XML,
 
                    DefaultOperator,
                    DefaultOperatorIdFormat,
                    OperatorNameSelector,
+
                    IncludeEVSEIds,
                    IncludeEVSEs,
+                   CustomEVSEIdMapper,
+
                    ServiceCheckEvery,
                    StatusCheckEvery,
                    CDRCheckEvery,
@@ -1019,15 +1004,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                               EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                               WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                              //EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                              //EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                              //ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                               ChargingStationOperator                            DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
                               ChargingStationOperatorNameSelectorDelegate        OperatorNameSelector                            = null,
+
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
+
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
                               TimeSpan?                                          CDRCheckEvery                                   = null,
@@ -1087,8 +1072,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    DefaultOperator,
                    DefaultOperatorIdFormat,
                    OperatorNameSelector,
+
                    IncludeEVSEIds,
                    IncludeEVSEs,
+                   CustomEVSEIdMapper,
+
                    ServiceCheckEvery,
                    StatusCheckEvery,
                    CDRCheckEvery,
