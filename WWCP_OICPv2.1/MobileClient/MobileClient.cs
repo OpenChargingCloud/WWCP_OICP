@@ -328,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
@@ -340,8 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             String                               Hostname,
                             IPPort                               RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
-                            LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
-                            X509Certificate                      ClientCert                   = null,
+                            LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
                             String                               URIPrefix                    = DefaultURIPrefix,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
@@ -356,8 +355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
-                   LocalCertificateSelector,
-                   ClientCert,
+                   ClientCertificateSelector,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
@@ -399,7 +397,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="Hostname">The OICP hostname to connect to.</param>
         /// <param name="RemotePort">An optional OICP TCP port to connect to.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
@@ -410,8 +408,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             String                               Hostname,
                             IPPort                               RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
-                            LocalCertificateSelectionCallback    LocalCertificateSelector     = null,
-                            X509Certificate                      ClientCert                   = null,
+                            LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
                             String                               URIPrefix                    = DefaultURIPrefix,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
@@ -424,8 +421,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    Hostname,
                    RemotePort ?? DefaultRemotePort,
                    RemoteCertificateValidator,
-                   LocalCertificateSelector,
-                   ClientCert,
+                   ClientCertificateSelector,
                    HTTPVirtualHost,
                    URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
                    null,
@@ -524,7 +520,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
-                                                    ClientCert,
                                                     UserAgent,
                                                     RequestTimeout,
                                                     DNSClient))
@@ -721,7 +716,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
-                                                    ClientCert,
                                                     UserAgent,
                                                     RequestTimeout,
                                                     DNSClient))
@@ -931,7 +925,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                                                     URIPrefix + MobileAuthorizationURI,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
-                                                    ClientCert,
                                                     UserAgent,
                                                     RequestTimeout,
                                                     DNSClient))
