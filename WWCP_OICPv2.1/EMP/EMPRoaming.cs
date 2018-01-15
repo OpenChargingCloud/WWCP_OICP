@@ -1706,17 +1706,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and logfile name.</param>
         public EMPRoaming(EMPClient               EMPClient,
                           EMPServer               EMPServer,
                           String                  ServerLoggingContext  = EMPServerLogger.DefaultContext,
                           LogfileCreatorDelegate  LogfileCreator        = null)
         {
 
-            this.EMPClient        = EMPClient;
-            this.EMPServer        = EMPServer;
+            this.EMPClient        = EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!");
+            this.EMPServer        = EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!");
             this.EMPServerLogger  = new EMPServerLogger(EMPServer,
-                                                        ServerLoggingContext,
+                                                        ServerLoggingContext ?? EMPServerLogger.DefaultContext,
                                                         LogfileCreator);
 
         }

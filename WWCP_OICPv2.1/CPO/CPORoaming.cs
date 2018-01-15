@@ -1064,18 +1064,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and logfile name.</param>
         public CPORoaming(CPOClient               CPOClient,
                           CPOServer               CPOServer,
                           String                  ServerLoggingContext  = CPOServerLogger.DefaultContext,
                           LogfileCreatorDelegate  LogfileCreator        = null)
         {
 
-            this.CPOClient        = CPOClient;
-            this.CPOServer        = CPOServer;
-
+            this.CPOClient        = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPOClient must not be null!");
+            this.CPOServer        = CPOServer ?? throw new ArgumentNullException(nameof(CPOServer), "The given CPOServer must not be null!");
             this.CPOServerLogger  = new CPOServerLogger(CPOServer,
-                                                        ServerLoggingContext,
+                                                        ServerLoggingContext ?? CPOServerLogger.DefaultContext,
                                                         LogfileCreator);
 
         }
