@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2017 GraphDefined GmbH
+ * Copyright (c) 2014-2018 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1090,7 +1090,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
@@ -1113,8 +1113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           String                               RemoteHostname,
                           IPPort                               RemoteTCPPort                   = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
-                          LocalCertificateSelectionCallback    LocalCertificateSelector        = null,
-                          X509Certificate                      ClientCert                      = null,
+                          LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
                           String                               RemoteHTTPVirtualHost           = null,
                           String                               URIPrefix                       = CPOClient.DefaultURIPrefix,
                           String                               EVSEDataURI                     = CPOClient.DefaultEVSEDataURI,
@@ -1145,8 +1144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  RemoteHostname,
                                  RemoteTCPPort,
                                  RemoteCertificateValidator,
-                                 LocalCertificateSelector,
-                                 ClientCert,
+                                 ClientCertificateSelector,
                                  RemoteHTTPVirtualHost,
                                  URIPrefix,
                                  EVSEDataURI,

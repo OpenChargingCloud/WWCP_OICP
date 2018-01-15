@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2017 GraphDefined GmbH
+ * Copyright (c) 2014-2018 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +54,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
@@ -103,8 +103,7 @@ namespace org.GraphDefined.WWCP
                                               IPPort                                                          RemoteTCPPort                                   = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
-                                              LocalCertificateSelectionCallback                               LocalCertificateSelector                        = null,
-                                              X509Certificate                                                 ClientCert                                      = null,
+                                              LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
                                               String                                                          URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
                                               String                                                          EVSEDataURI                                     = OICPv2_1.CPO.CPOClient.DefaultEVSEDataURI,
                                               String                                                          EVSEStatusURI                                   = OICPv2_1.CPO.CPOClient.DefaultEVSEStatusURI,
@@ -131,15 +130,15 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                                               OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                                               OICPv2_1.CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPCDR2OICPCDR                                 = null,
-                                              //OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                                              //OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                                              //OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                                               ChargingStationOperator                                         DefaultOperator                                 = null,
                                               OperatorIdFormats                                               DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                     OperatorNameSelector                            = null,
+
                                               IncludeEVSEIdDelegate                                           IncludeEVSEIds                                  = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
+                                              CustomEVSEIdMapperDelegate                                      CustomEVSEIdMapper                              = null,
+
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
                                               TimeSpan?                                                       CDRCheckEvery                                   = null,
@@ -182,8 +181,7 @@ namespace org.GraphDefined.WWCP
                                                                      RemoteHostname,
                                                                      RemoteTCPPort,
                                                                      RemoteCertificateValidator,
-                                                                     LocalCertificateSelector,
-                                                                     ClientCert,
+                                                                     ClientCertificateSelector,
                                                                      RemoteHTTPVirtualHost,
                                                                      URIPrefix,
                                                                      EVSEDataURI,
@@ -211,15 +209,15 @@ namespace org.GraphDefined.WWCP
                                                                      EVSE2EVSEDataRecord,
                                                                      EVSEStatusUpdate2EVSEStatusRecord,
                                                                      WWCPCDR2OICPCDR,
-                                                                     //EVSEDataRecord2XML,
-                                                                     //EVSEStatusRecord2XML,
-                                                                     //ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
                                                                      DefaultOperatorIdFormat,
                                                                      OperatorNameSelector,
+
                                                                      IncludeEVSEIds,
                                                                      IncludeEVSEs,
+                                                                     CustomEVSEIdMapper,
+
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
                                                                      CDRCheckEvery,
@@ -262,7 +260,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCert">The TLS client certificate to use.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
@@ -303,8 +301,7 @@ namespace org.GraphDefined.WWCP
                                               String                                                          RemoteHostname,
                                               IPPort                                                          RemoteTCPPort                                   = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
-                                              LocalCertificateSelectionCallback                               LocalCertificateSelector                        = null,
-                                              X509Certificate                                                 ClientCert                                      = null,
+                                              LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,
                                               String                                                          URIPrefix                                       = OICPv2_1.CPO.CPOClient.DefaultURIPrefix,
                                               String                                                          EVSEDataURI                                     = OICPv2_1.CPO.CPOClient.DefaultEVSEDataURI,
@@ -327,15 +324,15 @@ namespace org.GraphDefined.WWCP
                                               OICPv2_1.CPO.EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
                                               OICPv2_1.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
                                               OICPv2_1.CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
-                                              //OICPv2_1.CPO.EVSEDataRecord2XMLDelegate                         EVSEDataRecord2XML                              = null,
-                                              //OICPv2_1.CPO.EVSEStatusRecord2XMLDelegate                       EVSEStatusRecord2XML                            = null,
-                                              //OICPv2_1.CPO.ChargeDetailRecord2XMLDelegate                     ChargeDetailRecord2XML                          = null,
 
                                               ChargingStationOperator                                         DefaultOperator                                 = null,
                                               OperatorIdFormats                                               DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                               ChargingStationOperatorNameSelectorDelegate                     OperatorNameSelector                            = null,
+
                                               IncludeEVSEIdDelegate                                           IncludeEVSEIds                                  = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
+                                              CustomEVSEIdMapperDelegate                                      CustomEVSEIdMapper                              = null,
+
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
                                               TimeSpan?                                                       StatusCheckEvery                                = null,
                                               TimeSpan?                                                       CDRCheckEvery                                   = null,
@@ -383,8 +380,7 @@ namespace org.GraphDefined.WWCP
                                                                                                 RemoteHostname,
                                                                                                 RemoteTCPPort,
                                                                                                 RemoteCertificateValidator,
-                                                                                                LocalCertificateSelector,
-                                                                                                ClientCert,
+                                                                                                ClientCertificateSelector,
                                                                                                 RemoteHTTPVirtualHost,
                                                                                                 URIPrefix,
                                                                                                 EVSEDataURI,
@@ -410,15 +406,15 @@ namespace org.GraphDefined.WWCP
                                                                      EVSE2EVSEDataRecord,
                                                                      EVSEStatusUpdate2EVSEStatusRecord,
                                                                      WWCPChargeDetailRecord2OICPChargeDetailRecord,
-                                                                     //EVSEDataRecord2XML,
-                                                                     //EVSEStatusRecord2XML,
-                                                                     //ChargeDetailRecord2XML,
 
                                                                      DefaultOperator,
                                                                      DefaultOperatorIdFormat,
                                                                      OperatorNameSelector,
+
                                                                      IncludeEVSEIds,
                                                                      IncludeEVSEs,
+                                                                     CustomEVSEIdMapper,
+
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,
                                                                      CDRCheckEvery,

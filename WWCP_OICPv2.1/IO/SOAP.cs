@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2017 GraphDefined GmbH
+ * Copyright (c) 2014-2018 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,8 +53,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             #endregion
 
             return XMLNamespaces(
-                new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Envelope",
-                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.NS.SOAPEnvelope_v1_1.NamespaceName),
+                new XElement(SOAPNS.v1_1.NS.SOAPEnvelope + "Envelope",
+                    new XAttribute(XNamespace.Xmlns + "SOAP",                SOAPNS.v1_1.NS.SOAPEnvelope.NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "CommonTypes",         OICPNS.CommonTypes.         NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "EVSEData",            OICPNS.EVSEData.            NamespaceName),
                     new XAttribute(XNamespace.Xmlns + "EVSEStatus",          OICPNS.EVSEStatus.          NamespaceName),
@@ -66,8 +66,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     new XAttribute(XNamespace.Xmlns + "B2B2CFeedback",       OICPNS.B2B2CFeedback.       NamespaceName),
 #endif
 
-                    new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Header"),
-                    new XElement(SOAPNS.NS.SOAPEnvelope_v1_1 + "Body",  SOAPBody)
+                    new XElement(SOAPNS.v1_1.NS.SOAPEnvelope + "Header"),
+                    new XElement(SOAPNS.v1_1.NS.SOAPEnvelope + "Body",  SOAPBody)
                 )
             );
 

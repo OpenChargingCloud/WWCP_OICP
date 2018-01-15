@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2017 GraphDefined GmbH
+ * Copyright (c) 2014-2018 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -155,12 +155,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <summary>
         /// The HTTP content type for serving OICP+ XML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusXMLContentType   = new HTTPContentType("application/vnd.OICPPlus+xml", CharSetType.UTF8);
+        public static readonly HTTPContentType         OICPPlusXMLContentType   = new HTTPContentType("application/vnd.OICPPlus+xml", "utf-8", null, null);
 
         /// <summary>
         /// The HTTP content type for serving OICP+ HTML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application/vnd.OICPPlus+html", CharSetType.UTF8);
+        public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application/vnd.OICPPlus+html", "utf-8", null, null);
 
 
         private readonly XMLNamespacesDelegate                      XMLNamespaces;
