@@ -368,7 +368,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                             Server           = HTTPServer.DefaultServerName,
                             Date             = DateTime.Now,
                             Connection       = "close"
-                        }.AsImmutable());
+                        }.AsImmutable);
 
                 }
 
@@ -424,7 +424,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                     ToXML(_RoamingNetwork, XMLNamespaces, XMLPostProcessing: XMLPostProcessing).
                                                                     ToUTF8Bytes(),
                         X_ExpectedTotalNumberOfItems  = _ExpectedCount
-                    }.AsImmutable());
+                    }.AsImmutable);
 
             };
 
@@ -470,7 +470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                             Server           = HTTPServer.DefaultServerName,
                             Date             = DateTime.Now,
                             Connection       = "close"
-                        }.AsImmutable());
+                        }.AsImmutable);
 
                 }
 
@@ -529,7 +529,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                     XMLPostProcessing: XMLPostProcessing).
                                                             ToUTF8Bytes(),
                         X_ExpectedTotalNumberOfItems  = _ExpectedCount
-                    }.AsImmutable());
+                    }.AsImmutable);
 
             };
 
@@ -596,7 +596,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                             Server           = HTTPServer.DefaultServerName,
                             Date             = DateTime.Now,
                             Connection       = "close"
-                        }.AsImmutable());
+                        }.AsImmutable);
 
                 }
 
@@ -689,7 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                                                                       @"</html>", Environment.NewLine).
                                                                ToUTF8Bytes(),
                         X_ExpectedTotalNumberOfItems  = _ExpectedCount
-                   }.AsImmutable());
+                   }.AsImmutable);
 
             };
 
