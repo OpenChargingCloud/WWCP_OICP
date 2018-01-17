@@ -127,7 +127,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
-                                                              PushStatusResult                 Result,
+                                                              PushEVSEStatusResult             Result,
                                                               TimeSpan                         Runtime);
 
     #endregion
