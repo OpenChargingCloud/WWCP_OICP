@@ -1437,9 +1437,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                      CPO.ChargeDetailRecord2WWCPChargeDetailRecordDelegate  ChargeDetailRecord2WWCPChargeDetailRecord = null)
         {
 
-            var CustomData = new Dictionary<String, Object>();
-
-            CustomData.Add("OICP.CDR", ChargeDetailRecord);
+            var CustomData = new Dictionary<String, Object> {
+                                 { "OICP.CDR", ChargeDetailRecord }
+                             };
 
             if (ChargeDetailRecord.PartnerSessionId.HasValue)
                 CustomData.Add("OICP.PartnerSessionId",  ChargeDetailRecord.PartnerSessionId.ToString());
@@ -1511,28 +1511,28 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         {
 
-            var CustomData = new Dictionary<String, Object>();
-
-            CustomData.Add("WWCP.CDR", ChargeDetailRecord);
+            var CustomData = new Dictionary<String, Object> {
+                                 { "WWCP.CDR", ChargeDetailRecord }
+                             };
 
             var CDR = new ChargeDetailRecord(
-                          ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
-                          ChargeDetailRecord.SessionId.ToOICP(),
-                          ChargeDetailRecord.SessionTime.Value.StartTime,
-                          ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                          ChargeDetailRecord.IdentificationStart.ToOICP(),
-                          ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
-                          ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.StartTime : new DateTime?(),
-                          ChargeDetailRecord.SessionTime.HasValue ? ChargeDetailRecord.SessionTime.Value.EndTime   : null,
-                          ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value : new Single?(),
-                          ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value : new Single?(),
-                          ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
-                          ChargeDetailRecord.ConsumedEnergy,
-                          ChargeDetailRecord.MeteringSignature,
-                          ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
-                          ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
-                          CustomData
+                          EVSEId:                ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
+                          SessionId:             ChargeDetailRecord.SessionId.ToOICP(),
+                          SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
+                          SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                          Identification:        ChargeDetailRecord.IdentificationStart.ToOICP(),
+                          PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
+                          PartnerSessionId:      ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
+                          ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.Value.StartTime,
+                          ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                          MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : new Single?(),
+                          MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : new Single?(),
+                          MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
+                          ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
+                          MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                          HubOperatorId:         ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
+                          HubProviderId:         ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
+                          CustomData:            CustomData
                       );
 
             if (WWCPChargeDetailRecord2ChargeDetailRecord != null)
