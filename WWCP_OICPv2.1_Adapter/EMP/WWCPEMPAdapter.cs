@@ -2978,8 +2978,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             UInt64                       TotalEVSEsSkipped               = 0;
 
                             CPInfoList                   _CPInfoList;
-                            WWCP.EVSE_Id?  CurrentEVSEId;
-                            UInt64         EVSEsSkipped;
+                            WWCP.EVSE_Id?                CurrentEVSEId;
+                            UInt64                       EVSEsSkipped;
 
                             foreach (var CurrentOperatorEVSEData in OperatorEVSEData.OrderBy(evseoperator => evseoperator.OperatorName))
                             {
