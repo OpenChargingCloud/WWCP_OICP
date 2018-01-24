@@ -20,12 +20,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using System.Net.Security;
+using System.Security.Authentication;
 
 #endregion
 
@@ -238,6 +242,67 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         #endregion
 
         #region Constructor(s)
+
+        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+
+        /// <summary>
+        /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
+        /// </summary>
+        /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
+        /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
+        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
+        /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
+        /// <param name="ContentType">An optional HTTP content type to use.</param>
+        /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
+        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="AutoStart">Start the server immediately.</param>
+        public CPOServer(String                               HTTPServerName               = DefaultHTTPServerName,
+                         String                               ServiceId                    = null,
+                         IPPort                               TCPPort                      = null,
+                         ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                         RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                         SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+                         String                               ReservationURI               = DefaultReservationURI,
+                         HTTPContentType                      ContentType                  = null,
+                         Boolean                              RegisterHTTPRootService      = true,
+                         DNSClient                            DNSClient                    = null,
+                         Boolean                              AutoStart                    = false)
+
+            : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
+                   TCPPort     ?? DefaultHTTPServerPort,
+                   ServerCertificateSelector,
+                   ClientCertificateValidator,
+                   ClientCertificateSelector,
+                   AllowedTLSProtocols,
+                   URIPrefix   ?? DefaultURIPrefix,
+                   ContentType ?? DefaultContentType,
+                   RegisterHTTPRootService,
+                   DNSClient,
+                   AutoStart: false)
+
+        {
+
+            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
+            this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
+            this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
+
+            RegisterURITemplates();
+
+            if (AutoStart)
+                Start();
+
+        }
+
+        #endregion
 
         #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 

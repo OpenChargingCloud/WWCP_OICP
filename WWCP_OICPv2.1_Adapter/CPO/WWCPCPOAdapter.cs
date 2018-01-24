@@ -1065,9 +1065,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    EVSE2EVSEDataRecord,
                    EVSEStatusUpdate2EVSEStatusRecord,
                    WWCPChargeDetailRecord2OICPChargeDetailRecord,
-                   //EVSEDataRecord2XML,
-                   //EVSEStatusRecord2XML,
-                   //ChargeDetailRecord2XML,
 
                    DefaultOperator,
                    DefaultOperatorIdFormat,
