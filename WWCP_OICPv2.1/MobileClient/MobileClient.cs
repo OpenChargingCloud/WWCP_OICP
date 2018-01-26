@@ -338,7 +338,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public MobileClient(String                               ClientId,
                             String                               Hostname,
-                            IPPort                               RemotePort                   = null,
+                            IPPort?                              RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
@@ -406,7 +406,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         public MobileClient(String                               ClientId,
                             MobileClientLogger                   Logger,
                             String                               Hostname,
-                            IPPort                               RemotePort                   = null,
+                            IPPort?                              RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
@@ -515,9 +515,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    HTTPPort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
                                                     UserAgent,
@@ -711,9 +711,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    HTTPPort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
                                                     UserAgent,
@@ -920,9 +920,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    RemotePort,
                                                     HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    HTTPPort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
                                                     UserAgent,

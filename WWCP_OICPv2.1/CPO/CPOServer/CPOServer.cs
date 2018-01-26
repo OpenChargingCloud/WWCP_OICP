@@ -52,7 +52,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public new static readonly IPPort           DefaultHTTPServerPort      = new IPPort(2002);
+        public new static readonly IPPort           DefaultHTTPServerPort      = IPPort.Parse(2002);
 
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
@@ -264,7 +264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String                               HTTPServerName               = DefaultHTTPServerName,
                          String                               ServiceId                    = null,
-                         IPPort                               TCPPort                      = null,
+                         IPPort?                              TCPPort                      = null,
                          ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
@@ -321,7 +321,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
                          String           ServiceId                 = null,
-                         IPPort           TCPPort                   = null,
+                         IPPort?          TCPPort                   = null,
                          String           URIPrefix                 = DefaultURIPrefix,
                          String           AuthorizationURI          = DefaultAuthorizationURI,
                          String           ReservationURI            = DefaultReservationURI,
