@@ -180,7 +180,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region PullEVSEStatus
 
-                RegisterEvent("AuthorizeStartRequest",
+                RegisterEvent("PullEVSEStatusRequest",
                               handler => EMPClient.OnPullEVSEStatusSOAPRequest += handler,
                               handler => EMPClient.OnPullEVSEStatusSOAPRequest -= handler,
                               "PullEVSEStatus", "Requests", "All").
