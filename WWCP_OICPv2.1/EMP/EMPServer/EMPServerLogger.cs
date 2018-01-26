@@ -45,9 +45,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #region Properties
 
         /// <summary>
-        /// The linked OICP EMP server.
+        /// The attached EMP server.
         /// </summary>
-        public EMPServer EMPServer { get; }
+        public EMPServer  EMPServer   { get; }
 
         #endregion
 
@@ -143,9 +143,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         {
 
+            #region Initial checks
+
             this.EMPServer = EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMP server must not be null!");
 
-            #region Register AuthorizeStart/Stop and SendCDR log events
+            #endregion
+
+            #region Register log events
+
+            // AuthorizeStart/-Stop
 
             RegisterEvent("AuthorizeStartRequest",
                           handler => EMPServer.OnAuthorizeStartSOAPRequest += handler,
@@ -177,17 +183,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 RegisterDefaultDiscLogTarget(this);
 
 
+            // ChargeDetailRecord
+
             RegisterEvent("ChargeDetailRecordRequest",
                           handler => EMPServer.OnChargeDetailRecordSOAPRequest += handler,
                           handler => EMPServer.OnChargeDetailRecordSOAPRequest -= handler,
-                          "CDR", "All").
+                          "ChargeDetailRecord", "CDR", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
             RegisterEvent("ChargeDetailRecordResponse",
                           handler => EMPServer.OnChargeDetailRecordSOAPResponse += handler,
                           handler => EMPServer.OnChargeDetailRecordSOAPResponse -= handler,
-                          "CDR", "All").
+                          "ChargeDetailRecord", "CDR", "All").
                 RegisterDefaultConsoleLogTarget(this).
                 RegisterDefaultDiscLogTarget(this);
 
