@@ -54,15 +54,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
-    /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-    /// <param name="OperatorId">An Charging Station Operator identification.</param>
-    /// <param name="AuthToken">A (RFID) user identification.</param>
-    /// <param name="EVSEId">An optional EVSE identification.</param>
-    /// <param name="SessionId">An optional session identification.</param>
-    /// <param name="PartnerProductId">An optional partner product identification.</param>
-    /// <param name="PartnerSessionId">An optional partner session identification.</param>
-    /// <param name="RequestTimeout">An optional timeout for this request.</param>
+    /// <param name="Request">An AuthorizeStart request.</param>
     public delegate Task<CPO.AuthorizationStart>
 
         OnAuthorizeStartDelegate(DateTime                   Timestamp,

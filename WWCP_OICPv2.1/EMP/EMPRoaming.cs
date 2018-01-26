@@ -27,6 +27,8 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using System.Security.Authentication;
 
 #endregion
 
@@ -1741,6 +1743,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
+        /// <param name="RemoteClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="RemoteClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
         /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
         /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
@@ -1753,35 +1759,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
                           String                               RemoteHostname,
-                          IPPort                               RemoteTCPPort                   = null,
-                          RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
-                          LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
-                          String                               RemoteHTTPVirtualHost           = null,
-                          String                               URIPrefix                       = EMPClient.DefaultURIPrefix,
-                          String                               EVSEDataURI                     = EMPClient.DefaultEVSEDataURI,
-                          String                               EVSEStatusURI                   = EMPClient.DefaultEVSEStatusURI,
-                          String                               AuthenticationDataURI           = EMPClient.DefaultAuthenticationDataURI,
-                          String                               ReservationURI                  = EMPClient.DefaultReservationURI,
-                          String                               AuthorizationURI                = EMPClient.DefaultAuthorizationURI,
-                          Provider_Id?                         DefaultProviderId               = null,
-                          String                               HTTPUserAgent                   = EMPClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            RequestTimeout                  = null,
-                          Byte?                                MaxNumberOfRetries              = EMPClient.DefaultMaxNumberOfRetries,
+                          IPPort                               RemoteTCPPort                      = null,
+                          RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
+                          LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
+                          String                               RemoteHTTPVirtualHost              = null,
+                          String                               URIPrefix                          = EMPClient.DefaultURIPrefix,
+                          String                               EVSEDataURI                        = EMPClient.DefaultEVSEDataURI,
+                          String                               EVSEStatusURI                      = EMPClient.DefaultEVSEStatusURI,
+                          String                               AuthenticationDataURI              = EMPClient.DefaultAuthenticationDataURI,
+                          String                               ReservationURI                     = EMPClient.DefaultReservationURI,
+                          String                               AuthorizationURI                   = EMPClient.DefaultAuthorizationURI,
+                          Provider_Id?                         DefaultProviderId                  = null,
+                          String                               HTTPUserAgent                      = EMPClient.DefaultHTTPUserAgent,
+                          TimeSpan?                            RequestTimeout                     = null,
+                          Byte?                                MaxNumberOfRetries                 = EMPClient.DefaultMaxNumberOfRetries,
 
-                          String                               ServerName                      = EMPServer.DefaultHTTPServerName,
-                          String                               ServiceId                       = null,
-                          IPPort                               ServerTCPPort                   = null,
-                          String                               ServerURIPrefix                 = EMPServer.DefaultURIPrefix,
-                          String                               ServerAuthorizationURI          = EMPServer.DefaultAuthorizationURI,
-                          HTTPContentType                      ServerContentType               = null,
-                          Boolean                              ServerRegisterHTTPRootService   = true,
-                          Boolean                              ServerAutoStart                 = false,
+                          String                               ServerName                         = EMPServer.DefaultHTTPServerName,
+                          String                               ServiceId                          = null,
+                          IPPort                               ServerTCPPort                      = null,
+                          ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
+                          RemoteCertificateValidationCallback  RemoteClientCertificateValidator   = null,
+                          LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,
+                          SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12,
+                          String                               ServerURIPrefix                    = EMPServer.DefaultURIPrefix,
+                          String                               ServerAuthorizationURI             = EMPServer.DefaultAuthorizationURI,
+                          HTTPContentType                      ServerContentType                  = null,
+                          Boolean                              ServerRegisterHTTPRootService      = true,
+                          Boolean                              ServerAutoStart                    = false,
 
-                          String                               ClientLoggingContext            = EMPClient.EMPClientLogger.DefaultContext,
-                          String                               ServerLoggingContext            = EMPServerLogger.DefaultContext,
-                          LogfileCreatorDelegate               LogfileCreator                  = null,
+                          String                               ClientLoggingContext               = EMPClient.EMPClientLogger.DefaultContext,
+                          String                               ServerLoggingContext               = EMPServerLogger.DefaultContext,
+                          LogfileCreatorDelegate               LogfileCreator                     = null,
 
-                          DNSClient                            DNSClient                       = null)
+                          DNSClient                            DNSClient                          = null)
 
             : this(new EMPClient(ClientId,
                                  RemoteHostname,
@@ -1807,6 +1817,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    new EMPServer(ServerName,
                                  ServiceId,
                                  ServerTCPPort,
+                                 ServerCertificateSelector,
+                                 RemoteClientCertificateValidator,
+                                 RemoteClientCertificateSelector,
+                                 AllowedTLSProtocols,
                                  ServerURIPrefix,
                                  ServerAuthorizationURI,
                                  ServerContentType,

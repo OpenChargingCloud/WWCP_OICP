@@ -26,6 +26,9 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Security.Authentication;
+using System.Net.Security;
+using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
 
@@ -200,24 +203,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
+        /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public EMPServer(String           HTTPServerName            = DefaultHTTPServerName,
-                         String           ServiceId                 = null,
-                         IPPort           TCPPort                   = null,
-                         String           URIPrefix                 = DefaultURIPrefix,
-                         String           AuthorizationURI          = DefaultAuthorizationURI,
-                         HTTPContentType  ContentType               = null,
-                         Boolean          RegisterHTTPRootService   = true,
-                         DNSClient        DNSClient                 = null,
-                         Boolean          AutoStart                 = false)
+        public EMPServer(String                               HTTPServerName               = DefaultHTTPServerName,
+                         String                               ServiceId                    = null,
+                         IPPort                               TCPPort                      = null,
+                         ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                         RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                         SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
+                         String                               URIPrefix                    = DefaultURIPrefix,
+                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+                         HTTPContentType                      ContentType                  = null,
+                         Boolean                              RegisterHTTPRootService      = true,
+                         DNSClient                            DNSClient                    = null,
+                         Boolean                              AutoStart                    = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
+                   ServerCertificateSelector,
+                   ClientCertificateValidator,
+                   ClientCertificateSelector,
+                   AllowedTLSProtocols,
                    URIPrefix   ?? DefaultURIPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
