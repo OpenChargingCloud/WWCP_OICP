@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public static readonly TimeSpan DefaultReservationTime = TimeSpan.FromMinutes(15);
 
 
-        private readonly        Object         PullDataServiceLock;
+        //private readonly        Object         PullDataServiceLock;
         private readonly        Timer          PullDataServiceTimer;
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public  readonly static TimeSpan       DefaultPullDataServiceRequestTimeout     = TimeSpan.FromMinutes(30);
 
 
-        private readonly        Object         PullStatusServiceLock;
+        //private readonly        Object         PullStatusServiceLock;
         private readonly        Timer          PullStatusServiceTimer;
 
         /// <summary>
@@ -186,6 +186,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         #endregion
 
         #region PullStatusService
+
+        private static SemaphoreSlim PullEVSEStatusLock = new SemaphoreSlim(1, 1);
 
         public Boolean  DisablePullStatus { get; set; }
 
@@ -458,7 +460,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                   ? PullDataServiceEvery.Value.  TotalMilliseconds
                                                                   : DefaultPullDataServiceEvery. TotalMilliseconds);
             this.PullDataServiceRequestTimeout    = PullDataServiceRequestTimeout ?? DefaultPullDataServiceRequestTimeout;
-            this.PullDataServiceLock              = new Object();
+            //this.PullDataServiceLock              = new Object();
             this.PullDataServiceTimer             = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
             this.DisablePullData                  = DisablePullData;
 
@@ -467,7 +469,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                   ? PullStatusServiceEvery.Value.  TotalMilliseconds
                                                                   : DefaultPullStatusServiceEvery. TotalMilliseconds);
             this.PullStatusServiceRequestTimeout  = PullStatusServiceRequestTimeout ?? DefaultPullStatusServiceRequestTimeout;
-            this.PullStatusServiceLock            = new Object();
+            //this.PullStatusServiceLock            = new Object();
             this.PullStatusServiceTimer           = new Timer(PullStatusService, null, 150000, _PullStatusServiceEvery);
             this.DisablePullStatus                = DisablePullStatus;
 
@@ -2913,7 +2915,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public async Task PullData()
         {
 
-            var LockTaken = await PullEVSEDataLock.WaitAsync(0);
+            var LockTaken = await PullEVSEDataLock.WaitAsync(0).ConfigureAwait(false);
 
             if (LockTaken)
             {
@@ -3515,39 +3517,43 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             DebugX.LogT("[" + Id + "] 'Pull status service', as every " + _PullStatusServiceEvery + "ms!");
 
-            if (Monitor.TryEnter(PullStatusServiceLock,
-                                 TimeSpan.FromSeconds(5)))
+            var DataLockTaken = await PullEVSEDataLock.WaitAsync(0).ConfigureAwait(false);
+
+            if (DataLockTaken)
             {
 
-                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+                var StatusLockTaken = await PullEVSEStatusLock.WaitAsync(0).ConfigureAwait(false);
 
-                var StartTime = DateTime.UtcNow;
-                DebugX.LogT("[" + Id + "] 'Pull status service' started at " + StartTime.ToIso8601());
-
-                try
+                if (StatusLockTaken)
                 {
 
-                    var PullEVSEStatusTask  = EMPRoaming.PullEVSEStatus(DefaultProviderId.Value,
-                                                                        DefaultSearchCenter,
-                                                                        DefaultDistanceKM.HasValue ? DefaultDistanceKM.Value : 0,
+                    Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
-                                                                        CancellationToken:  new CancellationTokenSource().Token,
-                                                                        EventTrackingId:    EventTracking_Id.New,
-                                                                        RequestTimeout:     PullStatusServiceRequestTimeout);
+                    var StartTime = DateTime.UtcNow;
+                    DebugX.LogT("[" + Id + "] 'Pull status service' started at " + StartTime.ToIso8601());
 
-                    PullEVSEStatusTask.Wait();
+                    try
+                    {
 
-                    var DownloadTime = DateTime.UtcNow;
+                        var PullEVSEStatus = await EMPRoaming.PullEVSEStatus(DefaultProviderId.Value,
+                                                                             DefaultSearchCenter,
+                                                                             DefaultDistanceKM ?? 0,
+
+                                                                             CancellationToken:  new CancellationTokenSource().Token,
+                                                                             EventTrackingId:    EventTracking_Id.New,
+                                                                             RequestTimeout:     PullStatusServiceRequestTimeout);
+
+                        var DownloadTime = DateTime.UtcNow;
 
                     #region Everything is ok!
 
-                    if (PullEVSEStatusTask.Result                    != null  &&
-                        PullEVSEStatusTask.Result.Content            != null  &&
-                        PullEVSEStatusTask.Result.Content.StatusCode.HasValue &&
-                        PullEVSEStatusTask.Result.Content.StatusCode.Value.Code == StatusCodes.Success)
+                    if (PullEVSEStatus                    != null  &&
+                        PullEVSEStatus.Content            != null  &&
+                        PullEVSEStatus.Content.StatusCode.HasValue &&
+                        PullEVSEStatus.Content.StatusCode.Value.Code == StatusCodes.Success)
                     {
 
-                        var OperatorEVSEStatus = PullEVSEStatusTask.Result.Content.OperatorEVSEStatus;
+                        var OperatorEVSEStatus = PullEVSEStatus.Content.OperatorEVSEStatus;
 
                         if (OperatorEVSEStatus != null && OperatorEVSEStatus.Any())
                         {
@@ -3659,14 +3665,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region HTTP status is not 200 - OK
 
-                    else if (PullEVSEStatusTask.Result.HTTPStatusCode != HTTPStatusCode.OK)
+                    else if (PullEVSEStatus.HTTPStatusCode != HTTPStatusCode.OK)
                     {
 
                         DebugX.Log("Importing EVSE status records failed: " +
-                                   PullEVSEStatusTask.Result.HTTPStatusCode.ToString() +
+                                   PullEVSEStatus.HTTPStatusCode +
 
-                                   PullEVSEStatusTask.Result.HTTPBody != null
-                                       ? Environment.NewLine + PullEVSEStatusTask.Result.HTTPBody.ToUTF8String()
+                                   PullEVSEStatus.HTTPBody != null
+                                       ? Environment.NewLine + PullEVSEStatus.HTTPBody.ToUTF8String()
                                        : "");
 
                     }
@@ -3675,19 +3681,19 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                     #region OICP StatusCode is not 'Success'
 
-                    else if (PullEVSEStatusTask.Result.Content.StatusCode.HasValue &&
-                            !PullEVSEStatusTask.Result.Content.StatusCode.Value.HasResult)
+                    else if (PullEVSEStatus.Content.StatusCode.HasValue &&
+                            !PullEVSEStatus.Content.StatusCode.Value.HasResult)
                     {
 
                         DebugX.Log("Importing EVSE status records failed: " +
-                                   PullEVSEStatusTask.Result.Content.StatusCode.Value.Code.ToString() +
+                                   PullEVSEStatus.Content.StatusCode.Value.Code.ToString() +
 
-                                   (PullEVSEStatusTask.Result.Content.StatusCode.Value.Description.IsNotNullOrEmpty()
-                                        ? ", " + PullEVSEStatusTask.Result.Content.StatusCode.Value.Description
+                                   (PullEVSEStatus.Content.StatusCode.Value.Description.IsNotNullOrEmpty()
+                                        ? ", " + PullEVSEStatus.Content.StatusCode.Value.Description
                                         : "") +
 
-                                   (PullEVSEStatusTask.Result.Content.StatusCode.Value.AdditionalInfo.IsNotNullOrEmpty()
-                                        ? ", " + PullEVSEStatusTask.Result.Content.StatusCode.Value.AdditionalInfo
+                                   (PullEVSEStatus.Content.StatusCode.Value.AdditionalInfo.IsNotNullOrEmpty()
+                                        ? ", " + PullEVSEStatus.Content.StatusCode.Value.AdditionalInfo
                                         : ""));
 
                     }
@@ -3704,30 +3710,37 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     #endregion
 
 
-                    var EndTime = DateTime.UtcNow;
+                        var EndTime = DateTime.UtcNow;
 
-                    DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
+                        DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        while (e.InnerException != null)
+                            e = e.InnerException;
+
+                        DebugX.LogT(nameof(WWCPEMPAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+
+                    }
+
+                    finally
+                    {
+                        PullEVSEStatusLock.Release();
+                    }
 
                 }
-                catch (Exception e)
-                {
 
-                    while (e.InnerException != null)
-                        e = e.InnerException;
+                else
+                    Console.WriteLine("PullStatus->PullStatusServiceLock missed!");
 
-                    DebugX.LogT(nameof(WWCPEMPAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
-
-                }
-
-                finally
-                {
-                    Monitor.Exit(PullStatusServiceLock);
-                }
+                PullEVSEDataLock.Release();
 
             }
 
             else
-                Console.WriteLine("PullStatusServiceLock missed!");
+                Console.WriteLine("PullStatus->PullDataServiceLock missed!");
 
             return;
 
