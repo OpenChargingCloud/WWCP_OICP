@@ -52,9 +52,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region Properties
 
             /// <summary>
-            /// The attached OICP CPO client.
+            /// The attached CPO client.
             /// </summary>
-            public ICPOClient CPOClient { get; }
+            public ICPOClient  CPOClient   { get; }
 
             #endregion
 
@@ -157,96 +157,100 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                #region Register EVSE data/status push log events
+                #region Register log events
 
-                RegisterEvent("EVSEDataPush",
+                // PushData/-Status
+
+                RegisterEvent("PushEVSEDataRequest",
                               handler => CPOClient.OnPushEVSEDataSOAPRequest    += handler,
                               handler => CPOClient.OnPushEVSEDataSOAPRequest    -= handler,
-                              "EVSE", "EVSEData", "Request", "All").
+                              "PushEVSEData", "EVSE", "EVSEData", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("EVSEDataPushed",
+                RegisterEvent("PushEVSEDataResponse",
                               handler => CPOClient.OnPushEVSEDataSOAPResponse   += handler,
                               handler => CPOClient.OnPushEVSEDataSOAPResponse   -= handler,
-                              "EVSE", "EVSEData", "Response", "All").
+                              "PushEVSEData", "EVSE", "EVSEData", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("EVSEStatusPush",
+                RegisterEvent("PushEVSEStatusRequest",
                               handler => CPOClient.OnPushEVSEStatusSOAPRequest  += handler,
                               handler => CPOClient.OnPushEVSEStatusSOAPRequest  -= handler,
-                              "EVSE", "AuthorizationStart", "Request", "All").
+                              "PushEVSEStatus", "EVSE", "AuthorizationStart", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("EVSEStatusPushed",
+                RegisterEvent("PushEVSEStatusResponse",
                               handler => CPOClient.OnPushEVSEStatusSOAPResponse += handler,
                               handler => CPOClient.OnPushEVSEStatusSOAPResponse -= handler,
-                              "EVSE", "AuthorizationStart", "Response", "All").
+                              "PushEVSEStatus", "EVSE", "AuthorizationStart", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
+                // AuthorizeStart/-Stop
 
-                RegisterEvent("AuthorizeStart",
+                RegisterEvent("AuthorizeStartRequest",
                               handler => CPOClient.OnAuthorizeStartSOAPRequest += handler,
                               handler => CPOClient.OnAuthorizeStartSOAPRequest -= handler,
-                              "Authorize", "Request", "All").
+                              "AuthorizeStart", "Authorize", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeStarted",
+                RegisterEvent("AuthorizeStartResponse",
                               handler => CPOClient.OnAuthorizeStartSOAPResponse += handler,
                               handler => CPOClient.OnAuthorizeStartSOAPResponse -= handler,
-                              "Authorize", "Response", "All").
+                              "AuthorizeStart", "Authorize", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeStop",
+                RegisterEvent("AuthorizeStopRequest",
                               handler => CPOClient.OnAuthorizeStopSOAPRequest += handler,
                               handler => CPOClient.OnAuthorizeStopSOAPRequest -= handler,
-                              "Authorize", "Request", "All").
+                              "AuthorizeStop", "Authorize", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeStopped",
+                RegisterEvent("AuthorizeStopResponse",
                               handler => CPOClient.OnAuthorizeStopSOAPResponse += handler,
                               handler => CPOClient.OnAuthorizeStopSOAPResponse -= handler,
-                              "Authorize", "Response", "All").
+                              "AuthorizeStop", "Authorize", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
+                // SendCDR / PullAuthenticationData
 
-                RegisterEvent("SendChargeDetailRecord",
+                RegisterEvent("SendChargeDetailRecordRequest",
                               handler => CPOClient.OnSendChargeDetailRecordSOAPRequest += handler,
                               handler => CPOClient.OnSendChargeDetailRecordSOAPRequest -= handler,
-                              "ChargeDetailRecord", "CDR", "Request", "All").
+                              "SendChargeDetailRecord", "ChargeDetailRecord", "CDR", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("ChargeDetailRecordSent",
+                RegisterEvent("SendChargeDetailRecordResponse",
                               handler => CPOClient.OnSendChargeDetailRecordSOAPResponse += handler,
                               handler => CPOClient.OnSendChargeDetailRecordSOAPResponse -= handler,
-                              "ChargeDetailRecord", "CDR", "Response", "All").
+                              "SendChargeDetailRecord", "ChargeDetailRecord", "CDR", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("PullAuthenticationData",
+                RegisterEvent("PullAuthenticationDataRequest",
                               handler => CPOClient.OnPullAuthenticationDataSOAPRequest += handler,
                               handler => CPOClient.OnPullAuthenticationDataSOAPRequest -= handler,
-                              "AuthenticationData", "Request", "All").
+                              "PullAuthenticationData", "AuthenticationData", "Request", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthenticationDataPulled",
+                RegisterEvent("PullAuthenticationDataResponse",
                               handler => CPOClient.OnPullAuthenticationDataSOAPResponse += handler,
                               handler => CPOClient.OnPullAuthenticationDataSOAPResponse -= handler,
-                              "AuthenticationData", "Response", "All").
+                              "PullAuthenticationData", "AuthenticationData", "Response", "All").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
