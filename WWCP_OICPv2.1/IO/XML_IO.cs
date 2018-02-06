@@ -49,32 +49,56 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             if ((EVSEGoogleXML        != null && EVSEDecimalDegreeXML       != null) ||
                 (EVSEGoogleXML        != null && EVSEDegreeMinuteSecondsXML != null) ||
                 (EVSEDecimalDegreeXML != null && EVSEDegreeMinuteSecondsXML != null))
+            {
                 throw new ApplicationException("Invalid GeoCoordinates XML tag: Should only include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
+            }
 
             if (EVSEGoogleXML != null)
             {
-                throw new NotImplementedException("GeoCoordinates Google XML parsing!");
+
+                var Coordinates = EVSEGoogleXML.Value.Split(new Char[] { ',' }, StringSplitOptions.None);
+
+                if (!Longitude.TryParse(Coordinates[0],
+                                        out Longitude LongitudeValue))
+                {
+                    throw new ApplicationException("Invalid longitude in Google format provided!");
+                }
+
+                if (!Latitude.TryParse(Coordinates[1],
+                                       out Latitude LatitudeValue))
+                {
+                    throw new ApplicationException("Invalid latitude in Google format provided!");
+                }
+
+                return new GeoCoordinate(LatitudeValue,
+                                         LongitudeValue);
+
             }
 
             if (EVSEDecimalDegreeXML != null)
             {
 
-                Longitude LongitudeValue;
-                if (!Longitude.TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Longitude", "No GeoCoordinates DecimalDegree Longitude XML tag provided!"), out LongitudeValue))
+                if (!Longitude.TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Longitude",
+                                                                                "No GeoCoordinates DecimalDegree Longitude XML tag provided!"),
+                                        out Longitude LongitudeValue))
+                {
                     throw new ApplicationException("Invalid Longitude XML tag provided!");
+                }
 
-                Latitude LatitudeValue;
-                if (!Latitude. TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Latitude",  "No GeoCoordinates DecimalDegree Latitude XML tag provided!"),  out LatitudeValue))
+                if (!Latitude.TryParse(EVSEDecimalDegreeXML.ElementValueOrFail(OICPNS.CommonTypes + "Latitude",
+                                                                               "No GeoCoordinates DecimalDegree Latitude XML tag provided!"),
+                                       out Latitude LatitudeValue))
+                {
                     throw new ApplicationException("Invalid Latitude XML tag provided!");
+                }
 
-                return new GeoCoordinate(LatitudeValue, LongitudeValue);
+                return new GeoCoordinate(LatitudeValue,
+                                         LongitudeValue);
 
             }
 
             if (EVSEDegreeMinuteSecondsXML != null)
-            {
                 throw new NotImplementedException("GeoCoordinates DegreeMinuteSeconds XML parsing!");
-            }
 
             throw new ApplicationException("Invalid GeoCoordinates XML tag: Should at least include one of the following XML tags Google, DecimalDegree or DegreeMinuteSeconds!");
 
