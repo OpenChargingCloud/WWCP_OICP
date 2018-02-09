@@ -100,7 +100,7 @@ namespace org.GraphDefined.WWCP
                                               I18NString                                                      Description,
 
                                               String                                                          RemoteHostname,
-                                              IPPort                                                          RemoteTCPPort                                   = null,
+                                              IPPort?                                                         RemoteTCPPort                                   = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
                                               LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
@@ -115,7 +115,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                                          ServerName                                      = OICPv2_1.CPO.CPOServer.DefaultHTTPServerName,
                                               String                                                          ServiceId                                       = null,
-                                              IPPort                                                          ServerTCPPort                                   = null,
+                                              IPPort?                                                         ServerTCPPort                                   = null,
                                               String                                                          ServerURIPrefix                                 = OICPv2_1.CPO.CPOServer.DefaultURIPrefix,
                                               String                                                          ServerAuthorizationURI                          = OICPv2_1.CPO.CPOServer.DefaultAuthorizationURI,
                                               String                                                          ServerReservationURI                            = OICPv2_1.CPO.CPOServer.DefaultReservationURI,
@@ -299,7 +299,7 @@ namespace org.GraphDefined.WWCP
                                               SOAPServer                                                      SOAPServer,
 
                                               String                                                          RemoteHostname,
-                                              IPPort                                                          RemoteTCPPort                                   = null,
+                                              IPPort?                                                         RemoteTCPPort                                   = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
                                               LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
                                               String                                                          RemoteHTTPVirtualHost                           = null,

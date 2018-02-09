@@ -51,7 +51,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public new static readonly IPPort           DefaultHTTPServerPort      = new IPPort(2003);
+        public new static readonly IPPort           DefaultHTTPServerPort      = IPPort.Parse(2003);
 
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
@@ -215,7 +215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="AutoStart">Start the server immediately.</param>
         public EMPServer(String                               HTTPServerName               = DefaultHTTPServerName,
                          String                               ServiceId                    = null,
-                         IPPort                               TCPPort                      = null,
+                         IPPort?                              TCPPort                      = null,
                          ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,

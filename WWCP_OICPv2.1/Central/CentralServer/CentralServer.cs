@@ -48,7 +48,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// The default HTTP/SOAP/XML server TCP port.
         /// </summary>
-        public new static readonly IPPort           DefaultHTTPServerPort           = new IPPort(2003);
+        public new static readonly IPPort           DefaultHTTPServerPort           = IPPort.Parse(2003);
 
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
@@ -781,7 +781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="AutoStart">Start the server immediately.</param>
         public CentralServer(String           HTTPServerName            = DefaultHTTPServerName,
                              String           ServiceId                 = null,
-                             IPPort           TCPPort                   = null,
+                             IPPort?          TCPPort                   = null,
                              String           URIPrefix                 = DefaultURIPrefix,
                              String           EVSEDataURI               = DefaultAuthorizationURI,
                              String           EVSEStatusURI             = DefaultAuthorizationURI,

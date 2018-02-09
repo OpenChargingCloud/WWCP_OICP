@@ -54,8 +54,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public Provider_Id? DefaultProviderId
             => EMPClient?.DefaultProviderId;
 
-        public IPPort RemotePort
-            => EMPClient?.RemotePort;
+        public IPPort HTTPPort
+            => EMPClient.HTTPPort;
 
         public RemoteCertificateValidationCallback RemoteCertificateValidator
             => EMPClient?.RemoteCertificateValidator;
@@ -1759,7 +1759,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
                           String                               RemoteHostname,
-                          IPPort                               RemoteTCPPort                      = null,
+                          IPPort?                              RemoteTCPPort                      = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
                           String                               RemoteHTTPVirtualHost              = null,
@@ -1776,7 +1776,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                           String                               ServerName                         = EMPServer.DefaultHTTPServerName,
                           String                               ServiceId                          = null,
-                          IPPort                               ServerTCPPort                      = null,
+                          IPPort?                              ServerTCPPort                      = null,
                           ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
                           RemoteCertificateValidationCallback  RemoteClientCertificateValidator   = null,
                           LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,

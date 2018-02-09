@@ -47,8 +47,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public CPOClient        CPOClient         { get; }
 
-        public IPPort RemotePort
-            => CPOClient?.RemotePort;
+        public IPPort HTTPPort
+            => CPOClient.HTTPPort;
 
         public RemoteCertificateValidationCallback RemoteCertificateValidator
             => CPOClient?.RemoteCertificateValidator;
@@ -1111,7 +1111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPORoaming(String                               ClientId,
                           String                               RemoteHostname,
-                          IPPort                               RemoteTCPPort                   = null,
+                          IPPort?                              RemoteTCPPort                   = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
                           String                               RemoteHTTPVirtualHost           = null,
@@ -1126,7 +1126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                           String                               ServerName                      = CPOServer.DefaultHTTPServerName,
                           String                               ServiceId                       = null,
-                          IPPort                               ServerTCPPort                   = null,
+                          IPPort?                              ServerTCPPort                   = null,
                           String                               ServerURIPrefix                 = CPOServer.DefaultURIPrefix,
                           String                               ServerAuthorizationURI          = CPOServer.DefaultAuthorizationURI,
                           String                               ServerReservationURI            = CPOServer.DefaultReservationURI,
