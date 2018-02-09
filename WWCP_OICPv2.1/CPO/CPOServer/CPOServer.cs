@@ -404,8 +404,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             async (HTTPRequest, AuthorizeRemoteReservationStartXML) => {
 
 
-                EMP.AuthorizeRemoteReservationStartRequest                  AuthorizeRemoteReservationStartRequest  = null;
-                Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest> Acknowledgement                         = null;
+                Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest> Acknowledgement  = null;
 
                 #region Send OnAuthorizeRemoteReservationStartSOAPRequest event
 
@@ -432,7 +431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 if (EMP.AuthorizeRemoteReservationStartRequest.TryParse(AuthorizeRemoteReservationStartXML,
-                                                                        out AuthorizeRemoteReservationStartRequest,
+                                                                        out EMP.AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStartRequest,
                                                                         CustomAuthorizeRemoteReservationStartRequestParser,
                                                                         CustomIdentificationParser,
                                                                         OnException,
@@ -593,8 +592,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             async (HTTPRequest, AuthorizeRemoteReservationStopXML) => {
 
 
-                EMP.AuthorizeRemoteReservationStopRequest                  AuthorizeRemoteReservationStopRequest  = null;
-                Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest> Acknowledgement                        = null;
+                Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest> Acknowledgement  = null;
 
                 #region Send OnAuthorizeRemoteReservationStopSOAPRequest event
 
@@ -621,7 +619,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 if (EMP.AuthorizeRemoteReservationStopRequest.TryParse(AuthorizeRemoteReservationStopXML,
-                                                                       out AuthorizeRemoteReservationStopRequest,
+                                                                       out EMP.AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStopRequest,
                                                                        CustomAuthorizeRemoteReservationStopRequestParser,
                                                                        OnException,
 
@@ -777,8 +775,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             async (HTTPRequest, AuthorizeRemoteStartXML) => {
 
 
-                EMP.AuthorizeRemoteStartRequest                  AuthorizeRemoteStartRequest  = null;
-                Acknowledgement<EMP.AuthorizeRemoteStartRequest> Acknowledgement              = null;
+                Acknowledgement<EMP.AuthorizeRemoteStartRequest> Acknowledgement  = null;
 
                 #region Send OnAuthorizeRemoteStartSOAPRequest event
 
@@ -805,7 +802,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 if (EMP.AuthorizeRemoteStartRequest.TryParse(AuthorizeRemoteStartXML,
-                                                             out AuthorizeRemoteStartRequest,
+                                                             out EMP.AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest,
                                                              CustomAuthorizeRemoteStartRequestParser,
                                                              CustomIdentificationParser,
                                                              OnException,
@@ -966,8 +963,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                             async (HTTPRequest, AuthorizeRemoteStopXML) => {
 
 
-                EMP.AuthorizeRemoteStopRequest                  AuthorizeRemoteStopRequest  = null;
-                Acknowledgement<EMP.AuthorizeRemoteStopRequest> Acknowledgement             = null;
+
+                Acknowledgement<EMP.AuthorizeRemoteStopRequest> Acknowledgement  = null;
 
                 #region Send OnAuthorizeRemoteStopSOAPRequest event
 
@@ -994,7 +991,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 if (EMP.AuthorizeRemoteStopRequest.TryParse(AuthorizeRemoteStopXML,
-                                                            out AuthorizeRemoteStopRequest,
+                                                            out EMP.AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest,
                                                             CustomAuthorizeRemoteStopRequestParser,
                                                             OnException,
 
