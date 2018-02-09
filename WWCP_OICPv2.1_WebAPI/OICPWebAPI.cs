@@ -143,7 +143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <summary>
         /// The default HTTP URI prefix.
         /// </summary>
-        public const           String                  DefaultURIPrefix         = "/ext/OICPPlus";
+        public static readonly HTTPURI                 DefaultURIPrefix         = HTTPURI.Parse("/ext/OICPPlus");
 
         /// <summary>
         /// The default HTTP realm, if HTTP Basic Authentication is used.
@@ -182,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <summary>
         /// The HTTP URI prefix.
         /// </summary>
-        public String                                       URIPrefix     { get; }
+        public HTTPURI                                      URIPrefix     { get; }
 
         /// <summary>
         /// The HTTP realm, if HTTP Basic Authentication is used.
@@ -288,7 +288,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
         public OICPWebAPI(HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
-                          String                                       URIPrefix                           = DefaultURIPrefix,
+                          HTTPURI?                                     URIPrefix                           = null,
                           String                                       HTTPRealm                           = DefaultHTTPRealm,
                           IEnumerable<KeyValuePair<String, String>>    HTTPLogins                          = null,
 
@@ -300,21 +300,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                           XMLPostProcessingDelegate                    XMLPostProcessing                   = null)
         {
 
-            #region Initial checks
-
-            if (HTTPServer == null)
-                throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
-
-            if (URIPrefix.IsNullOrEmpty())
-                URIPrefix = DefaultURIPrefix;
-
-            if (!URIPrefix.StartsWith("/", StringComparison.Ordinal))
-                URIPrefix = "/" + URIPrefix;
-
-            #endregion
-
-            this.HTTPServer                         = HTTPServer;
-            this.URIPrefix                          = URIPrefix;
+            this.HTTPServer                         = HTTPServer ?? throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
+            this.URIPrefix                          = URIPrefix ?? DefaultURIPrefix;
             this.HTTPRealm                          = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
             this.HTTPLogins                         = HTTPLogins ?? new KeyValuePair<String, String>[0];
             this.DNSClient                          = HTTPServer.DNSClient;
@@ -384,8 +371,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                 #endregion
 
-                var skip = Request.QueryString.GetUInt32OrDefault("skip");
-                var take = Request.QueryString.GetUInt32         ("take");
+                var skip = Request.QueryString.GetUInt32("skip");
+                var take = Request.QueryString.GetUInt32("take");
 
                 //ToDo: Getting the expected total is very expensive!
                 var _ExpectedCount = _RoamingNetwork.EVSEs.ULongCount();
@@ -435,7 +422,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // -----------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEs",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEs",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: EVSEsDelegate);
 
@@ -444,7 +431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // ----------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}/EVSEs",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEs",
                                          OICPPlusXMLContentType,
                                          HTTPDelegate: EVSEsDelegate);
 
@@ -488,8 +475,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                 #region Check Query String parameters
 
-                var skip          = Request.QueryString.GetUInt32OrDefault("skip");
-                var take          = Request.QueryString.GetUInt32         ("take");
+                var skip          = Request.QueryString.GetUInt32("skip");
+                var take          = Request.QueryString.GetUInt32("take");
 
                 var statusFilter  = Request.QueryString.CreateEnumFilter<EVSE, EVSEStatusTypes>("status",
                                                                                                 (evse, status) => evse.Status == status.AsWWCPEVSEStatus());
@@ -540,7 +527,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // ---------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: EVSEStatusXMLDelegate);
 
@@ -549,7 +536,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // ---------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}/EVSEStatus",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
                                          OICPPlusXMLContentType,
                                          HTTPDelegate: EVSEStatusXMLDelegate);
 
@@ -614,8 +601,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
                 #region Check Query String parameters
 
-                var skip          = Request.QueryString.GetUInt32OrDefault("skip");
-                var take          = Request.QueryString.GetUInt32         ("take");
+                var skip          = Request.QueryString.GetUInt32("skip");
+                var take          = Request.QueryString.GetUInt32("take");
 
                 var statusFilter  = Request.QueryString.CreateEnumFilter<EVSE, EVSEStatusTypes>("status",
                                                                                                 (evse, status) => evse.Status == status.AsWWCPEVSEStatus());
@@ -700,7 +687,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // ---------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
                                          HTTPContentType.HTML_UTF8,
                                          HTTPDelegate: EVSEStatusHTMLDelegate);
 
@@ -709,7 +696,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             // ----------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         "/RNs/{RoamingNetworkId}/EVSEStatus",
+                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
                                          OICPPlusHTMLContentType,
                                          HTTPDelegate: EVSEStatusHTMLDelegate);
 

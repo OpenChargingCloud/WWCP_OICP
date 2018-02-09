@@ -49,42 +49,42 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP user agent string.
         /// </summary>
-        public new const           String  DefaultHTTPUserAgent            = "GraphDefined OICP " + Version.Number + " EMP Client";
+        public new const           String   DefaultHTTPUserAgent            = "GraphDefined OICP " + Version.Number + " EMP Client";
 
         /// <summary>
         /// The default remote TCP port to connect to.
         /// </summary>
-        public new static readonly IPPort  DefaultRemotePort               = IPPort.Parse(443);
+        public new static readonly IPPort   DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     const           String  DefaultURIPrefix                = "/ibis/ws";
+        public     static readonly HTTPURI  DefaultURIPrefix                = HTTPURI.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
         /// </summary>
-        public     const           String  DefaultEVSEDataURI              = "/eRoamingEvseData_V2.1";
+        public     const           String   DefaultEVSEDataURI              = "/eRoamingEvseData_V2.1";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
         /// </summary>
-        public     const           String  DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.0";
+        public     const           String   DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.0";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
         /// </summary>
-        public     const           String  DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.0";
+        public     const           String   DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.0";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP Reservation requests.
         /// </summary>
-        public     const           String  DefaultReservationURI           = "/eRoamingReservation_V1.0";
+        public     const           String   DefaultReservationURI           = "/eRoamingReservation_V1.0";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
         /// </summary>
-        public     const           String  DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.0";
+        public     const           String   DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.0";
 
         #endregion
 
@@ -862,7 +862,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          String                               HTTPVirtualHost              = null,
-                         String                               URIPrefix                    = DefaultURIPrefix,
+                         HTTPURI?                             URIPrefix                    = null,
                          String                               EVSEDataURI                  = DefaultEVSEDataURI,
                          String                               EVSEStatusURI                = DefaultEVSEStatusURI,
                          String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
@@ -884,7 +884,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
+                   URIPrefix ?? DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -948,7 +948,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          Provider_Id?                         DefaultProviderId            = null,
 
                          String                               HTTPVirtualHost              = null,
-                         String                               URIPrefix                    = DefaultURIPrefix,
+                         HTTPURI?                             URIPrefix                    = null,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte                                 MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -960,7 +960,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
+                   URIPrefix ?? DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,

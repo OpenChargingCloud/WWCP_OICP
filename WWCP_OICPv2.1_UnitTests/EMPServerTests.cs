@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
 
         public static async Task<String> SendAuthorizeStart(String     Hostname,
                                                             IPPort     TCPPort,
-                                                            String     URI,
+                                                            HTTPURI    URI,
                                                             DNSClient  DNSClient)
         {
 
