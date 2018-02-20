@@ -632,10 +632,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         if (ProductIdElements.Any())
                         {
 
-                            ChargingReservation_Id _ReservationId;
-
                             if (ProductIdElements.ContainsKey("R") &&
-                                ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value, ProductIdElements["R"], out _ReservationId))
+                                ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                                ProductIdElements["R"],
+                                                                out ChargingReservation_Id _ReservationId))
                                 ReservationId = _ReservationId;
 
 
@@ -653,17 +653,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             }
 
 
-                            Single _PlannedEnergy = 0;
-
                             if (ProductIdElements.ContainsKey("E") &&
-                                Single.TryParse(ProductIdElements["E"], out _PlannedEnergy))
+                                Single.TryParse(ProductIdElements["E"], out Single _PlannedEnergy))
                                 PlannedEnergy = _PlannedEnergy;
 
 
-                            ChargingProduct_Id _ProductId;
-
                             if (ProductIdElements.ContainsKey("P") &&
-                                ChargingProduct_Id.TryParse(ProductIdElements["P"], out _ProductId))
+                                ChargingProduct_Id.TryParse(ProductIdElements["P"], out ChargingProduct_Id _ProductId))
                                 ProductId = _ProductId;
 
 
