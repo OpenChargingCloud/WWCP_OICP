@@ -331,11 +331,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                   _AuthorizationIdentification.QRCodeIdentification.HasValue
                                                           ? _AuthorizationIdentification.QRCodeIdentification.Value.EVCOId
-                                                          : _AuthorizationIdentification.PlugAndChargeIdentification.HasValue
-                                                                ? _AuthorizationIdentification.PlugAndChargeIdentification.Value
-                                                                : _AuthorizationIdentification.RemoteIdentification.HasValue
-                                                                      ? _AuthorizationIdentification.RemoteIdentification.Value
-                                                                      : default(EVCO_Id),
+                                                          : _AuthorizationIdentification.PlugAndChargeIdentification ?? (_AuthorizationIdentification.RemoteIdentification ?? default(EVCO_Id)),
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                                     Session_Id.Parse),

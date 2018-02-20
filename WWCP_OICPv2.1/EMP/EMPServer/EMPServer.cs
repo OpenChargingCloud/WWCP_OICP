@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new const           String           DefaultURIPrefix           = "";
+        public new static readonly HTTPURI          DefaultURIPrefix           = HTTPURI.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -220,7 +220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         String                               URIPrefix                    = DefaultURIPrefix,
+                         HTTPURI?                             URIPrefix                    = null,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          HTTPContentType                      ContentType                  = null,
                          Boolean                              RegisterHTTPRootService      = true,
@@ -264,11 +264,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         public EMPServer(SOAPServer  SOAPServer,
                          String      ServiceId          = null,
-                         String      URIPrefix          = DefaultURIPrefix,
+                         HTTPURI?    URIPrefix          = null,
                          String      AuthorizationURI   = DefaultAuthorizationURI)
 
             : base(SOAPServer,
-                   URIPrefix)
+                   URIPrefix ?? DefaultURIPrefix)
 
         {
 

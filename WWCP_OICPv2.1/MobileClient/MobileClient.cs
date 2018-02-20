@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public const               String  DefaultURIPrefix                = "/ibis/ws";
+        public     static readonly HTTPURI DefaultURIPrefix                = HTTPURI.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP MobileAuthorization requests.
@@ -342,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
-                            String                               URIPrefix                    = DefaultURIPrefix,
+                            HTTPURI?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
@@ -357,7 +357,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
+                   URIPrefix ?? DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -410,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             String                               HTTPVirtualHost              = null,
-                            String                               URIPrefix                    = DefaultURIPrefix,
+                            HTTPURI?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
@@ -423,7 +423,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix.Trim().IsNotNullOrEmpty() ? URIPrefix : DefaultURIPrefix,
+                   URIPrefix ?? DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
