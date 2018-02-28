@@ -3600,21 +3600,27 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             // Update name (via events)!
                                             WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown, CurrentOperatorEVSEStatus.OperatorName);
 
-                                        WWCP.EVSE     CurrentEVSE    = null;
-                                        WWCP.EVSE_Id? CurrentEVSEId  = null;
-                                        UInt64        EVSEsUpdated   = 0;
-                                        UInt64        EVSEsSkipped   = 0;
+                                        WWCP.EVSE             CurrentEVSE     = null;
+                                        WWCP.EVSE_Id?         CurrentEVSEId   = null;
+                                        WWCP.EVSEStatusTypes  CurrentEVSEStatus;
+                                        UInt64                EVSEsUpdated    = 0;
+                                        UInt64                EVSEsSkipped    = 0;
 
                                         foreach (var CurrentEVSEDataRecord in CurrentOperatorEVSEStatus.EVSEStatusRecords)
                                         {
 
-                                            CurrentEVSEId = CurrentEVSEDataRecord.Id.ToWWCP();
+                                            CurrentEVSEId      = CurrentEVSEDataRecord.Id.    ToWWCP();
+                                            CurrentEVSEStatus  = CurrentEVSEDataRecord.Status.AsWWCPEVSEStatus();
 
                                             if (CurrentEVSEId.HasValue &&
-                                                WWCPChargingStationOperator.TryGetEVSEbyId(CurrentEVSEId, out CurrentEVSE))
+                                                WWCPChargingStationOperator.TryGetEVSEbyId(CurrentEVSEId, out CurrentEVSE) &&
+                                                CurrentEVSEStatus != CurrentEVSE?.Status.Value)
                                             {
-                                                CurrentEVSE.Status = CurrentEVSEDataRecord.Status.AsWWCPEVSEStatus();
+
+                                                // Update via events!
+                                                CurrentEVSE.Status = CurrentEVSEStatus;
                                                 EVSEsUpdated++;
+
                                             }
 
                                             else
