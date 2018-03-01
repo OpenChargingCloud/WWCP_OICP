@@ -31,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using System.IO;
 
 #endregion
 
@@ -3578,6 +3579,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                             UInt64                       TotalEVSEsUpdated               = 0;
                             UInt64                       TotalEVSEsSkipped               = 0;
 
+                            var                          NewStatus                       = new List<WWCP.EVSEStatus>();
+
                             foreach (var CurrentOperatorEVSEStatus in OperatorEVSEStatus.OrderBy(evseoperator => evseoperator.OperatorName))
                             {
 
@@ -3619,6 +3622,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                 // Update via events!
                                                 CurrentEVSE.Status = CurrentEVSEStatus;
+                                                NewStatus.Add(new WWCP.EVSEStatus(CurrentEVSEId.Value, new Timestamped<WWCP.EVSEStatusTypes>(DownloadTime, CurrentEVSEStatus)));
                                                 EVSEsUpdated++;
 
                                             }
@@ -3672,6 +3676,32 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                             if (TotalEVSEsSkipped > 0)
                                 DebugX.Log(TotalEVSEsSkipped + " EVSEs skipped");
+
+                            try
+                            {
+
+                                using (var logfile = File.AppendText(String.Concat("EVSEStatusChanges_",
+                                                                                   DateTime.Now.Year, "-",
+                                                                                   DateTime.Now.Month.ToString("D2"),
+                                                                                   ".log")))
+                                {
+
+                                    foreach (var status in NewStatus)
+                                    {
+
+                                        logfile.WriteLine(String.Concat(status.Status.Timestamp.ToIso8601(), (Char) 0x1E,
+                                                                        status.Id.              ToString(),  (Char) 0x1E,
+                                                                        status.Status.Value.    ToString(),  (Char) 0x1F));
+
+                                    }
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogT("[" + Id + "] 'Pull status service' could not write new status to log file:" + e.Message);
+                            }
 
                         }
 
