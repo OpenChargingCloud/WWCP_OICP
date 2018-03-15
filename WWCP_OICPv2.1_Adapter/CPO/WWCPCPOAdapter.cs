@@ -126,6 +126,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public String       DefaultOperatorName   { get; }
 
+
+        protected readonly CustomEVSEIdMapperDelegate CustomEVSEIdMapper;
+
         #endregion
 
         #region Events
@@ -349,7 +352,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                    IncludeEVSEIds,
                    IncludeEVSEs,
-                   CustomEVSEIdMapper,
+                   //CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -385,6 +388,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
             this.DefaultOperatorName                              = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                            = OperatorNameSelector;
+
+            this.CustomEVSEIdMapper                               = CustomEVSEIdMapper;
 
             this.OICP_ChargeDetailRecords_Queue                   = new List<ChargeDetailRecord>();
 
