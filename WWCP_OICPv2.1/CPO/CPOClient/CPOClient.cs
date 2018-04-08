@@ -2157,7 +2157,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-
     }
 
 }

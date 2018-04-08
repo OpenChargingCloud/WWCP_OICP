@@ -258,7 +258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region OnSendCDRRequest/-Response
+        #region OnSendCDRsRequest/-Response
 
         /// <summary>
         /// An event fired whenever a charge detail record was enqueued for later sending upstream.
@@ -274,6 +274,468 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// An event fired whenever a charge detail record had been sent upstream.
         /// </summary>
         public event OnSendCDRResponseDelegate  OnSendCDRsResponse;
+
+        #endregion
+
+
+
+        // OICP CPO Client SOAP logging
+
+        #region OnPushEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pushing EVSE data records will be send.
+        /// </summary>
+        public event OnPushEVSEDataRequestDelegate OnPushEVSEDataRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEDataRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pushing EVSE data records will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPushEVSEDataSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEDataSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEDataSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPushEVSEDataSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEDataSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEDataSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever EVSE data records had been sent upstream.
+        /// </summary>
+        public event OnPushEVSEDataResponseDelegate OnPushEVSEDataResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEDataResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEDataResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPushEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pushing EVSE status records will be send.
+        /// </summary>
+        public event OnPushEVSEStatusRequestDelegate OnPushEVSEStatusRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEStatusRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEStatusRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pushing EVSE status records will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPushEVSEStatusSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEStatusSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEStatusSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPushEVSEStatusSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEStatusSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEStatusSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever EVSE status records had been sent upstream.
+        /// </summary>
+        public event OnPushEVSEStatusResponseDelegate OnPushEVSEStatusResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEStatusResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEStatusResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region OnAuthorizeStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize start request will be send.
+        /// </summary>
+        public event OnAuthorizeStartRequestHandler OnOICPuthorizeStartRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeStartSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize start SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnAuthorizeStartSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStartResponseHandler OnOICPAuthorizeStartResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStartResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStartResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnAuthorizeStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize stop request will be send.
+        /// </summary>
+        public event OnAuthorizeStopRequestHandler OnOICPAuthorizeStopRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize stop SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnAuthorizeStopSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize stop SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnAuthorizeStopSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStopResponseHandler OnOICPAuthorizeStopResponse
+        {
+
+            add
+            {
+                CPOClient.OnAuthorizeStopResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnAuthorizeStopResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnSendChargeDetailRecordRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send.
+        /// </summary>
+        public event OnSendChargeDetailRecordRequestHandler OnSendChargeDetailRecordRequest
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a charge detail record will be send via SOAP.
+        /// </summary>
+        public event ClientRequestLogHandler OnSendChargeDetailRecordSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP response to a sent charge detail record had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnSendChargeDetailRecordSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a sent charge detail record had been received.
+        /// </summary>
+        public event OnSendChargeDetailRecordResponseHandler OnSendChargeDetailRecordResponse
+        {
+
+            add
+            {
+                CPOClient.OnSendChargeDetailRecordResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnSendChargeDetailRecordResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region OnPullAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pulling authentication data will be send.
+        /// </summary>
+        public event OnPullAuthenticationDataRequestHandler OnPullAuthenticationDataRequest
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pulling authentication data will be send.
+        /// </summary>
+        public event ClientRequestLogHandler OnPullAuthenticationDataSOAPRequest
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataSOAPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataSOAPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler OnPullAuthenticationDataSOAPResponse
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataSOAPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataSOAPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a pull authentication data request was received.
+        /// </summary>
+        public event OnPullAuthenticationDataResponseHandler OnPullAuthenticationDataResponse
+        {
+
+            add
+            {
+                CPOClient.OnPullAuthenticationDataResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPullAuthenticationDataResponse -= value;
+            }
+
+        }
 
         #endregion
 
