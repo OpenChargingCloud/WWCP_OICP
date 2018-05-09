@@ -790,7 +790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Maps a WWCP address to an OICP address.
         /// </summary>
         /// <param name="WWCPAddress">A WWCP address.</param>
-        public static Address ToOICP(this Vanaheimr.Hermod.Address WWCPAddress)
+        public static Address ToOICP(this Vanaheimr.Illias.Address WWCPAddress)
 
             => new Address(WWCPAddress.Country,
                            WWCPAddress.City,
@@ -804,9 +804,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// Maps an OICP address type to a WWCP address type.
         /// </summary>
         /// <param name="OICPAddress">A address type.</param>
-        public static Vanaheimr.Hermod.Address ToWWCP(this Address OICPAddress)
+        public static Vanaheimr.Illias.Address ToWWCP(this Address OICPAddress)
 
-            => Vanaheimr.Hermod.Address.Create(OICPAddress.Country,
+            => Vanaheimr.Illias.Address.Create(OICPAddress.Country,
                                                OICPAddress.PostalCode,
                                                OICPAddress.City,
                                                OICPAddress.Street,
