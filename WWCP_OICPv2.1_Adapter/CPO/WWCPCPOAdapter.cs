@@ -2174,7 +2174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -2270,7 +2270,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -2388,7 +2388,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToUpdateQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -2484,7 +2484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         EVSEsToRemoveQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -2585,7 +2585,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         return PushEVSEDataResult.Enqueued(Id, this);
 
@@ -2688,7 +2688,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         return PushEVSEDataResult.Enqueued(Id, this);
 
@@ -2790,7 +2790,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToUpdateQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         return PushEVSEDataResult.Enqueued(Id, this);
 
@@ -2892,7 +2892,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         foreach (var EVSE in FilteredEVSEs)
                             EVSEsToRemoveQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         return PushEVSEDataResult.Enqueued(Id, this);
 
@@ -3031,7 +3031,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                         }
 
-                        FlushEVSEFastStatusTimer.Change(_FlushEVSEFastStatusEvery, Timeout.Infinite);
+                        FlushEVSEFastStatusTimer.Change(FlushEVSEFastStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         return PushEVSEStatusResult.Enqueued(Id, this);
 
@@ -3134,7 +3134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         }
 
@@ -3231,7 +3231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         }
 
@@ -3350,7 +3350,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingStationsUpdateLog.Add(ChargingStation, List);
                         }
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -3721,7 +3721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         }
 
@@ -3818,7 +3818,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                             EVSEsToAddQueue.Add(evse);
 
-                            FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                         }
 
@@ -3937,7 +3937,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             ChargingPoolsUpdateLog.Add(ChargingPool, List);
                         }
 
-                        FlushEVSEDataAndStatusTimer.Change(_FlushEVSEDataAndStatusEvery, Timeout.Infinite);
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -6452,7 +6452,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
                                                                Runtime: Runtime);
 
-                            FlushChargeDetailRecordsTimer.Change(_FlushChargeDetailRecordsEvery, Timeout.Infinite);
+                            FlushChargeDetailRecordsTimer.Change(FlushChargeDetailRecordsEvery, TimeSpan.FromMilliseconds(-1));
 
                         }
 
@@ -6642,7 +6642,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
 
                 // Stop the timer. Will be rescheduled by next EVSE data/status change...
-                FlushEVSEDataAndStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                FlushEVSEDataAndStatusTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
 
             }
             finally
@@ -6813,7 +6813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 EVSEStatusChangesFastQueue.Clear();
 
                 // Stop the timer. Will be rescheduled by next EVSE status change...
-                FlushEVSEFastStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                FlushEVSEFastStatusTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
 
             }
             finally
@@ -6877,7 +6877,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     OICP_ChargeDetailRecords_Queue.Clear();
 
                     //// Stop the timer. Will be rescheduled by the next CDR...
-                    //FlushChargeDetailRecordsTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    //FlushChargeDetailRecordsTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
 
                 }
 
