@@ -1093,7 +1093,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                    "Charge detail record forwarded!"
                                );
 
-                    var FailedCDR = response.RejectedChargeDetailRecords.FirstOrDefault();
+                    var FailedCDR = response.ResultMap.FirstOrDefault();
 
                     if (FailedCDR != null)
                     {

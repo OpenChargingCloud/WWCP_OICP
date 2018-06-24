@@ -6448,8 +6448,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             Runtime  = Endtime - StartTime;
                             result   = SendCDRsResult.Enqueued(Id,
                                                                this,
+                                                               ChargeDetailRecords,
                                                                "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
-                                                               SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
+                                                               //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
                                                                Runtime: Runtime);
 
                             FlushChargeDetailRecordsTimer.Change(FlushChargeDetailRecordsEvery, TimeSpan.FromMilliseconds(-1));
@@ -6507,6 +6508,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                             if      (SendCDRsResults.All(cdrresult => cdrresult.Result == SendCDRResultTypes.Success))
                                 result = SendCDRsResult.Success(Id,
                                                                 this,
+                                                                ChargeDetailRecords,
                                                                 Runtime: Runtime);
 
                             else
@@ -6533,8 +6535,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                         Runtime  = Endtime - StartTime;
                         result   = SendCDRsResult.Timeout(Id,
                                                           this,
+                                                          ChargeDetailRecords,
                                                           "Could not " + (TransmissionType == TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!",
-                                                          ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
+                                                          //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
                                                           Runtime: Runtime);
 
                     }
