@@ -204,69 +204,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
         #region Events
 
-        #region RequestLog
+        #region Generic HTTP/SOAP server logging
 
         /// <summary>
-        /// An event called whenever a request came in.
+        /// An event called whenever a HTTP request came in.
         /// </summary>
-        public event RequestLogHandler RequestLog
-        {
-
-            add
-            {
-                HTTPServer.RequestLog += value;
-            }
-
-            remove
-            {
-                HTTPServer.RequestLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region AccessLog
+        public RequestLogEvent   RequestLog    = new RequestLogEvent();
 
         /// <summary>
-        /// An event called whenever a request could successfully be processed.
+        /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public event AccessLogHandler AccessLog
-        {
-
-            add
-            {
-                HTTPServer.AccessLog += value;
-            }
-
-            remove
-            {
-                HTTPServer.AccessLog -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region ErrorLog
+        public ResponseLogEvent  ResponseLog   = new ResponseLogEvent();
 
         /// <summary>
-        /// An event called whenever a request resulted in an error.
+        /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public event ErrorLogHandler ErrorLog
-        {
-
-            add
-            {
-                HTTPServer.ErrorLog += value;
-            }
-
-            remove
-            {
-                HTTPServer.ErrorLog -= value;
-            }
-
-        }
+        public ErrorLogEvent     ErrorLog      = new ErrorLogEvent();
 
         #endregion
 
@@ -312,6 +265,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             //this.EVSEDataRecord2XML                 = EVSEDataRecord2XML;
             //this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
             this.XMLPostProcessing                  = XMLPostProcessing;
+
+            // Link HTTP events...
+            HTTPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
+            HTTPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
+            HTTPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
             RegisterURITemplates();
 
