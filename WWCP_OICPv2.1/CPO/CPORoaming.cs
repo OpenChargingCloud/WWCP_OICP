@@ -640,17 +640,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public RequestLogEvent   RequestLog    = new RequestLogEvent();
+        public HTTPRequestLogEvent   RequestLog    = new HTTPRequestLogEvent();
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public ResponseLogEvent  ResponseLog   = new ResponseLogEvent();
+        public HTTPResponseLogEvent  ResponseLog   = new HTTPResponseLogEvent();
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public ErrorLogEvent     ErrorLog      = new ErrorLogEvent();
+        public HTTPErrorLogEvent     ErrorLog      = new HTTPErrorLogEvent();
 
         #endregion
 
