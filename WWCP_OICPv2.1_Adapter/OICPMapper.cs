@@ -304,7 +304,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return WWCP.EVSEStatusTypes.UnknownEVSE;
 
                 default:
-                    return WWCP.EVSEStatusTypes.Unspecified;
+                    return WWCP.EVSEStatusTypes.OutOfService;
 
             }
 
@@ -341,7 +341,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                     return EVSEStatusTypes.EvseNotFound;
 
                 default:
-                    return EVSEStatusTypes.Unknown;
+                    return EVSEStatusTypes.OutOfService;
 
             }
 
@@ -1484,7 +1484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                    //ConsumedEnergy:      Will be calculated!
 
-                                                   MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                                                   Signatures:            new String[] { ChargeDetailRecord.MeteringSignature },
 
                                                    CustomData:            CustomData
 
@@ -1529,7 +1529,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : new Single?(),
                           MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
                           ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
-                          MeteringSignature:     ChargeDetailRecord.MeteringSignature,
+                          MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
                           HubOperatorId:         ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
                           HubProviderId:         ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
                           CustomData:            CustomData
