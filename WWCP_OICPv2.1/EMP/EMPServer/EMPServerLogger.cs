@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                LogfileCreatorDelegate      LogfileCreator              = null)
 
-            : base(EMPServer?.SOAPServer,
+            : base(EMPServer?.SOAPServer.HTTPServer,
                    Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                    LogHTTPRequest_toConsole,

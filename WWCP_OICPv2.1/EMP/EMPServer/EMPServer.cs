@@ -316,7 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnAuthorizeStartSOAPRequest.GetInvocationList().
                                            Cast<RequestLogHandler>().
                                            Select(e => e(StartTime,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest))).
                                            ConfigureAwait(false);
 
@@ -444,7 +444,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
-                    Server          = SOAPServer.DefaultServerName,
+                    Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(AuthorizationStart.ToXML()).ToUTF8Bytes(),
@@ -462,7 +462,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnAuthorizeStartSOAPResponse.GetInvocationList().
                                            Cast<AccessLogHandler>().
                                            Select(e => e(HTTPResponse.Timestamp,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest,
                                                          HTTPResponse))).
                                            ConfigureAwait(false);
@@ -504,7 +504,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnAuthorizeStopSOAPRequest.GetInvocationList().
                                            Cast<RequestLogHandler>().
                                            Select(e => e(StartTime,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest))).
                                            ConfigureAwait(false);
 
@@ -630,7 +630,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
-                    Server          = SOAPServer.DefaultServerName,
+                    Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(AuthorizationStop.ToXML()).ToUTF8Bytes(),
@@ -648,7 +648,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnAuthorizeStopSOAPResponse.GetInvocationList().
                                            Cast<AccessLogHandler>().
                                            Select(e => e(HTTPResponse.Timestamp,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest,
                                                          HTTPResponse))).
                                            ConfigureAwait(false);
@@ -689,7 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnChargeDetailRecordSOAPRequest.GetInvocationList().
                                            Cast<RequestLogHandler>().
                                            Select(e => e(StartTime,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest))).
                                            ConfigureAwait(false);
 
@@ -805,7 +805,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
-                    Server          = SOAPServer.DefaultServerName,
+                    Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes(),
@@ -823,7 +823,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                         await Task.WhenAll(OnChargeDetailRecordSOAPResponse.GetInvocationList().
                                            Cast<AccessLogHandler>().
                                            Select(e => e(HTTPResponse.Timestamp,
-                                                         SOAPServer,
+                                                         SOAPServer.HTTPServer,
                                                          HTTPRequest,
                                                          HTTPResponse))).
                                            ConfigureAwait(false);
