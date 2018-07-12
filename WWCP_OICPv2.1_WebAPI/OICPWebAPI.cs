@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             if (HTTPRequest.ParsedURIParameters.Length < 1)
             {
 
-                HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.BadRequest,
                     Server          = HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
             if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
             {
 
-                HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.BadRequest,
                     Server          = HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
 
             if (RoamingNetwork == null) {
 
-                HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.NotFound,
                     Server          = HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -307,7 +307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 {
 
                     return Task.FromResult(
-                        new HTTPResponseBuilder(Request) {
+                        new HTTPResponse.Builder(Request) {
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
@@ -336,7 +336,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 var _ExpectedCount = _RoamingNetwork.EVSEs.ULongCount();
 
                 return Task.FromResult(
-                    new HTTPResponseBuilder(Request) {
+                    new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
                         Date                          = DateTime.Now,
@@ -409,7 +409,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 {
 
                     return Task.FromResult(
-                        new HTTPResponseBuilder(Request) {
+                        new HTTPResponse.Builder(Request) {
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
@@ -452,7 +452,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 var _ExpectedCount = _RoamingNetwork.EVSEStatus().ULongCount();
 
                 return Task.FromResult(
-                    new HTTPResponseBuilder(Request) {
+                    new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
                         Date                          = DateTime.Now,
@@ -535,7 +535,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 {
 
                     return Task.FromResult(
-                        new HTTPResponseBuilder(Request) {
+                        new HTTPResponse.Builder(Request) {
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
@@ -578,7 +578,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
                 var _ExpectedCount = _RoamingNetwork.EVSEStatus().ULongCount();
 
                 return Task.FromResult(
-                    new HTTPResponseBuilder(Request) {
+                    new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
                         Date                          = DateTime.Now,

@@ -442,7 +442,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Create SOAP response
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -628,7 +628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Create SOAP response
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -803,7 +803,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #region Create SOAP response
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,

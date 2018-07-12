@@ -1009,7 +1009,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -1186,7 +1186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -1359,7 +1359,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -1535,7 +1535,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -1718,7 +1718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -1895,7 +1895,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2077,7 +2077,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2254,7 +2254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2430,7 +2430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2609,7 +2609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2783,7 +2783,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -2966,7 +2966,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -3147,7 +3147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -3319,7 +3319,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -3491,7 +3491,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -3673,7 +3673,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -3845,7 +3845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
@@ -4016,7 +4016,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
                 #region Create SOAPResponse
 
-                var HTTPResponse = new HTTPResponseBuilder(HTTPRequest) {
+                var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
                     Date            = DateTime.Now,
