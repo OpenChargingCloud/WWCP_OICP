@@ -6356,6 +6356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                           Id.ToString(),
                                           EventTrackingId,
                                           RoamingNetwork.Id,
+                                          new WWCP.ChargeDetailRecord[0],
                                           ChargeDetailRecords,
                                           RequestTimeout);
 
@@ -6413,6 +6414,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                                                  Id.ToString(),
                                                                  EventTrackingId,
                                                                  RoamingNetwork.Id,
+                                                                 new WWCP.ChargeDetailRecord[0],
                                                                  ChargeDetailRecords,
                                                                  RequestTimeout);
 
@@ -6565,6 +6567,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                            Id.ToString(),
                                            EventTrackingId,
                                            RoamingNetwork.Id,
+                                           new WWCP.ChargeDetailRecord[0],
                                            ChargeDetailRecords,
                                            RequestTimeout,
                                            result,

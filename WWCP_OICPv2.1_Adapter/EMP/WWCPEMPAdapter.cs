@@ -1033,6 +1033,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         Id.ToString(),
                                                         ChargeDetailRecordRequest.EventTrackingId,
                                                         RoamingNetwork.Id,
+                                                        new WWCP.ChargeDetailRecord[0],
                                                         CDRs,
                                                         ChargeDetailRecordRequest.RequestTimeout);
 
@@ -1067,6 +1068,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                          Id.ToString(),
                                                          ChargeDetailRecordRequest.EventTrackingId,
                                                          RoamingNetwork.Id,
+                                                         new WWCP.ChargeDetailRecord[0],
                                                          CDRs,
                                                          ChargeDetailRecordRequest.RequestTimeout,
                                                          response,
