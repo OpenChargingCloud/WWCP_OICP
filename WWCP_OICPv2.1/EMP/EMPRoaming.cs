@@ -54,8 +54,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         public Provider_Id? DefaultProviderId
             => EMPClient?.DefaultProviderId;
 
-        public IPPort HTTPPort
-            => EMPClient.HTTPPort;
+        public IPPort RemotePort
+            => EMPClient.RemotePort;
 
         public RemoteCertificateValidationCallback RemoteCertificateValidator
             => EMPClient?.RemoteCertificateValidator;

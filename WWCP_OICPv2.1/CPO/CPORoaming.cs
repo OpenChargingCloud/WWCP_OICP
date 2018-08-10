@@ -47,8 +47,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// </summary>
         public CPOClient        CPOClient         { get; }
 
-        public IPPort HTTPPort
-            => CPOClient.HTTPPort;
+        public IPPort RemotePort
+            => CPOClient.RemotePort;
 
         public RemoteCertificateValidationCallback RemoteCertificateValidator
             => CPOClient?.RemoteCertificateValidator;
