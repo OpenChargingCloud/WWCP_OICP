@@ -48,6 +48,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                   IComparable
     {
 
+        private TimeSpan MaxLockWaitingTime = TimeSpan.FromSeconds(120);
+
         #region Data
 
         private        readonly  EVSE2EVSEDataRecordDelegate                            _EVSE2EVSEDataRecord;
@@ -2164,13 +2166,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    if (_IncludeEVSEs == null ||
-                       (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
+                    if (LockTaken &&
+                       (_IncludeEVSEs == null || _IncludeEVSEs(EVSE)))
                     {
 
                         EVSEsToAddQueue.Add(EVSE);
@@ -2182,7 +2184,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -2260,13 +2263,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    if (_IncludeEVSEs == null ||
-                       (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
+                    if (LockTaken &&
+                        (_IncludeEVSEs == null || _IncludeEVSEs(EVSE)))
                     {
 
                         EVSEsToAddQueue.Add(EVSE);
@@ -2278,7 +2281,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -2366,7 +2370,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
@@ -2396,7 +2400,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -2474,13 +2479,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    if (_IncludeEVSEs == null ||
-                       (_IncludeEVSEs != null && _IncludeEVSEs(EVSE)))
+                    if (LockTaken &&
+                        (_IncludeEVSEs == null || _IncludeEVSEs(EVSE)))
                     {
 
                         EVSEsToRemoveQueue.Add(EVSE);
@@ -2492,7 +2497,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -2571,33 +2577,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
-                                                            _IncludeEVSEIds(evse.Id)).
-                                              ToArray();
-
-                    if (FilteredEVSEs.Any())
+                    if (LockTaken)
                     {
 
-                        foreach (var EVSE in FilteredEVSEs)
-                            EVSEsToAddQueue.Add(EVSE);
+                        var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
+                                                                _IncludeEVSEIds(evse.Id)).
+                                                  ToArray();
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (FilteredEVSEs.Any())
+                        {
 
-                        return PushEVSEDataResult.Enqueued(Id, this);
+                            foreach (var EVSE in FilteredEVSEs)
+                                EVSEsToAddQueue.Add(EVSE);
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            return PushEVSEDataResult.Enqueued(Id, this);
+
+                        }
+
+                        return PushEVSEDataResult.NoOperation(Id, this);
 
                     }
-
-                    return PushEVSEDataResult.NoOperation(Id, this);
 
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
             }
@@ -2674,33 +2686,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
-                                                            _IncludeEVSEIds(evse.Id)).
-                                              ToArray();
-
-                    if (FilteredEVSEs.Any())
+                    if (LockTaken)
                     {
 
-                        foreach (var EVSE in FilteredEVSEs)
-                            EVSEsToAddQueue.Add(EVSE);
+                        var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
+                                                                _IncludeEVSEIds(evse.Id)).
+                                                  ToArray();
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (FilteredEVSEs.Any())
+                        {
 
-                        return PushEVSEDataResult.Enqueued(Id, this);
+                            foreach (var EVSE in FilteredEVSEs)
+                                EVSEsToAddQueue.Add(EVSE);
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            return PushEVSEDataResult.Enqueued(Id, this);
+
+                        }
+
+                        return PushEVSEDataResult.NoOperation(Id, this);
 
                     }
-
-                    return PushEVSEDataResult.NoOperation(Id, this);
 
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
             }
@@ -2776,33 +2794,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
-                                                            _IncludeEVSEIds(evse.Id)).
-                                              ToArray();
-
-                    if (FilteredEVSEs.Any())
+                    if (LockTaken)
                     {
 
-                        foreach (var EVSE in FilteredEVSEs)
-                            EVSEsToUpdateQueue.Add(EVSE);
+                        var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
+                                                                _IncludeEVSEIds(evse.Id)).
+                                                  ToArray();
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (FilteredEVSEs.Any())
+                        {
 
-                        return PushEVSEDataResult.Enqueued(Id, this);
+                            foreach (var EVSE in FilteredEVSEs)
+                                EVSEsToUpdateQueue.Add(EVSE);
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            return PushEVSEDataResult.Enqueued(Id, this);
+
+                        }
+
+                        return PushEVSEDataResult.NoOperation(Id, this);
 
                     }
-
-                    return PushEVSEDataResult.NoOperation(Id, this);
 
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
             }
@@ -2878,33 +2902,39 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
-                                                            _IncludeEVSEIds(evse.Id)).
-                                              ToArray();
-
-                    if (FilteredEVSEs.Any())
+                    if (LockTaken)
                     {
 
-                        foreach (var EVSE in FilteredEVSEs)
-                            EVSEsToRemoveQueue.Add(EVSE);
+                        var FilteredEVSEs = EVSEs.Where(evse => _IncludeEVSEs(evse) &&
+                                                                _IncludeEVSEIds(evse.Id)).
+                                                  ToArray();
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (FilteredEVSEs.Any())
+                        {
 
-                        return PushEVSEDataResult.Enqueued(Id, this);
+                            foreach (var EVSE in FilteredEVSEs)
+                                EVSEsToRemoveQueue.Add(EVSE);
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            return PushEVSEDataResult.Enqueued(Id, this);
+
+                        }
+
+                        return PushEVSEDataResult.NoOperation(Id, this);
 
                     }
-
-                    return PushEVSEDataResult.NoOperation(Id, this);
 
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
             }
@@ -3008,42 +3038,48 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
 
-                    var FilteredUpdates = StatusUpdates.Where(statusupdate => _IncludeEVSEs  (statusupdate.EVSE) &&
-                                                                              _IncludeEVSEIds(statusupdate.EVSE.Id)).
-                                                        ToArray();
-
-                    if (FilteredUpdates.Length > 0)
+                    if (LockTaken)
                     {
 
-                        foreach (var Update in FilteredUpdates)
+                        var FilteredUpdates = StatusUpdates.Where(statusupdate => _IncludeEVSEs  (statusupdate.EVSE) &&
+                                                                                  _IncludeEVSEIds(statusupdate.EVSE.Id)).
+                                                            ToArray();
+
+                        if (FilteredUpdates.Length > 0)
                         {
 
-                            // Delay the status update until the EVSE data had been uploaded!
-                            if (EVSEsToAddQueue.Any(evse => evse == Update.EVSE))
-                                EVSEStatusChangesDelayedQueue.Add(Update);
+                            foreach (var Update in FilteredUpdates)
+                            {
 
-                            else
-                                EVSEStatusChangesFastQueue.Add(Update);
+                                // Delay the status update until the EVSE data had been uploaded!
+                                if (EVSEsToAddQueue.Any(evse => evse == Update.EVSE))
+                                    EVSEStatusChangesDelayedQueue.Add(Update);
+
+                                else
+                                    EVSEStatusChangesFastQueue.Add(Update);
+
+                            }
+
+                            FlushEVSEFastStatusTimer.Change(FlushEVSEFastStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            return PushEVSEStatusResult.Enqueued(Id, this);
 
                         }
 
-                        FlushEVSEFastStatusTimer.Change(FlushEVSEFastStatusEvery, TimeSpan.FromMilliseconds(-1));
-
-                        return PushEVSEStatusResult.Enqueued(Id, this);
+                        return PushEVSEStatusResult.NoOperation(Id, this);
 
                     }
-
-                    return PushEVSEStatusResult.NoOperation(Id, this);
 
                 }
                 finally
                 {
-                    DataAndStatusLock.Release();
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
             }
@@ -3123,24 +3159,34 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    foreach (var evse in ChargingStation)
+                    if (LockTaken)
                     {
-
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        foreach (var evse in ChargingStation)
                         {
 
-                            EVSEsToAddQueue.Add(evse);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
 
-                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                EVSEsToAddQueue.Add(evse);
+
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            }
 
                         }
-
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -3220,24 +3266,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    foreach (var evse in ChargingStation)
+                    if (LockTaken)
                     {
 
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        foreach (var evse in ChargingStation)
                         {
 
-                            EVSEsToAddQueue.Add(evse);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
 
-                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                EVSEsToAddQueue.Add(evse);
+
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            }
 
                         }
 
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -3323,38 +3381,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    var AddData = false;
-
-                    foreach (var evse in ChargingStation)
-                    {
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
-                        {
-                            EVSEsToUpdateQueue.Add(evse);
-                            AddData = true;
-                        }
-                    }
-
-                    if (AddData)
+                    if (LockTaken)
                     {
 
-                        if (ChargingStationsUpdateLog.TryGetValue(ChargingStation, out List<PropertyUpdateInfos> PropertyUpdateInfo))
-                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                        var AddData = false;
 
-                        else
+                        foreach (var evse in ChargingStation)
                         {
-                            var List = new List<PropertyUpdateInfos>();
-                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
-                            ChargingStationsUpdateLog.Add(ChargingStation, List);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
+                                EVSEsToUpdateQueue.Add(evse);
+                                AddData = true;
+                            }
                         }
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (AddData)
+                        {
+
+                            if (ChargingStationsUpdateLog.TryGetValue(ChargingStation, out List<PropertyUpdateInfos> PropertyUpdateInfo))
+                                PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+
+                            else
+                            {
+                                var List = new List<PropertyUpdateInfos>();
+                                List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                                ChargingStationsUpdateLog.Add(ChargingStation, List);
+                            }
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                        }
 
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -3710,24 +3780,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    foreach (var evse in ChargingPool.EVSEs)
+                    if (LockTaken)
                     {
 
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        foreach (var evse in ChargingPool.EVSEs)
                         {
 
-                            EVSEsToAddQueue.Add(evse);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
 
-                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                EVSEsToAddQueue.Add(evse);
+
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            }
 
                         }
 
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -3807,24 +3889,36 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    foreach (var evse in ChargingPool.EVSEs)
+                    if (LockTaken)
                     {
 
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                        foreach (var evse in ChargingPool.EVSEs)
                         {
 
-                            EVSEsToAddQueue.Add(evse);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
 
-                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                EVSEsToAddQueue.Add(evse);
+
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                            }
 
                         }
 
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -3910,38 +4004,50 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
                 #endregion
 
-                await DataAndStatusLock.WaitAsync();
+                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+
+                try
                 {
 
-                    var AddData = false;
-
-                    foreach (var evse in ChargingPool.EVSEs)
-                    {
-                        if (_IncludeEVSEs == null ||
-                           (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
-                        {
-                            EVSEsToUpdateQueue.Add(evse);
-                            AddData = true;
-                        }
-                    }
-
-                    if (AddData)
+                    if (LockTaken)
                     {
 
-                        if (ChargingPoolsUpdateLog.TryGetValue(ChargingPool, out List<PropertyUpdateInfos> PropertyUpdateInfo))
-                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                        var AddData = false;
 
-                        else
+                        foreach (var evse in ChargingPool.EVSEs)
                         {
-                            var List = new List<PropertyUpdateInfos>();
-                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
-                            ChargingPoolsUpdateLog.Add(ChargingPool, List);
+                            if (_IncludeEVSEs == null ||
+                               (_IncludeEVSEs != null && _IncludeEVSEs(evse)))
+                            {
+                                EVSEsToUpdateQueue.Add(evse);
+                                AddData = true;
+                            }
                         }
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        if (AddData)
+                        {
+
+                            if (ChargingPoolsUpdateLog.TryGetValue(ChargingPool, out List<PropertyUpdateInfos> PropertyUpdateInfo))
+                                PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+
+                            else
+                            {
+                                var List = new List<PropertyUpdateInfos>();
+                                List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                                ChargingPoolsUpdateLog.Add(ChargingPool, List);
+                            }
+
+                            FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                        }
 
                     }
 
+                }
+                finally
+                {
+                    if (LockTaken)
+                        DataAndStatusLock.Release();
                 }
 
                 return PushEVSEDataResult.Enqueued(Id, this);
@@ -6613,48 +6719,73 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var ChargingStationsUpdateLogCopy      = new Dictionary<ChargingStation, PropertyUpdateInfos[]>();
             var ChargingPoolsUpdateLogCopy         = new Dictionary<ChargingPool,    PropertyUpdateInfos[]>();
 
-            await DataAndStatusLock.WaitAsync();
+            var LockTaken = await DataAndStatusLock.WaitAsync(0);
 
             try
             {
 
-                // Copy 'EVSEs to add', remove originals...
-                EVSEsToAddQueueCopy                      = new HashSet<EVSE>                (EVSEsToAddQueue);
-                EVSEsToAddQueue.Clear();
+                if (LockTaken)
+                {
 
-                // Copy 'EVSEs to update', remove originals...
-                EVSEsToUpdateQueueCopy                   = new HashSet<EVSE>                (EVSEsToUpdateQueue);
-                EVSEsToUpdateQueue.Clear();
+                    // Copy 'EVSEs to add', remove originals...
+                    EVSEsToAddQueueCopy                      = new HashSet<EVSE>                (EVSEsToAddQueue);
+                    EVSEsToAddQueue.Clear();
 
-                // Copy 'EVSE status changes', remove originals...
-                EVSEStatusChangesDelayedQueueCopy        = new List<EVSEStatusUpdate>       (EVSEStatusChangesDelayedQueue);
-                EVSEStatusChangesDelayedQueueCopy.AddRange(EVSEsToAddQueueCopy.SafeSelect(evse => new EVSEStatusUpdate(evse, evse.Status, evse.Status)));
-                EVSEStatusChangesDelayedQueue.Clear();
+                    // Copy 'EVSEs to update', remove originals...
+                    EVSEsToUpdateQueueCopy                   = new HashSet<EVSE>                (EVSEsToUpdateQueue);
+                    EVSEsToUpdateQueue.Clear();
 
-                // Copy 'EVSEs to remove', remove originals...
-                EVSEsToRemoveQueueCopy                   = new HashSet<EVSE>                (EVSEsToRemoveQueue);
-                EVSEsToRemoveQueue.Clear();
+                    // Copy 'EVSE status changes', remove originals...
+                    EVSEStatusChangesDelayedQueueCopy        = new List<EVSEStatusUpdate>       (EVSEStatusChangesDelayedQueue);
+                    EVSEStatusChangesDelayedQueueCopy.AddRange(EVSEsToAddQueueCopy.SafeSelect(evse => new EVSEStatusUpdate(evse, evse.Status, evse.Status)));
+                    EVSEStatusChangesDelayedQueue.Clear();
 
-                // Copy EVSE property updates
-                EVSEsUpdateLog.           ForEach(_ => EVSEsUpdateLogCopy.           Add(_.Key, _.Value.ToArray()));
-                EVSEsUpdateLog.Clear();
+                    // Copy 'EVSEs to remove', remove originals...
+                    EVSEsToRemoveQueueCopy                   = new HashSet<EVSE>                (EVSEsToRemoveQueue);
+                    EVSEsToRemoveQueue.Clear();
 
-                // Copy charging station property updates
-                ChargingStationsUpdateLog.ForEach(_ => ChargingStationsUpdateLogCopy.Add(_.Key, _.Value.ToArray()));
-                ChargingStationsUpdateLog.Clear();
+                    // Copy EVSE property updates
+                    EVSEsUpdateLog.           ForEach(_ => EVSEsUpdateLogCopy.           Add(_.Key, _.Value.ToArray()));
+                    EVSEsUpdateLog.Clear();
 
-                // Copy charging pool property updates
-                ChargingPoolsUpdateLog.   ForEach(_ => ChargingPoolsUpdateLogCopy.   Add(_.Key, _.Value.ToArray()));
-                ChargingPoolsUpdateLog.Clear();
+                    // Copy charging station property updates
+                    ChargingStationsUpdateLog.ForEach(_ => ChargingStationsUpdateLogCopy.Add(_.Key, _.Value.ToArray()));
+                    ChargingStationsUpdateLog.Clear();
+
+                    // Copy charging pool property updates
+                    ChargingPoolsUpdateLog.   ForEach(_ => ChargingPoolsUpdateLogCopy.   Add(_.Key, _.Value.ToArray()));
+                    ChargingPoolsUpdateLog.Clear();
 
 
-                // Stop the timer. Will be rescheduled by next EVSE data/status change...
-                FlushEVSEDataAndStatusTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
+                    // Stop the timer. Will be rescheduled by next EVSE data/status change...
+                    FlushEVSEDataAndStatusTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
+
+                }
 
             }
+            catch (Exception e)
+            {
+
+                while (e.InnerException != null)
+                    e = e.InnerException;
+
+                DebugX.LogT(GetType().Name + ".DataAndStatusLock '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+
+                //OnWWCPCPOAdapterException?.Invoke(DateTime.UtcNow,
+                //                                  this,
+                //                                  e);
+
+            }
+
             finally
             {
-                DataAndStatusLock.Release();
+
+                if (LockTaken)
+                    DataAndStatusLock.Release();
+
+                else
+                    DebugX.LogT("DataAndStatusLock exited!");
+
             }
 
             #endregion
@@ -6803,7 +6934,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             var EVSEStatusFastQueueCopy = new List<EVSEStatusUpdate>();
 
-            await DataAndStatusLock.WaitAsync();
+            var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
             try
             {
