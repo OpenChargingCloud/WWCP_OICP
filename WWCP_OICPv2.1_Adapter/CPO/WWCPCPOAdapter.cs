@@ -1618,16 +1618,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             var EVSEDataRecords  = new List<EVSEDataRecord>();
 
             if (EVSEs.IsNeitherNullNorEmpty())
-                foreach (var evse in EVSEs.Where(evse => evse != null          &&
-                                                         _IncludeEVSEs  (evse) &&
-                                                         _IncludeEVSEIds(evse.Id)))
+            {
+                foreach (var evse in EVSEs)
                 {
 
                     try
                     {
 
-                        // WWCP EVSE will be added as custom data "WWCP.EVSE"...
-                        EVSEDataRecords.Add(evse.ToOICP(_EVSE2EVSEDataRecord));
+                        if (evse == null)
+                            continue;
+
+                        if (_IncludeEVSEs(evse) && _IncludeEVSEIds(evse.Id))
+                            // WWCP EVSE will be added as custom data "WWCP.EVSE"...
+                            EVSEDataRecords.Add(evse.ToOICP(_EVSE2EVSEDataRecord));
+
+                        else
+                            DebugX.Log(evse.Id + " was filtered!");
 
                     }
                     catch (Exception e)
@@ -1637,6 +1643,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                     }
 
                 }
+            }
 
             #endregion
 
@@ -1666,7 +1673,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             }
 
             #endregion
-
 
             DateTime Endtime;
             TimeSpan Runtime;
