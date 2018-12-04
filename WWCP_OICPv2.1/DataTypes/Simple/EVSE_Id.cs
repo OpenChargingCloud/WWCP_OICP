@@ -20,6 +20,8 @@
 using System;
 using System.Text.RegularExpressions;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -216,6 +218,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             return new EVSE_Id?();
 
         }
+
+        #endregion
+
+        #region (static) TryParse(JToken)
+
+        /// <summary>
+        /// Try to parse the given JSON token as an EVSE identification.
+        /// </summary>
+        /// <param name="JToken">A JSON token representation of an EVSE identification.</param>
+        public static EVSE_Id? TryParse(JToken JToken)
+            => TryParse(JToken?.Value<String>());
 
         #endregion
 

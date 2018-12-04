@@ -93,11 +93,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="UID">An user identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromUID(UID                                  UID,
+        public static Identification FromUID(UID?                                 UID,
                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(RFIDId:     UID,
-                                  CustomData: CustomData);
+            => UID.HasValue
+                   ? new Identification(RFIDId:      UID.Value,
+                                        CustomData:  CustomData)
+                   : null;
 
         #endregion
 
@@ -109,12 +111,15 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="EVCOId">An electric vehicle contract identification (EVCO Id).</param>
         /// <param name="PIN">A PIN.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(EVCO_Id                              EVCOId,
+        public static Identification FromQRCodeIdentification(EVCO_Id?                             EVCOId,
                                                               String                               PIN,
                                                               IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(QRCodeIdentification: new QRCodeIdentification(EVCOId, PIN),
-                                  CustomData:           CustomData);
+            => EVCOId.HasValue
+                   ? new Identification(QRCodeIdentification:  new QRCodeIdentification(EVCOId.Value,
+                                                                                        PIN),
+                                        CustomData:            CustomData)
+                   : null;
 
         #endregion
 
@@ -125,11 +130,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="QRCodeIdentification">A QR-code identification (EVCO Id).</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(QRCodeIdentification                 QRCodeIdentification,
+        public static Identification FromQRCodeIdentification(QRCodeIdentification?                QRCodeIdentification,
                                                               IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(QRCodeIdentification: QRCodeIdentification,
-                                  CustomData:           CustomData);
+            => QRCodeIdentification.HasValue
+                   ? new Identification(QRCodeIdentification:  QRCodeIdentification.Value,
+                                        CustomData:            CustomData)
+                   : null;
 
         #endregion
 
@@ -140,11 +147,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromPlugAndChargeIdentification(EVCO_Id                              PlugAndChargeIdentification,
+        public static Identification FromPlugAndChargeIdentification(EVCO_Id?                             PlugAndChargeIdentification,
                                                                      IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(PlugAndChargeIdentification: PlugAndChargeIdentification,
-                                  CustomData:                  CustomData);
+            => PlugAndChargeIdentification.HasValue
+                   ? new Identification(PlugAndChargeIdentification:  PlugAndChargeIdentification.Value,
+                                        CustomData:                   CustomData)
+                   : null;
 
         #endregion
 
@@ -155,11 +164,13 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromRemoteIdentification(EVCO_Id                              RemoteIdentification,
+        public static Identification FromRemoteIdentification(EVCO_Id?                             RemoteIdentification,
                                                               IReadOnlyDictionary<String, Object>  CustomData  = null)
 
-            => new Identification(RemoteIdentification: RemoteIdentification,
-                                  CustomData:           CustomData);
+            => RemoteIdentification.HasValue
+                   ? new Identification(RemoteIdentification: RemoteIdentification.Value,
+                                        CustomData:           CustomData)
+                   : null;
 
         #endregion
 

@@ -20,6 +20,8 @@
 using System;
 using System.Text.RegularExpressions;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -77,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a RFID card identification.
@@ -104,7 +106,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a RFID card identification.
@@ -131,7 +133,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text, out UID)
+        #region (static) TryParse(JToken)
+
+        /// <summary>
+        /// Try to parse the given JSON token as a RFID card identification.
+        /// </summary>
+        /// <param name="JToken">A JSON token representation of a RFID card identification.</param>
+        public static UID? TryParse(JToken JToken)
+            => TryParse(JToken?.Value<String>());
+
+        #endregion
+
+        #region (static) TryParse(Text, out UID)
 
         /// <summary>
         /// Try to parse the given string as a RFID card identification.

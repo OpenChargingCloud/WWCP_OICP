@@ -18,7 +18,8 @@
 #region Usings
 
 using System;
-using System.Text.RegularExpressions;
+
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -111,6 +112,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                        : new PartnerProduct_Id(Text);
 
         }
+
+        #endregion
+
+        #region (static) TryParse(JToken)
+
+        /// <summary>
+        /// Try to parse the given JSON token as a partner product identification.
+        /// </summary>
+        /// <param name="JToken">A JSON token representation of a partner product identification.</param>
+        public static PartnerProduct_Id? TryParse(JToken JToken)
+            => TryParse(JToken?.Value<String>());
 
         #endregion
 

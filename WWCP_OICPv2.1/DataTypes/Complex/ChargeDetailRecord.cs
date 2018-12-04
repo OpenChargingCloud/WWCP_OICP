@@ -196,7 +196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             this.ChargingEnd           = ChargingEnd;
             this.MeterValueStart       = MeterValueStart.HasValue ? (Single) Math.Round(MeterValueStart.Value, 3) : new Single?();
             this.MeterValueEnd         = MeterValueEnd.  HasValue ? (Single) Math.Round(MeterValueEnd.  Value, 3) : new Single?();
-            this.MeterValuesInBetween  = MeterValuesInBetween.Any() ? MeterValuesInBetween.Select(metervalue => (Single) Math.Round(metervalue, 3)) : null;
+            this.MeterValuesInBetween  = MeterValuesInBetween.SafeAny() ? MeterValuesInBetween.Select(metervalue => (Single) Math.Round(metervalue, 3)) : null;
             this.ConsumedEnergy        = ConsumedEnergy. HasValue ? (Single) Math.Round(ConsumedEnergy. Value, 3) : new Single?();
             this.MeteringSignature     = MeteringSignature.SubstringMax(200);
             this.HubOperatorId         = HubOperatorId;

@@ -114,14 +114,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text, out HubProviderId)
+        #region TryParse(Text, out ChargingPool_Id)
 
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
         /// </summary>
         /// <param name="Text">A text representation of a charging pool identification.</param>
-        /// <param name="HubProviderId">The parsed charging pool identification.</param>
-        public static Boolean TryParse(String Text, out ChargingPool_Id HubProviderId)
+        /// <param name="ChargingPoolId">The parsed charging pool identification.</param>
+        public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
         {
 
             #region Initial checks
@@ -131,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             if (Text.IsNullOrEmpty())
             {
-                HubProviderId = default(ChargingPool_Id);
+                ChargingPoolId = default(ChargingPool_Id);
                 return false;
             }
 
@@ -140,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             try
             {
 
-                HubProviderId = new ChargingPool_Id(Text);
+                ChargingPoolId = new ChargingPool_Id(Text);
 
                 return true;
 
@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            HubProviderId = default(ChargingPool_Id);
+            ChargingPoolId = default(ChargingPool_Id);
             return false;
 
         }

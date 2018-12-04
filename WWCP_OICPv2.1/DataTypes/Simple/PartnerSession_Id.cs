@@ -18,7 +18,8 @@
 #region Usings
 
 using System;
-using System.Text.RegularExpressions;
+
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -69,7 +70,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a partner charging session identification.
@@ -94,7 +95,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a partner charging session identification.
@@ -114,7 +115,18 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #endregion
 
-        #region TryParse(Text, out PartnerSessionId)
+        #region (static) TryParse(JToken)
+
+        /// <summary>
+        /// Try to parse the given JSON token as a partner charging session identification.
+        /// </summary>
+        /// <param name="JToken">A JSON token representation of a partner charging session identification.</param>
+        public static PartnerSession_Id? TryParse(JToken JToken)
+            => TryParse(JToken?.Value<String>());
+
+        #endregion
+
+        #region (static) TryParse(Text, out PartnerSessionId)
 
         /// <summary>
         /// Try to parse the given string as a partner charging session identification.
