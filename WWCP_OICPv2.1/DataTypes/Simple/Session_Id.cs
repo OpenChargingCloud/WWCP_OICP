@@ -94,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// </summary>
         /// <param name="Text">A text representation of a charging session identification.</param>
         public static Session_Id Parse(String Text)
-{
+        {
 
             #region Initial checks
 
