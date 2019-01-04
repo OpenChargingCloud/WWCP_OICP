@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FA3124A9-EF8D-481C-AE3A-F5AFE9BC61A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WWCP_OICPv2._2</RootNamespace>
+    <AssemblyName>WWCP_OICPv2.2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\WWCP_OICPv2.2.xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Styx\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Central\CentralClient\CentralClient.cs" />
+    <Compile Include="Central\CentralClient\CentralClientDelegates.cs" />
+    <Compile Include="Central\CentralClient\CentralClientLogger.cs" />
+    <Compile Include="Central\CentralClient\ICentralClient.cs" />
+    <Compile Include="Central\CentralClient\ICentralClientExtentions.cs" />
+    <Compile Include="Central\CentralServer\CentralServer.cs" />
+    <Compile Include="Central\CentralServer\CentralServerDelegates.cs" />
+    <Compile Include="Central\CentralServer\CentralServerLogger.cs" />
+    <Compile Include="CPO\CPOClient\CPOClient.cs" />
+    <Compile Include="CPO\CPOClient\CPOClientDelegates.cs" />
+    <Compile Include="CPO\CPOClient\CPOClientLogger.cs" />
+    <Compile Include="CPO\CPOClient\ICPOClient.cs" />
+    <Compile Include="CPO\CPOClient\ICPOClientExtentions.cs" />
+    <Compile Include="CPO\CPODelegates.cs" />
+    <Compile Include="CPO\CPORoaming.cs" />
+    <Compile Include="CPO\CPOServer\CPOServer.cs" />
+    <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
+    <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
+    <Compile Include="DataTypes\ACustomData.cs" />
+    <Compile Include="DataTypes\ACustomDataBuilder.cs" />
+    <Compile Include="DataTypes\Complex\Address.cs" />
+    <Compile Include="DataTypes\Complex\ChargeDetailRecord.cs" />
+    <Compile Include="DataTypes\Complex\EVSEData.cs" />
+    <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
+    <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
+    <Compile Include="DataTypes\Complex\Identification.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEStatus.cs" />
+    <Compile Include="DataTypes\Complex\ProviderAuthenticationData.cs" />
+    <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
+    <Compile Include="DataTypes\Complex\StatusCode.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
+    <Compile Include="DataTypes\Enums\ActionTypes.cs" />
+    <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
+    <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
+    <Compile Include="DataTypes\Enums\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
+    <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormats.cs" />
+    <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
+    <Compile Include="DataTypes\Enums\PINCrypto.cs" />
+    <Compile Include="DataTypes\Enums\PlugTypes.cs" />
+    <Compile Include="DataTypes\Enums\ProviderIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\ResultCodes.cs" />
+    <Compile Include="DataTypes\Enums\StatusCodes.cs" />
+    <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\ICustomData.cs" />
+    <Compile Include="DataTypes\Result.cs" />
+    <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
+    <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />
+    <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
+    <Compile Include="DataTypes\Simple\EVCO_Id.cs" />
+    <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
+    <Compile Include="DataTypes\Simple\HubOperator_Id.cs" />
+    <Compile Include="DataTypes\Simple\HubProvider_Id.cs" />
+    <Compile Include="DataTypes\Simple\Operator_Id.cs" />
+    <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
+    <Compile Include="DataTypes\Simple\PartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="DataTypes\Simple\Session_Id.cs" />
+    <Compile Include="DataTypes\Simple\UID.cs" />
+    <Compile Include="Delegates.cs" />
+    <Compile Include="EMP\EMPClient\EMPClient.cs" />
+    <Compile Include="EMP\EMPClient\EMPClientDelegates.cs" />
+    <Compile Include="EMP\EMPClient\EMPClientLogger.cs" />
+    <Compile Include="EMP\EMPClient\IEMPClient.cs" />
+    <Compile Include="EMP\EMPClient\IEMPClientExtentions.cs" />
+    <Compile Include="EMP\EMPDelegates.cs" />
+    <Compile Include="EMP\EMPRoaming.cs" />
+    <Compile Include="EMP\EMPServer\EMPServer.cs" />
+    <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
+    <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
+    <Compile Include="IO\OICPClientHelper.cs" />
+    <Compile Include="IO\OICPExceptions.cs" />
+    <Compile Include="IO\OICPNS.cs" />
+    <Compile Include="IO\SOAP.cs" />
+    <Compile Include="IO\XML_IO.cs" />
+    <Compile Include="Messages\ARequest.cs" />
+    <Compile Include="Messages\AResponse.cs" />
+    <Compile Include="Messages\AResponseBuilder.cs" />
+    <Compile Include="Messages\Common\Acknowledgement.cs" />
+    <Compile Include="Messages\CPO\AuthenticationData.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStart.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStop.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
+    <Compile Include="Messages\CPO\PullAuthenticationDataRequest.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
+    <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
+    <Compile Include="Messages\Delegates.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
+    <Compile Include="Messages\EMP\EVSEStatus.cs" />
+    <Compile Include="Messages\EMP\EVSEStatusById.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
+    <Compile Include="Messages\EMP\PushAuthenticationDataRequest.cs" />
+    <Compile Include="Messages\IRequest.cs" />
+    <Compile Include="Messages\IResponse.cs" />
+    <Compile Include="Messages\Mobile\MobileAuthorizationStart.cs" />
+    <Compile Include="Messages\Mobile\MobileAuthorizeStartRequest.cs" />
+    <Compile Include="Messages\Mobile\MobileRemoteStartRequest.cs" />
+    <Compile Include="Messages\Mobile\MobileRemoteStopRequest.cs" />
+    <Compile Include="MobileClient\IMobileClient.cs" />
+    <Compile Include="MobileClient\IMobileClientExtentions.cs" />
+    <Compile Include="MobileClient\MobileClient.cs" />
+    <Compile Include="MobileClient\MobileClientDelegates.cs" />
+    <Compile Include="MobileClient\MobileClientLogger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Version.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BouncyCastle\crypto\crypto.csproj">
+      <Project>{38872a5f-e87e-4fad-b109-8eb7b2e6a4a0}</Project>
+      <Name>crypto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
+      <Project>{477efd16-3627-4473-957d-44ca9a9dfb79}</Project>
+      <Name>Hermod</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Styx\Styx\Styx.csproj">
+      <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
+      <Name>Styx</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
