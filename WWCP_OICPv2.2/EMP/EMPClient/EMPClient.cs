@@ -64,27 +64,32 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
         /// </summary>
-        public     const           String   DefaultEVSEDataURI              = "/eRoamingEvseData_V2.1";
+        public     const           String   DefaultEVSEDataURI              = "/eRoamingEvseData_V2.2";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
         /// </summary>
-        public     const           String   DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.0";
+        public     const           String   DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.1";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
         /// </summary>
-        public     const           String   DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.0";
+        public     const           String   DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.1";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP Reservation requests.
         /// </summary>
-        public     const           String   DefaultReservationURI           = "/eRoamingReservation_V1.0";
+        public     const           String   DefaultReservationURI           = "/eRoamingReservation_V1.1";
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
         /// </summary>
-        public     const           String   DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.0";
+        public     const           String   DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.1";
+
+        /// <summary>
+        /// The default HTTP/SOAP/XML URI for OICP DynamicPricing requests.
+        /// </summary>
+        public     const           String   DefaultDynamicPricingURI        = "/eRoamingDynamicPricing_V1.0";
 
         #endregion
 

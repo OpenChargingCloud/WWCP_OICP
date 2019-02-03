@@ -153,7 +153,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //
         //          <EVSEData:ProviderID>DE*GDF</EVSEData:ProviderID>
         // 
-        //          <!--You have a CHOICE of the next 2 items at this level-->
+        //          <!--You have a CHOICE of the next 4 items at this level-->        //
         //          <!--Optional:-->
         //          <EVSEData:SearchCenter>
         // 
@@ -187,6 +187,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <!--Optional:-->
         //          <EVSEData:LastCall>?</EVSEData:LastCall>
         //
+        //          <!--Optional:-->
+        //          <v2:OperatorIDs>
+        //             <!--1 or more repetitions:-->
+        //             <v2:OperatorID>?</v2:OperatorID>
+        //          </v2:OperatorIDs>
+        //
+        //          <!--Optional:-->
+        //          <v2:CountryCodes>
+        //             <!--1 or more repetitions:-->
+        //             <v2:CountryCode>?</v2:CountryCode>
+        //          </v2:CountryCodes>        //
         //          <EVSEData:GeoCoordinatesResponseFormat>DecimalDegree</EVSEData:GeoCoordinatesResponseFormat>
         //
         //       </EVSEData:eRoamingPullEvseData>
@@ -561,8 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (Object == null)
                 return false;
 
-            var PullEVSEData = Object as PullEVSEDataRequest;
-            if ((Object) PullEVSEData == null)
+            if (!(Object is PullEVSEDataRequest PullEVSEData))
                 return false;
 
             return Equals(PullEVSEData);
