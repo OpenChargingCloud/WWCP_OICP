@@ -44,6 +44,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                                                                @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // DIN HYPEN: DE-BMW-0010LY-3
                                                                @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // DIN:       DEBMW0010LY3
 
+                                                             //@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8})\-?([A-Za-z0-9]{1})$
                                                                @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |"    +   // ISO Hypen: DE-BMW-C001000LY-3
                                                                @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // ISO:       DEBMWC001000LY3
 
