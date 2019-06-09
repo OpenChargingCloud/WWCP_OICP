@@ -1260,11 +1260,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                               I18NString                           Name,
                               RoamingNetwork                       RoamingNetwork,
 
-                              String                               RemoteHostname,
+                              HTTPHostname                         RemoteHostname,
                               IPPort?                              RemoteTCPPort                      = null,
                               RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
                               LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
-                              String                               RemoteHTTPVirtualHost              = null,
+                              HTTPHostname?                        RemoteHTTPVirtualHost              = null,
                               HTTPURI?                             URIPrefix                          = null,
                               String                               EVSEDataURI                        = EMPClient.DefaultEVSEDataURI,
                               String                               EVSEStatusURI                      = EMPClient.DefaultEVSEStatusURI,

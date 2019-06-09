@@ -37,10 +37,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
     public static class EMPServerTests
     {
 
-        public static async Task<String> SendAuthorizeStart(String     Hostname,
-                                                            IPPort     TCPPort,
-                                                            HTTPURI    URI,
-                                                            DNSClient  DNSClient)
+        public static async Task<String> SendAuthorizeStart(HTTPHostname  Hostname,
+                                                            IPPort        TCPPort,
+                                                            HTTPURI       URI,
+                                                            DNSClient     DNSClient)
         {
 
             var response = await new HTTPClient(Hostname,

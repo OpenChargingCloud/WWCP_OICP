@@ -337,11 +337,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         /// <param name="LoggingContext">An optional context for logging client methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         public MobileClient(String                               ClientId,
-                            String                               Hostname,
+                            HTTPHostname                         Hostname,
                             IPPort?                              RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                            String                               HTTPVirtualHost              = null,
+                            HTTPHostname?                        HTTPVirtualHost              = null,
                             HTTPURI?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
@@ -369,13 +369,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
             #region Initial checks
 
             if (ClientId.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
-
-            if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+                throw new ArgumentNullException(nameof(ClientId), "The given client identification must not be null or empty!");
 
             #endregion
-
 
             this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
 
@@ -405,11 +401,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         /// <param name="DNSClient">An optional DNS client.</param>
         public MobileClient(String                               ClientId,
                             MobileClientLogger                   Logger,
-                            String                               Hostname,
+                            HTTPHostname                         Hostname,
                             IPPort?                              RemotePort                   = null,
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                            String                               HTTPVirtualHost              = null,
+                            HTTPHostname?                        HTTPVirtualHost              = null,
                             HTTPURI?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
@@ -435,19 +431,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
             #region Initial checks
 
             if (ClientId.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
-
-            if (Logger == null)
-                throw new ArgumentNullException(nameof(Logger),    "The given mobile client logger must not be null!");
-
-            if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+                throw new ArgumentNullException(nameof(ClientId), "The given client identification must not be null or empty!");
 
             #endregion
 
             this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
 
-            this.Logger                  = Logger;
+            this.Logger                  = Logger                 ?? throw new ArgumentNullException(nameof(Logger), "The given mobile client logger must not be null!");
 
         }
 
@@ -515,8 +505,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -711,8 +701,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -920,8 +910,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + MobileAuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,

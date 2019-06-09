@@ -48,6 +48,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         public EMPClient        EMPClient           { get; }
 
+        public HTTPHostname Hostname
+            => EMPClient.Hostname;
+
+        public HTTPHostname? VirtualHostname
+            => EMPClient.VirtualHostname;
+
         /// <summary>
         /// An optional default e-mobility provider identification.
         /// </summary>
@@ -1714,11 +1720,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public EMPRoaming(String                               ClientId,
-                          String                               RemoteHostname,
+                          HTTPHostname                         RemoteHostname,
                           IPPort?                              RemoteTCPPort                      = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
-                          String                               RemoteHTTPVirtualHost              = null,
+                          HTTPHostname?                        RemoteHTTPVirtualHost              = null,
                           HTTPURI?                             URIPrefix                          = null,
                           String                               EVSEDataURI                        = EMPClient.DefaultEVSEDataURI,
                           String                               EVSEStatusURI                      = EMPClient.DefaultEVSEStatusURI,

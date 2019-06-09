@@ -47,6 +47,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         public CPOClient        CPOClient         { get; }
 
+        public HTTPHostname Hostname
+            => CPOClient.Hostname;
+
+        public HTTPHostname? VirtualHostname
+            => CPOClient.VirtualHostname;
+
         public IPPort RemotePort
             => CPOClient.RemotePort;
 
@@ -1065,11 +1071,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// 
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CPORoaming(String                               ClientId,
-                          String                               RemoteHostname,
+                          HTTPHostname                         RemoteHostname,
                           IPPort?                              RemoteTCPPort                   = null,
                           RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
-                          String                               RemoteHTTPVirtualHost           = null,
+                          HTTPHostname?                        RemoteHTTPVirtualHost           = null,
                           HTTPURI?                             URIPrefix                       = null,
                           String                               EVSEDataURI                     = CPOClient.DefaultEVSEDataURI,
                           String                               EVSEStatusURI                   = CPOClient.DefaultEVSEStatusURI,

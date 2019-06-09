@@ -1439,11 +1439,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
 
-                              String                                             RemoteHostname,
+                              HTTPHostname                                       RemoteHostname,
                               IPPort?                                            RemoteTCPPort                                   = null,
                               RemoteCertificateValidationCallback                RemoteCertificateValidator                      = null,
                               LocalCertificateSelectionCallback                  ClientCertificateSelector                       = null,
-                              String                                             RemoteHTTPVirtualHost                           = null,
+                              HTTPHostname?                                      RemoteHTTPVirtualHost                           = null,
                               HTTPURI?                                           URIPrefix                                       = null,
                               String                                             EVSEDataURI                                     = CPOClient.DefaultEVSEDataURI,
                               String                                             EVSEStatusURI                                   = CPOClient.DefaultEVSEStatusURI,

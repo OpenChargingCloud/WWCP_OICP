@@ -669,11 +669,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public CentralClient(String                               ClientId,
-                             String                               Hostname,
+                             HTTPHostname                         Hostname,
                              IPPort?                              RemotePort                   = null,
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                             String                               HTTPVirtualHost              = null,
+                             HTTPHostname?                        HTTPVirtualHost              = null,
                              HTTPURI?                             URIPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
@@ -700,13 +700,9 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             #region Initial checks
 
             if (ClientId.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
-
-            if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+                throw new ArgumentNullException(nameof(ClientId), "The given client identification must not be null or empty!");
 
             #endregion
-
 
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
@@ -737,11 +733,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="DNSClient">An optional DNS client.</param>
         public CentralClient(String                               ClientId,
                              CentralClientLogger                  Logger,
-                             String                               Hostname,
+                             HTTPHostname                         Hostname,
                              IPPort?                              RemotePort                   = null,
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                             String                               HTTPVirtualHost              = null,
+                             HTTPHostname?                        HTTPVirtualHost              = null,
                              HTTPURI?                             URIPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
@@ -754,7 +750,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URIPrefix  ?? DefaultURIPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -766,21 +762,14 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
             #region Initial checks
 
             if (ClientId.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Logger),    "The given client identification must not be null or empty!");
-
-            if (Logger == null)
-                throw new ArgumentNullException(nameof(Logger),    "The given mobile client logger must not be null!");
-
-            if (Hostname.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Hostname),  "The given hostname must not be null or empty!");
+                throw new ArgumentNullException(nameof(ClientId), "The given client identification must not be null or empty!");
 
             #endregion
-
 
             this.AuthorizationURI  = AuthorizationURI ?? DefaultAuthorizationURI;
             this.ReservationURI    = ReservationURI   ?? DefaultReservationURI;
 
-            this.Logger            = Logger;
+            this.Logger            = Logger           ?? throw new ArgumentNullException(nameof(Logger), "The given mobile client logger must not be null!");
 
         }
 
@@ -852,8 +841,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + ReservationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -1069,8 +1058,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + ReservationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -1285,8 +1274,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -1503,8 +1492,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -1722,8 +1711,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -1918,8 +1907,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
@@ -2106,8 +2095,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    HTTPVirtualHost,
                                                     URIPrefix + AuthorizationURI,
+                                                    VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
                                                     ClientCertificateSelector,
