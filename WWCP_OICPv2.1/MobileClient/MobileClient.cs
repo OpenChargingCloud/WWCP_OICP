@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     static readonly HTTPURI DefaultURIPrefix                = HTTPURI.Parse("/ibis/ws");
+        public     static readonly HTTPPath DefaultURIPrefix                = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP MobileAuthorization requests.
@@ -342,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             HTTPHostname?                        HTTPVirtualHost              = null,
-                            HTTPURI?                             URIPrefix                    = null,
+                            HTTPPath?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
@@ -407,7 +407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             HTTPHostname?                        HTTPVirtualHost              = null,
-                            HTTPURI?                             URIPrefix                    = null,
+                            HTTPPath?                             URIPrefix                    = null,
                             String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,

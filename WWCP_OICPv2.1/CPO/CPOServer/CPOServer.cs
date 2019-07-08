@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new static readonly HTTPURI          DefaultURIPrefix           = HTTPURI.Parse("/");
+        public new static readonly HTTPPath          DefaultURIPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -269,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPURI?                             URIPrefix                    = null,
+                         HTTPPath?                             URIPrefix                    = null,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          String                               ReservationURI               = DefaultReservationURI,
                          HTTPContentType                      ContentType                  = null,
@@ -322,7 +322,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
                          String           ServiceId                 = null,
                          IPPort?          TCPPort                   = null,
-                         HTTPURI?         URIPrefix                 = null,
+                         HTTPPath?         URIPrefix                 = null,
                          String           AuthorizationURI          = DefaultAuthorizationURI,
                          String           ReservationURI            = DefaultReservationURI,
                          HTTPContentType  ContentType               = null,
@@ -365,7 +365,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
         public CPOServer(SOAPServer  SOAPServer,
                          String      ServiceId          = null,
-                         HTTPURI?    URIPrefix          = null,
+                         HTTPPath?    URIPrefix          = null,
                          String      AuthorizationURI   = DefaultAuthorizationURI,
                          String      ReservationURI     = DefaultReservationURI)
 

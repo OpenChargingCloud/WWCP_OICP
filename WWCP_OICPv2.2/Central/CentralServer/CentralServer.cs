@@ -53,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new static readonly HTTPURI          DefaultURIPrefix                = HTTPURI.Parse("/");
+        public new static readonly HTTPPath          DefaultURIPrefix                = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
@@ -787,7 +787,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public CentralServer(String           HTTPServerName            = DefaultHTTPServerName,
                              String           ServiceId                 = null,
                              IPPort?          TCPPort                   = null,
-                             HTTPURI?         URIPrefix                 = null,
+                             HTTPPath?         URIPrefix                 = null,
                              String           EVSEDataURI               = DefaultAuthorizationURI,
                              String           EVSEStatusURI             = DefaultAuthorizationURI,
                              String           AuthenticationDataURI     = DefaultAuthenticationDataURI,
@@ -835,7 +835,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
         public CentralServer(SOAPServer  SOAPServer,
                              String      ServiceId                  = null,
-                             HTTPURI?    URIPrefix                  = null,
+                             HTTPPath?    URIPrefix                  = null,
                              String      EVSEDataURI                = DefaultAuthorizationURI,
                              String      EVSEStatusURI              = DefaultAuthorizationURI,
                              String      AuthorizationURI           = DefaultAuthorizationURI,

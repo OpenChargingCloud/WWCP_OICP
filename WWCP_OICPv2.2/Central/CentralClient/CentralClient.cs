@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     static readonly HTTPURI  DefaultURIPrefix             = HTTPURI.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURIPrefix             = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -674,7 +674,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                              HTTPHostname?                        HTTPVirtualHost              = null,
-                             HTTPURI?                             URIPrefix                    = null,
+                             HTTPPath?                             URIPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
                              Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -739,7 +739,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                              HTTPHostname?                        HTTPVirtualHost              = null,
-                             HTTPURI?                             URIPrefix                    = null,
+                             HTTPPath?                             URIPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
                              Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,

@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     static readonly HTTPURI  DefaultURIPrefix                = HTTPURI.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURIPrefix                = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
@@ -867,7 +867,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPURI?                             URIPrefix                    = null,
+                         HTTPPath?                             URIPrefix                    = null,
                          String                               EVSEDataURI                  = DefaultEVSEDataURI,
                          String                               EVSEStatusURI                = DefaultEVSEStatusURI,
                          String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
@@ -950,7 +950,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          Provider_Id?                         DefaultProviderId            = null,
 
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPURI?                             URIPrefix                    = null,
+                         HTTPPath?                             URIPrefix                    = null,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte                                 MaxNumberOfRetries           = DefaultMaxNumberOfRetries,

@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     static readonly HTTPURI  DefaultURIPrefix                = HTTPURI.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURIPrefix                = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
@@ -621,7 +621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPURI?                             URIPrefix                    = null,
+                         HTTPPath?                            URIPrefix                    = null,
                          String                               EVSEDataURI                  = DefaultEVSEDataURI,
                          String                               EVSEStatusURI                = DefaultEVSEStatusURI,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
@@ -691,7 +691,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPURI?                             URIPrefix                    = null,
+                         HTTPPath?                             URIPrefix                    = null,
                          String                               EVSEDataURI                  = DefaultEVSEDataURI,
                          String                               EVSEStatusURI                = DefaultEVSEStatusURI,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
