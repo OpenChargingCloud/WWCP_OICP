@@ -692,6 +692,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   null,
                    MaxNumberOfRetries,
                    DNSClient)
 
@@ -755,6 +756,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
+                   null,
                    MaxNumberOfRetries,
                    DNSClient)
 
