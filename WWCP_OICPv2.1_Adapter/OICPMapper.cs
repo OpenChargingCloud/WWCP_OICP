@@ -1345,10 +1345,17 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                    : new eMobilityProvider_Id?();
 
 
+        //public static EVCO_Id ToOICP(this RemoteAuthentication RemoteAuthentication)
+        //    => EVCO_Id.Parse(RemoteAuthentication.RemoteIdentification.ToString());
+
+        public static RemoteAuthentication ToWWCP(this EVCO_Id EVCOId)
+            => RemoteAuthentication.FromRemoteIdentification(eMobilityAccount_Id.Parse(EVCOId.ToString()));
+
+
         public static EVCO_Id ToOICP(this eMobilityAccount_Id eMAId)
             => EVCO_Id.Parse(eMAId.ToString());
 
-        public static eMobilityAccount_Id ToWWCP(this EVCO_Id EVCOId)
+        public static eMobilityAccount_Id ToWWCP_eMAId(this EVCO_Id EVCOId)
             => eMobilityAccount_Id.Parse(EVCOId.ToString());
 
 
@@ -1373,21 +1380,21 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
         #region ToWWCP(this Identification)
 
-        public static AuthIdentification ToWWCP(this Identification Identification)
+        public static RemoteAuthentication ToWWCP(this Identification Identification)
         {
 
             if (Identification.RFIDId.HasValue)
-                return AuthIdentification.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
+                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
 
             if (Identification.QRCodeIdentification.HasValue)
-                return AuthIdentification.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP(),
+                return RemoteAuthentication.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),
                                                          Identification.QRCodeIdentification.Value.PIN);
 
             if (Identification.PlugAndChargeIdentification.HasValue)
-                return AuthIdentification.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP());
+                return RemoteAuthentication.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP_eMAId());
 
             if (Identification.RemoteIdentification.HasValue)
-                return AuthIdentification.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP());
+                return RemoteAuthentication.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP_eMAId());
 
             return null;
 
@@ -1400,26 +1407,26 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <summary>
         /// Create a new identification for authorization based on the given WWCP AuthInfo.
         /// </summary>
-        /// <param name="AuthInfo">A WWCP auth info.</param>
-        public static Identification ToOICP(this AuthIdentification AuthInfo)
+        /// <param name="Authentication">A WWCP auth info.</param>
+        public static Identification ToOICP(this AAuthentication Authentication)
         {
 
-            if (AuthInfo.AuthToken                   != null)
-                return Identification.FromUID                     (AuthInfo.AuthToken.ToOICP());
+            if (Authentication.AuthToken                   != null)
+                return Identification.FromUID                     (Authentication.AuthToken.ToOICP());
 
-            if (AuthInfo.QRCodeIdentification        != null)
-                return Identification.FromQRCodeIdentification       (new QRCodeIdentification(AuthInfo.QRCodeIdentification.eMAId.ToOICP(),
-                                                                                               AuthInfo.QRCodeIdentification.PIN,
-                                                                                               AuthInfo.QRCodeIdentification.Function.ToOICP(),
-                                                                                               AuthInfo.QRCodeIdentification.Salt));
+            if (Authentication.QRCodeIdentification        != null)
+                return Identification.FromQRCodeIdentification       (new QRCodeIdentification(Authentication.QRCodeIdentification.eMAId.ToOICP(),
+                                                                                               Authentication.QRCodeIdentification.PIN,
+                                                                                               Authentication.QRCodeIdentification.Function.ToOICP(),
+                                                                                               Authentication.QRCodeIdentification.Salt));
 
-            if (AuthInfo.PlugAndChargeIdentification.HasValue)
-                return Identification.FromPlugAndChargeIdentification(AuthInfo.PlugAndChargeIdentification.Value.ToOICP());
+            if (Authentication.PlugAndChargeIdentification.HasValue)
+                return Identification.FromPlugAndChargeIdentification(Authentication.PlugAndChargeIdentification.Value.ToOICP());
 
-            if (AuthInfo.RemoteIdentification.       HasValue)
-                return Identification.FromRemoteIdentification       (AuthInfo.RemoteIdentification.       Value.ToOICP());
+            if (Authentication.RemoteIdentification.       HasValue)
+                return Identification.FromRemoteIdentification       (Authentication.RemoteIdentification.       Value.ToOICP());
 
-            throw new ArgumentException("Invalid AuthInfo!", nameof(AuthInfo));
+            throw new ArgumentException("Invalid AuthInfo!", nameof(Authentication));
 
         }
 

@@ -489,13 +489,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 #region Map parameter values
 
-                var OperatorId      = Request.OperatorId.    ToWWCP();
-                var Identification  = Request.Identification.ToWWCP();
-                var EVSEId          = Request.EVSEId?.       ToWWCP();
-                var ProductId       = Request.PartnerProductId.HasValue
-                                          ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
-                                          : null;
-                var SessionId       = Request.SessionId.     ToWWCP();
+                var OperatorId           = Request.OperatorId.    ToWWCP();
+                var LocalAuthentication  = Request.Identification.ToWWCP().ToLocal;
+                var EVSEId               = Request.EVSEId?.       ToWWCP();
+                var ProductId            = Request.PartnerProductId.HasValue
+                                               ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
+                                               : null;
+                var SessionId            = Request.SessionId.     ToWWCP();
 
                 #endregion
 
@@ -516,7 +516,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                             Request.EventTrackingId,
                                                             RoamingNetwork.Id,
                                                             OperatorId,
-                                                            Identification,
+                                                            LocalAuthentication,
                                                             EVSEId.Value,
                                                             ProductId,
                                                             SessionId,
@@ -531,7 +531,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                     #endregion
 
-                    var response = await RoamingNetwork.AuthorizeStart(Identification,
+                    var response = await RoamingNetwork.AuthorizeStart(LocalAuthentication,
                                                                        EVSEId.Value,
                                                                        ProductId,
                                                                        SessionId,
@@ -556,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                              Request.EventTrackingId,
                                                              RoamingNetwork.Id,
                                                              OperatorId,
-                                                             Identification,
+                                                             LocalAuthentication,
                                                              EVSEId.Value,
                                                              ProductId,
                                                              SessionId,
@@ -646,7 +646,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                         Request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         OperatorId,
-                                                        Identification,
+                                                        LocalAuthentication,
                                                         ProductId,
                                                         SessionId,
                                                         Request.RequestTimeout);
@@ -659,7 +659,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                     #endregion
 
-                    var response = await RoamingNetwork.AuthorizeStart(Identification,
+                    var response = await RoamingNetwork.AuthorizeStart(LocalAuthentication,
                                                                        ProductId,
                                                                        SessionId,
                                                                        OperatorId,
@@ -684,7 +684,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                          Request.EventTrackingId,
                                                          RoamingNetwork.Id,
                                                          OperatorId,
-                                                         Identification,
+                                                         LocalAuthentication,
                                                          ProductId,
                                                          SessionId,
                                                          Request.RequestTimeout,
@@ -776,7 +776,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 #region Map parameter values
 
                 var SessionId            = Request.SessionId.     ToWWCP();
-                var AuthIdentification   = Request.Identification.ToWWCP();
+                var LocalAuthentication  = Request.Identification.ToWWCP().ToLocal;
                 var EVSEId               = Request.EVSEId?.       ToWWCP();
                 var OperatorId           = Request.OperatorId.    ToWWCP();
 
@@ -801,7 +801,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                            OperatorId,
                                                            EVSEId.Value,
                                                            SessionId,
-                                                           AuthIdentification,
+                                                           LocalAuthentication,
                                                            Request.RequestTimeout);
 
                     }
@@ -813,7 +813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                     #endregion
 
                     var response = await RoamingNetwork.AuthorizeStop(SessionId,
-                                                                      AuthIdentification,
+                                                                      LocalAuthentication,
                                                                       EVSEId.Value,
                                                                       OperatorId,
 
@@ -839,7 +839,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                             OperatorId,
                                                             EVSEId.Value,
                                                             SessionId,
-                                                            AuthIdentification,
+                                                            LocalAuthentication,
                                                             Request.RequestTimeout,
                                                             response,
                                                             EndTime - StartTime);
@@ -914,7 +914,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                        RoamingNetwork.Id,
                                                        OperatorId,
                                                        SessionId,
-                                                       AuthIdentification,
+                                                       LocalAuthentication,
                                                        Request.RequestTimeout);
 
                     }
@@ -926,7 +926,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                     #endregion
 
                     var response = await RoamingNetwork.AuthorizeStop(SessionId,
-                                                                      AuthIdentification,
+                                                                      LocalAuthentication,
                                                                       OperatorId,
 
                                                                       Request.Timestamp,
@@ -950,7 +950,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                         RoamingNetwork.Id,
                                                         OperatorId,
                                                         SessionId,
-                                                        AuthIdentification,
+                                                        LocalAuthentication,
                                                         Request.RequestTimeout,
                                                         response,
                                                         EndTime - StartTime);
@@ -1906,7 +1906,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #endregion
 
 
-        #region Reserve(EVSEId, ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+        #region Reserve(EVSEId, ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Reserve the possibility to charge at the given EVSE.
@@ -1933,7 +1933,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                             TimeSpan?                         Duration,
                                             ChargingReservation_Id?           ReservationId,
                                             eMobilityProvider_Id?             ProviderId,
-                                            AuthIdentification                Identification,
+                                            RemoteAuthentication              RemoteAuthentication,
                                             ChargingProduct                   ChargingProduct,
                                             IEnumerable<Auth_Token>           AuthTokens,
                                             IEnumerable<eMobilityAccount_Id>  eMAIds,
@@ -1982,7 +1982,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                              ReservationStartTime,
                                              Duration,
                                              ProviderId,
-                                             Identification,
+                                             RemoteAuthentication,
                                              ChargingProduct,
                                              AuthTokens,
                                              eMAIds,
@@ -2048,13 +2048,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             #region Add the eMAId to the list of valid eMAIds
 
-            if (eMAIds == null && Identification?.RemoteIdentification.HasValue == true)
-                eMAIds = new List<eMobilityAccount_Id> { Identification.RemoteIdentification.Value };
+            if (eMAIds == null && RemoteAuthentication?.RemoteIdentification.HasValue == true)
+                eMAIds = new List<eMobilityAccount_Id> { RemoteAuthentication.RemoteIdentification.Value };
 
-            if (eMAIds != null && Identification?.RemoteIdentification.HasValue == true && !eMAIds.Contains(Identification.RemoteIdentification.Value))
+            if (eMAIds != null && RemoteAuthentication?.RemoteIdentification.HasValue == true && !eMAIds.Contains(RemoteAuthentication.RemoteIdentification.Value))
             {
                 var _eMAIds = new List<eMobilityAccount_Id>(eMAIds);
-                _eMAIds.Add(Identification.RemoteIdentification.Value);
+                _eMAIds.Add(RemoteAuthentication.RemoteIdentification.Value);
                 eMAIds = _eMAIds;
             }
 
@@ -2065,7 +2065,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                              ProviderId:         ProviderId.HasValue
                                                                                      ? ProviderId.Value.ToOICP()
                                                                                      : DefaultProviderId.Value,
-                                                             Identification:     Identification.ToOICP(),
+                                                             Identification:     RemoteAuthentication.ToOICP(),
                                                              Duration:           Duration,
                                                              SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                                              PartnerSessionId:   null,
@@ -2097,7 +2097,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                              ConsumedReservationTime:  TimeSpan.FromSeconds(0),
                                                                              ReservationLevel:         ChargingReservationLevel.EVSE,
                                                                              ProviderId:               ProviderId,
-                                                                             Identification:           Identification,
+                                                                             Identification:           RemoteAuthentication,
                                                                              RoamingNetwork:           RoamingNetwork,
                                                                              ChargingPoolId:           null,
                                                                              ChargingStationId:        null,
@@ -2132,7 +2132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                               ReservationStartTime,
                                               Duration,
                                               ProviderId,
-                                              Identification,
+                                              RemoteAuthentication,
                                               ChargingProduct,
                                               AuthTokens,
                                               eMAIds,
@@ -2262,7 +2262,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #endregion
 
 
-        #region RemoteStart(EVSEId,            ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStart(EVSEId,            ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -2272,7 +2272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="ReservationId">An optional identification of a charging reservation.</param>
         /// <param name="SessionId">An optional identification of this charging session.</param>
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
-        /// <param name="eMAId">An optional identification of the e-mobility account who wants to charge.</param>
+        /// <param name="RemoteAuthentication">An optional identification of the e-mobility account who wants to charge.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2281,11 +2281,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         async Task<RemoteStartEVSEResult>
 
             IReserveRemoteStartStop.RemoteStart(WWCP.EVSE_Id             EVSEId,
-                                                ChargingProduct          ChargingProduct,  // = null,
-                                                ChargingReservation_Id?  ReservationId,    // = null,
-                                                ChargingSession_Id?      SessionId,        // = null,
-                                                eMobilityProvider_Id?    ProviderId,       // = null,
-                                                eMobilityAccount_Id?     eMAId,            // = null,
+                                                ChargingProduct          ChargingProduct,       // = null,
+                                                ChargingReservation_Id?  ReservationId,         // = null,
+                                                ChargingSession_Id?      SessionId,             // = null,
+                                                eMobilityProvider_Id?    ProviderId,            // = null,
+                                                RemoteAuthentication     RemoteAuthentication,  // = null,
 
                                                 DateTime?                Timestamp,
                                                 CancellationToken?       CancellationToken,
@@ -2296,8 +2296,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             #region Initial checks
 
-            if (!eMAId.HasValue)
-                throw new ArgumentNullException(nameof(eMAId),  "The e-mobility account identification is mandatory in OICP!");
+            if (RemoteAuthentication == null || !RemoteAuthentication.RemoteIdentification.HasValue)
+                throw new ArgumentNullException(nameof(RemoteAuthentication),  "The e-mobility account identification is mandatory in OICP!");
 
 
             if (!Timestamp.HasValue)
@@ -2334,7 +2334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                  ReservationId,
                                                  SessionId,
                                                  ProviderId,
-                                                 eMAId,
+                                                 RemoteAuthentication,
                                                  RequestTimeout);
 
             }
@@ -2424,8 +2424,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                 ? ProviderId.Value.ToOICP()
                                                                                 : DefaultProviderId.Value,
                                                         EVSEId:             EVSEId.ToOICP().Value,
-                                                        EVCOId:             eMAId.     Value.ToOICP(),
-                                                        SessionId:          SessionId.       ToOICP(),
+                                                        EVCOId:             RemoteAuthentication.ToOICP().RemoteIdentification.Value,
+                                                        SessionId:          SessionId.           ToOICP(),
                                                         PartnerSessionId:   null,
                                                         PartnerProductId:   PartnerProductIdElements.Count > 0
                                                                                 ? new PartnerProduct_Id?(PartnerProduct_Id.Parse(PartnerProductIdElements.
@@ -2477,7 +2477,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                   ReservationId,
                                                   SessionId,
                                                   ProviderId,
-                                                  eMAId,
+                                                  RemoteAuthentication,
                                                   RequestTimeout,
                                                   result,
                                                   EndTime - StartTime);
@@ -2496,7 +2496,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #endregion
 
-        #region RemoteStart(ChargingStationId, ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStart(ChargingStationId, ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Start a charging session at the given charging station.
@@ -2506,7 +2506,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="ReservationId">The unique identification for a charging reservation.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="RemoteAuthentication">The unique identification of the e-mobility account.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2515,11 +2515,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         Task<RemoteStartChargingStationResult>
 
             IReserveRemoteStartStop.RemoteStart(WWCP.ChargingStation_Id  ChargingStationId,
-                                                ChargingProduct          ChargingProduct,  // = null,
-                                                ChargingReservation_Id?  ReservationId,    // = null,
-                                                ChargingSession_Id?      SessionId,        // = null,
-                                                eMobilityProvider_Id?    ProviderId,       // = null,
-                                                eMobilityAccount_Id?     eMAId,            // = null,
+                                                ChargingProduct          ChargingProduct,       // = null,
+                                                ChargingReservation_Id?  ReservationId,         // = null,
+                                                ChargingSession_Id?      SessionId,             // = null,
+                                                eMobilityProvider_Id?    ProviderId,            // = null,
+                                                RemoteAuthentication     RemoteAuthentication,  // = null,
 
                                                 DateTime?                Timestamp,
                                                 CancellationToken?       CancellationToken,
@@ -2532,7 +2532,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #endregion
 
 
-        #region RemoteStop(                   SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(                   SessionId, ReservationHandling = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Stop the given charging session.
@@ -2540,7 +2540,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="RemoteAuthentication">The unique identification of the e-mobility account.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2550,8 +2550,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             IReserveRemoteStartStop.RemoteStop(ChargingSession_Id     SessionId,
                                                ReservationHandling?   ReservationHandling,
-                                               eMobilityProvider_Id?  ProviderId,         // = null,
-                                               eMobilityAccount_Id?   eMAId,              // = null,
+                                               eMobilityProvider_Id?  ProviderId,            // = null,
+                                               RemoteAuthentication   RemoteAuthentication,  // = null,
 
                                                DateTime?              Timestamp,
                                                CancellationToken?     CancellationToken,
@@ -2563,7 +2563,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #endregion
 
-        #region RemoteStop(EVSEId,            SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(EVSEId,            SessionId, ReservationHandling = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given EVSE.
@@ -2572,7 +2572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="SessionId">An optional identification of this charging session.</param>
         /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
-        /// <param name="eMAId">An optional identification of the e-mobility account who wants to stop charging.</param>
+        /// <param name="RemoteAuthentication">An optional identification of the e-mobility account who wants to stop charging.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2582,14 +2582,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             RemoteStop(WWCP.EVSE_Id           EVSEId,
                        ChargingSession_Id     SessionId,
-                       ReservationHandling?   ReservationHandling   = null,
-                       eMobilityProvider_Id?  ProviderId            = null,
-                       eMobilityAccount_Id?   eMAId                 = null,
+                       ReservationHandling?   ReservationHandling    = null,
+                       eMobilityProvider_Id?  ProviderId             = null,
+                       RemoteAuthentication   RemoteAuthentication   = null,
 
-                       DateTime?              Timestamp             = null,
-                       CancellationToken?     CancellationToken     = null,
-                       EventTracking_Id       EventTrackingId       = null,
-                       TimeSpan?              RequestTimeout        = null)
+                       DateTime?              Timestamp              = null,
+                       CancellationToken?     CancellationToken      = null,
+                       EventTracking_Id       EventTrackingId        = null,
+                       TimeSpan?              RequestTimeout         = null)
 
         {
 
@@ -2628,7 +2628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                 SessionId,
                                                 ReservationHandling,
                                                 ProviderId,
-                                                eMAId,
+                                                RemoteAuthentication,
                                                 RequestTimeout);
 
             }
@@ -2684,7 +2684,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                  SessionId,
                                                  ReservationHandling,
                                                  ProviderId,
-                                                 eMAId,
+                                                 RemoteAuthentication,
                                                  RequestTimeout,
                                                  result,
                                                  EndTime - StartTime);
@@ -2703,7 +2703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #endregion
 
-        #region RemoteStop(ChargingStationId, SessionId, ReservationHandling = null, ProviderId = null, eMAId = null, ...)
+        #region RemoteStop(ChargingStationId, SessionId, ReservationHandling = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
         /// Stop the given charging session at the given charging station.
@@ -2712,7 +2712,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ReservationHandling">Whether to remove the reservation after session end, or to keep it open for some more time.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
-        /// <param name="eMAId">The unique identification of the e-mobility account.</param>
+        /// <param name="RemoteAuthentication">The unique identification of the e-mobility account.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2723,8 +2723,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             IReserveRemoteStartStop.RemoteStop(WWCP.ChargingStation_Id  ChargingStationId,
                                                ChargingSession_Id       SessionId,
                                                ReservationHandling?     ReservationHandling,
-                                               eMobilityProvider_Id?    ProviderId,         // = null,
-                                               eMobilityAccount_Id?     eMAId,              // = null,
+                                               eMobilityProvider_Id?    ProviderId,            // = null,
+                                               RemoteAuthentication     RemoteAuthentication,  // = null,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
