@@ -1374,6 +1374,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static UID ToOICP(this Auth_Token AuthToken)
             => UID.Parse(AuthToken.ToString());
 
+        public static UID? ToOICP(this Auth_Token? AuthToken)
+            => AuthToken.HasValue
+                   ? UID.Parse(AuthToken.ToString())
+                   : new UID?();
+
         public static Auth_Token ToWWCP(this UID UID)
             => Auth_Token.Parse(UID.ToString());
 
@@ -1411,7 +1416,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public static Identification ToOICP(this AAuthentication Authentication)
         {
 
-            if (Authentication.AuthToken                   != null)
+            if (Authentication.AuthToken.HasValue)
                 return Identification.FromUID                     (Authentication.AuthToken.ToOICP());
 
             if (Authentication.QRCodeIdentification        != null)

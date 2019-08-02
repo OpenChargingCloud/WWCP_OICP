@@ -1378,6 +1378,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static Auth_Token ToWWCP(this UID UID)
             => Auth_Token.Parse(UID.ToString());
 
+        public static UID? ToOICP(this Auth_Token? AuthToken)
+            => AuthToken.HasValue
+                   ? UID.Parse(AuthToken.ToString())
+                   : new UID?();
+
 
         #region ToWWCP(this Identification)
 
