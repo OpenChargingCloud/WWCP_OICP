@@ -173,109 +173,109 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        #region Provider overloading
+        #region Operator overloading
 
-        #region Provider == (HubProviderId1, HubProviderId2)
+        #region Operator == (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
+        public static Boolean operator == (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(HubProviderId1, HubProviderId2))
+            if (Object.ReferenceEquals(ChargingStationId1, ChargingStationId2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) HubProviderId1 == null) || ((Object) HubProviderId2 == null))
+            if (((Object) ChargingStationId1 == null) || ((Object) ChargingStationId2 == null))
                 return false;
 
-            return HubProviderId1.Equals(HubProviderId2);
+            return ChargingStationId1.Equals(ChargingStationId2);
 
         }
 
         #endregion
 
-        #region Provider != (HubProviderId1, HubProviderId2)
+        #region Operator != (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
-            => !(HubProviderId1 == HubProviderId2);
+        public static Boolean operator != (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+            => !(ChargingStationId1 == ChargingStationId2);
 
         #endregion
 
-        #region Provider <  (HubProviderId1, HubProviderId2)
+        #region Operator <  (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
+        public static Boolean operator < (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
         {
 
-            if ((Object) HubProviderId1 == null)
-                throw new ArgumentNullException(nameof(HubProviderId1), "The given HubProviderId1 must not be null!");
+            if ((Object) ChargingStationId1 == null)
+                throw new ArgumentNullException(nameof(ChargingStationId1), "The given ChargingStationId1 must not be null!");
 
-            return HubProviderId1.CompareTo(HubProviderId2) < 0;
+            return ChargingStationId1.CompareTo(ChargingStationId2) < 0;
 
         }
 
         #endregion
 
-        #region Provider <= (HubProviderId1, HubProviderId2)
+        #region Operator <= (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
-            => !(HubProviderId1 > HubProviderId2);
+        public static Boolean operator <= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+            => !(ChargingStationId1 > ChargingStationId2);
 
         #endregion
 
-        #region Provider >  (HubProviderId1, HubProviderId2)
+        #region Operator >  (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
+        public static Boolean operator > (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
         {
 
-            if ((Object) HubProviderId1 == null)
-                throw new ArgumentNullException(nameof(HubProviderId1), "The given HubProviderId1 must not be null!");
+            if ((Object) ChargingStationId1 == null)
+                throw new ArgumentNullException(nameof(ChargingStationId1), "The given ChargingStationId1 must not be null!");
 
-            return HubProviderId1.CompareTo(HubProviderId2) > 0;
+            return ChargingStationId1.CompareTo(ChargingStationId2) > 0;
 
         }
 
         #endregion
 
-        #region Provider >= (HubProviderId1, HubProviderId2)
+        #region Operator >= (ChargingStationId1, ChargingStationId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A charging station identification.</param>
-        /// <param name="HubProviderId2">Another charging station identification.</param>
+        /// <param name="ChargingStationId1">A charging station identification.</param>
+        /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargingStation_Id HubProviderId1, ChargingStation_Id HubProviderId2)
-            => !(HubProviderId1 < HubProviderId2);
+        public static Boolean operator >= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+            => !(ChargingStationId1 < ChargingStationId2);
 
         #endregion
 

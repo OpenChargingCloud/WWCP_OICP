@@ -259,12 +259,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An event sent whenever a reserve EVSE command will be send.
         /// </summary>
-        public event OnReserveEVSERequestDelegate         OnReserveEVSERequest;
+        public event OnReserveRequestDelegate         OnReserveEVSERequest;
 
         /// <summary>
         /// An event sent whenever a reserve EVSE command was sent.
         /// </summary>
-        public event OnReserveEVSEResponseDelegate        OnReserveEVSEResponse;
+        public event OnReserveResponseDelegate        OnReserveEVSEResponse;
 
         #endregion
 
@@ -3278,7 +3278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                                                     #region Update matching charging station...
 
-                                                    if (_ChargingPool.TryGetChargingStationbyId(EVSEInfo.StationId, out _ChargingStation))
+                                                    if (_ChargingPool.TryGetChargingStationById(EVSEInfo.StationId, out _ChargingStation))
                                                     {
 
                                                         // Update via events!
@@ -3333,7 +3333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                                                     #region Update matching EVSE...
 
-                                                    if (_ChargingStation.TryGetEVSEbyId(CurrentEVSEDataRecord.Id.ToWWCP().Value, out _EVSE))
+                                                    if (_ChargingStation.TryGetEVSEById(CurrentEVSEDataRecord.Id.ToWWCP().Value, out _EVSE))
                                                     {
 
                                                         // Update via events!

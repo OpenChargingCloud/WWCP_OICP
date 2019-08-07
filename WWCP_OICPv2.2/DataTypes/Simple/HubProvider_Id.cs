@@ -173,9 +173,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        #region Provider overloading
+        #region Operator overloading
 
-        #region Provider == (HubProviderId1, HubProviderId2)
+        #region Operator == (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.
@@ -200,7 +200,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region Provider != (HubProviderId1, HubProviderId2)
+        #region Operator != (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.
@@ -213,7 +213,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region Provider <  (HubProviderId1, HubProviderId2)
+        #region Operator <  (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.
@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region Provider <= (HubProviderId1, HubProviderId2)
+        #region Operator <= (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.
@@ -246,7 +246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region Provider >  (HubProviderId1, HubProviderId2)
+        #region Operator >  (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.
@@ -266,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region Provider >= (HubProviderId1, HubProviderId2)
+        #region Operator >= (HubProviderId1, HubProviderId2)
 
         /// <summary>
         /// Compares two instances of this object.

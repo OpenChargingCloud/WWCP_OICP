@@ -981,7 +981,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         case ReservationResultType.AlreadyInUse:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
-                        case ReservationResultType.UnknownEVSE:
+                        case ReservationResultType.UnknownLocation:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(Request);
 
                         case ReservationResultType.OutOfService:
@@ -1029,27 +1029,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     switch (response.Result)
                     {
 
-                        case CancelReservationResults.Success:
+                        case CancelReservationResultTypes.Success:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.Success(
                                        Request,
                                        StatusCodeDescription: "Reservation deleted!"
                                    );
 
-                        case CancelReservationResults.UnknownReservationId:
+                        case CancelReservationResultTypes.UnknownReservationId:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.SessionIsInvalid(
                                        Request,
                                        SessionId: Request.SessionId
                                    );
 
-                        case CancelReservationResults.Offline:
-                        case CancelReservationResults.Timeout:
-                        case CancelReservationResults.CommunicationError:
+                        case CancelReservationResultTypes.Offline:
+                        case CancelReservationResultTypes.Timeout:
+                        case CancelReservationResultTypes.CommunicationError:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(Request);
 
-                        case CancelReservationResults.UnknownEVSE:
+                        case CancelReservationResultTypes.UnknownEVSE:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(Request);
 
-                        case CancelReservationResults.OutOfService:
+                        case CancelReservationResultTypes.OutOfService:
                             return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(Request);
 
                     }

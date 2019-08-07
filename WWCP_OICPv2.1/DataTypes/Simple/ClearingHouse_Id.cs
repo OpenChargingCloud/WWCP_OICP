@@ -173,109 +173,109 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #endregion
 
 
-        #region Provider overloading
+        #region Operator overloading
 
-        #region Provider == (HubProviderId1, HubProviderId2)
+        #region Operator == (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
+        public static Boolean operator == (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(HubProviderId1, HubProviderId2))
+            if (Object.ReferenceEquals(ClearingHouseIdId1, ClearingHouseIdId2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) HubProviderId1 == null) || ((Object) HubProviderId2 == null))
+            if (((Object) ClearingHouseIdId1 == null) || ((Object) ClearingHouseIdId2 == null))
                 return false;
 
-            return HubProviderId1.Equals(HubProviderId2);
+            return ClearingHouseIdId1.Equals(ClearingHouseIdId2);
 
         }
 
         #endregion
 
-        #region Provider != (HubProviderId1, HubProviderId2)
+        #region Operator != (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
-            => !(HubProviderId1 == HubProviderId2);
+        public static Boolean operator != (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+            => !(ClearingHouseIdId1 == ClearingHouseIdId2);
 
         #endregion
 
-        #region Provider <  (HubProviderId1, HubProviderId2)
+        #region Operator <  (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
+        public static Boolean operator < (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
         {
 
-            if ((Object) HubProviderId1 == null)
-                throw new ArgumentNullException(nameof(HubProviderId1), "The given HubProviderId1 must not be null!");
+            if ((Object) ClearingHouseIdId1 == null)
+                throw new ArgumentNullException(nameof(ClearingHouseIdId1), "The given ClearingHouseIdId1 must not be null!");
 
-            return HubProviderId1.CompareTo(HubProviderId2) < 0;
+            return ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) < 0;
 
         }
 
         #endregion
 
-        #region Provider <= (HubProviderId1, HubProviderId2)
+        #region Operator <= (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
-            => !(HubProviderId1 > HubProviderId2);
+        public static Boolean operator <= (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+            => !(ClearingHouseIdId1 > ClearingHouseIdId2);
 
         #endregion
 
-        #region Provider >  (HubProviderId1, HubProviderId2)
+        #region Operator >  (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
+        public static Boolean operator > (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
         {
 
-            if ((Object) HubProviderId1 == null)
-                throw new ArgumentNullException(nameof(HubProviderId1), "The given HubProviderId1 must not be null!");
+            if ((Object) ClearingHouseIdId1 == null)
+                throw new ArgumentNullException(nameof(ClearingHouseIdId1), "The given ClearingHouseIdId1 must not be null!");
 
-            return HubProviderId1.CompareTo(HubProviderId2) > 0;
+            return ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) > 0;
 
         }
 
         #endregion
 
-        #region Provider >= (HubProviderId1, HubProviderId2)
+        #region Operator >= (ClearingHouseIdId1, ClearingHouseIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId1">A clearing house identification.</param>
-        /// <param name="HubProviderId2">Another clearing house identification.</param>
+        /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
+        /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ClearingHouse_Id HubProviderId1, ClearingHouse_Id HubProviderId2)
-            => !(HubProviderId1 < HubProviderId2);
+        public static Boolean operator >= (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+            => !(ClearingHouseIdId1 < ClearingHouseIdId2);
 
         #endregion
 
