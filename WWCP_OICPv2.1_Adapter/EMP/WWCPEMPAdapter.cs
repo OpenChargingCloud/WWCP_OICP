@@ -3208,7 +3208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                                                     #region Update matching charging pool...
 
-                                                    if (WWCPChargingStationOperator.TryGetChargingPoolbyId(EVSEInfo.PoolId, out _ChargingPool))
+                                                    if (WWCPChargingStationOperator.TryGetChargingPoolById(EVSEInfo.PoolId, out _ChargingPool))
                                                     {
 
                                                         // External update via events!
