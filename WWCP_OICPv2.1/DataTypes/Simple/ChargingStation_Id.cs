@@ -47,6 +47,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         #region Properties
 
         /// <summary>
+        /// Indicates whether this identification is null or empty.
+        /// </summary>
+        public Boolean IsNullOrEmpty
+            => InternalId.IsNullOrEmpty();
+
+        /// <summary>
         /// The length of the charging station identificator.
         /// </summary>
         public UInt64 Length

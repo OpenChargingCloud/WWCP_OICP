@@ -27,6 +27,7 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using Org.BouncyCastle.Bcpg.OpenPgp;
+using Org.BouncyCastle.Crypto.Parameters;
 
 #endregion
 
@@ -151,8 +152,10 @@ namespace org.GraphDefined.WWCP
                                               Action<OICPv2_2.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
 
-                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
-                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
+                                              String                                                          EllipticCurve                                   = "P-256",
+                                              ECPrivateKeyParameters                                          PrivateKey                                      = null,
+                                              PublicKeyCertificates                                           PublicKeyCertificates                           = null,
+
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -227,8 +230,10 @@ namespace org.GraphDefined.WWCP
                                                                      DisableAuthentication,
                                                                      DisableSendChargeDetailRecords,
 
-                                                                     PublicKeyRing,
-                                                                     SecretKeyRing,
+                                                                     EllipticCurve,
+                                                                     PrivateKey,
+                                                                     PublicKeyCertificates,
+
                                                                      DNSClient);
 
 
@@ -345,8 +350,10 @@ namespace org.GraphDefined.WWCP
                                               Action<OICPv2_2.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
                                               Action<ICSORoamingProvider>                                     Configurator                                    = null,
 
-                                              PgpPublicKeyRing                                                PublicKeyRing                                   = null,
-                                              PgpSecretKeyRing                                                SecretKeyRing                                   = null,
+                                              String                                                          EllipticCurve                                   = "P-256",
+                                              ECPrivateKeyParameters                                          PrivateKey                                      = null,
+                                              PublicKeyCertificates                                           PublicKeyCertificates                           = null,
+
                                               DNSClient                                                       DNSClient                                       = null)
 
         {
@@ -424,8 +431,10 @@ namespace org.GraphDefined.WWCP
                                                                      DisableAuthentication,
                                                                      DisableSendChargeDetailRecords,
 
-                                                                     PublicKeyRing,
-                                                                     SecretKeyRing,
+                                                                     EllipticCurve,
+                                                                     PrivateKey,
+                                                                     PublicKeyCertificates,
+
                                                                      DNSClient);
 
             OICPConfigurator?.Invoke(NewRoamingProvider);

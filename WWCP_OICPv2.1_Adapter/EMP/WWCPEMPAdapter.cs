@@ -219,7 +219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         public Func<EVSEStatusReport, ChargingStationStatusTypes> EVSEStatusAggregationDelegate { get; }
 
-        public IEnumerable<ChargingReservation> Reservations => throw new NotImplementedException();
+        public IEnumerable<ChargingReservation> ChargingReservations => throw new NotImplementedException();
 
         public IEnumerable<ChargingSession> ChargingSessions => throw new NotImplementedException();
 
@@ -2007,6 +2007,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
+                                             RoamingNetwork.Id,
                                              ReservationId,
                                              ChargingLocation,
                                              ReservationStartTime,
@@ -2173,6 +2174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               Timestamp.Value,
                                               this,
                                               EventTrackingId,
+                                              RoamingNetwork.Id,
                                               ReservationId,
                                               ChargingLocation,
                                               ReservationStartTime,
@@ -2256,7 +2258,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                    Timestamp.Value,
                                                    this,
                                                    EventTrackingId,
-                                                   ProviderId.Value,
+                                                   RoamingNetwork.Id,
+                                                   //ProviderId.Value,
                                                    ReservationId,
                                                    Reason,
                                                    RequestTimeout);
@@ -2331,7 +2334,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                     Timestamp.Value,
                                                     this,
                                                     EventTrackingId,
-                                                    ProviderId,
+                                                    RoamingNetwork.Id,
+                                                    //ProviderId,
                                                     ReservationId,
                                                     canceledReservation,
                                                     Reason,
@@ -2420,6 +2424,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
+                                             RoamingNetwork.Id,
                                              ChargingLocation,
                                              ChargingProduct,
                                              ReservationId,
@@ -2564,6 +2569,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                               Timestamp.Value,
                                               this,
                                               EventTrackingId,
+                                              RoamingNetwork.Id,
                                               ChargingLocation,
                                               ChargingProduct,
                                               ReservationId,
@@ -2646,6 +2652,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                             Timestamp.Value,
                                             this,
                                             EventTrackingId,
+                                            RoamingNetwork.Id,
                                             SessionId,
                                             ReservationHandling,
                                             ProviderId,
@@ -2702,6 +2709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
+                                             RoamingNetwork.Id,
                                              SessionId,
                                              ReservationHandling,
                                              ProviderId,

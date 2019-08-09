@@ -31,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using Org.BouncyCastle.Bcpg.OpenPgp;
+using Org.BouncyCastle.Crypto.Parameters;
 
 #endregion
 
@@ -805,8 +806,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               Boolean                                            DisableAuthentication                           = false,
                               Boolean                                            DisableSendChargeDetailRecords                  = false,
 
-                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
-                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
+                              String                                             EllipticCurve                                   = "P-256",
+                              ECPrivateKeyParameters                             PrivateKey                                      = null,
+                              PublicKeyCertificates                              PublicKeyCertificates                           = null,
                               DNSClient                                          DNSClient                                       = null)
 
             : base(Id,
@@ -827,8 +829,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                    DisableAuthentication,
                    DisableSendChargeDetailRecords,
 
-                   PublicKeyRing,
-                   SecretKeyRing,
+                   EllipticCurve,
+                   PrivateKey,
+                   PublicKeyCertificates,
+
                    DNSClient ?? CPORoaming?.DNSClient)
 
         {
@@ -870,7 +874,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #region Request transformation
 
                 TimeSpan?           Duration           = null;
-                DateTime?           StartTime          = null;
+                DateTime?           ReservationStartTime          = null;
                 PartnerProduct_Id?  PartnerProductId   = Request.PartnerProductId;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
@@ -905,7 +909,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         var StartTimeText = Elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
                         if (StartTimeText.IsNotNullOrEmpty())
                         {
-                            StartTime = DateTime.Parse(StartTimeText.Substring(2));
+                            ReservationStartTime = DateTime.Parse(StartTimeText.Substring(2));
                         }
 
                     }
@@ -915,8 +919,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
                 var response = await RoamingNetwork.
-                                         Reserve(Request.EVSEId.ToWWCP().Value,
-                                                 StartTime:             StartTime,
+                                         Reserve(ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
+                                                 ReservationStartTime:  ReservationStartTime,
                                                  Duration:              Duration,
 
                                                  // Always create a reservation identification usable for OICP!
@@ -1013,8 +1017,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                Request.SessionId.ToString()
                                                            ),
                                                            ChargingReservationCancellationReason.Deleted,
-                                                           Request.ProviderId.ToWWCP(),
-                                                           Request.EVSEId.    ToWWCP(),
+                                                           //Request.ProviderId.ToWWCP(),
+                                                           //Request.EVSEId.    ToWWCP(),
 
                                                            Request.Timestamp,
                                                            Request.CancellationToken,
@@ -1146,13 +1150,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
                 var response = await RoamingNetwork.
-                                         RemoteStart(Request.EVSEId.    ToWWCP().Value,
+                                         RemoteStart(ChargingLocation.FromEVSEId(Request.EVSEId.    ToWWCP().Value),
                                                      ChargingProduct,
                                                      ReservationId,
                                                      Request.SessionId. ToWWCP(),
                                                      Request.ProviderId.ToWWCP(),
                                                      Request.EVCOId.    ToWWCP(),
-                                                     this,
+                                                     //this,
 
                                                      Request.Timestamp,
                                                      Request.CancellationToken,
@@ -1167,37 +1171,37 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     switch (response.Result)
                     {
 
-                        case RemoteStartEVSEResultType.Success:
+                        case RemoteStartResultType.Success:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
                                        Request,
                                        response.Session.Id.ToOICP(),
                                        StatusCodeDescription: "Ready to charge!"
                                    );
 
-                        case RemoteStartEVSEResultType.InvalidSessionId:
+                        case RemoteStartResultType.InvalidSessionId:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SessionIsInvalid(
                                        Request,
                                        SessionId: Request.SessionId
                                    );
 
-                        case RemoteStartEVSEResultType.InvalidCredentials:
+                        case RemoteStartResultType.InvalidCredentials:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract(Request);
 
-                        case RemoteStartEVSEResultType.Offline:
-                        case RemoteStartEVSEResultType.Timeout:
-                        case RemoteStartEVSEResultType.CommunicationError:
+                        case RemoteStartResultType.Offline:
+                        case RemoteStartResultType.Timeout:
+                        case RemoteStartResultType.CommunicationError:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(Request);
 
-                        case RemoteStartEVSEResultType.Reserved:
+                        case RemoteStartResultType.Reserved:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(Request);
 
-                        case RemoteStartEVSEResultType.AlreadyInUse:
+                        case RemoteStartResultType.AlreadyInUse:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
-                        case RemoteStartEVSEResultType.UnknownEVSE:
+                        case RemoteStartResultType.UnknownLocation:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID(Request);
 
-                        case RemoteStartEVSEResultType.OutOfService:
+                        case RemoteStartResultType.OutOfService:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService(Request);
 
                     }
@@ -1221,7 +1225,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                             Request) => {
 
                 var response = await RoamingNetwork.
-                                         RemoteStop(Request.EVSEId.   ToWWCP().Value,
+                                         RemoteStop(//Request.EVSEId.   ToWWCP().Value,
                                                     Request.SessionId.ToWWCP(),
                                                     ReservationHandling.Close,
                                                     Request.ProviderId.ToWWCP(),
@@ -1240,28 +1244,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     switch (response.Result)
                     {
 
-                        case RemoteStopEVSEResultType.Success:
+                        case RemoteStopResultType.Success:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
                                        Request,
                                        response.SessionId.ToOICP(),
                                        StatusCodeDescription: "Ready to stop charging!"
                                    );
 
-                        case RemoteStopEVSEResultType.InvalidSessionId:
+                        case RemoteStopResultType.InvalidSessionId:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SessionIsInvalid(
                                        Request,
                                        SessionId: Request.SessionId
                                    );
 
-                        case RemoteStopEVSEResultType.Offline:
-                        case RemoteStopEVSEResultType.Timeout:
-                        case RemoteStopEVSEResultType.CommunicationError:
+                        case RemoteStopResultType.Offline:
+                        case RemoteStopResultType.Timeout:
+                        case RemoteStopResultType.CommunicationError:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(Request);
 
-                        case RemoteStopEVSEResultType.UnknownEVSE:
+                        case RemoteStopResultType.UnknownLocation:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.UnknownEVSEID(Request);
 
-                        case RemoteStopEVSEResultType.OutOfService:
+                        case RemoteStopResultType.OutOfService:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.EVSEOutOfService(Request);
 
                     }
@@ -1345,8 +1349,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               Boolean                                            DisableAuthentication                           = false,
                               Boolean                                            DisableSendChargeDetailRecords                  = false,
 
-                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
-                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
+                              String                                             EllipticCurve                                   = "P-256",
+                              ECPrivateKeyParameters                             PrivateKey                                      = null,
+                              PublicKeyCertificates                              PublicKeyCertificates                           = null,
+
                               DNSClient                                          DNSClient                                       = null)
 
             : this(Id,
@@ -1380,8 +1386,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                    DisableAuthentication,
                    DisableSendChargeDetailRecords,
 
-                   PublicKeyRing,
-                   SecretKeyRing,
+                   EllipticCurve,
+                   PrivateKey,
+                   PublicKeyCertificates,
+
                    DNSClient ?? CPOServer?.DNSClient)
 
         { }
@@ -1488,8 +1496,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               Boolean                                            DisableAuthentication                           = false,
                               Boolean                                            DisableSendChargeDetailRecords                  = false,
 
-                              PgpPublicKeyRing                                   PublicKeyRing                                   = null,
-                              PgpSecretKeyRing                                   SecretKeyRing                                   = null,
+                              String                                             EllipticCurve                                   = "P-256",
+                              ECPrivateKeyParameters                             PrivateKey                                      = null,
+                              PublicKeyCertificates                              PublicKeyCertificates                           = null,
+
                               DNSClient                                          DNSClient                                       = null)
 
             : this(Id,
@@ -1549,8 +1559,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                    DisableAuthentication,
                    DisableSendChargeDetailRecords,
 
-                   PublicKeyRing,
-                   SecretKeyRing,
+                   EllipticCurve,
+                   PrivateKey,
+                   PublicKeyCertificates,
+
                    DNSClient)
 
         {

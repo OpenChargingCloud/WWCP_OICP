@@ -70,6 +70,12 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         public Char?        CheckDigit   { get; }
 
         /// <summary>
+        /// Indicates whether this identification is null or empty.
+        /// </summary>
+        public Boolean IsNullOrEmpty
+            => Suffix.IsNullOrEmpty();
+
+        /// <summary>
         /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
