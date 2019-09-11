@@ -99,25 +99,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// An optional initial value of the energy meter.
         /// </summary>
         [Optional]
-        public Single?                      MeterValueStart         { get; }
+        public Decimal?                     MeterValueStart         { get; }
 
         /// <summary>
         /// An optional final value of the energy meter.
         /// </summary>
         [Optional]
-        public Single?                      MeterValueEnd           { get; }
+        public Decimal?                     MeterValueEnd           { get; }
 
         /// <summary>
         /// An optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Single>          MeterValuesInBetween    { get; }
+        public IEnumerable<Decimal>         MeterValuesInBetween    { get; }
 
         /// <summary>
         /// The optional amount of consumed energy.
         /// </summary>
         [Optional]
-        public Single?                      ConsumedEnergy          { get; }
+        public Decimal?                     ConsumedEnergy          { get; }
 
         /// <summary>
         /// An optional signature for the metering values.
@@ -171,10 +171,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                   PartnerSession_Id?                   PartnerSessionId       = null,
                                   DateTime?                            ChargingStart          = null,
                                   DateTime?                            ChargingEnd            = null,
-                                  Single?                              MeterValueStart        = null,  // xx.yyy
-                                  Single?                              MeterValueEnd          = null,  // xx.yyy
-                                  IEnumerable<Single>                  MeterValuesInBetween   = null,  // xx.yyy
-                                  Single?                              ConsumedEnergy         = null,  // xx.yyy
+                                  Decimal?                             MeterValueStart        = null,  // xx.yyy
+                                  Decimal?                             MeterValueEnd          = null,  // xx.yyy
+                                  IEnumerable<Decimal>                 MeterValuesInBetween   = null,  // xx.yyy
+                                  Decimal?                             ConsumedEnergy         = null,  // xx.yyy
                                   String                               MeteringSignature      = null,  // maxlength: 200
                                   HubOperator_Id?                      HubOperatorId          = null,
                                   HubProvider_Id?                      HubProviderId          = null,
@@ -194,10 +194,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.PartnerSessionId      = PartnerSessionId;
             this.ChargingStart         = ChargingStart;
             this.ChargingEnd           = ChargingEnd;
-            this.MeterValueStart       = MeterValueStart.HasValue ? (Single) Math.Round(MeterValueStart.Value, 3) : new Single?();
-            this.MeterValueEnd         = MeterValueEnd.  HasValue ? (Single) Math.Round(MeterValueEnd.  Value, 3) : new Single?();
-            this.MeterValuesInBetween  = MeterValuesInBetween.SafeAny() ? MeterValuesInBetween.Select(metervalue => (Single) Math.Round(metervalue, 3)) : null;
-            this.ConsumedEnergy        = ConsumedEnergy. HasValue ? (Single) Math.Round(ConsumedEnergy. Value, 3) : new Single?();
+            this.MeterValueStart       = MeterValueStart.HasValue ? (Decimal) Math.Round(MeterValueStart.Value, 3) : new Decimal?();
+            this.MeterValueEnd         = MeterValueEnd.  HasValue ? (Decimal) Math.Round(MeterValueEnd.  Value, 3) : new Decimal?();
+            this.MeterValuesInBetween  = MeterValuesInBetween.SafeAny() ? MeterValuesInBetween.Select(metervalue => (Decimal) Math.Round(metervalue, 3)) : null;
+            this.ConsumedEnergy        = ConsumedEnergy. HasValue ? (Decimal) Math.Round(ConsumedEnergy. Value, 3) : new Decimal?();
             this.MeteringSignature     = MeteringSignature.SubstringMax(200);
             this.HubOperatorId         = HubOperatorId;
             this.HubProviderId         = HubProviderId;
@@ -415,17 +415,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                                      DateTime.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueStart",
-                                                                                     Single.Parse),
+                                                                                     Decimal.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueEnd",
-                                                                                     Single.Parse),
+                                                                                     Decimal.Parse),
 
                                          ChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
                                                                                      OICPNS.Authorization + "MeterValue",
-                                                                                     Single.Parse),
+                                                                                     Decimal.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ConsumedEnergy",
-                                                                                     Single.Parse),
+                                                                                     Decimal.Parse),
 
                                          ChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
 
@@ -911,25 +911,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// An optional initial value of the energy meter.
             /// </summary>
             [Optional]
-            public Single?                      MeterValueStart         { get; set; }
+            public Decimal?                     MeterValueStart         { get; set; }
 
             /// <summary>
             /// An optional final value of the energy meter.
             /// </summary>
             [Optional]
-            public Single?                      MeterValueEnd           { get; set; }
+            public Decimal?                     MeterValueEnd           { get; set; }
 
             /// <summary>
             /// An optional enumeration of meter values during the charging session.
             /// </summary>
             [Optional]
-            public IEnumerable<Single>          MeterValuesInBetween    { get; set; }
+            public IEnumerable<Decimal>         MeterValuesInBetween    { get; set; }
 
             /// <summary>
             /// The optional amount of consumed energy.
             /// </summary>
             [Optional]
-            public Single?                      ConsumedEnergy          { get; set; }
+            public Decimal?                     ConsumedEnergy          { get; set; }
 
             /// <summary>
             /// An optional signature for the metering values.
@@ -977,15 +977,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            Session_Id                   SessionId,
                            DateTime                     SessionStart,
                            DateTime                     SessionEnd,
-                           Identification  Identification,
+                           Identification               Identification,
                            PartnerProduct_Id?           PartnerProductId       = null,
                            PartnerSession_Id?           PartnerSessionId       = null,
                            DateTime?                    ChargingStart          = null,
                            DateTime?                    ChargingEnd            = null,
-                           Single?                      MeterValueStart        = null,  // xx.yyy
-                           Single?                      MeterValueEnd          = null,  // xx.yyy
-                           IEnumerable<Single>          MeterValuesInBetween   = null,  // xx.yyy
-                           Single?                      ConsumedEnergy         = null,  // xx.yyy
+                           Decimal?                     MeterValueStart        = null,  // xx.yyy
+                           Decimal?                     MeterValueEnd          = null,  // xx.yyy
+                           IEnumerable<Decimal>         MeterValuesInBetween   = null,  // xx.yyy
+                           Decimal?                     ConsumedEnergy         = null,  // xx.yyy
                            String                       MeteringSignature      = null,  // maxlength: 200
                            HubOperator_Id?              HubOperatorId          = null,
                            HubProvider_Id?              HubProviderId          = null,

@@ -126,10 +126,10 @@ namespace org.GraphDefined.WWCP.OICPv2_1.UnitTests
                                                                      PartnerSessionId:      PartnerSession_Id.Parse("081508150815-0815-0815-0815-0815081508150815"),
                                                                      ChargingStart:         DateTime.Now,
                                                                      ChargingEnd:           DateTime.Now - TimeSpan.FromHours(3),
-                                                                     MeterValueStart:       123.456f,
-                                                                     MeterValueEnd:         234.567f,
-                                                                     MeterValuesInBetween:  Enumeration.Create(123.456f, 189.768f, 223.312f, 234.560f, 234.567f),
-                                                                     ConsumedEnergy:        111.111f),
+                                                                     MeterValueStart:       123.456m,
+                                                                     MeterValueEnd:         234.567m,
+                                                                     MeterValuesInBetween:  Enumeration.Create(123.456m, 189.768m, 223.312m, 234.560m, 234.567m),
+                                                                     ConsumedEnergy:        111.111m),
 
                                                                  RequestTimeout:          TimeSpan.FromSeconds(120)
                                                                 );

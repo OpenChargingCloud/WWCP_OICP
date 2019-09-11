@@ -1477,22 +1477,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                                                    EnergyMeteringValues:  (ChargeDetailRecord.ChargingStart.HasValue &&
                                                                            ChargeDetailRecord.ChargingEnd  .HasValue)
-                                                                              ? new Timestamped<Single>[] {
+                                                                              ? new Timestamped<Decimal>[] {
 
-                                                                                    new Timestamped<Single>(
+                                                                                    new Timestamped<Decimal>(
                                                                                         ChargeDetailRecord.ChargingStart.  Value,
                                                                                         ChargeDetailRecord.MeterValueStart.Value
                                                                                     ),
 
                                                                                     //ToDo: Meter values in between... but we don't have timestamps for them!
 
-                                                                                    new Timestamped<Single>(
+                                                                                    new Timestamped<Decimal>(
                                                                                         ChargeDetailRecord.ChargingEnd.  Value,
                                                                                         ChargeDetailRecord.MeterValueEnd.Value
                                                                                     )
 
                                                                                 }
-                                                                              : new Timestamped<Single>[0],
+                                                                              : new Timestamped<Decimal>[0],
 
                                                    //ConsumedEnergy:      Will be calculated!
 
@@ -1530,16 +1530,16 @@ namespace org.GraphDefined.WWCP.OICPv2_1
             var CDR = new ChargeDetailRecord(
                           EVSEId:                ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
                           SessionId:             ChargeDetailRecord.SessionId.ToOICP(),
-                          SessionStart:          ChargeDetailRecord.SessionTime.Value.StartTime,
-                          SessionEnd:            ChargeDetailRecord.SessionTime.Value.EndTime.Value,
+                          SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
+                          SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
                           Identification:        ChargeDetailRecord.IdentificationStart.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
                           PartnerSessionId:      ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
-                          ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.Value.StartTime,
-                          ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : ChargeDetailRecord.SessionTime.Value.EndTime.Value,
-                          MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : new Single?(),
-                          MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : new Single?(),
-                          MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Single> v) => v.Value) : null,
+                          ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
+                          ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : ChargeDetailRecord.SessionTime.EndTime.Value,
+                          MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : new Decimal?(),
+                          MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : new Decimal?(),
+                          MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Decimal> v) => v.Value) : null,
                           ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy,
                           MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
                           HubOperatorId:         ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
