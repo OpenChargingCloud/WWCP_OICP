@@ -182,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         /// <summary>
         /// The HTTP URI prefix.
         /// </summary>
-        public HTTPPath                                      URIPrefix     { get; }
+        public HTTPPath                                     URIPrefix     { get; }
 
         /// <summary>
         /// The HTTP realm, if HTTP Basic Authentication is used.
@@ -254,7 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.WebAPI
         {
 
             this.HTTPServer                         = HTTPServer ?? throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
-            this.URIPrefix                          = URIPrefix ?? DefaultURIPrefix;
+            this.URIPrefix                          = URIPrefix  ?? DefaultURIPrefix;
             this.HTTPRealm                          = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
             this.HTTPLogins                         = HTTPLogins ?? new KeyValuePair<String, String>[0];
             this.DNSClient                          = HTTPServer.DNSClient;

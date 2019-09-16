@@ -74,7 +74,6 @@
     <Compile Include="DataTypes\Enums\ProviderIdFormats.cs" />
     <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
     <Compile Include="Messages\AResponseBuilder.cs" />
-    <Compile Include="Messages\Delegates.cs" />
     <Compile Include="Messages\EMP\EVSEStatus.cs" />
     <Compile Include="DataTypes\ICustomData.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />

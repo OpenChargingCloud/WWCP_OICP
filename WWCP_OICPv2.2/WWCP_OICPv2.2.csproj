@@ -140,7 +140,6 @@
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
-    <Compile Include="Messages\Delegates.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
