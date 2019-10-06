@@ -40,32 +40,37 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The unqiue identification of the charging station operator.
         /// </summary>
-        public Operator_Id         OperatorId          { get; }
+        public Operator_Id            OperatorId             { get; }
 
         /// <summary>
         /// An user identification.
         /// </summary>
-        public Identification      Identification      { get; }
+        public Identification         Identification         { get; }
 
         /// <summary>
         /// An optional EVSE identification.
         /// </summary>
-        public EVSE_Id?            EVSEId              { get; }
+        public EVSE_Id?               EVSEId                 { get; }
 
         /// <summary>
         /// An optional partner product identification.
         /// </summary>
-        public PartnerProduct_Id?  PartnerProductId    { get; }
+        public PartnerProduct_Id?     PartnerProductId       { get; }
 
         /// <summary>
         /// An optional charging session identification.
         /// </summary>
-        public Session_Id?         SessionId           { get; }
+        public Session_Id?            SessionId              { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId    { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         #endregion
 
@@ -79,23 +84,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public AuthorizeStartRequest(Operator_Id         OperatorId,
-                                     Identification      Identification,
-                                     EVSE_Id?            EVSEId              = null,
-                                     PartnerProduct_Id?  PartnerProductId    = null,   // OICP v2.1: [max 100]
-                                     Session_Id?         SessionId           = null,
-                                     PartnerSession_Id?  PartnerSessionId    = null,   // OICP v2.1: [max 50]
+        public AuthorizeStartRequest(Operator_Id            OperatorId,
+                                     Identification         Identification,
+                                     EVSE_Id?               EVSEId                = null,
+                                     PartnerProduct_Id?     PartnerProductId      = null,
+                                     Session_Id?            SessionId             = null,
+                                     CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                     EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                                     DateTime?           Timestamp           = null,
-                                     CancellationToken?  CancellationToken   = null,
-                                     EventTracking_Id    EventTrackingId     = null,
-                                     TimeSpan?           RequestTimeout      = null)
+                                     DateTime?              Timestamp             = null,
+                                     CancellationToken?     CancellationToken     = null,
+                                     EventTracking_Id       EventTrackingId       = null,
+                                     TimeSpan?              RequestTimeout        = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -104,12 +111,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.OperatorId        = OperatorId;
-            this.Identification    = Identification;
-            this.EVSEId            = EVSEId;
-            this.PartnerProductId  = PartnerProductId;
-            this.SessionId         = SessionId;
-            this.PartnerSessionId  = PartnerSessionId;
+            this.OperatorId           = OperatorId;
+            this.Identification       = Identification;
+            this.EVSEId               = EVSEId;
+            this.PartnerProductId     = PartnerProductId;
+            this.SessionId            = SessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
         }
 
@@ -131,7 +139,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         //          <Authorization:SessionID>?</Authorization:SessionID>
         //
         //          <!--Optional:-->
-        //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+        //          <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <Authorization:OperatorID>?</Authorization:OperatorID>
         //
@@ -326,8 +337,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                      AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                           Session_Id.Parse),
 
-                                     AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
-                                                                          PartnerSession_Id.Parse),
+                                     AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
+                                                                          CPOPartnerSession_Id.Parse),
+
+                                     AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EMPPartnerSessionID",
+                                                                          EMPPartnerSession_Id.Parse),
 
                                      Timestamp,
                                      CancellationToken,
@@ -423,26 +437,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// Return a XML representation of this object.
         /// </summary>
         /// <param name="CustomAuthorizeStartRequestSerializer">A delegate to customize the serialization of AuthorizeStart requests.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeStartRequest> CustomAuthorizeStartRequestSerializer  = null,
                               CustomXMLSerializerDelegate<Identification>        CustomIdentificationSerializer         = null)
-
         {
 
             var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeStart",
 
-                                       SessionId.       HasValue ? new XElement(OICPNS.Authorization + "SessionID",        SessionId.       ToString()) : null,
-                                       PartnerSessionId.HasValue ? new XElement(OICPNS.Authorization + "PartnerSessionID", PartnerSessionId.ToString()) : null,
+                                       SessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "SessionID",            SessionId.          ToString())
+                                           : null,
 
-                                       new XElement(OICPNS.Authorization + "OperatorID",    OperatorId.ToString()),
+                                       CPOPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                                           : null,
+
+                                       EMPPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                           : null,
+
+                                       new XElement(OICPNS.Authorization + "OperatorID",                 OperatorId.         ToString()),
 
                                        EVSEId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "EVSEID",  EVSEId.    ToString())
+                                           ? new XElement(OICPNS.Authorization + "EVSEID",               EVSEId.             ToString())
                                            : null,
 
                                        Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
    
                                        PartnerProductId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.ToString())
+                                           ? new XElement(OICPNS.Authorization + "PartnerProductID",     PartnerProductId.   ToString())
                                            : null
 
                                   );
@@ -492,7 +515,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStart2">Another authorize start request.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AuthorizeStartRequest AuthorizeStart1, AuthorizeStartRequest AuthorizeStart2)
-
             => !(AuthorizeStart1 == AuthorizeStart2);
 
         #endregion
@@ -514,11 +536,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             if (Object == null)
                 return false;
 
-            var AuthorizeStart = Object as AuthorizeStartRequest;
-            if ((Object) AuthorizeStart == null)
+            if (!(Object is AuthorizeStartRequest AuthorizeStartRequest))
                 return false;
 
-            return this.Equals(AuthorizeStart);
+            return Equals(AuthorizeStartRequest);
 
         }
 
@@ -534,23 +555,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public override Boolean Equals(AuthorizeStartRequest AuthorizeStart)
         {
 
-            if ((Object) AuthorizeStart == null)
+            if (AuthorizeStart is null)
                 return false;
 
             return OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
                    Identification.Equals(AuthorizeStart.Identification) &&
 
-                   ((!EVSEId.          HasValue && !AuthorizeStart.EVSEId.          HasValue) ||
-                     (EVSEId.          HasValue &&  AuthorizeStart.EVSEId.          HasValue && EVSEId.          Value.Equals(AuthorizeStart.EVSEId.          Value))) &&
+                   ((!EVSEId.             HasValue && !AuthorizeStart.EVSEId.             HasValue) ||
+                     (EVSEId.             HasValue &&  AuthorizeStart.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStart.EVSEId.             Value))) &&
 
-                   ((!PartnerProductId.HasValue && !AuthorizeStart.PartnerProductId.HasValue) ||
-                     (PartnerProductId.HasValue &&  AuthorizeStart.PartnerProductId.HasValue && PartnerProductId.Value.Equals(AuthorizeStart.PartnerProductId.Value))) &&
+                   ((!PartnerProductId.   HasValue && !AuthorizeStart.PartnerProductId.   HasValue) ||
+                     (PartnerProductId.   HasValue &&  AuthorizeStart.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeStart.PartnerProductId.   Value))) &&
 
-                   ((!SessionId.       HasValue && !AuthorizeStart.SessionId.       HasValue) ||
-                     (SessionId.       HasValue &&  AuthorizeStart.SessionId.       HasValue && SessionId.       Value.Equals(AuthorizeStart.SessionId.       Value))) &&
+                   ((!SessionId.          HasValue && !AuthorizeStart.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizeStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeStart.SessionId.          Value))) &&
 
-                   ((!PartnerSessionId.HasValue && !AuthorizeStart.PartnerSessionId.HasValue) ||
-                     (PartnerSessionId.HasValue &&  AuthorizeStart.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeStart.PartnerSessionId.Value)));
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeStart.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStart.CPOPartnerSessionId.Value))) &&
+
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeStart.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStart.EMPPartnerSessionId.Value)));
 
         }
 
@@ -569,23 +593,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             unchecked
             {
 
-                return OperatorId.    GetHashCode() * 19 ^
-                       Identification.GetHashCode() * 17 ^
+                return OperatorId.    GetHashCode() * 13 ^
+                       Identification.GetHashCode() * 11 ^
 
                        (EVSEId           != null
-                            ? EVSEId.          GetHashCode() * 11
+                            ? EVSEId.             GetHashCode() * 9
                             : 0) ^
 
                        (PartnerProductId != null
-                            ? PartnerProductId.GetHashCode() * 7
+                            ? PartnerProductId.   GetHashCode() * 7
                             : 0) ^
 
                        (SessionId        != null
-                            ? SessionId.       GetHashCode() * 5
+                            ? SessionId.          GetHashCode() * 5
                             : 0) ^
 
-                       (PartnerSessionId != null
-                            ? PartnerSessionId.GetHashCode() * 3
+                       (CPOPartnerSessionId != null
+                            ? CPOPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (EMPPartnerSessionId != null
+                            ? EMPPartnerSessionId.GetHashCode()
                             : 0);
 
             }
@@ -613,7 +641,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  : "");
 
         #endregion
-
 
     }
 

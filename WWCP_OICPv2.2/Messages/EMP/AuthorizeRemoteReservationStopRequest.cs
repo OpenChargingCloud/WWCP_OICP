@@ -40,22 +40,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// A charging session identification.
         /// </summary>
-        public Session_Id          SessionId          { get; }
+        public Session_Id             SessionId              { get; }
 
         /// <summary>
         /// An e-mobility provider identification.
         /// </summary>
-        public Provider_Id         ProviderId         { get; }
+        public Provider_Id            ProviderId             { get; }
 
         /// <summary>
         /// An EVSE identification.
         /// </summary>
-        public EVSE_Id             EVSEId             { get; }
+        public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId   { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         #endregion
 
@@ -67,21 +72,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="SessionId">A charging session identification.</param>
         /// <param name="ProviderId">Your e-mobility provider identification (EMP Id).</param>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public AuthorizeRemoteReservationStopRequest(Session_Id          SessionId,
-                                                     Provider_Id         ProviderId,
-                                                     EVSE_Id             EVSEId,
-                                                     PartnerSession_Id?  PartnerSessionId    = null,
+        public AuthorizeRemoteReservationStopRequest(Session_Id             SessionId,
+                                                     Provider_Id            ProviderId,
+                                                     EVSE_Id                EVSEId,
+                                                     CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                     EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                                                     DateTime?           Timestamp           = null,
-                                                     CancellationToken?  CancellationToken   = null,
-                                                     EventTracking_Id    EventTrackingId     = null,
-                                                     TimeSpan?           RequestTimeout      = null)
+                                                     DateTime?              Timestamp             = null,
+                                                     CancellationToken?     CancellationToken     = null,
+                                                     EventTracking_Id       EventTrackingId       = null,
+                                                     TimeSpan?              RequestTimeout        = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -90,10 +97,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.SessionId         = SessionId;
-            this.ProviderId        = ProviderId;
-            this.EVSEId            = EVSEId;
-            this.PartnerSessionId  = PartnerSessionId;
+            this.SessionId            = SessionId;
+            this.ProviderId           = ProviderId;
+            this.EVSEId               = EVSEId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
         }
 
@@ -258,8 +266,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      AuthorizeRemoteReservationStopXML.MapValueOrFail    (OICPNS.Reservation + "EVSEID",
                                                                                                           EVSE_Id.Parse),
 
-                                                     AuthorizeRemoteReservationStopXML.MapValueOrNullable(OICPNS.Reservation + "PartnerSessionID",
-                                                                                                          PartnerSession_Id.Parse),
+                                                     AuthorizeRemoteReservationStopXML.MapValueOrNullable(OICPNS.Reservation + "CPOPartnerSessionID",
+                                                                                                          CPOPartnerSession_Id.Parse),
+
+                                                     AuthorizeRemoteReservationStopXML.MapValueOrNullable(OICPNS.Reservation + "EMPPartnerSessionID",
+                                                                                                          EMPPartnerSession_Id.Parse),
 
                                                      Timestamp,
                                                      CancellationToken,
@@ -355,14 +366,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             var XML = new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop",
 
-                                       new XElement(OICPNS.Reservation + "SessionID",               SessionId.       ToString()),
+                                       new XElement(OICPNS.Reservation + "SessionID",                  SessionId.          ToString()),
 
-                                       PartnerSessionId.HasValue
-                                           ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
+                                       CPOPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Reservation + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                            : null,
 
-                                       new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
-                                       new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString())
+                                       EMPPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Reservation + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                           : null,
+
+                                       new XElement(OICPNS.Reservation + "ProviderID",                 ProviderId.         ToString()),
+                                       new XElement(OICPNS.Reservation + "EVSEID",                     EVSEId.             ToString())
 
                                   );
 
@@ -411,7 +426,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStop2">Another authorize remote reservation stop request.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStop1, AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStop2)
-
             => !(AuthorizeRemoteReservationStop1 == AuthorizeRemoteReservationStop2);
 
         #endregion
@@ -433,11 +447,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (Object == null)
                 return false;
 
-            var AuthorizeRemoteReservationStop = Object as AuthorizeRemoteReservationStopRequest;
-            if ((Object) AuthorizeRemoteReservationStop == null)
+            if (!(Object is AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStopRequest))
                 return false;
 
-            return Equals(AuthorizeRemoteReservationStop);
+            return Equals(AuthorizeRemoteReservationStopRequest);
 
         }
 
@@ -453,15 +466,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStop)
         {
 
-            if ((Object) AuthorizeRemoteReservationStop == null)
+            if (AuthorizeRemoteReservationStop is null)
                 return false;
 
             return SessionId. Equals(AuthorizeRemoteReservationStop.SessionId)  &&
                    ProviderId.Equals(AuthorizeRemoteReservationStop.ProviderId) &&
                    EVSEId.    Equals(AuthorizeRemoteReservationStop.EVSEId)     &&
 
-                   ((!PartnerSessionId.HasValue && !AuthorizeRemoteReservationStop.PartnerSessionId.HasValue) ||
-                     (PartnerSessionId.HasValue &&  AuthorizeRemoteReservationStop.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeRemoteReservationStop.PartnerSessionId.Value)));
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteReservationStop.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteReservationStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteReservationStop.CPOPartnerSessionId.Value))) &&
+
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteReservationStop.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteReservationStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteReservationStop.EMPPartnerSessionId.Value)));
 
         }
 
@@ -480,13 +496,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return SessionId. GetHashCode() * 7 ^
-                       ProviderId.GetHashCode() * 5 ^
-                       EVSEId.    GetHashCode() * 3 ^
+                return SessionId. GetHashCode() * 9 ^
+                       ProviderId.GetHashCode() * 7 ^
+                       EVSEId.    GetHashCode() * 5 ^
 
-                       (PartnerSessionId.HasValue
-                            ? PartnerSessionId.GetHashCode()
+                       (CPOPartnerSessionId.HasValue
+                            ? CPOPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (EMPPartnerSessionId.HasValue
+                            ? EMPPartnerSessionId.GetHashCode()
                             : 0);
+
 
             }
         }

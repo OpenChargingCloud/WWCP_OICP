@@ -40,32 +40,37 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An e-mobility provider identification.
         /// </summary>
-        public Provider_Id         ProviderId         { get; }
+        public Provider_Id            ProviderId             { get; }
 
         /// <summary>
         /// An EVSE identification.
         /// </summary>
-        public EVSE_Id             EVSEId             { get; }
+        public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
         /// An electric vehicle contract identification.
         /// </summary>
-        public EVCO_Id             EVCOId             { get; }
+        public EVCO_Id                EVCOId                 { get; }
 
         /// <summary>
         /// An optional charging session identification.
         /// </summary>
-        public Session_Id?         SessionId          { get; }
+        public Session_Id?            SessionId              { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId   { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         /// <summary>
         /// An optional partner product identification.
         /// </summary>
-        public PartnerProduct_Id?  PartnerProductId   { get; }
+        public PartnerProduct_Id?     PartnerProductId       { get; }
 
         #endregion
 
@@ -78,24 +83,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="EVCOId">An electric vehicle contract identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public AuthorizeRemoteStartRequest(Provider_Id         ProviderId,
-                                           EVSE_Id             EVSEId,
-                                           EVCO_Id             EVCOId,
-                                           Session_Id?         SessionId           = null,
-                                           PartnerSession_Id?  PartnerSessionId    = null,
-                                           PartnerProduct_Id?  PartnerProductId    = null,
+        public AuthorizeRemoteStartRequest(Provider_Id            ProviderId,
+                                           EVSE_Id                EVSEId,
+                                           EVCO_Id                EVCOId,
+                                           Session_Id?            SessionId             = null,
+                                           CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                           PartnerProduct_Id?     PartnerProductId      = null,
 
-                                           DateTime?           Timestamp           = null,
-                                           CancellationToken?  CancellationToken   = null,
-                                           EventTracking_Id    EventTrackingId     = null,
-                                           TimeSpan?           RequestTimeout      = null)
+                                           DateTime?              Timestamp             = null,
+                                           CancellationToken?     CancellationToken     = null,
+                                           EventTracking_Id       EventTrackingId       = null,
+                                           TimeSpan?              RequestTimeout        = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -104,12 +111,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.ProviderId        = ProviderId;
-            this.EVSEId            = EVSEId;
-            this.EVCOId            = EVCOId;
-            this.SessionId         = SessionId;
-            this.PartnerSessionId  = PartnerSessionId;
-            this.PartnerProductId  = PartnerProductId;
+            this.ProviderId           = ProviderId;
+            this.EVSEId               = EVSEId;
+            this.EVCOId               = EVCOId;
+            this.SessionId            = SessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
+            this.PartnerProductId     = PartnerProductId;
 
         }
 
@@ -131,7 +139,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <Authorization:SessionID>?</Authorization:SessionID>
         //
         //          <!--Optional:-->
-        //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+        //          <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <Authorization:ProviderID>?</Authorization:ProviderID>
         //          <Authorization:EVSEID>?</Authorization:EVSEID>
@@ -336,8 +347,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                                     Session_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
-                                                                                                    PartnerSession_Id.Parse),
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
+                                                                                                    CPOPartnerSession_Id.Parse),
+
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "EMPPartnerSessionID",
+                                                                                                    EMPPartnerSession_Id.Parse),
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerProductID",
                                                                                                     PartnerProduct_Id.Parse),
@@ -433,7 +447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        /// <param name="CustomIdentificationSerializer">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
+        /// <param name="CustomAuthorizeRemoteStartRequestSerializer">A delegate to customize the serialization of AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestSerializer   = null,
                               CustomXMLSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
@@ -442,20 +456,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
                                        SessionId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.       ToString())
+                                           ? new XElement(OICPNS.Authorization + "SessionID",            SessionId.          ToString())
                                            : null,
 
-                                       PartnerSessionId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                       CPOPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                            : null,
 
-                                       new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
-                                       new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString()),
+                                       EMPPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                           : null,
+
+                                       new XElement(OICPNS.Authorization + "ProviderID",                 ProviderId.         ToString()),
+                                       new XElement(OICPNS.Authorization + "EVSEID",                     EVSEId.             ToString()),
 
                                        Identification.FromRemoteIdentification(EVCOId).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
 
                                        PartnerProductId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
+                                           ? new XElement(OICPNS.Authorization + "PartnerProductID",     PartnerProductId.   ToString())
                                            : null
 
                                    );
@@ -505,7 +523,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStartRequest2">Another authorize remote start request.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest1, AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest2)
-
             => !(AuthorizeRemoteStartRequest1 == AuthorizeRemoteStartRequest2);
 
         #endregion
@@ -527,8 +544,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (Object == null)
                 return false;
 
-            var AuthorizeRemoteStartRequest = Object as AuthorizeRemoteStartRequest;
-            if ((Object) AuthorizeRemoteStartRequest == null)
+            if (!(Object is AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest))
                 return false;
 
             return Equals(AuthorizeRemoteStartRequest);
@@ -547,21 +563,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest)
         {
 
-            if ((Object) AuthorizeRemoteStartRequest == null)
+            if (AuthorizeRemoteStartRequest is null)
                 return false;
 
             return ProviderId.Equals(AuthorizeRemoteStartRequest.ProviderId) &&
                    EVSEId.    Equals(AuthorizeRemoteStartRequest.EVSEId)     &&
                    EVCOId.    Equals(AuthorizeRemoteStartRequest.EVCOId)     &&
 
-                   ((!SessionId.       HasValue && !AuthorizeRemoteStartRequest.SessionId.       HasValue) ||
-                     (SessionId.       HasValue &&  AuthorizeRemoteStartRequest.SessionId.       HasValue && SessionId.       Value.Equals(AuthorizeRemoteStartRequest.SessionId.       Value))) &&
+                   ((!SessionId.          HasValue && !AuthorizeRemoteStartRequest.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizeRemoteStartRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStartRequest.SessionId.          Value))) &&
 
-                   ((!PartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.PartnerSessionId.HasValue) ||
-                     (PartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.PartnerSessionId.Value))) &&
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.CPOPartnerSessionId.Value))) &&
 
-                   ((!PartnerProductId.HasValue && !AuthorizeRemoteStartRequest.PartnerProductId.HasValue) ||
-                     (PartnerProductId.HasValue &&  AuthorizeRemoteStartRequest.PartnerProductId.HasValue && PartnerProductId.Value.Equals(AuthorizeRemoteStartRequest.PartnerProductId.Value)));
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.EMPPartnerSessionId.Value))) &&
+
+                   ((!PartnerProductId.   HasValue && !AuthorizeRemoteStartRequest.PartnerProductId.   HasValue) ||
+                     (PartnerProductId.   HasValue &&  AuthorizeRemoteStartRequest.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeRemoteStartRequest.PartnerProductId.   Value)));
 
         }
 
@@ -580,20 +599,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return ProviderId.GetHashCode() * 17 ^
-                       EVSEId.    GetHashCode() * 11 ^
-                       EVCOId.    GetHashCode() *  7 ^
+                return ProviderId.GetHashCode() * 19 ^
+                       EVSEId.    GetHashCode() * 17 ^
+                       EVCOId.    GetHashCode() * 11 ^
 
-                       (SessionId.        HasValue
-                            ? SessionId.       GetHashCode() * 5
+                       (SessionId.          HasValue
+                            ? SessionId.          GetHashCode() * 7
                             : 0) ^
 
-                       (PartnerSessionId. HasValue
-                            ? PartnerSessionId.GetHashCode() * 3
+                       (CPOPartnerSessionId.HasValue
+                            ? CPOPartnerSessionId.GetHashCode() * 5
                             : 0) ^
 
-                       (!PartnerProductId.HasValue
-                            ? PartnerProductId.GetHashCode()
+                       (EMPPartnerSessionId.HasValue
+                            ? EMPPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (!PartnerProductId.  HasValue
+                            ? PartnerProductId.   GetHashCode()
                             : 0);
 
             }

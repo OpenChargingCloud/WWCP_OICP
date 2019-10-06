@@ -30,6 +30,10 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
+    /// <summary>
+    /// An OICP acknowledgement.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
     public class Acknowledgement<TRequest> : AResponse<TRequest,
                                                        Acknowledgement<TRequest>>
 
@@ -42,24 +46,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// The result of the operation.
         /// </summary>
-        public Boolean             Result              { get; }
+        public Boolean                Result                 { get; }
 
         /// <summary>
         /// The status code of the operation.
         /// </summary>
-        public StatusCode          StatusCode          { get; }
+        public StatusCode             StatusCode             { get; }
 
         /// <summary>
         /// An optional charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public Session_Id?         SessionId           { get; }
+        public Session_Id?            SessionId              { get; }
 
         /// <summary>
-        /// An optional partner charging session identification for
+        /// An optional EMP partner charging session identification for
         /// RemoteReservationStart and RemoteStart requests.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId    { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional CPO partner charging session identification for
+        /// RemoteReservationStart and RemoteStart requests.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         #endregion
 
@@ -74,30 +84,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Result">The result of the operation.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="CustomData">Optional additional customer-specific data.</param>
         private Acknowledgement(TRequest                             Request,
                                 Boolean                              Result,
                                 StatusCode                           StatusCode,
-                                Session_Id?                          SessionId          = null,
-                                PartnerSession_Id?                   PartnerSessionId   = null,
-                                IReadOnlyDictionary<String, Object>  CustomData         = null)
+                                Session_Id?                          SessionId             = null,
+                                CPOPartnerSession_Id?                CPOPartnerSessionId   = null,
+                                EMPPartnerSession_Id?                EMPPartnerSessionId   = null,
+                                IReadOnlyDictionary<String, Object>  CustomData            = null)
 
             : base(Request,
                    CustomData)
 
         {
 
-            #region Initial checks
-
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given request object must not be null!");
-
-            #endregion
-
-            this.Result            = Result;
-            this.StatusCode        = StatusCode;
-            this.SessionId         = SessionId;
-            this.PartnerSessionId  = PartnerSessionId;
+            this.Result               = Result;
+            this.StatusCode           = StatusCode;
+            this.SessionId            = SessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
         }
 
@@ -110,12 +117,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="CustomData">Optional additional customer-specific data.</param>
         public Acknowledgement(TRequest                             Request,
                                Session_Id?                          SessionId                  = null,
-                               PartnerSession_Id?                   PartnerSessionId           = null,
+                               CPOPartnerSession_Id?                CPOPartnerSessionId        = null,
+                               EMPPartnerSession_Id?                EMPPartnerSessionId        = null,
                                String                               StatusCodeDescription      = null,
                                String                               StatusCodeAdditionalInfo   = null,
                                IReadOnlyDictionary<String, Object>  CustomData                 = null)
@@ -126,7 +136,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                   StatusCodeDescription,
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId,
+                   CPOPartnerSessionId,
+                   EMPPartnerSessionId,
                    CustomData)
 
         { }
@@ -143,13 +154,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="CustomData">Optional additional customer-specific data.</param>
         public Acknowledgement(TRequest                             Request,
                                StatusCodes                          StatusCode,
                                String                               StatusCodeDescription      = null,
                                String                               StatusCodeAdditionalInfo   = null,
                                Session_Id?                          SessionId                  = null,
-                               PartnerSession_Id?                   PartnerSessionId           = null,
+                               CPOPartnerSession_Id?                CPOPartnerSessionId        = null,
+                               EMPPartnerSession_Id?                EMPPartnerSessionId        = null,
                                IReadOnlyDictionary<String, Object>  CustomData                 = null)
 
             : this(Request,
@@ -158,7 +172,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                   StatusCodeDescription,
                                   StatusCodeAdditionalInfo),
                    SessionId,
-                   PartnerSessionId,
+                   CPOPartnerSessionId,
+                   EMPPartnerSessionId,
                    CustomData)
 
         { }
@@ -175,16 +190,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         public static Acknowledgement<TRequest>
 
-            Success(TRequest            Request,
-                    Session_Id?         SessionId                  = null,
-                    PartnerSession_Id?  PartnerSessionId           = null,
-                    String              StatusCodeDescription      = null,
-                    String              StatusCodeAdditionalInfo   = null)
+            Success(TRequest               Request,
+                    Session_Id?            SessionId                  = null,
+                    CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                    EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                    String                 StatusCodeDescription      = null,
+                    String                 StatusCodeAdditionalInfo   = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  true,
@@ -194,7 +211,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -208,14 +226,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            DataError(TRequest            Request,
-                      String              StatusCodeDescription      = null,
-                      String              StatusCodeAdditionalInfo   = null,
-                      Session_Id?         SessionId                  = null,
-                      PartnerSession_Id?  PartnerSessionId           = null)
+            DataError(TRequest               Request,
+                      String                 StatusCodeDescription      = null,
+                      String                 StatusCodeAdditionalInfo   = null,
+                      Session_Id?            SessionId                  = null,
+                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -225,7 +245,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -238,14 +259,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            SystemError(TRequest            Request,
-                        String              StatusCodeDescription      = null,
-                        String              StatusCodeAdditionalInfo   = null,
-                        Session_Id?         SessionId                  = null,
-                        PartnerSession_Id?  PartnerSessionId           = null)
+            SystemError(TRequest               Request,
+                        String                 StatusCodeDescription      = null,
+                        String                 StatusCodeAdditionalInfo   = null,
+                        Session_Id?            SessionId                  = null,
+                        CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -255,7 +278,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -268,14 +292,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            ServiceNotAvailable(TRequest            Request,
-                                String              StatusCodeDescription      = null,
-                                String              StatusCodeAdditionalInfo   = null,
-                                Session_Id?         SessionId                  = null,
-                                PartnerSession_Id?  PartnerSessionId           = null)
+            ServiceNotAvailable(TRequest               Request,
+                                String                 StatusCodeDescription      = null,
+                                String                 StatusCodeAdditionalInfo   = null,
+                                Session_Id?            SessionId                  = null,
+                                CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -285,7 +311,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -298,14 +325,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            SessionIsInvalid(TRequest            Request,
-                             String              StatusCodeDescription      = null,
-                             String              StatusCodeAdditionalInfo   = null,
-                             Session_Id?         SessionId                  = null,
-                             PartnerSession_Id?  PartnerSessionId           = null)
+            SessionIsInvalid(TRequest               Request,
+                             String                 StatusCodeDescription      = null,
+                             String                 StatusCodeAdditionalInfo   = null,
+                             Session_Id?            SessionId                  = null,
+                             CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -315,7 +344,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -328,14 +358,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            CommunicationToEVSEFailed(TRequest            Request,
-                                      String              StatusCodeDescription      = null,
-                                      String              StatusCodeAdditionalInfo   = null,
-                                      Session_Id?         SessionId                  = null,
-                                      PartnerSession_Id?  PartnerSessionId           = null)
+            CommunicationToEVSEFailed(TRequest               Request,
+                                      String                 StatusCodeDescription      = null,
+                                      String                 StatusCodeAdditionalInfo   = null,
+                                      Session_Id?            SessionId                  = null,
+                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -345,7 +377,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -358,14 +391,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            EVSEAlreadyReserved(TRequest            Request,
-                                String              StatusCodeDescription     = null,
-                                String              StatusCodeAdditionalInfo  = null,
-                                Session_Id?         SessionId                 = null,
-                                PartnerSession_Id?  PartnerSessionId          = null)
+            EVSEAlreadyReserved(TRequest               Request,
+                                String                 StatusCodeDescription      = null,
+                                String                 StatusCodeAdditionalInfo   = null,
+                                Session_Id?            SessionId                  = null,
+                                CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -375,7 +410,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -388,14 +424,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            EVSEAlreadyInUse_WrongToken(TRequest            Request,
-                                        String              StatusCodeDescription     = null,
-                                        String              StatusCodeAdditionalInfo  = null,
-                                        Session_Id?         SessionId                 = null,
-                                        PartnerSession_Id?  PartnerSessionId          = null)
+            EVSEAlreadyInUse_WrongToken(TRequest               Request,
+                                        String                 StatusCodeDescription      = null,
+                                        String                 StatusCodeAdditionalInfo   = null,
+                                        Session_Id?            SessionId                  = null,
+                                        CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -405,7 +443,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -418,14 +457,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            UnknownEVSEID(TRequest            Request,
-                          String              StatusCodeDescription     = null,
-                          String              StatusCodeAdditionalInfo  = null,
-                          Session_Id?         SessionId                 = null,
-                          PartnerSession_Id?  PartnerSessionId          = null)
+            UnknownEVSEID(TRequest               Request,
+                          String                 StatusCodeDescription      = null,
+                          String                 StatusCodeAdditionalInfo   = null,
+                          Session_Id?            SessionId                  = null,
+                          CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                          EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -435,7 +476,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -448,14 +490,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            EVSEOutOfService(TRequest            Request,
-                             String              StatusCodeDescription     = null,
-                             String              StatusCodeAdditionalInfo  = null,
-                             Session_Id?         SessionId                 = null,
-                             PartnerSession_Id?  PartnerSessionId          = null)
+            EVSEOutOfService(TRequest               Request,
+                             String                 StatusCodeDescription      = null,
+                             String                 StatusCodeAdditionalInfo   = null,
+                             Session_Id?            SessionId                  = null,
+                             CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -465,7 +509,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -478,14 +523,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         public static Acknowledgement<TRequest>
 
-            NoValidContract(TRequest            Request,
-                            String              StatusCodeDescription     = null,
-                            String              StatusCodeAdditionalInfo  = null,
-                            Session_Id?         SessionId                 = null,
-                            PartnerSession_Id?  PartnerSessionId          = null)
+            NoValidContract(TRequest               Request,
+                            String                 StatusCodeDescription      = null,
+                            String                 StatusCodeAdditionalInfo   = null,
+                            Session_Id?            SessionId                  = null,
+                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
                                                  false,
@@ -495,7 +542,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
-                                                 PartnerSessionId);
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
 
         #endregion
 
@@ -528,7 +576,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
         //
         //          <!--Optional:-->
-        //          <CommonTypes:PartnerSessionID>?</CommonTypes:PartnerSessionID>
+        //          <CommonTypes:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <CommonTypes:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //       </CommonTypes:eRoamingAcknowledgement>
         //    </soapenv:Body>
@@ -542,7 +593,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Try to parse the given XML representation of an OICP acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
-        /// <param name="XML">The XML to parse.</param>
+        /// <param name="AcknowledgementXML">The XML to parse.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom Acknowledgement XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
+        /// <param name="OnException">A delegate whenever exceptions occur.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                            Request,
                                                       XElement                                            AcknowledgementXML,
                                                       CustomXMLParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
@@ -570,10 +624,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given XML representation of an OICP acknowledgement.
         /// </summary>
-        /// <param name="XML">The XML to parse.</param>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="AcknowledgementXML">The XML to parse.</param>
+        /// <param name="Acknowledgement">The parsed acknowledgement</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom Acknowledgement XML elements.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        /// <param name="Acknowledgement">The parsed acknowledgement</param>
+        /// <param name="OnException">A delegate whenever exceptions occur.</param>
         public static Boolean TryParse(TRequest                                            Request,
                                        XElement                                            AcknowledgementXML,
                                        out Acknowledgement<TRequest>                       Acknowledgement,
@@ -606,8 +662,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                       AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "SessionID",
                                                                             Session_Id.Parse),
 
-                                      AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "PartnerSessionID",
-                                                                            PartnerSession_Id.Parse)
+                                      AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "CPOPartnerSessionID",
+                                                                            CPOPartnerSession_Id.Parse),
+
+                                      AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "EMPPartnerSessionID",
+                                                                            EMPPartnerSession_Id.Parse)
 
                                   );
 
@@ -638,7 +697,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Return a XML-representation of this object.
         /// </summary>
         /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
-        /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom StatusCode XML elements.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
                               CustomXMLSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
         {
@@ -650,11 +709,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                           StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer),
 
                           SessionId != null
-                              ? new XElement(OICPNS.CommonTypes + "SessionID",         SessionId.ToString())
+                              ? new XElement(OICPNS.CommonTypes + "SessionID",            SessionId.          ToString())
                               : null,
 
-                          PartnerSessionId != null
-                              ? new XElement(OICPNS.CommonTypes + "PartnerSessionID",  PartnerSessionId.ToString())
+                          CPOPartnerSessionId != null
+                              ? new XElement(OICPNS.CommonTypes + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                              : null,
+
+                          EMPPartnerSessionId != null
+                              ? new XElement(OICPNS.CommonTypes + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
                               : null
 
                       );
@@ -668,6 +731,134 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
+        #region Operator overloading
+
+        #region Operator == (Acknowledgement1, Acknowledgement2)
+
+        /// <summary>
+        /// Compares two acknowledgements for equality.
+        /// </summary>
+        /// <param name="Acknowledgement1">An acknowledgement.</param>
+        /// <param name="Acknowledgement2">Another acknowledgement.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (Acknowledgement<TRequest> Acknowledgement1, Acknowledgement<TRequest> Acknowledgement2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(Acknowledgement1, Acknowledgement2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) Acknowledgement1 == null) || ((Object) Acknowledgement2 == null))
+                return false;
+
+            return Acknowledgement1.Equals(Acknowledgement2);
+
+        }
+
+        #endregion
+
+        #region Operator != (Acknowledgement1, Acknowledgement2)
+
+        /// <summary>
+        /// Compares two acknowledgements for inequality.
+        /// </summary>
+        /// <param name="Acknowledgement1">An acknowledgement.</param>
+        /// <param name="Acknowledgement2">Another acknowledgement.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (Acknowledgement<TRequest> Acknowledgement1, Acknowledgement<TRequest> Acknowledgement2)
+            => !(Acknowledgement1 == Acknowledgement2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<Acknowledgement> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            if (!(Object is Acknowledgement<TRequest> Acknowledgement))
+                return false;
+
+            return Equals(Acknowledgement);
+
+        }
+
+        #endregion
+
+        #region Equals(Acknowledgement)
+
+        /// <summary>
+        /// Compares two acknowledgements for equality.
+        /// </summary>
+        /// <param name="Acknowledgement">An acknowledgement to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public override Boolean Equals(Acknowledgement<TRequest> Acknowledgement)
+        {
+
+            if (Acknowledgement is null)
+                return false;
+
+            return Result.    Equals(Acknowledgement.Result)     &&
+                   StatusCode.Equals(Acknowledgement.StatusCode) &&
+
+                   ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
+
+                   ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
+
+                   ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return Result.    GetHashCode() * 11 ^
+                       StatusCode.GetHashCode() *  7 ^
+
+                       (SessionId.          HasValue
+                            ? SessionId.          GetHashCode() * 5
+                            : 0) ^
+
+                       (CPOPartnerSessionId.HasValue
+                            ? CPOPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (EMPPartnerSessionId.HasValue
+                            ? EMPPartnerSessionId.GetHashCode()
+                            : 0);
+
+            }
+        }
+
+        #endregion
+
         #region (override) ToString()
 
         /// <summary>
@@ -680,12 +871,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        public override bool Equals(Acknowledgement<TRequest> ARequest)
-        {
-            throw new NotImplementedException();
-        }
 
+        #region ToBuilder
 
+        /// <summary>
+        /// Return an acknowledgement builder.
+        /// </summary>
+        public Builder ToBuilder
+            => new Builder(this);
+
+        #endregion
+
+        #region (class) Builder
+
+        /// <summary>
+        /// An acknowledgement builder.
+        /// </summary>
         public class Builder : AResponseBuilder<TRequest,
                                                 Acknowledgement<TRequest>>
         {
@@ -695,24 +896,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <summary>
             /// The result of the operation.
             /// </summary>
-            public Boolean                     Result             { get; set; }
+            public Boolean                     Result                 { get; set; }
 
             /// <summary>
             /// The status code of the operation.
             /// </summary>
-            public StatusCode                  StatusCode         { get; set; }
+            public StatusCode                  StatusCode             { get; set; }
 
             /// <summary>
             /// An optional charging session identification for
             /// RemoteReservationStart and RemoteStart requests.
             /// </summary>
-            public Session_Id?                 SessionId          { get; set; }
+            public Session_Id?                 SessionId              { get; set; }
 
             /// <summary>
-            /// An optional partner charging session identification for
+            /// An optional EMP partner charging session identification for
             /// RemoteReservationStart and RemoteStart requests.
             /// </summary>
-            public PartnerSession_Id?          PartnerSessionId   { get; set; }
+            public CPOPartnerSession_Id?       CPOPartnerSessionId    { get; set; }
+
+            /// <summary>
+            /// An optional CPO partner charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public EMPPartnerSession_Id?       EMPPartnerSessionId    { get; set; }
 
             #endregion
 
@@ -731,20 +938,144 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 if (Acknowledgement != null)
                 {
 
-                    this.Result            = Acknowledgement.Result;
-                    this.StatusCode        = Acknowledgement.StatusCode;
-                    this.SessionId         = Acknowledgement.SessionId;
-                    this.PartnerSessionId  = Acknowledgement.PartnerSessionId;
+                    this.Result               = Acknowledgement.Result;
+                    this.StatusCode           = Acknowledgement.StatusCode;
+                    this.SessionId            = Acknowledgement.SessionId;
+                    this.CPOPartnerSessionId  = Acknowledgement.CPOPartnerSessionId;
+                    this.EMPPartnerSessionId  = Acknowledgement.EMPPartnerSessionId;
 
                 }
 
             }
 
 
-            public override bool Equals(Acknowledgement<TRequest> ARequest)
+            #region Operator overloading
+
+            #region Operator == (Acknowledgement1, Acknowledgement2)
+
+            /// <summary>
+            /// Compares two acknowledgements for equality.
+            /// </summary>
+            /// <param name="Acknowledgement1">An acknowledgement.</param>
+            /// <param name="Acknowledgement2">Another acknowledgement.</param>
+            /// <returns>True if both match; False otherwise.</returns>
+            public static Boolean operator == (Builder Acknowledgement1, Builder Acknowledgement2)
             {
-                throw new NotImplementedException();
+
+                // If both are null, or both are same instance, return true.
+                if (Object.ReferenceEquals(Acknowledgement1, Acknowledgement2))
+                    return true;
+
+                // If one is null, but not both, return false.
+                if (((Object) Acknowledgement1 == null) || ((Object) Acknowledgement2 == null))
+                    return false;
+
+                return Acknowledgement1.Equals(Acknowledgement2);
+
             }
+
+            #endregion
+
+            #region Operator != (Acknowledgement1, Acknowledgement2)
+
+            /// <summary>
+            /// Compares two acknowledgements for inequality.
+            /// </summary>
+            /// <param name="Acknowledgement1">An acknowledgement.</param>
+            /// <param name="Acknowledgement2">Another acknowledgement.</param>
+            /// <returns>False if both match; True otherwise.</returns>
+            public static Boolean operator != (Builder Acknowledgement1, Builder Acknowledgement2)
+                => !(Acknowledgement1 == Acknowledgement2);
+
+            #endregion
+
+            #endregion
+
+            #region IEquatable<Acknowledgement> Members
+
+            #region Equals(Object)
+
+            /// <summary>
+            /// Compares two instances of this object.
+            /// </summary>
+            /// <param name="Object">An object to compare with.</param>
+            /// <returns>true|false</returns>
+            public override Boolean Equals(Object Object)
+            {
+
+                if (Object == null)
+                    return false;
+
+                if (!(Object is Acknowledgement<TRequest> Acknowledgement))
+                    return false;
+
+                return Equals(Acknowledgement);
+
+            }
+
+            #endregion
+
+            #region Equals(Acknowledgement)
+
+            /// <summary>
+            /// Compares two acknowledgements for equality.
+            /// </summary>
+            /// <param name="Acknowledgement">An acknowledgement to compare with.</param>
+            /// <returns>True if both match; False otherwise.</returns>
+            public override Boolean Equals(Acknowledgement<TRequest> Acknowledgement)
+            {
+
+                if (Acknowledgement is null)
+                    return false;
+
+                return Result.    Equals(Acknowledgement.Result)     &&
+                       StatusCode.Equals(Acknowledgement.StatusCode) &&
+
+                       ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
+                         (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
+
+                       ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
+                         (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
+
+                       ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
+                         (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
+
+            }
+
+            #endregion
+
+            #endregion
+
+            #region GetHashCode()
+
+            /// <summary>
+            /// Return the HashCode of this object.
+            /// </summary>
+            /// <returns>The HashCode of this object.</returns>
+            public override Int32 GetHashCode()
+            {
+                unchecked
+                {
+
+                    return Result.    GetHashCode() * 11 ^
+                           StatusCode.GetHashCode() *  7 ^
+
+                           (SessionId.          HasValue
+                                ? SessionId.          GetHashCode() * 5
+                                : 0) ^
+
+                           (CPOPartnerSessionId.HasValue
+                                ? CPOPartnerSessionId.GetHashCode() * 3
+                                : 0) ^
+
+                           (EMPPartnerSessionId.HasValue
+                                ? EMPPartnerSessionId.GetHashCode()
+                                : 0);
+
+                }
+            }
+
+            #endregion
 
             public override Acknowledgement<TRequest> ToImmutable
 
@@ -752,10 +1083,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                  Result,
                                                  StatusCode,
                                                  SessionId,
-                                                 PartnerSessionId,
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId,
                                                  CustomData);
 
         }
+
+        #endregion
 
     }
 

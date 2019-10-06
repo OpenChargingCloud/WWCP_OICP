@@ -1851,7 +1851,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.EVSEId,
                                                      Request.Identification,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
@@ -2003,7 +2004,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.EVSEId,
                                                      Request.Identification,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
@@ -2069,7 +2071,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -2217,7 +2220,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      EndTime - StartTime))).
@@ -2283,7 +2287,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.EVSEId,
                                                      Request.EVCOId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
@@ -2430,7 +2435,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.EVSEId,
                                                      Request.EVCOId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
@@ -2496,7 +2502,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -2644,7 +2651,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      EndTime - StartTime))).

@@ -829,8 +829,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.Identification,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
+                                                     Request.Duration,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -862,7 +864,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                  ResponseLogDelegate:  OnAuthorizeRemoteReservationStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -981,8 +983,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.Identification,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
+                                                     Request.Duration,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      Endtime - StartTime))).
@@ -1047,7 +1051,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -1196,7 +1201,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      EndTime - StartTime))).
@@ -1262,7 +1268,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.EVCOId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
@@ -1296,7 +1303,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                  ResponseLogDelegate:  OnAuthorizeRemoteStartSOAPResponse,
                                                  CancellationToken:    Request.CancellationToken,
                                                  EventTrackingId:      Request.EventTrackingId,
-                                                 RequestTimeout:         Request.RequestTimeout ?? RequestTimeout.Value,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
 
                                                  #region OnSuccess
 
@@ -1415,7 +1422,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.EVCOId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.PartnerProductId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
@@ -1481,7 +1489,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -1630,7 +1639,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.ProviderId,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      EndTime - StartTime))).
@@ -1700,7 +1710,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.PartnerProductId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -1830,7 +1841,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.EVSEId,
                                                      Request.PartnerProductId,
                                                      Request.SessionId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      Endtime - StartTime))).
@@ -1896,7 +1908,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.Identification,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -2022,7 +2035,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                      Request.SessionId,
                                                      Request.Identification,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      Endtime - StartTime))).

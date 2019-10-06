@@ -42,9 +42,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Upload the given EVSE data records.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorEVSEData">An operator EVSE data.</param>
         /// <param name="Action">The server-side data management operation.</param>
-        /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -77,6 +78,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Upload the given EVSE data records.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE data records.</param>
@@ -121,6 +124,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create a new task pushing a single EVSE data record onto the OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
         /// <param name="Action">The server-side data management operation.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
@@ -161,6 +166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create a new task pushing EVSE data records onto the OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="Action">The server-side data management operation.</param>
         /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
@@ -186,9 +193,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Upload the given EVSE status records.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorEVSEStatus">An operator EVSE status.</param>
         /// <param name="Action">The server-side status management operation.</param>
-        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -221,6 +229,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Upload the given EVSE status records.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="OperatorName">An optional name of the charging station operator maintaining the given EVSE status records.</param>
@@ -265,6 +275,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create a new task pushing a single EVSE status record onto the OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="EVSEStatusRecord">An EVSE status record.</param>
         /// <param name="Action">The server-side status management operation.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
@@ -305,6 +317,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create a new task pushing EVSE status records onto the OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="Action">The server-side status management operation.</param>
         /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
@@ -330,12 +344,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create an OICP authorize start request.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// <param name="UID">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
         /// <param name="SessionId">An optional session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -343,18 +360,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<AuthorizationStart>>
 
-            AuthorizeStart(this ICPOClient     ICPOClient,
-                           Operator_Id         OperatorId,
-                           UID                 UID,
-                           EVSE_Id?            EVSEId              = null,
-                           PartnerProduct_Id?  PartnerProductId    = null,
-                           Session_Id?         SessionId           = null,
-                           PartnerSession_Id?  PartnerSessionId    = null,
+            AuthorizeStart(this ICPOClient        ICPOClient,
+                           Operator_Id            OperatorId,
+                           UID                    UID,
+                           EVSE_Id?               EVSEId                = null,
+                           PartnerProduct_Id?     PartnerProductId      = null,
+                           Session_Id?            SessionId             = null,
+                           CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                           DateTime?           Timestamp           = null,
-                           CancellationToken?  CancellationToken   = null,
-                           EventTracking_Id    EventTrackingId     = null,
-                           TimeSpan?           RequestTimeout      = null)
+                           DateTime?              Timestamp             = null,
+                           CancellationToken?     CancellationToken     = null,
+                           EventTracking_Id       EventTrackingId       = null,
+                           TimeSpan?              RequestTimeout        = null)
 
 
                 => ICPOClient.AuthorizeStart(new AuthorizeStartRequest(OperatorId,
@@ -362,7 +380,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                        EVSEId,
                                                                        PartnerProductId,
                                                                        SessionId,
-                                                                       PartnerSessionId,
+                                                                       CPOPartnerSessionId,
+                                                                       EMPPartnerSessionId,
 
                                                                        Timestamp,
                                                                        CancellationToken,
@@ -380,11 +399,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Create an OICP authorize stop request.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorId">An EVSE Operator identification.</param>
         /// <param name="SessionId">The OICP session identification from the AuthorizeStart request.</param>
         /// <param name="UID">A (RFID) user identification.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -392,24 +414,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<AuthorizationStop>>
 
-            AuthorizeStop(this ICPOClient     ICPOClient,
-                          Operator_Id         OperatorId,
-                          Session_Id          SessionId,
-                          UID                 UID,
-                          EVSE_Id?            EVSEId              = null,
-                          PartnerSession_Id?  PartnerSessionId    = null,
+            AuthorizeStop(this ICPOClient        ICPOClient,
+                          Operator_Id            OperatorId,
+                          Session_Id             SessionId,
+                          UID                    UID,
+                          EVSE_Id?               EVSEId                = null,
+                          CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                          EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                          DateTime?           Timestamp           = null,
-                          CancellationToken?  CancellationToken   = null,
-                          EventTracking_Id    EventTrackingId     = null,
-                          TimeSpan?           RequestTimeout      = null)
+                          DateTime?              Timestamp             = null,
+                          CancellationToken?     CancellationToken     = null,
+                          EventTracking_Id       EventTrackingId       = null,
+                          TimeSpan?              RequestTimeout        = null)
 
 
                  => ICPOClient.AuthorizeStop(new AuthorizeStopRequest(OperatorId,
                                                                       SessionId,
                                                                       Identification.FromUID(UID),
                                                                       EVSEId,
-                                                                      PartnerSessionId,
+                                                                      CPOPartnerSessionId,
+                                                                      EMPPartnerSessionId,
 
                                                                       Timestamp,
                                                                       CancellationToken,
@@ -423,6 +447,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Send a charge detail record to an OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -455,6 +481,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// Pull authentication data from the OICP server.
         /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
         /// <param name="OperatorId">An Charging Station Operator identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -480,7 +508,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                                        RequestTimeout ?? ICPOClient.RequestTimeout));
 
         #endregion
-
 
     }
 

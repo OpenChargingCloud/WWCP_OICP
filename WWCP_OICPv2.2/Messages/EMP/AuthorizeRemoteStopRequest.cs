@@ -40,22 +40,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// A charging session identification.
         /// </summary>
-        public Session_Id          SessionId          { get; }
+        public Session_Id             SessionId              { get; }
 
         /// <summary>
         /// An e-mobility provider identification.
         /// </summary>
-        public Provider_Id         ProviderId         { get; }
+        public Provider_Id            ProviderId             { get; }
 
         /// <summary>
         /// An EVSE identification.
         /// </summary>
-        public EVSE_Id             EVSEId             { get; }
+        public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId   { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         #endregion
 
@@ -67,16 +72,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="SessionId">A charging session identification.</param>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">The EVSE identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
-        public AuthorizeRemoteStopRequest(Session_Id          SessionId,
-                                          Provider_Id         ProviderId,
-                                          EVSE_Id             EVSEId,
-                                          PartnerSession_Id?  PartnerSessionId    = null,
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public AuthorizeRemoteStopRequest(Session_Id             SessionId,
+                                          Provider_Id            ProviderId,
+                                          EVSE_Id                EVSEId,
+                                          CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                          EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                                          DateTime?           Timestamp           = null,
-                                          CancellationToken?  CancellationToken   = null,
-                                          EventTracking_Id    EventTrackingId     = null,
-                                          TimeSpan?           RequestTimeout      = null)
+                                          DateTime?              Timestamp             = null,
+                                          CancellationToken?     CancellationToken     = null,
+                                          EventTracking_Id       EventTrackingId       = null,
+                                          TimeSpan?              RequestTimeout        = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -85,10 +97,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.SessionId         = SessionId;
-            this.ProviderId        = ProviderId;
-            this.EVSEId            = EVSEId;
-            this.PartnerSessionId  = PartnerSessionId;
+            this.SessionId            = SessionId;
+            this.ProviderId           = ProviderId;
+            this.EVSEId               = EVSEId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
         }
 
@@ -108,7 +121,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <Authorization:SessionID>?</Authorization:SessionID>
         //
         //          <!--Optional:-->
-        //          <Authorization:PartnerSessionID>?</Authorization:PartnerSessionID>
+        //          <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <Authorization:ProviderID>?</Authorization:ProviderID>
         //          <Authorization:EVSEID>?</Authorization:EVSEID>
@@ -253,8 +269,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                  AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "EVSEID",
                                                                                                   EVSE_Id.Parse),
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
-                                                                                                  PartnerSession_Id.Parse),
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
+                                                                                                  CPOPartnerSession_Id.Parse),
+
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Authorization + "EMPPartnerSessionID",
+                                                                                                  EMPPartnerSession_Id.Parse),
 
                                                  Timestamp,
                                                  CancellationToken,
@@ -349,14 +368,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             var XML= new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop",
 
-                                      new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
+                                      new XElement(OICPNS.Authorization + "SessionID",                  SessionId.          ToString()),
 
-                                      PartnerSessionId.HasValue
-                                          ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                                      CPOPartnerSessionId.HasValue
+                                          ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                           : null,
 
-                                      new XElement(OICPNS.Authorization + "ProviderID",              ProviderId.      ToString()),
-                                      new XElement(OICPNS.Authorization + "EVSEID",                  EVSEId.          ToString())
+                                      EMPPartnerSessionId.HasValue
+                                          ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                          : null,
+
+                                      new XElement(OICPNS.Authorization + "ProviderID",                 ProviderId.         ToString()),
+                                      new XElement(OICPNS.Authorization + "EVSEID",                     EVSEId.             ToString())
 
                                  );
 
@@ -405,7 +428,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStopRequest2">Another authorize remote stop request.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest1, AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest2)
-
             => !(AuthorizeRemoteStopRequest1 == AuthorizeRemoteStopRequest2);
 
         #endregion
@@ -427,8 +449,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (Object == null)
                 return false;
 
-            var AuthorizeRemoteStopRequest = Object as AuthorizeRemoteStopRequest;
-            if ((Object) AuthorizeRemoteStopRequest == null)
+            if (!(Object is AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest))
                 return false;
 
             return Equals(AuthorizeRemoteStopRequest);
@@ -447,15 +468,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest)
         {
 
-            if ((Object) AuthorizeRemoteStopRequest == null)
+            if (AuthorizeRemoteStopRequest is null)
                 return false;
 
             return SessionId. Equals(AuthorizeRemoteStopRequest.SessionId)  &&
                    ProviderId.Equals(AuthorizeRemoteStopRequest.ProviderId) &&
                    EVSEId.    Equals(AuthorizeRemoteStopRequest.EVSEId)     &&
 
-                   ((!PartnerSessionId.HasValue && !AuthorizeRemoteStopRequest.PartnerSessionId.HasValue) ||
-                     (PartnerSessionId.HasValue &&  AuthorizeRemoteStopRequest.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeRemoteStopRequest.PartnerSessionId.Value)));
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStopRequest.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStopRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStopRequest.CPOPartnerSessionId.Value))) &&
+
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteStopRequest.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteStopRequest.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteStopRequest.EMPPartnerSessionId.Value)));
 
         }
 
@@ -474,12 +498,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return SessionId. GetHashCode() * 7 ^
-                       ProviderId.GetHashCode() * 5 ^
-                       EVSEId.    GetHashCode() * 3 ^
+                return SessionId. GetHashCode() * 11 ^
+                       ProviderId.GetHashCode() *  7 ^
+                       EVSEId.    GetHashCode() *  5 ^
 
-                       (PartnerSessionId.HasValue
-                            ? PartnerSessionId.GetHashCode()
+                       (CPOPartnerSessionId.HasValue
+                            ? CPOPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (EMPPartnerSessionId.HasValue
+                            ? EMPPartnerSessionId.GetHashCode()
                             : 0);
 
             }

@@ -44,6 +44,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
@@ -93,6 +95,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
@@ -133,6 +137,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// 
@@ -167,6 +173,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications.</param>
         /// 
@@ -202,6 +210,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task pushing provider authentication data onto the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderAuthenticationData">Provider authentication data.</param>
         /// <param name="Action">An optional OICP action.</param>
         /// 
@@ -236,6 +246,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task pushing provider authentication data records onto the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="AuthorizationIdentifications">An enumeration of authorization identifications.</param>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="Action">An optional OICP action.</param>
@@ -246,15 +258,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<Acknowledgement<PushAuthenticationDataRequest>>>
 
-            PushAuthenticationData(this IEMPClient                           IEMPClient,
+            PushAuthenticationData(this IEMPClient              IEMPClient,
                                    IEnumerable<Identification>  AuthorizationIdentifications,
-                                   Provider_Id                               ProviderId,
-                                   ActionTypes                               Action              = ActionTypes.fullLoad,
+                                   Provider_Id                  ProviderId,
+                                   ActionTypes                  Action              = ActionTypes.fullLoad,
 
-                                   DateTime?                                 Timestamp           = null,
-                                   CancellationToken?                        CancellationToken   = null,
-                                   EventTracking_Id                          EventTrackingId     = null,
-                                   TimeSpan?                                 RequestTimeout      = null)
+                                   DateTime?                    Timestamp           = null,
+                                   CancellationToken?           CancellationToken   = null,
+                                   EventTracking_Id             EventTrackingId     = null,
+                                   TimeSpan?                    RequestTimeout      = null)
 
 
                 => IEMPClient.PushAuthenticationData(new PushAuthenticationDataRequest(new ProviderAuthenticationData(ProviderId,
@@ -274,12 +286,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a reservation at the given EVSE.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="Identification">The unique identification of the e-mobility account.</param>
         /// <param name="Duration">The duration of the reservation (max. 99 minutes).</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -288,28 +303,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-            ReservationStart(this IEMPClient       IEMPClient,
-                             Provider_Id           ProviderId,
-                             EVSE_Id               EVSEId,
-                             Identification        Identification,
-                             TimeSpan?             Duration            = null,
-                             Session_Id?           SessionId           = null,
-                             PartnerSession_Id?    PartnerSessionId    = null,
-                             PartnerProduct_Id?    PartnerProductId    = null,
+            ReservationStart(this IEMPClient        IEMPClient,
+                             Provider_Id            ProviderId,
+                             EVSE_Id                EVSEId,
+                             Identification         Identification,
+                             Session_Id?            SessionId             = null,
+                             CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                             EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                             PartnerProduct_Id?     PartnerProductId      = null,
+                             TimeSpan?              Duration              = null,
 
-                             DateTime?             Timestamp           = null,
-                             CancellationToken?    CancellationToken   = null,
-                             EventTracking_Id      EventTrackingId     = null,
-                             TimeSpan?             RequestTimeout      = null)
+                             DateTime?              Timestamp             = null,
+                             CancellationToken?     CancellationToken     = null,
+                             EventTracking_Id       EventTrackingId       = null,
+                             TimeSpan?              RequestTimeout        = null)
 
 
                 => IEMPClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(ProviderId,
                                                                                                          EVSEId,
                                                                                                          Identification,
-                                                                                                         Duration,
                                                                                                          SessionId,
-                                                                                                         PartnerSessionId,
+                                                                                                         CPOPartnerSessionId,
+                                                                                                         EMPPartnerSessionId,
                                                                                                          PartnerProductId,
+                                                                                                         Duration,
 
                                                                                                          Timestamp,
                                                                                                          CancellationToken,
@@ -323,9 +340,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Delete a reservation at the given EVSE.
         /// </summary>
-        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -333,22 +354,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-            ReservationStop(this IEMPClient       IEMPClient,
-                            Session_Id            SessionId,
-                            Provider_Id           ProviderId,
-                            EVSE_Id               EVSEId,
-                            PartnerSession_Id?    PartnerSessionId    = null,
+            ReservationStop(this IEMPClient        IEMPClient,
+                            Session_Id             SessionId,
+                            Provider_Id            ProviderId,
+                            EVSE_Id                EVSEId,
+                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                            DateTime?             Timestamp           = null,
-                            CancellationToken?    CancellationToken   = null,
-                            EventTracking_Id      EventTrackingId     = null,
-                            TimeSpan?             RequestTimeout      = null)
+                            DateTime?              Timestamp             = null,
+                            CancellationToken?     CancellationToken     = null,
+                            EventTracking_Id       EventTrackingId       = null,
+                            TimeSpan?              RequestTimeout        = null)
 
 
                 => IEMPClient.AuthorizeRemoteReservationStop(new AuthorizeRemoteReservationStopRequest(SessionId,
                                                                                         ProviderId,
                                                                                         EVSEId,
-                                                                                        PartnerSessionId,
+                                                                                        CPOPartnerSessionId,
+                                                                                        EMPPartnerSessionId,
 
                                                                                         Timestamp,
                                                                                         CancellationToken,
@@ -363,11 +386,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be started.</param>
         /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
         /// <param name="SessionId">The unique identification for this charging session.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="PartnerProductId">The unique identification of the choosen charging product.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -376,24 +402,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
-            RemoteStart(this IEMPClient       IEMPClient,
-                        Provider_Id           ProviderId,
-                        EVSE_Id               EVSEId,
-                        EVCO_Id               EVCOId,
-                        Session_Id?           SessionId           = null,
-                        PartnerSession_Id?    PartnerSessionId    = null,
-                        PartnerProduct_Id?    PartnerProductId    = null,
+            RemoteStart(this IEMPClient        IEMPClient,
+                        Provider_Id            ProviderId,
+                        EVSE_Id                EVSEId,
+                        EVCO_Id                EVCOId,
+                        Session_Id?            SessionId             = null,
+                        CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                        EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                        PartnerProduct_Id?     PartnerProductId      = null,
 
-                        DateTime?             Timestamp           = null,
-                        CancellationToken?    CancellationToken   = null,
-                        EventTracking_Id      EventTrackingId     = null,
-                        TimeSpan?             RequestTimeout      = null)
+                        DateTime?              Timestamp             = null,
+                        CancellationToken?     CancellationToken     = null,
+                        EventTracking_Id       EventTrackingId       = null,
+                        TimeSpan?              RequestTimeout        = null)
 
                 => IEMPClient.AuthorizeRemoteStart(new AuthorizeRemoteStartRequest(ProviderId,
                                                                                    EVSEId,
                                                                                    EVCOId,
                                                                                    SessionId,
-                                                                                   PartnerSessionId,
+                                                                                   CPOPartnerSessionId,
+                                                                                   EMPPartnerSessionId,
                                                                                    PartnerProductId,
 
                                                                                    Timestamp,
@@ -408,10 +436,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Stop the given charging session at the given EVSE.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="SessionId">The unique identification for this charging session.</param>
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="EVSEId">The unique identification of the EVSE to be stopped.</param>
-        /// <param name="PartnerSessionId">The unique identification for the partner charging session.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -419,22 +450,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<HTTPResponse<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
-            RemoteStop(this IEMPClient       IEMPClient,
-                       Session_Id            SessionId,
-                       Provider_Id           ProviderId,
-                       EVSE_Id               EVSEId,
-                       PartnerSession_Id?    PartnerSessionId    = null,
+            RemoteStop(this IEMPClient        IEMPClient,
+                       Session_Id             SessionId,
+                       Provider_Id            ProviderId,
+                       EVSE_Id                EVSEId,
+                       CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                       EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
 
-                       DateTime?             Timestamp           = null,
-                       CancellationToken?    CancellationToken   = null,
-                       EventTracking_Id      EventTrackingId     = null,
-                       TimeSpan?             RequestTimeout      = null)
+                       DateTime?              Timestamp             = null,
+                       CancellationToken?     CancellationToken     = null,
+                       EventTracking_Id       EventTrackingId       = null,
+                       TimeSpan?              RequestTimeout        = null)
 
 
                 => IEMPClient.AuthorizeRemoteStop(new AuthorizeRemoteStopRequest(SessionId,
                                                                                  ProviderId,
                                                                                  EVSEId,
-                                                                                 PartnerSessionId,
+                                                                                 CPOPartnerSessionId,
+                                                                                 EMPPartnerSessionId,
 
                                                                                  Timestamp,
                                                                                  CancellationToken,
@@ -449,6 +482,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Create a new task querying charge detail records from the OICP server.
         /// </summary>
+        /// <param name="IEMPClient">An EMP client.</param>
+        /// 
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="From">The starting time.</param>
         /// <param name="To">An optional end time. [default: current time].</param>
@@ -480,7 +515,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                        RequestTimeout ?? IEMPClient.RequestTimeout));
 
         #endregion
-
 
     }
 

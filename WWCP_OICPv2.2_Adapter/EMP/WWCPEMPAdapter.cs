@@ -583,7 +583,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                             case AuthStartEVSEResultType.Authorized:
                                 return CPO.AuthorizationStart.Authorized(Request,
                                                                          response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
-                                                                         default(PartnerSession_Id?),
+                                                                         default,
+                                                                         default,
                                                                          DefaultProviderId,//    response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
                                                                          "Ready to charge!",
                                                                          null,
@@ -598,8 +599,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                             case AuthStartEVSEResultType.InvalidSessionId:
                                 return CPO.AuthorizationStart.SessionIsInvalid(Request,
-                                                                               SessionId:         Request.SessionId,
-                                                                               PartnerSessionId:  Request.PartnerSessionId);
+                                                                               SessionId:            Request.SessionId,
+                                                                               CPOPartnerSessionId:  Request.CPOPartnerSessionId,
+                                                                               EMPPartnerSessionId:  Request.EMPPartnerSessionId);
 
                             case AuthStartEVSEResultType.CommunicationTimeout:
                                 return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
@@ -709,7 +711,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                             case AuthStartResultType.Authorized:
                                 return CPO.AuthorizationStart.Authorized(Request,
                                                                          response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
-                                                                         default(PartnerSession_Id?),
+                                                                         default,
+                                                                         default,
                                                                          DefaultProviderId,//    response.ProviderId.HasValue ? response.ProviderId.Value.ToOICP() : default(Provider_Id?),
                                                                          "Ready to charge!",
                                                                          null,
@@ -735,8 +738,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                             case AuthStartResultType.InvalidSessionId:
                                 return CPO.AuthorizationStart.SessionIsInvalid(Request,
-                                                                               SessionId:         Request.SessionId,
-                                                                               PartnerSessionId:  Request.PartnerSessionId);
+                                                                               SessionId:            Request.SessionId,
+                                                                               CPOPartnerSessionId:  Request.CPOPartnerSessionId,
+                                                                               EMPPartnerSessionId:  Request.EMPPartnerSessionId);
 
                             case AuthStartResultType.CommunicationTimeout:
                                 return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
@@ -864,6 +868,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                            Request,
                                            response.SessionId. ToOICP(),
                                            null,
+                                           null,
                                            response.ProviderId.ToOICP(),
                                            "Ready to stop charging!"
                                        );
@@ -974,6 +979,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                 return CPO.AuthorizationStop.Authorized(
                                            Request,
                                            response.SessionId. ToOICP(),
+                                           null,
                                            null,
                                            response.ProviderId.ToOICP(),
                                            "Ready to stop charging!"
@@ -1091,7 +1097,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         return Acknowledgement<CPO.SendChargeDetailRecordRequest>.Success(
                                    ChargeDetailRecordRequest,
                                    ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                   ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId,
+                                   ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
+                                   ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId,
                                    "Charge detail record forwarded!"
                                );
 
@@ -1113,22 +1120,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                             case SendCDRResultTypes.InvalidSessionId:
                                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.SessionIsInvalid(
                                            ChargeDetailRecordRequest,
-                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                             case SendCDRResultTypes.UnknownEVSE:
                                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.UnknownEVSEID(
                                            ChargeDetailRecordRequest,
-                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                             case SendCDRResultTypes.Error:
                                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
                                            ChargeDetailRecordRequest,
-                                           SessionId:         ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           PartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.PartnerSessionId
+                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                         }
@@ -1393,10 +1403,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         }
 
 
-        public event OnNewReservationDelegate OnNewReservation;
-        public event OnReservationCanceledDelegate OnReservationCanceled;
-        public event OnNewChargingSessionDelegate OnNewChargingSession;
-        public event OnNewChargeDetailRecordDelegate OnNewChargeDetailRecord;
+        public event OnNewReservationDelegate         OnNewReservation;
+        public event OnReservationCanceledDelegate    OnReservationCanceled;
+        public event OnNewChargingSessionDelegate     OnNewChargingSession;
+        public event OnNewChargeDetailRecordDelegate  OnNewChargeDetailRecord;
 
 
         // Outgoing EMPClient requests...
@@ -2083,24 +2093,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #endregion
 
 
-            var response = await EMPRoaming.ReservationStart(EVSEId:             EVSEId.ToOICP().Value,
-                                                             ProviderId:         ProviderId.HasValue
-                                                                                     ? ProviderId.Value.ToOICP()
-                                                                                     : DefaultProviderId.Value,
-                                                             Identification:     RemoteAuthentication.ToOICP(),
-                                                             Duration:           Duration,
-                                                             SessionId:          ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
-                                                             PartnerSessionId:   null,
-                                                             PartnerProductId:   PartnerProductIdElements.Count > 0
-                                                                                     ? PartnerProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                                   Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                                   AggregateWith("|"))
-                                                                                     : default(PartnerProduct_Id?),
+            var response = await EMPRoaming.ReservationStart(EVSEId:                EVSEId.ToOICP().Value,
+                                                             ProviderId:            ProviderId.HasValue
+                                                                                        ? ProviderId.Value.ToOICP()
+                                                                                        : DefaultProviderId.Value,
+                                                             Identification:        RemoteAuthentication.ToOICP(),
+                                                             Duration:              Duration,
+                                                             SessionId:             ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
+                                                             CPOPartnerSessionId:   null,
+                                                             EMPPartnerSessionId:   null,
+                                                             PartnerProductId:      PartnerProductIdElements.Count > 0
+                                                                                        ? PartnerProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                                      Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                                      AggregateWith("|"))
+                                                                                        : default(PartnerProduct_Id?),
 
-                                                             Timestamp:          Timestamp,
-                                                             CancellationToken:  CancellationToken,
-                                                             EventTrackingId:    EventTrackingId,
-                                                             RequestTimeout:     RequestTimeout).
+                                                             Timestamp:             Timestamp,
+                                                             CancellationToken:     CancellationToken,
+                                                             EventTrackingId:       EventTrackingId,
+                                                             RequestTimeout:        RequestTimeout).
                                             ConfigureAwait(false);
 
 
@@ -2110,24 +2121,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             {
 
                 result = ReservationResult.Success(response.Content.SessionId != null
-                                                   ? new ChargingReservation(Id:                       ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
-                                                                                                           "*R" + response.Content.SessionId.ToString()),
-                                                                             Timestamp:                DateTime.UtcNow,
-                                                                             StartTime:                DateTime.UtcNow,
-                                                                             Duration:                 Duration.HasValue ? Duration.Value : DefaultReservationTime,
-                                                                             EndTime:                  DateTime.UtcNow + (Duration.HasValue ? Duration.Value : DefaultReservationTime),
-                                                                             ConsumedReservationTime:  TimeSpan.FromSeconds(0),
-                                                                             ReservationLevel:         ChargingReservationLevel.EVSE,
-                                                                             ProviderId:               ProviderId,
-                                                                             StartAuthentication:      RemoteAuthentication,
-                                                                             RoamingNetworkId:         RoamingNetwork.Id,
-                                                                             ChargingPoolId:           null,
-                                                                             ChargingStationId:        null,
-                                                                             EVSEId:                   EVSEId,
-                                                                             ChargingProduct:          ChargingProduct,
-                                                                             AuthTokens:               AuthTokens,
-                                                                             eMAIds:                   eMAIds,
-                                                                             PINs:                     PINs)
+                                                   ? new ChargingReservation(Id:                        ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
+                                                                                                            "*R" + response.Content.SessionId.ToString()),
+                                                                             Timestamp:                 DateTime.UtcNow,
+                                                                             StartTime:                 DateTime.UtcNow,
+                                                                             Duration:                  Duration ?? DefaultReservationTime,
+                                                                             EndTime:                   DateTime.UtcNow + (Duration ?? DefaultReservationTime),
+                                                                             ConsumedReservationTime:   TimeSpan.FromSeconds(0),
+                                                                             ReservationLevel:          ChargingReservationLevel.EVSE,
+                                                                             ProviderId:                ProviderId,
+                                                                             StartAuthentication:       RemoteAuthentication,
+                                                                             RoamingNetworkId:          RoamingNetwork.Id,
+                                                                             ChargingPoolId:            null,
+                                                                             ChargingStationId:         null,
+                                                                             EVSEId:                    EVSEId,
+                                                                             ChargingProduct:           ChargingProduct,
+                                                                             AuthTokens:                AuthTokens,
+                                                                             eMAIds:                    eMAIds,
+                                                                             PINs:                      PINs)
                                                    : null);
 
             }
@@ -2145,23 +2156,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             {
 
                 OnReserveResponse?.Invoke(EndTime,
-                                              Timestamp.Value,
-                                              this,
-                                              EventTrackingId,
-                                              RoamingNetwork.Id,
-                                              ReservationId,
-                                              ChargingLocation,
-                                              ReservationStartTime,
-                                              Duration,
-                                              ProviderId,
-                                              RemoteAuthentication,
-                                              ChargingProduct,
-                                              AuthTokens,
-                                              eMAIds,
-                                              PINs,
-                                              result,
-                                              EndTime - StartTime,
-                                              RequestTimeout);
+                                          Timestamp.Value,
+                                          this,
+                                          EventTrackingId,
+                                          RoamingNetwork.Id,
+                                          ReservationId,
+                                          ChargingLocation,
+                                          ReservationStartTime,
+                                          Duration,
+                                          ProviderId,
+                                          RemoteAuthentication,
+                                          ChargingProduct,
+                                          AuthTokens,
+                                          eMAIds,
+                                          PINs,
+                                          result,
+                                          EndTime - StartTime,
+                                          RequestTimeout);
 
             }
             catch (Exception e)
@@ -2252,17 +2263,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             var ProviderId = reservation.ProviderId;
             var EVSEId     = reservation.EVSEId;
 
-            var result = await EMPRoaming.ReservationStop(SessionId:          Session_Id.Parse(ReservationId.Suffix),
-                                                          ProviderId:         ProviderId.HasValue
-                                                                                  ? ProviderId.Value.ToOICP()
-                                                                                  : DefaultProviderId.Value,
-                                                          EVSEId:             EVSEId.Value.ToOICP().Value,
-                                                          PartnerSessionId:   null,
+            var result = await EMPRoaming.ReservationStop(SessionId:             Session_Id.Parse(ReservationId.Suffix),
+                                                          ProviderId:            ProviderId.HasValue
+                                                                                     ? ProviderId.Value.ToOICP()
+                                                                                     : DefaultProviderId.Value,
+                                                          EVSEId:                EVSEId.Value.ToOICP().Value,
+                                                          CPOPartnerSessionId:   null,
+                                                          EMPPartnerSessionId:   null,
 
-                                                          Timestamp:          Timestamp,
-                                                          CancellationToken:  CancellationToken,
-                                                          EventTrackingId:    EventTrackingId,
-                                                          RequestTimeout:     RequestTimeout).
+                                                          Timestamp:             Timestamp,
+                                                          CancellationToken:     CancellationToken,
+                                                          EventTrackingId:       EventTrackingId,
+                                                          RequestTimeout:        RequestTimeout).
                                           ConfigureAwait(false);
 
             if (result.HTTPStatusCode == HTTPStatusCode.OK &&
@@ -2446,24 +2458,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #endregion
 
 
-            var response = await EMPRoaming.RemoteStart(ProviderId:         ProviderId.HasValue
-                                                                                ? ProviderId.Value.ToOICP()
-                                                                                : DefaultProviderId.Value,
-                                                        EVSEId:             EVSEId.ToOICP().Value,
-                                                        EVCOId:             RemoteAuthentication.ToOICP().RemoteIdentification.Value,
-                                                        SessionId:          SessionId.           ToOICP(),
-                                                        PartnerSessionId:   null,
-                                                        PartnerProductId:   PartnerProductIdElements.Count > 0
-                                                                                ? new PartnerProduct_Id?(PartnerProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                                                 Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                                                 AggregateWith("|")))
-                                                                                : null,
+            var response = await EMPRoaming.RemoteStart(ProviderId:            ProviderId.HasValue
+                                                                                   ? ProviderId.Value.ToOICP()
+                                                                                   : DefaultProviderId.Value,
+                                                        EVSEId:                EVSEId.ToOICP().Value,
+                                                        EVCOId:                RemoteAuthentication.ToOICP().RemoteIdentification.Value,
+                                                        SessionId:             SessionId.           ToOICP(),
+                                                        CPOPartnerSessionId:   null,
+                                                        EMPPartnerSessionId:   null,
+                                                        PartnerProductId:      PartnerProductIdElements.Count > 0
+                                                                                   ? new PartnerProduct_Id?(PartnerProduct_Id.Parse(PartnerProductIdElements.
+                                                                                                                                    Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                                                                    AggregateWith("|")))
+                                                                                   : null,
 
-                                                        Timestamp:          Timestamp,
-                                                        CancellationToken:  CancellationToken,
-                                                        EventTrackingId:    EventTrackingId,
-                                                        RequestTimeout:     RequestTimeout
-                                                        ).
+                                                        Timestamp:             Timestamp,
+                                                        CancellationToken:     CancellationToken,
+                                                        EventTrackingId:       EventTrackingId,
+                                                        RequestTimeout:        RequestTimeout).
                                             ConfigureAwait(false);
 
 
@@ -2600,17 +2612,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             RoamingNetwork.SessionsStore.TryGet(SessionId, out ChargingSession session);
             var EVSEId = session.EVSEId.Value;
 
-            var response = await EMPRoaming.RemoteStop(SessionId:          SessionId.       ToOICP(),
-                                                       ProviderId:         ProviderId.HasValue
-                                                                                ? ProviderId.Value.ToOICP()
-                                                                                : DefaultProviderId.Value,
-                                                       EVSEId:             EVSEId.          ToOICP().Value,
-                                                       PartnerSessionId:   null,
+            var response = await EMPRoaming.RemoteStop(SessionId:             SessionId.       ToOICP(),
+                                                       ProviderId:            ProviderId.HasValue
+                                                                                   ? ProviderId.Value.ToOICP()
+                                                                                   : DefaultProviderId.Value,
+                                                       EVSEId:                EVSEId.          ToOICP().Value,
+                                                       CPOPartnerSessionId:   null,
+                                                       EMPPartnerSessionId:   null,
 
-                                                       Timestamp:          Timestamp,
-                                                       CancellationToken:  CancellationToken,
-                                                       EventTrackingId:    EventTrackingId,
-                                                       RequestTimeout:     RequestTimeout).
+                                                       Timestamp:             Timestamp,
+                                                       CancellationToken:     CancellationToken,
+                                                       EventTrackingId:       EventTrackingId,
+                                                       RequestTimeout:        RequestTimeout).
                                             ConfigureAwait(false);
 
             if (response.HTTPStatusCode == HTTPStatusCode.OK &&

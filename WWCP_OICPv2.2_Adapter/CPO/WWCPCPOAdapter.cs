@@ -5074,10 +5074,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                        LocalAuthentication. ToOICP().RFIDId.Value,
+                                                        LocalAuthentication.ToOICP().RFIDId.Value,
                                                         null,
                                                         ChargingProduct?.Id.ToOICP(),
                                                         SessionId.          ToOICP(),
+                                                        null,
                                                         null,
 
                                                         Timestamp,
@@ -5256,10 +5257,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication. ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDId.Value,
                                                          EVSEId.             ToOICP(),
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
+                                                         null,
                                                          null,
 
                                                          Timestamp,
@@ -5440,10 +5442,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication. ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDId.Value,
                                                          null,
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
+                                                         null,
                                                          null,
 
                                                          Timestamp,
@@ -5622,10 +5625,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication. ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDId.Value,
                                                          null,
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
+                                                         null,
                                                          null,
 
                                                          Timestamp,
@@ -5799,8 +5803,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var response = await CPORoaming.AuthorizeStop(OperatorId.HasValue
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
-                                                              SessionId.         ToOICP(),
+                                                              SessionId.          ToOICP(),
                                                               LocalAuthentication.ToOICP().RFIDId.Value,
+                                                              null,
                                                               null,
                                                               null,
 
@@ -5976,9 +5981,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
-                                                               SessionId.         ToOICP(),
+                                                               SessionId.          ToOICP(),
                                                                LocalAuthentication.ToOICP().RFIDId.Value,
-                                                               EVSEId.            ToOICP(),
+                                                               EVSEId.             ToOICP(),
+                                                               null,
                                                                null,
 
                                                                Timestamp,
@@ -6155,8 +6161,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
-                                                               SessionId.         ToOICP(),
+                                                               SessionId.          ToOICP(),
                                                                LocalAuthentication.ToOICP().RFIDId.Value,
+                                                               null,
                                                                null,
                                                                null,
 
@@ -6334,8 +6341,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
-                                                               SessionId.         ToOICP(),
+                                                               SessionId.          ToOICP(),
                                                                LocalAuthentication.ToOICP().RFIDId.Value,
+                                                               null,
                                                                null,
                                                                null,
 

@@ -361,7 +361,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                   AuthorizeStartRequest.EVSEId,
                                                                   AuthorizeStartRequest.SessionId,
                                                                   AuthorizeStartRequest.PartnerProductId,
-                                                                  AuthorizeStartRequest.PartnerSessionId,
+                                                                  AuthorizeStartRequest.CPOPartnerSessionId,
+                                                                  AuthorizeStartRequest.EMPPartnerSessionId,
                                                                   AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                    ConfigureAwait(false);
 
@@ -395,7 +396,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                             "Could not process the incoming AuthorizationStart request!",
                                                                             null,
                                                                             AuthorizeStartRequest.SessionId,
-                                                                            AuthorizeStartRequest.PartnerSessionId
+                                                                            AuthorizeStartRequest.CPOPartnerSessionId,
+                                                                            AuthorizeStartRequest.EMPPartnerSessionId
                                                                         );
 
                         #endregion
@@ -419,7 +421,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                  AuthorizeStartRequest.EVSEId,
                                                                  AuthorizeStartRequest.SessionId,
                                                                  AuthorizeStartRequest.PartnerProductId,
-                                                                 AuthorizeStartRequest.PartnerSessionId,
+                                                                 AuthorizeStartRequest.CPOPartnerSessionId,
+                                                                 AuthorizeStartRequest.EMPPartnerSessionId,
                                                                  AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                                  AuthorizationStart,
                                                                  EndTime - StartTime))).
@@ -558,7 +561,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                  ServiceId,
                                                                  AuthorizeStopRequest.EventTrackingId,
                                                                  AuthorizeStopRequest.SessionId,
-                                                                 AuthorizeStopRequest.PartnerSessionId,
+                                                                 AuthorizeStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeStopRequest.EMPPartnerSessionId,
                                                                  AuthorizeStopRequest.OperatorId,
                                                                  AuthorizeStopRequest.EVSEId,
                                                                  AuthorizeStopRequest.Identification,
@@ -595,7 +599,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     "Could not process the incoming AuthorizeStop request!",
                                                     null,
                                                     AuthorizeStopRequest.SessionId,
-                                                    AuthorizeStopRequest.PartnerSessionId
+                                                    AuthorizeStopRequest.CPOPartnerSessionId,
+                                                    AuthorizeStopRequest.EMPPartnerSessionId
                                                 );
 
                         #endregion
@@ -615,7 +620,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                  ServiceId,
                                                                  AuthorizeStopRequest.EventTrackingId,
                                                                  AuthorizeStopRequest.SessionId,
-                                                                 AuthorizeStopRequest.PartnerSessionId,
+                                                                 AuthorizeStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeStopRequest.EMPPartnerSessionId,
                                                                  AuthorizeStopRequest.OperatorId,
                                                                  AuthorizeStopRequest.EVSEId,
                                                                  AuthorizeStopRequest.Identification,
@@ -694,6 +700,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             #region /Authorization - ChargeDetailRecord
 
+            // curl -v -X POST --data "@Testdata.xml" -H "Content-Type: text/xml" -H "Accept: text/xml" http://127.0.0.1:3114/RNs/PROD/Authorization
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + AuthorizationURI,
                                             "ChargeDetailRecord",

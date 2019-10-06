@@ -1306,7 +1306,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                      Request.EVSEId,
                                                      Request.SessionId,
                                                      Request.PartnerProductId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -1435,7 +1436,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                      "HTTP request failed!",
                                      null,
                                      Request?.SessionId,
-                                     Request?.PartnerSessionId
+                                     Request?.CPOPartnerSessionId,
+                                     Request?.EMPPartnerSessionId
                                  )
                              );
 
@@ -1466,7 +1468,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                      Request.EVSEId,
                                                      Request.SessionId,
                                                      Request.PartnerProductId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      Endtime - StartTime))).
@@ -1533,7 +1536,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                      Request.SessionId,
                                                      Request.Identification,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value))).
                                        ConfigureAwait(false);
 
@@ -1657,7 +1661,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                      "HTTP request failed!",
                                      null,
                                      Request?.SessionId,
-                                     Request?.PartnerSessionId
+                                     Request?.CPOPartnerSessionId,
+                                     Request?.EMPPartnerSessionId
                                  )
                              );
 
@@ -1685,7 +1690,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                      Request.SessionId,
                                                      Request.Identification,
                                                      Request.EVSEId,
-                                                     Request.PartnerSessionId,
+                                                     Request.CPOPartnerSessionId,
+                                                     Request.EMPPartnerSessionId,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
                                                      result.Content,
                                                      Endtime - StartTime))).

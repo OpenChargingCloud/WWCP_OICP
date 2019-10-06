@@ -107,7 +107,8 @@
     <Compile Include="DataTypes\Simple\HubProvider_Id.cs" />
     <Compile Include="DataTypes\Simple\Operator_Id.cs" />
     <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
-    <Compile Include="DataTypes\Simple\PartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\CPOPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\Provider_Id.cs" />
     <Compile Include="DataTypes\Simple\Session_Id.cs" />
     <Compile Include="DataTypes\Simple\UID.cs" />

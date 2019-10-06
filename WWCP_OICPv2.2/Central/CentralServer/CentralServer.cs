@@ -53,7 +53,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new static readonly HTTPPath          DefaultURIPrefix                = HTTPPath.Parse("/");
+        public new static readonly HTTPPath         DefaultURIPrefix                = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
@@ -1645,7 +1645,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
                                                              AuthorizeRemoteReservationStartRequest.Identification,
                                                              AuthorizeRemoteReservationStartRequest.SessionId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerProductId,
                                                              AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
@@ -1703,7 +1704,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
                                                              AuthorizeRemoteReservationStartRequest.Identification,
                                                              AuthorizeRemoteReservationStartRequest.SessionId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteReservationStartRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteReservationStartRequest.PartnerProductId,
                                                              AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              Acknowledgement,
@@ -1825,7 +1827,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
                                                              AuthorizeRemoteReservationStopRequest.ProviderId,
                                                              AuthorizeRemoteReservationStopRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStopRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteReservationStopRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -1881,7 +1884,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
                                                              AuthorizeRemoteReservationStopRequest.ProviderId,
                                                              AuthorizeRemoteReservationStopRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStopRequest.PartnerSessionId,
+                                                             AuthorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteReservationStopRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              Acknowledgement,
                                                              EndTime - StopTime))).
@@ -2004,7 +2008,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteStartRequest.EVSEId,
                                                              AuthorizeRemoteStartRequest.EVCOId,
                                                              AuthorizeRemoteStartRequest.SessionId,
-                                                             AuthorizeRemoteStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteStartRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteStartRequest.PartnerProductId,
                                                              AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
@@ -2062,7 +2067,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteStartRequest.EVSEId,
                                                              AuthorizeRemoteStartRequest.EVCOId,
                                                              AuthorizeRemoteStartRequest.SessionId,
-                                                             AuthorizeRemoteStartRequest.PartnerSessionId,
+                                                             AuthorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteStartRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteStartRequest.PartnerProductId,
                                                              AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              Acknowledgement,
@@ -2184,7 +2190,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteStopRequest.SessionId,
                                                              AuthorizeRemoteStopRequest.ProviderId,
                                                              AuthorizeRemoteStopRequest.EVSEId,
-                                                             AuthorizeRemoteStopRequest.PartnerSessionId,
+                                                             AuthorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteStopRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -2240,7 +2247,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeRemoteStopRequest.SessionId,
                                                              AuthorizeRemoteStopRequest.ProviderId,
                                                              AuthorizeRemoteStopRequest.EVSEId,
-                                                             AuthorizeRemoteStopRequest.PartnerSessionId,
+                                                             AuthorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeRemoteStopRequest.EMPPartnerSessionId,
                                                              AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              Acknowledgement,
                                                              EndTime - StopTime))).
@@ -2894,7 +2902,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeStartRequest.EVSEId,
                                                              AuthorizeStartRequest.PartnerProductId,
                                                              AuthorizeStartRequest.SessionId,
-                                                             AuthorizeStartRequest.PartnerSessionId,
+                                                             AuthorizeStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeStartRequest.EMPPartnerSessionId,
                                                              AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -2952,7 +2961,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeStartRequest.EVSEId,
                                                              AuthorizeStartRequest.PartnerProductId,
                                                              AuthorizeStartRequest.SessionId,
-                                                             AuthorizeStartRequest.PartnerSessionId,
+                                                             AuthorizeStartRequest.CPOPartnerSessionId,
+                                                             AuthorizeStartRequest.EMPPartnerSessionId,
                                                              AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              AuthorizationStart,
                                                              EndTime - StartTime))).
@@ -3076,7 +3086,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeStopRequest.SessionId,
                                                              AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.PartnerSessionId,
+                                                             AuthorizeStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeStopRequest.EMPPartnerSessionId,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
                                                ConfigureAwait(false);
 
@@ -3133,7 +3144,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              AuthorizeStopRequest.SessionId,
                                                              AuthorizeStopRequest.Identification,
                                                              AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.PartnerSessionId,
+                                                             AuthorizeStopRequest.CPOPartnerSessionId,
+                                                             AuthorizeStopRequest.EMPPartnerSessionId,
                                                              AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,
                                                              AuthorizationStop,
                                                              EndTime - StopTime))).

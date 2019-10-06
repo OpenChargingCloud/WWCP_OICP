@@ -89,7 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         {
 
-            this.Request            = Request;
+            this.Request            = Request           ?? throw new ArgumentNullException(nameof(Request), "The given request object must not be null!");
             this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.UtcNow;
 
         }

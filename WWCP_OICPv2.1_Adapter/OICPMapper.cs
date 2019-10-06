@@ -1465,6 +1465,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             var CDR = new  WWCP.ChargeDetailRecord(SessionId:             ChargeDetailRecord.SessionId.ToWWCP(),
                                                    EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
+                                                   ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue ? new eMobilityProvider_Id?(eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString())) : null,
 
                                                    ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
                                                                               ? new ChargingProduct(ChargeDetailRecord.PartnerProductId.Value.ToWWCP())
@@ -1520,7 +1521,6 @@ namespace org.GraphDefined.WWCP.OICPv2_1
         /// <param name="WWCPChargeDetailRecord2ChargeDetailRecord">A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.</param>
         public static ChargeDetailRecord ToOICP(this WWCP.ChargeDetailRecord                           ChargeDetailRecord,
                                                 CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2ChargeDetailRecord = null)
-
         {
 
             var CustomData = new Dictionary<String, Object> {

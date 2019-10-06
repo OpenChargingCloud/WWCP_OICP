@@ -150,7 +150,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          EVSE_Id?                     EVSEId,
                                                          Session_Id?                  SessionId,
                                                          PartnerProduct_Id?           PartnerProductId,
-                                                         PartnerSession_Id?           PartnerSessionId,
+                                                         CPOPartnerSession_Id?        CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?        EMPPartnerSessionId,
                                                          TimeSpan                     RequestTimeout);
 
     /// <summary>
@@ -166,7 +167,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          EVSE_Id?                     EVSEId,
                                                          Session_Id?                  SessionId,
                                                          PartnerProduct_Id?           PartnerProductId,
-                                                         PartnerSession_Id?           PartnerSessionId,
+                                                         CPOPartnerSession_Id?        CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?        EMPPartnerSessionId,
                                                          TimeSpan                     RequestTimeout,
                                                          AuthorizationStart           Result,
                                                          TimeSpan                     Duration);
@@ -187,7 +189,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                         Session_Id                    SessionId,
                                                         Identification                Identification,
                                                         EVSE_Id?                      EVSEId,
-                                                        PartnerSession_Id?            PartnerSessionId,
+                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
+                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
                                                         TimeSpan                      RequestTimeout);
 
     /// <summary>
@@ -202,7 +205,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                         Session_Id                    SessionId,
                                                         Identification                Identification,
                                                         EVSE_Id?                      EVSEId,
-                                                        PartnerSession_Id?            PartnerSessionId,
+                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
+                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
                                                         TimeSpan                      RequestTimeout,
                                                         AuthorizationStop             Result,
                                                         TimeSpan                      Duration);

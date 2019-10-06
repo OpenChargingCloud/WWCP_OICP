@@ -36,29 +36,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="RequestTimestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="SenderId">The unique identification of the sender.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="Identification">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">The timeout of this request.</param>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStartRequestDelegate(DateTime              LogTimestamp,
-                                                         DateTime              RequestTimestamp,
-                                                         CPOServer             Sender,
-                                                         String                SenderId,
-                                                         EventTracking_Id      EventTrackingId,
-                                                         EVSE_Id               EVSEId,
-                                                         PartnerProduct_Id?    PartnerProductId,
-                                                         Session_Id?           SessionId,
-                                                         PartnerSession_Id?    PartnerSessionId,
-                                                         Provider_Id?          ProviderId,
-                                                         Identification        Identification,
-                                                         TimeSpan?             RequestTimeout);
+        OnAuthorizeRemoteReservationStartRequestDelegate(DateTime                LogTimestamp,
+                                                         DateTime                RequestTimestamp,
+                                                         CPOServer               Sender,
+                                                         String                  SenderId,
+                                                         EventTracking_Id        EventTrackingId,
+                                                         EVSE_Id                 EVSEId,
+                                                         PartnerProduct_Id?      PartnerProductId,
+                                                         Session_Id?             SessionId,
+                                                         CPOPartnerSession_Id?   CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?   EMPPartnerSessionId,
+                                                         Provider_Id?            ProviderId,
+                                                         Identification          Identification,
+                                                         TimeSpan?               RequestTimeout);
 
 
     /// <summary>
@@ -84,7 +85,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="Identification">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
@@ -99,7 +101,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                           EVSE_Id                                                        EVSEId,
                                                           PartnerProduct_Id?                                             PartnerProductId,
                                                           Session_Id?                                                    SessionId,
-                                                          PartnerSession_Id?                                             PartnerSessionId,
+                                                          CPOPartnerSession_Id?                                          CPOPartnerSessionId,
+                                                          EMPPartnerSession_Id?                                          EMPPartnerSessionId,
                                                           Provider_Id?                                                   ProviderId,
                                                           Identification                                                 Identification,
                                                           TimeSpan                                                       RequestTimeout,
@@ -117,25 +120,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="RequestTimestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="SenderId">The unique identification of the sender.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="RequestTimeout">The timeout of this request.</param>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStopRequestDelegate(DateTime              LogTimestamp,
-                                                        DateTime              RequestTimestamp,
-                                                        CPOServer             Sender,
-                                                        String                SenderId,
-                                                        EventTracking_Id      EventTrackingId,
-                                                        EVSE_Id               EVSEId,
-                                                        Session_Id?           SessionId,
-                                                        PartnerSession_Id?    PartnerSessionId,
-                                                        Provider_Id?          ProviderId,
-                                                        TimeSpan?             RequestTimeout);
+        OnAuthorizeRemoteReservationStopRequestDelegate(DateTime                LogTimestamp,
+                                                        DateTime                RequestTimestamp,
+                                                        CPOServer               Sender,
+                                                        String                  SenderId,
+                                                        EventTracking_Id        EventTrackingId,
+                                                        EVSE_Id                 EVSEId,
+                                                        Session_Id?             SessionId,
+                                                        CPOPartnerSession_Id?   CPOPartnerSessionId,
+                                                        EMPPartnerSession_Id?   EMPPartnerSessionId,
+                                                        Provider_Id?            ProviderId,
+                                                        TimeSpan?               RequestTimeout);
 
 
     /// <summary>
@@ -159,11 +163,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="SenderId">The unique identification of the sender.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
-    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
     /// <param name="Duration">The time between request and response.</param>
@@ -175,7 +178,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          EventTracking_Id                                              EventTrackingId,
                                                          EVSE_Id                                                       EVSEId,
                                                          Session_Id?                                                   SessionId,
-                                                         PartnerSession_Id?                                            PartnerSessionId,
+                                                         CPOPartnerSession_Id?                                         CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?                                         EMPPartnerSessionId,
                                                          Provider_Id?                                                  ProviderId,
                                                          TimeSpan                                                      RequestTimeout,
                                                          Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>    Result,
@@ -193,29 +197,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="RequestTimestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="SenderId">The unique identification of the sender.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">The timeout of this request.</param>
     public delegate Task
 
-        OnAuthorizeRemoteStartRequestDelegate(DateTime              LogTimestamp,
-                                              DateTime              RequestTimestamp,
-                                              CPOServer             Sender,
-                                              String                SenderId,
-                                              EventTracking_Id      EventTrackingId,
-                                              EVSE_Id               EVSEId,
-                                              PartnerProduct_Id?    PartnerProductId,
-                                              Session_Id?           SessionId,
-                                              PartnerSession_Id?    PartnerSessionId,
-                                              Provider_Id?          ProviderId,
-                                              EVCO_Id?              EVCOId,
-                                              TimeSpan?             RequestTimeout);
+        OnAuthorizeRemoteStartRequestDelegate(DateTime                LogTimestamp,
+                                              DateTime                RequestTimestamp,
+                                              CPOServer               Sender,
+                                              String                  SenderId,
+                                              EventTracking_Id        EventTrackingId,
+                                              EVSE_Id                 EVSEId,
+                                              PartnerProduct_Id?      PartnerProductId,
+                                              Session_Id?             SessionId,
+                                              CPOPartnerSession_Id?   CPOPartnerSessionId,
+                                              EMPPartnerSession_Id?   EMPPartnerSessionId,
+                                              Provider_Id?            ProviderId,
+                                              EVCO_Id?                EVCOId,
+                                              TimeSpan?               RequestTimeout);
 
 
     /// <summary>
@@ -241,7 +246,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
@@ -256,7 +262,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                EVSE_Id                                             EVSEId,
                                                PartnerProduct_Id?                                  PartnerProductId,
                                                Session_Id?                                         SessionId,
-                                               PartnerSession_Id?                                  PartnerSessionId,
+                                               CPOPartnerSession_Id?                               CPOPartnerSessionId,
+                                               EMPPartnerSession_Id?                               EMPPartnerSessionId,
                                                Provider_Id?                                        ProviderId,
                                                EVCO_Id?                                            EVCOId,
                                                TimeSpan                                            RequestTimeout,
@@ -274,25 +281,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="RequestTimestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="SenderId">The unique identification of the sender.</param>
-    /// <param name="CancellationToken">A token to cancel this task.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="RequestTimeout">The timeout of this request.</param>
     public delegate Task
 
-        OnAuthorizeRemoteStopRequestDelegate(DateTime              LogTimestamp,
-                                             DateTime              RequestTimestamp,
-                                             CPOServer             Sender,
-                                             String                SenderId,
-                                             EventTracking_Id      EventTrackingId,
-                                             EVSE_Id               EVSEId,
-                                             Session_Id?           SessionId,
-                                             PartnerSession_Id?    PartnerSessionId,
-                                             Provider_Id?          ProviderId,
-                                             TimeSpan?             RequestTimeout);
+        OnAuthorizeRemoteStopRequestDelegate(DateTime                LogTimestamp,
+                                             DateTime                RequestTimestamp,
+                                             CPOServer               Sender,
+                                             String                  SenderId,
+                                             EventTracking_Id        EventTrackingId,
+                                             EVSE_Id                 EVSEId,
+                                             Session_Id?             SessionId,
+                                             CPOPartnerSession_Id?   CPOPartnerSessionId,
+                                             EMPPartnerSession_Id?   EMPPartnerSessionId,
+                                             Provider_Id?            ProviderId,
+                                             TimeSpan?               RequestTimeout);
 
 
     /// <summary>
@@ -316,11 +324,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="SenderId">The unique identification of the sender.</param>
     /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
     /// <param name="EVSEId">The unique identification of an EVSE.</param>
-    /// <param name="PartnerProductId">The unique identification of the choosen charging product at the given EVSE.</param>
     /// <param name="SessionId">The unique identification of this charging session.</param>
-    /// <param name="PartnerSessionId">The unique identification of this charging session on the partner side.</param>
+    /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+    /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
     /// <param name="Duration">The time between request and response.</param>
@@ -332,7 +339,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                               EventTracking_Id                                   EventTrackingId,
                                               EVSE_Id                                            EVSEId,
                                               Session_Id?                                        SessionId,
-                                              PartnerSession_Id?                                 PartnerSessionId,
+                                              CPOPartnerSession_Id?                              CPOPartnerSessionId,
+                                              EMPPartnerSession_Id?                              EMPPartnerSessionId,
                                               Provider_Id?                                       ProviderId,
                                               TimeSpan                                           RequestTimeout,
                                               Acknowledgement<EMP.AuthorizeRemoteStopRequest>    Result,

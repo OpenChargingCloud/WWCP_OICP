@@ -40,37 +40,42 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An e-mobility provider identification.
         /// </summary>
-        public Provider_Id         ProviderId          { get; }
+        public Provider_Id            ProviderId             { get; }
 
         /// <summary>
         /// An EVSE identification.
         /// </summary>
-        public EVSE_Id             EVSEId              { get; }
+        public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
         /// An identification, e.g. an electric vehicle contract identification.
         /// </summary>
-        public Identification      Identification      { get; }
-
-        /// <summary>
-        /// The duration of the reservation (max. 99 minutes).
-        /// </summary>
-        public TimeSpan?           Duration            { get; }
+        public Identification         Identification         { get; }
 
         /// <summary>
         /// An optional charging session identification.
         /// </summary>
-        public Session_Id?         SessionId           { get; }
+        public Session_Id?            SessionId              { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?  PartnerSessionId    { get; }
+        public CPOPartnerSession_Id?  CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?  EMPPartnerSessionId    { get; }
 
         /// <summary>
         /// An optional partner product identification.
         /// </summary>
-        public PartnerProduct_Id?  PartnerProductId    { get; }
+        public PartnerProduct_Id?     PartnerProductId       { get; }
+
+        /// <summary>
+        /// The optional duration of reservation.
+        /// </summary>
+        public TimeSpan?              Duration               { get; }
 
         #endregion
 
@@ -82,27 +87,29 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="Identification">An identification, e.g. an electric vehicle contract identification.</param>
-        /// <param name="Duration">The duration of the reservation (max. 99 minutes).</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
+        /// <param name="Duration">The duration of the reservation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public AuthorizeRemoteReservationStartRequest(Provider_Id         ProviderId,
-                                                      EVSE_Id             EVSEId,
-                                                      Identification      Identification,
-                                                      TimeSpan?           Duration            = null,
-                                                      Session_Id?         SessionId           = null,
-                                                      PartnerSession_Id?  PartnerSessionId    = null,
-                                                      PartnerProduct_Id?  PartnerProductId    = null,
+        public AuthorizeRemoteReservationStartRequest(Provider_Id            ProviderId,
+                                                      EVSE_Id                EVSEId,
+                                                      Identification         Identification,
+                                                      Session_Id?            SessionId             = null,
+                                                      CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                      EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                                      PartnerProduct_Id?     PartnerProductId      = null,
+                                                      TimeSpan?              Duration              = null,
 
-                                                      DateTime?           Timestamp           = null,
-                                                      CancellationToken?  CancellationToken   = null,
-                                                      EventTracking_Id    EventTrackingId     = null,
-                                                      TimeSpan?           RequestTimeout      = null)
+                                                      DateTime?              Timestamp             = null,
+                                                      CancellationToken?     CancellationToken     = null,
+                                                      EventTracking_Id       EventTrackingId       = null,
+                                                      TimeSpan?              RequestTimeout        = null)
 
             : base(Timestamp,
                    CancellationToken,
@@ -111,19 +118,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.ProviderId         = ProviderId;
-            this.EVSEId             = EVSEId;
-            this.Identification     = Identification;
-            this.Duration           = Duration;
-            this.SessionId          = SessionId;
-            this.PartnerSessionId   = PartnerSessionId;
-            this.PartnerProductId   = PartnerProductId;
+            this.ProviderId           = ProviderId;
+            this.EVSEId               = EVSEId;
+            this.Identification       = Identification;
+            this.SessionId            = SessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
+            this.PartnerProductId     = PartnerProductId;
+            this.Duration             = Duration;
 
         }
 
         #endregion
 
-        //ToDo: Add duration field!
+
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -178,6 +186,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //
         //          <!--Optional:-->
         //          <Reservation:PartnerProductID>?</Reservation:PartnerProductID>
+        //
+        //          <!--Optional:-->
+        //          <Reservation:Duration>?</Reservation:Duration>
         //
         //       </Reservation:eRoamingAuthorizeRemoteReservationStart>
         //    </soapenv:Body>
@@ -329,17 +340,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                                                                              e),
                                                                                                             OnException),
 
-                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "Duration",
-                                                                                                            TimeSpan.Parse),
-
                                                       AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "SessionID",
                                                                                                             Session_Id.Parse),
 
-                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "PartnerSessionID",
-                                                                                                            PartnerSession_Id.Parse),
+                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "CPOPartnerSessionID",
+                                                                                                            CPOPartnerSession_Id.Parse),
+
+                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "EMPPartnerSessionID",
+                                                                                                            EMPPartnerSession_Id.Parse),
 
                                                       AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "PartnerProductID",
                                                                                                             PartnerProduct_Id.Parse),
+
+                                                      AuthorizeRemoteReservationStartXML.MapValueOrNullable(OICPNS.Reservation + "Duration",
+                                                                                                            v => TimeSpan.FromMinutes(Double.Parse(v))),
 
                                                       Timestamp,
                                                       CancellationToken,
@@ -427,7 +441,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #endregion
 
-        //ToDo: Add duration field!
         #region ToXML(CustomAuthorizeRemoteReservationStartRequestSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
@@ -443,21 +456,29 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             var XML = new XElement(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart",
 
                                        SessionId.HasValue
-                                           ? new XElement(OICPNS.Reservation + "SessionID",         SessionId.       ToString())
+                                           ? new XElement(OICPNS.Reservation + "SessionID",            SessionId.          ToString())
                                            : null,
 
-                                       PartnerSessionId.HasValue
-                                           ? new XElement(OICPNS.Reservation + "PartnerSessionID",  PartnerSessionId.ToString())
+                                       CPOPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Reservation + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                            : null,
 
-                                       new XElement(OICPNS.Reservation + "ProviderID",              ProviderId.      ToString()),
-                                       new XElement(OICPNS.Reservation + "EVSEID",                  EVSEId.          ToString()),
+                                       EMPPartnerSessionId.HasValue
+                                           ? new XElement(OICPNS.Reservation + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                           : null,
+
+                                       new XElement(OICPNS.Reservation + "ProviderID",                 ProviderId.         ToString()),
+                                       new XElement(OICPNS.Reservation + "EVSEID",                     EVSEId.             ToString()),
 
                                        Identification.ToXML(OICPNS.Reservation + "Identification",
                                                             CustomIdentificationSerializer),
 
                                        PartnerProductId.HasValue
-                                           ? new XElement(OICPNS.Reservation + "PartnerProductID",  PartnerProductId.ToString())
+                                           ? new XElement(OICPNS.Reservation + "PartnerProductID",     PartnerProductId.   ToString())
+                                           : null,
+
+                                       Duration.HasValue
+                                           ? new XElement(OICPNS.Reservation + "Duration",             Convert.ToInt32(Math.Round(Duration.Value.TotalMinutes, 0)))
                                            : null
 
                                    );
@@ -507,7 +528,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStart2">Another authorize remote reservation start request.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStart1, AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStart2)
-
             => !(AuthorizeRemoteReservationStart1 == AuthorizeRemoteReservationStart2);
 
         #endregion
@@ -529,11 +549,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (Object == null)
                 return false;
 
-            var AuthorizeRemoteReservationStart = Object as AuthorizeRemoteReservationStartRequest;
-            if ((Object) AuthorizeRemoteReservationStart == null)
+            if (!(Object is AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStartRequest))
                 return false;
 
-            return Equals(AuthorizeRemoteReservationStart);
+            return Equals(AuthorizeRemoteReservationStartRequest);
 
         }
 
@@ -549,24 +568,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStart)
         {
 
-            if ((Object) AuthorizeRemoteReservationStart == null)
+            if (AuthorizeRemoteReservationStart is null)
                 return false;
 
             return ProviderId.    Equals(AuthorizeRemoteReservationStart.ProviderId)     &&
                    EVSEId.        Equals(AuthorizeRemoteReservationStart.EVSEId)         &&
                    Identification.Equals(AuthorizeRemoteReservationStart.Identification) &&
 
-                   ((!Duration.        HasValue && !AuthorizeRemoteReservationStart.Duration.        HasValue) ||
-                     (Duration.        HasValue &&  AuthorizeRemoteReservationStart.Duration.        HasValue && Duration.        Value.Equals(AuthorizeRemoteReservationStart.Duration.        Value))) &&
+                   ((!SessionId.          HasValue && !AuthorizeRemoteReservationStart.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizeRemoteReservationStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteReservationStart.SessionId.          Value))) &&
 
-                   ((!SessionId.       HasValue && !AuthorizeRemoteReservationStart.SessionId.       HasValue) ||
-                     (SessionId.       HasValue &&  AuthorizeRemoteReservationStart.SessionId.       HasValue && SessionId.       Value.Equals(AuthorizeRemoteReservationStart.SessionId.       Value))) &&
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteReservationStart.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteReservationStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteReservationStart.CPOPartnerSessionId.Value))) &&
 
-                   ((!PartnerSessionId.HasValue && !AuthorizeRemoteReservationStart.PartnerSessionId.HasValue) ||
-                     (PartnerSessionId.HasValue &&  AuthorizeRemoteReservationStart.PartnerSessionId.HasValue && PartnerSessionId.Value.Equals(AuthorizeRemoteReservationStart.PartnerSessionId.Value))) &&
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteReservationStart.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteReservationStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteReservationStart.EMPPartnerSessionId.Value))) &&
 
-                   ((!PartnerProductId.HasValue && !AuthorizeRemoteReservationStart.PartnerProductId.HasValue) ||
-                     (PartnerProductId.HasValue &&  AuthorizeRemoteReservationStart.PartnerProductId.HasValue && PartnerProductId.Value.Equals(AuthorizeRemoteReservationStart.PartnerProductId.Value)));
+                   ((!PartnerProductId.   HasValue && !AuthorizeRemoteReservationStart.PartnerProductId.   HasValue) ||
+                     (PartnerProductId.   HasValue &&  AuthorizeRemoteReservationStart.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeRemoteReservationStart.PartnerProductId.   Value))) &&
+
+                   ((!Duration.           HasValue && !AuthorizeRemoteReservationStart.Duration.           HasValue) ||
+                     (Duration.           HasValue &&  AuthorizeRemoteReservationStart.Duration.           HasValue && Duration.           Value.Equals(AuthorizeRemoteReservationStart.Duration.           Value)));
 
         }
 
@@ -589,20 +611,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                        EVSEId.        GetHashCode() * 13 ^
                        Identification.GetHashCode() * 11 ^
 
-                       (Duration.         HasValue
-                            ? Duration.        GetHashCode() * 7
-                            : 0) ^
-
                        (SessionId.        HasValue
-                            ? SessionId.       GetHashCode() * 5
+                            ? SessionId.          GetHashCode() * 9
                             : 0) ^
 
-                       (PartnerSessionId. HasValue
-                            ? PartnerSessionId.GetHashCode() * 3
+                       (CPOPartnerSessionId.HasValue
+                            ? CPOPartnerSessionId.GetHashCode() * 7
                             : 0) ^
 
-                       (!PartnerProductId.HasValue
-                            ? PartnerProductId.GetHashCode()
+                       (EMPPartnerSessionId.HasValue
+                            ? EMPPartnerSessionId.GetHashCode() * 5
+                            : 0) ^
+
+                       (PartnerProductId.HasValue
+                            ? PartnerProductId.   GetHashCode() * 3
+                            : 0) ^
+
+                       (Duration.HasValue
+                            ? Duration.           GetHashCode()
                             : 0);
 
             }

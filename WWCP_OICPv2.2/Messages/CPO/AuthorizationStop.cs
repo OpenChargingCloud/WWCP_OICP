@@ -42,27 +42,32 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The charging session identification.
         /// </summary>
-        public Session_Id?               SessionId             { get; }
+        public Session_Id?               SessionId              { get; }
 
         /// <summary>
-        /// An optional partner charging session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
-        public PartnerSession_Id?        PartnerSessionId      { get; }
+        public CPOPartnerSession_Id?     CPOPartnerSessionId    { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        public EMPPartnerSession_Id?     EMPPartnerSessionId    { get; }
 
         /// <summary>
         /// The e-mobility provider identification.
         /// </summary>
-        public Provider_Id?              ProviderId            { get; }
+        public Provider_Id?              ProviderId             { get; }
 
         /// <summary>
         /// The authorization status, e.g. "Authorized".
         /// </summary>
-        public AuthorizationStatusTypes  AuthorizationStatus   { get; }
+        public AuthorizationStatusTypes  AuthorizationStatus    { get; }
 
         /// <summary>
         /// The authorization status code.
         /// </summary>
-        public StatusCode                StatusCode            { get; }
+        public StatusCode                StatusCode             { get; }
 
         #endregion
 
@@ -75,16 +80,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStatus">The authorization status.</param>
         /// <param name="StatusCode">An optional status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
         private AuthorizationStop(AuthorizeStopRequest                 Request,
                                   AuthorizationStatusTypes             AuthorizationStatus,
                                   StatusCode                           StatusCode,
-                                  Session_Id?                          SessionId          = null,
-                                  PartnerSession_Id?                   PartnerSessionId   = null,
-                                  Provider_Id?                         ProviderId         = null,
-                                  IReadOnlyDictionary<String, Object>  CustomData         = null)
+                                  Session_Id?                          SessionId             = null,
+                                  CPOPartnerSession_Id?                CPOPartnerSessionId   = null,
+                                  EMPPartnerSession_Id?                EMPPartnerSessionId   = null,
+                                  Provider_Id?                         ProviderId            = null,
+                                  IReadOnlyDictionary<String, Object>  CustomData            = null)
 
             : base(Request,
                    CustomData)
@@ -94,7 +101,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             this.AuthorizationStatus  = AuthorizationStatus;
             this.StatusCode           = StatusCode;
             this.SessionId            = SessionId;
-            this.PartnerSessionId     = PartnerSessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
             this.ProviderId           = ProviderId;
 
         }
@@ -109,16 +117,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">The charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        public static AuthorizationStop Authorized(AuthorizeStopRequest  Request,
-                                                   Session_Id?           SessionId                  = null,
-                                                   PartnerSession_Id?    PartnerSessionId           = null,
-                                                   Provider_Id?          ProviderId                 = null,
-                                                   String                StatusCodeDescription      = null,
-                                                   String                StatusCodeAdditionalInfo   = null)
+        public static AuthorizationStop Authorized(AuthorizeStopRequest   Request,
+                                                   Session_Id?            SessionId                  = null,
+                                                   CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                   Provider_Id?           ProviderId                 = null,
+                                                   String                 StatusCodeDescription      = null,
+                                                   String                 StatusCodeAdditionalInfo   = null)
 
 
             => new AuthorizationStop(Request,
@@ -129,7 +139,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -144,15 +155,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop NotAuthorized(AuthorizeStopRequest  Request,
-                                                      StatusCodes           StatusCode,
-                                                      String                StatusCodeDescription      = null,
-                                                      String                StatusCodeAdditionalInfo   = null,
-                                                      Session_Id?           SessionId                  = null,
-                                                      PartnerSession_Id?    PartnerSessionId           = null,
-                                                      Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop NotAuthorized(AuthorizeStopRequest   Request,
+                                                      StatusCodes            StatusCode,
+                                                      String                 StatusCodeDescription      = null,
+                                                      String                 StatusCodeAdditionalInfo   = null,
+                                                      Session_Id?            SessionId                  = null,
+                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                      Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -162,7 +175,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -176,14 +190,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop SessionIsInvalid(AuthorizeStopRequest  Request,
-                                                         String                StatusCodeDescription      = null,
-                                                         String                StatusCodeAdditionalInfo   = null,
-                                                         Session_Id?           SessionId                  = null,
-                                                         PartnerSession_Id?    PartnerSessionId           = null,
-                                                         Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop SessionIsInvalid(AuthorizeStopRequest   Request,
+                                                         String                 StatusCodeDescription      = null,
+                                                         String                 StatusCodeAdditionalInfo   = null,
+                                                         Session_Id?            SessionId                  = null,
+                                                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                         Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -193,7 +209,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -207,14 +224,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop CommunicationToEVSEFailed(AuthorizeStopRequest  Request,
-                                                                  String                StatusCodeDescription      = null,
-                                                                  String                StatusCodeAdditionalInfo   = null,
-                                                                  Session_Id?           SessionId                  = null,
-                                                                  PartnerSession_Id?    PartnerSessionId           = null,
-                                                                  Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop CommunicationToEVSEFailed(AuthorizeStopRequest   Request,
+                                                                  String                 StatusCodeDescription      = null,
+                                                                  String                 StatusCodeAdditionalInfo   = null,
+                                                                  Session_Id?            SessionId                  = null,
+                                                                  CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                                  EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                                  Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -224,7 +243,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -238,14 +258,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop NoEVConnectedToEVSE(AuthorizeStopRequest  Request,
-                                                            String                StatusCodeDescription      = null,
-                                                            String                StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?           SessionId                  = null,
-                                                            PartnerSession_Id?    PartnerSessionId           = null,
-                                                            Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop NoEVConnectedToEVSE(AuthorizeStopRequest   Request,
+                                                            String                 StatusCodeDescription      = null,
+                                                            String                 StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?            SessionId                  = null,
+                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                            Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -255,7 +277,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -269,14 +292,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop EVSEAlreadyReserved(AuthorizeStopRequest  Request,
-                                                            String                StatusCodeDescription      = null,
-                                                            String                StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?           SessionId                  = null,
-                                                            PartnerSession_Id?    PartnerSessionId           = null,
-                                                            Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop EVSEAlreadyReserved(AuthorizeStopRequest   Request,
+                                                            String                 StatusCodeDescription      = null,
+                                                            String                 StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?            SessionId                  = null,
+                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                            Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -286,7 +311,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -300,14 +326,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop UnknownEVSEID(AuthorizeStopRequest  Request,
-                                                      String              StatusCodeDescription      = null,
-                                                      String              StatusCodeAdditionalInfo   = null,
-                                                      Session_Id?         SessionId                  = null,
-                                                      PartnerSession_Id?  PartnerSessionId           = null,
-                                                      Provider_Id?        ProviderId                 = null)
+        public static AuthorizationStop UnknownEVSEID(AuthorizeStopRequest   Request,
+                                                      String                 StatusCodeDescription      = null,
+                                                      String                 StatusCodeAdditionalInfo   = null,
+                                                      Session_Id?            SessionId                  = null,
+                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                      Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -317,7 +345,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -331,14 +360,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop EVSEOutOfService(AuthorizeStopRequest  Request,
-                                                         String                StatusCodeDescription      = null,
-                                                         String                StatusCodeAdditionalInfo   = null,
-                                                         Session_Id?           SessionId                  = null,
-                                                         PartnerSession_Id?    PartnerSessionId           = null,
-                                                         Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop EVSEOutOfService(AuthorizeStopRequest   Request,
+                                                         String                 StatusCodeDescription      = null,
+                                                         String                 StatusCodeAdditionalInfo   = null,
+                                                         Session_Id?            SessionId                  = null,
+                                                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                         Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -348,7 +379,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -362,14 +394,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop ServiceNotAvailable(AuthorizeStopRequest  Request,
-                                                            String                StatusCodeDescription      = null,
-                                                            String                StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?           SessionId                  = null,
-                                                            PartnerSession_Id?    PartnerSessionId           = null,
-                                                            Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop ServiceNotAvailable(AuthorizeStopRequest   Request,
+                                                            String                 StatusCodeDescription      = null,
+                                                            String                 StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?            SessionId                  = null,
+                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                            Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -379,7 +413,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -393,14 +428,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop DataError(AuthorizeStopRequest  Request,
-                                                  String                StatusCodeDescription      = null,
-                                                  String                StatusCodeAdditionalInfo   = null,
-                                                  Session_Id?           SessionId                  = null,
-                                                  PartnerSession_Id?    PartnerSessionId           = null,
-                                                  Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop DataError(AuthorizeStopRequest   Request,
+                                                  String                 StatusCodeDescription      = null,
+                                                  String                 StatusCodeAdditionalInfo   = null,
+                                                  Session_Id?            SessionId                  = null,
+                                                  CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                  EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                  Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -410,7 +447,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -424,14 +462,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="PartnerSessionId">An optional partner charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStop SystemError(AuthorizeStopRequest  Request,
-                                                    String                StatusCodeDescription      = null,
-                                                    String                StatusCodeAdditionalInfo   = null,
-                                                    Session_Id?           SessionId                  = null,
-                                                    PartnerSession_Id?    PartnerSessionId           = null,
-                                                    Provider_Id?          ProviderId                 = null)
+        public static AuthorizationStop SystemError(AuthorizeStopRequest   Request,
+                                                    String                 StatusCodeDescription      = null,
+                                                    String                 StatusCodeAdditionalInfo   = null,
+                                                    Session_Id?            SessionId                  = null,
+                                                    CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                                    EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                                    Provider_Id?           ProviderId                 = null)
 
             => new AuthorizationStop(Request,
                                      AuthorizationStatusTypes.NotAuthorized,
@@ -441,7 +481,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          StatusCodeAdditionalInfo
                                      ),
                                      SessionId,
-                                     PartnerSessionId,
+                                     CPOPartnerSessionId,
+                                     EMPPartnerSessionId,
                                      ProviderId);
 
         #endregion
@@ -462,7 +503,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         //          <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
         //
         //          <!--Optional:-->
-        //          <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+        //          <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <!--Optional:-->
         //          <Authorization:ProviderID>DE*GDF</Authorization:ProviderID>
@@ -496,7 +540,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopXML">The XML to parse.</param>
         /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizationStop Parse(AuthorizeStopRequest                        Request,
                                               XElement                                    AuthorizationStopXML,
@@ -528,7 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopText">The text to parse.</param>
         /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizationStop Parse(AuthorizeStopRequest                        Request,
                                               String                                      AuthorizationStopText,
@@ -595,8 +639,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                         AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                 Session_Id.       Parse),
 
-                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "PartnerSessionID",
-                                                                                PartnerSession_Id.Parse),
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
+                                                                                CPOPartnerSession_Id.Parse),
+
+                                        AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "EMPPartnerSessionID",
+                                                                                EMPPartnerSession_Id.Parse),
 
                                         AuthorizationStopXML.MapValueOrNullable(OICPNS.Authorization + "ProviderID",
                                                                                 Provider_Id.      Parse)
@@ -634,7 +681,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStopText">The text to parse.</param>
         /// <param name="AuthorizationStop">The parsed authorization stop request.</param>
         /// <param name="CustomAuthorizationStopParser">A delegate to parse custom AuthorizationStop XML elements.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(AuthorizeStopRequest                        Request,
                                        String                                      AuthorizationStopText,
@@ -676,7 +723,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         /// <param name="CustomAuthorizationStopSerializer">A delegate to customize the serialization of AuthorizationStop respones.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
-        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<AuthorizationStop>  CustomAuthorizationStopSerializer   = null,
                               CustomXMLSerializerDelegate<StatusCode>         CustomStatusCodeSerializer          = null)
 
@@ -685,18 +731,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizationStop",
 
                           SessionId != null
-                              ? new XElement(OICPNS.Authorization + "SessionID",         SessionId.ToString())
+                              ? new XElement(OICPNS.Authorization + "SessionID",            SessionId.          ToString())
                               : null,
 
-                          PartnerSessionId.HasValue
-                              ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                          CPOPartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                              : null,
+
+                          EMPPartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
                               : null,
 
                           ProviderId != null
-                              ? new XElement(OICPNS.Authorization + "ProviderID",        ProviderId.ToString())
+                              ? new XElement(OICPNS.Authorization + "ProviderID",           ProviderId.         ToString())
                               : null,
 
-                          new XElement(OICPNS.Authorization + "AuthorizationStatus",     AuthorizationStatus.ToString()),
+                          new XElement(OICPNS.Authorization + "AuthorizationStatus",    AuthorizationStatus.ToString()),
 
                           StatusCode.ToXML(OICPNS.Authorization + "StatusCode",
                                            CustomStatusCodeSerializer)
@@ -711,6 +761,142 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
+
+        #region Operator overloading
+
+        #region Operator == (AuthorizationStop1, AuthorizationStop2)
+
+        /// <summary>
+        /// Compares two AuthorizationStop requests for equality.
+        /// </summary>
+        /// <param name="AuthorizationStop1">An authorize stop request.</param>
+        /// <param name="AuthorizationStop2">Another authorize stop request.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public static Boolean operator == (AuthorizationStop AuthorizationStop1, AuthorizationStop AuthorizationStop2)
+        {
+
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (((Object) AuthorizationStop1 == null) || ((Object) AuthorizationStop2 == null))
+                return false;
+
+            return AuthorizationStop1.Equals(AuthorizationStop2);
+
+        }
+
+        #endregion
+
+        #region Operator != (AuthorizationStop1, AuthorizationStop2)
+
+        /// <summary>
+        /// Compares two AuthorizationStop requests for inequality.
+        /// </summary>
+        /// <param name="AuthorizationStop1">An authorize stop request.</param>
+        /// <param name="AuthorizationStop2">Another authorize stop request.</param>
+        /// <returns>False if both match; True otherwise.</returns>
+        public static Boolean operator != (AuthorizationStop AuthorizationStop1, AuthorizationStop AuthorizationStop2)
+            => !(AuthorizationStop1 == AuthorizationStop2);
+
+        #endregion
+
+        #endregion
+
+        #region IEquatable<AuthorizationStop> Members
+
+        #region Equals(Object)
+
+        /// <summary>
+        /// Compares two instances of this object.
+        /// </summary>
+        /// <param name="Object">An object to compare with.</param>
+        /// <returns>true|false</returns>
+        public override Boolean Equals(Object Object)
+        {
+
+            if (Object == null)
+                return false;
+
+            if (!(Object is AuthorizationStop AuthorizationStop))
+                return false;
+
+            return Equals(AuthorizationStop);
+
+        }
+
+        #endregion
+
+        #region Equals(AuthorizationStop)
+
+        /// <summary>
+        /// Compares two authorize stop requests for equality.
+        /// </summary>
+        /// <param name="AuthorizationStop">An authorize stop request to compare with.</param>
+        /// <returns>True if both match; False otherwise.</returns>
+        public override Boolean Equals(AuthorizationStop AuthorizationStop)
+        {
+
+            if (AuthorizationStop is null)
+                return false;
+
+            return AuthorizationStatus.Equals(AuthorizationStop.AuthorizationStatus) &&
+                   StatusCode.         Equals(AuthorizationStop.StatusCode)          &&
+                   //AuthorizationStopIdentifications
+
+                   ((!SessionId.          HasValue && !AuthorizationStop.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizationStop.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStop.SessionId.          Value))) &&
+
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizationStop.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizationStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStop.CPOPartnerSessionId.Value))) &&
+
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizationStop.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizationStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStop.EMPPartnerSessionId.Value))) &&
+
+                   ((!ProviderId.         HasValue && !AuthorizationStop.ProviderId.         HasValue) ||
+                     (ProviderId.         HasValue &&  AuthorizationStop.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStop.ProviderId.         Value)));
+
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetHashCode()
+
+        /// <summary>
+        /// Return the HashCode of this object.
+        /// </summary>
+        /// <returns>The HashCode of this object.</returns>
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+
+                return AuthorizationStatus.GetHashCode() * 13 ^
+                       StatusCode.         GetHashCode() * 11 ^
+
+                       (SessionId != null
+                            ? SessionId.          GetHashCode() * 7
+                            : 0) ^
+
+                       (CPOPartnerSessionId != null
+                            ? CPOPartnerSessionId.GetHashCode() * 5
+                            : 0) ^
+
+                       (EMPPartnerSessionId != null
+                            ? EMPPartnerSessionId.GetHashCode() * 3
+                            : 0) ^
+
+                       (ProviderId != null
+                            ? ProviderId.         GetHashCode()
+                            : 0);
+
+            }
+        }
+
+        #endregion
 
         #region (override) ToString()
 
@@ -736,11 +922,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #endregion
 
 
-        public override bool Equals(AuthorizationStop AResponse)
-        {
-            throw new NotImplementedException();
-        }
-
 
         #region ToBuilder
 
@@ -763,37 +944,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             #region Properties
 
-            public AuthorizeStopRequest        Request               { get; set; }
-
             /// <summary>
             /// The charging session identification.
             /// </summary>
-            public Session_Id?                 SessionId             { get; set; }
+            public Session_Id?                 SessionId              { get; set; }
 
             /// <summary>
-            /// An optional partner charging session identification.
+            /// An optional EMP partner charging session identification.
             /// </summary>
-            public PartnerSession_Id?          PartnerSessionId      { get; set; }
+            public CPOPartnerSession_Id?       CPOPartnerSessionId    { get; set; }
+
+            /// <summary>
+            /// An optional CPO partner charging session identification.
+            /// </summary>
+            public EMPPartnerSession_Id?       EMPPartnerSessionId    { get; set; }
 
             /// <summary>
             /// The e-mobility provider identification.
             /// </summary>
-            public Provider_Id?                ProviderId            { get; set; }
+            public Provider_Id?                ProviderId             { get; set; }
 
             /// <summary>
             /// The authorization status, e.g. "Authorized".
             /// </summary>
-            public AuthorizationStatusTypes    AuthorizationStatus   { get; set; }
+            public AuthorizationStatusTypes    AuthorizationStatus    { get; set; }
 
             /// <summary>
             /// The authorization status code.
             /// </summary>
-            public StatusCode                  StatusCode            { get; set; }
-
-            //     /// <summary>
-            //     /// The result of the operation.
-            //     /// </summary>
-            //     public Result                      Result                { get; set; }
+            public StatusCode                  StatusCode             { get; set; }
 
             #endregion
 
@@ -804,7 +983,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             /// <summary>
             /// Create a new AuthorizationStop response builder.
             /// </summary>
-            /// <param name="Request">An AuthorizeStop request.</param>
+            /// <param name="Request">The request leading to this response.</param>
             /// <param name="CustomData">Optional custom data.</param>
             public Builder(AuthorizeStopRequest                 Request,
                            IReadOnlyDictionary<String, Object>  CustomData  = null)
@@ -841,7 +1020,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     this.AuthorizationStatus  = AuthorizationStop.AuthorizationStatus;
                     this.StatusCode           = AuthorizationStop.StatusCode;
                     this.SessionId            = AuthorizationStop.SessionId;
-                    this.PartnerSessionId     = AuthorizationStop.PartnerSessionId;
+                    this.CPOPartnerSessionId  = AuthorizationStop.CPOPartnerSessionId;
+                    this.EMPPartnerSessionId  = AuthorizationStop.EMPPartnerSessionId;
                     this.ProviderId           = AuthorizationStop.ProviderId;
 
                 }
@@ -853,10 +1033,142 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             #endregion
 
 
-            public override Boolean Equals(AuthorizationStop AResponse)
+            #region Operator overloading
+
+            #region Operator == (AuthorizationStop1, AuthorizationStop2)
+
+            /// <summary>
+            /// Compares two AuthorizationStop requests for equality.
+            /// </summary>
+            /// <param name="AuthorizationStop1">An authorize stop request.</param>
+            /// <param name="AuthorizationStop2">Another authorize stop request.</param>
+            /// <returns>True if both match; False otherwise.</returns>
+            public static Boolean operator == (Builder AuthorizationStop1, Builder AuthorizationStop2)
             {
-                throw new NotImplementedException();
+
+                // If both are null, or both are same instance, return true.
+                if (Object.ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
+                    return true;
+
+                // If one is null, but not both, return false.
+                if (((Object) AuthorizationStop1 == null) || ((Object) AuthorizationStop2 == null))
+                    return false;
+
+                return AuthorizationStop1.Equals(AuthorizationStop2);
+
             }
+
+            #endregion
+
+            #region Operator != (AuthorizationStop1, AuthorizationStop2)
+
+            /// <summary>
+            /// Compares two AuthorizationStop requests for inequality.
+            /// </summary>
+            /// <param name="AuthorizationStop1">An authorize stop request.</param>
+            /// <param name="AuthorizationStop2">Another authorize stop request.</param>
+            /// <returns>False if both match; True otherwise.</returns>
+            public static Boolean operator != (Builder AuthorizationStop1, Builder AuthorizationStop2)
+                => !(AuthorizationStop1 == AuthorizationStop2);
+
+            #endregion
+
+            #endregion
+
+            #region IEquatable<AuthorizationStop> Members
+
+            #region Equals(Object)
+
+            /// <summary>
+            /// Compares two instances of this object.
+            /// </summary>
+            /// <param name="Object">An object to compare with.</param>
+            /// <returns>true|false</returns>
+            public override Boolean Equals(Object Object)
+            {
+
+                if (Object == null)
+                    return false;
+
+                if (!(Object is Builder AuthorizationStop))
+                    return false;
+
+                return Equals(AuthorizationStop);
+
+            }
+
+            #endregion
+
+            #region Equals(AuthorizationStop)
+
+            /// <summary>
+            /// Compares two authorize stop requests for equality.
+            /// </summary>
+            /// <param name="AuthorizationStop">An authorize stop request to compare with.</param>
+            /// <returns>True if both match; False otherwise.</returns>
+            public override Boolean Equals(AuthorizationStop AuthorizationStop)
+            {
+
+                if (AuthorizationStop is null)
+                    return false;
+
+                return AuthorizationStatus.Equals(AuthorizationStop.AuthorizationStatus) &&
+                       StatusCode.         Equals(AuthorizationStop.StatusCode)          &&
+                       //AuthorizationStopIdentifications
+
+                       ((!SessionId.          HasValue && !AuthorizationStop.SessionId.          HasValue) ||
+                         (SessionId.          HasValue &&  AuthorizationStop.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStop.SessionId.          Value))) &&
+
+                       ((!CPOPartnerSessionId.HasValue && !AuthorizationStop.CPOPartnerSessionId.HasValue) ||
+                         (CPOPartnerSessionId.HasValue &&  AuthorizationStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStop.CPOPartnerSessionId.Value))) &&
+
+                       ((!EMPPartnerSessionId.HasValue && !AuthorizationStop.EMPPartnerSessionId.HasValue) ||
+                         (EMPPartnerSessionId.HasValue &&  AuthorizationStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStop.EMPPartnerSessionId.Value))) &&
+
+                       ((!ProviderId.         HasValue && !AuthorizationStop.ProviderId.         HasValue) ||
+                         (ProviderId.         HasValue &&  AuthorizationStop.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStop.ProviderId.         Value)));
+
+            }
+
+            #endregion
+
+            #endregion
+
+            #region GetHashCode()
+
+            /// <summary>
+            /// Return the HashCode of this object.
+            /// </summary>
+            /// <returns>The HashCode of this object.</returns>
+            public override Int32 GetHashCode()
+            {
+                unchecked
+                {
+
+                    return AuthorizationStatus.GetHashCode() * 13 ^
+                           StatusCode.         GetHashCode() * 11 ^
+
+                           (SessionId != null
+                                ? SessionId.          GetHashCode() * 7
+                                : 0) ^
+
+                           (CPOPartnerSessionId != null
+                                ? CPOPartnerSessionId.GetHashCode() * 5
+                                : 0) ^
+
+                           (EMPPartnerSessionId != null
+                                ? EMPPartnerSessionId.GetHashCode() * 3
+                                : 0) ^
+
+                           (ProviderId != null
+                                ? ProviderId.         GetHashCode()
+                                : 0);
+
+                }
+            }
+
+            #endregion
+
 
             public override AuthorizationStop ToImmutable
 
@@ -864,7 +1176,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          AuthorizationStatus,
                                          StatusCode,
                                          SessionId,
-                                         PartnerSessionId,
+                                         CPOPartnerSessionId,
+                                         EMPPartnerSessionId,
                                          ProviderId,
                                          CustomData);
 

@@ -404,7 +404,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                             async (HTTPRequest, AuthorizeRemoteReservationStartXML) => {
 
 
-                Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest> Acknowledgement  = null;
+                EMP.AuthorizeRemoteReservationStartRequest                   AuthorizeRemoteReservationStartRequest   = null;
+                Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>  Acknowledgement                          = null;
 
                 #region Send OnAuthorizeRemoteReservationStartSOAPRequest event
 
@@ -430,115 +431,131 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
 
-                if (EMP.AuthorizeRemoteReservationStartRequest.TryParse(AuthorizeRemoteReservationStartXML,
-                                                                        out EMP.AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStartRequest,
-                                                                        CustomAuthorizeRemoteReservationStartRequestParser,
-                                                                        CustomIdentificationParser,
-                                                                        OnException,
-
-                                                                        HTTPRequest.Timestamp,
-                                                                        HTTPRequest.CancellationToken,
-                                                                        HTTPRequest.EventTrackingId,
-                                                                        HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeRemoteReservationStartRequest event
+                    if (EMP.AuthorizeRemoteReservationStartRequest.TryParse(AuthorizeRemoteReservationStartXML,
+                                                                            out AuthorizeRemoteReservationStartRequest,
+                                                                            CustomAuthorizeRemoteReservationStartRequestParser,
+                                                                            CustomIdentificationParser,
+                                                                            OnException,
 
-                    try
+                                                                            HTTPRequest.Timestamp,
+                                                                            HTTPRequest.CancellationToken,
+                                                                            HTTPRequest.EventTrackingId,
+                                                                            HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeRemoteReservationStartRequest != null)
-                            await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
-                                               Select(e => e(StartTime,
-                                                             AuthorizeRemoteReservationStartRequest.Timestamp.Value,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteReservationStartRequest.EventTrackingId,
-                                                             AuthorizeRemoteReservationStartRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerProductId,
-                                                             AuthorizeRemoteReservationStartRequest.SessionId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
-                                                             AuthorizeRemoteReservationStartRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStartRequest.Identification,
-                                                             AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeRemoteReservationStartRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteReservationStartRequest != null)
+                                await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                 AuthorizeRemoteReservationStartRequest.Timestamp.Value,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteReservationStartRequest.EventTrackingId,
+                                                                 AuthorizeRemoteReservationStartRequest.EVSEId,
+                                                                 AuthorizeRemoteReservationStartRequest.PartnerProductId,
+                                                                 AuthorizeRemoteReservationStartRequest.SessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.ProviderId,
+                                                                 AuthorizeRemoteReservationStartRequest.Identification,
+                                                                 AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeRemoteReservationStart != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
+                                                                 Cast<OnAuthorizeRemoteReservationStartDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeRemoteReservationStartRequest))).
+                                                                 ConfigureAwait(false);
+
+                            Acknowledgement = results.FirstOrDefault();
+
+                        }
+
+                        if (Acknowledgement == null)
+                            Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.SystemError(
+                                                 AuthorizeRemoteReservationStartRequest,
+                                                 "Could not process the incoming AuthorizeRemoteReservationStart request!",
+                                                 null,
+                                                 AuthorizeRemoteReservationStartRequest.SessionId,
+                                                 AuthorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                 AuthorizeRemoteReservationStartRequest.EMPPartnerSessionId
+                                             );
+
+                        #endregion
+
+                        #region Send OnAuthorizeRemoteReservationStartResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteReservationStartResponse != null)
+                                await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteReservationStartRequest.EventTrackingId,
+                                                                 AuthorizeRemoteReservationStartRequest.EVSEId,
+                                                                 AuthorizeRemoteReservationStartRequest.PartnerProductId,
+                                                                 AuthorizeRemoteReservationStartRequest.SessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStartRequest.ProviderId,
+                                                                 AuthorizeRemoteReservationStartRequest.Identification,
+                                                                 AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 Acknowledgement,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeRemoteReservationStart != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
-                                                             Cast<OnAuthorizeRemoteReservationStartDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeRemoteReservationStartRequest))).
-                                                             ConfigureAwait(false);
-
-                        Acknowledgement = results.FirstOrDefault();
-
-                    }
-
-                    if (Acknowledgement == null)
-                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.SystemError(
-                                             AuthorizeRemoteReservationStartRequest,
-                                             "Could not process the incoming AuthorizeRemoteReservationStart request!",
-                                             null,
-                                             AuthorizeRemoteReservationStartRequest.SessionId,
-                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId
-                                         );
-
-                    #endregion
-
-                    #region Send OnAuthorizeRemoteReservationStartResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeRemoteReservationStartResponse != null)
-                            await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteReservationStartRequest.EventTrackingId,
-                                                             AuthorizeRemoteReservationStartRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerProductId,
-                                                             AuthorizeRemoteReservationStartRequest.SessionId,
-                                                             AuthorizeRemoteReservationStartRequest.PartnerSessionId,
-                                                             AuthorizeRemoteReservationStartRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStartRequest.Identification,
-                                                             AuthorizeRemoteReservationStartRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             Acknowledgement,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
-                    }
-
-                    #endregion
+                    else
+                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.DataError(
+                                              AuthorizeRemoteReservationStartRequest,
+                                              "Could not process the incoming AuthorizeRemoteReservationStart request!"
+                                          );
 
                 }
-
-                else
+                catch (Exception e)
+                {
                     Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.DataError(
-                                          AuthorizeRemoteReservationStartRequest,
-                                          "Could not process the incoming AuthorizeRemoteReservationStart request!"
-                                      );
+                        AuthorizeRemoteReservationStartRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAPResponse
@@ -592,7 +609,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                             async (HTTPRequest, AuthorizeRemoteReservationStopXML) => {
 
 
-                Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest> Acknowledgement  = null;
+                EMP.AuthorizeRemoteReservationStopRequest                   AuthorizeRemoteReservationStopRequest   = null;
+                Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>  Acknowledgement                         = null;
 
                 #region Send OnAuthorizeRemoteReservationStopSOAPRequest event
 
@@ -618,110 +636,126 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
 
-                if (EMP.AuthorizeRemoteReservationStopRequest.TryParse(AuthorizeRemoteReservationStopXML,
-                                                                       out EMP.AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStopRequest,
-                                                                       CustomAuthorizeRemoteReservationStopRequestParser,
-                                                                       OnException,
-
-                                                                       HTTPRequest.Timestamp,
-                                                                       HTTPRequest.CancellationToken,
-                                                                       HTTPRequest.EventTrackingId,
-                                                                       HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeRemoteReservationStopRequest event
+                    if (EMP.AuthorizeRemoteReservationStopRequest.TryParse(AuthorizeRemoteReservationStopXML,
+                                                                           out AuthorizeRemoteReservationStopRequest,
+                                                                           CustomAuthorizeRemoteReservationStopRequestParser,
+                                                                           OnException,
 
-                    try
+                                                                           HTTPRequest.Timestamp,
+                                                                           HTTPRequest.CancellationToken,
+                                                                           HTTPRequest.EventTrackingId,
+                                                                           HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeRemoteReservationStopRequest != null)
-                            await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
-                                               Select(e => e(StartTime,
-                                                             AuthorizeRemoteReservationStopRequest.Timestamp.Value,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteReservationStopRequest.EventTrackingId,
-                                                             AuthorizeRemoteReservationStopRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStopRequest.SessionId,
-                                                             AuthorizeRemoteReservationStopRequest.PartnerSessionId,
-                                                             AuthorizeRemoteReservationStopRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeRemoteReservationStopRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteReservationStopRequest != null)
+                                await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                 AuthorizeRemoteReservationStopRequest.Timestamp.Value,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteReservationStopRequest.EventTrackingId,
+                                                                 AuthorizeRemoteReservationStopRequest.EVSEId,
+                                                                 AuthorizeRemoteReservationStopRequest.SessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.ProviderId,
+                                                                 AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeRemoteReservationStop != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeRemoteReservationStop.GetInvocationList().
+                                                                 Cast<OnAuthorizeRemoteReservationStopDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeRemoteReservationStopRequest))).
+                                                                 ConfigureAwait(false);
+
+                            Acknowledgement = results.FirstOrDefault();
+
+                        }
+
+                        if (Acknowledgement == null)
+                            Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.SystemError(
+                                                 AuthorizeRemoteReservationStopRequest,
+                                                 "Could not process the incoming AuthorizeRemoteReservationStop request!",
+                                                 null,
+                                                 AuthorizeRemoteReservationStopRequest.SessionId,
+                                                 AuthorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                 AuthorizeRemoteReservationStopRequest.EMPPartnerSessionId
+                                             );
+
+                        #endregion
+
+                        #region Send OnAuthorizeRemoteReservationStopResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteReservationStopResponse != null)
+                                await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteReservationStopRequest.EventTrackingId,
+                                                                 AuthorizeRemoteReservationStopRequest.EVSEId,
+                                                                 AuthorizeRemoteReservationStopRequest.SessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteReservationStopRequest.ProviderId,
+                                                                 AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 Acknowledgement,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeRemoteReservationStop != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeRemoteReservationStop.GetInvocationList().
-                                                             Cast<OnAuthorizeRemoteReservationStopDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeRemoteReservationStopRequest))).
-                                                             ConfigureAwait(false);
-
-                        Acknowledgement = results.FirstOrDefault();
-
-                    }
-
-                    if (Acknowledgement == null)
-                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.SystemError(
-                                             AuthorizeRemoteReservationStopRequest,
-                                             "Could not process the incoming AuthorizeRemoteReservationStop request!",
-                                             null,
-                                             AuthorizeRemoteReservationStopRequest.SessionId,
-                                             AuthorizeRemoteReservationStopRequest.PartnerSessionId
-                                         );
-
-                    #endregion
-
-                    #region Send OnAuthorizeRemoteReservationStopResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeRemoteReservationStopResponse != null)
-                            await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteReservationStopRequest.EventTrackingId,
-                                                             AuthorizeRemoteReservationStopRequest.EVSEId,
-                                                             AuthorizeRemoteReservationStopRequest.SessionId,
-                                                             AuthorizeRemoteReservationStopRequest.PartnerSessionId,
-                                                             AuthorizeRemoteReservationStopRequest.ProviderId,
-                                                             AuthorizeRemoteReservationStopRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             Acknowledgement,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
-                    }
-
-                    #endregion
+                    else
+                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.DataError(
+                                              AuthorizeRemoteReservationStopRequest,
+                                              "Could not process the incoming AuthorizeRemoteReservationStop request!"
+                                          );
 
                 }
-
-                else
+                catch (Exception e)
+                {
                     Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.DataError(
-                                          AuthorizeRemoteReservationStopRequest,
-                                          "Could not process the incoming AuthorizeRemoteReservationStop request!"
-                                      );
+                        AuthorizeRemoteReservationStopRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAPResponse
@@ -775,7 +809,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                             async (HTTPRequest, AuthorizeRemoteStartXML) => {
 
 
-                Acknowledgement<EMP.AuthorizeRemoteStartRequest> Acknowledgement  = null;
+                EMP.AuthorizeRemoteStartRequest                   AuthorizeRemoteStartRequest   = null;
+                Acknowledgement<EMP.AuthorizeRemoteStartRequest>  Acknowledgement               = null;
 
                 #region Send OnAuthorizeRemoteStartSOAPRequest event
 
@@ -801,115 +836,131 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
 
-                if (EMP.AuthorizeRemoteStartRequest.TryParse(AuthorizeRemoteStartXML,
-                                                             out EMP.AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest,
-                                                             CustomAuthorizeRemoteStartRequestParser,
-                                                             CustomIdentificationParser,
-                                                             OnException,
-
-                                                             HTTPRequest.Timestamp,
-                                                             HTTPRequest.CancellationToken,
-                                                             HTTPRequest.EventTrackingId,
-                                                             HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeRemoteStartRequest event
+                    if (EMP.AuthorizeRemoteStartRequest.TryParse(AuthorizeRemoteStartXML,
+                                                                 out AuthorizeRemoteStartRequest,
+                                                                 CustomAuthorizeRemoteStartRequestParser,
+                                                                 CustomIdentificationParser,
+                                                                 OnException,
 
-                    try
+                                                                 HTTPRequest.Timestamp,
+                                                                 HTTPRequest.CancellationToken,
+                                                                 HTTPRequest.EventTrackingId,
+                                                                 HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeRemoteStartRequest != null)
-                            await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteStartRequestDelegate>().
-                                               Select(e => e(StartTime,
-                                                              AuthorizeRemoteStartRequest.Timestamp.Value,
-                                                              this,
-                                                              ServiceId,
-                                                              AuthorizeRemoteStartRequest.EventTrackingId,
-                                                              AuthorizeRemoteStartRequest.EVSEId,
-                                                              AuthorizeRemoteStartRequest.PartnerProductId,
-                                                              AuthorizeRemoteStartRequest.SessionId,
-                                                              AuthorizeRemoteStartRequest.PartnerSessionId,
-                                                              AuthorizeRemoteStartRequest.ProviderId,
-                                                              AuthorizeRemoteStartRequest.EVCOId,
-                                                              AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeRemoteStartRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteStartRequest != null)
+                                await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteStartRequestDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                  AuthorizeRemoteStartRequest.Timestamp.Value,
+                                                                  this,
+                                                                  ServiceId,
+                                                                  AuthorizeRemoteStartRequest.EventTrackingId,
+                                                                  AuthorizeRemoteStartRequest.EVSEId,
+                                                                  AuthorizeRemoteStartRequest.PartnerProductId,
+                                                                  AuthorizeRemoteStartRequest.SessionId,
+                                                                  AuthorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                  AuthorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                  AuthorizeRemoteStartRequest.ProviderId,
+                                                                  AuthorizeRemoteStartRequest.EVCOId,
+                                                                  AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeRemoteStart != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
+                                                                 Cast<OnAuthorizeRemoteStartDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeRemoteStartRequest))).
+                                                                 ConfigureAwait(false);
+
+                            Acknowledgement = results.FirstOrDefault();
+
+                        }
+
+                        if (Acknowledgement == null)
+                            Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SystemError(
+                                                 AuthorizeRemoteStartRequest,
+                                                 "Could not process the incoming AuthorizeRemoteStart request!",
+                                                 null,
+                                                 AuthorizeRemoteStartRequest.SessionId,
+                                                 AuthorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                 AuthorizeRemoteStartRequest.EMPPartnerSessionId
+                                             );
+
+                        #endregion
+
+                        #region Send OnAuthorizeRemoteStartResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteStartResponse != null)
+                                await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteStartResponseDelegate>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteStartRequest.EventTrackingId,
+                                                                 AuthorizeRemoteStartRequest.EVSEId,
+                                                                 AuthorizeRemoteStartRequest.PartnerProductId,
+                                                                 AuthorizeRemoteStartRequest.SessionId,
+                                                                 AuthorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteStartRequest.ProviderId,
+                                                                 AuthorizeRemoteStartRequest.EVCOId,
+                                                                 AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 Acknowledgement,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeRemoteStart != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
-                                                             Cast<OnAuthorizeRemoteStartDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeRemoteStartRequest))).
-                                                             ConfigureAwait(false);
-
-                        Acknowledgement = results.FirstOrDefault();
-
-                    }
-
-                    if (Acknowledgement == null)
-                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SystemError(
-                                             AuthorizeRemoteStartRequest,
-                                             "Could not process the incoming AuthorizeRemoteStart request!",
-                                             null,
-                                             AuthorizeRemoteStartRequest.SessionId,
-                                             AuthorizeRemoteStartRequest.PartnerSessionId
-                                         );
-
-                    #endregion
-
-                    #region Send OnAuthorizeRemoteStartResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeRemoteStartResponse != null)
-                            await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteStartRequest.EventTrackingId,
-                                                             AuthorizeRemoteStartRequest.EVSEId,
-                                                             AuthorizeRemoteStartRequest.PartnerProductId,
-                                                             AuthorizeRemoteStartRequest.SessionId,
-                                                             AuthorizeRemoteStartRequest.PartnerSessionId,
-                                                             AuthorizeRemoteStartRequest.ProviderId,
-                                                             AuthorizeRemoteStartRequest.EVCOId,
-                                                             AuthorizeRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             Acknowledgement,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartResponse));
-                    }
-
-                    #endregion
+                    else
+                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStartRequest>.DataError(
+                                              AuthorizeRemoteStartRequest,
+                                              "Could not process the incoming AuthorizeRemoteStart request!"
+                                          );
 
                 }
-
-                else
+                catch (Exception e)
+                {
                     Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStartRequest>.DataError(
-                                          AuthorizeRemoteStartRequest,
-                                          "Could not process the incoming AuthorizeRemoteStart request!"
-                                      );
+                        AuthorizeRemoteStartRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAPResponse
@@ -964,7 +1015,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
 
 
-                Acknowledgement<EMP.AuthorizeRemoteStopRequest> Acknowledgement  = null;
+                EMP.AuthorizeRemoteStopRequest                   AuthorizeRemoteStopRequest   = null;
+                Acknowledgement<EMP.AuthorizeRemoteStopRequest>  Acknowledgement              = null;
 
                 #region Send OnAuthorizeRemoteStopSOAPRequest event
 
@@ -990,110 +1042,126 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 #endregion
 
 
-                if (EMP.AuthorizeRemoteStopRequest.TryParse(AuthorizeRemoteStopXML,
-                                                            out EMP.AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest,
-                                                            CustomAuthorizeRemoteStopRequestParser,
-                                                            OnException,
-
-                                                            HTTPRequest.Timestamp,
-                                                            HTTPRequest.CancellationToken,
-                                                            HTTPRequest.EventTrackingId,
-                                                            HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeRemoteStopRequest event
+                    if (EMP.AuthorizeRemoteStopRequest.TryParse(AuthorizeRemoteStopXML,
+                                                                out AuthorizeRemoteStopRequest,
+                                                                CustomAuthorizeRemoteStopRequestParser,
+                                                                OnException,
 
-                    try
+                                                                HTTPRequest.Timestamp,
+                                                                HTTPRequest.CancellationToken,
+                                                                HTTPRequest.EventTrackingId,
+                                                                HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeRemoteStopRequest != null)
-                            await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteStopRequestDelegate>().
-                                               Select(e => e(StartTime,
-                                                             AuthorizeRemoteStopRequest.Timestamp.Value,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteStopRequest.EventTrackingId,
-                                                             AuthorizeRemoteStopRequest.EVSEId,
-                                                             AuthorizeRemoteStopRequest.SessionId,
-                                                             AuthorizeRemoteStopRequest.PartnerSessionId,
-                                                             AuthorizeRemoteStopRequest.ProviderId,
-                                                             AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeRemoteStopRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteStopRequest != null)
+                                await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteStopRequestDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                 AuthorizeRemoteStopRequest.Timestamp.Value,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteStopRequest.EventTrackingId,
+                                                                 AuthorizeRemoteStopRequest.EVSEId,
+                                                                 AuthorizeRemoteStopRequest.SessionId,
+                                                                 AuthorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteStopRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteStopRequest.ProviderId,
+                                                                 AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeRemoteStop != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeRemoteStop.GetInvocationList().
+                                                                 Cast<OnAuthorizeRemoteStopDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeRemoteStopRequest))).
+                                                                 ConfigureAwait(false);
+
+                            Acknowledgement = results.FirstOrDefault();
+
+                        }
+
+                        if (Acknowledgement == null)
+                            Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SystemError(
+                                                 AuthorizeRemoteStopRequest,
+                                                 "Could not process the incoming AuthorizeRemoteStop request!",
+                                                 null,
+                                                 AuthorizeRemoteStopRequest.SessionId,
+                                                 AuthorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                 AuthorizeRemoteStopRequest.EMPPartnerSessionId
+                                             );
+
+                        #endregion
+
+                        #region Send OnAuthorizeRemoteStopResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeRemoteStopResponse != null)
+                                await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeRemoteStopResponseDelegate>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeRemoteStopRequest.EventTrackingId,
+                                                                 AuthorizeRemoteStopRequest.EVSEId,
+                                                                 AuthorizeRemoteStopRequest.SessionId,
+                                                                 AuthorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                                 AuthorizeRemoteStopRequest.EMPPartnerSessionId,
+                                                                 AuthorizeRemoteStopRequest.ProviderId,
+                                                                 AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 Acknowledgement,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeRemoteStop != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeRemoteStop.GetInvocationList().
-                                                             Cast<OnAuthorizeRemoteStopDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeRemoteStopRequest))).
-                                                             ConfigureAwait(false);
-
-                        Acknowledgement = results.FirstOrDefault();
-
-                    }
-
-                    if (Acknowledgement == null)
-                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SystemError(
-                                             AuthorizeRemoteStopRequest,
-                                             "Could not process the incoming AuthorizeRemoteStop request!",
-                                             null,
-                                             AuthorizeRemoteStopRequest.SessionId,
-                                             AuthorizeRemoteStopRequest.PartnerSessionId
-                                         );
-
-                    #endregion
-
-                    #region Send OnAuthorizeRemoteStopResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeRemoteStopResponse != null)
-                            await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
-                                               Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeRemoteStopRequest.EventTrackingId,
-                                                             AuthorizeRemoteStopRequest.EVSEId,
-                                                             AuthorizeRemoteStopRequest.SessionId,
-                                                             AuthorizeRemoteStopRequest.PartnerSessionId,
-                                                             AuthorizeRemoteStopRequest.ProviderId,
-                                                             AuthorizeRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             Acknowledgement,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopResponse));
-                    }
-
-                    #endregion
+                    else
+                        Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStopRequest>.DataError(
+                                              AuthorizeRemoteStopRequest,
+                                              "Could not process the incoming AuthorizeRemoteStop request!"
+                                          );
 
                 }
-
-                else
+                catch (Exception e)
+                {
                     Acknowledgement = Acknowledgement<EMP.AuthorizeRemoteStopRequest>.DataError(
-                                          AuthorizeRemoteStopRequest,
-                                          "Could not process the incoming AuthorizeRemoteStop request!"
-                                      );
+                        AuthorizeRemoteStopRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAP response

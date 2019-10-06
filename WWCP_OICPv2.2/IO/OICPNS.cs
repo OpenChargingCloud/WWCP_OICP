@@ -41,14 +41,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static readonly XNamespace EVSEData             = "http://www.hubject.com/b2b/services/evsedata/v2.2";
 
         /// <summary>
-        /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 2.0.
+        /// The namespace for the EVSE Status within the Open Intercharge Protocol (OICP) Version 2.1.
         /// </summary>
-        public static readonly XNamespace EVSEStatus           = "http://www.hubject.com/b2b/services/evsestatus/v2.0";
+        public static readonly XNamespace EVSEStatus           = "http://www.hubject.com/b2b/services/evsestatus/v2.1";
 
         /// <summary>
-        /// The namespace for the Authorization within the Open Intercharge Protocol (OICP) Version 2.0.
+        /// The namespace for the Authorization within the Open Intercharge Protocol (OICP) Version 2.1.
         /// </summary>
-        public static readonly XNamespace Authorization        = "http://www.hubject.com/b2b/services/authorization/v2.0";
+        public static readonly XNamespace Authorization        = "http://www.hubject.com/b2b/services/authorization/v2.1";
 
         /// <summary>
         /// The namespace for the Reservation within the Open Intercharge Protocol (OICP) Version 1.1.
@@ -56,9 +56,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static readonly XNamespace Reservation          = "http://www.hubject.com/b2b/services/reservation/v1.1";
 
         /// <summary>
-        /// The namespace for the Authentication Data within the Open Intercharge Protocol (OICP) Version 2.2.
+        /// The namespace for the Authentication Data within the Open Intercharge Protocol (OICP) Version 2.1.
         /// </summary>
-        public static readonly XNamespace AuthenticationData   = "http://www.hubject.com/b2b/services/authenticationdata/v2.2";
+        public static readonly XNamespace AuthenticationData   = "http://www.hubject.com/b2b/services/authenticationdata/v2.1";
 
         /// <summary>
         /// The namespace for the Mobile Authorization within the Open Intercharge Protocol (OICP) Version 2.0.
@@ -69,6 +69,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         ///// The namespace for B2B2C feedback within the Open Intercharge Protocol (OICP) Version 2.2.
         ///// </summary>
         public static readonly XNamespace B2B2CFeedback        = "http://www.hubject.com/b2b/services/b2b2cfeedback/v1.0";
+
+        /// <summary>
+        /// The namespace for the dynamic pricing within the Open Intercharge Protocol (OICP) Version 1.0.
+        /// </summary>
+        public static readonly XNamespace DynamicPricing       = "http://www.hubject.com/b2b/services/dynamicpricing/v1.0";
 
     }
 

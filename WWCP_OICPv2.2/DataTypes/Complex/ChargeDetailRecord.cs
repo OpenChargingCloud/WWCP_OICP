@@ -78,10 +78,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public PartnerProduct_Id?           PartnerProductId        { get; }
 
         /// <summary>
-        /// An optional partner session identification.
+        /// An optional CPO partner session identification.
         /// </summary>
         [Optional]
-        public PartnerSession_Id?           PartnerSessionId        { get; }
+        public CPOPartnerSession_Id?        CPOPartnerSessionId     { get; }
+
+        /// <summary>
+        /// An optional EMP partner session identification.
+        /// </summary>
+        [Optional]
+        public EMPPartnerSession_Id?        EMPPartnerSessionId     { get; }
 
         /// <summary>
         /// An optional charging start timestamp.
@@ -150,7 +156,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionEnd">The timestamp of the session end.</param>
         /// <param name="Identification">An identification.</param>
         /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
-        /// <param name="PartnerSessionId">An optional partner session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ChargingStart">An optional charging start timestamp.</param>
         /// <param name="ChargingEnd">An optional charging end timestamp.</param>
         /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
@@ -168,7 +175,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                   DateTime                             SessionEnd,
                                   Identification                       Identification,
                                   PartnerProduct_Id?                   PartnerProductId       = null,
-                                  PartnerSession_Id?                   PartnerSessionId       = null,
+                                  CPOPartnerSession_Id?                CPOPartnerSessionId    = null,
+                                  EMPPartnerSession_Id?                EMPPartnerSessionId    = null,
                                   DateTime?                            ChargingStart          = null,
                                   DateTime?                            ChargingEnd            = null,
                                   Decimal?                             MeterValueStart        = null,  // xx.yyy
@@ -191,7 +199,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.SessionEnd            = SessionEnd;
             this.Identification        = Identification;
             this.PartnerProductId      = PartnerProductId;
-            this.PartnerSessionId      = PartnerSessionId;
+            this.CPOPartnerSessionId   = CPOPartnerSessionId;
+            this.EMPPartnerSessionId   = EMPPartnerSessionId;
             this.ChargingStart         = ChargingStart;
             this.ChargingEnd           = ChargingEnd;
             this.MeterValueStart       = MeterValueStart.HasValue ? (Decimal) Math.Round(MeterValueStart.Value, 3) : new Decimal?();
@@ -220,7 +229,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         //       <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
         //
         //       <!--Optional:-->
-        //       <Authorization:PartnerSessionID>0815</Authorization:PartnerSessionID>
+        //       <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //       <!--Optional:-->
+        //       <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //       <!--Optional:-->
         //       <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
@@ -405,8 +417,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "PartnerProductID",
                                                                                      PartnerProduct_Id.Parse),
 
-                                         ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "PartnerSessionID",
-                                                                                     PartnerSession_Id.Parse),
+                                         ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "CPOPartnerSessionID",
+                                                                                     CPOPartnerSession_Id.Parse),
+
+                                         ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "EMPPartnerSessionID",
+                                                                                     EMPPartnerSession_Id.Parse),
 
                                          ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ChargingStart",
                                                                                      DateTime.Parse),
@@ -514,30 +529,34 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var XML = new XElement(XName ?? OICPNS.Authorization + "eRoamingChargeDetailRecord",
 
-                          new XElement(OICPNS.Authorization + "SessionID",               SessionId.       ToString()),
+                          new XElement(OICPNS.Authorization + "SessionID",                  SessionId.          ToString()),
 
-                          PartnerSessionId.HasValue
-                              ? new XElement(OICPNS.Authorization + "PartnerSessionID",  PartnerSessionId.ToString())
+                          CPOPartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                              : null,
+
+                          EMPPartnerSessionId.HasValue
+                              ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
                               : null,
 
                           PartnerProductId.HasValue
-                              ? new XElement(OICPNS.Authorization + "PartnerProductID",  PartnerProductId.ToString())
+                              ? new XElement(OICPNS.Authorization + "PartnerProductID",     PartnerProductId.   ToString())
                               : null,
 
-                          new XElement(OICPNS.Authorization + "EvseID",                  EVSEId.          ToString()),
+                          new XElement(OICPNS.Authorization + "EvseID",                     EVSEId.             ToString()),
 
                           Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
 
                           ChargingStart.HasValue
-                              ? new XElement(OICPNS.Authorization + "ChargingStart",     ChargingStart.Value.ToIso8601())
+                              ? new XElement(OICPNS.Authorization + "ChargingStart",        ChargingStart.Value.ToIso8601())
                               : null,
 
                           ChargingEnd.HasValue
-                              ? new XElement(OICPNS.Authorization + "ChargingEnd",       ChargingEnd.  Value.ToIso8601())
+                              ? new XElement(OICPNS.Authorization + "ChargingEnd",          ChargingEnd.  Value.ToIso8601())
                               : null,
 
-                          new XElement(OICPNS.Authorization + "SessionStart", SessionStart.ToIso8601()),
-                          new XElement(OICPNS.Authorization + "SessionEnd",   SessionEnd.  ToIso8601()),
+                          new XElement(OICPNS.Authorization + "SessionStart",               SessionStart.       ToIso8601()),
+                          new XElement(OICPNS.Authorization + "SessionEnd",                 SessionEnd.         ToIso8601()),
 
                           MeterValueStart.HasValue
                               ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", "."))
@@ -750,11 +769,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            var OICPChargeDetailRecord = Object as ChargeDetailRecord;
-            if ((Object) OICPChargeDetailRecord == null)
+            if (!(Object is ChargeDetailRecord ChargeDetailRecord))
                 return false;
 
-            return this.Equals(OICPChargeDetailRecord);
+            return Equals(ChargeDetailRecord);
 
         }
 
@@ -770,7 +788,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Boolean Equals(ChargeDetailRecord ChargeDetailRecord)
         {
 
-            if ((Object) ChargeDetailRecord == null)
+            if (ChargeDetailRecord is null)
                 return false;
 
             return SessionId.Equals(ChargeDetailRecord.SessionId);
@@ -829,7 +847,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            SessionEnd,
                            Identification,
                            PartnerProductId,
-                           PartnerSessionId,
+                           CPOPartnerSessionId,
+                           EMPPartnerSessionId,
                            ChargingStart,
                            ChargingEnd,
                            MeterValueStart,
@@ -881,7 +900,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// An identification.
             /// </summary>
             [Optional]
-            public Identification  Identification          { get; set; }
+            public Identification               Identification          { get; set; }
 
             /// <summary>
             /// An unqiue identification for the consumed charging product.
@@ -890,10 +909,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             public PartnerProduct_Id?           PartnerProductId        { get; set; }
 
             /// <summary>
-            /// An optional partner session identification.
+            /// An optional CPO partner session identification.
             /// </summary>
             [Optional]
-            public PartnerSession_Id?           PartnerSessionId        { get; set; }
+            public CPOPartnerSession_Id?        CPOPartnerSessionId     { get; set; }
+
+            /// <summary>
+            /// An optional EMP partner session identification.
+            /// </summary>
+            [Optional]
+            public EMPPartnerSession_Id?        EMPPartnerSessionId     { get; set; }
 
             /// <summary>
             /// An optional charging start timestamp.
@@ -962,7 +987,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <param name="SessionEnd">The timestamp of the session end.</param>
             /// <param name="Identification">An identification.</param>
             /// <param name="PartnerProductId">An unqiue identification for the consumed charging product.</param>
-            /// <param name="PartnerSessionId">An optional partner session identification.</param>
+            /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
+            /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
             /// <param name="ChargingStart">An optional charging start timestamp.</param>
             /// <param name="ChargingEnd">An optional charging end timestamp.</param>
             /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
@@ -979,7 +1005,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            DateTime                     SessionEnd,
                            Identification               Identification,
                            PartnerProduct_Id?           PartnerProductId       = null,
-                           PartnerSession_Id?           PartnerSessionId       = null,
+                           CPOPartnerSession_Id?        CPOPartnerSessionId    = null,
+                           EMPPartnerSession_Id?        EMPPartnerSessionId    = null,
                            DateTime?                    ChargingStart          = null,
                            DateTime?                    ChargingEnd            = null,
                            Decimal?                     MeterValueStart        = null,  // xx.yyy
@@ -996,20 +1023,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             {
 
-                #region Initial checks
-
-                if (Identification == null)
-                    throw new ArgumentNullException(nameof(Identification),  "The given identification must not be null!");
-
-                #endregion
-
                 this.EVSEId                = EVSEId;
                 this.SessionId             = SessionId;
                 this.SessionStart          = SessionStart;
                 this.SessionEnd            = SessionEnd;
-                this.Identification        = Identification;
+                this.Identification        = Identification ?? throw new ArgumentNullException(nameof(Identification),  "The given identification must not be null!");
                 this.PartnerProductId      = PartnerProductId;
-                this.PartnerSessionId      = PartnerSessionId;
+                this.CPOPartnerSessionId   = CPOPartnerSessionId;
+                this.EMPPartnerSessionId   = EMPPartnerSessionId;
                 this.ChargingStart         = ChargingStart;
                 this.ChargingEnd           = ChargingEnd;
                 this.MeterValueStart       = MeterValueStart;
@@ -1038,7 +1059,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                           SessionEnd,
                                           Identification,
                                           PartnerProductId,
-                                          PartnerSessionId,
+                                          CPOPartnerSessionId,
+                                          EMPPartnerSessionId,
                                           ChargingStart,
                                           ChargingEnd,
                                           MeterValueStart,

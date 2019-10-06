@@ -171,7 +171,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           EVSE_Id                                                   EVSEId,
                                                                           Identification                                            Identification,
                                                                           Session_Id?                                               SessionId,
-                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          CPOPartnerSession_Id?                                     CPOPartnerSessionId,
+                                                                          EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           PartnerProduct_Id?                                        PartnerProductId,
                                                                           TimeSpan                                                  RequestTimeout);
 
@@ -186,7 +187,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           EVSE_Id                                                   EVSEId,
                                                                           Identification                                            Identification,
                                                                           Session_Id?                                               SessionId,
-                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          CPOPartnerSession_Id?                                     CPOPartnerSessionId,
+                                                                          EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           PartnerProduct_Id?                                        PartnerProductId,
                                                                           TimeSpan                                                  RequestTimeout,
                                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>   Result,
@@ -204,7 +206,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           Session_Id                                                SessionId,
                                                                           Provider_Id                                               ProviderId,
                                                                           EVSE_Id                                                   EVSEId,
-                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          CPOPartnerSession_Id?                                     CPOPartnerSessionId,
+                                                                          EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           TimeSpan                                                  RequestTimeout);
 
     /// <summary>
@@ -217,7 +220,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           Session_Id                                                SessionId,
                                                                           Provider_Id                                               ProviderId,
                                                                           EVSE_Id                                                   EVSEId,
-                                                                          PartnerSession_Id?                                        PartnerSessionId,
+                                                                          CPOPartnerSession_Id?                                     CPOPartnerSessionId,
+                                                                          EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           TimeSpan                                                  RequestTimeout,
                                                                           Acknowledgement<AuthorizeRemoteReservationStopRequest>    Result,
                                                                           TimeSpan                                                  Duration);
@@ -238,7 +242,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                EVSE_Id                                        EVSEId,
                                                                EVCO_Id                                        EVCOId,
                                                                Session_Id?                                    SessionId,
-                                                               PartnerSession_Id?                             PartnerSessionId,
+                                                               CPOPartnerSession_Id?                          CPOPartnerSessionId,
+                                                               EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                PartnerProduct_Id?                             PartnerProductId,
                                                                TimeSpan                                       RequestTimeout);
 
@@ -253,7 +258,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                EVSE_Id                                        EVSEId,
                                                                EVCO_Id                                        EVCOId,
                                                                Session_Id?                                    SessionId,
-                                                               PartnerSession_Id?                             PartnerSessionId,
+                                                               CPOPartnerSession_Id?                          CPOPartnerSessionId,
+                                                               EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                PartnerProduct_Id?                             PartnerProductId,
                                                                TimeSpan                                       RequestTimeout,
                                                                Acknowledgement<AuthorizeRemoteStartRequest>   Result,
@@ -271,7 +277,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                Session_Id                                     SessionId,
                                                                Provider_Id                                    ProviderId,
                                                                EVSE_Id                                        EVSEId,
-                                                               PartnerSession_Id?                             PartnerSessionId,
+                                                               CPOPartnerSession_Id?                          CPOPartnerSessionId,
+                                                               EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                TimeSpan                                       RequestTimeout);
 
     /// <summary>
@@ -284,7 +291,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                Session_Id                                     SessionId,
                                                                Provider_Id                                    ProviderId,
                                                                EVSE_Id                                        EVSEId,
-                                                               PartnerSession_Id?                             PartnerSessionId,
+                                                               CPOPartnerSession_Id?                          CPOPartnerSessionId,
+                                                               EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                TimeSpan                                       RequestTimeout,
                                                                Acknowledgement<AuthorizeRemoteStopRequest>    Result,
                                                                TimeSpan                                       Duration);
