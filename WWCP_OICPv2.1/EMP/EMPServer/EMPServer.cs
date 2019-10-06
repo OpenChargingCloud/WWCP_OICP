@@ -326,118 +326,130 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                     e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
                 }
 
-                #endregion
+                                                #endregion
 
-
-                if (CPO.AuthorizeStartRequest.TryParse(AuthorizeStartXML,
-                                                       out AuthorizeStartRequest,
-                                                       CustomAuthorizeStartRequestParser,
-                                                       CustomIdentificationParser,
-                                                       OnException,
-
-                                                       HTTPRequest.Timestamp,
-                                                       HTTPRequest.CancellationToken,
-                                                       HTTPRequest.EventTrackingId,
-                                                       HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeStartRequest event
+                    if (CPO.AuthorizeStartRequest.TryParse(AuthorizeStartXML,
+                                                           out AuthorizeStartRequest,
+                                                           CustomAuthorizeStartRequestParser,
+                                                           CustomIdentificationParser,
+                                                           OnException,
 
-                    try
+                                                           HTTPRequest.Timestamp,
+                                                           HTTPRequest.CancellationToken,
+                                                           HTTPRequest.EventTrackingId,
+                                                           HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeStartRequest != null)
-                            await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
-                                               Cast<OnAuthorizeStartRequestDelegate>().
-                                               Select(e => e(StartTime,
-                                                              AuthorizeStartRequest.Timestamp.Value,
-                                                              this,
-                                                              ServiceId,
-                                                              AuthorizeStartRequest.EventTrackingId,
-                                                              AuthorizeStartRequest.OperatorId,
-                                                              AuthorizeStartRequest.Identification,
-                                                              AuthorizeStartRequest.EVSEId,
-                                                              AuthorizeStartRequest.SessionId,
-                                                              AuthorizeStartRequest.PartnerProductId,
-                                                              AuthorizeStartRequest.PartnerSessionId,
-                                                              AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeStartRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeStartRequest != null)
+                                await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeStartRequestDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                  AuthorizeStartRequest.Timestamp.Value,
+                                                                  this,
+                                                                  ServiceId,
+                                                                  AuthorizeStartRequest.EventTrackingId,
+                                                                  AuthorizeStartRequest.OperatorId,
+                                                                  AuthorizeStartRequest.Identification,
+                                                                  AuthorizeStartRequest.EVSEId,
+                                                                  AuthorizeStartRequest.SessionId,
+                                                                  AuthorizeStartRequest.PartnerProductId,
+                                                                  AuthorizeStartRequest.PartnerSessionId,
+                                                                  AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeStart != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeStart.GetInvocationList().
+                                                                 Cast<OnAuthorizeStartDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeStartRequest))).
+                                                                 ConfigureAwait(false);
+
+                            AuthorizationStart = results.FirstOrDefault();
+
+                        }
+
+                        if (AuthorizationStart == null)
+                            AuthorizationStart = CPO.AuthorizationStart.SystemError(
+                                                                            AuthorizeStartRequest,
+                                                                            "Could not process the incoming AuthorizationStart request!",
+                                                                            null,
+                                                                            AuthorizeStartRequest.SessionId,
+                                                                            AuthorizeStartRequest.PartnerSessionId
+                                                                        );
+
+                        #endregion
+
+                        #region Send OnAuthorizeStartResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeStartResponse != null)
+                                await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeStartResponseDelegate>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeStartRequest.EventTrackingId,
+                                                                 AuthorizeStartRequest.OperatorId,
+                                                                 AuthorizeStartRequest.Identification,
+                                                                 AuthorizeStartRequest.EVSEId,
+                                                                 AuthorizeStartRequest.SessionId,
+                                                                 AuthorizeStartRequest.PartnerProductId,
+                                                                 AuthorizeStartRequest.PartnerSessionId,
+                                                                 AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 AuthorizationStart,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeStart != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeStart.GetInvocationList().
-                                                             Cast<OnAuthorizeStartDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeStartRequest))).
-                                                             ConfigureAwait(false);
-
-                        AuthorizationStart = results.FirstOrDefault();
-
-                    }
-
-                    if (AuthorizationStart == null)
-                        AuthorizationStart = CPO.AuthorizationStart.SystemError(
-                                                                        AuthorizeStartRequest,
-                                                                        "Could not process the incoming AuthorizationStart request!",
-                                                                        null,
-                                                                        AuthorizeStartRequest.SessionId,
-                                                                        AuthorizeStartRequest.PartnerSessionId
-                                                                    );
-
-                    #endregion
-
-                    #region Send OnAuthorizeStartResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeStartResponse != null)
-                            await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
-                                               Cast<OnAuthorizeStartResponseDelegate>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeStartRequest.EventTrackingId,
-                                                             AuthorizeStartRequest.OperatorId,
-                                                             AuthorizeStartRequest.Identification,
-                                                             AuthorizeStartRequest.EVSEId,
-                                                             AuthorizeStartRequest.SessionId,
-                                                             AuthorizeStartRequest.PartnerProductId,
-                                                             AuthorizeStartRequest.PartnerSessionId,
-                                                             AuthorizeStartRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             AuthorizationStart,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartResponse));
-                    }
-
-                    #endregion
+                    else
+                        AuthorizationStart = CPO.AuthorizationStart.DataError(
+                                                 AuthorizeStartRequest,
+                                                 "Could not process the incoming AuthorizeStart request!"
+                                             );
 
                 }
-
-                else
+                catch (Exception e)
+                {
                     AuthorizationStart = CPO.AuthorizationStart.DataError(
-                                             AuthorizeStartRequest,
-                                             "Could not process the incoming AuthorizeStart request!"
-                                         );
+                        AuthorizeStartRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAP response
@@ -517,113 +529,126 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                 #endregion
 
 
-                if (CPO.AuthorizeStopRequest.TryParse(AuthorizeStopXML,
-                                                      out AuthorizeStopRequest,
-                                                      CustomAuthorizeStopRequestParser,
-                                                      CustomIdentificationParser,
-                                                      OnException,
-
-                                                      HTTPRequest.Timestamp,
-                                                      HTTPRequest.CancellationToken,
-                                                      HTTPRequest.EventTrackingId,
-                                                      HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnAuthorizeStopRequest event
+                    if (CPO.AuthorizeStopRequest.TryParse(AuthorizeStopXML,
+                                                          out AuthorizeStopRequest,
+                                                          CustomAuthorizeStopRequestParser,
+                                                          CustomIdentificationParser,
+                                                          OnException,
 
-                    try
+                                                          HTTPRequest.Timestamp,
+                                                          HTTPRequest.CancellationToken,
+                                                          HTTPRequest.EventTrackingId,
+                                                          HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnAuthorizeStopRequest != null)
-                            await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
-                                               Cast<OnAuthorizeStopRequestHandler>().
-                                               Select(e => e(StartTime,
-                                                             AuthorizeStopRequest.Timestamp.Value,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeStopRequest.EventTrackingId,
-                                                             AuthorizeStopRequest.SessionId,
-                                                             AuthorizeStopRequest.PartnerSessionId,
-                                                             AuthorizeStopRequest.OperatorId,
-                                                             AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.Identification,
-                                                             AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnAuthorizeStopRequest event
+
+                        try
+                        {
+
+                            if (OnAuthorizeStopRequest != null)
+                                await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                                   Cast<OnAuthorizeStopRequestHandler>().
+                                                   Select(e => e(StartTime,
+                                                                 AuthorizeStopRequest.Timestamp.Value,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeStopRequest.EventTrackingId,
+                                                                 AuthorizeStopRequest.SessionId,
+                                                                 AuthorizeStopRequest.PartnerSessionId,
+                                                                 AuthorizeStopRequest.OperatorId,
+                                                                 AuthorizeStopRequest.EVSEId,
+                                                                 AuthorizeStopRequest.Identification,
+                                                                 AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnAuthorizeStop != null)
+                        {
+
+                            var results = await Task.WhenAll(OnAuthorizeStop.GetInvocationList().
+                                                                 Cast<OnAuthorizeStopDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               AuthorizeStopRequest))).
+                                                                 ConfigureAwait(false);
+
+                            AuthorizationStop = results.FirstOrDefault();
+
+                        }
+
+                        if (AuthorizationStop == null)
+                            AuthorizationStop = CPO.AuthorizationStop.SystemError(
+                                                    null,
+                                                    "Could not process the incoming AuthorizeStop request!",
+                                                    null,
+                                                    AuthorizeStopRequest.SessionId,
+                                                    AuthorizeStopRequest.PartnerSessionId
+                                                );
+
+                        #endregion
+
+                        #region Send OnAuthorizeStopResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnAuthorizeStopResponse != null)
+                                await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                                   Cast<OnAuthorizeStopResponseHandler>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 AuthorizeStopRequest.EventTrackingId,
+                                                                 AuthorizeStopRequest.SessionId,
+                                                                 AuthorizeStopRequest.PartnerSessionId,
+                                                                 AuthorizeStopRequest.OperatorId,
+                                                                 AuthorizeStopRequest.EVSEId,
+                                                                 AuthorizeStopRequest.Identification,
+                                                                 AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 AuthorizationStop,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnAuthorizeStop != null)
-                    {
-
-                        var results = await Task.WhenAll(OnAuthorizeStop.GetInvocationList().
-                                                             Cast<OnAuthorizeStopDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           AuthorizeStopRequest))).
-                                                             ConfigureAwait(false);
-
-                        AuthorizationStop = results.FirstOrDefault();
-
-                    }
-
-                    if (AuthorizationStop == null)
-                        AuthorizationStop = CPO.AuthorizationStop.SystemError(
-                                                null,
-                                                "Could not process the incoming AuthorizeStop request!",
-                                                null,
-                                                AuthorizeStopRequest.SessionId,
-                                                AuthorizeStopRequest.PartnerSessionId
+                    else
+                        AuthorizationStop = CPO.AuthorizationStop.DataError(
+                                                AuthorizeStopRequest,
+                                                "Could not process the incoming AuthorizeStop request!"
                                             );
 
-                    #endregion
-
-                    #region Send OnAuthorizeStopResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnAuthorizeStopResponse != null)
-                            await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
-                                               Cast<OnAuthorizeStopResponseHandler>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             AuthorizeStopRequest.EventTrackingId,
-                                                             AuthorizeStopRequest.SessionId,
-                                                             AuthorizeStopRequest.PartnerSessionId,
-                                                             AuthorizeStopRequest.OperatorId,
-                                                             AuthorizeStopRequest.EVSEId,
-                                                             AuthorizeStopRequest.Identification,
-                                                             AuthorizeStopRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             AuthorizationStop,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopResponse));
-                    }
-
-                    #endregion
-
                 }
-
-                else
+                catch (Exception e)
+                {
                     AuthorizationStop = CPO.AuthorizationStop.DataError(
-                                            AuthorizeStopRequest,
-                                            "Could not process the incoming AuthorizeStop request!"
-                                        );
+                        AuthorizeStopRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAP response
@@ -701,104 +726,116 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
                 #endregion
 
-
-                if (CPO.SendChargeDetailRecordRequest.TryParse(ChargeDetailRecordXML,
-                                                               out SendChargeDetailRecordRequest,
-                                                               CustomChargeDetailRecordParser,
-                                                               CustomIdentificationParser,
-                                                               OnException,
-
-                                                               HTTPRequest.Timestamp,
-                                                               HTTPRequest.CancellationToken,
-                                                               HTTPRequest.EventTrackingId,
-                                                               HTTPRequest.Timeout ?? DefaultRequestTimeout))
+                try
                 {
 
-                    #region Send OnChargeDetailRecordRequest event
+                    if (CPO.SendChargeDetailRecordRequest.TryParse(ChargeDetailRecordXML,
+                                                                   out SendChargeDetailRecordRequest,
+                                                                   CustomChargeDetailRecordParser,
+                                                                   CustomIdentificationParser,
+                                                                   OnException,
 
-                    try
+                                                                   HTTPRequest.Timestamp,
+                                                                   HTTPRequest.CancellationToken,
+                                                                   HTTPRequest.EventTrackingId,
+                                                                   HTTPRequest.Timeout ?? DefaultRequestTimeout))
                     {
 
-                        if (OnChargeDetailRecordRequest != null)
-                            await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
-                                               Cast<OnChargeDetailRecordRequestHandler>().
-                                               Select(e => e(StartTime,
-                                                             SendChargeDetailRecordRequest.Timestamp.Value,
-                                                             this,
-                                                             ServiceId,
-                                                             SendChargeDetailRecordRequest.EventTrackingId,
-                                                             SendChargeDetailRecordRequest.ChargeDetailRecord,
-                                                             SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
-                                               ConfigureAwait(false);
+                        #region Send OnChargeDetailRecordRequest event
+
+                        try
+                        {
+
+                            if (OnChargeDetailRecordRequest != null)
+                                await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
+                                                   Cast<OnChargeDetailRecordRequestHandler>().
+                                                   Select(e => e(StartTime,
+                                                                 SendChargeDetailRecordRequest.Timestamp.Value,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 SendChargeDetailRecordRequest.EventTrackingId,
+                                                                 SendChargeDetailRecordRequest.ChargeDetailRecord,
+                                                                 SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordRequest));
+                        }
+
+                        #endregion
+
+                        #region Call async subscribers
+
+                        if (OnChargeDetailRecord != null)
+                        {
+
+                            var results = await Task.WhenAll(OnChargeDetailRecord.GetInvocationList().
+                                                                 Cast<OnChargeDetailRecordDelegate>().
+                                                                 Select(e => e(DateTime.Now,
+                                                                               this,
+                                                                               SendChargeDetailRecordRequest))).
+                                                                 ConfigureAwait(false);
+
+                            Acknowledgement = results.FirstOrDefault();
+
+                        }
+
+                        if (Acknowledgement == null)
+                            Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
+                                                  null,
+                                                  "Could not process the incoming SendChargeDetailRecordRequest request!",
+                                                  null
+                                              );
+
+                        #endregion
+
+                        #region Send OnChargeDetailRecordResponse event
+
+                        var EndTime = DateTime.Now;
+
+                        try
+                        {
+
+                            if (OnChargeDetailRecordResponse != null)
+                                await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
+                                                   Cast<OnChargeDetailRecordResponseHandler>().
+                                                   Select(e => e(EndTime,
+                                                                 this,
+                                                                 ServiceId,
+                                                                 SendChargeDetailRecordRequest.EventTrackingId,
+                                                                 SendChargeDetailRecordRequest.ChargeDetailRecord,
+                                                                 SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,
+                                                                 Acknowledgement,
+                                                                 EndTime - StartTime))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordResponse));
+                        }
+
+                        #endregion
 
                     }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordRequest));
-                    }
 
-                    #endregion
-
-                    #region Call async subscribers
-
-                    if (OnChargeDetailRecord != null)
-                    {
-
-                        var results = await Task.WhenAll(OnChargeDetailRecord.GetInvocationList().
-                                                             Cast<OnChargeDetailRecordDelegate>().
-                                                             Select(e => e(DateTime.Now,
-                                                                           this,
-                                                                           SendChargeDetailRecordRequest))).
-                                                             ConfigureAwait(false);
-
-                        Acknowledgement = results.FirstOrDefault();
-
-                    }
-
-                    if (Acknowledgement == null)
-                        Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.SystemError(
-                                              null,
-                                              "Could not process the incoming SendChargeDetailRecordRequest request!",
-                                              null
+                    else
+                        Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
+                                              SendChargeDetailRecordRequest,
+                                              "Could not process the incoming SendChargeDetailRecord request!"
                                           );
 
-                    #endregion
-
-                    #region Send OnChargeDetailRecordResponse event
-
-                    var EndTime = DateTime.Now;
-
-                    try
-                    {
-
-                        if (OnChargeDetailRecordResponse != null)
-                            await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
-                                               Cast<OnChargeDetailRecordResponseHandler>().
-                                               Select(e => e(EndTime,
-                                                             this,
-                                                             ServiceId,
-                                                             SendChargeDetailRecordRequest.EventTrackingId,
-                                                             SendChargeDetailRecordRequest.ChargeDetailRecord,
-                                                             SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,
-                                                             Acknowledgement,
-                                                             EndTime - StartTime))).
-                                               ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordResponse));
-                    }
-
-                    #endregion
-
                 }
-
-                else
+                catch (Exception e)
+                {
                     Acknowledgement = Acknowledgement<CPO.SendChargeDetailRecordRequest>.DataError(
-                                          SendChargeDetailRecordRequest,
-                                          "Could not process the incoming SendChargeDetailRecord request!"
-                                      );
+                        SendChargeDetailRecordRequest,
+                        e.Message,
+                        e.StackTrace
+                    );
+                }
 
 
                 #region Create SOAP response
