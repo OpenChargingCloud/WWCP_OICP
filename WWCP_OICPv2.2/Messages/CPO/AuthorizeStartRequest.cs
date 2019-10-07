@@ -328,7 +328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                                                            e),
                                                                           OnException),
 
-                                     AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
+                                     AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "EvseID",
                                                                           EVSE_Id.Parse),
 
                                      AuthorizeStartXML.MapValueOrNullable(OICPNS.Authorization + "PartnerProductID",

@@ -178,8 +178,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.1"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         // 
         // [...]
         // 
@@ -301,7 +301,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 Identification = new Identification(
 
-                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
+                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RFIDMifareFamilyIdentification",
                                                                             OICPNS.CommonTypes + "UID",
                                                                             UID.Parse),
 
@@ -354,10 +354,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Identification">The parsed identification.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                IdentificationText,
-                                       out Identification                    Identification,
+        public static Boolean TryParse(String                                   IdentificationText,
+                                       out Identification                       Identification,
                                        CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                       OnExceptionDelegate                   OnException                  = null)
+                                       OnExceptionDelegate                      OnException                  = null)
         {
 
             try
@@ -390,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(XName                                     XName                            = null,
+        public XElement ToXML(XName                                        XName                            = null,
                               CustomXMLSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
 
         {

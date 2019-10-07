@@ -31,9 +31,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     {
 
         /// <summary>
-        /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 2.0.
+        /// The namespace for the common types within the Open Intercharge Protocol (OICP) Version 2.1.
         /// </summary>
-        public static readonly XNamespace CommonTypes          = "http://www.hubject.com/b2b/services/commontypes/v2.0";
+        public static readonly XNamespace CommonTypes          = "http://www.hubject.com/b2b/services/commontypes/v2.1";
 
         /// <summary>
         /// The namespace for the EVSE Data within the Open Intercharge Protocol (OICP) Version 2.2.
