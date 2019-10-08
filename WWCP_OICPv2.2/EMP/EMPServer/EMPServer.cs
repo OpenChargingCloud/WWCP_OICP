@@ -700,7 +700,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             #region /Authorization - ChargeDetailRecord
 
-            // curl -v -X POST --data "@Testdata.xml" -H "Content-Type: text/xml" -H "Accept: text/xml" http://127.0.0.1:3114/RNs/PROD/Authorization
+            // curl -v -X POST --data "@../Testdata-UID-01.xml" -H "Content-Type: text/xml" -H "Accept: text/xml" http://127.0.0.1:3114/RNs/PROD/Authorization
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
                                             URIPrefix + AuthorizationURI,
                                             "ChargeDetailRecord",
