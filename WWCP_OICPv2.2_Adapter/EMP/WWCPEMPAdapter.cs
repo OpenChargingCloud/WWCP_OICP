@@ -721,7 +721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                         );
 
                             case AuthStartResultType.NotAuthorized:
-                                if (Request.Identification.RFIDId != null)
+                                if (Request.Identification.RFIDMifareId != null)
                                     return CPO.AuthorizationStart.NotAuthorized(Request,
                                                                                 StatusCodes.RFIDAuthenticationfailed_InvalidUID,
                                                                                 "RFID Authentication failed - Invalid UID!");

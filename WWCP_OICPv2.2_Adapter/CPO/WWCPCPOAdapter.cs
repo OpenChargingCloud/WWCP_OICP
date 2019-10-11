@@ -5074,7 +5074,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                        LocalAuthentication.ToOICP().RFIDId.Value,
+                                                        LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                         null,
                                                         ChargingProduct?.Id.ToOICP(),
                                                         SessionId.          ToOICP(),
@@ -5257,7 +5257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication.ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                          EVSEId.             ToOICP(),
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
@@ -5442,7 +5442,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication.ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                          null,
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
@@ -5625,7 +5625,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           AuthorizeStart(OperatorId.HasValue
                                                             ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                             : DefaultOperatorId,
-                                                         LocalAuthentication.ToOICP().RFIDId.Value,
+                                                         LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                          null,
                                                          ChargingProduct?.Id.ToOICP(),
                                                          SessionId.          ToOICP(),
@@ -5804,7 +5804,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                               SessionId.          ToOICP(),
-                                                              LocalAuthentication.ToOICP().RFIDId.Value,
+                                                              LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                               null,
                                                               null,
                                                               null,
@@ -5982,7 +5982,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                                SessionId.          ToOICP(),
-                                                               LocalAuthentication.ToOICP().RFIDId.Value,
+                                                               LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                                EVSEId.             ToOICP(),
                                                                null,
                                                                null,
@@ -6162,7 +6162,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                                SessionId.          ToOICP(),
-                                                               LocalAuthentication.ToOICP().RFIDId.Value,
+                                                               LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                                null,
                                                                null,
                                                                null,
@@ -6342,7 +6342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                   ? OperatorId.Value.ToOICP(DefaultOperatorIdFormat)
                                                                   : DefaultOperatorId,
                                                                SessionId.          ToOICP(),
-                                                               LocalAuthentication.ToOICP().RFIDId.Value,
+                                                               LocalAuthentication.ToOICP().RFIDMifareId.Value,
                                                                null,
                                                                null,
                                                                null,

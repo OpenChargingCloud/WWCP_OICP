@@ -77,6 +77,7 @@
     <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />
     <Compile Include="DataTypes\Complex\OperatorEVSEStatus.cs" />
     <Compile Include="DataTypes\Complex\ProviderAuthenticationData.cs" />
+    <Compile Include="DataTypes\Complex\RFIDIdentification.cs" />
     <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Complex\StatusCode.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
     <Compile Include="DataTypes\Enums\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\RFIDTypes.cs" />
     <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\GeoCoordinatesResponseFormats.cs" />

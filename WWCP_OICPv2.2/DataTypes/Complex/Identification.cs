@@ -41,6 +41,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Properties
 
         /// <summary>
+        /// A RFID Mifare identification.
+        /// </summary>
+        public UID?                   RFIDMifareId                   { get; }
+
+        /// <summary>
         /// A RFID identification.
         /// </summary>
         public UID?                   RFIDId                         { get; }
@@ -64,7 +69,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #region Constructor(s)
 
-        private Identification(UID?                                 RFIDId                        = null,
+        private Identification(UID?                                 RFIDMifareId                  = null,
+                               UID?                                 RFIDId                        = null,
                                QRCodeIdentification?                QRCodeIdentification          = null,
                                EVCO_Id?                             PlugAndChargeIdentification   = null,
                                EVCO_Id?                             RemoteIdentification          = null,
@@ -74,6 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         {
 
+            this.RFIDMifareId                 = RFIDMifareId;
             this.RFIDId                       = RFIDId;
             this.QRCodeIdentification         = QRCodeIdentification;
             this.PlugAndChargeIdentification  = PlugAndChargeIdentification;
@@ -86,6 +93,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         //ToDo: Implement new RFIDIdentification complex type!
 
+        #region (static) FromUID                        (MifareUID,                   CustomData = null)
+
+        /// <summary>
+        /// Create a new Mifare identification.
+        /// </summary>
+        /// <param name="MifareUID">A Mifare user identification.</param>
+        /// <param name="CustomData">Optional custom data.</param>
+        public static Identification FromUID(UID?                                 MifareUID,
+                                             IReadOnlyDictionary<String, Object>  CustomData  = null)
+
+            => MifareUID.HasValue
+                   ? new Identification(RFIDMifareId:  MifareUID.Value,
+                                        CustomData:    CustomData)
+                   : null;
+
+        #endregion
+
         #region (static) FromRFIDId                     (UID,                         CustomData = null)
 
         /// <summary>
@@ -93,8 +117,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="UID">An user identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromUID(UID?                                 UID,
-                                             IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromRFID(UID?                                 UID,
+                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
 
             => UID.HasValue
                    ? new Identification(RFIDId:      UID.Value,
@@ -186,9 +210,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         //    <Authorization:Identification>
         //       <!--You have a CHOICE of the next 4 items at this level-->
         //
-        //       <CommonTypes:RFIDmifarefamilyIdentification>
+        //       <CommonTypes:RFIDMifarefamilyIdentification>
         //          <CommonTypes:UID>08152305</CommonTypes:UID>
-        //       </CommonTypes:RFIDmifarefamilyIdentification>
+        //       </CommonTypes:RFIDMifarefamilyIdentification>
+        //
+        //       <CommonTypes:RFIDIdentification>
+        //          <CommonTypes:EVCOID>23224235</CommonTypes:EVCOID>
+        //       </CommonTypes:RFIDIdentification>
         //
         //       <CommonTypes:QRCodeIdentification>
         //
@@ -305,6 +333,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                             OICPNS.CommonTypes + "UID",
                                                                             UID.Parse),
 
+                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RFIDIdentification",
+                                                                            OICPNS.CommonTypes + "UID",
+                                                                            UID.Parse),
+
                                      IdentificationXML.MapElement          (OICPNS.CommonTypes + "QRCodeIdentification",
                                                                             OICPv2_2.QRCodeIdentification.Parse,
                                                                             OnException),
@@ -325,7 +357,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                 Identification);
 
                 // Returns 'false' when nothing was found...
-                return Identification.RFIDId.                     HasValue ||
+                return Identification.RFIDMifareId.                     HasValue ||
                        Identification.QRCodeIdentification.       HasValue ||
                        Identification.PlugAndChargeIdentification.HasValue ||
                        Identification.RemoteIdentification.       HasValue;
@@ -397,9 +429,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var XML = new XElement(XName ?? OICPNS.Authorization + "Identification",
 
-                          RFIDId.HasValue
+                          RFIDMifareId.HasValue
                               ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                    new XElement(OICPNS.CommonTypes + "UID",     RFIDId.ToString()))
+                                    new XElement(OICPNS.CommonTypes + "UID",     RFIDMifareId.ToString()))
                               : null,
 
                           QRCodeIdentification.HasValue
@@ -569,8 +601,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) Identification == null)
                 throw new ArgumentNullException(nameof(Identification), "The given identification must not be null!");
 
-            if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
-                return RFIDId.                     Value.CompareTo(Identification.RFIDId.                     Value);
+            if (RFIDMifareId.                     HasValue && Identification.RFIDMifareId.                     HasValue)
+                return RFIDMifareId.                     Value.CompareTo(Identification.RFIDMifareId.                     Value);
 
             if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
                 return QRCodeIdentification.       Value.CompareTo(Identification.QRCodeIdentification.       Value);
@@ -628,8 +660,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) Identification == null)
                 return false;
 
-            if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
-                return RFIDId.                     Value.Equals(Identification.RFIDId.                     Value);
+            if (RFIDMifareId.                     HasValue && Identification.RFIDMifareId.                     HasValue)
+                return RFIDMifareId.                     Value.Equals(Identification.RFIDMifareId.                     Value);
 
             if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
                 return QRCodeIdentification.       Value.Equals(Identification.QRCodeIdentification.       Value);
@@ -658,8 +690,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Int32 GetHashCode()
         {
 
-            if (RFIDId.HasValue)
-                return RFIDId.GetHashCode();
+            if (RFIDMifareId.HasValue)
+                return RFIDMifareId.GetHashCode();
 
             if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.GetHashCode();
@@ -684,8 +716,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override String ToString()
         {
 
-            if (RFIDId.HasValue)
-                return RFIDId.ToString();
+            if (RFIDMifareId.HasValue)
+                return RFIDMifareId.ToString();
 
             if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.ToString();
