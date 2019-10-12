@@ -110,10 +110,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         /// <param name="SendChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static SendChargeDetailRecordRequest Parse(XElement                                     SendChargeDetailRecordXML,
                                                           CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                                          CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                           OnExceptionDelegate                          OnException                      = null,
 
                                                           DateTime?                                    Timestamp                        = null,
@@ -127,6 +135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out SendChargeDetailRecordRequest _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -149,10 +158,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static SendChargeDetailRecordRequest Parse(String                                       SendChargeDetailRecordText,
                                                           CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                                          CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                           OnExceptionDelegate                          OnException                      = null,
 
                                                           DateTime?                                    Timestamp                        = null,
@@ -166,6 +183,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out SendChargeDetailRecordRequest _SendChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -189,11 +207,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="SendChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(XElement                                     SendChargeDetailRecordXML,
                                        out SendChargeDetailRecordRequest            SendChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        OnExceptionDelegate                          OnException                      = null,
 
                                        DateTime?                                    Timestamp                        = null,
@@ -210,6 +236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                              ChargeDetailRecord.Parse(SendChargeDetailRecordXML,
                                                                       CustomChargeDetailRecordParser,
                                                                       CustomIdentificationParser,
+                                                                      CustomRFIDIdentificationParser,
                                                                       OnException),
 
                                              Timestamp,
@@ -243,11 +270,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Boolean TryParse(String                                       SendChargeDetailRecordText,
                                        out SendChargeDetailRecordRequest            SendChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        OnExceptionDelegate                          OnException                      = null,
 
                                        DateTime?                                    Timestamp                        = null,
@@ -264,6 +299,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                              out SendChargeDetailRecord,
                              CustomChargeDetailRecordParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

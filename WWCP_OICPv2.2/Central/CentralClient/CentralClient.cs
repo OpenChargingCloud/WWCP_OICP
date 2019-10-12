@@ -466,6 +466,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public CustomXMLSerializerDelegate<Identification>                                           CustomIdentificationSerializer                            { get; set; }
 
         public CustomXMLParserDelegate<Identification>                                               CustomIdentificationParser                                { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                                           CustomRFIDIdentificationParser                            { get; set; }
 
 
 
@@ -1752,6 +1753,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                                                                                                                                   xml,
                                                                                                                                                                   CustomAuthorizeStartResponseParser,
                                                                                                                                                                   CustomIdentificationParser,
+                                                                                                                                                                  CustomRFIDIdentificationParser,
                                                                                                                                                                   CustomStatusCodeParser,
                                                                                                                                                                   onexception)),
 

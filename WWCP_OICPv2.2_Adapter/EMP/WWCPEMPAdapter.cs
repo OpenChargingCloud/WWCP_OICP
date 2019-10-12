@@ -721,7 +721,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                         );
 
                             case AuthStartResultType.NotAuthorized:
-                                if (Request.Identification.RFIDMifareId != null)
+                                if (Request.Identification.RFIDId != null)
                                     return CPO.AuthorizationStart.NotAuthorized(Request,
                                                                                 StatusCodes.RFIDAuthenticationfailed_InvalidUID,
                                                                                 "RFID Authentication failed - Invalid UID!");
@@ -3166,7 +3166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                         _ChargingPool.Description           = CurrentEVSEDataRecord.AdditionalInfo;
                                                         _ChargingPool.LocationLanguage      = LocationLanguage;
                                                         _ChargingPool.EntranceLocation      = CurrentEVSEDataRecord.GeoChargingPointEntrance;
-                                                        _ChargingPool.OpeningTimes          = CurrentEVSEDataRecord.OpeningTime != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTime) : null;
+                                                        _ChargingPool.OpeningTimes          = CurrentEVSEDataRecord.OpeningTimes != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
                                                         _ChargingPool.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                         _ChargingPool.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                         _ChargingPool.Accessibility         = CurrentEVSEDataRecord.Accessibility.ToWWCP();
@@ -3199,7 +3199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                 pool.GeoLocation                 = CurrentEVSEDataRecord.GeoCoordinate;
                                                                                 pool.LocationLanguage            = LocationLanguage;
                                                                                 pool.EntranceLocation            = CurrentEVSEDataRecord.GeoChargingPointEntrance;
-                                                                                pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTime != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTime) : null;
+                                                                                pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTimes != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
                                                                                 pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.ToEnumeration().SafeSelect(mode   => OICPMapper.AsWWCPAuthenticationMode(mode)));
                                                                                 pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     ToEnumeration().SafeSelect(option => OICPMapper.AsWWCPPaymentOption(option)));
                                                                                 pool.Accessibility               = CurrentEVSEDataRecord.Accessibility.ToWWCP();

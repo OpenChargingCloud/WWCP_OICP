@@ -95,6 +95,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public CustomXMLParserDelegate<CPO.AuthorizeStopRequest>   CustomAuthorizeStopRequestParser    { get; set; }
         public CustomXMLParserDelegate<Identification>             CustomIdentificationParser          { get; set; }
 
+        public CustomXMLParserDelegate<RFIDIdentification>         CustomRFIDIdentificationParser      { get; set; }
+
         public CustomXMLParserDelegate<ChargeDetailRecord>         CustomChargeDetailRecordParser      { get; set; }
 
 
@@ -335,6 +337,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                             out AuthorizeStartRequest,
                                                             CustomAuthorizeStartRequestParser,
                                                             CustomIdentificationParser,
+                                                            CustomRFIDIdentificationParser,
                                                             OnException,
 
                                                             HTTPRequest.Timestamp,
@@ -539,6 +542,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                           out AuthorizeStopRequest,
                                                           CustomAuthorizeStopRequestParser,
                                                           CustomIdentificationParser,
+                                                          CustomRFIDIdentificationParser,
                                                           OnException,
 
                                                           HTTPRequest.Timestamp,
@@ -740,6 +744,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    out SendChargeDetailRecordRequest,
                                                                    CustomChargeDetailRecordParser,
                                                                    CustomIdentificationParser,
+                                                                   CustomRFIDIdentificationParser,
                                                                    OnException,
 
                                                                    HTTPRequest.Timestamp,

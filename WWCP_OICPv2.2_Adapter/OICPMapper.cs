@@ -1389,8 +1389,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static RemoteAuthentication ToWWCP(this Identification Identification)
         {
 
-            if (Identification.RFIDMifareId.HasValue)
-                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDMifareId.ToString()));
+            if (Identification.RFIDId.HasValue)
+                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
 
             if (Identification.QRCodeIdentification.HasValue)
                 return RemoteAuthentication.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),

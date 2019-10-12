@@ -187,6 +187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStopXML">The XML to parse.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -194,8 +195,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeStopRequest Parse(XElement                                       AuthorizeStopXML,
-                                                 CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
                                                  CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
+                                                 CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 CustomXMLParserDelegate<RFIDIdentification>    CustomRFIDIdentificationParser     = null,
                                                  OnExceptionDelegate                            OnException                        = null,
 
                                                  DateTime?                                      Timestamp                          = null,
@@ -208,6 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -231,6 +234,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStopText">The text to parse.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -240,6 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public static AuthorizeStopRequest Parse(String                                         AuthorizeStopText,
                                                  CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                                  CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                                 CustomXMLParserDelegate<RFIDIdentification>    CustomRFIDIdentificationParser     = null,
                                                  OnExceptionDelegate                            OnException                        = null,
 
                                                  DateTime?                                      Timestamp                          = null,
@@ -252,6 +257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizeStopRequest _AuthorizeStop,
                          CustomAuthorizeStopRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -276,6 +282,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStop">The parsed authorize stop request.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -286,6 +293,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizeStopRequest                       AuthorizeStop,
                                        CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>    CustomRFIDIdentificationParser     = null,
                                        OnExceptionDelegate                            OnException                        = null,
 
                                        DateTime?                                      Timestamp                          = null,
@@ -314,6 +322,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                      AuthorizeStopXML.MapElementOrFail  (OICPNS.Authorization + "Identification",
                                                                          (xml, e) => Identification.Parse(xml,
                                                                                                           CustomIdentificationParser,
+                                                                                                          CustomRFIDIdentificationParser,
                                                                                                           e),
                                                                          OnException),
 
@@ -364,6 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStop">The parsed authorize stop request.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to customize the deserialization of AuthorizeStop requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -374,6 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizeStopRequest                       AuthorizeStop,
                                        CustomXMLParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>        CustomIdentificationParser         = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>    CustomRFIDIdentificationParser     = null,
                                        OnExceptionDelegate                            OnException                        = null,
 
                                        DateTime?                                      Timestamp                          = null,
@@ -390,6 +401,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                              out AuthorizeStop,
                              CustomAuthorizeStopRequestParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

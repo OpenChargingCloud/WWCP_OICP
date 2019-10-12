@@ -78,14 +78,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
-            if (EVSEStatusRecords == null)
-                throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
+            if (EVSEStatusRecords == null || !EVSEStatusRecords.Any())
+                throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null or empty!");
+
+            if (OperatorName != null)
+                OperatorName = OperatorName.Trim();
 
             #endregion
 
             this.EVSEStatusRecords  = EVSEStatusRecords;
             this.OperatorId         = OperatorId;
-            this.OperatorName       = OperatorName;
+            this.OperatorName       = OperatorName.SubstringMax(100);
 
         }
 
@@ -95,8 +98,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.1"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         //
         // [...]
         //
@@ -137,12 +140,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(OperatorEVSEStatusXML,
-                         out OperatorEVSEStatus _OperatorEVSEStatus,
+                         out OperatorEVSEStatus operatorEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException))
 
-                return _OperatorEVSEStatus;
+                return operatorEVSEStatus;
 
             return null;
 
@@ -166,12 +169,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(OperatorEVSEStatusText,
-                         out OperatorEVSEStatus _OperatorEVSEStatus,
+                         out OperatorEVSEStatus operatorEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException))
 
-                return _OperatorEVSEStatus;
+                return operatorEVSEStatus;
 
             return null;
 
@@ -208,9 +211,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 OperatorEVSEStatus = new OperatorEVSEStatus(
 
                                          OperatorEVSEStatusXML.MapElements          (OICPNS.EVSEStatus + "EvseStatusRecord",
-                                                                                     (EvseStatusRecordXML, onexception) => EVSEStatusRecord.Parse(EvseStatusRecordXML,
-                                                                                                                                                  CustomEVSEStatusRecordParser,
-                                                                                                                                                  onexception),
+                                                                                     (xml, e) => EVSEStatusRecord.Parse(xml,
+                                                                                                                        CustomEVSEStatusRecordParser,
+                                                                                                                        e),
                                                                                      OnException).
                                                                                      Where(operatorevsestatus => operatorevsestatus != null),
 
@@ -441,12 +444,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var OperatorEVSEStatus = Object as OperatorEVSEStatus;
-            if ((Object) OperatorEVSEStatus == null)
-                throw new ArgumentException("The given object is not an operator EVSE status identification!", nameof(Object));
+            if (!(Object is OperatorEVSEStatus OperatorEVSEStatus))
+                throw new ArgumentException("The given object is not an OperatorEVSEStatus identification!", nameof(Object));
 
             return CompareTo(OperatorEVSEStatus);
 
@@ -464,7 +466,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if ((Object) OperatorEVSEStatus == null)
-                throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given operator EVSE status must not be null!");
+                throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given OperatorEVSEStatus must not be null!");
 
             return OperatorId.CompareTo(OperatorEVSEStatus.OperatorId);
 
@@ -486,11 +488,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var OperatorEVSEStatus = Object as OperatorEVSEStatus;
-            if ((Object) OperatorEVSEStatus == null)
+            if (!(Object is OperatorEVSEStatus OperatorEVSEStatus))
                 return false;
 
             return Equals(OperatorEVSEStatus);
@@ -518,7 +519,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                     (OperatorName   != null && OperatorEVSEStatus.OperatorName   != null && OperatorName.   Equals(OperatorEVSEStatus.OperatorName))) &&
 
                    ((!EVSEStatusRecords.Any() && !OperatorEVSEStatus.EVSEStatusRecords.Any()) ||
-                    (EVSEStatusRecords.Any() && OperatorEVSEStatus.EVSEStatusRecords.Any() && EVSEStatusRecords.Count().Equals(OperatorEVSEStatus.EVSEStatusRecords.Count())));
+                     (EVSEStatusRecords.Any() &&  OperatorEVSEStatus.EVSEStatusRecords.Any() && EVSEStatusRecords.Count().Equals(OperatorEVSEStatus.EVSEStatusRecords.Count())));
 
         }
 

@@ -319,10 +319,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargeDetailRecordXML">The XML to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ChargeDetailRecord Parse(XElement                                     ChargeDetailRecordXML,
                                                CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
@@ -330,6 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                          out ChargeDetailRecord _ChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _ChargeDetailRecord;
@@ -348,10 +351,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ChargeDetailRecord Parse(String                                       ChargeDetailRecordText,
                                                CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                OnExceptionDelegate                          OnException                      = null)
         {
 
@@ -359,6 +364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                          out ChargeDetailRecord _ChargeDetailRecord,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _ChargeDetailRecord;
@@ -378,11 +384,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                     ChargeDetailRecordXML,
                                        out ChargeDetailRecord                       ChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        OnExceptionDelegate                          OnException                      = null)
         {
 
@@ -395,6 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 var Identification = ChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
                                                                             (xml, e) => OICPv2_2.Identification.Parse(xml,
                                                                                                                       CustomIdentificationParser,
+                                                                                                                      CustomRFIDIdentificationParser,
                                                                                                                       e),
                                                                             OnException);
 
@@ -481,11 +490,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                       ChargeDetailRecordText,
                                        out ChargeDetailRecord                       ChargeDetailRecord,
                                        CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        OnExceptionDelegate                          OnException                      = null)
         {
 
@@ -496,6 +507,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                              out ChargeDetailRecord,
                              CustomChargeDetailRecordParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException))
 
                     return true;

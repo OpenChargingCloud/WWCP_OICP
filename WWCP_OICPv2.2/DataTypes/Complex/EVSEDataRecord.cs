@@ -155,7 +155,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// The opening times of this EVSE.
         /// </summary>
-        public String               OpeningTime                 { get; }
+        public String               OpeningTimes                 { get; }
 
         /// <summary>
         /// An optional hub operator of this EVSE.
@@ -205,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
         /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
-        /// <param name="OpeningTime">The opening times of this EVSE.</param>
+        /// <param name="OpeningTimes">The opening times of this EVSE.</param>
         /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
         /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
         /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               I18NString                           AdditionalInfo              = null,
                               GeoCoordinate?                       GeoChargingPointEntrance    = null,
                               Boolean                              IsOpen24Hours               = true,
-                              String                               OpeningTime                 = null,
+                              String                               OpeningTimes                = null,
                               HubOperator_Id?                      HubOperatorId               = null,
                               ClearingHouse_Id?                    ClearingHouseId             = null,
                               Boolean                              IsHubjectCompatible         = true,
@@ -286,7 +286,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.AdditionalInfo             = AdditionalInfo.SubstringMax(200) ?? new I18NString();
             this.GeoChargingPointEntrance   = GeoChargingPointEntrance;
             this.IsOpen24Hours              = IsOpen24Hours;
-            this.OpeningTime                = OpeningTime;
+            this.OpeningTimes               = OpeningTimes;
             this.HubOperatorId              = HubOperatorId;
             this.ClearingHouseId            = ClearingHouseId;
             this.IsHubjectCompatible        = IsHubjectCompatible;
@@ -444,12 +444,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(EVSEDataRecordXML,
-                         out EVSEDataRecord _EVSEDataRecord,
+                         out EVSEDataRecord evseDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
 
-                return _EVSEDataRecord;
+                return evseDataRecord;
 
             return null;
 
@@ -473,12 +473,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(EVSEDataRecordText,
-                         out EVSEDataRecord _EVSEDataRecord,
+                         out EVSEDataRecord evseDataRecord,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
 
-                return _EVSEDataRecord;
+                return evseDataRecord;
 
             return null;
 
@@ -549,41 +549,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 var _AdditionalInfo = new I18NString();
 
-                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "AdditionalInfo",
-                                                          v => _AdditionalInfo.Add(Languages.deu, v));
+                foreach (var infoTextXML in EVSEDataRecordXML.
+                                                Element (OICPNS.EVSEData + "AdditionalInfo").
+                                                Elements(OICPNS.EVSEData + "InfoText"))
+                {
 
-                // EnAdditionalInfo not parsed as OICP v2.0 multi-language string!
-                EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnAdditionalInfo",
-                                                          EnAdditionalInfo => {
+                    var lang = infoTextXML.Attribute("lang").Value?.Trim().ToLower();
 
-                                                              // The section must end with the separator string "|||"
-                                                              // Example: "DEU:Inhalt|||GBR:Content|||FRA:Objet|||"
-                                                              if (EnAdditionalInfo.Contains("|||"))
-                                                              {
+                    if (lang.Length == 2 && Enum.TryParse(lang, out Languages Language))
+                        _AdditionalInfo.Add(Language, infoTextXML.Value);
 
-                                                                  String[]  I18NTokens;
-                                                                  Languages Language;
-                                                                  Char[]    Seperator = new Char[] { ':' };
-
-                                                                  foreach (var CurrentToken in EnAdditionalInfo.Trim().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
-                                                                  {
-
-                                                                      I18NTokens = CurrentToken.Trim().Split(Seperator, 2);
-
-                                                                      if (I18NTokens.Length == 2 && Enum.TryParse(I18NTokens[0].Trim().ToLower(), out Language))
-                                                                          _AdditionalInfo.Add(Language, I18NTokens[1].Trim());
-
-                                                                      else
-                                                                          DebugX.Log("EVSE '" + EVSEId + "': Could not parse 'EnAdditionalInfo' token: " + CurrentToken);
-
-                                                                  }
-
-                                                              }
-
-                                                              else
-                                                                  _AdditionalInfo.Add(Languages.eng, EnAdditionalInfo);
-
-                                                          });
+                }
 
                 #endregion
 
@@ -604,19 +580,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                     _ChargingStationName,
 
-                    EVSEDataRecordXML.MapElementOrFail(OICPNS.EVSEData + "Address",
-                                                       (xml, e) => Address.Parse(xml,
-                                                                                 CustomAddressParser,
-                                                                                 e),
-                                                       OnException),
+                    EVSEDataRecordXML.MapElementOrFail  (OICPNS.EVSEData + "Address",
+                                                         (xml, e) => Address.Parse(xml,
+                                                                                   CustomAddressParser,
+                                                                                   e),
+                                                         OnException),
 
                     XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
 
-                    EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "Plugs",
+                    EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
                                                          OICPNS.EVSEData + "Plug",
                                                          XML_IO.AsPlugType).
                                                          Reduce(),
 
+                    //ToDo!!!!!!!!!!!!!!!!!!!!
                     EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
                                                          OICPNS.EVSEData + "ChargingFacility",
                                                          XML_IO.AsChargingFacility,
@@ -664,7 +641,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                     EVSEDataRecordXML.MapValueOrFail(OICPNS.EVSEData + "IsOpen24Hours",
                                                      s => s == "true"),
 
-                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTime"),
+                    //ToDo!!!!!!!!!!!!!!!!!!!!
+                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTimes"),
 
                     EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "HubOperatorID",
                                                          HubOperator_Id.Parse),
@@ -858,8 +836,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           new XElement(OICPNS.EVSEData + "IsOpen24Hours",         IsOpen24Hours ? "true" : "false"),
 
-                          OpeningTime.IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTime)
+                          OpeningTimes.IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTimes)
                               : null,
 
                           HubOperatorId != null
@@ -1135,7 +1113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                    AdditionalInfo,
                    GeoChargingPointEntrance,
                    IsOpen24Hours,
-                   OpeningTime,
+                   OpeningTimes,
                    HubOperatorId,
                    ClearingHouseId,
                    IsHubjectCompatible,

@@ -160,12 +160,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public CustomXMLParserDelegate<EMP.PushAuthenticationDataRequest>                                CustomPushAuthenticationDataRequestParser                  { get; set; }
         public CustomXMLParserDelegate<ProviderAuthenticationData>                                       CustomProviderAuthenticationDataParser                     { get; set; }
         public CustomXMLParserDelegate<Identification>                                                   CustomAuthorizationIdentificationParser                    { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                                               CustomAuthorizationRFIDIdentificationParser                { get; set; }
         public CustomXMLSerializerDelegate<EMP.PushAuthenticationDataRequest>                            CustomPushAuthenticationDataRequestSerializer              { get; set; }
         public CustomXMLSerializerDelegate<Acknowledgement<EMP.PushAuthenticationDataRequest>>           CustomPushAuthenticationDataResponseSerializer             { get; set; }
         public CustomXMLSerializerDelegate<StatusCode>                                                   CustomStatusCodeSerializer                                 { get; set; }
 
         public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStartRequest>                       CustomAuthorizeRemoteReservationStartRequestParser         { get; set; }
         public CustomXMLParserDelegate<Identification>                                                   CustomIdentificationParser                                 { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                                               CustomRFIDIdentificationParser                             { get; set; }
+
         public CustomXMLSerializerDelegate<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>  CustomAuthorizeRemoteReservationStartResponseSerializer    { get; set; }
 
         public CustomXMLParserDelegate<EMP.AuthorizeRemoteReservationStopRequest>                        CustomAuthorizeRemoteReservationStopRequestParser          { get; set; }
@@ -1445,6 +1448,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                                CustomPushAuthenticationDataRequestParser,
                                                                CustomProviderAuthenticationDataParser,
                                                                CustomAuthorizationIdentificationParser,
+                                                               CustomAuthorizationRFIDIdentificationParser,
                                                                OnException,
 
                                                                HTTPRequest.Timestamp,
@@ -1620,6 +1624,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                                         out AuthorizeRemoteReservationStartRequest,
                                                                         CustomAuthorizeRemoteReservationStartRequestParser,
                                                                         CustomIdentificationParser,
+                                                                        CustomRFIDIdentificationParser,
                                                                         OnException,
 
                                                                         HTTPRequest.Timestamp,
@@ -1983,6 +1988,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                              out AuthorizeRemoteStartRequest,
                                                              CustomAuthorizeRemoteStartRequestParser,
                                                              CustomIdentificationParser,
+                                                             CustomRFIDIdentificationParser,
                                                              OnException,
 
                                                              HTTPRequest.Timestamp,
@@ -2876,6 +2882,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                        out AuthorizeStartRequest,
                                                        CustomAuthorizeStartRequestParser,
                                                        CustomIdentificationParser,
+                                                       CustomRFIDIdentificationParser,
                                                        OnException,
 
                                                        HTTPRequest.Timestamp,
@@ -3061,6 +3068,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                       out AuthorizeStopRequest,
                                                       CustomAuthorizeStopRequestParser,
                                                       CustomIdentificationParser,
+                                                      CustomRFIDIdentificationParser,
                                                       OnException,
 
                                                       HTTPRequest.Timestamp,
@@ -3243,6 +3251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                                out SendChargeDetailRecordRequest,
                                                                CustomChargeDetailRecordParser,
                                                                CustomIdentificationParser,
+                                                               CustomRFIDIdentificationParser,
                                                                OnException,
 
                                                                HTTPRequest.Timestamp,

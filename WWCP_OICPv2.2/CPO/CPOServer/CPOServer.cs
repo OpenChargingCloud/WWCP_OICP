@@ -108,6 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public CustomXMLParserDelegate<EMP.AuthorizeRemoteStopRequest>                                   CustomAuthorizeRemoteStopRequestParser                           { get; set; }
 
         public CustomXMLParserDelegate<Identification>                                                   CustomIdentificationParser                                       { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                                               CustomRFIDIdentificationParser                                   { get; set; }
 
         public OnExceptionDelegate                                                                       OnException                                                      { get; set; }
 
@@ -438,6 +439,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                             out AuthorizeRemoteReservationStartRequest,
                                                                             CustomAuthorizeRemoteReservationStartRequestParser,
                                                                             CustomIdentificationParser,
+                                                                            CustomRFIDIdentificationParser,
                                                                             OnException,
 
                                                                             HTTPRequest.Timestamp,
@@ -843,6 +845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                  out AuthorizeRemoteStartRequest,
                                                                  CustomAuthorizeRemoteStartRequestParser,
                                                                  CustomIdentificationParser,
+                                                                 CustomRFIDIdentificationParser,
                                                                  OnException,
 
                                                                  HTTPRequest.Timestamp,

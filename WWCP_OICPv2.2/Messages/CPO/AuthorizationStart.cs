@@ -590,12 +590,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStartXML">The XML to parse.</param>
         /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizationStart Parse(AuthorizeStartRequest                        Request,
                                                XElement                                     AuthorizationStartXML,
                                                CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
                                                OnExceptionDelegate                          OnException                      = null)
         {
@@ -605,6 +607,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizationStart _AuthorizationStart,
                          CustomAuthorizationStartParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          CustomStatusCodeParser,
                          OnException))
 
@@ -625,12 +628,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStartText">The text to parse.</param>
         /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static AuthorizationStart Parse(AuthorizeStartRequest                        Request,
                                                String                                       AuthorizationStartText,
                                                CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
                                                CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                                CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
                                                OnExceptionDelegate                          OnException                      = null)
         {
@@ -640,6 +645,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizationStart _AuthorizationStart,
                          CustomAuthorizationStartParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          CustomStatusCodeParser,
                          OnException))
 
@@ -661,6 +667,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStart">The parsed AuthorizationStart request.</param>
         /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(AuthorizeStartRequest                        Request,
@@ -668,6 +675,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizationStart                       AuthorizationStart,
                                        CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
                                        OnExceptionDelegate                          OnException                      = null)
         {
@@ -709,6 +717,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                          AuthorizationStartXML.MapElements       (OICPNS.Authorization + "AuthorizationStopIdentifications",
                                                                                   (XML, e) => Identification.Parse(XML,
                                                                                                                    CustomIdentificationParser,
+                                                                                                                   CustomRFIDIdentificationParser,
                                                                                                                    e),
                                                                                   OnException)
 
@@ -746,6 +755,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizationStart">The parsed EVSE statuses request.</param>
         /// <param name="CustomAuthorizationStartParser">A delegate to parse custom AuthorizationStart XML elements.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(AuthorizeStartRequest                        Request,
@@ -753,6 +763,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizationStart                       AuthorizationStart,
                                        CustomXMLParserDelegate<AuthorizationStart>  CustomAuthorizationStartParser   = null,
                                        CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
                                        CustomXMLParserDelegate<StatusCode>          CustomStatusCodeParser           = null,
                                        OnExceptionDelegate                          OnException                      = null)
         {
@@ -765,6 +776,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                              out AuthorizationStart,
                              CustomAuthorizationStartParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              CustomStatusCodeParser,
                              OnException))
 

@@ -449,13 +449,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            if (!(Object is QRCodeIdentification))
+            if (!(Object is QRCodeIdentification QRCodeIdentification))
                 throw new ArgumentException("The given object is not an QR code identification with (hashed) pin!", nameof(Object));
 
-            return CompareTo((QRCodeIdentification) Object);
+            return CompareTo(QRCodeIdentification);
 
         }
 
@@ -474,18 +474,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 throw new ArgumentNullException(nameof(QRCodeIdentification),  "The given QR code identification with (hashed) pin must not be null!");
 
             var result = EVCOId.CompareTo(QRCodeIdentification.EVCOId);
-            if (result != 0)
-                return result;
 
-            result = String.Compare(PIN, QRCodeIdentification.PIN, StringComparison.Ordinal);
-            if (result != 0)
-                return result;
+            if (result == 0)
+                result = String.Compare(PIN, QRCodeIdentification.PIN, StringComparison.OrdinalIgnoreCase);
 
-            result = Function.CompareTo(QRCodeIdentification.Function);
-            if (result != 0)
-                return result;
+            if (result == 0)
+                result = Function.CompareTo(QRCodeIdentification.Function);
 
-            return String.Compare(Salt, QRCodeIdentification.Salt, StringComparison.Ordinal);
+            if (result == 0)
+                result = String.Compare(Salt, QRCodeIdentification.Salt, StringComparison.OrdinalIgnoreCase);
+
+            return result;
 
         }
 
@@ -505,13 +504,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            if (!(Object is QRCodeIdentification))
+            if (!(Object is QRCodeIdentification QRCodeIdentification))
                 return false;
 
-            return Equals((QRCodeIdentification) Object);
+            return Equals(QRCodeIdentification);
 
         }
 

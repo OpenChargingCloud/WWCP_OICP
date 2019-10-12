@@ -204,6 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStartXML">The XML to parse.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -215,6 +216,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             Parse(XElement                                                         AuthorizeRemoteReservationStartXML,
                   CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
                   CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                  CustomXMLParserDelegate<RFIDIdentification>                      CustomRFIDIdentificationParser                       = null,
                   OnExceptionDelegate                                              OnException                                          = null,
 
                   DateTime?                                                        Timestamp                                            = null,
@@ -228,6 +230,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart,
                          CustomAuthorizeRemoteReservationStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -251,6 +254,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStartText">The text to parse.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -262,6 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             Parse(String                                                           AuthorizeRemoteReservationStartText,
                   CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
                   CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                  CustomXMLParserDelegate<RFIDIdentification>                      CustomRFIDIdentificationParser                       = null,
                   OnExceptionDelegate                                              OnException                                          = null,
 
                   DateTime?                                                        Timestamp                                            = null,
@@ -275,6 +280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out AuthorizeRemoteReservationStartRequest _AuthorizeRemoteReservationStart,
                          CustomAuthorizeRemoteReservationStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -299,6 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -309,6 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        out AuthorizeRemoteReservationStartRequest                       AuthorizeRemoteReservationStart,
                                        CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>                      CustomRFIDIdentificationParser                       = null,
                                        OnExceptionDelegate                                              OnException                                          = null,
 
                                        DateTime?                                                        Timestamp                                            = null,
@@ -337,6 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                       AuthorizeRemoteReservationStartXML.MapElementOrFail  (OICPNS.Reservation + "Identification",
                                                                                                             (xml, e) => Identification.Parse(xml,
                                                                                                                                              CustomIdentificationParser,
+                                                                                                                                             CustomRFIDIdentificationParser,
                                                                                                                                              e),
                                                                                                             OnException),
 
@@ -393,6 +402,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -403,6 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        out AuthorizeRemoteReservationStartRequest                       AuthorizeRemoteReservationStart,
                                        CustomXMLParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>                          CustomIdentificationParser                           = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>                      CustomRFIDIdentificationParser                       = null,
                                        OnExceptionDelegate                                              OnException                                          = null,
 
                                        DateTime?                                                        Timestamp                                            = null,
@@ -419,6 +430,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                              out AuthorizeRemoteReservationStart,
                              CustomAuthorizeRemoteReservationStartRequestParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

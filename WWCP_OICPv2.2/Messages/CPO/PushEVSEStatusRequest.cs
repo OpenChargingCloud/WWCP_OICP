@@ -96,14 +96,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            #region Initial checks
-
-            if (OperatorEVSEStatus == null)
-                throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given OperatorEVSEStatus must not be null!");
-
-            #endregion
-
-            this.OperatorEVSEStatus  = OperatorEVSEStatus;
+            this.OperatorEVSEStatus  = OperatorEVSEStatus ?? throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given OperatorEVSEStatus must not be null!");
             this.Action              = Action;
 
         }
@@ -114,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/v2.0">
+        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/v2.1">
         // 
         //    <soapenv:Header/>
         // 
@@ -160,19 +153,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static PushEVSEStatusRequest Parse(XElement                                     PushEVSEStatusXML,
-                                                  CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                                  CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                                  OnExceptionDelegate                          OnException                     = null,
+                                                  CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                                  CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                                  OnExceptionDelegate                          OnException                      = null,
 
-                                                  DateTime?                                    Timestamp                       = null,
-                                                  CancellationToken?                           CancellationToken               = null,
-                                                  EventTracking_Id                             EventTrackingId                 = null,
-                                                  TimeSpan?                                    RequestTimeout                  = null)
+                                                  DateTime?                                    Timestamp                        = null,
+                                                  CancellationToken?                           CancellationToken                = null,
+                                                  EventTracking_Id                             EventTrackingId                  = null,
+                                                  TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
             if (TryParse(PushEVSEStatusXML,
-                         out PushEVSEStatusRequest _PushEVSEStatus,
+                         out PushEVSEStatusRequest pushEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException,
@@ -182,7 +175,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          EventTrackingId,
                          RequestTimeout))
 
-                return _PushEVSEStatus;
+                return pushEVSEStatus;
 
             return null;
 
@@ -205,19 +198,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static PushEVSEStatusRequest Parse(String                                       PushEVSEStatusText,
-                                                  CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser  = null,
-                                                  CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser    = null,
-                                                  OnExceptionDelegate                          OnException                     = null,
+                                                  CustomXMLParserDelegate<OperatorEVSEStatus>  CustomOperatorEVSEStatusParser   = null,
+                                                  CustomXMLParserDelegate<EVSEStatusRecord>    CustomEVSEStatusRecordParser     = null,
+                                                  OnExceptionDelegate                          OnException                      = null,
 
-                                                  DateTime?                                    Timestamp                       = null,
-                                                  CancellationToken?                           CancellationToken               = null,
-                                                  EventTracking_Id                             EventTrackingId                 = null,
-                                                  TimeSpan?                                    RequestTimeout                  = null)
+                                                  DateTime?                                    Timestamp                        = null,
+                                                  CancellationToken?                           CancellationToken                = null,
+                                                  EventTracking_Id                             EventTrackingId                  = null,
+                                                  TimeSpan?                                    RequestTimeout                   = null)
 
         {
 
             if (TryParse(PushEVSEStatusText,
-                         out PushEVSEStatusRequest _PushEVSEStatus,
+                         out PushEVSEStatusRequest pushEVSEStatus,
                          CustomOperatorEVSEStatusParser,
                          CustomEVSEStatusRecordParser,
                          OnException,
@@ -227,7 +220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          EventTrackingId,
                          RequestTimeout))
 
-                return _PushEVSEStatus;
+                return pushEVSEStatus;
 
             return null;
 
@@ -456,14 +449,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var PushEVSEStatus = Object as PushEVSEStatusRequest;
-            if ((Object) PushEVSEStatus == null)
+            if (!(Object is PushEVSEStatusRequest PushEVSEStatusRequest))
                 return false;
 
-            return this.Equals(PushEVSEStatus);
+            return Equals(PushEVSEStatusRequest);
 
         }
 
@@ -533,7 +525,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                              " (", OperatorName != null ? OperatorName : "", " / ", OperatorName, ")");
 
         #endregion
-
 
     }
 

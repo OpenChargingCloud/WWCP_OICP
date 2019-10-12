@@ -433,6 +433,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public CustomXMLParserDelegate<AuthenticationData>                 CustomAuthenticationDataParser                   { get; set; }
         public CustomXMLParserDelegate<ProviderAuthenticationData>         CustomProviderAuthenticationDataParser           { get; set; }
         public CustomXMLParserDelegate<Identification>                     CustomAuthorizationIdentificationParser          { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                 CustomAuthorizationRFIDIdentificationParser      { get; set; }
 
         public CustomXMLSerializerDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestSerializer            { get; set; }
         public CustomXMLSerializerDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestSerializer             { get; set; }
@@ -442,6 +443,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
 
         public CustomXMLParserDelegate<Identification>                     CustomIdentificationParser                       { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                 CustomRFIDIdentificationParser                   { get; set; }
         public CustomXMLParserDelegate<StatusCode>                         CustomStatusCodeParser                           { get; set; }
 
         #endregion
@@ -1353,6 +1355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                                                                                                                   xml,
                                                                                                                                                                   CustomAuthorizationStartParser,
                                                                                                                                                                   CustomIdentificationParser,
+                                                                                                                                                                  CustomRFIDIdentificationParser,
                                                                                                                                                                   CustomStatusCodeParser,
                                                                                                                                                                   onexception)),
 
@@ -2040,6 +2043,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                                                                                    CustomAuthenticationDataParser,
                                                                                                                                    CustomProviderAuthenticationDataParser,
                                                                                                                                    CustomAuthorizationIdentificationParser,
+                                                                                                                                   CustomAuthorizationRFIDIdentificationParser,
                                                                                                                                    CustomStatusCodeParser,
                                                                                                                                    onexception)),
 

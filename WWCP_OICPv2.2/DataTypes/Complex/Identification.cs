@@ -43,12 +43,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// A RFID Mifare identification.
         /// </summary>
-        public UID?                   RFIDMifareId                   { get; }
+        public UID?                   RFIDId                         { get; }
 
         /// <summary>
         /// A RFID identification.
         /// </summary>
-        public UID?                   RFIDId                         { get; }
+        public RFIDIdentification?    RFIDIdentification             { get; }
 
         /// <summary>
         /// An e-mobility account identification (EVCO Id) and a PIN.
@@ -69,8 +69,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #region Constructor(s)
 
-        private Identification(UID?                                 RFIDMifareId                  = null,
-                               UID?                                 RFIDId                        = null,
+        private Identification(UID?                                 RFIDId                        = null,
+                               RFIDIdentification?                  RFIDIdentification            = null,
                                QRCodeIdentification?                QRCodeIdentification          = null,
                                EVCO_Id?                             PlugAndChargeIdentification   = null,
                                EVCO_Id?                             RemoteIdentification          = null,
@@ -80,8 +80,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         {
 
-            this.RFIDMifareId                 = RFIDMifareId;
             this.RFIDId                       = RFIDId;
+            this.RFIDIdentification           = RFIDIdentification;
             this.QRCodeIdentification         = QRCodeIdentification;
             this.PlugAndChargeIdentification  = PlugAndChargeIdentification;
             this.RemoteIdentification         = RemoteIdentification;
@@ -104,7 +104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
 
             => MifareUID.HasValue
-                   ? new Identification(RFIDMifareId:  MifareUID.Value,
+                   ? new Identification(RFIDId:  MifareUID.Value,
                                         CustomData:    CustomData)
                    : null;
 
@@ -256,15 +256,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="IdentificationXML">The XML to parse.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(XElement                                 IdentificationXML,
-                                           CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                           OnExceptionDelegate                      OnException                  = null)
+        public static Identification Parse(XElement                                     IdentificationXML,
+                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                           CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                           OnExceptionDelegate                          OnException                      = null)
         {
 
             if (TryParse(IdentificationXML,
                          out Identification _Identification,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _Identification;
@@ -282,15 +285,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="IdentificationText">The text to parse.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(String                                   IdentificationText,
-                                           CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                           OnExceptionDelegate                      OnException                  = null)
+        public static Identification Parse(String                                       IdentificationText,
+                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                           CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                           OnExceptionDelegate                          OnException                      = null)
         {
 
             if (TryParse(IdentificationText,
                          out Identification _Identification,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _Identification;
@@ -309,11 +315,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="IdentificationXML">The XML to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                 IdentificationXML,
-                                       out Identification                       Identification,
-                                       CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                       OnExceptionDelegate                      OnException                  = null)
+        public static Boolean TryParse(XElement                                     IdentificationXML,
+                                       out Identification                           Identification,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -333,9 +341,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                             OICPNS.CommonTypes + "UID",
                                                                             UID.Parse),
 
-                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RFIDIdentification",
-                                                                            OICPNS.CommonTypes + "UID",
-                                                                            UID.Parse),
+                                     IdentificationXML.MapElement          (OICPNS.CommonTypes + "RFIDIdentification",
+                                                                            (xml, e) => OICPv2_2.RFIDIdentification.Parse(xml,
+                                                                                                                          CustomRFIDIdentificationParser,
+                                                                                                                          e),
+                                                                            OnException),
 
                                      IdentificationXML.MapElement          (OICPNS.CommonTypes + "QRCodeIdentification",
                                                                             OICPv2_2.QRCodeIdentification.Parse,
@@ -357,7 +367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                 Identification);
 
                 // Returns 'false' when nothing was found...
-                return Identification.RFIDMifareId.                     HasValue ||
+                return Identification.RFIDId.                     HasValue ||
                        Identification.QRCodeIdentification.       HasValue ||
                        Identification.PlugAndChargeIdentification.HasValue ||
                        Identification.RemoteIdentification.       HasValue;
@@ -385,11 +395,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="IdentificationText">The text to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                   IdentificationText,
-                                       out Identification                       Identification,
-                                       CustomXMLParserDelegate<Identification>  CustomIdentificationParser   = null,
-                                       OnExceptionDelegate                      OnException                  = null)
+        public static Boolean TryParse(String                                       IdentificationText,
+                                       out Identification                           Identification,
+                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -398,6 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 if (TryParse(XDocument.Parse(IdentificationText).Root,
                              out Identification,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException))
 
                     return true;
@@ -429,9 +442,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var XML = new XElement(XName ?? OICPNS.Authorization + "Identification",
 
-                          RFIDMifareId.HasValue
+                          RFIDId.HasValue
                               ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
-                                    new XElement(OICPNS.CommonTypes + "UID",     RFIDMifareId.ToString()))
+                                    new XElement(OICPNS.CommonTypes + "UID",     RFIDId.ToString()))
+                              : null,
+
+                          RFIDIdentification.HasValue
+                              ? RFIDIdentification.Value.ToXML()
                               : null,
 
                           QRCodeIdentification.HasValue
@@ -576,11 +593,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var Identification = Object as Identification;
-            if ((Object) Identification == null)
+            if (!(Object is Identification Identification))
                 throw new ArgumentException("The given object is not an identification identification!", nameof(Object));
 
             return CompareTo(Identification);
@@ -601,8 +617,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) Identification == null)
                 throw new ArgumentNullException(nameof(Identification), "The given identification must not be null!");
 
-            if (RFIDMifareId.                     HasValue && Identification.RFIDMifareId.                     HasValue)
-                return RFIDMifareId.                     Value.CompareTo(Identification.RFIDMifareId.                     Value);
+            if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
+                return RFIDId.                     Value.CompareTo(Identification.RFIDId.                     Value);
+
+            if (RFIDIdentification.         HasValue && Identification.RFIDIdentification.         HasValue)
+                return RFIDIdentification.         Value.CompareTo(Identification.RFIDIdentification.         Value);
 
             if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
                 return QRCodeIdentification.       Value.CompareTo(Identification.QRCodeIdentification.       Value);
@@ -634,11 +653,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var Identification = Object as Identification;
-            if ((Object) Identification == null)
+            if (!(Object is Identification Identification))
                 return false;
 
             return Equals(Identification);
@@ -660,8 +678,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) Identification == null)
                 return false;
 
-            if (RFIDMifareId.                     HasValue && Identification.RFIDMifareId.                     HasValue)
-                return RFIDMifareId.                     Value.Equals(Identification.RFIDMifareId.                     Value);
+            if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
+                return RFIDId.                     Value.Equals(Identification.RFIDId.                     Value);
+
+            if (RFIDIdentification.         HasValue && Identification.RFIDIdentification.         HasValue)
+                return RFIDIdentification.         Value.Equals(Identification.RFIDIdentification.         Value);
 
             if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
                 return QRCodeIdentification.       Value.Equals(Identification.QRCodeIdentification.       Value);
@@ -671,7 +692,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (RemoteIdentification.       HasValue && Identification.RemoteIdentification.       HasValue)
                 return RemoteIdentification.       Value.Equals(Identification.RemoteIdentification.       Value);
-
 
             return ToString().Equals(Identification.ToString());
 
@@ -690,8 +710,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Int32 GetHashCode()
         {
 
-            if (RFIDMifareId.HasValue)
-                return RFIDMifareId.GetHashCode();
+            if (RFIDId.HasValue)
+                return RFIDId.GetHashCode();
+
+            if (RFIDIdentification.HasValue)
+                return RFIDIdentification.GetHashCode();
 
             if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.GetHashCode();
@@ -716,8 +739,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override String ToString()
         {
 
-            if (RFIDMifareId.HasValue)
-                return RFIDMifareId.ToString();
+            if (RFIDId.HasValue)
+                return RFIDId.ToString();
+
+            if (RFIDIdentification.HasValue)
+                return RFIDIdentification.ToString();
 
             if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.ToString();

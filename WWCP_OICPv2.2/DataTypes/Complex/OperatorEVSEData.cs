@@ -78,14 +78,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
-            if (EVSEDataRecords == null)
-                throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
+            if (EVSEDataRecords == null || !EVSEDataRecords.Any())
+                throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null or empty!");
+
+            if (OperatorName != null)
+                OperatorName = OperatorName.Trim();
 
             #endregion
 
             this.EVSEDataRecords  = EVSEDataRecords;
             this.OperatorId       = OperatorId;
-            this.OperatorName     = OperatorName;
+            this.OperatorName     = OperatorName.SubstringMax(100);
 
         }
 
@@ -95,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.1"
         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.1">
         // 
         //    <soapenv:Header/>
@@ -128,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
         //                   xmlns:fn          = "http://www.w3.org/2005/xpath-functions"
         //                   xmlns:sbp         = "http://www.inubit.com/eMobility/SBP"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0"
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.1"
         //                   xmlns:EVSEData    = "http://www.hubject.com/b2b/services/evsedata/v2.1">
         //
         //    <soapenv:Body>
@@ -217,13 +220,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(OperatorEVSEDataXML,
-                         out OperatorEVSEData _OperatorEVSEData,
+                         out OperatorEVSEData operatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
 
-                return _OperatorEVSEData;
+                return operatorEVSEData;
 
             return null;
 
@@ -249,13 +252,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(OperatorEVSEDataText,
-                         out OperatorEVSEData _OperatorEVSEData,
+                         out OperatorEVSEData operatorEVSEData,
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
                          OnException))
 
-                return _OperatorEVSEData;
+                return operatorEVSEData;
 
             return null;
 
@@ -384,11 +387,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        public XElement ToXML(XName                                       OperatorEVSEDataXName             = null,
-                              CustomXMLSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer  = null,
-                              XName                                       EVSEDataRecordXName               = null,
-                              Boolean                                     IncludeEVSEDataRecordMetadata     = true,
-                              CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer    = null)
+        public XElement ToXML(XName                                          OperatorEVSEDataXName              = null,
+                              CustomXMLSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer   = null,
+                              XName                                          EVSEDataRecordXName                = null,
+                              Boolean                                        IncludeEVSEDataRecordMetadata      = true,
+                              CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer     = null)
 
         {
 
@@ -537,11 +540,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var OperatorEVSEData = Object as OperatorEVSEData;
-            if ((Object) OperatorEVSEData == null)
+            if (!(Object is OperatorEVSEData OperatorEVSEData))
                 throw new ArgumentException("The given object is not an operator EVSE data identification!", nameof(Object));
 
             return CompareTo(OperatorEVSEData);
@@ -582,11 +584,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var OperatorEVSEData = Object as OperatorEVSEData;
-            if ((Object) OperatorEVSEData == null)
+            if (!(Object is OperatorEVSEData OperatorEVSEData))
                 return false;
 
             return Equals(OperatorEVSEData);
@@ -614,7 +615,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                     (OperatorName   != null && OperatorEVSEData.OperatorName   != null && OperatorName.   Equals(OperatorEVSEData.OperatorName))) &&
 
                    ((!EVSEDataRecords.Any() && !OperatorEVSEData.EVSEDataRecords.Any()) ||
-                    (EVSEDataRecords.Any() && OperatorEVSEData.EVSEDataRecords.Any() && EVSEDataRecords.Count().Equals(OperatorEVSEData.EVSEDataRecords.Count())));
+                     (EVSEDataRecords.Any() &&  OperatorEVSEData.EVSEDataRecords.Any() && EVSEDataRecords.Count().Equals(OperatorEVSEData.EVSEDataRecords.Count())));
 
         }
 
@@ -660,7 +661,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                              ", ",  EVSEDataRecords.Count(), " EVSE data record(s)");
 
         #endregion
-
 
     }
 

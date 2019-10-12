@@ -196,6 +196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStartRequestXML">The XML to parse.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -204,15 +205,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteStartRequest
 
-            Parse(XElement                                           AuthorizeRemoteStartRequestXML,
+            Parse(XElement                                              AuthorizeRemoteStartRequestXML,
                   CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
                   CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
-                  OnExceptionDelegate                                OnException                               = null,
+                  CustomXMLParserDelegate<RFIDIdentification>           CustomRFIDIdentificationParser            = null,
+                  OnExceptionDelegate                                   OnException                               = null,
 
-                  DateTime?                                          Timestamp                                 = null,
-                  CancellationToken?                                 CancellationToken                         = null,
-                  EventTracking_Id                                   EventTrackingId                           = null,
-                  TimeSpan?                                          RequestTimeout                            = null)
+                  DateTime?                                             Timestamp                                 = null,
+                  CancellationToken?                                    CancellationToken                         = null,
+                  EventTracking_Id                                      EventTrackingId                           = null,
+                  TimeSpan?                                             RequestTimeout                            = null)
 
         {
 
@@ -220,6 +222,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out AuthorizeRemoteStartRequest _AuthorizeRemoteStartRequest,
                          CustomAuthorizeRemoteStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -243,6 +246,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -251,15 +255,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static AuthorizeRemoteStartRequest
 
-            Parse(String                                             AuthorizeRemoteStartRequestText,
+            Parse(String                                                AuthorizeRemoteStartRequestText,
                   CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
                   CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
-                  OnExceptionDelegate                                OnException                               = null,
+                  CustomXMLParserDelegate<RFIDIdentification>           CustomRFIDIdentificationParser            = null,
+                  OnExceptionDelegate                                   OnException                               = null,
 
-                  DateTime?                                          Timestamp                                 = null,
-                  CancellationToken?                                 CancellationToken                         = null,
-                  EventTracking_Id                                   EventTrackingId                           = null,
-                  TimeSpan?                                          RequestTimeout                            = null)
+                  DateTime?                                             Timestamp                                 = null,
+                  CancellationToken?                                    CancellationToken                         = null,
+                  EventTracking_Id                                      EventTrackingId                           = null,
+                  TimeSpan?                                             RequestTimeout                            = null)
 
         {
 
@@ -267,6 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out AuthorizeRemoteStartRequest _AuthorizeRemoteStartRequest,
                          CustomAuthorizeRemoteStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -291,6 +297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -301,6 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        out AuthorizeRemoteStartRequest                       AuthorizeRemoteStartRequest,
                                        CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>           CustomRFIDIdentificationParser            = null,
                                        OnExceptionDelegate                                   OnException                               = null,
 
                                        DateTime?                                             Timestamp                                 = null,
@@ -322,6 +330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var _AuthorizationIdentification = AuthorizeRemoteStartRequestXML.MapElementOrFail(OICPNS.Authorization + "Identification",
                                                                                                    (xml, e) => Identification.Parse(xml,
                                                                                                                                     CustomIdentificationParser,
+                                                                                                                                    CustomRFIDIdentificationParser,
                                                                                                                                     e),
                                                                                                    OnException);
 
@@ -394,22 +403,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(String                                             AuthorizeRemoteStartRequestText,
-                                       out AuthorizeRemoteStartRequest                    AuthorizeRemoteStartRequest,
+        public static Boolean TryParse(String                                                AuthorizeRemoteStartRequestText,
+                                       out AuthorizeRemoteStartRequest                       AuthorizeRemoteStartRequest,
                                        CustomXMLParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>               CustomIdentificationParser                = null,
-                                       OnExceptionDelegate                                OnException                               = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>           CustomRFIDIdentificationParser            = null,
+                                       OnExceptionDelegate                                   OnException                               = null,
 
-                                       DateTime?                                          Timestamp                                 = null,
-                                       CancellationToken?                                 CancellationToken                         = null,
-                                       EventTracking_Id                                   EventTrackingId                           = null,
-                                       TimeSpan?                                          RequestTimeout                            = null)
+                                       DateTime?                                             Timestamp                                 = null,
+                                       CancellationToken?                                    CancellationToken                         = null,
+                                       EventTracking_Id                                      EventTrackingId                           = null,
+                                       TimeSpan?                                             RequestTimeout                            = null)
 
         {
 
@@ -420,6 +431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                              out AuthorizeRemoteStartRequest,
                              CustomAuthorizeRemoteStartRequestParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

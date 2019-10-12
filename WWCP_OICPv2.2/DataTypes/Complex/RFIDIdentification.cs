@@ -21,6 +21,7 @@ using System;
 using System.Xml.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -88,7 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.UID            = UID;
             this.RFIDType       = RFIDType;
             this.EVCOId         = EVCOId;
-            this.PrintedNumber  = PrintedNumber?.Substring(0, Math.Min(PrintedNumber.Length, 150));
+            this.PrintedNumber  = PrintedNumber?.SubstringMax(150);
             this.ExpiryDate     = ExpiryDate;
 
         }
@@ -99,12 +100,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.0"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.1"
+        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         // 
         // [...]
         // 
-        //    <CommonTypes:RFIDIdentificationType>
+        //    <CommonTypes:RFIDIdentification>
         // 
         //       <CommonTypes:UID>...</CommonTypes:UID>
         // 
@@ -119,7 +120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         //       <!--Optional:-->
         //       <CommonTypes:ExpiryDate>...</CommonTypes:ExpiryDate>
         // 
-        //    </CommonTypes:RFIDIdentificationType>
+        //    </CommonTypes:RFIDIdentification>
         // 
         // [...]
         // 
@@ -127,22 +128,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) Parse(RFIDIdentificationXML,  OnException = null)
+        #region (static) Parse   (RFIDIdentificationXML,  OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP RFID identification.
         /// </summary>
         /// <param name="RFIDIdentificationXML">The XML to parse.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static RFIDIdentification? Parse(XElement             RFIDIdentificationXML,
-                                                  OnExceptionDelegate  OnException = null)
+        public static RFIDIdentification? Parse(XElement                                     RFIDIdentificationXML,
+                                                CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                                OnExceptionDelegate                          OnException                      = null)
         {
 
             if (TryParse(RFIDIdentificationXML,
-                         out RFIDIdentification _RFIDIdentification,
+                         out RFIDIdentification rfidIdentification,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
-                return _RFIDIdentification;
+                return rfidIdentification;
 
             return null;
 
@@ -150,22 +154,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) Parse(RFIDIdentificationText, OnException = null)
+        #region (static) Parse   (RFIDIdentificationText, OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP RFID identification.
         /// </summary>
         /// <param name="RFIDIdentificationText">The text to parse.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static RFIDIdentification? Parse(String               RFIDIdentificationText,
-                                                  OnExceptionDelegate  OnException = null)
+        public static RFIDIdentification? Parse(String                                       RFIDIdentificationText,
+                                                CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                                OnExceptionDelegate                          OnException                      = null)
         {
 
             if (TryParse(RFIDIdentificationText,
-                         out RFIDIdentification _RFIDIdentification,
+                         out RFIDIdentification rfidIdentification,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
-                return _RFIDIdentification;
+                return rfidIdentification;
 
             return null;
 
@@ -180,68 +187,47 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="RFIDIdentificationXML">The XML to parse.</param>
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                RFIDIdentificationXML,
-                                       out RFIDIdentification  RFIDIdentification,
-                                       OnExceptionDelegate     OnException  = null)
+        public static Boolean TryParse(XElement                                     RFIDIdentificationXML,
+                                       out RFIDIdentification                       RFIDIdentification,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
             {
 
-                //if (!(RFIDIdentificationXML.Name == OICPNS.CommonTypes         + "RFIDIdentification") &&
-                //     (RFIDIdentificationXML.Name == OICPNS.MobileAuthorization + "RFIDIdentification"))
-                //{
-                    RFIDIdentification = default(RFIDIdentification);
+                if (!(RFIDIdentificationXML.Name == OICPNS.CommonTypes         + "RFIDIdentification") &&
+                     (RFIDIdentificationXML.Name == OICPNS.MobileAuthorization + "RFIDIdentification"))
+                {
+                    RFIDIdentification = default;
                     return false;
-                //}
+                }
 
-                //var EVCOId        = RFIDIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "EVCOID", EVCO_Id.Parse);
-                //var PIN           = RFIDIdentificationXML.ElementValueOrDefault(OICPNS.CommonTypes + "PIN");
-                //var HashedPINXML  = RFIDIdentificationXML.Element              (OICPNS.CommonTypes + "HashedPIN");
+                RFIDIdentification = new RFIDIdentification(
 
-                //#region Parse a PIN
+                                         RFIDIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "UID",
+                                                                                     UID.Parse),
 
-                //if (PIN != null && PIN.Trim().IsNotNullOrEmpty())
+                                         RFIDIdentificationXML.MapEnumValuesOrFail  (OICPNS.CommonTypes + "RFIDType",
+                                                                                     s => (RFIDTypes) Enum.Parse(typeof(RFIDTypes), s)),
 
-                //    RFIDIdentification = new RFIDIdentification(EVCOId, PIN.Trim());
+                                         RFIDIdentificationXML.MapValueOrNullable   (OICPNS.EVSEStatus + "EvcoID",
+                                                                                     EVCO_Id.Parse),
 
-                //#endregion
+                                         RFIDIdentificationXML.ElementValueOrDefault(OICPNS.EVSEStatus + "PrintedNumber"),
 
-                //#region Parse a hashed PIN
+                                         RFIDIdentificationXML.MapValueOrNullable   (OICPNS.EVSEStatus + "ExpiryDate",
+                                                                                     DateTime.Parse)
 
-                //else if (HashedPINXML != null)
+                                     );
 
-                //    RFIDIdentification = new RFIDIdentification(EVCOId,
 
-                //                                                    HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Value"),
+                if (CustomRFIDIdentificationParser != null)
+                    RFIDIdentification = CustomRFIDIdentificationParser(RFIDIdentificationXML, RFIDIdentification);
 
-                //                                                    HashedPINXML.MapValueOrFail    (OICPNS.CommonTypes + "Function",
-                //                                                                                    text => {
-
-                //                                                                                        switch (text.ToUpper())
-                //                                                                                        {
-
-                //                                                                                            case "MD5":
-                //                                                                                                return PINCrypto.MD5;
-
-                //                                                                                            case "SHA-1":
-                //                                                                                                return PINCrypto.SHA1;
-
-                //                                                                                        }
-
-                //                                                                                        throw new Exception("Unknown PIN crypto '" + text + "'!");
-
-                //                                                                                    }),
-
-                //                                                    HashedPINXML.ElementValueOrFail(OICPNS.CommonTypes + "Salt"));
-
-                //#endregion
-
-                //else
-                //    RFIDIdentification = new RFIDIdentification(EVCOId);
-
-                //return true;
+                return true;
 
             }
             catch (Exception e)
@@ -249,7 +235,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 OnException?.Invoke(DateTime.UtcNow, RFIDIdentificationXML, e);
 
-                RFIDIdentification = default(RFIDIdentification);
+                RFIDIdentification = default;
                 return false;
 
             }
@@ -265,10 +251,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="RFIDIdentificationText">The text to parse.</param>
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                    RFIDIdentificationText,
-                                       out RFIDIdentification  RFIDIdentification,
-                                       OnExceptionDelegate       OnException  = null)
+        public static Boolean TryParse(String                                       RFIDIdentificationText,
+                                       out RFIDIdentification                       RFIDIdentification,
+                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
+                                       OnExceptionDelegate                          OnException                      = null)
         {
 
             try
@@ -276,6 +264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 if (TryParse(XDocument.Parse(RFIDIdentificationText).Root,
                              out RFIDIdentification,
+                             CustomRFIDIdentificationParser,
                              OnException))
 
                     return true;
@@ -360,7 +349,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (RFIDIdentification RFIDIdentification1, RFIDIdentification RFIDIdentification2)
-
             => !(RFIDIdentification1 == RFIDIdentification2);
 
         #endregion
@@ -444,13 +432,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            if (!(Object is RFIDIdentification))
+            if (!(Object is RFIDIdentification RFIDIdentification))
                 throw new ArgumentException("The given object is not an RFID identification!", nameof(Object));
 
-            return CompareTo((RFIDIdentification) Object);
+            return CompareTo(RFIDIdentification);
 
         }
 
@@ -468,19 +456,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) RFIDIdentification == null)
                 throw new ArgumentNullException(nameof(RFIDIdentification),  "The given RFID identification must not be null!");
 
-            var result = EVCOId.CompareTo(RFIDIdentification.EVCOId);
-            if (result != 0)
-                return result;
+            var result = UID.CompareTo(RFIDIdentification.UID);
 
-            result = String.Compare(PIN, RFIDIdentification.PIN, StringComparison.Ordinal);
-            if (result != 0)
-                return result;
+            if (result == 0)
+                result = RFIDType.CompareTo(RFIDIdentification.RFIDType);
 
-            result = Function.CompareTo(RFIDIdentification.Function);
-            if (result != 0)
-                return result;
+            if (result == 0)
+                result = EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue
+                             ? EVCOId.Value.CompareTo(RFIDIdentification.EVCOId.Value)
+                             : 0;
 
-            return String.Compare(Salt, RFIDIdentification.Salt, StringComparison.Ordinal);
+            if (result == 0)
+                result = String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase);
+
+            if (result == 0)
+                result = ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue
+                             ? ExpiryDate.Value.CompareTo(RFIDIdentification.ExpiryDate.Value)
+                             : 0;
+
+            return result;
 
         }
 
@@ -503,10 +497,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            if (!(Object is RFIDIdentification))
+            if (!(Object is RFIDIdentification RFIDIdentification))
                 return false;
 
-            return Equals((RFIDIdentification) Object);
+            return Equals(RFIDIdentification);
 
         }
 
@@ -525,10 +519,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) RFIDIdentification == null)
                 return false;
 
-            return EVCOId.  Equals(RFIDIdentification.EVCOId)   &&
-                   PIN.     Equals(RFIDIdentification.PIN)      &&
-                   Function.Equals(RFIDIdentification.Function) &&
-                   Salt.    Equals(RFIDIdentification.Salt);
+            return UID.     Equals(RFIDIdentification.UID)      &&
+                   RFIDType.Equals(RFIDIdentification.RFIDType) &&
+
+                   ((!EVCOId.HasValue && !RFIDIdentification.EVCOId.HasValue) ||
+                     (EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue && EVCOId.Value.Equals(RFIDIdentification.EVCOId.Value))) &&
+
+                   ((PrintedNumber == null && RFIDIdentification.PrintedNumber == null) ||
+                    (PrintedNumber != null && RFIDIdentification.PrintedNumber != null &&
+                     String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase) != 0)) &&
+
+                   ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
+                     (ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value)));
 
         }
 
@@ -546,10 +548,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             unchecked
             {
 
-                return EVCOId.  GetHashCode() * 7 ^
-                       PIN.     GetHashCode() * 5 ^
-                       Function.GetHashCode() * 3 ^
-                       Salt.    GetHashCode();
+                return EVCOId.  GetHashCode() * 9 ^
+                       RFIDType.GetHashCode() * 7 ^
+
+                       (EVCOId.HasValue
+                            ? EVCOId.GetHashCode() * 5
+                            : 0) ^
+
+                       (PrintedNumber != null
+                            ? PrintedNumber.GetHashCode() * 3
+                            : 0) ^
+
+                       (EVCOId.HasValue
+                            ? EVCOId.GetHashCode()
+                            : 0);
 
             }
         }
@@ -563,12 +575,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVCOId.ToString(),
-                             Function != PINCrypto.none
-                                 ? " -" + Function
+            => String.Concat(UID.ToString(),
+                             " (", RFIDType, ") ",
+
+                             PrintedNumber.IsNeitherNullNorEmpty()
+                                 ? ", '" + PrintedNumber + "'"
                                  : "",
-                             "-> ",
-                             PIN ?? "");
+
+                             EVCOId.HasValue
+                                 ? ", ContractId: '" + EVCOId + "'"
+                                 : "",
+
+                             ExpiryDate.HasValue
+                                 ? ", expires: " + ExpiryDate
+                                 : "");
 
         #endregion
 

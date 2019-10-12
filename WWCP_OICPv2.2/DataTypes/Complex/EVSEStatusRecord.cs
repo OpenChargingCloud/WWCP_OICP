@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv    = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/evsestatus/v2.0">
+        //                   xmlns:EVSEStatus = "http://www.hubject.com/b2b/services/evsestatus/evsestatus/v2.1">
         //
         // [...]
         //
@@ -105,17 +105,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusRecordXML">The XML to parse.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEStatusRecord Parse(XElement                                EVSEStatusRecordXML,
-                                             CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
-                                             OnExceptionDelegate                     OnException       = null)
+        public static EVSEStatusRecord Parse(XElement                                   EVSEStatusRecordXML,
+                                             CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null,
+                                             OnExceptionDelegate                        OnException                    = null)
         {
 
             if (TryParse(EVSEStatusRecordXML,
-                         out EVSEStatusRecord _EVSEStatusRecord,
+                         out EVSEStatusRecord evseStatusRecord,
                          CustomEVSEStatusRecordParser,
                          OnException))
 
-                return _EVSEStatusRecord;
+                return evseStatusRecord;
 
             return null;
 
@@ -131,17 +131,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static EVSEStatusRecord Parse(String                                  EVSEStatusRecordText,
-                                             CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
-                                             OnExceptionDelegate                     OnException       = null)
+        public static EVSEStatusRecord Parse(String                                     EVSEStatusRecordText,
+                                             CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null,
+                                             OnExceptionDelegate                        OnException                    = null)
         {
 
             if (TryParse(EVSEStatusRecordText,
-                         out EVSEStatusRecord _EVSEStatusRecord,
+                         out EVSEStatusRecord evseStatusRecord,
                          CustomEVSEStatusRecordParser,
                          OnException))
 
-                return _EVSEStatusRecord;
+                return evseStatusRecord;
 
             return null;
 
@@ -158,10 +158,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                EVSEStatusRecordXML,
-                                       out EVSEStatusRecord                    EVSEStatusRecord,
-                                       CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
-                                       OnExceptionDelegate                     OnException                   = null)
+        public static Boolean TryParse(XElement                                   EVSEStatusRecordXML,
+                                       out EVSEStatusRecord                       EVSEStatusRecord,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null,
+                                       OnExceptionDelegate                        OnException                    = null)
         {
 
             try
@@ -213,10 +213,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                  EVSEStatusRecordText,
-                                       out EVSEStatusRecord                    EVSEStatusRecord,
-                                       CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser  = null,
-                                       OnExceptionDelegate                     OnException                   = null)
+        public static Boolean TryParse(String                                     EVSEStatusRecordText,
+                                       out EVSEStatusRecord                       EVSEStatusRecord,
+                                       CustomXMLParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null,
+                                       OnExceptionDelegate                        OnException                    = null)
         {
 
             try
@@ -249,8 +249,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSEStatusRecord XML elements.</param>
-        public XElement ToXML(XName                                       XName                             = null,
-                              CustomXMLSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer  = null)
+        public XElement ToXML(XName                                          XName                              = null,
+                              CustomXMLSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer   = null)
 
         {
 
@@ -387,11 +387,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var EVSEStatusRecord = Object as EVSEStatusRecord;
-            if ((Object) EVSEStatusRecord == null)
+            if (!(Object is EVSEStatusRecord EVSEStatusRecord))
                 throw new ArgumentException("The given object is not an EVSE status record identification!", nameof(Object));
 
             return CompareTo(EVSEStatusRecord);
@@ -412,14 +411,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) EVSEStatusRecord == null)
                 throw new ArgumentNullException(nameof(EVSEStatusRecord), "The given EVSE status record must not be null!");
 
-            // Compare the EVSE Ids
-            var _Result = Id.CompareTo(EVSEStatusRecord.Id);
+            var result = Id.CompareTo(EVSEStatusRecord.Id);
 
-            // If equal: Compare the EVSE status
-            if (_Result == 0)
-                _Result = Status.CompareTo(EVSEStatusRecord.Status);
+            if (result == 0)
+                result = Status.CompareTo(EVSEStatusRecord.Status);
 
-            return _Result;
+            return result;
 
         }
 
@@ -439,14 +436,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var EVSEStatusRecord = Object as EVSEStatusRecord;
-            if ((Object) EVSEStatusRecord == null)
+            if (!(Object is EVSEStatusRecord EVSEStatusRecord))
                 return false;
 
-            return this.Equals(EVSEStatusRecord);
+            return Equals(EVSEStatusRecord);
 
         }
 
@@ -485,7 +481,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             unchecked
             {
 
-                return Id.    GetHashCode() * 5 ^
+                return Id.    GetHashCode() * 3 ^
                        Status.GetHashCode();
 
             }
@@ -505,7 +501,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                              Status);
 
         #endregion
-
 
     }
 

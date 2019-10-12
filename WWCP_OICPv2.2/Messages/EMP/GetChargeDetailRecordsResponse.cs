@@ -144,8 +144,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
         /// <param name="GetChargeDetailRecordsResponseXML">The XML to parse.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
-        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static GetChargeDetailRecordsResponse
 
@@ -154,6 +155,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                   CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
                   CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
                   CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                  CustomXMLParserDelegate<RFIDIdentification>              CustomRFIDIdentificationParser               = null,
                   OnExceptionDelegate                                      OnException                                  = null)
 
         {
@@ -164,6 +166,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          CustomGetChargeDetailRecordsResponseParser,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _GetChargeDetailRecordsResponse;
@@ -182,8 +185,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="Request">An PullGetChargeDetailRecordsResponse request.</param>
         /// <param name="GetChargeDetailRecordsResponseText">The text to parse.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
-        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static GetChargeDetailRecordsResponse
 
@@ -192,6 +196,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                   CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
                   CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
                   CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                  CustomXMLParserDelegate<RFIDIdentification>              CustomRFIDIdentificationParser               = null,
                   OnExceptionDelegate                                      OnException                                  = null)
 
         {
@@ -202,6 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          CustomGetChargeDetailRecordsResponseParser,
                          CustomChargeDetailRecordParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _GetChargeDetailRecordsResponse;
@@ -221,8 +227,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="GetChargeDetailRecordsResponseXML">The XML to parse.</param>
         /// <param name="GetChargeDetailRecordsResponse">The parsed GetChargeDetailRecordsResponse request.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
-        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(GetChargeDetailRecordsRequest                            Request,
                                        XElement                                                 GetChargeDetailRecordsResponseXML,
@@ -230,6 +237,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
                                        CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
                                        CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>              CustomRFIDIdentificationParser               = null,
                                        OnExceptionDelegate                                      OnException                                  = null)
         {
 
@@ -250,6 +258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                                     (XML, e) => ChargeDetailRecord.Parse(XML,
                                                                                                                                          CustomChargeDetailRecordParser,
                                                                                                                                          CustomIdentificationParser,
+                                                                                                                                         CustomRFIDIdentificationParser,
                                                                                                                                          e),
                                                                                                     OnException)
 
@@ -286,8 +295,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="GetChargeDetailRecordsResponseText">The text to parse.</param>
         /// <param name="GetChargeDetailRecordsResponse">The parsed EVSE statuses request.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords responses.</param>
-        /// <param name="CustomOperatorGetChargeDetailRecordsResponseParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseRecordParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(GetChargeDetailRecordsRequest                            Request,
                                        String                                                   GetChargeDetailRecordsResponseText,
@@ -295,6 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        CustomXMLParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null,
                                        CustomXMLParserDelegate<ChargeDetailRecord>              CustomChargeDetailRecordParser               = null,
                                        CustomXMLParserDelegate<Identification>                  CustomIdentificationParser                   = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>              CustomRFIDIdentificationParser               = null,
                                        OnExceptionDelegate                                      OnException                                  = null)
         {
 
@@ -307,6 +318,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                              CustomGetChargeDetailRecordsResponseParser,
                              CustomChargeDetailRecordParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException))
 
                     return true;

@@ -133,18 +133,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="ProviderAuthenticationDataXML">The XML to parse.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ProviderAuthenticationData Parse(XElement                                             ProviderAuthenticationDataXML,
-                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                                       OnExceptionDelegate                                  OnException                               = null)
+                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser   = null,
+                                                       CustomXMLParserDelegate<Identification>              CustomIdentificationParser               = null,
+                                                       CustomXMLParserDelegate<RFIDIdentification>          CustomRFIDIdentificationParser           = null,
+                                                       OnExceptionDelegate                                  OnException                              = null)
         {
 
             if (TryParse(ProviderAuthenticationDataXML,
                          out ProviderAuthenticationData _ProviderAuthenticationData,
                          CustomProviderAuthenticationDataParser,
-                         CustomAuthorizationIdentificationParser,
+                         CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _ProviderAuthenticationData;
@@ -162,18 +165,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="ProviderAuthenticationDataText">The text to parse.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static ProviderAuthenticationData Parse(String                                               ProviderAuthenticationDataText,
-                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                                       OnExceptionDelegate                                  OnException                               = null)
+                                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser   = null,
+                                                       CustomXMLParserDelegate<Identification>              CustomIdentificationParser               = null,
+                                                       CustomXMLParserDelegate<RFIDIdentification>          CustomRFIDIdentificationParser           = null,
+                                                       OnExceptionDelegate                                  OnException                              = null)
         {
 
             if (TryParse(ProviderAuthenticationDataText,
                          out ProviderAuthenticationData _ProviderAuthenticationData,
                          CustomProviderAuthenticationDataParser,
-                         CustomAuthorizationIdentificationParser,
+                         CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException))
 
                 return _ProviderAuthenticationData;
@@ -192,13 +198,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderAuthenticationDataXML">The XML to parse.</param>
         /// <param name="ProviderAuthenticationData">The parsed provider authentication data.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                             ProviderAuthenticationDataXML,
                                        out ProviderAuthenticationData                       ProviderAuthenticationData,
-                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                       OnExceptionDelegate                                  OnException                               = null)
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser   = null,
+                                       CustomXMLParserDelegate<Identification>              CustomIdentificationParser               = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>          CustomRFIDIdentificationParser           = null,
+                                       OnExceptionDelegate                                  OnException                              = null)
         {
 
             try
@@ -218,7 +226,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                  ProviderAuthenticationDataXML.MapElementsOrFail(OICPNS.AuthenticationData + "AuthenticationDataRecord",
                                                                                                  OICPNS.AuthenticationData + "Identification",
                                                                                                  (XML, e) => Identification.Parse(XML,
-                                                                                                                                  CustomAuthorizationIdentificationParser,
+                                                                                                                                  CustomIdentificationParser,
+                                                                                                                                  CustomRFIDIdentificationParser,
                                                                                                                                   e),
                                                                                                  OnException)
 
@@ -253,12 +262,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="ProviderAuthenticationDataText">The text to parse.</param>
         /// <param name="ProviderAuthenticationData">The parsed provider authentication data.</param>
+        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                               ProviderAuthenticationDataText,
                                        out ProviderAuthenticationData                       ProviderAuthenticationData,
-                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser    = null,
-                                       CustomXMLParserDelegate<Identification>              CustomAuthorizationIdentificationParser   = null,
-                                       OnExceptionDelegate                                  OnException                               = null)
+                                       CustomXMLParserDelegate<ProviderAuthenticationData>  CustomProviderAuthenticationDataParser   = null,
+                                       CustomXMLParserDelegate<Identification>              CustomIdentificationParser               = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>          CustomRFIDIdentificationParser           = null,
+                                       OnExceptionDelegate                                  OnException                              = null)
         {
 
             try
@@ -267,7 +280,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 if (TryParse(XDocument.Parse(ProviderAuthenticationDataText).Root,
                              out ProviderAuthenticationData,
                              CustomProviderAuthenticationDataParser,
-                             CustomAuthorizationIdentificationParser,
+                             CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException))
 
                     return true;

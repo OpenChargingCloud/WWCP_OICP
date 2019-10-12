@@ -23,7 +23,6 @@ using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
@@ -31,9 +30,16 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
+    /// <summary>
+    /// Extention methods for OICP status codes.
+    /// </summary>
     public static class StatusCodeExtentions
     {
 
+        /// <summary>
+        /// Whether the given status code is valid and has results.
+        /// </summary>
+        /// <param name="StatusCode">A status code.</param>
         public static Boolean HasResult(this StatusCode? StatusCode)
         {
 
@@ -87,8 +93,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Description">An optional description of the result code.</param>
         /// <param name="AdditionalInfo">An optional additional information.</param>
         public StatusCode(StatusCodes  Code,
-                          String       Description     = null,
-                          String       AdditionalInfo  = null)
+                          String       Description      = null,
+                          String       AdditionalInfo   = null)
         {
 
             this.Code            = Code;
@@ -104,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         // <?xml version='1.0' encoding='UTF-8'?>
         // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         //
         // [...]
         //
@@ -132,13 +138,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(StatusCodeXML,
-                         out StatusCode _StatusCode,
+                         out StatusCode statusCode,
                          CustomStatusCodeParser,
                          OnException))
 
-                return _StatusCode;
+                return statusCode;
 
-            return default(StatusCode);
+            return default;
 
         }
 
@@ -158,13 +164,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(StatusCodeText,
-                         out StatusCode _StatusCode,
+                         out StatusCode statusCode,
                          CustomStatusCodeParser,
                          OnException))
 
-                return _StatusCode;
+                return statusCode;
 
-            return default(StatusCode);
+            return default;
 
         }
 
@@ -237,17 +243,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                        OnExceptionDelegate                  OnException              = null)
         {
 
-            var _StatusCode = TryParse(StatusCodeXML,
-                                       CustomStatusCodeParser,
-                                       OnException);
+            var statusCode = TryParse(StatusCodeXML,
+                                      CustomStatusCodeParser,
+                                      OnException);
 
-            if (_StatusCode.HasValue)
+            if (statusCode.HasValue)
             {
-                StatusCode = _StatusCode.Value;
+                StatusCode = statusCode.Value;
                 return true;
             }
 
-            StatusCode = default(StatusCode);
+            StatusCode = default;
             return false;
 
         }
@@ -317,7 +323,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 OnException?.Invoke(DateTime.UtcNow, StatusCodeText, e);
             }
 
-            StatusCode = default(StatusCode);
+            StatusCode = default;
             return false;
 
         }
@@ -446,13 +452,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            if (!(Object is StatusCode))
+            if (!(Object is StatusCode StatusCode))
                 return false;
 
-            return Equals((StatusCode) Object);
+            return Equals(StatusCode);
 
         }
 
@@ -529,7 +535,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                  : "");
 
         #endregion
-
 
     }
 

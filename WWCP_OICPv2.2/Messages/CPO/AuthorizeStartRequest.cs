@@ -199,6 +199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStartXML">The XML to parse.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -208,6 +209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public static AuthorizeStartRequest Parse(XElement                                        AuthorizeStartXML,
                                                   CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                                   CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                                  CustomXMLParserDelegate<RFIDIdentification>     CustomRFIDIdentificationParser      = null,
                                                   OnExceptionDelegate                             OnException                         = null,
 
                                                   DateTime?                                       Timestamp                           = null,
@@ -221,6 +223,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizeStartRequest _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -244,6 +247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStartText">The text to parse.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -253,6 +257,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public static AuthorizeStartRequest Parse(String                                          AuthorizeStartText,
                                                   CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                                   CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                                  CustomXMLParserDelegate<RFIDIdentification>     CustomRFIDIdentificationParser      = null,
                                                   OnExceptionDelegate                             OnException                         = null,
 
                                                   DateTime?                                       Timestamp                           = null,
@@ -266,6 +271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          out AuthorizeStartRequest _AuthorizeStart,
                          CustomAuthorizeStartRequestParser,
                          CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -290,6 +296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStart">The parsed authorize start request.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID Identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -300,6 +307,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizeStartRequest                       AuthorizeStart,
                                        CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>     CustomRFIDIdentificationParser      = null,
                                        OnExceptionDelegate                             OnException                         = null,
 
                                        DateTime?                                       Timestamp                           = null,
@@ -325,6 +333,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                      AuthorizeStartXML.MapElementOrFail  (OICPNS.Authorization + "Identification",
                                                                           (xml, e) => Identification.Parse(xml,
                                                                                                            CustomIdentificationParser,
+                                                                                                           CustomRFIDIdentificationParser,
                                                                                                            e),
                                                                           OnException),
 
@@ -383,6 +392,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="AuthorizeStart">The parsed authorize start request.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to customize the deserialization of AuthorizeStart requests.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -393,6 +403,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                        out AuthorizeStartRequest                       AuthorizeStart,
                                        CustomXMLParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null,
                                        CustomXMLParserDelegate<Identification>         CustomIdentificationParser          = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>     CustomRFIDIdentificationParser      = null,
                                        OnExceptionDelegate                             OnException                         = null,
 
                                        DateTime?                                       Timestamp                           = null,
@@ -409,6 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                              out AuthorizeStart,
                              CustomAuthorizeStartRequestParser,
                              CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

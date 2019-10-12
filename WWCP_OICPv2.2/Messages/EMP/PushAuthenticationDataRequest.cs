@@ -165,9 +165,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Parse the given XML representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
-        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData requests.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -179,7 +180,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             Parse(XElement                                                PushAuthenticationDataRequestXML,
                   CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
                   CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
-                  CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                  CustomXMLParserDelegate<Identification>                 CustomIdentificationParser                  = null,
+                  CustomXMLParserDelegate<RFIDIdentification>             CustomRFIDIdentificationParser              = null,
                   OnExceptionDelegate                                     OnException                                 = null,
 
                   DateTime?                                               Timestamp                                   = null,
@@ -193,7 +195,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out PushAuthenticationDataRequest _PushAuthenticationDataRequest,
                          CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
-                         CustomAuthorizationIdentificationParser,
+                         CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -215,9 +218,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Parse the given text representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
-        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData requests.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -229,7 +233,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             Parse(String                                                  PushAuthenticationDataRequestText,
                   CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
                   CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
-                  CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                  CustomXMLParserDelegate<Identification>                 CustomIdentificationParser                  = null,
+                  CustomXMLParserDelegate<RFIDIdentification>             CustomRFIDIdentificationParser              = null,
                   OnExceptionDelegate                                     OnException                                 = null,
 
                   DateTime?                                               Timestamp                                   = null,
@@ -243,7 +248,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          out PushAuthenticationDataRequest _PushAuthenticationDataRequest,
                          CustomPushAuthenticationDataRequestParser,
                          CustomProviderAuthenticationDataParser,
-                         CustomAuthorizationIdentificationParser,
+                         CustomIdentificationParser,
+                         CustomRFIDIdentificationParser,
                          OnException,
 
                          Timestamp,
@@ -266,9 +272,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         /// <param name="PushAuthenticationDataRequestXML">The XML to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
-        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData requests.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -279,7 +286,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        out PushAuthenticationDataRequest                       PushAuthenticationDataRequest,
                                        CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
                                        CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
-                                       CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                                       CustomXMLParserDelegate<Identification>                 CustomIdentificationParser                  = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>             CustomRFIDIdentificationParser              = null,
                                        OnExceptionDelegate                                     OnException                                 = null,
 
                                        DateTime?                                               Timestamp                                   = null,
@@ -303,7 +311,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     PushAuthenticationDataRequestXML.MapElement    (OICPNS.AuthenticationData + "ProviderAuthenticationData",
                                                                                                     (xml, e) => ProviderAuthenticationData.Parse(xml,
                                                                                                                                                  CustomProviderAuthenticationDataParser,
-                                                                                                                                                 CustomAuthorizationIdentificationParser,
+                                                                                                                                                 CustomIdentificationParser,
+                                                                                                                                                 CustomRFIDIdentificationParser,
                                                                                                                                                  e),
                                                                                                     OnException),
 
@@ -344,9 +353,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
-        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
+        /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData requests.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
-        /// <param name="CustomAuthorizationIdentificationParser">A delegate to parse custom AuthorizationIdentification XML elements.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
+        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -357,7 +367,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                        out PushAuthenticationDataRequest                       PushAuthenticationDataRequest,
                                        CustomXMLParserDelegate<PushAuthenticationDataRequest>  CustomPushAuthenticationDataRequestParser   = null,
                                        CustomXMLParserDelegate<ProviderAuthenticationData>     CustomProviderAuthenticationDataParser      = null,
-                                       CustomXMLParserDelegate<Identification>                 CustomAuthorizationIdentificationParser     = null,
+                                       CustomXMLParserDelegate<Identification>                 CustomIdentificationParser                  = null,
+                                       CustomXMLParserDelegate<RFIDIdentification>             CustomRFIDIdentificationParser              = null,
                                        OnExceptionDelegate                                     OnException                                 = null,
 
                                        DateTime?                                               Timestamp                                   = null,
@@ -374,7 +385,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                              out PushAuthenticationDataRequest,
                              CustomPushAuthenticationDataRequestParser,
                              CustomProviderAuthenticationDataParser,
-                             CustomAuthorizationIdentificationParser,
+                             CustomIdentificationParser,
+                             CustomRFIDIdentificationParser,
                              OnException,
 
                              Timestamp,

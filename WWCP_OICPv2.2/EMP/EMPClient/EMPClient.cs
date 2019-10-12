@@ -602,6 +602,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public CustomXMLParserDelegate<GetChargeDetailRecordsResponse>              CustomGetChargeDetailRecordsResponseParser                { get; set; }
         public CustomXMLParserDelegate<ChargeDetailRecord>                          CustomChargeDetailRecordParser                            { get; set; }
         public CustomXMLParserDelegate<Identification>                              CustomIdentificationParser                                { get; set; }
+        public CustomXMLParserDelegate<RFIDIdentification>                          CustomRFIDIdentificationParser                            { get; set; }
 
 
         public CustomXMLSerializerDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestSerializer    { get; set; }
@@ -2758,6 +2759,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                                                                                   CustomGetChargeDetailRecordsParser,
                                                                                                                                                   CustomChargeDetailRecordParser,
                                                                                                                                                   CustomIdentificationParser,
+                                                                                                                                                  CustomRFIDIdentificationParser,
                                                                                                                                                   onexception)),
 
                                                  #endregion
