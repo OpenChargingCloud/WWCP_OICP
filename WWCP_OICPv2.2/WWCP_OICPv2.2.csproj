@@ -66,8 +66,6 @@
     <Compile Include="CPO\CPOServer\CPOServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
-    <Compile Include="DataTypes\ACustomData.cs" />
-    <Compile Include="DataTypes\ACustomDataBuilder.cs" />
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\ChargeDetailRecord.cs" />
     <Compile Include="DataTypes\Complex\EVSEData.cs" />
@@ -98,7 +96,6 @@
     <Compile Include="DataTypes\Enums\ResultCodes.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
-    <Compile Include="DataTypes\ICustomData.cs" />
     <Compile Include="DataTypes\Result.cs" />
     <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
     <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />

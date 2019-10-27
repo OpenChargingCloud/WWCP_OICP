@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCPOAdapter : AWWCPCSOAdapter,
+    public class WWCPCPOAdapter : AWWCPCSOAdapter<ChargeDetailRecord>,
                                   ICSORoamingProvider,
                                   IEquatable <WWCPCPOAdapter>,
                                   IComparable<WWCPCPOAdapter>,

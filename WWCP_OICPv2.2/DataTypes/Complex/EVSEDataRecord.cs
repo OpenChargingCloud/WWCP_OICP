@@ -1128,7 +1128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// An OICP Electric Vehicle Supply Equipment (EVSE).
         /// This is meant to be one electrical circuit which can charge a electric vehicle.
         /// </summary>
-        public class Builder : ACustomDataBuilder
+        public new class Builder : ACustomData.Builder
         {
 
             #region Properties

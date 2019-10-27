@@ -1516,7 +1516,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
+
+
         #region ToOICP(this ChargeDetailRecord, WWCPChargeDetailRecord2ChargeDetailRecord = null)
+
+        public static String WWCP_CDR = "WWCP.CDR";
 
         /// <summary>
         /// Convert a WWCP charge detail record into a corresponding OICP charge detail record.
@@ -1527,16 +1531,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                 CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2ChargeDetailRecord = null)
         {
 
-            var CustomData = new Dictionary<String, Object> {
-                                 { "WWCP.CDR", ChargeDetailRecord }
-                             };
-
             var CDR = new ChargeDetailRecord(
                           EVSEId:                ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
                           SessionId:             ChargeDetailRecord.SessionId.ToOICP(),
                           SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
                           SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
-                          Identification:        ChargeDetailRecord.IdentificationStart.ToOICP(),
+                          Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
                           CPOPartnerSessionId:   ChargeDetailRecord.GetCustomDataAs<CPOPartnerSession_Id?>("OICP.CPOPartnerSessionId"),
                           EMPPartnerSessionId:   ChargeDetailRecord.GetCustomDataAs<EMPPartnerSession_Id?>("OICP.EMPPartnerSessionId"),
@@ -1549,7 +1549,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                           MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
                           HubOperatorId:         ChargeDetailRecord.GetCustomDataAs<HubOperator_Id?>("OICP.HubOperatorId"),
                           HubProviderId:         ChargeDetailRecord.GetCustomDataAs<HubProvider_Id?>("OICP.HubProviderId"),
-                          CustomData:            CustomData
+                          CustomData:            new Dictionary<String, Object> {
+                                                     { WWCP_CDR, ChargeDetailRecord }
+                                                 }
                       );
 
             if (WWCPChargeDetailRecord2ChargeDetailRecord != null)

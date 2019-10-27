@@ -1532,7 +1532,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
                           SessionId:             ChargeDetailRecord.SessionId.ToOICP(),
                           SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
                           SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
-                          Identification:        ChargeDetailRecord.IdentificationStart.ToOICP(),
+                          Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
                           PartnerSessionId:      ChargeDetailRecord.GetCustomDataAs<PartnerSession_Id?>("OICP.PartnerSessionId"),
                           ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,

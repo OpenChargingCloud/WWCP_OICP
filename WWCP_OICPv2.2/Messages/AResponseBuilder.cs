@@ -17,6 +17,7 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Illias;
 using System;
 using System.Collections.Generic;
 
@@ -30,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// </summary>
     /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
     /// <typeparam name="TResponse">The type of the OICP response.</typeparam>
-    public abstract class AResponseBuilder<TRequest, TResponse> : ACustomDataBuilder,
+    public abstract class AResponseBuilder<TRequest, TResponse> : ACustomData.Builder,
                                                                   IResponse,
                                                                   IEquatable<TResponse>
 
@@ -62,8 +63,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Request">The OICP request leading to this result.</param>
         /// <param name="CustomData">Optional customer-specific data of the response.</param>
-        protected AResponseBuilder(TRequest                             Request,
-                                   IReadOnlyDictionary<String, Object>  CustomData  = null)
+        protected AResponseBuilder(TRequest                    Request,
+                                   Dictionary<String, Object>  CustomData  = null)
 
             : this(Request,
                    DateTime.Now,
@@ -81,16 +82,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Request">The OICP request leading to this result.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="CustomData">Optional customer-specific data of the response.</param>
-        protected AResponseBuilder(TRequest                             Request,
-                                   DateTime?                            ResponseTimestamp  = null,
-                                   IReadOnlyDictionary<String, Object>  CustomData         = null)
+        protected AResponseBuilder(TRequest                    Request,
+                                   DateTime?                   ResponseTimestamp  = null,
+                                   Dictionary<String, Object>  CustomData         = null)
 
             : base(CustomData)
 
         {
 
             this.Request            = Request;
-            this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.Now;
+            this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.UtcNow;
 
         }
 
@@ -107,7 +108,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                    IEnumerable<KeyValuePair<String, Object>>  CustomData  = null)
 
             : this(Request,
-                   DateTime.Now,
+                   DateTime.UtcNow,
                    CustomData)
 
         { }
@@ -131,7 +132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             this.Request            = Request;
-            this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.Now;
+            this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.UtcNow;
 
         }
 

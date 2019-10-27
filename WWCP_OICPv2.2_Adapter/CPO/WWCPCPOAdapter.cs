@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCPOAdapter : AWWCPCSOAdapter,
+    public class WWCPCPOAdapter : AWWCPCSOAdapter<ChargeDetailRecord>,
                                   ICSORoamingProvider,
                                   IEquatable <WWCPCPOAdapter>,
                                   IComparable<WWCPCPOAdapter>,
@@ -6553,7 +6553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                 try
                                 {
 
-                                    ChargeDetailRecordsQueue.Add(ChargeDetailRecord);
+                                    ChargeDetailRecordsQueue.Add(ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord));
                                     SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                           SendCDRResultTypes.Enqueued));
 
@@ -6604,7 +6604,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                                     if (response.HTTPStatusCode == HTTPStatusCode.OK &&
                                         response.Content        != null              &&
-                                        response.Content.Result)
+                                        response.Content.Result == true)
                                     {
                                         SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                               SendCDRResultTypes.Success));
@@ -6641,7 +6641,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                   Where (cdrresult => cdrresult.Result != SendCDRResultTypes.Success).
                                                                   Select(cdrresult => cdrresult.ChargeDetailRecord),
                                                               Runtime: Runtime);
-
 
                         }
 
@@ -7024,7 +7023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             #region Make a thread local copy of all data
 
             var LockTaken                     = await FlushChargeDetailRecordsLock.WaitAsync(MaxLockWaitingTime);
-            var ChargeDetailRecordsQueueCopy  = new List<WWCP.ChargeDetailRecord>();
+            var ChargeDetailRecordsQueueCopy  = new List<ChargeDetailRecord>();
 
             try
             {
@@ -7065,22 +7064,53 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             if (ChargeDetailRecordsQueueCopy.Count > 0)
             {
 
-                var sendCDRsResult = await SendChargeDetailRecords(ChargeDetailRecordsQueueCopy,
-                                                                   TransmissionTypes.Direct,
+                var SendCDRsResults = new List<SendCDRResult>();
+                HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
 
-                                                                   DateTime.UtcNow,
-                                                                   new CancellationTokenSource().Token,
-                                                                   EventTracking_Id.New,
-                                                                   DefaultRequestTimeout).
-                                               ConfigureAwait(false);
-
-                if (sendCDRsResult.Warnings.Any())
+                foreach (var chargeDetailRecord in ChargeDetailRecordsQueueCopy)
                 {
 
-                    SendOnWarnings(DateTime.UtcNow,
-                                   nameof(WWCPCPOAdapter) + Id,
-                                   "SendChargeDetailRecords",
-                                   sendCDRsResult.Warnings);
+                    try
+                    {
+
+                        response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord,
+
+                                                                           DateTime.UtcNow,
+                                                                           new CancellationTokenSource().Token,
+                                                                           EventTracking_Id.New,
+                                                                           DefaultRequestTimeout).
+                                                    ConfigureAwait(false);
+
+                        if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                            response.Content != null &&
+                            response.Content.Result == true)
+                        {
+                            SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                                                                  SendCDRResultTypes.Success));
+                        }
+
+                        else
+                            SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                                                                  SendCDRResultTypes.Error,
+                                                                  response.HTTPBodyAsUTF8String));
+
+                    }
+                    catch (Exception e)
+                    {
+                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                                                              SendCDRResultTypes.Error,
+                                                              e.Message));
+                    }
+
+                    //if (sendCDRsResult.Warnings.Any())
+                    //{
+
+                    //    SendOnWarnings(DateTime.UtcNow,
+                    //                   nameof(WWCPCPOAdapter) + Id,
+                    //                   "SendChargeDetailRecords",
+                    //                   sendCDRsResult.Warnings);
+
+                    //}
 
                 }
 

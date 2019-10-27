@@ -736,11 +736,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var OICPChargeDetailRecord = Object as ChargeDetailRecord;
-            if ((Object) OICPChargeDetailRecord == null)
+            if (!(Object is ChargeDetailRecord ChargeDetailRecord))
                 throw new ArgumentException("The given object is not a charge detail record!", nameof(Object));
 
-            return CompareTo(OICPChargeDetailRecord);
+            return CompareTo(ChargeDetailRecord);
 
         }
 
@@ -755,7 +754,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(ChargeDetailRecord ChargeDetailRecord)
         {
 
-            if ((Object) ChargeDetailRecord == null)
+            if (ChargeDetailRecord is null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecord),  "The given charge detail record must not be null!");
 
             return SessionId.CompareTo(ChargeDetailRecord.SessionId);
@@ -879,7 +878,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// An OICP charge detail record.
         /// </summary>
-        public class Builder : ACustomDataBuilder
+        public new class Builder : ACustomData.Builder
         {
 
             #region Properties
