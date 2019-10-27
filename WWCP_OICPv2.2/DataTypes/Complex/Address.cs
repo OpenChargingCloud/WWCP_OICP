@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using System.Text.RegularExpressions;
 
 #endregion
 
@@ -37,6 +38,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            IComparable<Address>,
                            IComparable
     {
+
+        #region Data
+
+        /// <summary>
+        /// The OICP timezone regular expression.
+        /// </summary>
+        public static Regex TimezoneRegExpr = new Regex("[U][T][C][+,-][0-9][0-9][:][0-9][0-9]");
+
+        #endregion
 
         #region Properties
 
@@ -112,13 +122,29 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         {
 
+            #region Initial checks
+
+            if (Country == null)
+                throw new ArgumentNullException(nameof(Country),   "The given country must not be null!");
+
+            if (City.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(City),      "The given city must not be null or empty!");
+
+            if (Street.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(Street),    "The given street must not be null or empty!");
+
+            if (Timezone.IsNotNullOrEmpty() && !TimezoneRegExpr.IsMatch(Timezone))
+                throw new ArgumentException    (nameof(Timezone),  "The given timezone is not valid!");
+
+            #endregion
+
             this.Country        = Country;
-            this.City           = City;
-            this.Street         = Street;
-            this.PostalCode     = PostalCode;
-            this.HouseNumber    = HouseNumber;
-            this.FloorLevel     = FloorLevel;
-            this.Region         = Region;
+            this.City           = City.        SubstringMax( 50);
+            this.Street         = Street.      SubstringMax(100); 
+            this.PostalCode     = PostalCode?. SubstringMax( 10);
+            this.HouseNumber    = HouseNumber?.SubstringMax( 10);
+            this.FloorLevel     = FloorLevel?. SubstringMax(  5);
+            this.Region         = Region?.     SubstringMax( 50);
             this.Timezone       = Timezone;
 
         }
@@ -126,26 +152,31 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        //ToDo Timezone reg expr !!!!!!!!!!!!!!!!!!!!
-
         #region (static) Create(Country, City, Street, ...)
 
         /// <summary>
         /// Create a new address.
         /// </summary>
         /// <param name="Country">The country.</param>
-        /// <param name="PostalCode">The postal code</param>
         /// <param name="City">The city.</param>
         /// <param name="Street">The name of the street.</param>
-        /// <param name="HouseNumber">The house number.</param>
-        public static Address Create(Country     Country,
-                                     String      PostalCode,
-                                     I18NString  City,
-                                     String      Street,
-                                     String      HouseNumber  = null,
-                                     String      FloorLevel   = null,
-                                     String      Region       = null,
-                                     String      Timezone     = null)
+        /// <param name="PostalCode">An optional postal code</param>
+        /// <param name="HouseNumber">An optional house number.</param>
+        /// <param name="FloorLevel">An optional floor level.</param>
+        /// <param name="Region">An optional region.</param>
+        /// <param name="Timezone">An optional timezone.</param>
+        /// 
+        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        public static Address Create(Country                              Country,
+                                     String                               PostalCode,
+                                     I18NString                           City,
+                                     String                               Street,
+                                     String                               HouseNumber   = null,
+                                     String                               FloorLevel    = null,
+                                     String                               Region        = null,
+                                     String                               Timezone      = null,
+
+                                     IReadOnlyDictionary<String, Object>  CustomData    = null)
 
             => new Address(Country,
                            City,

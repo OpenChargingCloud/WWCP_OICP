@@ -82,7 +82,7 @@
     <Compile Include="DataTypes\Enums\ActionTypes.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
-    <Compile Include="DataTypes\Enums\ChargingFacilities.cs" />
+    <Compile Include="DataTypes\Complex\ChargingFacility.cs" />
     <Compile Include="DataTypes\Enums\ChargingModes.cs" />
     <Compile Include="DataTypes\Enums\RFIDTypes.cs" />
     <Compile Include="DataTypes\Enums\DeltaTypes.cs" />

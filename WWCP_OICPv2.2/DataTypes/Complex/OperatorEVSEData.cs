@@ -211,11 +211,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(XElement                                   OperatorEVSEDataXML,
                                              CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
                                              CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
                                              CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                             CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
                                              OnExceptionDelegate                        OnException                    = null)
         {
 
@@ -224,6 +226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
+                         CustomChargingFacilityParser,
                          OnException))
 
                 return operatorEVSEData;
@@ -243,11 +246,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static OperatorEVSEData Parse(String                                     OperatorEVSEDataText,
                                              CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
                                              CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
                                              CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                             CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
                                              OnExceptionDelegate                        OnException                    = null)
         {
 
@@ -256,6 +261,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                          CustomOperatorEVSEDataParser,
                          CustomEVSEDataRecordParser,
                          CustomAddressParser,
+                         CustomChargingFacilityParser,
                          OnException))
 
                 return operatorEVSEData;
@@ -276,12 +282,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(XElement                                   OperatorEVSEDataXML,
                                        out OperatorEVSEData                       OperatorEVSEData,
                                        CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
                                        CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
                                        CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                       CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
                                        OnExceptionDelegate                        OnException                    = null)
         {
 
@@ -300,6 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                                  (xml, e) => EVSEDataRecord.Parse(xml,
                                                                                                                   CustomEVSEDataRecordParser,
                                                                                                                   CustomAddressParser,
+                                                                                                                  CustomChargingFacilityParser,
                                                                                                                   e),
                                                                                  OnException).
                                                                                  Where(operatorevsedata => operatorevsedata != null),
@@ -343,12 +352,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         public static Boolean TryParse(String                                     OperatorEVSEDataText,
                                        out OperatorEVSEData                       OperatorEVSEData,
                                        CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null,
                                        CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
                                        CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
+                                       CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
                                        OnExceptionDelegate                        OnException                    = null)
         {
 
@@ -360,6 +371,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                              CustomOperatorEVSEDataParser,
                              CustomEVSEDataRecordParser,
                              CustomAddressParser,
+                             CustomChargingFacilityParser,
                              OnException))
 
                     return true;
@@ -387,11 +399,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
         /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
+        /// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>
+        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom ChargingFacility XML elements.</param>
         public XElement ToXML(XName                                          OperatorEVSEDataXName              = null,
                               CustomXMLSerializerDelegate<OperatorEVSEData>  CustomOperatorEVSEDataSerializer   = null,
                               XName                                          EVSEDataRecordXName                = null,
                               Boolean                                        IncludeEVSEDataRecordMetadata      = true,
-                              CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer     = null)
+                              CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer     = null,
+                              CustomXMLSerializerDelegate<Address>           CustomAddressSerializer            = null,
+                              CustomXMLSerializerDelegate<ChargingFacility>  CustomChargingFacilitySerializer   = null)
 
         {
 
@@ -406,7 +422,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            EVSEDataRecords.Any()
                                ? EVSEDataRecords.SafeSelect(evsedatarecord => evsedatarecord.ToXML(EVSEDataRecordXName,
                                                                                                    IncludeEVSEDataRecordMetadata,
-                                                                                                   CustomEVSEDataRecordSerializer))
+                                                                                                   CustomEVSEDataRecordSerializer,
+                                                                                                   CustomAddressSerializer,
+                                                                                                   CustomChargingFacilitySerializer))
                                : null
 
                        );

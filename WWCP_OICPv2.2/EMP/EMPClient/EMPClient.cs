@@ -593,6 +593,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public CustomXMLParserDelegate<OperatorEVSEData>                            CustomOperatorEVSEDataParser                              { get; set; }
         public CustomXMLParserDelegate<EVSEDataRecord>                              CustomEVSEDataRecordParser                                { get; set; }
         public CustomXMLParserDelegate<Address>                                     CustomAddressParser                                       { get; set; }
+        public CustomXMLParserDelegate<ChargingFacility>                            CustomChargingFacilityParser                              { get; set; }
 
         public CustomXMLParserDelegate<EVSEStatus>                                  CustomEVSEStatusParser                                    { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEStatus>                          CustomOperatorEVSEStatusParser                            { get; set; }
@@ -1091,6 +1092,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                                                                                                 CustomOperatorEVSEDataParser,
                                                                                                                                                                 CustomEVSEDataRecordParser,
                                                                                                                                                                 CustomAddressParser,
+                                                                                                                                                                CustomChargingFacilityParser,
                                                                                                                                                                 CustomStatusCodeParser,
                                                                                                                                                                 onexception)),
 

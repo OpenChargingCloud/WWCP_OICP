@@ -387,11 +387,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region AC, 1 phase
 
-            if (EVSE.CurrentTypes == CurrentTypes.AC_OnePhase)
+            if (EVSE.CurrentType == CurrentTypes.AC_OnePhase)
             {
 
-                if (EVSE.AverageVoltage >= 100.0 &&
-                    EVSE.AverageVoltage <= 120.0)
+                if (EVSE.AverageVoltage >= 100.0m &&
+                    EVSE.AverageVoltage <= 120.0m)
                 {
 
                     if (EVSE.MaxCurrent <= 10)
@@ -405,8 +405,8 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                 }
 
-                if (EVSE.AverageVoltage >= 200.0 &&
-                    EVSE.AverageVoltage <= 240.0)
+                if (EVSE.AverageVoltage >= 200.0m &&
+                    EVSE.AverageVoltage <= 240.0m)
                 {
 
                     if (EVSE.MaxCurrent <= 10)
@@ -429,11 +429,11 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region AC, 3 phases
 
-            else if (EVSE.CurrentTypes == CurrentTypes.AC_ThreePhases)
+            else if (EVSE.CurrentType == CurrentTypes.AC_ThreePhases)
             {
 
-                if (EVSE.AverageVoltage >= 380.0 &&
-                    EVSE.AverageVoltage <= 480.0)
+                if (EVSE.AverageVoltage >= 380.0m &&
+                    EVSE.AverageVoltage <= 480.0m)
                 {
 
                     if (EVSE.MaxCurrent <= 16)
@@ -453,7 +453,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
             #region DC
 
-            else if (EVSE.CurrentTypes == CurrentTypes.DC)
+            else if (EVSE.CurrentType == CurrentTypes.DC)
             {
 
                 if (EVSE.MaxPower > 50000)
@@ -492,41 +492,41 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals10A:
 
-                        if (EVSE.AverageVoltage < 110.0)
+                        if (EVSE.AverageVoltage < 110.0m)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 10.0)
-                            EVSE.MaxCurrent = 10.0f;
+                        if (EVSE.MaxCurrent < 10.0m)
+                            EVSE.MaxCurrent = 10.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals16A:
 
-                        if (EVSE.AverageVoltage < 110.0)
+                        if (EVSE.AverageVoltage < 110.0m)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0f;
+                        if (EVSE.MaxCurrent < 16.0m)
+                            EVSE.MaxCurrent = 16.0m;
 
                         break;
 
 
                     case OICPv2_1.ChargingFacilities.CF_100_120V_1Phase_lessOrEquals32A:
 
-                        if (EVSE.AverageVoltage < 110.0)
+                        if (EVSE.AverageVoltage < 110.0m)
                             EVSE.AverageVoltage = 110;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0f;
+                        if (EVSE.MaxCurrent < 32.0m)
+                            EVSE.MaxCurrent = 32.0m;
 
                         break;
 
@@ -534,93 +534,93 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals10A:
 
-                        if (EVSE.AverageVoltage < 230.0)
+                        if (EVSE.AverageVoltage < 230.0m)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 10.0)
-                            EVSE.MaxCurrent = 10.0f;
+                        if (EVSE.MaxCurrent < 10.0m)
+                            EVSE.MaxCurrent = 10.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals16A:
 
-                        if (EVSE.AverageVoltage < 230.0)
+                        if (EVSE.AverageVoltage < 230.0m)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0f;
+                        if (EVSE.MaxCurrent < 16.0m)
+                            EVSE.MaxCurrent = 16.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_200_240V_1Phase_lessOrEquals32A:
 
-                        if (EVSE.AverageVoltage < 230.0)
+                        if (EVSE.AverageVoltage < 230.0m)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0f;
+                        if (EVSE.MaxCurrent < 32.0m)
+                            EVSE.MaxCurrent = 32.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_200_240V_1Phase_moreThan32A:
 
-                        if (EVSE.AverageVoltage < 230.0)
+                        if (EVSE.AverageVoltage < 230.0m)
                             EVSE.AverageVoltage = 230;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_OnePhase;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_OnePhase;
 
-                        if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0f;
+                        if (EVSE.MaxCurrent < 32.0m)
+                            EVSE.MaxCurrent = 32.0m;
 
                         break;
 
 
                     case OICPv2_1.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals16A:
 
-                        if (EVSE.AverageVoltage < 400.0)
+                        if (EVSE.AverageVoltage < 400.0m)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
-                        if (EVSE.MaxCurrent < 16.0)
-                            EVSE.MaxCurrent = 16.0f;
+                        if (EVSE.MaxCurrent < 16.0m)
+                            EVSE.MaxCurrent = 16.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals32A:
 
-                        if (EVSE.AverageVoltage < 400.0)
+                        if (EVSE.AverageVoltage < 400.0m)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
-                        if (EVSE.MaxCurrent < 32.0)
-                            EVSE.MaxCurrent = 32.0f;
+                        if (EVSE.MaxCurrent < 32.0m)
+                            EVSE.MaxCurrent = 32.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.CF_380_480V_3Phase_lessOrEquals63A:
 
-                        if (EVSE.AverageVoltage < 400.0)
+                        if (EVSE.AverageVoltage < 400.0m)
                             EVSE.AverageVoltage = 400;
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.AC_ThreePhases;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.AC_ThreePhases;
 
-                        if (EVSE.MaxCurrent < 63.0)
-                            EVSE.MaxCurrent = 63.0f;
+                        if (EVSE.MaxCurrent < 63.0m)
+                            EVSE.MaxCurrent = 63.0m;
 
                         break;
 
@@ -628,31 +628,31 @@ namespace org.GraphDefined.WWCP.OICPv2_1
 
                     case OICPv2_1.ChargingFacilities.DCCharging_lessOrEquals20kW:
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.DC;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.DC;
 
-                        if (EVSE.MaxPower < 20000.0)
-                            EVSE.MaxPower = 20000.0f;
+                        if (EVSE.MaxPower < 20000.0m)
+                            EVSE.MaxPower = 20000.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.DCCharging_lessOrEquals50kW:
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.DC;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.DC;
 
-                        if (EVSE.MaxPower < 50000.0)
-                            EVSE.MaxPower = 50000.0f;
+                        if (EVSE.MaxPower < 50000.0m)
+                            EVSE.MaxPower = 50000.0m;
 
                         break;
 
                     case OICPv2_1.ChargingFacilities.DCCharging_moreThan50kW:
 
-                        if (EVSE.CurrentTypes == CurrentTypes.Unspecified)
-                            EVSE.CurrentTypes = CurrentTypes.DC;
+                        if (EVSE.CurrentType == CurrentTypes.Unspecified)
+                            EVSE.CurrentType = CurrentTypes.DC;
 
-                        if (EVSE.MaxPower < 50000.0)
-                            EVSE.MaxPower = 50000.0f;
+                        if (EVSE.MaxPower < 50000.0m)
+                            EVSE.MaxPower = 50000.0m;
 
                         break;
 

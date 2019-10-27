@@ -3336,7 +3336,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                         _EVSE.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                                                         _EVSE.ChargingModes   = CurrentEVSEDataRecord.ChargingModes.AsWWCPChargingMode();
                                                         OICPMapper.ApplyChargingFacilities(_EVSE, CurrentEVSEDataRecord.ChargingFacilities);
-                                                        _EVSE.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
+                                                        _EVSE.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity.HasValue ? new Decimal?(Convert.ToDecimal(CurrentEVSEDataRecord.MaxCapacity.Value)) : null;
                                                         _EVSE.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
 
                                                         EVSEsUpdated++;
@@ -3356,7 +3356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                                                                         evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                                                                                         evse.ChargingModes   = CurrentEVSEDataRecord.ChargingModes.AsWWCPChargingMode();
                                                                                         OICPMapper.ApplyChargingFacilities(evse, CurrentEVSEDataRecord.ChargingFacilities);
-                                                                                        evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
+                                                                                        evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity.HasValue ? new Decimal?(Convert.ToDecimal(CurrentEVSEDataRecord.MaxCapacity.Value)) : null;
                                                                                         evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
 
                                                                                         EVSEsCreated++;

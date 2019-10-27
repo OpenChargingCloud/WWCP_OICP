@@ -3278,8 +3278,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                         // Update via events!
                                                         _EVSE.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                                                         _EVSE.ChargingModes   = CurrentEVSEDataRecord.ChargingModes.AsWWCPChargingMode();
-                                                        OICPMapper.ApplyChargingFacilities(_EVSE, CurrentEVSEDataRecord.ChargingFacilities);
-                                                        _EVSE.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
+                                                        OICPMapper.ApplyChargingFacilities(CurrentEVSEDataRecord.ChargingFacilities, _EVSE);
+                                                        _EVSE.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity.HasValue ? new Decimal?(Convert.ToDecimal(CurrentEVSEDataRecord.MaxCapacity.Value)) : null;
                                                         _EVSE.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
 
                                                         EVSEsUpdated++;
@@ -3298,14 +3298,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                         evse.DataSource      = Id.ToString();
                                                                                         evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
                                                                                         evse.ChargingModes   = CurrentEVSEDataRecord.ChargingModes.AsWWCPChargingMode();
-                                                                                        OICPMapper.ApplyChargingFacilities(evse, CurrentEVSEDataRecord.ChargingFacilities);
-                                                                                        evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
+                                                                                        OICPMapper.ApplyChargingFacilities(CurrentEVSEDataRecord.ChargingFacilities, evse);
+                                                                                        evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity.HasValue ? new Decimal?(Convert.ToDecimal(CurrentEVSEDataRecord.MaxCapacity.Value)) : null;
                                                                                         evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
 
                                                                                         EVSEsCreated++;
 
-                                                                                    }
-                                                                                   );
+                                                                                    });
 
                                                     #endregion
 
