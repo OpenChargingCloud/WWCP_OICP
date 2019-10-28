@@ -20,10 +20,10 @@
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Text.RegularExpressions;
 
 #endregion
 
@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An OICP address.
+    /// An address.
     /// </summary>
     public class Address : ACustomData,
                            IEquatable<Address>,
@@ -125,26 +125,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             #region Initial checks
 
             if (Country == null)
-                throw new ArgumentNullException(nameof(Country),   "The given country must not be null!");
+                throw new ArgumentNullException(nameof(Country),  "The given country must not be null!");
 
             if (City.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(City),      "The given city must not be null or empty!");
+                throw new ArgumentNullException(nameof(City),     "The given city must not be null or empty!");
 
             if (Street.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Street),    "The given street must not be null or empty!");
+                throw new ArgumentNullException(nameof(Street),   "The given street must not be null or empty!");
 
             if (Timezone.IsNotNullOrEmpty() && !TimezoneRegExpr.IsMatch(Timezone))
-                throw new ArgumentException    (nameof(Timezone),  "The given timezone is not valid!");
+                throw new ArgumentException    ("The given timezone is not valid!", nameof(Timezone));
 
             #endregion
 
             this.Country        = Country;
-            this.City           = City.        SubstringMax( 50);
-            this.Street         = Street.      SubstringMax(100); 
-            this.PostalCode     = PostalCode?. SubstringMax( 10);
-            this.HouseNumber    = HouseNumber?.SubstringMax( 10);
-            this.FloorLevel     = FloorLevel?. SubstringMax(  5);
-            this.Region         = Region?.     SubstringMax( 50);
+            this.City           = City.        TrimAll().SubstringMax( 50);
+            this.Street         = Street.      Trim().   SubstringMax(100);
+            this.PostalCode     = PostalCode?. Trim().   SubstringMax( 10);
+            this.HouseNumber    = HouseNumber?.Trim().   SubstringMax( 10);
+            this.FloorLevel     = FloorLevel?. Trim().   SubstringMax(  5);
+            this.Region         = Region?.     Trim().   SubstringMax( 50);
             this.Timezone       = Timezone;
 
         }
@@ -227,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) Parse(AddressXML,  CustomAddressParser = null, OnException = null)
+        #region (static) Parse   (AddressXML,               CustomAddressParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given XML representation of an OICP address.
@@ -253,7 +253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) Parse(AddressText, CustomAddressParser = null, OnException = null)
+        #region (static) Parse   (AddressText,              CustomAddressParser = null, OnException = null)
 
         /// <summary>
         /// Parse the given text representation of an OICP address.
@@ -274,6 +274,71 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 return _Address;
 
             return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(AddressXML,  out Address, CustomAddressParser = null, OnException = null)
+
+        /// <summary>
+        /// Try to parse the given XML representation of an OIOI Address.
+        /// </summary>
+        /// <param name="AddressXML">The XML to parse.</param>
+        /// <param name="Address">The parsed address.</param>
+        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
+        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
+        public static Boolean TryParse(XElement                          AddressXML,
+                                       out Address                       Address,
+                                       CustomXMLParserDelegate<Address>  CustomAddressParser   = null,
+                                       OnExceptionDelegate               OnException           = null)
+        {
+
+            try
+            {
+
+                var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
+
+                if (!Country.TryParse(_CountryTXT, out Country _Country))
+                {
+
+                    if (String.Equals(_CountryTXT, "UNKNOWN", StringComparison.CurrentCultureIgnoreCase))
+                        _Country = Country.unknown;
+
+                    else
+                        throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
+
+                }
+
+                Address = new Address(_Country,
+
+                                      I18NString.Create(Languages.unknown,
+                                                        AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City")?.Trim()),
+
+                                      AddressXML.ElementValueOrFail   (OICPNS.CommonTypes + "Street"        )?.Trim(),
+
+                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "")?.Trim(),
+                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum",   "")?.Trim(),
+                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor",      "")?.Trim(),
+                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Region",     "")?.Trim(),
+                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "TimeZone",   "")?.Trim());
+
+                if (CustomAddressParser != null)
+                    Address = CustomAddressParser(AddressXML,
+                                                  Address);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                OnException?.Invoke(DateTime.UtcNow,
+                                    AddressXML,
+                                    e);
+            }
+
+            Address = null;
+            return false;
 
         }
 
@@ -317,72 +382,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) TryParse(AddressXML,  out Address, CustomAddressParser = null, OnException = null)
-
-        /// <summary>
-        /// Try to parse the given XML representation of an OIOI Address.
-        /// </summary>
-        /// <param name="AddressXML">The XML to parse.</param>
-        /// <param name="Address">The parsed address.</param>
-        /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                          AddressXML,
-                                       out Address                       Address,
-                                       CustomXMLParserDelegate<Address>  CustomAddressParser   = null,
-                                       OnExceptionDelegate               OnException           = null)
-        {
-
-            try
-            {
-
-                var _CountryTXT = AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Country", "Missing 'Country'-XML tag!").Trim();
-
-                if (!Country.TryParse(_CountryTXT, out Country _Country))
-                {
-
-                    if (String.Equals(_CountryTXT, "UNKNOWN", StringComparison.CurrentCultureIgnoreCase))
-                        _Country = Country.unknown;
-
-                    else
-                        throw new Exception("'" + _CountryTXT + "' is an unknown country name!");
-
-                }
-
-                Address = new Address(_Country,
-
-                                      I18NString.Create(Languages.unknown,
-                                                        AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "City").Trim()),
-
-                                      AddressXML.ElementValueOrFail(OICPNS.CommonTypes + "Street").Trim(),
-
-                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "PostalCode", "").Trim(),
-                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "HouseNum", "").Trim(),
-                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Floor", "").Trim(),
-                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "Region", "").Trim(),
-                                      AddressXML.ElementValueOrDefault(OICPNS.CommonTypes + "TimeZone", "").Trim()
-                                      );
-
-                if (CustomAddressParser != null)
-                    Address = CustomAddressParser(AddressXML,
-                                                  Address);
-
-                return true;
-
-            }
-            catch (Exception e)
-            {
-                OnException?.Invoke(DateTime.UtcNow,
-                                    AddressXML,
-                                    e);
-            }
-
-            Address = null;
-            return false;
-
-        }
-
-        #endregion
-
         #region ToXML(XName = null, CustomAddressSerializer = null)
 
         /// <summary>
@@ -396,28 +395,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var XML = new XElement(XName ?? OICPNS.EVSEData + "Address",
 
-                          new XElement(OICPNS.CommonTypes + "Country",        Country.Alpha3Code),
-                          new XElement(OICPNS.CommonTypes + "City",           City.FirstText()),
-                          new XElement(OICPNS.CommonTypes + "Street",         Street), // OICP v2.1 requires at least 5 characters!
+                          new XElement(OICPNS.CommonTypes + "Country",  Country.Alpha3Code),
+                          new XElement(OICPNS.CommonTypes + "City",     City.FirstText()),
+                          new XElement(OICPNS.CommonTypes + "Street",   Street),
 
                           PostalCode. IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.CommonTypes + "PostalCode", PostalCode)
+                              ? new XElement(OICPNS.CommonTypes + "PostalCode",  PostalCode)
                               : null,
 
                           HouseNumber.IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.CommonTypes + "HouseNum",   HouseNumber)
+                              ? new XElement(OICPNS.CommonTypes + "HouseNum",    HouseNumber)
                               : null,
 
                           FloorLevel. IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.CommonTypes + "Floor",      FloorLevel)
+                              ? new XElement(OICPNS.CommonTypes + "Floor",       FloorLevel)
                               : null,
 
-                          Region. IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.CommonTypes + "Region",     Region)
+                          Region.     IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "Region",      Region)
                               : null,
 
-                          Timezone. IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.CommonTypes + "TimeZone",   Timezone)
+                          Timezone.   IsNotNullOrEmpty()
+                              ? new XElement(OICPNS.CommonTypes + "TimeZone",    Timezone)
                               : null
 
                       );
@@ -467,7 +466,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Address2">Another address.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Address Address1, Address Address2)
-
             => !(Address1 == Address2);
 
         #endregion
@@ -551,12 +549,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var Address = Object as Address;
-            if ((Object)Address == null)
-                throw new ArgumentException("The given object is not an address identification!", nameof(Object));
+            if (!(Object is Address Address))
+                throw new ArgumentException("The given object is not an address!", nameof(Object));
 
             return CompareTo(Address);
 
@@ -573,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Address Address)
         {
 
-            if ((Object) Address == null)
+            if (Address is null)
                 throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
 
             var c = Country.     CompareTo(Address.Country);
@@ -627,8 +624,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            var Address = Object as Address;
-            if ((Object) Address == null)
+            if (!(Object is Address Address))
                 return false;
 
             return Equals(Address);
@@ -647,7 +643,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Boolean Equals(Address Address)
         {
 
-            if ((Object) Address == null)
+            if (Address is null)
                 return false;
 
             return Country.Equals(Address.Country) &&
@@ -747,7 +743,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                  : "");
 
         #endregion
-
 
     }
 

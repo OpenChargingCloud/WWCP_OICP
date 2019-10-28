@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP user.
+    /// The unique identification of an user.
     /// </summary>
     public struct UID : IId,
                         IEquatable <UID>,
@@ -63,7 +63,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the RFID card identificator.
+        /// The length of the user identificator.
         /// </summary>
         public UInt64 Length
             => (UInt64) InternalId.Length;
@@ -73,10 +73,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new RFID card identification.
-        /// based on the given string.
+        /// Create a new user identification based on the given string.
         /// </summary>
-        /// <param name="Text">The value of the RFID identification.</param>
+        /// <param name="Text">The value of the user identification.</param>
         private UID(String Text)
         {
             InternalId = Text;
@@ -88,25 +87,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given string as a RFID card identification.
+        /// Parse the given string as a user identification.
         /// </summary>
-        /// <param name="Text">A text representation of a RFID card identification.</param>
+        /// <param name="Text">A text representation of a user identification.</param>
         public static UID Parse(String Text)
         {
 
             #region Initial checks
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a RFID card identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a user identification must not be null or empty!");
 
             #endregion
 
-            var MatchCollection = UID_RegEx.Matches(Text);
+            if (TryParse(Text, out UID uid))
+                return uid;
 
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of an user identification: '" + Text + "'!", nameof(Text));
-
-            return new UID(Text);
+            throw new ArgumentException("Illegal text representation of an user identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -121,19 +118,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static UID? TryParse(String Text)
         {
 
-            #region Initial checks
+            if (TryParse(Text, out UID uid))
+                return uid;
 
-            if (Text.IsNullOrEmpty())
-                return new UID?();
-
-            #endregion
-
-            var MatchCollection = UID_RegEx.Matches(Text);
-
-            if (MatchCollection.Count != 1)
-                return new UID?();
-
-            return new UID(Text);
+            return new UID();
 
         }
 
@@ -164,20 +152,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                UID = default(UID);
+                UID = default;
                 return false;
             }
+
+            Text = Text.Trim().ToUpper();
 
             #endregion
 
             try
             {
 
-                var MatchCollection = UID_RegEx.Matches(Text);
-
-                if (MatchCollection.Count != 1)
+                if (!UID_RegEx.IsMatch(Text))
                 {
-                    UID = default(UID);
+                    UID = default;
                     return false;
                 }
 
@@ -194,7 +182,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            UID = default(UID);
+            UID = default;
             return false;
 
         }

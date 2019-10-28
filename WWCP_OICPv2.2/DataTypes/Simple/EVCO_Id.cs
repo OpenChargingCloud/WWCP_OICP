@@ -40,15 +40,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// The regular expression for parsing an electric vehicle contract identification.
         /// </summary>
-        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\*[A-Za-z0-9]{3})\*([A-Za-z0-9]{6})\*([0-9|X])$ |"  +   // DIN STAR:  DE*BMW*0010LY*3
-                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // DIN HYPEN: DE-BMW-0010LY-3
-                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // DIN:       DEBMW0010LY3
-
-                                                             //@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8})\-?([A-Za-z0-9]{1})$
-                                                               @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |" +   // ISO Hypen: DE-BMW-C001000LY-3
-                                                               @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // ISO:       DEBMWC001000LY3
-
+        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8}\-?[\d|A-Za-z])$|" +         // ISO
+                                                               @"^([A-Za-z]{2}[\*|\-]?[A-Za-z0-9]{3})[\*|\-]?([A-Za-z0-9]{6}[\*|\-]?[\d|X])$",  // DIN
                                                                RegexOptions.IgnorePatternWhitespace);
+
+                                                         //     (@"^([A-Za-z]{2}\*[A-Za-z0-9]{3})\*([A-Za-z0-9]{6})\*([0-9|X])$ |"  +   // DIN STAR:  DE*BMW*0010LY*3
+                                                         //      @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // DIN HYPEN: DE-BMW-0010LY-3
+                                                         //      @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // DIN:       DEBMW0010LY3
+                                                         //
+                                                         //    //@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8})\-?([A-Za-z0-9]{1})$
+                                                         //      @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |" +   // ISO Hypen: DE-BMW-C001000LY-3
+                                                         //      @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // ISO:       DEBMWC001000LY3
+                                                         //
+                                                         //      RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -267,23 +271,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
-
             if (Text.IsNullOrEmpty())
             {
-                EVCOId = default(EVCO_Id);
+                EVCOId = default;
                 return false;
             }
+
+            Text = Text.Trim();
 
             #endregion
 
             try
             {
 
-                EVCOId = default(EVCO_Id);
+                EVCOId = default;
 
-                var _MatchCollection = EVCOId_RegEx.Matches(Text.Trim().ToUpper());
+                var _MatchCollection = EVCOId_RegEx.Matches(Text);
 
                 if (_MatchCollection.Count != 1)
                     return false;
@@ -374,7 +377,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            EVCOId = default(EVCO_Id);
+            EVCOId = default;
             return false;
 
         }

@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP charging session.
+    /// The unique identification of a charging session.
     /// </summary>
     public struct Session_Id : IId,
                                IEquatable<Session_Id>,
@@ -109,12 +109,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #endregion
 
-            var MatchCollection = SessionId_RegEx.Matches(Text);
+            if (TryParse(Text, out Session_Id sessionId))
+                return sessionId;
 
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
-
-            return new Session_Id(Text);
+            throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -129,17 +127,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static Session_Id? TryParse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text.IsNullOrEmpty())
-                return new Session_Id?();
-
-            #endregion
-
-            var MatchCollection = SessionId_RegEx.Matches(Text);
-
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
+            if (TryParse(Text, out Session_Id sessionId))
+                return sessionId;
 
             return new Session_Id(Text);
 
@@ -172,20 +161,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                SessionId = default(Session_Id);
+                SessionId = default;
                 return false;
             }
+
+            Text = Text.Trim();
 
             #endregion
 
             try
             {
 
-                var MatchCollection = SessionId_RegEx.Matches(Text);
-
-                if (MatchCollection.Count != 1)
+                if (!SessionId_RegEx.IsMatch(Text))
                 {
-                    SessionId = default(Session_Id);
+                    SessionId = default;
                     return false;
                 }
 
@@ -202,7 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            SessionId = default(Session_Id);
+            SessionId = default;
             return false;
 
         }
@@ -345,11 +334,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is Session_Id))
-                throw new ArgumentException("The given object is not a charging session identification!",
-                                            nameof(Object));
+            if (!(Object is Session_Id SessionId))
+                throw new ArgumentException("The given object is not a charging session identification!");
 
-            return CompareTo((Session_Id) Object);
+            return CompareTo(SessionId);
 
         }
 
@@ -368,7 +356,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
 
             // Compare the length of the SessionIds
-            var _Result = this.Length.CompareTo(SessionId.Length);
+            var _Result = Length.CompareTo(SessionId.Length);
 
             if (_Result == 0)
                 _Result = String.Compare(InternalId, SessionId.InternalId, StringComparison.Ordinal);
@@ -396,10 +384,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            if (!(Object is Session_Id))
+            if (!(Object is Session_Id SessionId))
                 return false;
 
-            return Equals((Session_Id) Object);
+            return Equals(SessionId);
 
         }
 

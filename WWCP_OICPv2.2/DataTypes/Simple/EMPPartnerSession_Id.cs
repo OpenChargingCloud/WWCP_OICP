@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
 
@@ -29,10 +30,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP EMP partner charging session.
+    /// The unique identification of a charging session.
     /// </summary>
     public struct EMPPartnerSession_Id : IId,
-                                         IEquatable <EMPPartnerSession_Id>,
+                                         IEquatable<EMPPartnerSession_Id>,
                                          IComparable<EMPPartnerSession_Id>
 
     {
@@ -43,6 +44,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The internal identification.
         /// </summary>
         private readonly String InternalId;
+
+        /// <summary>
+        /// The regular expression for parsing a charging session identification.
+        /// </summary>
+        public static readonly Regex SessionId_RegEx  = new Regex("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
+                                                                  RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -55,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the EMP partner charging session identificator.
+        /// The length of the charging session identificator.
         /// </summary>
         public UInt64 Length
             => (UInt64) InternalId.Length;
@@ -65,7 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMP partner charging session identification.
+        /// Create a new charging session identification.
         /// based on the given string.
         /// </summary>
         private EMPPartnerSession_Id(String Text)
@@ -76,26 +83,36 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
+        #region (static) NewRandom
+
+        /// <summary>
+        /// Create a new random charging session identification.
+        /// </summary>
+        public static EMPPartnerSession_Id NewRandom
+            => Parse(Guid.NewGuid().ToString());
+
+        #endregion
+
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given string as an EMP partner charging session identification.
+        /// Parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EMP partner charging session identification.</param>
+        /// <param name="Text">A text representation of a charging session identification.</param>
         public static EMPPartnerSession_Id Parse(String Text)
         {
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
-
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a partner charging session identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging session identification must not be null or empty!");
 
             #endregion
 
-            return new EMPPartnerSession_Id(Text);
+            if (TryParse(Text, out EMPPartnerSession_Id sessionId))
+                return sessionId;
+
+            throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -104,18 +121,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given string as an EMP partner charging session identification.
+        /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EMP partner charging session identification.</param>
+        /// <param name="Text">A text representation of a charging session identification.</param>
         public static EMPPartnerSession_Id? TryParse(String Text)
         {
 
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out EMPPartnerSession_Id sessionId))
+                return sessionId;
 
-            return Text.IsNullOrEmpty()
-                       ? new EMPPartnerSession_Id?()
-                       : new EMPPartnerSession_Id(Text);
+            return new EMPPartnerSession_Id(Text);
 
         }
 
@@ -124,41 +139,46 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(JToken)
 
         /// <summary>
-        /// Try to parse the given JSON token as an EMP partner charging session identification.
+        /// Try to parse the given JSON token as a charging session identification.
         /// </summary>
-        /// <param name="JToken">A JSON token representation of an EMP partner charging session identification.</param>
+        /// <param name="JToken">A JSON token representation of a charging session identification.</param>
         public static EMPPartnerSession_Id? TryParse(JToken JToken)
             => TryParse(JToken?.Value<String>());
 
         #endregion
 
-        #region (static) TryParse(Text, out EMPPartnerSessionId)
+        #region (static) TryParse(Text, out SessionId)
 
         /// <summary>
-        /// Try to parse the given string as an EMP partner charging session identification.
+        /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EMP partner charging session identification.</param>
-        /// <param name="EMPPartnerSessionId">The parsed EMP partner charging session identification.</param>
-        public static Boolean TryParse(String Text, out EMPPartnerSession_Id EMPPartnerSessionId)
+        /// <param name="Text">A text representation of a charging session identification.</param>
+        /// <param name="SessionId">The parsed charging session identification.</param>
+        public static Boolean TryParse(String Text, out EMPPartnerSession_Id SessionId)
         {
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
-
             if (Text.IsNullOrEmpty())
             {
-                EMPPartnerSessionId = default(EMPPartnerSession_Id);
+                SessionId = default;
                 return false;
             }
+
+            Text = Text.Trim();
 
             #endregion
 
             try
             {
 
-                EMPPartnerSessionId = new EMPPartnerSession_Id(Text);
+                if (!SessionId_RegEx.IsMatch(Text))
+                {
+                    SessionId = default;
+                    return false;
+                }
+
+                SessionId = new EMPPartnerSession_Id(Text);
 
                 return true;
 
@@ -171,7 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            EMPPartnerSessionId = default(EMPPartnerSession_Id);
+            SessionId = default;
             return false;
 
         }
@@ -181,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Clone
 
         /// <summary>
-        /// Clone this partner charging session identification.
+        /// Clone this charging session identification.
         /// </summary>
         public EMPPartnerSession_Id Clone
 
@@ -194,113 +214,113 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #region Operator overloading
 
-        #region Operator == (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator == (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
+        public static Boolean operator == (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2))
+            if (Object.ReferenceEquals(SessionId1, SessionId2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) PartnerEMPPartnerSessionId1 == null) || ((Object) PartnerEMPPartnerSessionId2 == null))
+            if (((Object) SessionId1 == null) || ((Object) SessionId2 == null))
                 return false;
 
-            return PartnerEMPPartnerSessionId1.Equals(PartnerEMPPartnerSessionId2);
+            return SessionId1.Equals(SessionId2);
 
         }
 
         #endregion
 
-        #region Operator != (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator != (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
-            => !(PartnerEMPPartnerSessionId1 == PartnerEMPPartnerSessionId2);
+        public static Boolean operator != (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+            => !(SessionId1 == SessionId2);
 
         #endregion
 
-        #region Operator <  (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator <  (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
+        public static Boolean operator < (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
         {
 
-            if ((Object) PartnerEMPPartnerSessionId1 == null)
-                throw new ArgumentNullException(nameof(PartnerEMPPartnerSessionId1), "The given PartnerEMPPartnerSessionId1 must not be null!");
+            if ((Object) SessionId1 == null)
+                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
 
-            return PartnerEMPPartnerSessionId1.CompareTo(PartnerEMPPartnerSessionId2) < 0;
+            return SessionId1.CompareTo(SessionId2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator <= (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
-            => !(PartnerEMPPartnerSessionId1 > PartnerEMPPartnerSessionId2);
+        public static Boolean operator <= (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+            => !(SessionId1 > SessionId2);
 
         #endregion
 
-        #region Operator >  (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator >  (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
+        public static Boolean operator > (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
         {
 
-            if ((Object) PartnerEMPPartnerSessionId1 == null)
-                throw new ArgumentNullException(nameof(PartnerEMPPartnerSessionId1), "The given PartnerEMPPartnerSessionId1 must not be null!");
+            if ((Object) SessionId1 == null)
+                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
 
-            return PartnerEMPPartnerSessionId1.CompareTo(PartnerEMPPartnerSessionId2) > 0;
+            return SessionId1.CompareTo(SessionId2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (PartnerEMPPartnerSessionId1, PartnerEMPPartnerSessionId2)
+        #region Operator >= (SessionId1, SessionId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PartnerEMPPartnerSessionId1">A EMP partner charging session identification.</param>
-        /// <param name="PartnerEMPPartnerSessionId2">Another EMP partner charging session identification.</param>
+        /// <param name="SessionId1">A charging session identification.</param>
+        /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EMPPartnerSession_Id PartnerEMPPartnerSessionId1, EMPPartnerSession_Id PartnerEMPPartnerSessionId2)
-            => !(PartnerEMPPartnerSessionId1 < PartnerEMPPartnerSessionId2);
+        public static Boolean operator >= (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+            => !(SessionId1 < SessionId2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<EMPPartnerSessionId> Members
+        #region IComparable<SessionId> Members
 
         #region CompareTo(Object)
 
@@ -314,33 +334,32 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is EMPPartnerSession_Id))
-                throw new ArgumentException("The given object is not a partner charging session identification!",
-                                            nameof(Object));
+            if (!(Object is EMPPartnerSession_Id SessionId))
+                throw new ArgumentException("The given object is not a charging session identification!");
 
-            return CompareTo((EMPPartnerSession_Id) Object);
+            return CompareTo(SessionId);
 
         }
 
         #endregion
 
-        #region CompareTo(EMPPartnerSessionId)
+        #region CompareTo(SessionId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="EMPPartnerSessionId">An object to compare with.</param>
-        public Int32 CompareTo(EMPPartnerSession_Id EMPPartnerSessionId)
+        /// <param name="SessionId">An object to compare with.</param>
+        public Int32 CompareTo(EMPPartnerSession_Id SessionId)
         {
 
-            if ((Object) EMPPartnerSessionId == null)
-                throw new ArgumentNullException(nameof(EMPPartnerSessionId),  "The given partner charging session identification must not be null!");
+            if ((Object) SessionId == null)
+                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
 
-            // Compare the length of the EMPPartnerSessionIds
-            var _Result = this.Length.CompareTo(EMPPartnerSessionId.Length);
+            // Compare the length of the SessionIds
+            var _Result = Length.CompareTo(SessionId.Length);
 
             if (_Result == 0)
-                _Result = String.Compare(InternalId, EMPPartnerSessionId.InternalId, StringComparison.Ordinal);
+                _Result = String.Compare(InternalId, SessionId.InternalId, StringComparison.Ordinal);
 
             return _Result;
 
@@ -350,7 +369,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region IEquatable<EMPPartnerSessionId> Members
+        #region IEquatable<SessionId> Members
 
         #region Equals(Object)
 
@@ -365,29 +384,29 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            if (!(Object is EMPPartnerSession_Id))
+            if (!(Object is EMPPartnerSession_Id SessionId))
                 return false;
 
-            return Equals((EMPPartnerSession_Id) Object);
+            return Equals(SessionId);
 
         }
 
         #endregion
 
-        #region Equals(EMPPartnerSessionId)
+        #region Equals(SessionId)
 
         /// <summary>
-        /// Compares two EMPPartnerSessionIds for equality.
+        /// Compares two SessionIds for equality.
         /// </summary>
-        /// <param name="EMPPartnerSessionId">A EMP partner charging session identification to compare with.</param>
+        /// <param name="SessionId">A charging session identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(EMPPartnerSession_Id EMPPartnerSessionId)
+        public Boolean Equals(EMPPartnerSession_Id SessionId)
         {
 
-            if ((Object) EMPPartnerSessionId == null)
+            if ((Object) SessionId == null)
                 return false;
 
-            return InternalId.Equals(EMPPartnerSessionId.InternalId);
+            return InternalId.Equals(SessionId.InternalId);
 
         }
 
