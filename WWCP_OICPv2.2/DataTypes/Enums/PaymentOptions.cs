@@ -34,37 +34,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Unspecified
         /// </summary>
-        Unspecified   = 0,
+        Unspecified,
 
         /// <summary>
-        /// Free charging.
+        /// No Payment.
         /// </summary>
-        Free          = 1,
+        NoPayment,
 
         /// <summary>
         /// Direct payment via e.g. cash, credit/debit card, SMS or phone call.
         /// </summary>
-        Direct        = 1 << 1,
-
-        /// <summary>
-        /// Direct payment via SMS.
-        /// </summary>
-        SMS           = 1 << 2,
-
-        /// <summary>
-        /// Direct payment via cash.
-        /// </summary>
-        Cash          = 1 << 3,
-
-        /// <summary>
-        /// Direct payment credit card.
-        /// </summary>
-        CreditCard    = 1 << 4,
+        Direct,
 
         /// <summary>
         /// Payment via contract.
         /// </summary>
-        Contract      = 1 << 5
+        Contract
 
     }
 

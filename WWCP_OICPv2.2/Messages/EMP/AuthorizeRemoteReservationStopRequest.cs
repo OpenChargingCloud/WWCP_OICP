@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0">
+        //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.1">
         //
         //    <soapenv:Header/>
         //
@@ -121,10 +121,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <Reservation:SessionID>?</Authorization:SessionID>
         //
         //          <!--Optional:-->
-        //          <Reservation:PartnerSessionID>?</Authorization:PartnerSessionID>
+        //          <Reservation:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Reservation:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <Reservation:ProviderID>?</Authorization:ProviderID>
-        //          <Reservation:EVSEID>?</Authorization:EVSEID>
+        //          <Reservation:EvseID>?</Authorization:EvseID>
         //
         //       </Reservation:eRoamingAuthorizeRemoteReservationStop>
         //    </soapenv:Body>
@@ -444,7 +447,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
             if (!(Object is AuthorizeRemoteReservationStopRequest AuthorizeRemoteReservationStopRequest))

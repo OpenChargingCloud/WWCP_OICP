@@ -24,6 +24,9 @@ using System;
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
+    /// <summary>
+    /// Value added services at charging stations and/or EVSEs.
+    /// </summary>
     [Flags]
     public enum ValueAddedServices
     {
@@ -34,8 +37,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         None                        = 0,
 
         /// <summary>
-        /// Can an EV driver reserve the charging spot
-        /// via remote services?
+        /// Can an EV driver reserve the charging spot via remote services?
         /// </summary>
         Reservation                 = 1,
 

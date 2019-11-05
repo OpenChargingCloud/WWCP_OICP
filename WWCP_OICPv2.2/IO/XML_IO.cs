@@ -521,7 +521,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             {
 
                 case "NoPayment":
-                    return PaymentOptions.Free;
+                    return PaymentOptions.NoPayment;
 
                 case "Direct":
                     return PaymentOptions.Direct;
@@ -546,7 +546,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             switch (PaymentOption)
             {
 
-                case PaymentOptions.Free:
+                case PaymentOptions.NoPayment:
                     return "NoPayment";
 
                 case PaymentOptions.Direct:

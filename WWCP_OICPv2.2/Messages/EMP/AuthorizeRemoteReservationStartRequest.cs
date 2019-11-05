@@ -135,8 +135,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.0"
-        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        //                   xmlns:Reservation  = "http://www.hubject.com/b2b/services/reservation/v1.1"
+        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         //
         //    <soapenv:Header/>
         //
@@ -147,42 +147,65 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <Reservation:SessionID>?</Reservation:SessionID>
         //
         //          <!--Optional:-->
-        //          <Reservation:PartnerSessionID>?</Reservation:PartnerSessionID>
+        //          <Reservation:CPOPartnerSessionID>?</Reservation:CPOPartnerSessionID>
+        //
+        //          <!--Optional:-->
+        //          <Reservation:EMPPartnerSessionID>?</Reservation:EMPPartnerSessionID>
         //
         //          <Reservation:ProviderID>?</Reservation:ProviderID>
-        //          <Reservation:EVSEID>?</Reservation:EVSEID>
+        //          <Reservation:EvseID>?</Reservation:EvseID>
         //
-        //          <Reservation:Identification>
+        //       <Authorization:Identification>
+        //         <!--You have a CHOICE of the next 5 items at this level-->
         //
-        //             <!--You have a CHOICE of the next 4 items at this level-->
-        //             <CommonTypes:RFIDmifarefamilyIdentification>
-        //                <CommonTypes:UID>?</CommonTypes:UID>
-        //             </CommonTypes:RFIDmifarefamilyIdentification>
+        //         <CommonTypes:RFIDMifareFamilyIdentification>
+        //            <CommonTypes:UID>?</CommonTypes:UID>
+        //         </CommonTypes:RFIDMifareFamilyIdentification>
         //
-        //             <CommonTypes:QRCodeIdentification>
         //
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //         <CommonTypes:RFIDIdentification>
         //
-        //                <!--You have a CHOICE of the next 2 items at this level-->
-        //                <CommonTypes:PIN>?</CommonTypes:PIN>
+        //            <CommonTypes:UID>?</CommonTypes:UID>
         //
-        //                <CommonTypes:HashedPIN>
-        //                   <CommonTypes:Value>?</CommonTypes:Value>
-        //                   <CommonTypes:Function>?</CommonTypes:Function>
-        //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-        //                </CommonTypes:HashedPIN>
+        //            <!--Optional:-->
+        //            <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
         //
-        //             </CommonTypes:QRCodeIdentification>
+        //            <CommonTypes:RFIDType>?</CommonTypes:RFIDType>
         //
-        //             <CommonTypes:PlugAndChargeIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:PlugAndChargeIdentification>
+        //            <!--Optional:-->
+        //            <CommonTypes:PrintedNumber>?</CommonTypes:PrintedNumber>
         //
-        //             <CommonTypes:RemoteIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:RemoteIdentification>
+        //            <!--Optional:-->
+        //            <CommonTypes:ExpiryDate>?</CommonTypes:ExpiryDate>
         //
-        //          </Reservation:Identification>
+        //         </CommonTypes:RFIDIdentification>
+        //
+        //
+        //         <CommonTypes:QRCodeIdentification>
+        //
+        //            <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
+        //
+        //            <!--You have a CHOICE of the next 2 items at this level-->
+        //            <CommonTypes:PIN>?</CommonTypes:PIN>
+        //
+        //            <CommonTypes:HashedPIN>
+        //               <CommonTypes:Value>?</CommonTypes:Value>
+        //               <CommonTypes:Function>?</CommonTypes:Function>
+        //            </CommonTypes:HashedPIN>
+        //
+        //         </CommonTypes:QRCodeIdentification>
+        //
+        //
+        //         <CommonTypes:PlugAndChargeIdentification>
+        //            <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //         </CommonTypes:PlugAndChargeIdentification>
+        //
+        //
+        //         <CommonTypes:RemoteIdentification>
+        //           <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //         </CommonTypes:RemoteIdentification>
+        //
+        //       </Authorization:Identification>
         //
         //          <!--Optional:-->
         //          <Reservation:PartnerProductID>?</Reservation:PartnerProductID>
@@ -558,7 +581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
             if (!(Object is AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStartRequest))
