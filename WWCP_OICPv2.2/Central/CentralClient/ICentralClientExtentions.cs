@@ -144,7 +144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// 
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="Identification">An user or contract identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
@@ -159,7 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             AuthorizeRemoteStart(this ICentralClient    ICentralClient,
                                  Provider_Id            ProviderId,
                                  EVSE_Id                EVSEId,
-                                 EVCO_Id                EVCOId,
+                                 Identification         Identification,
                                  Session_Id?            SessionId             = null,
                                  CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                  EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
@@ -173,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
                 => ICentralClient.AuthorizeRemoteStart(new EMP.AuthorizeRemoteStartRequest(ProviderId,
                                                                                            EVSEId,
-                                                                                           EVCOId,
+                                                                                           Identification,
                                                                                            SessionId,
                                                                                            CPOPartnerSessionId,
                                                                                            EMPPartnerSessionId,

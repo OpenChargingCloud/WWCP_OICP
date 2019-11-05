@@ -204,7 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
     /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+    /// <param name="Identification">The user or contract identification.</param>
     /// <param name="RequestTimeout">The timeout of this request.</param>
     public delegate Task
 
@@ -219,7 +219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                               CPOPartnerSession_Id?   CPOPartnerSessionId,
                                               EMPPartnerSession_Id?   EMPPartnerSessionId,
                                               Provider_Id?            ProviderId,
-                                              EVCO_Id?                EVCOId,
+                                              Identification          Identification,
                                               TimeSpan?               RequestTimeout);
 
 
@@ -249,7 +249,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
     /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
-    /// <param name="EVCOId">The unique identification of the e-mobility account.</param>
+    /// <param name="Identification">The user or contract identification.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
     /// <param name="Duration">The time between request and response.</param>
@@ -265,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                CPOPartnerSession_Id?                               CPOPartnerSessionId,
                                                EMPPartnerSession_Id?                               EMPPartnerSessionId,
                                                Provider_Id?                                        ProviderId,
-                                               EVCO_Id?                                            EVCOId,
+                                               Identification                                      Identification,
                                                TimeSpan                                            RequestTimeout,
                                                Acknowledgement<EMP.AuthorizeRemoteStartRequest>    Result,
                                                TimeSpan                                            Duration);

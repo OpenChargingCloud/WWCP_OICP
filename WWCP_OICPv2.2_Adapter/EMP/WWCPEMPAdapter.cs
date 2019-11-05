@@ -2462,7 +2462,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                    ? ProviderId.Value.ToOICP()
                                                                                    : DefaultProviderId.Value,
                                                         EVSEId:                EVSEId.ToOICP().Value,
-                                                        EVCOId:                RemoteAuthentication.ToOICP().RemoteIdentification.Value,
+                                                        Identification:        RemoteAuthentication.ToOICP(),
                                                         SessionId:             SessionId.           ToOICP(),
                                                         CPOPartnerSessionId:   null,
                                                         EMPPartnerSessionId:   null,
