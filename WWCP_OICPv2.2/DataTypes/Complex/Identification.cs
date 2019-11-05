@@ -382,6 +382,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 // Returns 'false' when nothing was found...
                 return Identification.RFIDId.                     HasValue ||
+                       Identification.RFIDIdentification.         HasValue ||
                        Identification.QRCodeIdentification.       HasValue ||
                        Identification.PlugAndChargeIdentification.HasValue ||
                        Identification.RemoteIdentification.       HasValue;

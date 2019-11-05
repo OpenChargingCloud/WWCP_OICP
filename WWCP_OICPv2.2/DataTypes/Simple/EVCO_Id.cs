@@ -19,7 +19,7 @@
 
 using System;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -37,22 +37,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #region Data
 
+        private readonly String InternalId;
+
         /// <summary>
         /// The regular expression for parsing an electric vehicle contract identification.
         /// </summary>
-        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8}\-?[\d|A-Za-z])$|" +         // ISO
-                                                               @"^([A-Za-z]{2}[\*|\-]?[A-Za-z0-9]{3})[\*|\-]?([A-Za-z0-9]{6}[\*|\-]?[\d|X])$",  // DIN
+        public static readonly Regex EVCOId_RegEx  = new Regex(@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8})\-?([\d|A-Za-z])$|" +         // ISO
+                                                               @"^([A-Za-z]{2}[\*|\-]?[A-Za-z0-9]{3})[\*|\-]?([A-Za-z0-9]{6})[\*|\-]?([\d|X])$",  // DIN
                                                                RegexOptions.IgnorePatternWhitespace);
-
-                                                         //     (@"^([A-Za-z]{2}\*[A-Za-z0-9]{3})\*([A-Za-z0-9]{6})\*([0-9|X])$ |"  +   // DIN STAR:  DE*BMW*0010LY*3
-                                                         //      @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-([A-Za-z0-9]{6})-([0-9|X])$ |"     +   // DIN HYPEN: DE-BMW-0010LY-3
-                                                         //      @"^([A-Za-z]{2}[A-Za-z0-9]{3})([A-Za-z0-9]{6})([0-9|X])$ |"        +   // DIN:       DEBMW0010LY3
-                                                         //
-                                                         //    //@"^([A-Za-z]{2}\-?[A-Za-z0-9]{3})\-?C([A-Za-z0-9]{8})\-?([A-Za-z0-9]{1})$
-                                                         //      @"^([A-Za-z]{2}-[A-Za-z0-9]{3})-C([A-Za-z0-9]{8})-([0-9|X])$ |" +   // ISO Hypen: DE-BMW-C001000LY-3
-                                                         //      @"^([A-Za-z]{2}[A-Za-z0-9]{3})C([A-Za-z0-9]{8})([0-9|X])$",            // ISO:       DEBMWC001000LY3
-                                                         //
-                                                         //      RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -77,17 +69,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Indicates whether this identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
-            => Suffix.IsNullOrEmpty();
+            => InternalId.IsNullOrEmpty();
 
         /// <summary>
         /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
-
-            => ProviderId.Length +
-               1UL +
-               (UInt64) Suffix.Length +
-               (CheckDigit.HasValue ? 2UL : 0UL);
+            => (UInt64) InternalId.Length;
 
         #endregion
 
@@ -96,21 +84,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Create a new electric vehicle contract identification.
         /// </summary>
+        /// <param name="InternalId">The internal representation of the EVCO identification, as there are some many optional characters.</param>
         /// <param name="ProviderId">The unique identification of an e-mobility provider.</param>
         /// <param name="Suffix">The suffix of the electric vehicle contract identification.</param>
         /// <param name="CheckDigit">An optional check digit of the electric vehicle contract identification.</param>
-        private EVCO_Id(Provider_Id  ProviderId,
+        private EVCO_Id(String       InternalId,
+                        Provider_Id  ProviderId,
                         String       Suffix,
                         Char?        CheckDigit = null)
         {
 
-            #region Initial checks
-
-            if (Suffix.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Suffix),  "The identification suffix must not be null or empty!");
-
-            #endregion
-
+            this.InternalId  = InternalId;
             this.ProviderId  = ProviderId;
             this.Suffix      = Suffix;
             this.CheckDigit  = CheckDigit;
@@ -120,7 +104,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        #region (static) Parse(Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given text representation of an electric vehicle contract identification.
@@ -129,54 +113,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static EVCO_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The text representation of the electric vehicle contract identification must not be null or empty!");
-
-            #endregion
-
-            var _MatchCollection = EVCOId_RegEx.Matches(Text);
-
-            if (_MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal electric vehicle contract identification '" + Text + "'!");
-
-            Provider_Id _ProviderId;
-
-            // DIN STAR:  DE*BMW*0010LY*3
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value,  out _ProviderId))
-                return new EVCO_Id(_ProviderId,
-                                   _MatchCollection[0].Groups[2].Value,
-                                   _MatchCollection[0].Groups[3].Value[0]);
-
-            // DIN HYPEN: DE-BMW-0010LY-3
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
-                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
-                                   _MatchCollection[0].Groups[5].Value,
-                                   _MatchCollection[0].Groups[6].Value[0]);
-
-            // DIN:       DEBMW0010LY3
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
-                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN),
-                                   _MatchCollection[0].Groups[8].Value,
-                                   _MatchCollection[0].Groups[9].Value[0]);
-
-
-            // ISO Hypen: DE-BMW-C001000LY-3
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
-                return new EVCO_Id(_ProviderId,
-                                   _MatchCollection[0].Groups[11].Value,
-                                   _MatchCollection[0].Groups[12].Value[0]);
-
-            // ISO:       DEBMWC001000LY3
-            if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
-                return new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.ISO_HYPHEN),
-                                   _MatchCollection[0].Groups[14].Value,
-                                   _MatchCollection[0].Groups[15].Value[0]);
-
+            if (TryParse(Text, out EVCO_Id EVCOId))
+                return EVCOId;
 
             throw new ArgumentException("Illegal electric vehicle contract identification '" + Text + "'!");
 
@@ -184,7 +122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) Parse(ProviderId, Suffix)
+        #region (static) Parse   (ProviderId, Suffix)
 
         /// <summary>
         /// Parse the given electric vehicle contract identification.
@@ -239,23 +177,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static EVCO_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVCO_Id _EVCOId))
-                return _EVCOId;
+            if (TryParse(Text, out EVCO_Id EVCOId))
+                return EVCOId;
 
             return new EVCO_Id?();
 
         }
-
-        #endregion
-
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as a partner charging session identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of a partner charging session identification.</param>
-        public static EVCO_Id? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
 
         #endregion
 
@@ -271,111 +198,65 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
             {
                 EVCOId = default;
                 return false;
             }
 
-            Text = Text.Trim();
-
             #endregion
 
             try
             {
 
-                EVCOId = default;
+                var matchCollection = EVCOId_RegEx.Matches(Text);
 
-                var _MatchCollection = EVCOId_RegEx.Matches(Text);
-
-                if (_MatchCollection.Count != 1)
+                if (matchCollection.Count != 1)
+                {
+                    EVCOId = default;
                     return false;
+                }
 
-                Provider_Id _ProviderId;
 
-                #region DIN STAR:  DE*BMW*0010LY*3
-
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[1].Value, out _ProviderId))
+                // ISO: DE-GDF-C12022187-X, DEGDFC12022187X
+                if (Provider_Id.TryParse(matchCollection[0].Groups[1].Value, out Provider_Id providerId))
                 {
 
-                    EVCOId = new EVCO_Id(_ProviderId,
-                                         _MatchCollection[0].Groups[2].Value,
-                                         _MatchCollection[0].Groups[3].Value[0]);
+                    EVCOId = new EVCO_Id(Text,
+                                         providerId,
+                                         matchCollection[0].Groups[2].Value,
+                                         matchCollection[0].Groups[3].Value[0]);
 
                     return true;
 
                 }
 
-                #endregion
 
-                #region DIN HYPEN: DE-BMW-0010LY-3
-
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[4].Value,  out _ProviderId))
+                // DIN: DE*GDF*0010LY*3, DE-GDF-0010LY-3, DEGDF0010LY3
+                if (Provider_Id.TryParse(matchCollection[0].Groups[4].Value,  out providerId))
                 {
 
-                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
-                                         _MatchCollection[0].Groups[5].Value,
-                                         _MatchCollection[0].Groups[6].Value[0]);
+                    if (providerId.Format == ProviderIdFormats.ISO_HYPHEN)
+                        providerId = providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN);
+
+                    EVCOId = new EVCO_Id(Text,
+                                         providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
+                                         matchCollection[0].Groups[5].Value,
+                                         matchCollection[0].Groups[6].Value[0]);
 
                     return true;
 
                 }
-
-                #endregion
-
-                #region DIN:       DEBMW0010LY3
-
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[7].Value,  out _ProviderId))
-                {
-
-                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.DIN),
-                                         _MatchCollection[0].Groups[8].Value,
-                                         _MatchCollection[0].Groups[9].Value[0]);
-
-                    return true;
-
-                }
-
-                #endregion
-
-
-                #region ISO Hypen: DE-BMW-C001000LY-3
-
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[10].Value, out _ProviderId))
-                {
-
-                    EVCOId = new EVCO_Id(_ProviderId,
-                                         _MatchCollection[0].Groups[11].Value,
-                                         _MatchCollection[0].Groups[12].Value[0]);
-
-                    return true;
-
-                }
-
-                #endregion
-
-                #region ISO:       DEBMWC001000LY3
-
-                if (Provider_Id.TryParse(_MatchCollection[0].Groups[13].Value, out _ProviderId))
-                {
-
-                    EVCOId = new EVCO_Id(_ProviderId.ChangeFormat(ProviderIdFormats.ISO_HYPHEN),
-                                         _MatchCollection[0].Groups[14].Value,
-                                         _MatchCollection[0].Groups[15].Value[0]);
-
-                    return true;
-
-                }
-
-                #endregion
 
             }
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
-            { }
+            {
+                EVCOId = default;
+                return false;
+            }
 
             EVCOId = default;
             return false;
@@ -391,8 +272,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         public EVCO_Id Clone
 
-            => new EVCO_Id(ProviderId.Clone,
-                                       Suffix);
+            => new EVCO_Id(new String(InternalId.ToCharArray()),
+                           ProviderId.Clone,
+                           Suffix);
 
         #endregion
 
@@ -522,10 +404,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
 
-            if (!(Object is EVCO_Id))
-                throw new ArgumentException("The given object is not a EVCOId!", nameof(Object));
+            if (!(Object is EVCO_Id EVCOId))
+                throw new ArgumentException("The given object is not a EVCOId!");
 
-            return CompareTo((EVCO_Id) Object);
+            return CompareTo(EVCOId);
 
         }
 
@@ -543,30 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) EVCOId == null)
                 throw new ArgumentNullException(nameof(EVCOId),  "The given contract identification must not be null!");
 
-            // Compare the length of the contract identifications
-            var _Result = Length.CompareTo(EVCOId.Length);
-
-            // If equal: Compare charging operator identifications
-            if (_Result == 0)
-                _Result = ProviderId.CompareTo(EVCOId.ProviderId);
-
-            // If equal: Compare contract identification suffix
-            if (_Result == 0)
-                _Result = String.Compare(Suffix, EVCOId.Suffix, StringComparison.Ordinal);
-
-            // If equal: Compare contract check digit
-            if (_Result == 0)
-            {
-
-                if (!CheckDigit.HasValue && !EVCOId.CheckDigit.HasValue)
-                    _Result = 0;
-
-                if ( CheckDigit.HasValue &&  EVCOId.CheckDigit.HasValue)
-                    _Result = CheckDigit.Value.CompareTo(EVCOId.CheckDigit.Value);
-
-            }
-
-            return _Result;
+            return String.Compare(InternalId, EVCOId.InternalId, StringComparison.Ordinal);
 
         }
 
@@ -589,10 +448,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Object == null)
                 return false;
 
-            if (!(Object is EVCO_Id))
+            if (!(Object is EVCO_Id EVCOId))
                 return false;
 
-            return Equals((EVCO_Id) Object);
+            return Equals(EVCOId);
 
         }
 
@@ -611,11 +470,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if ((Object) EVCOId == null)
                 return false;
 
-            return ProviderId.Equals(EVCOId.ProviderId) &&
-                   Suffix.    Equals(EVCOId.Suffix)     &&
-
-                   ((!CheckDigit.HasValue && !EVCOId.CheckDigit.HasValue) ||
-                     (CheckDigit.HasValue &&  EVCOId.CheckDigit.HasValue && CheckDigit.Value.Equals(EVCOId.CheckDigit.Value)));
+            return InternalId.Equals(EVCOId.InternalId);
 
         }
 
@@ -630,19 +485,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <returns>The HashCode of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId.GetHashCode() * 7 ^
-                       Suffix.    GetHashCode() * 5 ^
-
-                       (CheckDigit.HasValue
-                            ? CheckDigit.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => InternalId.GetHashCode();
 
         #endregion
 
@@ -652,50 +495,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-        {
-
-            switch (ProviderId.Format)
-            {
-
-                case ProviderIdFormats.DIN:
-                    return String.Concat(ProviderId,
-                                         Suffix,
-                                         CheckDigit.HasValue
-                                             ? "" + CheckDigit
-                                             : "");
-
-                case ProviderIdFormats.DIN_STAR:
-                    return String.Concat(ProviderId, "*",
-                                         Suffix,
-                                         CheckDigit.HasValue
-                                             ? "*" + CheckDigit
-                                             : "");
-
-                case ProviderIdFormats.DIN_HYPHEN:
-                    return String.Concat(ProviderId, "-",
-                                         Suffix,
-                                         CheckDigit.HasValue
-                                             ? "-" + CheckDigit
-                                             : "");
-
-
-                case ProviderIdFormats.ISO:
-                    return String.Concat(ProviderId,
-                                         "C", Suffix,
-                                         CheckDigit.HasValue
-                                             ? "" + CheckDigit
-                                             : "");
-
-                default: // ISO_HYPHEN
-                    return String.Concat(ProviderId, "-",
-                                         "C", Suffix,
-                                         CheckDigit.HasValue
-                                             ? "-" + CheckDigit
-                                             : "");
-
-            }
-
-        }
+            => InternalId;
 
         #endregion
 

@@ -1277,6 +1277,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                    : new UID?();
 
 
+
+        //ToDo: Add RFIDIdentification!!!
+
         #region ToWWCP(this Identification)
 
         public static RemoteAuthentication ToWWCP(this Identification Identification)
@@ -1300,6 +1303,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         }
 
         #endregion
+
+        //ToDo: Add RFIDIdentification!!!
 
         #region ToOICP(this RemoteAuthentication)
 

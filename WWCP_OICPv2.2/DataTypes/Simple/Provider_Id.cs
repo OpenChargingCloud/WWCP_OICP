@@ -152,7 +152,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
             {
 
-                var Separator = ProviderIdFormats.ISO;
+                ProviderIdFormats Separator;
 
                 switch (MatchCollection[0].Groups[2].Value)
                 {
@@ -269,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                ProviderId = default(Provider_Id);
+                ProviderId = default;
                 return false;
             }
 
@@ -282,7 +282,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 if (MatchCollection.Count != 1)
                 {
-                    ProviderId = default(Provider_Id);
+                    ProviderId = default;
                     return false;
                 }
 
@@ -325,7 +325,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            ProviderId = default(Provider_Id);
+            ProviderId = default;
             return false;
 
         }
@@ -354,7 +354,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (CountryCode == null || Suffix.IsNullOrEmpty())
             {
-                ProviderId = default(Provider_Id);
+                ProviderId = default;
                 return false;
             }
 
