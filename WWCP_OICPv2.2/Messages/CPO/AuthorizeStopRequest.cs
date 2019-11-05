@@ -326,7 +326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                                                           e),
                                                                          OnException),
 
-                                     AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "EVSEID",
+                                     AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "EvseID",
                                                                          EVSE_Id.Parse),
 
                                      AuthorizeStopXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
@@ -451,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                       new XElement(OICPNS.Authorization + "OperatorID",                 OperatorId.         ToString()),
 
                                       EVSEId.HasValue
-                                          ? new XElement(OICPNS.Authorization + "EVSEID",               EVSEId.             ToString())
+                                          ? new XElement(OICPNS.Authorization + "EvseID",               EVSEId.             ToString())
                                           : null,
 
                                       Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)

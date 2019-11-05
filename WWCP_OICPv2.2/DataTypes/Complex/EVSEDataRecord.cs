@@ -757,10 +757,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               ? new XAttribute(OICPNS.EVSEData + "lastUpdate", LastUpdate.ToString())
                               : null,
 
-                          new XElement(OICPNS.EVSEData + "EvseId",                Id.ToString()),
-                          new XElement(OICPNS.EVSEData + "ChargingStationId",     ChargingStationId),
+                          new XElement(OICPNS.EVSEData + "EvseID",                Id.ToString()),
+                          new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId),
                           new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
                           new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
+
+                          ChargingPoolId.HasValue
+                              ? new XElement(OICPNS.EVSEData + "ChargingPoolID",  ChargingPoolId.Value.ToString())
+                              : null,
 
                           Address.ToXML(OICPNS.EVSEData + "Address",
                                         CustomAddressSerializer),
@@ -811,31 +815,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
 
-#if OICPv2_1
-                          new XElement(OICPNS.EVSEData + "HotlinePhoneNum",   HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, "")),  // RegEx: \+[0-9]{5,15}
-
-                          AdditionalInfo.has(Languages.deu)
-                              ? new XElement(OICPNS.EVSEData + "AdditionalInfo", AdditionalInfo[Languages.deu])
-                              : null,
-
-                          AdditionalInfo.has(Languages.eng)
-                              ? new XElement(OICPNS.EVSEData + "EnAdditionalInfo", AdditionalInfo[Languages.eng])
-                              : null,
-#endif
-
-#if OICPv2_2
                           HotlinePhoneNumber.IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.EVSEData + "HotlinePhoneNum", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
+                              ? new XElement(OICPNS.EVSEData + "HotlinePhoneNumber", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
                               : null,
 
-                          AdditionalInfo.IsNotNullOrEmpty()
+                          AdditionalInfo.IsNeitherNullNorEmpty()
                               ? new XElement(OICPNS.EVSEData + "AdditionalInfo",
                                              AdditionalInfo.
                                                  Select(info => new XElement(OICPNS.EVSEData + "InfoText",
-                                                                             new XAttribute("lang", info.Language), //ToDo: ISO 639-3 codes for languages is not what OICP expects!
+                                                                             new XAttribute("lang", info.Language), //ToDo: ISO 639-3 codes for languages is not what OICP expects! Pattern: [a-z]{2,3}(-[A-Z]{2,3}(-[a-zA-Z]{4})?)?(-x-[a-zA-Z0-9]{1,8})?
                                                                              info.Text)))
                               : null,
-#endif
 
                           GeoChargingPointEntrance != null
                               ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
@@ -848,9 +838,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           new XElement(OICPNS.EVSEData + "IsOpen24Hours",         IsOpen24Hours ? "true" : "false"),
 
-                          OpeningTimes.IsNotNullOrEmpty()
-                              ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTimes)
-                              : null,
+                          //ToDo: Implement new OpeningTimes complex type!
+                          //OpeningTimes.IsNotNullOrEmpty()
+                          //    ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTimes)
+                          //    : null,
 
                           HubOperatorId != null
                               ? new XElement(OICPNS.EVSEData + "HubOperatorID",   HubOperatorId.ToString())

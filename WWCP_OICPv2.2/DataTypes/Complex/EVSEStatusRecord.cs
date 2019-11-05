@@ -175,7 +175,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 EVSEStatusRecord = new EVSEStatusRecord(
 
-                                       EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseId",
+                                       EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseID",
                                                                           EVSE_Id.Parse),
 
                                        EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseStatus",
@@ -255,7 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             var XML = new XElement(XName ?? OICPNS.EVSEStatus + "EvseStatusRecord",
-                          new XElement(OICPNS.EVSEStatus + "EvseId",      Id.    ToString()),
+                          new XElement(OICPNS.EVSEStatus + "EvseID",      Id.    ToString()),
                           new XElement(OICPNS.EVSEStatus + "EvseStatus",  XML_IO.AsText(Status))
                       );
 

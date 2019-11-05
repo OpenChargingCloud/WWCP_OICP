@@ -443,7 +443,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             var XML = new XElement(XName ?? OICPNS.Authorization + "Identification",
 
                           RFIDId.HasValue
-                              ? new XElement(OICPNS.CommonTypes + "RFIDmifarefamilyIdentification",
+                              ? new XElement(OICPNS.CommonTypes + "RFIDMifareFamilyIdentification",
                                     new XElement(OICPNS.CommonTypes + "UID",     RFIDId.ToString()))
                               : null,
 

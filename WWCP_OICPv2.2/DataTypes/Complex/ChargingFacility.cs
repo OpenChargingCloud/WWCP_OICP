@@ -250,22 +250,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public XElement ToXML(CustomXMLSerializerDelegate<ChargingFacility> CustomChargingFacilitySerializer = null)
         {
 
-            var XML = new XElement("ChargingFacility",
+            var XML = new XElement(OICPNS.EVSEData + "ChargingFacility",
 
                               PowerType.HasValue
-                                  ? new XElement("PowerType",  PowerType.Value.AsText())
+                                  ? new XElement(OICPNS.EVSEData + "PowerType",  PowerType.Value.AsText())
                                   : null,
 
                               Voltage.HasValue
-                                  ? new XElement("Voltage",    Voltage.  Value.ToString())
+                                  ? new XElement(OICPNS.EVSEData + "Voltage",    Voltage.  Value.ToString())
                                   : null,
 
                               Amperage.HasValue
-                                  ? new XElement("Amperage",   Amperage. Value.ToString())
+                                  ? new XElement(OICPNS.EVSEData + "Amperage",   Amperage. Value.ToString())
                                   : null,
 
                               Power.HasValue
-                                  ? new XElement("Power",      Power.    Value.ToString())
+                                  ? new XElement(OICPNS.EVSEData + "Power",      Power.    Value.ToString())
                                   : null
 
                       );

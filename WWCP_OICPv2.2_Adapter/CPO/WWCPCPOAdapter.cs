@@ -6509,7 +6509,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             else
             {
 
-                var LockTaken = await FlushChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
+                var invokeTimer  = false;
+                var LockTaken    = await FlushChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
 
                 try
                 {
@@ -6567,16 +6568,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             }
 
-                            Endtime  = DateTime.UtcNow;
-                            Runtime  = Endtime - StartTime;
-                            result   = SendCDRsResult.Enqueued(Id,
-                                                               this,
-                                                               ChargeDetailRecords,
-                                                               "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
-                                                               //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
-                                                               Runtime: Runtime);
-
-                            FlushChargeDetailRecordsTimer.Change(FlushChargeDetailRecordsEvery, TimeSpan.FromMilliseconds(-1));
+                            Endtime      = DateTime.UtcNow;
+                            Runtime      = Endtime - StartTime;
+                            result       = SendCDRsResult.Enqueued(Id,
+                                                                   this,
+                                                                   ChargeDetailRecords,
+                                                                   "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
+                                                                   //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
+                                                                   Runtime: Runtime);
+                            invokeTimer  = true;
 
                         }
 
@@ -6672,6 +6672,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     if (LockTaken)
                         FlushChargeDetailRecordsLock.Release();
                 }
+
+                if (invokeTimer)
+                    FlushChargeDetailRecordsTimer.Change(FlushChargeDetailRecordsEvery, TimeSpan.FromMilliseconds(-1));
 
             }
 
@@ -7020,48 +7023,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         protected override async Task FlushChargeDetailRecordsQueues()
         {
 
-            #region Make a thread local copy of all data
+            var ChargeDetailRecordsQueueCopy = ChargeDetailRecordsQueue.ToArray();
 
-            var LockTaken                     = await FlushChargeDetailRecordsLock.WaitAsync(MaxLockWaitingTime);
-            var ChargeDetailRecordsQueueCopy  = new List<ChargeDetailRecord>();
-
-            try
-            {
-
-                if (LockTaken)
-                {
-
-                    // Copy CDRs, empty original queue...
-                    ChargeDetailRecordsQueueCopy.AddRange(ChargeDetailRecordsQueue);
-                    ChargeDetailRecordsQueue.Clear();
-
-                    //// Stop the timer. Will be rescheduled by the next CDR...
-                    //FlushChargeDetailRecordsTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
-
-                }
-
-            }
-            catch (Exception e)
-            {
-
-                while (e.InnerException != null)
-                    e = e.InnerException;
-
-                DebugX.LogT(nameof(WWCPCPOAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
-
-            }
-
-            finally
-            {
-                if (LockTaken)
-                    FlushChargeDetailRecordsLock.Release();
-            }
-
-            #endregion
-
-            #region Send charge detail records
-
-            if (ChargeDetailRecordsQueueCopy.Count > 0)
+            if (ChargeDetailRecordsQueueCopy.Length > 0)
             {
 
                 var SendCDRsResults = new List<SendCDRResult>();
@@ -7115,8 +7079,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
 
             }
-
-            #endregion
 
             //ToDo: Send FlushChargeDetailRecordsQueues result event...
             //ToDo: Re-add to queue if it could not be send...
