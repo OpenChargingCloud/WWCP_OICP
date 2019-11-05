@@ -266,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                  AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "ProviderID",
                                                                                                   Provider_Id.Parse),
 
-                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "EVSEID",
+                                                 AuthorizeRemoteStopRequestXML.MapValueOrFail    (OICPNS.Authorization + "EvseID",
                                                                                                   EVSE_Id.Parse),
 
                                                  AuthorizeRemoteStopRequestXML.MapValueOrNullable(OICPNS.Authorization + "CPOPartnerSessionID",
@@ -446,7 +446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
             if (!(Object is AuthorizeRemoteStopRequest AuthorizeRemoteStopRequest))

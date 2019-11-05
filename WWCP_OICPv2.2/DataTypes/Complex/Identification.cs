@@ -91,8 +91,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        //ToDo: Implement new RFIDIdentification complex type!
-
         #region (static) FromUID                        (MifareUID,                   CustomData = null)
 
         /// <summary>
@@ -207,41 +205,57 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         // 
         // [...]
         // 
-        //    <Authorization:Identification>
-        //       <!--You have a CHOICE of the next 4 items at this level-->
+        // <Authorization:Identification>
+        //    <!--You have a CHOICE of the next 5 items at this level-->
         //
-        //       <CommonTypes:RFIDMifarefamilyIdentification>
-        //          <CommonTypes:UID>08152305</CommonTypes:UID>
-        //       </CommonTypes:RFIDMifarefamilyIdentification>
+        //    <CommonTypes:RFIDMifareFamilyIdentification>
+        //       <CommonTypes:UID>?</CommonTypes:UID>
+        //    </CommonTypes:RFIDMifareFamilyIdentification>
         //
-        //       <CommonTypes:RFIDIdentification>
-        //          <CommonTypes:EVCOID>23224235</CommonTypes:EVCOID>
-        //       </CommonTypes:RFIDIdentification>
         //
-        //       <CommonTypes:QRCodeIdentification>
+        //    <CommonTypes:RFIDIdentification>
         //
-        //          <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
+        //       <CommonTypes:UID>?</CommonTypes:UID>
         //
-        //          <!--You have a CHOICE of the next 2 items at this level-->
-        //          <CommonTypes:PIN>1234</CommonTypes:PIN>
+        //       <!--Optional:-->
+        //       <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
         //
-        //          <CommonTypes:HashedPIN>
-        //             <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-        //             <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-        //             <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-        //          </CommonTypes:HashedPIN>
+        //       <CommonTypes:RFIDType>?</CommonTypes:RFIDType>
         //
-        //       </CommonTypes:QRCodeIdentification>
+        //       <!--Optional:-->
+        //       <CommonTypes:PrintedNumber>?</CommonTypes:PrintedNumber>
         //
-        //       <CommonTypes:PlugAndChargeIdentification>
-        //          <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //       </CommonTypes:PlugAndChargeIdentification>
+        //       <!--Optional:-->
+        //       <CommonTypes:ExpiryDate>?</CommonTypes:ExpiryDate>
         //
-        //       <CommonTypes:RemoteIdentification>
-        //          <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //       </CommonTypes:RemoteIdentification>
+        //    </CommonTypes:RFIDIdentification>
         //
-        //    </Authorization:Identification>
+        //
+        //    <CommonTypes:QRCodeIdentification>
+        //
+        //       <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
+        //
+        //       <!--You have a CHOICE of the next 2 items at this level-->
+        //       <CommonTypes:PIN>?</CommonTypes:PIN>
+        //
+        //       <CommonTypes:HashedPIN>
+        //          <CommonTypes:Value>?</CommonTypes:Value>
+        //          <CommonTypes:Function>?</CommonTypes:Function>
+        //       </CommonTypes:HashedPIN>
+        //
+        //    </CommonTypes:QRCodeIdentification>
+        //
+        //
+        //    <CommonTypes:PlugAndChargeIdentification>
+        //       <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //    </CommonTypes:PlugAndChargeIdentification>
+        //
+        //
+        //    <CommonTypes:RemoteIdentification>
+        //      <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //    </CommonTypes:RemoteIdentification>
+        //
+        // </Authorization:Identification>
         // 
         // [...]
         // 
@@ -352,11 +366,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                             OnException),
 
                                      IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "PlugAndChargeIdentification",
-                                                                            OICPNS.CommonTypes + "EVCOID",
+                                                                            OICPNS.CommonTypes + "EvcoID",
                                                                             EVCO_Id.Parse),
 
                                      IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RemoteIdentification",
-                                                                            OICPNS.CommonTypes + "EVCOID",
+                                                                            OICPNS.CommonTypes + "EvcoID",
                                                                             EVCO_Id.Parse)
 
                                  );
@@ -614,7 +628,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Identification Identification)
         {
 
-            if ((Object) Identification == null)
+            if (Identification is null)
                 throw new ArgumentNullException(nameof(Identification), "The given identification must not be null!");
 
             if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
@@ -675,7 +689,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Boolean Equals(Identification Identification)
         {
 
-            if ((Object) Identification == null)
+            if (Identification is null)
                 return false;
 
             if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)

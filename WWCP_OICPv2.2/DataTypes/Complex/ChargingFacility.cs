@@ -28,7 +28,7 @@ using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
-        /// <summary>
+    /// <summary>
     /// A charging facility.
     /// </summary>
     public class ChargingFacility: IEquatable<ChargingFacility>

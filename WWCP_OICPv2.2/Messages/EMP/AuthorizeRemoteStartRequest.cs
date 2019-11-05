@@ -48,9 +48,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
-        /// An electric vehicle contract identification.
+        /// The user or contract identification.
         /// </summary>
-        public EVCO_Id                EVCOId                 { get; }
+        public Identification         Identification         { get; }
 
         /// <summary>
         /// An optional charging session identification.
@@ -81,7 +81,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        /// <param name="Identification">The user or contract identification.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeRemoteStartRequest(Provider_Id            ProviderId,
                                            EVSE_Id                EVSEId,
-                                           EVCO_Id                EVCOId,
+                                           Identification         Identification,
                                            Session_Id?            SessionId             = null,
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
@@ -113,7 +113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             this.ProviderId           = ProviderId;
             this.EVSEId               = EVSEId;
-            this.EVCOId               = EVCOId;
+            this.Identification       = Identification;
             this.SessionId            = SessionId;
             this.CPOPartnerSessionId  = CPOPartnerSessionId;
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
@@ -126,64 +126,72 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv        = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/v2.0"
-        //                   xmlns:CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // <soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/">
+        //   <soapenv:Body>
+        //     <Authorization:eRoamingAuthorizeRemoteStart xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.1"
+        //                                                 xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         //
-        //    <soapenv:Header/>
+        //       <!--Optional:-->
+        //       <Authorization:SessionID>389f4491-2835-4dc9-9eae-1e93eb26f7f5</Authorization:SessionID>
         //
-        //    <soapenv:Body>
-        //       <Authorization:eRoamingAuthorizeRemoteStart>
+        //       <Authorization:ProviderID>DE-MEG</Authorization:ProviderID>
+        //       <Authorization:EvseID>DE*BDO*E028578852*2</Authorization:EvseID>
         //
-        //          <!--Optional:-->
-        //          <Authorization:SessionID>?</Authorization:SessionID>
+        //       <Authorization:Identification>
+        //         <!--You have a CHOICE of the next 5 items at this level-->
         //
-        //          <!--Optional:-->
-        //          <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
+        //         <CommonTypes:RFIDMifareFamilyIdentification>
+        //            <CommonTypes:UID>?</CommonTypes:UID>
+        //         </CommonTypes:RFIDMifareFamilyIdentification>
         //
-        //          <!--Optional:-->
-        //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
-        //          <Authorization:ProviderID>?</Authorization:ProviderID>
-        //          <Authorization:EVSEID>?</Authorization:EVSEID>
+        //         <CommonTypes:RFIDIdentification>
         //
-        //          <Authorization:Identification>
+        //            <CommonTypes:UID>?</CommonTypes:UID>
         //
-        //             <!--You have a CHOICE of the next 4 items at this level-->
-        //             <CommonTypes:RFIDmifarefamilyIdentification>
-        //                <CommonTypes:UID>?</CommonTypes:UID>
-        //             </CommonTypes:RFIDmifarefamilyIdentification>
+        //            <!--Optional:-->
+        //            <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
         //
-        //             <CommonTypes:QRCodeIdentification>
+        //            <CommonTypes:RFIDType>?</CommonTypes:RFIDType>
         //
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
+        //            <!--Optional:-->
+        //            <CommonTypes:PrintedNumber>?</CommonTypes:PrintedNumber>
         //
-        //                <!--You have a CHOICE of the next 2 items at this level-->
-        //                <CommonTypes:PIN>?</CommonTypes:PIN>
-        //                <CommonTypes:HashedPIN>
-        //                   <CommonTypes:Value>?</CommonTypes:Value>
-        //                   <CommonTypes:Function>?</CommonTypes:Function>
-        //                   <CommonTypes:Salt>?</CommonTypes:Salt>
-        //                </CommonTypes:HashedPIN>
+        //            <!--Optional:-->
+        //            <CommonTypes:ExpiryDate>?</CommonTypes:ExpiryDate>
         //
-        //             </CommonTypes:QRCodeIdentification>
+        //         </CommonTypes:RFIDIdentification>
         //
-        //             <CommonTypes:PlugAndChargeIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:PlugAndChargeIdentification>
         //
-        //             <CommonTypes:RemoteIdentification>
-        //                <CommonTypes:EVCOID>?</CommonTypes:EVCOID>
-        //             </CommonTypes:RemoteIdentification>
+        //         <CommonTypes:QRCodeIdentification>
         //
-        //          </Authorization:Identification>
+        //            <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
         //
-        //          <!--Optional:-->
-        //          <Authorization:PartnerProductID>?</Authorization:PartnerProductID>
+        //            <!--You have a CHOICE of the next 2 items at this level-->
+        //            <CommonTypes:PIN>?</CommonTypes:PIN>
         //
-        //       </Authorization:eRoamingAuthorizeRemoteStart>
+        //            <CommonTypes:HashedPIN>
+        //               <CommonTypes:Value>?</CommonTypes:Value>
+        //               <CommonTypes:Function>?</CommonTypes:Function>
+        //            </CommonTypes:HashedPIN>
         //
-        //    </soapenv:Body>
+        //         </CommonTypes:QRCodeIdentification>
+        //
+        //
+        //         <CommonTypes:PlugAndChargeIdentification>
+        //            <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //         </CommonTypes:PlugAndChargeIdentification>
+        //
+        //
+        //         <CommonTypes:RemoteIdentification>
+        //           <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
+        //         </CommonTypes:RemoteIdentification>
+        //
+        //       </Authorization:Identification>
+        //
+        //     </Authorization:eRoamingAuthorizeRemoteStart>
+        //
+        //   </soapenv:Body>
         // </soapenv:Envelope>
 
         #endregion
@@ -327,31 +335,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                     return false;
                 }
 
-                var _AuthorizationIdentification = AuthorizeRemoteStartRequestXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-                                                                                                   (xml, e) => Identification.Parse(xml,
-                                                                                                                                    CustomIdentificationParser,
-                                                                                                                                    CustomRFIDIdentificationParser,
-                                                                                                                                    e),
-                                                                                                   OnException);
-
-                if (!(_AuthorizationIdentification.QRCodeIdentification.       HasValue ||
-                      _AuthorizationIdentification.PlugAndChargeIdentification.HasValue ||
-                      _AuthorizationIdentification.RemoteIdentification.       HasValue))
-
-                    throw new Exception("No EVCO identification found in request!");
-
-
                 AuthorizeRemoteStartRequest = new AuthorizeRemoteStartRequest(
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Authorization + "ProviderID",
                                                                                                     Provider_Id.Parse),
 
-                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Authorization + "EVSEID",
+                                                  AuthorizeRemoteStartRequestXML.MapValueOrFail    (OICPNS.Authorization + "EvseID",
                                                                                                     EVSE_Id.Parse),
 
-                                                  _AuthorizationIdentification.QRCodeIdentification.HasValue
-                                                          ? _AuthorizationIdentification.QRCodeIdentification.Value.EVCOId
-                                                          : _AuthorizationIdentification.PlugAndChargeIdentification ?? (_AuthorizationIdentification.RemoteIdentification ?? default(EVCO_Id)),
+                                                  AuthorizeRemoteStartRequestXML.MapElementOrFail  (OICPNS.Authorization + "Identification",
+                                                                                                    (xml, e) => OICPv2_2.Identification.Parse(xml,
+                                                                                                                                              CustomIdentificationParser,
+                                                                                                                                              CustomRFIDIdentificationParser,
+                                                                                                                                              e),
+                                                                                                    OnException),
 
                                                   AuthorizeRemoteStartRequestXML.MapValueOrNullable(OICPNS.Authorization + "SessionID",
                                                                                                     Session_Id.Parse),
@@ -468,24 +465,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             var XML = new XElement(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart",
 
                                        SessionId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "SessionID",            SessionId.          ToString())
+                                           ? new XElement(OICPNS.Authorization + "SessionID", SessionId.          ToString())
                                            : null,
 
                                        CPOPartnerSessionId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                                           ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID", CPOPartnerSessionId.ToString())
                                            : null,
 
                                        EMPPartnerSessionId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                                           ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID", EMPPartnerSessionId.ToString())
                                            : null,
 
-                                       new XElement(OICPNS.Authorization + "ProviderID",                 ProviderId.         ToString()),
-                                       new XElement(OICPNS.Authorization + "EVSEID",                     EVSEId.             ToString()),
+                                       new XElement(OICPNS.Authorization + "ProviderID", ProviderId.         ToString()),
+                                       new XElement(OICPNS.Authorization + "EVSEID", EVSEId.             ToString()),
 
-                                       Identification.FromRemoteIdentification(EVCOId).ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
+                                       Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
 
                                        PartnerProductId.HasValue
-                                           ? new XElement(OICPNS.Authorization + "PartnerProductID",     PartnerProductId.   ToString())
+                                           ? new XElement(OICPNS.Authorization + "PartnerProductID", PartnerProductId.   ToString())
                                            : null
 
                                    );
@@ -553,7 +550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
             if (!(Object is AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest))
@@ -578,9 +575,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             if (AuthorizeRemoteStartRequest is null)
                 return false;
 
-            return ProviderId.Equals(AuthorizeRemoteStartRequest.ProviderId) &&
-                   EVSEId.    Equals(AuthorizeRemoteStartRequest.EVSEId)     &&
-                   EVCOId.    Equals(AuthorizeRemoteStartRequest.EVCOId)     &&
+            return ProviderId.    Equals(AuthorizeRemoteStartRequest.ProviderId)     &&
+                   EVSEId.        Equals(AuthorizeRemoteStartRequest.EVSEId)         &&
+                   Identification.Equals(AuthorizeRemoteStartRequest.Identification) &&
 
                    ((!SessionId.          HasValue && !AuthorizeRemoteStartRequest.SessionId.          HasValue) ||
                      (SessionId.          HasValue &&  AuthorizeRemoteStartRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStartRequest.SessionId.          Value))) &&
@@ -611,9 +608,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return ProviderId.GetHashCode() * 19 ^
-                       EVSEId.    GetHashCode() * 17 ^
-                       EVCOId.    GetHashCode() * 11 ^
+                return ProviderId.    GetHashCode() * 19 ^
+                       EVSEId.        GetHashCode() * 17 ^
+                       Identification.GetHashCode() * 11 ^
 
                        (SessionId.          HasValue
                             ? SessionId.          GetHashCode() * 7
@@ -644,7 +641,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override String ToString()
 
             => String.Concat(EVSEId,
-                             " for ", EVCOId,
+                             " for ", Identification,
                              " (", ProviderId, ")");
 
         #endregion
