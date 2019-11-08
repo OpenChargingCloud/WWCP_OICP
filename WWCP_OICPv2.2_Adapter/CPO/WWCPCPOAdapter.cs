@@ -3016,6 +3016,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             if (StatusUpdates == null || !StatusUpdates.Any())
                 return PushEVSEStatusResult.NoOperation(Id, this);
 
+            PushEVSEStatusResult result = null;
+
             #endregion
 
             #region Enqueue, if requested...
@@ -3044,7 +3046,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 #endregion
 
-                var LockTaken = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
+                var invokeTimer  = false;
+                var LockTaken    = await DataAndStatusLock.WaitAsync(MaxLockWaitingTime);
 
                 try
                 {
@@ -3071,13 +3074,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             }
 
-                            FlushEVSEFastStatusTimer.Change(FlushEVSEFastStatusEvery, TimeSpan.FromMilliseconds(-1));
+                            invokeTimer = true;
 
-                            return PushEVSEStatusResult.Enqueued(Id, this);
+                            result = PushEVSEStatusResult.Enqueued(Id, this);
 
                         }
 
-                        return PushEVSEStatusResult.NoOperation(Id, this);
+                        result = PushEVSEStatusResult.NoOperation(Id, this);
 
                     }
 
@@ -3087,6 +3090,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     if (LockTaken)
                         DataAndStatusLock.Release();
                 }
+
+                if (!LockTaken)
+                    return PushEVSEStatusResult.Error(Id, this, Description: "Could not acquire DataAndStatusLock!");
+
+                if (invokeTimer)
+                    FlushEVSEFastStatusTimer.Change(FlushEVSEFastStatusEvery, TimeSpan.FromMilliseconds(-1));
+
+                return result;
 
             }
 
