@@ -25,6 +25,74 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsAuthenticationMode(AuthenticationMode)
+
+        /// <summary>
+        /// Maps a string to an OICP authentication mode.
+        /// </summary>
+        /// <param name="AuthenticationMode">A text-representation of an authentication mode.</param>
+        public static AuthenticationModes AsAuthenticationMode(String AuthenticationMode)
+        {
+
+            switch (AuthenticationMode.Trim())
+            {
+
+                case "NFC RFID Classic": return AuthenticationModes.NFC_RFID_Classic;
+                case "NFC RFID DESFire": return AuthenticationModes.NFC_RFID_DESFire;
+                case "PnC": return AuthenticationModes.PnC;
+                case "REMOTE": return AuthenticationModes.REMOTE;
+                case "Direct Payment": return AuthenticationModes.DirectPayment;
+
+                default: return AuthenticationModes.Unknown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(AuthenticationMode)
+
+        public static String AsString(this AuthenticationModes AuthenticationMode)
+        {
+
+            switch (AuthenticationMode)
+            {
+
+                case AuthenticationModes.NFC_RFID_Classic:
+                    return "NFC RFID Classic";
+
+                case AuthenticationModes.NFC_RFID_DESFire:
+                    return "NFC RFID DESFire";
+
+                case AuthenticationModes.PnC:
+                    return "PnC";
+
+                case AuthenticationModes.REMOTE:
+                    return "REMOTE";
+
+                case AuthenticationModes.DirectPayment:
+                    return "Direct Payment";
+
+
+                default:
+                    return "Unkown";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
+
+    /// <summary>
     /// The supported ways of ev driver authentication.
     /// </summary>
     [Flags]

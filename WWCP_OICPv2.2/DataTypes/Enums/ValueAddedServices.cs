@@ -25,6 +25,89 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsValueAddedService(ValueAddedService)
+
+        /// <summary>
+        /// Parses the OICP ValueAddedService.
+        /// </summary>
+        /// <param name="ValueAddedService">A value added service.</param>
+        public static ValueAddedServices AsValueAddedService(String ValueAddedService)
+        {
+
+            switch (ValueAddedService.Trim())
+            {
+
+                case "Reservation":
+                    return ValueAddedServices.Reservation;
+
+                case "DynamicPricing":
+                    return ValueAddedServices.DynamicPricing;
+
+                case "ParkingSensors":
+                    return ValueAddedServices.ParkingSensors;
+
+                case "MaximumPowerCharging":
+                    return ValueAddedServices.MaximumPowerCharging;
+
+                case "PredictiveChargePointUsage":
+                    return ValueAddedServices.PredictiveChargePointUsage;
+
+                case "ChargingPlans":
+                    return ValueAddedServices.ChargingPlans;
+
+                default:
+                    return ValueAddedServices.None;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(ValueAddedService)
+
+        public static String AsString(this ValueAddedServices ValueAddedService)
+        {
+
+            switch (ValueAddedService)
+            {
+
+                case ValueAddedServices.Reservation:
+                    return "Reservation";
+
+                case ValueAddedServices.DynamicPricing:
+                    return "DynamicPricing";
+
+                case ValueAddedServices.ParkingSensors:
+                    return "ParkingSensors";
+
+                case ValueAddedServices.MaximumPowerCharging:
+                    return "MaximumPowerCharging";
+
+                case ValueAddedServices.PredictiveChargePointUsage:
+                    return "PredictiveChargePointUsage";
+
+                case ValueAddedServices.ChargingPlans:
+                    return "ChargingPlans";
+
+                default:
+                    return "None";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
+
+    /// <summary>
     /// Value added services at charging stations and/or EVSEs.
     /// </summary>
     [Flags]

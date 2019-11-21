@@ -25,6 +25,72 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsPaymetOptions(PaymetOption)
+
+        /// <summary>
+        /// Maps an OICP paymet option to a WWCP paymet option.
+        /// </summary>
+        /// <param name="PaymetOption">A paymet option.</param>
+        public static PaymentOptions AsPaymetOption(String PaymetOption)
+        {
+
+            switch (PaymetOption.Trim())
+            {
+
+                case "No Payment":
+                    return PaymentOptions.NoPayment;
+
+                case "Direct":
+                    return PaymentOptions.Direct;
+
+                case "Contract":
+                    return PaymentOptions.Contract;
+
+                default:
+                    return PaymentOptions.Unspecified;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(PaymentOption)
+
+        public static String AsString(this PaymentOptions PaymentOption)
+        {
+
+            switch (PaymentOption)
+            {
+
+                case PaymentOptions.NoPayment:
+                    return "No Payment";
+
+                case PaymentOptions.Direct:
+                    return "Direct";
+
+                case PaymentOptions.Contract:
+                    return "Contract";
+
+
+                default:
+                    return "Unkown";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
+
+    /// <summary>
     /// OICP payment options.
     /// </summary>
     [Flags]

@@ -15,8 +15,81 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+    /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsActionType(Text)
+
+        public static ActionTypes AsActionType(this String Text)
+        {
+
+            switch (Text)
+            {
+
+                case "fullLoad":
+                    return ActionTypes.fullLoad;
+
+                case "update":
+                    return ActionTypes.update;
+
+                case "insert":
+                    return ActionTypes.insert;
+
+                case "delete":
+                    return ActionTypes.delete;
+
+                default:
+                    return ActionTypes.Unknown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsText(this ActionType)
+
+        public static String AsText(this ActionTypes ActionType)
+        {
+
+            switch (ActionType)
+            {
+
+                case ActionTypes.fullLoad:
+                    return "fullLoad";
+
+                case ActionTypes.update:
+                    return "update";
+
+                case ActionTypes.insert:
+                    return "insert";
+
+                case ActionTypes.delete:
+                    return "delete";
+
+                default:
+                    return "Unknown";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
 
     /// <summary>
     /// The type of data management action when updating remote data.

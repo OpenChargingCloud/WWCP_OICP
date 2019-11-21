@@ -15,8 +15,74 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+    /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsAccessibilityType(AccessibilityType)
+
+        /// <summary>
+        /// Maps an OICP accessibility type to a WWCP accessibility type.
+        /// </summary>
+        /// <param name="AccessibilityType">A accessibility type.</param>
+        public static AccessibilityTypes AsAccessibilityType(String AccessibilityType)
+        {
+
+            switch (AccessibilityType.Trim())
+            {
+
+                case "Free publicly accessible": return AccessibilityTypes.Free_publicly_accessible;
+                case "Restricted access": return AccessibilityTypes.Restricted_access;
+                case "Paying publicly accessible": return AccessibilityTypes.Paying_publicly_accessible;
+
+                default: return AccessibilityTypes.Unspecified;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(AccessibilityType)
+
+        public static String AsString(this AccessibilityTypes AccessibilityType)
+        {
+
+            switch (AccessibilityType)
+            {
+
+                case AccessibilityTypes.Free_publicly_accessible:
+                    return "Free publicly accessible";
+
+                case AccessibilityTypes.Restricted_access:
+                    return "Restricted access";
+
+                case AccessibilityTypes.Paying_publicly_accessible:
+                    return "Paying publicly accessible";
+
+
+                default:
+                    return "Unspecified";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
 
     /// <summary>
     /// The accessibility of an EVSE.

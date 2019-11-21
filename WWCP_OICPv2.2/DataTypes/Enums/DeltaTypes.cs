@@ -15,8 +15,76 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+
+    /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsDeltaType(Text)
+
+        public static DeltaTypes AsDeltaType(this String Text)
+        {
+
+            switch (Text)
+            {
+
+                case "update":
+                    return DeltaTypes.update;
+
+                case "insert":
+                    return DeltaTypes.insert;
+
+                case "delete":
+                    return DeltaTypes.delete;
+
+                default:
+                    return DeltaTypes.Unknown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsText(this DeltaType)
+
+        public static String AsText(this DeltaTypes DeltaType)
+        {
+
+            switch (DeltaType)
+            {
+
+                case DeltaTypes.update:
+                    return "update";
+
+                case DeltaTypes.insert:
+                    return "insert";
+
+                case DeltaTypes.delete:
+                    return "delete";
+
+                default:
+                    return "Unknown";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
 
     /// <summary>
     /// OICP delta type for e.g. EVSE data records.

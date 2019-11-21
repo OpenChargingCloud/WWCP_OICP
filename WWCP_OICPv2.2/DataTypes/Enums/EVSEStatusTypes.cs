@@ -15,8 +15,93 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+    /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsEVSEStatusType(EVSEStatusType)
+
+        /// <summary>
+        /// Parses OICP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatusType">An EVSE status.</param>
+        public static EVSEStatusTypes AsEVSEStatusType(String EVSEStatusType)
+        {
+
+            switch (EVSEStatusType.Trim())
+            {
+
+                case "Available":
+                    return EVSEStatusTypes.Available;
+
+                case "Reserved":
+                    return EVSEStatusTypes.Reserved;
+
+                case "Occupied":
+                    return EVSEStatusTypes.Occupied;
+
+                case "OutOfService":
+                    return EVSEStatusTypes.OutOfService;
+
+                case "EvseNotFound":
+                    return EVSEStatusTypes.EvseNotFound;
+
+
+                default:
+                    return EVSEStatusTypes.Unknown;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(EVSEStatusType)
+
+        public static String AsText(this EVSEStatusTypes EVSEStatusType)
+        {
+
+            switch (EVSEStatusType)
+            {
+
+                case EVSEStatusTypes.Available:
+                    return "Available";
+
+                case EVSEStatusTypes.Reserved:
+                    return "Reserved";
+
+                case EVSEStatusTypes.Occupied:
+                    return "Occupied";
+
+                case EVSEStatusTypes.OutOfService:
+                    return "OutOfService";
+
+                case EVSEStatusTypes.EvseNotFound:
+                    return "EvseNotFound";
+
+
+                default:
+                    return "Unknown";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
 
     /// <summary>
     /// The current dynamic status of an Electric Vehicle Supply Equipment (EVSE).

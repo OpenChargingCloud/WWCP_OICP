@@ -24,6 +24,75 @@ using System;
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
+
+    /// <summary>
+    /// OICP XML I/O.
+    /// </summary>
+    public static partial class XML_IO
+    {
+
+        #region AsChargingMode(ChargingMode)
+
+        /// <summary>
+        /// Maps an OICP charging mode to a WWCP charging mode.
+        /// </summary>
+        /// <param name="ChargingMode">A charging mode.</param>
+        public static ChargingModes AsChargingMode(String ChargingMode)
+        {
+
+            switch (ChargingMode.Trim())
+            {
+
+                case "Mode_1":   return ChargingModes.Mode_1;
+                case "Mode_2":   return ChargingModes.Mode_2;
+                case "Mode_3":   return ChargingModes.Mode_3;
+                case "Mode_4":   return ChargingModes.Mode_4;
+                case "CHAdeMO":  return ChargingModes.CHAdeMO;
+
+                default: return ChargingModes.Unspecified;
+
+            }
+
+        }
+
+        #endregion
+
+        #region AsString(ChargingMode)
+
+        public static String AsString(this ChargingModes ChargingMode)
+        {
+
+            switch (ChargingMode)
+            {
+
+                case ChargingModes.Mode_1:
+                    return "Mode_1";
+
+                case ChargingModes.Mode_2:
+                    return "Mode_2";
+
+                case ChargingModes.Mode_3:
+                    return "Mode_3";
+
+                case ChargingModes.Mode_4:
+                    return "Mode_4";
+
+                case ChargingModes.CHAdeMO:
+                    return "CHAdeMO";
+
+
+                default:
+                    return "Unspecified";
+
+            }
+
+        }
+
+        #endregion
+
+    }
+
+
     /// <summary>
     /// OICP charging modes.
     /// </summary>
