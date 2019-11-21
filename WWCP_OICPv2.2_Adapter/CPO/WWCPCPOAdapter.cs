@@ -6521,7 +6521,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 var invokeTimer  = false;
-                var LockTaken    = await FlushChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(60));
+                var LockTaken    = await FlushChargeDetailRecordsLock.WaitAsync(TimeSpan.FromSeconds(180));
 
                 try
                 {
@@ -7031,63 +7031,56 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         protected override Boolean SkipFlushChargeDetailRecordsQueues()
             => ChargeDetailRecordsQueue.Count == 0;
 
-        protected override async Task FlushChargeDetailRecordsQueues()
+        protected override async Task FlushChargeDetailRecordsQueues(IEnumerable<ChargeDetailRecord> ChargeDetailRecords)
         {
 
-            var ChargeDetailRecordsQueueCopy = ChargeDetailRecordsQueue.ToArray();
+            var SendCDRsResults = new List<SendCDRResult>();
+            HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
 
-            if (ChargeDetailRecordsQueueCopy.Length > 0)
+            foreach (var chargeDetailRecord in ChargeDetailRecords)
             {
 
-                var SendCDRsResults = new List<SendCDRResult>();
-                HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> response;
-
-                foreach (var chargeDetailRecord in ChargeDetailRecordsQueueCopy)
+                try
                 {
 
-                    try
-                    {
+                    response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord,
 
-                        response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord,
+                                                                       DateTime.UtcNow,
+                                                                       new CancellationTokenSource().Token,
+                                                                       EventTracking_Id.New,
+                                                                       DefaultRequestTimeout).
+                                                ConfigureAwait(false);
 
-                                                                           DateTime.UtcNow,
-                                                                           new CancellationTokenSource().Token,
-                                                                           EventTracking_Id.New,
-                                                                           DefaultRequestTimeout).
-                                                    ConfigureAwait(false);
-
-                        if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-                            response.Content != null &&
-                            response.Content.Result == true)
-                        {
-                            SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
-                                                                  SendCDRResultTypes.Success));
-                        }
-
-                        else
-                            SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
-                                                                  SendCDRResultTypes.Error,
-                                                                  response.HTTPBodyAsUTF8String));
-
-                    }
-                    catch (Exception e)
+                    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
+                        response.Content        != null &&
+                        response.Content.Result == true)
                     {
                         SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
-                                                              SendCDRResultTypes.Error,
-                                                              e.Message));
+                                                              SendCDRResultTypes.Success));
                     }
 
-                    //if (sendCDRsResult.Warnings.Any())
-                    //{
-
-                    //    SendOnWarnings(DateTime.UtcNow,
-                    //                   nameof(WWCPCPOAdapter) + Id,
-                    //                   "SendChargeDetailRecords",
-                    //                   sendCDRsResult.Warnings);
-
-                    //}
+                    else
+                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                                                              SendCDRResultTypes.Error,
+                                                              response.HTTPBodyAsUTF8String));
 
                 }
+                catch (Exception e)
+                {
+                    SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                                                          SendCDRResultTypes.Error,
+                                                          e.Message));
+                }
+
+                //if (sendCDRsResult.Warnings.Any())
+                //{
+
+                //    SendOnWarnings(DateTime.UtcNow,
+                //                   nameof(WWCPCPOAdapter) + Id,
+                //                   "SendChargeDetailRecords",
+                //                   sendCDRsResult.Warnings);
+
+                //}
 
             }
 

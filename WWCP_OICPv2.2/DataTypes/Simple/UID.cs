@@ -127,17 +127,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as a RFID card identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of a RFID card identification.</param>
-        public static UID? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
-
-        #endregion
-
         #region (static) TryParse(Text, out UID)
 
         /// <summary>
