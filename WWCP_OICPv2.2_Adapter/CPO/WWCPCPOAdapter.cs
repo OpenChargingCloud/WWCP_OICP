@@ -7105,7 +7105,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
         /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (WWCPCPOAdapter WWCPCPOAdapter1, WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator == (WWCPCPOAdapter WWCPCPOAdapter1,
+                                           WWCPCPOAdapter WWCPCPOAdapter2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -7113,7 +7114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) WWCPCPOAdapter1 == null) || ((Object) WWCPCPOAdapter2 == null))
+            if (WWCPCPOAdapter1 is null || WWCPCPOAdapter2 is null)
                 return false;
 
             return WWCPCPOAdapter1.Equals(WWCPCPOAdapter2);
@@ -7130,7 +7131,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
         /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (WWCPCPOAdapter WWCPCPOAdapter1, WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator != (WWCPCPOAdapter WWCPCPOAdapter1,
+                                           WWCPCPOAdapter WWCPCPOAdapter2)
 
             => !(WWCPCPOAdapter1 == WWCPCPOAdapter2);
 
@@ -7148,8 +7150,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           WWCPCPOAdapter  WWCPCPOAdapter2)
         {
 
-            if ((Object) WWCPCPOAdapter1 == null)
-                throw new ArgumentNullException(nameof(WWCPCPOAdapter1),  "The given WWCPCPOAdapter must not be null!");
+            if (WWCPCPOAdapter1 is null)
+                throw new ArgumentNullException(nameof(WWCPCPOAdapter1),  "The given WWCPCPOAdapter1 must not be null!");
 
             return WWCPCPOAdapter1.CompareTo(WWCPCPOAdapter2) < 0;
 
@@ -7184,7 +7186,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                           WWCPCPOAdapter WWCPCPOAdapter2)
         {
 
-            if ((Object) WWCPCPOAdapter1 == null)
+            if (WWCPCPOAdapter1 is null)
                 throw new ArgumentNullException(nameof(WWCPCPOAdapter1),  "The given WWCPCPOAdapter must not be null!");
 
             return WWCPCPOAdapter1.CompareTo(WWCPCPOAdapter2) > 0;
@@ -7221,11 +7223,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            var WWCPCPOAdapter = Object as WWCPCPOAdapter;
-            if ((Object) WWCPCPOAdapter == null)
+            if (!(Object is WWCPCPOAdapter WWCPCPOAdapter))
                 throw new ArgumentException("The given object is not an WWCPCPOAdapter!", nameof(Object));
 
             return CompareTo(WWCPCPOAdapter);
@@ -7243,7 +7244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public Int32 CompareTo(WWCPCPOAdapter WWCPCPOAdapter)
         {
 
-            if ((Object) WWCPCPOAdapter == null)
+            if (WWCPCPOAdapter is null)
                 throw new ArgumentNullException(nameof(WWCPCPOAdapter), "The given WWCPCPOAdapter must not be null!");
 
             return Id.CompareTo(WWCPCPOAdapter.Id);
@@ -7266,11 +7267,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var WWCPCPOAdapter = Object as WWCPCPOAdapter;
-            if ((Object) WWCPCPOAdapter == null)
+            if (!(Object is WWCPCPOAdapter WWCPCPOAdapter))
                 return false;
 
             return Equals(WWCPCPOAdapter);
@@ -7289,7 +7289,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public Boolean Equals(WWCPCPOAdapter WWCPCPOAdapter)
         {
 
-            if ((Object) WWCPCPOAdapter == null)
+            if (WWCPCPOAdapter is null)
                 return false;
 
             return Id.Equals(WWCPCPOAdapter.Id);
