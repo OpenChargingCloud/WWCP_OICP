@@ -121,7 +121,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (TryParse(Text, out UID uid))
                 return uid;
 
-            return new UID();
+            return new UID?();
 
         }
 

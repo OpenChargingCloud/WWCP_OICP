@@ -472,12 +472,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           PlugAndChargeIdentification.HasValue
                               ? new XElement(OICPNS.CommonTypes + "PlugAndChargeIdentification",
-                                    new XElement(OICPNS.CommonTypes + "EVCOID",  PlugAndChargeIdentification.ToString()))
+                                    new XElement(OICPNS.CommonTypes + "EvcoID",  PlugAndChargeIdentification.ToString()))
                               : null,
 
                           RemoteIdentification.HasValue
                               ? new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                    new XElement(OICPNS.CommonTypes + "EVCOID",  RemoteIdentification.ToString()))
+                                    new XElement(OICPNS.CommonTypes + "EvcoID",  RemoteIdentification.ToString()))
                               : null);
 
             return CustomIdentificationSerializer != null
