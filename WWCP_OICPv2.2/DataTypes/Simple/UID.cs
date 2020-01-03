@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an user.
+    /// The unique identification of a RFID card (user).
     /// </summary>
     public struct UID : IId,
                         IEquatable <UID>,
@@ -63,17 +63,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the user identificator.
+        /// The length of the RFID card (user) identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new user identification based on the given string.
+        /// Create a new RFID card (user) identification based on the given string.
         /// </summary>
         /// <param name="Text">The value of the user identification.</param>
         private UID(String Text)
@@ -94,6 +94,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             #region Initial checks
+
+            if (Text != null)
+                Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of a user identification must not be null or empty!");
@@ -203,19 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (UID UID1, UID UID2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(UID1, UID2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) UID1 == null) || ((Object) UID2 == null))
-                return false;
-
-            return UID1.Equals(UID2);
-
-        }
+            => UID1.Equals(UID2);
 
         #endregion
 
@@ -228,7 +219,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (UID UID1, UID UID2)
-            => !(UID1 == UID2);
+            => !UID1.Equals(UID2);
 
         #endregion
 
@@ -241,14 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (UID UID1, UID UID2)
-        {
-
-            if ((Object) UID1 == null)
-                throw new ArgumentNullException(nameof(UID1), "The given UID1 must not be null!");
-
-            return UID1.CompareTo(UID2) < 0;
-
-        }
+            => UID1.CompareTo(UID2) < 0;
 
         #endregion
 
@@ -261,7 +245,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (UID UID1, UID UID2)
-            => !(UID1 > UID2);
+            => UID1.CompareTo(UID2) <= 0;
 
         #endregion
 
@@ -274,14 +258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (UID UID1, UID UID2)
-        {
-
-            if ((Object) UID1 == null)
-                throw new ArgumentNullException(nameof(UID1), "The given UID1 must not be null!");
-
-            return UID1.CompareTo(UID2) > 0;
-
-        }
+            => UID1.CompareTo(UID2) > 0;
 
         #endregion
 
@@ -294,7 +271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID2">Another RFID card identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (UID UID1, UID UID2)
-            => !(UID1 < UID2);
+            => UID1.CompareTo(UID2) >= 0;
 
         #endregion
 
@@ -309,18 +286,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is UID))
-                throw new ArgumentException("The given object is not a RFID card identification!",
-                                            nameof(Object));
-
-            return CompareTo((UID) Object);
-
-        }
+            => Object is UID uid
+                   ? CompareTo(uid)
+                   : throw new ArgumentException("The given object is not a RFID card unique identification!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -331,20 +301,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="UID">An object to compare with.</param>
         public Int32 CompareTo(UID UID)
-        {
 
-            if ((Object) UID == null)
-                throw new ArgumentNullException(nameof(UID),  "The given RFID card identification must not be null!");
-
-            // Compare the length of the UIDs
-            var _Result = this.Length.CompareTo(UID.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, UID.InternalId, StringComparison.Ordinal);
-
-            return _Result;
-
-        }
+            => String.Compare(InternalId,
+                              UID.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -360,17 +320,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is UID))
-                return false;
-
-            return Equals((UID) Object);
-
-        }
+            => Object is UID uid
+                   ? Equals(uid)
+                   : false;
 
         #endregion
 
@@ -382,14 +335,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="UID">A RFID card identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(UID UID)
-        {
 
-            if ((Object) UID == null)
-                return false;
-
-            return InternalId.Equals(UID.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             UID.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

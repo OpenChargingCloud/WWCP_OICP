@@ -85,13 +85,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 {
 
                     case OperatorIdFormats.DIN:
-                        return OperatorId.Length + 1 + (UInt64) Suffix.Length;
+                        return OperatorId.Length + 1 + (UInt64) Suffix?.Length;
 
                     case OperatorIdFormats.ISO_STAR:
-                        return OperatorId.Length + 2 + (UInt64) Suffix.Length;
+                        return OperatorId.Length + 2 + (UInt64) Suffix?.Length;
 
                     default:  // ISO
-                        return OperatorId.Length + 1 + (UInt64) Suffix.Length;
+                        return OperatorId.Length + 1 + (UInt64) Suffix?.Length;
 
                 }
 
@@ -218,8 +218,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static EVSE_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVSE_Id _EVSEId))
-                return _EVSEId;
+            if (TryParse(Text, out EVSE_Id EVSEId))
+                return EVSEId;
 
             return new EVSE_Id?();
 
@@ -334,22 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(EVSEId1, EVSEId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) EVSEId1 == null) || ((Object) EVSEId2 == null))
-                return false;
-
-            if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
-
-            return EVSEId1.Equals(EVSEId2);
-
-        }
+            => EVSEId1.Equals(EVSEId2);
 
         #endregion
 
@@ -362,7 +347,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-            => !(EVSEId1 == EVSEId2);
+            => !EVSEId1.Equals(EVSEId2);
 
         #endregion
 
@@ -375,14 +360,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-        {
-
-            if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
-
-            return EVSEId1.CompareTo(EVSEId2) < 0;
-
-        }
+            => EVSEId1.CompareTo(EVSEId2) < 0;
 
         #endregion
 
@@ -395,7 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-            => !(EVSEId1 > EVSEId2);
+            => EVSEId1.CompareTo(EVSEId2) <= 0;
 
         #endregion
 
@@ -408,14 +386,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-        {
-
-            if ((Object) EVSEId1 == null)
-                throw new ArgumentNullException(nameof(EVSEId1),  "The given EVSE identification must not be null!");
-
-            return EVSEId1.CompareTo(EVSEId2) > 0;
-
-        }
+            => EVSEId1.CompareTo(EVSEId2) > 0;
 
         #endregion
 
@@ -428,7 +399,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId2">Another EVSE identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
-            => !(EVSEId1 < EVSEId2);
+            => EVSEId1.CompareTo(EVSEId2) >= 0;
 
         #endregion
 
@@ -443,17 +414,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
-
-            if (!(Object is EVSE_Id))
-                throw new ArgumentException("The given object is not a EVSE identification!", nameof(Object));
-
-            return CompareTo((EVSE_Id) Object);
-
-        }
+            => Object is EVSE_Id EVSEId
+                   ? CompareTo(EVSEId)
+                   : throw new ArgumentException("The given object is not a EVSE identification!", nameof(Object));
 
         #endregion
 
@@ -466,21 +430,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(EVSE_Id EVSEId)
         {
 
-            if ((Object) EVSEId == null)
-                throw new ArgumentNullException(nameof(EVSEId),  "The given EVSE identification must not be null!");
+            var result = OperatorId.CompareTo(EVSEId.OperatorId);
 
-            // Compare the length of the EVSE identifications
-            var _Result = Length.CompareTo(EVSEId.Length);
-
-            // If equal: Compare operator identifications
-            if (_Result == 0)
-                _Result = OperatorId.CompareTo(EVSEId.OperatorId);
-
-            // If equal: Compare EVSE identification suffix
-            if (_Result == 0)
-                _Result = String.Compare(Suffix, EVSEId.Suffix, StringComparison.Ordinal);
-
-            return _Result;
+            return result == 0
+                       ? String.Compare(Suffix, EVSEId.Suffix, StringComparison.OrdinalIgnoreCase)
+                       : result;
 
         }
 
@@ -498,17 +452,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is EVSE_Id))
-                return false;
-
-            return Equals((EVSE_Id) Object);
-
-        }
+            => Object is EVSE_Id EVSEId
+                   ? Equals(EVSEId)
+                   : false;
 
         #endregion
 
@@ -520,15 +467,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEId">An EVSE identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSE_Id EVSEId)
-        {
 
-            if ((Object) EVSEId == null)
-                return false;
-
-            return OperatorId.Equals(EVSEId.OperatorId) &&
-                   Suffix.    Equals(EVSEId.Suffix);
-
-        }
+            => OperatorId.Equals(EVSEId.OperatorId) &&
+               String.Equals(Suffix, EVSEId.Suffix, StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

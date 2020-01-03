@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The length of the charging pool identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -96,7 +96,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #endregion
 
-            return new ChargingPool_Id(Text);
+            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
+                return chargingPoolId;
+
+            throw new ArgumentException("Illegal text representation of a charging pool identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -111,18 +114,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static ChargingPool_Id? TryParse(String Text)
         {
 
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
+                return chargingPoolId;
 
-            return Text.IsNullOrEmpty()
-                       ? new ChargingPool_Id?()
-                       : new ChargingPool_Id(Text);
+            return new ChargingPool_Id?();
 
         }
 
         #endregion
 
-        #region TryParse(Text, out ChargingPool_Id)
+        #region TryParse(Text, out ChargingPoolId)
 
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
@@ -139,7 +140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                ChargingPoolId = default(ChargingPool_Id);
+                ChargingPoolId = default;
                 return false;
             }
 
@@ -147,11 +148,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             try
             {
-
                 ChargingPoolId = new ChargingPool_Id(Text);
-
                 return true;
-
             }
 
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
@@ -161,7 +159,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            ChargingPoolId = default(ChargingPool_Id);
+            ChargingPoolId = default;
             return false;
 
         }
@@ -193,19 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ChargingPoolId1, ChargingPoolId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) ChargingPoolId1 == null) || ((Object) ChargingPoolId2 == null))
-                return false;
-
-            return ChargingPoolId1.Equals(ChargingPoolId2);
-
-        }
+            => ChargingPoolId1.Equals(ChargingPoolId2);
 
         #endregion
 
@@ -218,7 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-            => !(ChargingPoolId1 == ChargingPoolId2);
+            => !ChargingPoolId1.Equals(ChargingPoolId2);
 
         #endregion
 
@@ -231,14 +217,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-        {
-
-            if ((Object) ChargingPoolId1 == null)
-                throw new ArgumentNullException(nameof(ChargingPoolId1), "The given ChargingPoolId1 must not be null!");
-
-            return ChargingPoolId1.CompareTo(ChargingPoolId2) < 0;
-
-        }
+            => ChargingPoolId1.CompareTo(ChargingPoolId2) < 0;
 
         #endregion
 
@@ -251,7 +230,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-            => !(ChargingPoolId1 > ChargingPoolId2);
+            => ChargingPoolId1.CompareTo(ChargingPoolId2) <= 0;
 
         #endregion
 
@@ -264,14 +243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-        {
-
-            if ((Object) ChargingPoolId1 == null)
-                throw new ArgumentNullException(nameof(ChargingPoolId1), "The given ChargingPoolId1 must not be null!");
-
-            return ChargingPoolId1.CompareTo(ChargingPoolId2) > 0;
-
-        }
+            => ChargingPoolId1.CompareTo(ChargingPoolId2) > 0;
 
         #endregion
 
@@ -284,13 +256,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
-            => !(ChargingPoolId1 < ChargingPoolId2);
+            => ChargingPoolId1.CompareTo(ChargingPoolId2) >= 0;
 
         #endregion
 
         #endregion
 
-        #region IComparable<HubProviderId> Members
+        #region IComparable<ChargingPoolId> Members
 
         #region CompareTo(Object)
 
@@ -299,48 +271,31 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is ChargingPool_Id))
-                throw new ArgumentException("The given object is not a charging pool identification!",
-                                            nameof(Object));
-
-            return CompareTo((ChargingPool_Id) Object);
-
-        }
+            => Object is ChargingPool_Id chargingPoolId
+                   ? CompareTo(chargingPoolId)
+                   : throw new ArgumentException("The given object is not a charging pool identification!",
+                                                 nameof(Object));
 
         #endregion
 
-        #region CompareTo(HubProviderId)
+        #region CompareTo(ChargingPoolId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId">An object to compare with.</param>
-        public Int32 CompareTo(ChargingPool_Id HubProviderId)
-        {
+        /// <param name="ChargingPoolId">An object to compare with.</param>
+        public Int32 CompareTo(ChargingPool_Id ChargingPoolId)
 
-            if ((Object) HubProviderId == null)
-                throw new ArgumentNullException(nameof(HubProviderId),  "The given charging pool identification must not be null!");
-
-            // Compare the length of the HubProviderIds
-            var _Result = this.Length.CompareTo(HubProviderId.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, HubProviderId.InternalId, StringComparison.Ordinal);
-
-            return _Result;
-
-        }
+            => String.Compare(InternalId,
+                              ChargingPoolId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<HubProviderId> Members
+        #region IEquatable<ChargingPoolId> Members
 
         #region Equals(Object)
 
@@ -350,36 +305,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is ChargingPool_Id))
-                return false;
-
-            return Equals((ChargingPool_Id) Object);
-
-        }
+            => Object is ChargingPool_Id chargingPoolId
+                   ? Equals(chargingPoolId)
+                   : false;
 
         #endregion
 
-        #region Equals(HubProviderId)
+        #region Equals(ChargingPoolId)
 
         /// <summary>
-        /// Compares two HubProviderIds for equality.
+        /// Compares two ChargingPoolIds for equality.
         /// </summary>
-        /// <param name="HubProviderId">A charging pool identification to compare with.</param>
+        /// <param name="ChargingPoolId">A charging pool identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargingPool_Id HubProviderId)
-        {
+        public Boolean Equals(ChargingPool_Id ChargingPoolId)
 
-            if ((Object) HubProviderId == null)
-                return false;
-
-            return InternalId.Equals(HubProviderId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             ChargingPoolId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The length of the hub operator identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -89,11 +89,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a hub operator identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a hub operator must not be null or empty!");
 
             #endregion
 
-            return new HubOperator_Id(Text);
+            if (TryParse(Text, out HubOperator_Id hubOperatorId))
+                return hubOperatorId;
+
+            throw new ArgumentException("Illegal text representation of a hub operator identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -108,12 +111,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static HubOperator_Id? TryParse(String Text)
         {
 
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out HubOperator_Id hubOperatorId))
+                return hubOperatorId;
 
-            return Text.IsNullOrEmpty()
-                       ? new HubOperator_Id?()
-                       : new HubOperator_Id(Text);
+            return new HubOperator_Id?();
 
         }
 
@@ -136,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                HubOperatorId = default(HubOperator_Id);
+                HubOperatorId = default;
                 return false;
             }
 
@@ -144,11 +145,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             try
             {
-
                 HubOperatorId = new HubOperator_Id(Text);
-
                 return true;
-
             }
 
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
@@ -158,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            HubOperatorId = default(HubOperator_Id);
+            HubOperatorId = default;
             return false;
 
         }
@@ -190,19 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(HubOperatorId1, HubOperatorId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) HubOperatorId1 == null) || ((Object) HubOperatorId2 == null))
-                return false;
-
-            return HubOperatorId1.Equals(HubOperatorId2);
-
-        }
+            => HubOperatorId1.Equals(HubOperatorId2);
 
         #endregion
 
@@ -215,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-            => !(HubOperatorId1 == HubOperatorId2);
+            => !HubOperatorId1.Equals(HubOperatorId2);
 
         #endregion
 
@@ -228,14 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-        {
-
-            if ((Object) HubOperatorId1 == null)
-                throw new ArgumentNullException(nameof(HubOperatorId1), "The given HubOperatorId1 must not be null!");
-
-            return HubOperatorId1.CompareTo(HubOperatorId2) < 0;
-
-        }
+            => HubOperatorId1.CompareTo(HubOperatorId2) < 0;
 
         #endregion
 
@@ -248,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-            => !(HubOperatorId1 > HubOperatorId2);
+            => HubOperatorId1.CompareTo(HubOperatorId2) <= 0;
 
         #endregion
 
@@ -261,14 +240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-        {
-
-            if ((Object) HubOperatorId1 == null)
-                throw new ArgumentNullException(nameof(HubOperatorId1), "The given HubOperatorId1 must not be null!");
-
-            return HubOperatorId1.CompareTo(HubOperatorId2) > 0;
-
-        }
+            => HubOperatorId1.CompareTo(HubOperatorId2) > 0;
 
         #endregion
 
@@ -281,7 +253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId2">Another hub operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (HubOperator_Id HubOperatorId1, HubOperator_Id HubOperatorId2)
-            => !(HubOperatorId1 < HubOperatorId2);
+            => HubOperatorId1.CompareTo(HubOperatorId2) >= 0;
 
         #endregion
 
@@ -296,18 +268,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is HubOperator_Id))
-                throw new ArgumentException("The given object is not a hub operator identification!",
-                                            nameof(Object));
-
-            return CompareTo((HubOperator_Id) Object);
-
-        }
+            => Object is HubOperator_Id hubOperatorId
+                   ? CompareTo(hubOperatorId)
+                   : throw new ArgumentException("The given object is not a hub operator identification!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -318,20 +283,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="HubOperatorId">An object to compare with.</param>
         public Int32 CompareTo(HubOperator_Id HubOperatorId)
-        {
 
-            if ((Object) HubOperatorId == null)
-                throw new ArgumentNullException(nameof(HubOperatorId),  "The given hub operator identification must not be null!");
-
-            // Compare the length of the HubOperatorIds
-            var _Result = this.Length.CompareTo(HubOperatorId.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, HubOperatorId.InternalId, StringComparison.Ordinal);
-
-            return _Result;
-
-        }
+            => String.Compare(InternalId,
+                              HubOperatorId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -347,17 +302,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is HubOperator_Id))
-                return false;
-
-            return Equals((HubOperator_Id) Object);
-
-        }
+            => Object is HubOperator_Id hubOperatorId
+                   ? Equals(hubOperatorId)
+                   : false;
 
         #endregion
 
@@ -369,14 +317,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="HubOperatorId">A hub operator identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(HubOperator_Id HubOperatorId)
-        {
 
-            if ((Object) HubOperatorId == null)
-                return false;
-
-            return InternalId.Equals(HubOperatorId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             HubOperatorId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

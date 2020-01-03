@@ -27,7 +27,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP charging station.
+    /// The unique identification of a charging station.
     /// </summary>
     public struct ChargingStation_Id : IId,
                                        IEquatable <ChargingStation_Id>,
@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The length of the charging station identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -93,7 +93,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #endregion
 
-            return new ChargingStation_Id(Text);
+            if (TryParse(Text, out ChargingStation_Id chargingStationId))
+                return chargingStationId;
+
+            throw new ArgumentException("Illegal text representation of a charging station identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -108,25 +111,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static ChargingStation_Id? TryParse(String Text)
         {
 
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out ChargingStation_Id chargingStationId))
+                return chargingStationId;
 
-            return Text.IsNullOrEmpty()
-                       ? new ChargingStation_Id?()
-                       : new ChargingStation_Id(Text);
+            return new ChargingStation_Id?();
 
         }
 
         #endregion
 
-        #region TryParse(Text, out HubProviderId)
+        #region TryParse(Text, out ChargingStationId)
 
         /// <summary>
         /// Try to parse the given string as a charging station identification.
         /// </summary>
         /// <param name="Text">A text representation of a charging station identification.</param>
-        /// <param name="HubProviderId">The parsed charging station identification.</param>
-        public static Boolean TryParse(String Text, out ChargingStation_Id HubProviderId)
+        /// <param name="ChargingStationId">The parsed charging station identification.</param>
+        public static Boolean TryParse(String Text, out ChargingStation_Id ChargingStationId)
         {
 
             #region Initial checks
@@ -136,7 +137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                HubProviderId = default(ChargingStation_Id);
+                ChargingStationId = default;
                 return false;
             }
 
@@ -144,11 +145,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             try
             {
-
-                HubProviderId = new ChargingStation_Id(Text);
-
+                ChargingStationId = new ChargingStation_Id(Text);
                 return true;
-
             }
 
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
@@ -158,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            HubProviderId = default(ChargingStation_Id);
+            ChargingStationId = default;
             return false;
 
         }
@@ -190,19 +188,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ChargingStationId1, ChargingStationId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) ChargingStationId1 == null) || ((Object) ChargingStationId2 == null))
-                return false;
-
-            return ChargingStationId1.Equals(ChargingStationId2);
-
-        }
+            => ChargingStationId1.Equals(ChargingStationId2);
 
         #endregion
 
@@ -215,7 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-            => !(ChargingStationId1 == ChargingStationId2);
+            => !ChargingStationId1.Equals(ChargingStationId2);
 
         #endregion
 
@@ -228,14 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-        {
-
-            if ((Object) ChargingStationId1 == null)
-                throw new ArgumentNullException(nameof(ChargingStationId1), "The given ChargingStationId1 must not be null!");
-
-            return ChargingStationId1.CompareTo(ChargingStationId2) < 0;
-
-        }
+            => ChargingStationId1.CompareTo(ChargingStationId2) < 0;
 
         #endregion
 
@@ -248,7 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-            => !(ChargingStationId1 > ChargingStationId2);
+            => ChargingStationId1.CompareTo(ChargingStationId2) <= 0;
 
         #endregion
 
@@ -261,14 +240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-        {
-
-            if ((Object) ChargingStationId1 == null)
-                throw new ArgumentNullException(nameof(ChargingStationId1), "The given ChargingStationId1 must not be null!");
-
-            return ChargingStationId1.CompareTo(ChargingStationId2) > 0;
-
-        }
+            => ChargingStationId1.CompareTo(ChargingStationId2) > 0;
 
         #endregion
 
@@ -281,13 +253,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
-            => !(ChargingStationId1 < ChargingStationId2);
+            => ChargingStationId1.CompareTo(ChargingStationId2) >= 0;
 
         #endregion
 
         #endregion
 
-        #region IComparable<HubProviderId> Members
+        #region IComparable<ChargingStationId> Members
 
         #region CompareTo(Object)
 
@@ -296,48 +268,31 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is ChargingStation_Id))
-                throw new ArgumentException("The given object is not a charging station identification!",
-                                            nameof(Object));
-
-            return CompareTo((ChargingStation_Id) Object);
-
-        }
+            => Object is ChargingStation_Id chargingStationId
+                   ? CompareTo(chargingStationId)
+                   : throw new ArgumentException("The given object is not a charging station identification!",
+                                                 nameof(Object));
 
         #endregion
 
-        #region CompareTo(HubProviderId)
+        #region CompareTo(ChargingStationId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId">An object to compare with.</param>
-        public Int32 CompareTo(ChargingStation_Id HubProviderId)
-        {
+        /// <param name="ChargingStationId">An object to compare with.</param>
+        public Int32 CompareTo(ChargingStation_Id ChargingStationId)
 
-            if ((Object) HubProviderId == null)
-                throw new ArgumentNullException(nameof(HubProviderId),  "The given charging station identification must not be null!");
-
-            // Compare the length of the HubProviderIds
-            var _Result = this.Length.CompareTo(HubProviderId.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, HubProviderId.InternalId, StringComparison.Ordinal);
-
-            return _Result;
-
-        }
+            => String.Compare(InternalId,
+                              ChargingStationId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<HubProviderId> Members
+        #region IEquatable<ChargingStationId> Members
 
         #region Equals(Object)
 
@@ -347,36 +302,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is ChargingStation_Id))
-                return false;
-
-            return Equals((ChargingStation_Id) Object);
-
-        }
+            => Object is ChargingStation_Id ChargingStationId
+                   ? Equals(ChargingStationId)
+                   : false;
 
         #endregion
 
-        #region Equals(HubProviderId)
+        #region Equals(ChargingStationId)
 
         /// <summary>
-        /// Compares two HubProviderIds for equality.
+        /// Compares two ChargingStationIds for equality.
         /// </summary>
-        /// <param name="HubProviderId">A charging station identification to compare with.</param>
+        /// <param name="ChargingStationId">A charging station identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargingStation_Id HubProviderId)
-        {
+        public Boolean Equals(ChargingStation_Id ChargingStationId)
 
-            if ((Object) HubProviderId == null)
-                return false;
-
-            return InternalId.Equals(HubProviderId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             ChargingStationId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

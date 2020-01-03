@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The length of the partner product identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -95,7 +95,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #endregion
 
-            return new PartnerProduct_Id(Text);
+            if (TryParse(Text, out PartnerProduct_Id partnerProductId))
+                return partnerProductId;
+
+            throw new ArgumentException("Illegal text representation of a partner product identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -110,12 +113,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static PartnerProduct_Id? TryParse(String Text)
         {
 
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out PartnerProduct_Id partnerProductId))
+                return partnerProductId;
 
-            return Text.IsNullOrEmpty()
-                       ? new PartnerProduct_Id?()
-                       : new PartnerProduct_Id(Text);
+            return new PartnerProduct_Id?();
 
         }
 
@@ -149,7 +150,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                PartnerProductId = default(PartnerProduct_Id);
+                PartnerProductId = default;
                 return false;
             }
 
@@ -157,11 +158,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             try
             {
-
                 PartnerProductId = new PartnerProduct_Id(Text);
-
                 return true;
-
             }
 
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
@@ -171,7 +169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            PartnerProductId = default(PartnerProduct_Id);
+            PartnerProductId = default;
             return false;
 
         }
@@ -203,19 +201,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(PartnerProductId1, PartnerProductId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) PartnerProductId1 == null) || ((Object) PartnerProductId2 == null))
-                return false;
-
-            return PartnerProductId1.Equals(PartnerProductId2);
-
-        }
+            => PartnerProductId1.Equals(PartnerProductId2);
 
         #endregion
 
@@ -228,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-            => !(PartnerProductId1 == PartnerProductId2);
+            => !PartnerProductId1.Equals(PartnerProductId2);
 
         #endregion
 
@@ -241,14 +227,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-        {
-
-            if ((Object) PartnerProductId1 == null)
-                throw new ArgumentNullException(nameof(PartnerProductId1), "The given PartnerProductId1 must not be null!");
-
-            return PartnerProductId1.CompareTo(PartnerProductId2) < 0;
-
-        }
+            => PartnerProductId1.CompareTo(PartnerProductId2) < 0;
 
         #endregion
 
@@ -261,7 +240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-            => !(PartnerProductId1 > PartnerProductId2);
+            => PartnerProductId1.CompareTo(PartnerProductId2) <= 0;
 
         #endregion
 
@@ -274,14 +253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-        {
-
-            if ((Object) PartnerProductId1 == null)
-                throw new ArgumentNullException(nameof(PartnerProductId1), "The given PartnerProductId1 must not be null!");
-
-            return PartnerProductId1.CompareTo(PartnerProductId2) > 0;
-
-        }
+            => PartnerProductId1.CompareTo(PartnerProductId2) > 0;
 
         #endregion
 
@@ -294,7 +266,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
-            => !(PartnerProductId1 < PartnerProductId2);
+            => PartnerProductId1.CompareTo(PartnerProductId2) >= 0;
 
         #endregion
 
@@ -309,18 +281,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is PartnerProduct_Id))
-                throw new ArgumentException("The given object is not a partner product identification!",
-                                            nameof(Object));
-
-            return CompareTo((PartnerProduct_Id) Object);
-
-        }
+            => Object is PartnerProduct_Id partnerProductId
+                   ? CompareTo(partnerProductId)
+                   : throw new ArgumentException("The given object is not a partner product identification!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -331,14 +296,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="PartnerProductId">An object to compare with.</param>
         public Int32 CompareTo(PartnerProduct_Id PartnerProductId)
-        {
 
-            if ((Object) PartnerProductId == null)
-                throw new ArgumentNullException(nameof(PartnerProductId),  "The given partner product identification must not be null!");
-
-            return String.Compare(InternalId, PartnerProductId.InternalId, StringComparison.Ordinal);
-
-        }
+            => String.Compare(InternalId,
+                              PartnerProductId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -354,17 +315,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is PartnerProduct_Id))
-                return false;
-
-            return Equals((PartnerProduct_Id) Object);
-
-        }
+            => Object is PartnerProduct_Id partnerProductId
+                   ? Equals(partnerProductId)
+                   : false;
 
         #endregion
 
@@ -376,14 +330,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="PartnerProductId">A partner product identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(PartnerProduct_Id PartnerProductId)
-        {
 
-            if ((Object) PartnerProductId == null)
-                return false;
-
-            return InternalId.Equals(PartnerProductId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             PartnerProductId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

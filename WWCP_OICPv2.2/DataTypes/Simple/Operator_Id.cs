@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP charging station operator.
+    /// The unique identification of an operator.
     /// </summary>
     public struct Operator_Id : IId,
                                 IEquatable<Operator_Id>,
@@ -39,7 +39,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Data
 
         /// <summary>
-        /// The regular expression for parsing an OICP charging station operator identification.
+        /// The regular expression for parsing an operator identification.
         /// </summary>
         public static readonly Regex  OperatorId_RegEx  = new Regex(@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
                                                                     @"^\+?([0-9]{1,3})\*([0-9]{3})$",
@@ -60,7 +60,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public String             Suffix        { get; }
 
         /// <summary>
-        /// The format of the charging station operator identification.
+        /// The format of the operator identification.
         /// </summary>
         public OperatorIdFormats  Format        { get; }
 
@@ -82,13 +82,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 {
 
                     case OperatorIdFormats.DIN:
-                        return (UInt64) (CountryCode.TelefonCode.ToString().Length + 1 + Suffix.Length);
+                        return (UInt64) (CountryCode.TelefonCode.ToString().Length + 1 + Suffix?.Length);
 
                     case OperatorIdFormats.ISO_STAR:
-                        return (UInt64) (CountryCode.Alpha2Code.Length             + 1 + Suffix.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length             + 1 + Suffix?.Length);
 
                     default:  // ISO
-                        return (UInt64) (CountryCode.Alpha2Code.Length                 + Suffix.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length                 + Suffix?.Length);
 
                 }
 
@@ -100,7 +100,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new charging station operator identification.
+        /// Create a new operator identification.
         /// </summary>
         /// <param name="CountryCode">The country code.</param>
         /// <param name="Suffix">The suffix of the charging station operator identification.</param>
@@ -223,8 +223,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static Operator_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Operator_Id _OperatorId))
-                return _OperatorId;
+            if (TryParse(Text, out Operator_Id operatorId))
+                return operatorId;
 
             return new Operator_Id?();
 
@@ -348,19 +348,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(OperatorId1, OperatorId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) OperatorId1 == null) || ((Object) OperatorId2 == null))
-                return false;
-
-            return OperatorId1.Equals(OperatorId2);
-
-        }
+            => OperatorId1.Equals(OperatorId2);
 
         #endregion
 
@@ -373,7 +361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (Operator_Id OperatorId1, Operator_Id OperatorId2)
-            => !(OperatorId1 == OperatorId2);
+            => !OperatorId1.Equals(OperatorId2);
 
         #endregion
 
@@ -386,14 +374,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-
-            if ((Object) OperatorId1 == null)
-                throw new ArgumentNullException(nameof(OperatorId1), "The given OperatorId1 must not be null!");
-
-            return OperatorId1.CompareTo(OperatorId2) < 0;
-
-        }
+            => OperatorId1.CompareTo(OperatorId2) < 0;
 
         #endregion
 
@@ -406,7 +387,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (Operator_Id OperatorId1, Operator_Id OperatorId2)
-            => !(OperatorId1 > OperatorId2);
+            => OperatorId1.CompareTo(OperatorId2) <= 0;
 
         #endregion
 
@@ -419,14 +400,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (Operator_Id OperatorId1, Operator_Id OperatorId2)
-        {
-
-            if ((Object) OperatorId1 == null)
-                throw new ArgumentNullException(nameof(OperatorId1), "The given OperatorId1 must not be null!");
-
-            return OperatorId1.CompareTo(OperatorId2) > 0;
-
-        }
+            => OperatorId1.CompareTo(OperatorId2) > 0;
 
         #endregion
 
@@ -439,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (Operator_Id OperatorId1, Operator_Id OperatorId2)
-            => !(OperatorId1 < OperatorId2);
+            => OperatorId1.CompareTo(OperatorId2) >= 0;
 
         #endregion
 
@@ -454,17 +428,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is Operator_Id))
-                throw new ArgumentException("The given object is not a charging station operator identification!", nameof(Object));
-
-            return CompareTo((Operator_Id) Object);
-
-        }
+            => Object is Operator_Id operatorId
+                   ? CompareTo(operatorId)
+                   : throw new ArgumentException("The given object is not a charging station operator identification!", nameof(Object));
 
         #endregion
 
@@ -477,21 +444,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Operator_Id OperatorId)
         {
 
-            if ((Object) OperatorId == null)
-                throw new ArgumentNullException(nameof(OperatorId), "The given charging station operator identification must not be null!");
+            var result = CountryCode.CompareTo(OperatorId.CountryCode);
 
-            // Compare the length of the OperatorIds
-            var _Result = this.Length.CompareTo(OperatorId.Length);
-
-            // If equal: Compare country codes
-            if (_Result == 0)
-                _Result = CountryCode.CompareTo(OperatorId.CountryCode);
-
-            // If equal: Compare provider ids
-            if (_Result == 0)
-                _Result = String.Compare(Suffix, OperatorId.Suffix, StringComparison.Ordinal);
-
-            return _Result;
+            return result == 0
+                       ? String.Compare(Suffix, OperatorId.Suffix, StringComparison.OrdinalIgnoreCase)
+                       : result;
 
         }
 
@@ -509,37 +466,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is Operator_Id))
-                return false;
-
-            return Equals((Operator_Id) Object);
-
-        }
+            => Object is Operator_Id operatorId
+                   ? Equals(operatorId)
+                   : false;
 
         #endregion
 
         #region Equals(OperatorId)
 
         /// <summary>
-        /// Compares two OperatorIds for equality.
+        /// Compares two operator identifications for equality.
         /// </summary>
-        /// <param name="OperatorId">A OperatorId to compare with.</param>
+        /// <param name="OperatorId">An operator identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Operator_Id OperatorId)
-        {
 
-            if ((Object) OperatorId == null)
-                return false;
-
-            return CountryCode.Equals(OperatorId.CountryCode) &&
-                   Suffix.     Equals(OperatorId.Suffix);
-
-        }
+            => CountryCode.Equals(OperatorId.CountryCode) &&
+               String.Equals(Suffix, OperatorId.Suffix, StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

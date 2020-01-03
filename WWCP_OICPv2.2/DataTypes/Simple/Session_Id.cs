@@ -65,7 +65,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// The length of the charging session identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -104,6 +104,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
+            if (Text != null)
+                Text = Text.Trim();
+
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of a charging session identification must not be null or empty!");
 
@@ -130,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (TryParse(Text, out Session_Id sessionId))
                 return sessionId;
 
-            return new Session_Id(Text);
+            return new Session_Id?();
 
         }
 
@@ -223,19 +226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (Session_Id SessionId1, Session_Id SessionId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(SessionId1, SessionId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) SessionId1 == null) || ((Object) SessionId2 == null))
-                return false;
-
-            return SessionId1.Equals(SessionId2);
-
-        }
+            => SessionId1.Equals(SessionId2);
 
         #endregion
 
@@ -248,7 +239,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 == SessionId2);
+            => !SessionId1.Equals(SessionId2);
 
         #endregion
 
@@ -261,14 +252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (Session_Id SessionId1, Session_Id SessionId2)
-        {
-
-            if ((Object) SessionId1 == null)
-                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
-
-            return SessionId1.CompareTo(SessionId2) < 0;
-
-        }
+            => SessionId1.CompareTo(SessionId2) < 0;
 
         #endregion
 
@@ -281,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 > SessionId2);
+            => SessionId1.CompareTo(SessionId2) <= 0;
 
         #endregion
 
@@ -294,14 +278,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (Session_Id SessionId1, Session_Id SessionId2)
-        {
-
-            if ((Object) SessionId1 == null)
-                throw new ArgumentNullException(nameof(SessionId1), "The given SessionId1 must not be null!");
-
-            return SessionId1.CompareTo(SessionId2) > 0;
-
-        }
+            => SessionId1.CompareTo(SessionId2) > 0;
 
         #endregion
 
@@ -314,7 +291,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (Session_Id SessionId1, Session_Id SessionId2)
-            => !(SessionId1 < SessionId2);
+            => SessionId1.CompareTo(SessionId2) >= 0;
 
         #endregion
 
@@ -329,17 +306,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is Session_Id SessionId))
-                throw new ArgumentException("The given object is not a charging session identification!");
-
-            return CompareTo(SessionId);
-
-        }
+            => Object is Session_Id sessionId
+                   ? CompareTo(sessionId)
+                   : throw new ArgumentException("The given object is not a charging session identification!");
 
         #endregion
 
@@ -350,20 +320,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="SessionId">An object to compare with.</param>
         public Int32 CompareTo(Session_Id SessionId)
-        {
 
-            if ((Object) SessionId == null)
-                throw new ArgumentNullException(nameof(SessionId),  "The given charging session identification must not be null!");
-
-            // Compare the length of the SessionIds
-            var _Result = Length.CompareTo(SessionId.Length);
-
-            if (_Result == 0)
-                _Result = String.Compare(InternalId, SessionId.InternalId, StringComparison.Ordinal);
-
-            return _Result;
-
-        }
+            => String.Compare(InternalId,
+                              SessionId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -379,17 +339,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is Session_Id SessionId))
-                return false;
-
-            return Equals(SessionId);
-
-        }
+            => Object is Session_Id sessionId
+                   ? Equals(sessionId)
+                   : false;
 
         #endregion
 
@@ -401,14 +354,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="SessionId">A charging session identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Session_Id SessionId)
-        {
 
-            if ((Object) SessionId == null)
-                return false;
-
-            return InternalId.Equals(SessionId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             SessionId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

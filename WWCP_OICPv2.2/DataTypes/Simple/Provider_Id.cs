@@ -81,13 +81,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 {
 
                     case ProviderIdFormats.DIN_STAR:
-                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix?.Length);
 
                     case ProviderIdFormats.ISO:
-                        return (UInt64) (CountryCode.Alpha2Code.Length     + Suffix.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length     + Suffix?.Length);
 
                     default: // ISO_HYPHEN
-                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix?.Length);
 
                 }
 
@@ -242,8 +242,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static Provider_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Provider_Id _ProviderId))
-                return _ProviderId;
+            if (TryParse(Text, out Provider_Id providerId))
+                return providerId;
 
             return new Provider_Id?();
 
@@ -420,19 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (Provider_Id ProviderId1, Provider_Id ProviderId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ProviderId1, ProviderId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) ProviderId1 == null) || ((Object) ProviderId2 == null))
-                return false;
-
-            return ProviderId1.Equals(ProviderId2);
-
-        }
+            => ProviderId1.Equals(ProviderId2);
 
         #endregion
 
@@ -445,7 +433,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (Provider_Id ProviderId1, Provider_Id ProviderId2)
-            => !(ProviderId1 == ProviderId2);
+            => !ProviderId1.Equals(ProviderId2);
 
         #endregion
 
@@ -458,14 +446,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (Provider_Id ProviderId1, Provider_Id ProviderId2)
-        {
-
-            if ((Object) ProviderId1 == null)
-                throw new ArgumentNullException(nameof(ProviderId1), "The given ProviderId1 must not be null!");
-
-            return ProviderId1.CompareTo(ProviderId2) < 0;
-
-        }
+            => ProviderId1.CompareTo(ProviderId2) < 0;
 
         #endregion
 
@@ -478,7 +459,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (Provider_Id ProviderId1, Provider_Id ProviderId2)
-            => !(ProviderId1 > ProviderId2);
+            => ProviderId1.CompareTo(ProviderId2) <= 0;
 
         #endregion
 
@@ -491,14 +472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (Provider_Id ProviderId1, Provider_Id ProviderId2)
-        {
-
-            if ((Object) ProviderId1 == null)
-                throw new ArgumentNullException(nameof(ProviderId1), "The given ProviderId1 must not be null!");
-
-            return ProviderId1.CompareTo(ProviderId2) > 0;
-
-        }
+            => ProviderId1.CompareTo(ProviderId2) > 0;
 
         #endregion
 
@@ -511,7 +485,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (Provider_Id ProviderId1, Provider_Id ProviderId2)
-            => !(ProviderId1 < ProviderId2);
+            => ProviderId1.CompareTo(ProviderId2) >= 0;
 
         #endregion
 
@@ -526,17 +500,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is Provider_Id))
-                throw new ArgumentException("The given object is not an e-mobility provider identification!", nameof(Object));
-
-            return CompareTo((Provider_Id) Object);
-
-        }
+            => Object is Provider_Id providerId
+                   ? CompareTo(providerId)
+                   : throw new ArgumentException("The given object is not an e-mobility provider identification!", nameof(Object));
 
         #endregion
 
@@ -549,21 +516,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public Int32 CompareTo(Provider_Id ProviderId)
         {
 
-            if ((Object) ProviderId == null)
-                throw new ArgumentNullException(nameof(ProviderId), "The given e-mobility provider identification must not be null!");
+            var result = CountryCode.CompareTo(ProviderId.CountryCode);
 
-            // Compare the length of the ProviderIds
-            var _Result = Length.CompareTo(ProviderId.Length);
-
-            // If equal: Compare country codes
-            if (_Result == 0)
-                _Result = CountryCode.CompareTo(ProviderId.CountryCode);
-
-            // If equal: Compare provider ids
-            if (_Result == 0)
-                _Result = String.Compare(Suffix, ProviderId.Suffix, StringComparison.Ordinal);
-
-            return _Result;
+            return result == 0
+                       ? String.Compare(Suffix, ProviderId.Suffix, StringComparison.OrdinalIgnoreCase)
+                       : result;
 
         }
 
@@ -581,17 +538,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is Provider_Id))
-                return false;
-
-            return Equals((Provider_Id) Object);
-
-        }
+            => Object is Provider_Id providerId
+                   ? Equals(providerId)
+                   : false;
 
         #endregion
 
@@ -603,15 +553,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="ProviderId">An e-mobility provider to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Provider_Id ProviderId)
-        {
 
-            if ((Object) ProviderId == null)
-                return false;
-
-            return CountryCode.Equals(ProviderId.CountryCode) &&
-                   Suffix.     Equals(ProviderId.Suffix);
-
-        }
+            => CountryCode.Equals(ProviderId.CountryCode) &&
+               String.Equals(Suffix, ProviderId.Suffix, StringComparison.OrdinalIgnoreCase);
 
         #endregion
 

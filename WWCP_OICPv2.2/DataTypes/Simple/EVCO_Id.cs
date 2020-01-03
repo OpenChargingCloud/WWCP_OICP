@@ -75,7 +75,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -290,22 +290,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(EVCOId1, EVCOId2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) EVCOId1 == null) || ((Object) EVCOId2 == null))
-                return false;
-
-            if ((Object) EVCOId1 == null)
-                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
-
-            return EVCOId1.Equals(EVCOId2);
-
-        }
+            => EVCOId1.Equals(EVCOId2);
 
         #endregion
 
@@ -318,7 +303,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-            => !(EVCOId1 == EVCOId2);
+            => !EVCOId1.Equals(EVCOId2);
 
         #endregion
 
@@ -331,14 +316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-        {
-
-            if ((Object) EVCOId1 == null)
-                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
-
-            return EVCOId1.CompareTo(EVCOId2) < 0;
-
-        }
+            => EVCOId1.CompareTo(EVCOId2) < 0;
 
         #endregion
 
@@ -351,7 +329,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-            => !(EVCOId1 > EVCOId2);
+            => EVCOId1.CompareTo(EVCOId2) <= 0;
 
         #endregion
 
@@ -364,14 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-        {
-
-            if ((Object) EVCOId1 == null)
-                throw new ArgumentNullException(nameof(EVCOId1),  "The given contract identification must not be null!");
-
-            return EVCOId1.CompareTo(EVCOId2) > 0;
-
-        }
+            => EVCOId1.CompareTo(EVCOId2) > 0;
 
         #endregion
 
@@ -384,7 +355,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId2">Another contract identification.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (EVCO_Id EVCOId1, EVCO_Id EVCOId2)
-            => !(EVCOId1 < EVCOId2);
+            => EVCOId1.CompareTo(EVCOId2) >= 0;
 
         #endregion
 
@@ -399,17 +370,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object),  "The given object must not be null!");
-
-            if (!(Object is EVCO_Id EVCOId))
-                throw new ArgumentException("The given object is not a EVCOId!");
-
-            return CompareTo(EVCOId);
-
-        }
+            => Object is EVCO_Id EVCOId
+                   ? CompareTo(EVCOId)
+                   : throw new ArgumentException("The given object is not a EVCOId!");
 
         #endregion
 
@@ -420,14 +384,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="EVCOId">An object to compare with.</param>
         public Int32 CompareTo(EVCO_Id EVCOId)
-        {
 
-            if ((Object) EVCOId == null)
-                throw new ArgumentNullException(nameof(EVCOId),  "The given contract identification must not be null!");
-
-            return String.Compare(InternalId, EVCOId.InternalId, StringComparison.Ordinal);
-
-        }
+            => String.Compare(InternalId,
+                              EVCOId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -443,17 +403,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is EVCO_Id EVCOId))
-                return false;
-
-            return Equals(EVCOId);
-
-        }
+            => Object is EVCO_Id EVCOId
+                   ? Equals(EVCOId)
+                   : false;
 
         #endregion
 
@@ -465,14 +418,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVCOId">A contract identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVCO_Id EVCOId)
-        {
 
-            if ((Object) EVCOId == null)
-                return false;
-
-            return InternalId.Equals(EVCOId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             EVCOId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
