@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2019 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2020 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Affero GPL license, Version 3.0 (the "License");
