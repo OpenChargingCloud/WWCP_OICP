@@ -1159,37 +1159,37 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     switch (response.Result)
                     {
 
-                        case RemoteStartResultType.Success:
+                        case RemoteStartResultTypes.Success:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
                                        Request,
                                        response.Session.Id.ToOICP(),
                                        StatusCodeDescription: "Ready to charge!"
                                    );
 
-                        case RemoteStartResultType.InvalidSessionId:
+                        case RemoteStartResultTypes.InvalidSessionId:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SessionIsInvalid(
                                        Request,
                                        SessionId: Request.SessionId
                                    );
 
-                        case RemoteStartResultType.InvalidCredentials:
+                        case RemoteStartResultTypes.InvalidCredentials:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract(Request);
 
-                        case RemoteStartResultType.Offline:
-                        case RemoteStartResultType.Timeout:
-                        case RemoteStartResultType.CommunicationError:
+                        case RemoteStartResultTypes.Offline:
+                        case RemoteStartResultTypes.Timeout:
+                        case RemoteStartResultTypes.CommunicationError:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(Request);
 
-                        case RemoteStartResultType.Reserved:
+                        case RemoteStartResultTypes.Reserved:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(Request);
 
-                        case RemoteStartResultType.AlreadyInUse:
+                        case RemoteStartResultTypes.AlreadyInUse:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
-                        case RemoteStartResultType.UnknownLocation:
+                        case RemoteStartResultTypes.UnknownLocation:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID(Request);
 
-                        case RemoteStartResultType.OutOfService:
+                        case RemoteStartResultTypes.OutOfService:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService(Request);
 
                     }
@@ -1232,28 +1232,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     switch (response.Result)
                     {
 
-                        case RemoteStopResultType.Success:
+                        case RemoteStopResultTypes.Success:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
                                        Request,
                                        response.SessionId.ToOICP(),
                                        StatusCodeDescription: "Ready to stop charging!"
                                    );
 
-                        case RemoteStopResultType.InvalidSessionId:
+                        case RemoteStopResultTypes.InvalidSessionId:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SessionIsInvalid(
                                        Request,
                                        SessionId: Request.SessionId
                                    );
 
-                        case RemoteStopResultType.Offline:
-                        case RemoteStopResultType.Timeout:
-                        case RemoteStopResultType.CommunicationError:
+                        case RemoteStopResultTypes.Offline:
+                        case RemoteStopResultTypes.Timeout:
+                        case RemoteStopResultTypes.CommunicationError:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(Request);
 
-                        case RemoteStopResultType.UnknownLocation:
+                        case RemoteStopResultTypes.UnknownLocation:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.UnknownEVSEID(Request);
 
-                        case RemoteStopResultType.OutOfService:
+                        case RemoteStopResultTypes.OutOfService:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.EVSEOutOfService(Request);
 
                     }

@@ -3,7 +3,7 @@
    <soapenv:Body>
       <tns:eRoamingAuthorizeRemoteStart xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.1"
 										xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.1">
-         <tns:SessionID>27ed5d9b-b40a-4828-ad57-ef9178a0d868</tns:SessionID>
+         <tns:SessionID>27ed5d9b-b40a-4828-ad57-ef9178a0d867</tns:SessionID>
          <tns:ProviderID>DE-GDF</tns:ProviderID>
          <tns:EvseID>DE*BDO*EVSE*CI*TESTS*A*1</tns:EvseID>
          <tns:Identification>
