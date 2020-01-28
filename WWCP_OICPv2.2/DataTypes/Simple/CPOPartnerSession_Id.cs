@@ -45,12 +45,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         private readonly String InternalId;
 
-        /// <summary>
-        /// The regular expression for parsing a charging session identification.
-        /// </summary>
-        public static readonly Regex SessionId_RegEx  = new Regex("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
-                                                                  RegexOptions.IgnorePatternWhitespace);
-
         #endregion
 
         #region Properties
@@ -175,17 +169,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             try
             {
-
-                if (!SessionId_RegEx.IsMatch(Text))
-                {
-                    SessionId = default;
-                    return false;
-                }
-
                 SessionId = new CPOPartnerSession_Id(Text);
-
                 return true;
-
             }
 
 #pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
