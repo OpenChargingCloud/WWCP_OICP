@@ -6574,7 +6574,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                 {
                                     SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                           SendCDRResultTypes.CouldNotConvertCDRFormat,
-                                                                          e.Message));
+                                                                          I18NString.Create(Languages.eng, e.Message)));
                                 }
 
                             }
@@ -6624,14 +6624,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                     else
                                         SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                               SendCDRResultTypes.Error,
-                                                                              response.HTTPBodyAsUTF8String));
+                                                                              I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String)));
 
                                 }
                                 catch (Exception e)
                                 {
                                     SendCDRsResults.Add(new SendCDRResult(ChargeDetailRecord,
                                                                           SendCDRResultTypes.CouldNotConvertCDRFormat,
-                                                                          e.Message));
+                                                                          I18NString.Create(Languages.eng, e.Message)));
                                 }
 
                             }
@@ -7062,14 +7062,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     else
                         SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
                                                               SendCDRResultTypes.Error,
-                                                              response.HTTPBodyAsUTF8String));
+                                                              I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String)));
 
                 }
                 catch (Exception e)
                 {
                     SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
                                                           SendCDRResultTypes.Error,
-                                                          e.Message));
+                                                          I18NString.Create(Languages.eng, e.Message)));
                 }
 
                 //if (sendCDRsResult.Warnings.Any())
