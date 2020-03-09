@@ -1365,7 +1365,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 CustomData.Add("OICP.HubProviderId",        ChargeDetailRecord.HubProviderId.      ToString());
 
 
-            var CDR = new  WWCP.ChargeDetailRecord(SessionId:             ChargeDetailRecord.SessionId.ToWWCP(),
+            var CDR = new  WWCP.ChargeDetailRecord(Id:                    ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP().ToString()),
+                                                   SessionId:             ChargeDetailRecord.SessionId.ToWWCP(),
                                                    EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
                                                    ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue ? new eMobilityProvider_Id?(eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString())) : null,
 
