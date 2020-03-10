@@ -27,27 +27,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// MiFare classic.
         /// </summary>
-        mifareCls,
+        mifareCls       =  1,
 
         /// <summary>
         /// MiFare DESFire.
         /// </summary>
-        mifareDes,
+        mifareDes       =  2,
 
         /// <summary>
         /// Calypso.
         /// </summary>
-        calypso,
+        calypso         =  4,
 
         /// <summary>
         /// NFC.
         /// </summary>
-        nfc,
+        nfc             =  8,
 
         /// <summary>
         /// MiFare family.
         /// </summary>
-        mifareFamily
+        mifareFamily    = 16
 
     }
 

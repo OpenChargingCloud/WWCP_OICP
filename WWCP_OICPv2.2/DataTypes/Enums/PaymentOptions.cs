@@ -35,55 +35,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Maps an OICP paymet option to a WWCP paymet option.
         /// </summary>
-        /// <param name="PaymetOption">A paymet option.</param>
-        public static PaymentOptions AsPaymetOption(String PaymetOption)
-        {
+        /// <param name="PaymentOption">A payment option.</param>
+        public static PaymentOptions AsPaymetOption(String PaymentOption)
 
-            switch (PaymetOption.Trim())
-            {
-
-                case "No Payment":
-                    return PaymentOptions.NoPayment;
-
-                case "Direct":
-                    return PaymentOptions.Direct;
-
-                case "Contract":
-                    return PaymentOptions.Contract;
-
-                default:
-                    return PaymentOptions.Unspecified;
-
-            }
-
-        }
+            => (PaymentOption.Trim()) switch {
+                "No Payment" => PaymentOptions.NoPayment,
+                "Direct"     => PaymentOptions.Direct,
+                "Contract"   => PaymentOptions.Contract,
+                _            => PaymentOptions.Unspecified,
+            };
 
         #endregion
 
         #region AsString(PaymentOption)
 
         public static String AsString(this PaymentOptions PaymentOption)
-        {
 
-            switch (PaymentOption)
-            {
-
-                case PaymentOptions.NoPayment:
-                    return "No Payment";
-
-                case PaymentOptions.Direct:
-                    return "Direct";
-
-                case PaymentOptions.Contract:
-                    return "Contract";
-
-
-                default:
-                    return "Unkown";
-
-            }
-
-        }
+            => PaymentOption switch {
+                PaymentOptions.NoPayment => "No Payment",
+                PaymentOptions.Direct    => "Direct",
+                PaymentOptions.Contract  => "Contract",
+                _                        => "Unspecified",
+            };
 
         #endregion
 
@@ -100,22 +73,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Unspecified
         /// </summary>
-        Unspecified,
+        Unspecified     = 0,
 
         /// <summary>
         /// No Payment.
         /// </summary>
-        NoPayment,
+        NoPayment       = 1,
 
         /// <summary>
         /// Direct payment via e.g. cash, credit/debit card, SMS or phone call.
         /// </summary>
-        Direct,
+        Direct          = 2,
 
         /// <summary>
         /// Payment via contract.
         /// </summary>
-        Contract
+        Contract        = 4
 
     }
 

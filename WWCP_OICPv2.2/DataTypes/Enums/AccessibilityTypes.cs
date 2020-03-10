@@ -93,27 +93,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Unknown accessibility.
         /// </summary>
-        Unspecified,
+        Unspecified                 = 0,
 
         /// <summary>
         /// Free for everyone.
         /// </summary>
-        Free_publicly_accessible,
+        Free_publicly_accessible    = 1,
 
         /// <summary>
         /// Limited access, e.g. only for customers or employees.
         /// </summary>
-        Restricted_access,
+        Restricted_access           = 2,
 
         /// <summary>
         /// Free for everyone who pays.
         /// </summary>
-        Paying_publicly_accessible,
+        Paying_publicly_accessible  = 4,
 
         /// <summary>
         /// This station is only usable for testing.
         /// </summary>
-        Test_Station
+        Test_Station                = 8
 
     }
 
