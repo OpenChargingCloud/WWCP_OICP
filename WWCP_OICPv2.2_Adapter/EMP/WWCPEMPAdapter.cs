@@ -2612,11 +2612,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             RoamingNetwork.SessionsStore.TryGet(SessionId, out ChargingSession session);
             var EVSEId = session.EVSEId.Value;
 
-            var response = await EMPRoaming.RemoteStop(SessionId:             SessionId.       ToOICP(),
+            var response = await EMPRoaming.RemoteStop(SessionId:             SessionId.ToOICP(),
                                                        ProviderId:            ProviderId.HasValue
                                                                                    ? ProviderId.Value.ToOICP()
                                                                                    : DefaultProviderId.Value,
-                                                       EVSEId:                EVSEId.          ToOICP().Value,
+                                                       EVSEId:                EVSEId.   ToOICP().Value,
                                                        CPOPartnerSessionId:   null,
                                                        EMPPartnerSessionId:   null,
 
@@ -2638,7 +2638,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             else
                 result = RemoteStopResult.Error(SessionId,
                                                 response.HTTPStatusCode.ToString(),
-                                                response);
+                                                Runtime: DateTime.UtcNow - StartTime);
 
 
             #region Send OnRemoteStopResponse event

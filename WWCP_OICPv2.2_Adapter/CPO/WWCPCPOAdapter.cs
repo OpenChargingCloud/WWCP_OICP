@@ -7056,19 +7056,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         response.Content        != null &&
                         response.Content.Result == true)
                     {
-                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                               SendCDRResultTypes.Success));
                     }
 
                     else
-                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                        SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                               SendCDRResultTypes.Error,
                                                               I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String)));
 
                 }
                 catch (Exception e)
                 {
-                    SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR] as WWCP.ChargeDetailRecord,
+                    SendCDRsResults.Add(new SendCDRResult(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                           SendCDRResultTypes.Error,
                                                           I18NString.Create(Languages.eng, e.Message)));
                 }

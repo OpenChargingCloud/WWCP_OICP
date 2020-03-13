@@ -1009,25 +1009,25 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <param name="HubOperatorId">An optional identification of the hub operator.</param>
             /// <param name="HubProviderId">An optional identification of the hub provider.</param>
             /// <param name="CustomData">A dictionary of customer-specific data.</param>
-            public Builder(EVSE_Id                      EVSEId,
-                           Session_Id                   SessionId,
-                           DateTime                     SessionStart,
-                           DateTime                     SessionEnd,
-                           Identification               Identification,
-                           PartnerProduct_Id?           PartnerProductId       = null,
-                           CPOPartnerSession_Id?        CPOPartnerSessionId    = null,
-                           EMPPartnerSession_Id?        EMPPartnerSessionId    = null,
-                           DateTime?                    ChargingStart          = null,
-                           DateTime?                    ChargingEnd            = null,
-                           Decimal?                     MeterValueStart        = null,  // xx.yyy
-                           Decimal?                     MeterValueEnd          = null,  // xx.yyy
-                           IEnumerable<Decimal>         MeterValuesInBetween   = null,  // xx.yyy
-                           Decimal?                     ConsumedEnergy         = null,  // xx.yyy
-                           String                       MeteringSignature      = null,  // maxlength: 200
-                           HubOperator_Id?              HubOperatorId          = null,
-                           HubProvider_Id?              HubProviderId          = null,
+            public Builder(EVSE_Id                                    EVSEId,
+                           Session_Id                                 SessionId,
+                           DateTime                                   SessionStart,
+                           DateTime                                   SessionEnd,
+                           Identification                             Identification,
+                           PartnerProduct_Id?                         PartnerProductId       = null,
+                           CPOPartnerSession_Id?                      CPOPartnerSessionId    = null,
+                           EMPPartnerSession_Id?                      EMPPartnerSessionId    = null,
+                           DateTime?                                  ChargingStart          = null,
+                           DateTime?                                  ChargingEnd            = null,
+                           Decimal?                                   MeterValueStart        = null,  // xx.yyy
+                           Decimal?                                   MeterValueEnd          = null,  // xx.yyy
+                           IEnumerable<Decimal>                       MeterValuesInBetween   = null,  // xx.yyy
+                           Decimal?                                   ConsumedEnergy         = null,  // xx.yyy
+                           String                                     MeteringSignature      = null,  // maxlength: 200
+                           HubOperator_Id?                            HubOperatorId          = null,
+                           HubProvider_Id?                            HubProviderId          = null,
 
-                           Dictionary<String, Object>   CustomData             = null)
+                           IEnumerable<KeyValuePair<String, Object>>  CustomData             = null)
 
                 : base(CustomData)
 

@@ -1294,35 +1294,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
             /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
             /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
-            public Builder(EVSE_Id                        Id,
+            public Builder(EVSE_Id                                    Id,
 
-                           DeltaTypes?                    DeltaType                  = null,
-                           DateTime?                      LastUpdate                 = null,
+                           DeltaTypes?                                DeltaType                  = null,
+                           DateTime?                                  LastUpdate                 = null,
 
-                           ChargingStation_Id?            ChargingStationId          = null,
-                           ChargingPool_Id?               ChargingPoolId             = null,
-                           I18NString                     ChargingStationName        = null,
-                           Address                        Address                    = null,
-                           GeoCoordinate?                 GeoCoordinate              = null,
-                           PlugTypes                      Plugs                      = PlugTypes.Unspecified,
-                           IEnumerable<ChargingFacility>  ChargingFacilities         = null,
-                           ChargingModes                  ChargingModes              = ChargingModes.Unspecified,
-                           AuthenticationModes            AuthenticationModes        = AuthenticationModes.Unknown,
-                           Single?                        MaxCapacity                = null,
-                           PaymentOptions                 PaymentOptions             = PaymentOptions.Unspecified,
-                           ValueAddedServices             ValueAddedServices         = ValueAddedServices.None,
-                           AccessibilityTypes             Accessibility              = AccessibilityTypes.Free_publicly_accessible,
-                           String                         HotlinePhoneNumber         = null,
-                           I18NString                     AdditionalInfo             = null,
-                           GeoCoordinate?                 GeoChargingPointEntrance   = null,
-                           Boolean                        IsOpen24Hours              = true,
-                           String                         OpeningTime                = null,
-                           HubOperator_Id?                HubOperatorId              = null,
-                           ClearingHouse_Id?              ClearingHouseId            = null,
-                           Boolean                        IsHubjectCompatible        = true,
-                           Boolean                        DynamicInfoAvailable       = true,
+                           ChargingStation_Id?                        ChargingStationId          = null,
+                           ChargingPool_Id?                           ChargingPoolId             = null,
+                           I18NString                                 ChargingStationName        = null,
+                           Address                                    Address                    = null,
+                           GeoCoordinate?                             GeoCoordinate              = null,
+                           PlugTypes                                  Plugs                      = PlugTypes.Unspecified,
+                           IEnumerable<ChargingFacility>              ChargingFacilities         = null,
+                           ChargingModes                              ChargingModes              = ChargingModes.Unspecified,
+                           AuthenticationModes                        AuthenticationModes        = AuthenticationModes.Unknown,
+                           Single?                                    MaxCapacity                = null,
+                           PaymentOptions                             PaymentOptions             = PaymentOptions.Unspecified,
+                           ValueAddedServices                         ValueAddedServices         = ValueAddedServices.None,
+                           AccessibilityTypes                         Accessibility              = AccessibilityTypes.Free_publicly_accessible,
+                           String                                     HotlinePhoneNumber         = null,
+                           I18NString                                 AdditionalInfo             = null,
+                           GeoCoordinate?                             GeoChargingPointEntrance   = null,
+                           Boolean                                    IsOpen24Hours              = true,
+                           String                                     OpeningTime                = null,
+                           HubOperator_Id?                            HubOperatorId              = null,
+                           ClearingHouse_Id?                          ClearingHouseId            = null,
+                           Boolean                                    IsHubjectCompatible        = true,
+                           Boolean                                    DynamicInfoAvailable       = true,
 
-                           Dictionary<String, Object>     CustomData                 = null)
+                           IEnumerable<KeyValuePair<String, Object>>  CustomData                 = null)
 
                 : base(CustomData)
 
