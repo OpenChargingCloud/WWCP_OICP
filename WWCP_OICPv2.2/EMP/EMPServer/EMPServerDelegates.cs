@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -47,7 +46,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                          PartnerProduct_Id?       PartnerProductId,
                                          CPOPartnerSession_Id?    CPOPartnerSessionId,
                                          EMPPartnerSession_Id?    EMPPartnerSessionId,
-                                         TimeSpan                 RequestTimeout);
+                                         TimeSpan?                RequestTimeout);
 
 
     /// <summary>
@@ -79,7 +78,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                          PartnerProduct_Id?       PartnerProductId,
                                          CPOPartnerSession_Id?    CPOPartnerSessionId,
                                          EMPPartnerSession_Id?    EMPPartnerSessionId,
-                                         TimeSpan                 RequestTimeout,
+                                         TimeSpan?                RequestTimeout,
                                          CPO.AuthorizationStart   Result,
                                          TimeSpan                 Duration);
 
