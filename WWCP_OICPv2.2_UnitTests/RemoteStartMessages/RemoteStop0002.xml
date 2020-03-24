@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Body>
+      <tns:eRoamingAuthorizeRemoteStop xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.1"
+                                       xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.1">
+<tns:SessionID>7f0d7978-ab29-462c-908f-b31aa9c9326e</tns:SessionID>
+<tns:EMPPartnerSessionID>5920036</tns:EMPPartnerSessionID>
+<tns:ProviderID>DE-MEG</tns:ProviderID>
+<tns:EvseID>DE*LVF*E970993236*1</tns:EvseID>
+      </tns:eRoamingAuthorizeRemoteStop>
+   </soapenv:Body>
+</soapenv:Envelope>

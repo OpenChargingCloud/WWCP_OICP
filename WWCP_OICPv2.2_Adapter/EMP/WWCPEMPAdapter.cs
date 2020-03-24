@@ -363,12 +363,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An event sent whenever a 'charge detail record' was received.
         /// </summary>
-        public event OnSendCDRRequestDelegate   OnChargeDetailRecordRequest;
+        public event OnSendCDRsRequestDelegate   OnChargeDetailRecordRequest;
 
         /// <summary>
         /// An event sent whenever a response to a 'charge detail record' was sent.
         /// </summary>
-        public event OnSendCDRResponseDelegate  OnChargeDetailRecordResponse;
+        public event OnSendCDRsResponseDelegate  OnChargeDetailRecordResponse;
 
         #endregion
 
@@ -769,7 +769,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                         Id.ToString(),
                                                         ChargeDetailRecordRequest.EventTrackingId,
                                                         RoamingNetwork.Id,
-                                                        new WWCP.ChargeDetailRecord[0],
                                                         CDRs,
                                                         ChargeDetailRecordRequest.RequestTimeout);
 
@@ -804,7 +803,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                          Id.ToString(),
                                                          ChargeDetailRecordRequest.EventTrackingId,
                                                          RoamingNetwork.Id,
-                                                         new WWCP.ChargeDetailRecord[0],
                                                          CDRs,
                                                          ChargeDetailRecordRequest.RequestTimeout,
                                                          response,

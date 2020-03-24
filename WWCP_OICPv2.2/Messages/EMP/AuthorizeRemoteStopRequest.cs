@@ -111,7 +111,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region Documentation
 
         // <soapenv:Envelope xmlns:soapenv        = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/v2.0">
+        //                   xmlns:Authorization  = "http://www.hubject.com/b2b/services/authorization/v2.1">
+        //                   xmlns:CommonTypes    = "http://www.hubject.com/b2b/services/commontypes/v2.1">
         //
         //    <soapenv:Header/>
         //
@@ -127,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         //          <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
         //
         //          <Authorization:ProviderID>?</Authorization:ProviderID>
-        //          <Authorization:EVSEID>?</Authorization:EVSEID>
+        //          <Authorization:EvseID>?</Authorization:EvseID>
         //
         //       </Authorization:eRoamingAuthorizeRemoteStop>
         //    </soapenv:Body>
@@ -379,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                           : null,
 
                                       new XElement(OICPNS.Authorization + "ProviderID",                 ProviderId.         ToString()),
-                                      new XElement(OICPNS.Authorization + "EVSEID",                     EVSEId.             ToString())
+                                      new XElement(OICPNS.Authorization + "EvseID",                     EVSEId.             ToString())
 
                                  );
 
