@@ -410,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 #region Send OnAuthorizeRemoteReservationStartSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -486,7 +486,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             var results = await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
                                                                  Cast<OnAuthorizeRemoteReservationStartDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeRemoteReservationStartRequest))).
                                                                  ConfigureAwait(false);
@@ -509,7 +509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                         #region Send OnAuthorizeRemoteReservationStartResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -565,7 +565,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStartAcknowledgementSerializer,
                                                                                CustomStatusCodeSerializer)).ToUTF8Bytes(),
@@ -616,7 +616,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 #region Send OnAuthorizeRemoteReservationStopSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -688,7 +688,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             var results = await Task.WhenAll(OnAuthorizeRemoteReservationStop.GetInvocationList().
                                                                  Cast<OnAuthorizeRemoteReservationStopDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeRemoteReservationStopRequest))).
                                                                  ConfigureAwait(false);
@@ -711,7 +711,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                         #region Send OnAuthorizeRemoteReservationStopResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -765,7 +765,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteReservationStopAcknowledgementSerializer,
                                                                                CustomStatusCodeSerializer)).ToUTF8Bytes(),
@@ -816,7 +816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 #region Send OnAuthorizeRemoteStartSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -892,7 +892,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             var results = await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
                                                                  Cast<OnAuthorizeRemoteStartDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeRemoteStartRequest))).
                                                                  ConfigureAwait(false);
@@ -915,7 +915,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                         #region Send OnAuthorizeRemoteStartResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -971,7 +971,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStartAcknowledgementSerializer,
                                                                                CustomStatusCodeSerializer)).ToUTF8Bytes(),
@@ -1023,7 +1023,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 #region Send OnAuthorizeRemoteStopSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -1095,7 +1095,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             var results = await Task.WhenAll(OnAuthorizeRemoteStop.GetInvocationList().
                                                                  Cast<OnAuthorizeRemoteStopDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeRemoteStopRequest))).
                                                                  ConfigureAwait(false);
@@ -1118,7 +1118,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                         #region Send OnAuthorizeRemoteStopResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -1172,7 +1172,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML(CustomAuthorizeRemoteStopAcknowledgementSerializer,
                                                                                CustomStatusCodeSerializer)).ToUTF8Bytes(),

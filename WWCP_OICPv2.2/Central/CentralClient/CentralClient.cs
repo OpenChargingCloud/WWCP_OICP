@@ -813,7 +813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -968,7 +968,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1036,7 +1036,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1187,7 +1187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -1252,7 +1252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1407,7 +1407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -1474,7 +1474,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1625,7 +1625,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var EndTime = DateTime.Now;
+            var EndTime = DateTime.UtcNow;
 
             try
             {
@@ -1693,7 +1693,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeStartRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -1829,7 +1829,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             try
             {
 
-                var Endtime = DateTime.Now;
+                var Endtime = DateTime.UtcNow;
 
                 if (OnAuthorizeStartResponse != null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
@@ -1893,7 +1893,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeStopRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2021,7 +2021,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnAuthorizeStopResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {
@@ -2087,7 +2087,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnSendChargeDetailRecordRequest event
 
-            var StartTime = DateTime.Now;
+            var StartTime = DateTime.UtcNow;
 
             try
             {
@@ -2240,7 +2240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             #region Send OnSendChargeDetailRecordResponse event
 
-            var Endtime = DateTime.Now;
+            var Endtime = DateTime.UtcNow;
 
             try
             {

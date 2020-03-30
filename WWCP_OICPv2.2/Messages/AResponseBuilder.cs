@@ -67,7 +67,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                    Dictionary<String, Object>  CustomData  = null)
 
             : this(Request,
-                   DateTime.Now,
+                   DateTime.UtcNow,
                    CustomData)
 
         { }

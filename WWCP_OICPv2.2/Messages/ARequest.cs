@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                         TimeSpan?           RequestTimeout      = null)
         {
 
-            this.Timestamp                = Timestamp         ?? DateTime.Now;
+            this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
             this.CancellationTokenSource  = CancellationToken == null ? new CancellationTokenSource() : null;
             this.CancellationToken        = CancellationToken ?? CancellationTokenSource.Token;
             this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;

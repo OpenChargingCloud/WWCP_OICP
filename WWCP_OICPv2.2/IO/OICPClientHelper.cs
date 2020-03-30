@@ -45,7 +45,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (StatusCode.TryParse(XML, out StatusCode _StatusCode))
             {
                 OICPException = new OICPException(_StatusCode);
-                OnError(DateTime.Now, XML, OICPException);
+                OnError(DateTime.UtcNow, XML, OICPException);
                 return true;
             }
 

@@ -83,7 +83,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.BadRequest,
                     Server          = HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                 };
 
                 return false;
@@ -96,7 +96,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.BadRequest,
                     Server          = HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.JSON_UTF8,
                     Content         = @"{ ""description"": ""Invalid RoamingNetworkId!"" }".ToUTF8Bytes()
                 };
@@ -114,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.NotFound,
                     Server          = HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.JSON_UTF8,
                     Content         = @"{ ""description"": ""Unknown RoamingNetworkId!"" }".ToUTF8Bytes()
                 };
@@ -311,7 +311,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
-                            Date             = DateTime.Now,
+                            Date             = DateTime.UtcNow,
                             Connection       = "close"
                         }.AsImmutable);
 
@@ -339,7 +339,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                     new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
-                        Date                          = DateTime.Now,
+                        Date                          = DateTime.UtcNow,
                         AccessControlAllowOrigin      = "*",
                         AccessControlAllowMethods     = "GET",
                         AccessControlAllowHeaders     = "Content-Type, Authorization",
@@ -413,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
-                            Date             = DateTime.Now,
+                            Date             = DateTime.UtcNow,
                             Connection       = "close"
                         }.AsImmutable);
 
@@ -455,7 +455,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                     new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
-                        Date                          = DateTime.Now,
+                        Date                          = DateTime.UtcNow,
                         AccessControlAllowOrigin      = "*",
                         AccessControlAllowMethods     = "GET",
                         AccessControlAllowHeaders     = "Content-Type, Authorization",
@@ -539,7 +539,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                             HTTPStatusCode   = HTTPStatusCode.Unauthorized,
                             WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
                             Server           = HTTPServer.DefaultServerName,
-                            Date             = DateTime.Now,
+                            Date             = DateTime.UtcNow,
                             Connection       = "close"
                         }.AsImmutable);
 
@@ -581,7 +581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                     new HTTPResponse.Builder(Request) {
                         HTTPStatusCode                = HTTPStatusCode.OK,
                         Server                        = HTTPServer.DefaultServerName,
-                        Date                          = DateTime.Now,
+                        Date                          = DateTime.UtcNow,
                         AccessControlAllowOrigin      = "*",
                         AccessControlAllowMethods     = "GET",
                         AccessControlAllowHeaders     = "Content-Type, Authorization",

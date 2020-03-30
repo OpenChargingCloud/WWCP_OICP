@@ -83,7 +83,7 @@ namespace org.GraphDefined.WWCP
         public static OICPv2_2.EMP.WWCPEMPAdapter
 
             CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
-                                              EMPRoamingProvider_Id                     Id,
+                                              CSORoamingProvider_Id                     Id,
                                               I18NString                                Name,
 
                                               HTTPHostname                              RemoteHostname,
@@ -139,7 +139,7 @@ namespace org.GraphDefined.WWCP
                                               DNSClient                                 DNSClient                          = null,
 
                                               Action<OICPv2_2.EMP.WWCPEMPAdapter>       OICPConfigurator                   = null,
-                                              Action<IEMPRoamingProvider>               Configurator                       = null)
+                                              Action<ICSORoamingProvider>               Configurator                       = null)
 
         {
 
@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP
         public static OICPv2_2.EMP.WWCPEMPAdapter
 
             CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
-                                              EMPRoamingProvider_Id                     Id,
+                                              CSORoamingProvider_Id                     Id,
                                               I18NString                                Name,
                                               SOAPServer                                SOAPServer,
 
@@ -310,7 +310,7 @@ namespace org.GraphDefined.WWCP
                                               DNSClient                                 DNSClient                         = null,
 
                                               Action<OICPv2_2.EMP.WWCPEMPAdapter>       OICPConfigurator                  = null,
-                                              Action<IEMPRoamingProvider>               Configurator                      = null)
+                                              Action<ICSORoamingProvider>               Configurator                      = null)
 
         {
 

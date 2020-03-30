@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 #region Send OnAuthorizeStartSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -384,7 +384,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                             var results = await Task.WhenAll(OnAuthorizeStart.GetInvocationList().
                                                                  Cast<OnAuthorizeStartDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeStartRequest))).
                                                                  ConfigureAwait(false);
@@ -407,7 +407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                         #region Send OnAuthorizeStartResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -463,7 +463,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(AuthorizationStart.ToXML()).ToUTF8Bytes(),
                     Connection      = "close"
@@ -513,7 +513,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 #region Send OnAuthorizeStopSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -588,7 +588,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                             var results = await Task.WhenAll(OnAuthorizeStop.GetInvocationList().
                                                                  Cast<OnAuthorizeStopDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                AuthorizeStopRequest))).
                                                                  ConfigureAwait(false);
@@ -611,7 +611,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                         #region Send OnAuthorizeStopResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -666,7 +666,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(AuthorizationStop.ToXML()).ToUTF8Bytes(),
                     Connection      = "close"
@@ -716,7 +716,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 #region Send OnChargeDetailRecordSOAPRequest event
 
-                var StartTime = DateTime.Now;
+                var StartTime = DateTime.UtcNow;
 
                 try
                 {
@@ -785,7 +785,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                             var results = await Task.WhenAll(OnChargeDetailRecord.GetInvocationList().
                                                                  Cast<OnChargeDetailRecordDelegate>().
-                                                                 Select(e => e(DateTime.Now,
+                                                                 Select(e => e(DateTime.UtcNow,
                                                                                this,
                                                                                SendChargeDetailRecordRequest))).
                                                                  ConfigureAwait(false);
@@ -805,7 +805,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                         #region Send OnChargeDetailRecordResponse event
 
-                        var EndTime = DateTime.Now;
+                        var EndTime = DateTime.UtcNow;
 
                         try
                         {
@@ -855,7 +855,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
                     HTTPStatusCode  = HTTPStatusCode.OK,
                     Server          = SOAPServer.HTTPServer.DefaultServerName,
-                    Date            = DateTime.Now,
+                    Date            = DateTime.UtcNow,
                     ContentType     = HTTPContentType.XMLTEXT_UTF8,
                     Content         = SOAP.Encapsulation(Acknowledgement.ToXML()).ToUTF8Bytes(),
                     Connection      = "close"

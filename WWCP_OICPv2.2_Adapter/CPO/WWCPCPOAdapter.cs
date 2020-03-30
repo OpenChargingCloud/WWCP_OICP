@@ -42,8 +42,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCPOAdapter : AWWCPCSOAdapter<ChargeDetailRecord>,
-                                  ICSORoamingProvider,
+    public class WWCPCPOAdapter : AWWCPEMPAdapter<ChargeDetailRecord>,
+                                  IEMPRoamingProvider,
                                   IEquatable <WWCPCPOAdapter>,
                                   IComparable<WWCPCPOAdapter>,
                                   IComparable
@@ -705,7 +705,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">The attached DNS service.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
@@ -1243,7 +1243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
@@ -1367,7 +1367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOAdapter(CSORoamingProvider_Id                              Id,
+        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
