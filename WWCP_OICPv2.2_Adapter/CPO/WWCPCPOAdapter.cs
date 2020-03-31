@@ -1109,24 +1109,27 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                    );
 
                         case RemoteStartResultTypes.InvalidCredentials:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract(Request);
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract            (Request);
+
+                        case RemoteStartResultTypes.NoEVConnectedToEVSE:
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE        (Request);
 
                         case RemoteStartResultTypes.Offline:
                         case RemoteStartResultTypes.Timeout:
                         case RemoteStartResultTypes.CommunicationError:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(Request);
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed  (Request);
 
                         case RemoteStartResultTypes.Reserved:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(Request);
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved        (Request);
 
                         case RemoteStartResultTypes.AlreadyInUse:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
                         case RemoteStartResultTypes.UnknownLocation:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID(Request);
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID              (Request);
 
                         case RemoteStartResultTypes.OutOfService:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService(Request);
+                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService           (Request);
 
                     }
                 }

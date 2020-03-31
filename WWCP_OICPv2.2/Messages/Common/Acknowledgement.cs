@@ -547,6 +547,39 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
+        #region (static) NoEVConnectedToEVSE        (Request, StatusCodeDescription = null, ...)
+
+        /// <summary>
+        /// Create a new OICP 'NoEVConnectedToEVSE' acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
+        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        public static Acknowledgement<TRequest>
+
+            NoEVConnectedToEVSE(TRequest               Request,
+                                String                 StatusCodeDescription      = null,
+                                String                 StatusCodeAdditionalInfo   = null,
+                                Session_Id?            SessionId                  = null,
+                                CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+
+                => new Acknowledgement<TRequest>(Request,
+                                                 false,
+                                                 new StatusCode(
+                                                     StatusCodes.NoEVConnectedToEVSE,
+                                                     StatusCodeDescription ?? "No electric vehicle connected to EVSE.!",
+                                                     StatusCodeAdditionalInfo
+                                                 ),
+                                                 SessionId,
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId);
+
+        #endregion
+
 
         #region Documentation
 
