@@ -138,6 +138,7 @@ namespace org.GraphDefined.WWCP
 
                                               IncludeEVSEIdDelegate                                           IncludeEVSEIds                                  = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
+                                              ChargeDetailRecordFilterDelegate                                ChargeDetailRecordFilter                        = null,
                                               CustomEVSEIdMapperDelegate                                      CustomEVSEIdMapper                              = null,
 
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
@@ -219,6 +220,7 @@ namespace org.GraphDefined.WWCP
 
                                                                      IncludeEVSEIds,
                                                                      IncludeEVSEs,
+                                                                     ChargeDetailRecordFilter,
                                                                      CustomEVSEIdMapper,
 
                                                                      ServiceCheckEvery,
@@ -308,7 +310,7 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
                                               LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
                                               HTTPHostname?                                                   RemoteHTTPVirtualHost                           = null,
-                                              HTTPPath?                                                        URIPrefix                                       = null,
+                                              HTTPPath?                                                       URIPrefix                                       = null,
                                               String                                                          EVSEDataURI                                     = OICPv2_2.CPO.CPOClient.DefaultEVSEDataURI,
                                               String                                                          EVSEStatusURI                                   = OICPv2_2.CPO.CPOClient.DefaultEVSEStatusURI,
                                               String                                                          AuthorizationURI                                = OICPv2_2.CPO.CPOClient.DefaultAuthorizationURI,
@@ -317,7 +319,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                                                       RequestTimeout                                  = null,
                                               Byte?                                                           MaxNumberOfRetries                              = OICPv2_2.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
-                                              HTTPPath?                                                        ServerURIPrefix                                 = null,
+                                              HTTPPath?                                                       ServerURIPrefix                                 = null,
                                               String                                                          ServiceId                                       = null,
                                               String                                                          ServerAuthorizationURI                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURI,
                                               String                                                          ServerReservationURI                            = OICPv2_2.CPO.CPOServer.DefaultReservationURI,
@@ -336,6 +338,7 @@ namespace org.GraphDefined.WWCP
 
                                               IncludeEVSEIdDelegate                                           IncludeEVSEIds                                  = null,
                                               IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
+                                              ChargeDetailRecordFilterDelegate                                ChargeDetailRecordFilter                        = null,
                                               CustomEVSEIdMapperDelegate                                      CustomEVSEIdMapper                              = null,
 
                                               TimeSpan?                                                       ServiceCheckEvery                               = null,
@@ -420,6 +423,7 @@ namespace org.GraphDefined.WWCP
 
                                                                      IncludeEVSEIds,
                                                                      IncludeEVSEs,
+                                                                     ChargeDetailRecordFilter,
                                                                      CustomEVSEIdMapper,
 
                                                                      ServiceCheckEvery,

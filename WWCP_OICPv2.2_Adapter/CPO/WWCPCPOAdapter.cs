@@ -124,8 +124,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         protected readonly CustomEVSEIdMapperDelegate CustomEVSEIdMapper;
 
-        public Func<WWCP.ChargeDetailRecord, ChargeDetailRecordFilters> ChargeDetailRecordFilter { get; set; }
-
         #endregion
 
         #region Events
@@ -721,6 +719,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              ChargeDetailRecordFilterDelegate                   ChargeDetailRecordFilter                        = null,
+
                               CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
 
                               TimeSpan?                                          ServiceCheckEvery                               = null,
@@ -744,6 +744,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                    IncludeEVSEIds,
                    IncludeEVSEs,
+                   null,
+                   null,
+                   null,
+                   null,
+                   ChargeDetailRecordFilter,
                    //CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
@@ -1266,6 +1271,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              ChargeDetailRecordFilterDelegate                   ChargeDetailRecordFilter                        = null,
                               CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
 
                               TimeSpan?                                          ServiceCheckEvery                               = null,
@@ -1303,6 +1309,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                    IncludeEVSEIds,
                    IncludeEVSEs,
+                   ChargeDetailRecordFilter,
                    CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
@@ -1380,7 +1387,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               RemoteCertificateValidationCallback                RemoteCertificateValidator                      = null,
                               LocalCertificateSelectionCallback                  ClientCertificateSelector                       = null,
                               HTTPHostname?                                      RemoteHTTPVirtualHost                           = null,
-                              HTTPPath?                                           URIPrefix                                       = null,
+                              HTTPPath?                                          URIPrefix                                       = null,
                               String                                             EVSEDataURI                                     = CPOClient.DefaultEVSEDataURI,
                               String                                             EVSEStatusURI                                   = CPOClient.DefaultEVSEStatusURI,
                               String                                             AuthorizationURI                                = CPOClient.DefaultAuthorizationURI,
@@ -1392,7 +1399,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
                               String                                             ServiceId                                       = null,
                               IPPort?                                            ServerTCPPort                                   = null,
-                              HTTPPath?                                           ServerURIPrefix                                 = null,
+                              HTTPPath?                                          ServerURIPrefix                                 = null,
                               String                                             ServerAuthorizationURI                          = CPOServer.DefaultAuthorizationURI,
                               String                                             ServerReservationURI                            = CPOServer.DefaultReservationURI,
                               HTTPContentType                                    ServerContentType                               = null,
@@ -1413,6 +1420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                               IncludeEVSEIdDelegate                              IncludeEVSEIds                                  = null,
                               IncludeEVSEDelegate                                IncludeEVSEs                                    = null,
+                              ChargeDetailRecordFilterDelegate                   ChargeDetailRecordFilter                        = null,
                               CustomEVSEIdMapperDelegate                         CustomEVSEIdMapper                              = null,
 
                               TimeSpan?                                          ServiceCheckEvery                               = null,
@@ -1476,6 +1484,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                    IncludeEVSEIds,
                    IncludeEVSEs,
+                   ChargeDetailRecordFilter,
                    CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
@@ -5958,18 +5967,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         response.Content        != null &&
                         response.Content.Result == true)
                     {
-                        result = SendCDRResult.Success(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR));
+                        result = SendCDRResult.Success(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                                       Runtime: response.Runtime);
                     }
 
                     else
                         result = SendCDRResult.Error(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                     I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String));
+                                                     I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String),
+                                                     response.Runtime);
 
                 }
                 catch (Exception e)
                 {
                     result = SendCDRResult.Error(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                 Warning.Create(I18NString.Create(Languages.eng, e.Message)));
+                                                 Warning.Create(I18NString.Create(Languages.eng, e.Message)),
+                                                 Runtime: TimeSpan.Zero);
                 }
 
                 RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP(), result);
