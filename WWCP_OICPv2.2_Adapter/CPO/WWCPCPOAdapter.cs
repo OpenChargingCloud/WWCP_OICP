@@ -5382,7 +5382,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     ForwardedCDRs.Add(cdr);
 
                 else
-                    FilteredCDRs.Add(SendCDRResult.Filtered(cdr,
+                    FilteredCDRs.Add(SendCDRResult.Filtered(DateTime.UtcNow,
+                                                            cdr,
                                                             Warning.Create(I18NString.Create(Languages.eng, "This charge detail record was filtered!"))));
 
             }
@@ -5421,7 +5422,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 Endtime  = DateTime.UtcNow;
                 Runtime  = Endtime - StartTime;
-                results   = SendCDRsResult.AdminDown(Id,
+                results  = SendCDRsResult.AdminDown(DateTime.UtcNow, 
+                                                    Id,
                                                     this,
                                                     ChargeDetailRecords,
                                                     Runtime: Runtime);
@@ -5478,12 +5480,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                 {
 
                                     ChargeDetailRecordsQueue.Add(ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord));
-                                    SendCDRsResults.Add(SendCDRResult.Enqueued(ChargeDetailRecord));
+                                    SendCDRsResults.Add(SendCDRResult.Enqueued(DateTime.UtcNow,
+                                                                               ChargeDetailRecord));
 
                                 }
                                 catch (Exception e)
                                 {
-                                    SendCDRsResults.Add(SendCDRResult.CouldNotConvertCDRFormat(ChargeDetailRecord,
+                                    SendCDRsResults.Add(SendCDRResult.CouldNotConvertCDRFormat(DateTime.UtcNow,
+                                                                                               ChargeDetailRecord,
                                                                                                Warning.Create(I18NString.Create(Languages.eng, e.Message))));
                                 }
 
@@ -5491,7 +5495,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             Endtime      = DateTime.UtcNow;
                             Runtime      = Endtime - StartTime;
-                            results       = SendCDRsResult.Enqueued(Id,
+                            results      = SendCDRsResult.Enqueued(DateTime.UtcNow,
+                                                                   Id,
                                                                    this,
                                                                    ChargeDetailRecords,
                                                                    "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
@@ -5529,18 +5534,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                         response.Content.Result == true)
                                     {
 
-                                        result = SendCDRResult.Success(chargeDetailRecord);
+                                        result = SendCDRResult.Success(DateTime.UtcNow,
+                                                                       chargeDetailRecord);
 
                                     }
 
                                     else
-                                        result = SendCDRResult.Error(chargeDetailRecord,
+                                        result = SendCDRResult.Error(DateTime.UtcNow,
+                                                                     chargeDetailRecord,
                                                                      I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String));
 
                                 }
                                 catch (Exception e)
                                 {
-                                    result = SendCDRResult.CouldNotConvertCDRFormat(chargeDetailRecord,
+                                    result = SendCDRResult.CouldNotConvertCDRFormat(DateTime.UtcNow,
+                                                                                    chargeDetailRecord,
                                                                                     I18NString.Create(Languages.eng, e.Message));
                                 }
 
@@ -5553,13 +5561,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                             Runtime  = Endtime - StartTime;
 
                             if (SendCDRsResults.All(cdrresult => cdrresult.Result == SendCDRResultTypes.Success))
-                                results = SendCDRsResult.Success(Id,
+                                results = SendCDRsResult.Success(DateTime.UtcNow,
+                                                                 Id,
                                                                  this,
                                                                  ChargeDetailRecords,
                                                                  Runtime: Runtime);
 
                             else
-                                results = SendCDRsResult.Error(Id,
+                                results = SendCDRsResult.Error(DateTime.UtcNow,
+                                                               Id,
                                                                this,
                                                                SendCDRsResults.
                                                                    Where (cdrresult => cdrresult.Result != SendCDRResultTypes.Success).
@@ -5579,7 +5589,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                         Endtime  = DateTime.UtcNow;
                         Runtime  = Endtime - StartTime;
-                        results   = SendCDRsResult.Timeout(Id,
+                        results  = SendCDRsResult.Timeout(DateTime.UtcNow, 
+                                                          Id,
                                                           this,
                                                           ChargeDetailRecords,
                                                           "Could not " + (TransmissionType == TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!",
@@ -5967,19 +5978,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         response.Content        != null &&
                         response.Content.Result == true)
                     {
-                        result = SendCDRResult.Success(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                        result = SendCDRResult.Success(DateTime.UtcNow,
+                                                       chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                        Runtime: response.Runtime);
                     }
 
                     else
-                        result = SendCDRResult.Error(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                        result = SendCDRResult.Error(DateTime.UtcNow,
+                                                     chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                      I18NString.Create(Languages.eng, response.HTTPBodyAsUTF8String),
                                                      response.Runtime);
 
                 }
                 catch (Exception e)
                 {
-                    result = SendCDRResult.Error(chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                    result = SendCDRResult.Error(DateTime.UtcNow, 
+                                                 chargeDetailRecord.GetCustomDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                  Warning.Create(I18NString.Create(Languages.eng, e.Message)),
                                                  Runtime: TimeSpan.Zero);
                 }
