@@ -1101,6 +1101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     {
 
                         case RemoteStartResultTypes.Success:
+                        case RemoteStartResultTypes.AsyncOperation:
                             return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
                                        Request,
                                        response.Session.Id.ToOICP(),
@@ -1178,6 +1179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     {
 
                         case RemoteStopResultTypes.Success:
+                        case RemoteStopResultTypes.AsyncOperation:
                             return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
                                        Request,
                                        response.SessionId.ToOICP(),
