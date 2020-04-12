@@ -853,7 +853,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                            EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
-                            case SendCDRResultTypes.UnknownEVSE:
+                            case SendCDRResultTypes.UnknownLocation:
                                 return Acknowledgement<CPO.SendChargeDetailRecordRequest>.UnknownEVSEID(
                                            ChargeDetailRecordRequest,
                                            SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,

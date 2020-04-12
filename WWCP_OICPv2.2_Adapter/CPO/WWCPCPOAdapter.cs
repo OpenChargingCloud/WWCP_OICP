@@ -5262,8 +5262,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  SessionId,
                                  response.Content?.ProviderId?.ToWWCP(),
                                  response.Content.StatusCode.HasResult
-                                     ? response.Content.StatusCode.Description
-                                     : null,
+                                     ? I18NString.Create(Languages.eng, response.Content.StatusCode.Description)
+                                     : I18NString.Empty,
                                  response.Content.StatusCode.HasResult
                                      ? response.Content.StatusCode.AdditionalInfo
                                      : null
@@ -5277,8 +5277,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  SessionId,
                                  response.Content?.ProviderId?.ToWWCP(),
                                  response.Content.StatusCode.HasResult
-                                     ? response.Content.StatusCode.Description
-                                     : null,
+                                     ? I18NString.Create(Languages.eng, response.Content.StatusCode.Description)
+                                     : I18NString.Empty,
                                  response.Content.StatusCode.HasResult
                                      ? response.Content.StatusCode.AdditionalInfo
                                      : null
@@ -5501,7 +5501,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                    Id,
                                                                    this,
                                                                    ChargeDetailRecords,
-                                                                   "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!",
+                                                                   I18NString.Create(Languages.eng, "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!"),
                                                                    //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
                                                                    Runtime: Runtime);
                             invokeTimer  = true;
@@ -5595,7 +5595,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                           Id,
                                                           this,
                                                           ChargeDetailRecords,
-                                                          "Could not " + (TransmissionType == TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!",
+                                                          I18NString.Create(Languages.eng, "Could not " + (TransmissionType == TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
                                                           //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
                                                           Runtime: Runtime);
 
