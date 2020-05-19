@@ -557,7 +557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                     switch (response.Result)
                     {
 
-                        case AuthStartResultType.Authorized:
+                        case AuthStartResultTypes.Authorized:
                             return CPO.AuthorizationStart.Authorized(Request,
                                                                         response.SessionId. HasValue ? response.SessionId. Value.ToOICP() : default(Session_Id?),
                                                                         default,
@@ -569,30 +569,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                             SafeSelect(token => OICPv2_2.Identification.FromUID(token.ToOICP()))
                                                                     );
 
-                        case AuthStartResultType.NotAuthorized:
+                        case AuthStartResultTypes.NotAuthorized:
                             return CPO.AuthorizationStart.NotAuthorized(Request,
                                                                         StatusCodes.RFIDAuthenticationfailed_InvalidUID,
                                                                         "RFID Authentication failed - invalid UID");
 
-                        case AuthStartResultType.InvalidSessionId:
+                        case AuthStartResultTypes.InvalidSessionId:
                             return CPO.AuthorizationStart.SessionIsInvalid(Request,
                                                                             SessionId:            Request.SessionId,
                                                                             CPOPartnerSessionId:  Request.CPOPartnerSessionId,
                                                                             EMPPartnerSessionId:  Request.EMPPartnerSessionId);
 
-                        case AuthStartResultType.CommunicationTimeout:
+                        case AuthStartResultTypes.CommunicationTimeout:
                             return CPO.AuthorizationStart.CommunicationToEVSEFailed(Request);
 
-                        case AuthStartResultType.StartChargingTimeout:
+                        case AuthStartResultTypes.StartChargingTimeout:
                             return CPO.AuthorizationStart.NoEVConnectedToEVSE(Request);
 
-                        case AuthStartResultType.Reserved:
+                        case AuthStartResultTypes.Reserved:
                             return CPO.AuthorizationStart.EVSEAlreadyReserved(Request);
 
-                        case AuthStartResultType.UnknownLocation:
+                        case AuthStartResultTypes.UnknownLocation:
                             return CPO.AuthorizationStart.UnknownEVSEID(Request);
 
-                        case AuthStartResultType.OutOfService:
+                        case AuthStartResultTypes.OutOfService:
                             return CPO.AuthorizationStart.EVSEOutOfService(Request);
 
                     }
@@ -704,7 +704,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                     switch (response.Result)
                     {
 
-                        case AuthStopResultType.Authorized:
+                        case AuthStopResultTypes.Authorized:
                             return CPO.AuthorizationStop.Authorized(
                                         Request,
                                         response.SessionId. ToOICP(),
@@ -714,19 +714,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                         "Ready to stop charging!"
                                     );
 
-                        case AuthStopResultType.InvalidSessionId:
+                        case AuthStopResultTypes.InvalidSessionId:
                             return CPO.AuthorizationStop.SessionIsInvalid(Request);
 
-                        case AuthStopResultType.CommunicationTimeout:
+                        case AuthStopResultTypes.CommunicationTimeout:
                             return CPO.AuthorizationStop.CommunicationToEVSEFailed(Request);
 
-                        case AuthStopResultType.StopChargingTimeout:
+                        case AuthStopResultTypes.StopChargingTimeout:
                             return CPO.AuthorizationStop.NoEVConnectedToEVSE(Request);
 
-                        case AuthStopResultType.UnknownLocation:
+                        case AuthStopResultTypes.UnknownLocation:
                             return CPO.AuthorizationStop.UnknownEVSEID(Request);
 
-                        case AuthStopResultType.OutOfService:
+                        case AuthStopResultTypes.OutOfService:
                             return CPO.AuthorizationStop.EVSEOutOfService(Request);
 
                     }
