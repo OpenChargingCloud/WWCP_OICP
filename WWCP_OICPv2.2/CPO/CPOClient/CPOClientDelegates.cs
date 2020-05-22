@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -70,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                         IEnumerable<EVSEDataRecord>             EVSEDataRecords,
                                                         TimeSpan                                RequestTimeout,
                                                         Acknowledgement<PushEVSEDataRequest>    Result,
-                                                        TimeSpan                                Duration);
+                                                        TimeSpan                                Runtime);
 
     #endregion
 
@@ -102,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                           IEnumerable<EVSEStatusRecord>            EVSEStatusRecords,
                                                           TimeSpan                                 RequestTimeout,
                                                           Acknowledgement<PushEVSEStatusRequest>   Result,
-                                                          TimeSpan                                 Duration);
+                                                          TimeSpan                                 Runtime);
 
     #endregion
 
@@ -130,7 +129,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                  Operator_Id                  OperatorId,
                                                                  TimeSpan                     RequestTimeout,
                                                                  AuthenticationData           Result,
-                                                                 TimeSpan                     Duration);
+                                                                 TimeSpan                     Runtime);
 
     #endregion
 
@@ -171,7 +170,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          EMPPartnerSession_Id?        EMPPartnerSessionId,
                                                          TimeSpan                     RequestTimeout,
                                                          AuthorizationStart           Result,
-                                                         TimeSpan                     Duration);
+                                                         TimeSpan                     Runtime);
 
     #endregion
 
@@ -209,7 +208,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                         EMPPartnerSession_Id?         EMPPartnerSessionId,
                                                         TimeSpan                      RequestTimeout,
                                                         AuthorizationStop             Result,
-                                                        TimeSpan                      Duration);
+                                                        TimeSpan                      Runtime);
 
     #endregion
 
@@ -237,7 +236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                                  ChargeDetailRecord                               ChargeDetailRecord,
                                                                  TimeSpan                                         RequestTimeout,
                                                                  Acknowledgement<SendChargeDetailRecordRequest>   Result,
-                                                                 TimeSpan                                         Duration);
+                                                                 TimeSpan                                         Runtime);
 
     #endregion
 

@@ -24,6 +24,8 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using Newtonsoft.Json.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -844,6 +846,58 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             return CustomAuthorizationStartSerializer != null
                        ? CustomAuthorizationStartSerializer(this, XML)
                        : XML;
+
+        }
+
+        #endregion
+
+
+        #region ToJSON(CustomAuthorizationStartSerializer = null, CustomStatusCodeSerializer = null, CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomAuthorizationStartSerializer">A delegate to customize the serialization of AuthorizationStart respones.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizationStart>  CustomAuthorizationStartSerializer   = null,
+                              CustomJObjectSerializerDelegate<StatusCode>          CustomStatusCodeSerializer           = null,
+                              CustomJObjectSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
+
+        {
+
+            var JSON = JSONObject.Create(
+
+                           SessionId.HasValue
+                               ? new JProperty("SessionID",            SessionId.          ToString())
+                               : null,
+
+                           CPOPartnerSessionId.HasValue
+                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                               : null,
+
+                           EMPPartnerSessionId.HasValue
+                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                               : null,
+
+                           ProviderId.HasValue
+                               ? new JProperty("ProviderID",           ProviderId.         ToString())
+                               : null,
+
+                           new JProperty("AuthorizationStatus",        AuthorizationStatus.ToString()),
+
+
+                           new JProperty("StatusCode",                 StatusCode.         ToJSON(CustomStatusCodeSerializer)),
+
+                           AuthorizationStopIdentifications.Any()
+                               ? new JProperty("AuthorizationStopIdentifications", new JArray(AuthorizationStopIdentifications.Select(identification => identification.ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer))))
+                               : null
+
+                       );
+
+            return CustomAuthorizationStartSerializer != null
+                       ? CustomAuthorizationStartSerializer(this, JSON)
+                       : JSON;
 
         }
 

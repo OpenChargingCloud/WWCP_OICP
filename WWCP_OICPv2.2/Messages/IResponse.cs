@@ -17,28 +17,12 @@
 
 #region Usings
 
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 #endregion
 
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
-
-    public delegate T        CustomJObjectParserDelegate<T>    (JObject  JSON, T Data);
-
-    public delegate T        CustomJArrayParserDelegate<T>     (JArray   JSON, T Data);
-
-    public delegate JObject  CustomJObjectSerializerDelegate<T>(T ResponseBuilder, JObject JSON);
-
-    public delegate JArray   CustomJArraySerializerDelegate<T> (T ResponseBuilder, JArray  JSON);
-
-    public delegate TB CustomMapper2Delegate<TB>(TB ResponseBuilder);
-
-  //  public delegate TB CustomMapperDelegate<T, TB>(XElement XML, TB ResponseBuilder);
-
 
     /// <summary>
     /// The common interface of an OICP response message.

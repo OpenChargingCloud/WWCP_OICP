@@ -18,9 +18,12 @@
 #region Usings
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.WWCP.OICPv2_2.EMP;
 using org.GraphDefined.WWCP.OICPv2_2.CPO;
@@ -143,24 +146,24 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         /// <summary>
         /// The default HTTP URI prefix.
         /// </summary>
-        public static readonly HTTPPath                DefaultURIPrefix         = HTTPPath.Parse("/ext/OICPPlus");
+        public static readonly HTTPPath                             DefaultURLPathPrefix        = HTTPPath.Parse("/ext/OICPPlus");
 
         /// <summary>
         /// The default HTTP realm, if HTTP Basic Authentication is used.
         /// </summary>
-        public const           String                  DefaultHTTPRealm         = "Open Charging Cloud OICPPlus WebAPI";
+        public const           String                               DefaultHTTPRealm            = "Open Charging Cloud OICPPlus WebAPI";
 
         //ToDo: http://www.iana.org/form/media-types
 
         /// <summary>
         /// The HTTP content type for serving OICP+ XML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusXMLContentType   = new HTTPContentType("application", "vnd.OICPPlus+xml", "utf-8", null, null);
+        public static readonly HTTPContentType                      OICPPlusXMLContentType      = new HTTPContentType("application", "vnd.OICPPlus+xml", "utf-8", null, null);
 
         /// <summary>
         /// The HTTP content type for serving OICP+ HTML data.
         /// </summary>
-        public static readonly HTTPContentType         OICPPlusHTMLContentType  = new HTTPContentType("application", "vnd.OICPPlus+html", "utf-8", null, null);
+        public static readonly HTTPContentType                      OICPPlusHTMLContentType     = new HTTPContentType("application", "vnd.OICPPlus+html", "utf-8", null, null);
 
 
         private readonly XMLNamespacesDelegate                      XMLNamespaces;
@@ -170,6 +173,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         //private readonly EVSEStatusRecord2XMLDelegate               EVSEStatusRecord2XML;
         private readonly XMLPostProcessingDelegate                  XMLPostProcessing;
 
+        public static readonly HTTPEventSource_Id                   DebugLogId                  = HTTPEventSource_Id.Parse("OICPDebugLog");
+
         #endregion
 
         #region Properties
@@ -177,28 +182,41 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         /// <summary>
         /// The HTTP server for serving the OICP+ WebAPI.
         /// </summary>
-        public HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer    { get; }
+        public HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer          { get; }
 
         /// <summary>
         /// The HTTP URI prefix.
         /// </summary>
-        public HTTPPath                                     URIPrefix     { get; }
+        public HTTPPath                                     URLPathPrefix       { get; }
 
         /// <summary>
         /// The HTTP realm, if HTTP Basic Authentication is used.
         /// </summary>
-        public String                                       HTTPRealm     { get; }
+        public String                                       HTTPRealm           { get; }
 
         /// <summary>
         /// An enumeration of logins for an optional HTTP Basic Authentication.
         /// </summary>
-        public IEnumerable<KeyValuePair<String, String>>    HTTPLogins    { get; }
+        public IEnumerable<KeyValuePair<String, String>>    HTTPLogins          { get; }
+
+
+        /// <summary>
+        /// Send debug information via HTTP Server Sent Events.
+        /// </summary>
+        public HTTPEventSource<JObject>                     DebugLog            { get; }
 
 
         /// <summary>
         /// The DNS client to use.
         /// </summary>
-        public DNSClient                                    DNSClient     { get; }
+        public DNSClient                                    DNSClient           { get; }
+
+
+
+        private readonly List<WWCPCPOAdapter> _CPOAdapters;
+
+        public IEnumerable<WWCPCPOAdapter> CPOAdapters
+            => _CPOAdapters;
 
         #endregion
 
@@ -231,7 +249,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         /// Attach the OICP+ WebAPI to the given HTTP server.
         /// </summary>
         /// <param name="HTTPServer">A HTTP server.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="HTTPRealm">The HTTP realm, if HTTP Basic Authentication is used.</param>
         /// <param name="HTTPLogins">An enumeration of logins for an optional HTTP Basic Authentication.</param>
         /// 
@@ -241,7 +259,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         /// <param name="EVSEStatusRecord2XML">An optional delegate to process an EVSE status record XML before sending it somewhere.</param>
         /// <param name="XMLPostProcessing">An optional delegate to process the XML after its final creation.</param>
         public OICPWebAPI(HTTPServer<RoamingNetworks, RoamingNetwork>  HTTPServer,
-                          HTTPPath?                                     URIPrefix                           = null,
+                          HTTPPath?                                    URLPathPrefix                       = null,
                           String                                       HTTPRealm                           = DefaultHTTPRealm,
                           IEnumerable<KeyValuePair<String, String>>    HTTPLogins                          = null,
 
@@ -253,8 +271,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                           XMLPostProcessingDelegate                    XMLPostProcessing                   = null)
         {
 
-            this.HTTPServer                         = HTTPServer ?? throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
-            this.URIPrefix                          = URIPrefix  ?? DefaultURIPrefix;
+            this.HTTPServer                         = HTTPServer    ?? throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
+            this.URLPathPrefix                      = URLPathPrefix ?? DefaultURLPathPrefix;
             this.HTTPRealm                          = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
             this.HTTPLogins                         = HTTPLogins ?? new KeyValuePair<String, String>[0];
             this.DNSClient                          = HTTPServer.DNSClient;
@@ -266,10 +284,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             //this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
             this.XMLPostProcessing                  = XMLPostProcessing;
 
+            this._CPOAdapters                       = new List<WWCPCPOAdapter>();
+
             // Link HTTP events...
             HTTPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
             HTTPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             HTTPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
+
+            var LogfilePrefix                       = "HTTPSSEs" + Path.DirectorySeparatorChar;
+
+            this.DebugLog                           = HTTPServer.AddJSONEventSource(EventIdentification:      DebugLogId,
+                                                                                    URLTemplate:              this.URLPathPrefix + "/DebugLog",
+                                                                                    MaxNumberOfCachedEvents:  10000,
+                                                                                    RetryIntervall:           TimeSpan.FromSeconds(5),
+                                                                                    EnableLogging:            true,
+                                                                                    LogfilePrefix:            LogfilePrefix);
 
             RegisterURITemplates();
 
@@ -286,7 +315,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             #region / (HTTPRoot)
 
             HTTPServer.RegisterResourcesFolder(HTTPHostname.Any,
-                                               URIPrefix + "/",
+                                               URLPathPrefix + "/",
                                                "org.GraphDefined.WWCP.OICPv2_2.WebAPI.HTTPRoot",
                                                DefaultFilename: "index.html");
 
@@ -380,7 +409,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // -----------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEs",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}" + URLPathPrefix + "/EVSEs",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: EVSEsDelegate);
 
@@ -389,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // ----------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEs",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}/EVSEs",
                                          OICPPlusXMLContentType,
                                          HTTPDelegate: EVSEsDelegate);
 
@@ -485,7 +514,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // ---------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}" + URLPathPrefix + "/EVSEStatus",
                                          HTTPContentType.XML_UTF8,
                                          HTTPDelegate: EVSEStatusXMLDelegate);
 
@@ -494,7 +523,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // ---------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
                                          OICPPlusXMLContentType,
                                          HTTPDelegate: EVSEStatusXMLDelegate);
 
@@ -591,7 +620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                                                       Environment.NewLine,
 
                                                                       @"  <head>", Environment.NewLine,
-                                                                      @"    <link href=""" + URIPrefix + @"/styles.css"" type=""text/css"" rel=""stylesheet"" />", Environment.NewLine,
+                                                                      @"    <link href=""" + URLPathPrefix + @"/styles.css"" type=""text/css"" rel=""stylesheet"" />", Environment.NewLine,
                                                                       @"  </head>", Environment.NewLine,
                                                                       Environment.NewLine,
 
@@ -645,7 +674,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // ---------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}" + URIPrefix + "/EVSEStatus",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}" + URLPathPrefix + "/EVSEStatus",
                                          HTTPContentType.HTML_UTF8,
                                          HTTPDelegate: EVSEStatusHTMLDelegate);
 
@@ -654,7 +683,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             // ----------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.GET,
-                                         URIPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
+                                         URLPathPrefix + "/RNs/{RoamingNetworkId}/EVSEStatus",
                                          OICPPlusHTMLContentType,
                                          HTTPDelegate: EVSEStatusHTMLDelegate);
 
@@ -664,6 +693,97 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
         #endregion
 
+
+
+        public void Add(WWCPCPOAdapter CPOAdapter)
+        {
+
+            _CPOAdapters.Add(CPOAdapter);
+
+            CPOAdapter.CPOClient.OnAuthorizeStartRequest += async  (LogTimestamp,
+                                                                    RequestTimestamp,
+                                                                    Sender,
+                                                                    SenderId,
+                                                                    EventTrackingId,
+                                                                    OperatorId,
+                                                                    Identification,
+                                                                    EVSEId,
+                                                                    SessionId,
+                                                                    PartnerProductId,
+                                                                    CPOPartnerSessionId,
+                                                                    EMPPartnerSessionId,
+                                                                    RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeStartRequest",
+                                                                                                  JSONObject.Create(
+                                                                                                      new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                      new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                      //new JProperty("roamingNetworkId",            RoamingNetworkId.    ToString()),
+                                                                                                      //EMPRoamingProviderId.HasValue
+                                                                                                      //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                      //    : null,
+                                                                                                      //CSORoamingProviderId.HasValue
+                                                                                                      //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                      //    : null,
+                                                                                                      //OperatorId.    HasValue
+                                                                                                      //    ? new JProperty("operatorId",            OperatorId.          ToString())
+                                                                                                      //    : null,
+                                                                                                      new JProperty("Identification",               Identification.              ToJSON()),
+                                                                                                      //ChargingLocation.IsDefined()
+                                                                                                      //    ? new JProperty("chargingLocation",      ChargingLocation.    ToJSON())
+                                                                                                      //    : null,
+                                                                                                      //ChargingProduct != null
+                                                                                                      //    ? new JProperty("chargingProduct",       ChargingProduct.     ToJSON())
+                                                                                                      //    : null,
+                                                                                                      //SessionId.     HasValue
+                                                                                                      //    ? new JProperty("sessionId",             SessionId.           ToString())
+                                                                                                      //    : null,
+                                                                                                      new JProperty("requestTimeout",        Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                               ));;
+
+            CPOAdapter.CPOClient.OnAuthorizeStartResponse += async (LogTimestamp,
+                                                                    RequestTimestamp,
+                                                                    Sender,
+                                                                    SenderId,
+                                                                    EventTrackingId,
+                                                                    OperatorId,
+                                                                    Identification,
+                                                                    EVSEId,
+                                                                    SessionId,
+                                                                    PartnerProductId,
+                                                                    CPOPartnerSessionId,
+                                                                    EMPPartnerSessionId,
+                                                                    RequestTimeout,
+                                                                    Result,
+                                                                    Runtime) => await DebugLog.SubmitEvent("AuthorizeStartResponse",
+                                                                                               JSONObject.Create(
+                                                                                                   new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                   new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                   //new JProperty("roamingNetworkId",            RoamingNetwork.Id.   ToString()),
+                                                                                                   //EMPRoamingProviderId.HasValue
+                                                                                                   //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                   //    : null,
+                                                                                                   //CSORoamingProviderId.HasValue
+                                                                                                   //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                   //    : null,
+                                                                                                   //OperatorId.HasValue
+                                                                                                   //    ? new JProperty("operatorId",            OperatorId.          ToString())
+                                                                                                   //    : null,
+                                                                                                   new JProperty("Identification",               Identification.              ToJSON()),
+                                                                                                   //ChargingLocation.IsDefined()
+                                                                                                   //    ? new JProperty("chargingLocation",      ChargingLocation.    ToJSON())
+                                                                                                   //    : null,
+                                                                                                   //ChargingProduct != null
+                                                                                                   //    ? new JProperty("chargingProduct",       ChargingProduct.     ToJSON())
+                                                                                                   //    : null,
+                                                                                                   //SessionId.HasValue
+                                                                                                   //    ? new JProperty("sessionId",             SessionId.           ToString())
+                                                                                                   //    : null,
+                                                                                                   new JProperty("requestTimeout",                Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                   new JProperty("result",                        Result.              ToJSON()),
+                                                                                                   new JProperty("runtime",                       Math.Round(Runtime.TotalMilliseconds,   0))
+
+                                                                                               ));
+
+        }
 
     }
 

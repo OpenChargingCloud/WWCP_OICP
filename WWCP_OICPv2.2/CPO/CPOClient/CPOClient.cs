@@ -504,22 +504,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartRequestHandler    OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestHandler     OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an authorize start SOAP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler    OnAuthorizeStartSOAPRequest;
+        public event ClientRequestLogHandler            OnAuthorizeStartSOAPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an authorize start SOAP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler   OnAuthorizeStartSOAPResponse;
+        public event ClientResponseLogHandler           OnAuthorizeStartSOAPResponse;
 
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseHandler  OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseHandler    OnAuthorizeStartResponse;
 
         #endregion
 

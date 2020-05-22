@@ -23,6 +23,8 @@ using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using Newtonsoft.Json.Linq;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -489,6 +491,47 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
+        #region ToJSON(CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
+
+        {
+
+            var JSON = new JObject(
+
+                           RFIDId.HasValue
+                               ? new JProperty("RFIDMifareFamilyIdentification",  RFIDId.                     Value.ToString())
+                               : null,
+
+                           RFIDIdentification.HasValue
+                               ? new JProperty("RFIDIdentification",              RFIDIdentification.         Value.ToString())
+                               : null,
+
+                           QRCodeIdentification.HasValue
+                               ? new JProperty("QRCodeIdentification",            QRCodeIdentification.       Value.ToString())
+                               : null,
+
+                           PlugAndChargeIdentification.HasValue
+                               ? new JProperty("PlugAndChargeIdentification",     PlugAndChargeIdentification.Value.ToString())
+                               : null,
+
+                           RemoteIdentification.HasValue
+                               ? new JProperty("RemoteIdentification",            RemoteIdentification.       Value.ToString())
+                               : null);
+
+            return CustomIdentificationSerializer != null
+                       ? CustomIdentificationSerializer(this, JSON)
+                       : JSON;
+
+        }
+
+        #endregion
+
+
         #region Operator overloading
 
         #region Operator == (Identification1, Identification2)
@@ -774,7 +817,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         }
 
         #endregion
-
 
     }
 
