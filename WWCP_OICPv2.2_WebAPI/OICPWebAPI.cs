@@ -274,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             this.HTTPServer                         = HTTPServer    ?? throw new ArgumentNullException(nameof(HTTPServer), "The given HTTP server must not be null!");
             this.URLPathPrefix                      = URLPathPrefix ?? DefaultURLPathPrefix;
             this.HTTPRealm                          = HTTPRealm.IsNotNullOrEmpty() ? HTTPRealm : DefaultHTTPRealm;
-            this.HTTPLogins                         = HTTPLogins ?? new KeyValuePair<String, String>[0];
+            this.HTTPLogins                         = HTTPLogins    ?? new KeyValuePair<String, String>[0];
             this.DNSClient                          = HTTPServer.DNSClient;
 
             this.XMLNamespaces                      = XMLNamespaces;
@@ -700,6 +700,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
             _CPOAdapters.Add(CPOAdapter);
 
+            #region OnAuthorizeStartRequest/-Response
+
             CPOAdapter.CPOClient.OnAuthorizeStartRequest += async  (LogTimestamp,
                                                                     RequestTimestamp,
                                                                     Sender,
@@ -713,31 +715,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                                                     CPOPartnerSessionId,
                                                                     EMPPartnerSessionId,
                                                                     RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeStartRequest",
-                                                                                                  JSONObject.Create(
-                                                                                                      new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
-                                                                                                      new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
-                                                                                                      //new JProperty("roamingNetworkId",            RoamingNetworkId.    ToString()),
-                                                                                                      //EMPRoamingProviderId.HasValue
-                                                                                                      //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
-                                                                                                      //    : null,
-                                                                                                      //CSORoamingProviderId.HasValue
-                                                                                                      //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
-                                                                                                      //    : null,
-                                                                                                      //OperatorId.    HasValue
-                                                                                                      //    ? new JProperty("operatorId",            OperatorId.          ToString())
-                                                                                                      //    : null,
-                                                                                                      new JProperty("Identification",               Identification.              ToJSON()),
-                                                                                                      //ChargingLocation.IsDefined()
-                                                                                                      //    ? new JProperty("chargingLocation",      ChargingLocation.    ToJSON())
-                                                                                                      //    : null,
-                                                                                                      //ChargingProduct != null
-                                                                                                      //    ? new JProperty("chargingProduct",       ChargingProduct.     ToJSON())
-                                                                                                      //    : null,
-                                                                                                      //SessionId.     HasValue
-                                                                                                      //    ? new JProperty("sessionId",             SessionId.           ToString())
-                                                                                                      //    : null,
-                                                                                                      new JProperty("requestTimeout",        Math.Round(RequestTimeout.TotalSeconds, 0))
-                                                                                               ));;
+                                                                                                                  JSONObject.Create(
+                                                                                                                      new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                                      new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                                      //new JProperty("roamingNetworkId",            RoamingNetworkId.    ToString()),
+                                                                                                                      //EMPRoamingProviderId.HasValue
+                                                                                                                      //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                                      //    : null,
+                                                                                                                      //CSORoamingProviderId.HasValue
+                                                                                                                      //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                                      //    : null,
+                                                                                                                      new JProperty("operatorId",                  OperatorId.          ToString()),
+                                                                                                                      new JProperty("identification",              Identification.      ToJSON()),
+                                                                                                                      EVSEId.HasValue
+                                                                                                                         ? new JProperty("EVSEId",                 EVSEId.              ToString())
+                                                                                                                         : null,
+                                                                                                                      SessionId.HasValue
+                                                                                                                          ? new JProperty("sessionId",             SessionId.           ToString())
+                                                                                                                          : null,
+                                                                                                                      PartnerProductId.HasValue
+                                                                                                                          ? new JProperty("partnerProductId",      PartnerProductId.    ToString())
+                                                                                                                          : null,
+                                                                                                                      CPOPartnerSessionId.HasValue
+                                                                                                                          ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId. ToString())
+                                                                                                                          : null,
+                                                                                                                      EMPPartnerSessionId.HasValue
+                                                                                                                          ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId. ToString())
+                                                                                                                          : null,
+                                                                                                                      new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                 ));
 
             CPOAdapter.CPOClient.OnAuthorizeStartResponse += async (LogTimestamp,
                                                                     RequestTimestamp,
@@ -754,34 +760,122 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                                                     RequestTimeout,
                                                                     Result,
                                                                     Runtime) => await DebugLog.SubmitEvent("AuthorizeStartResponse",
-                                                                                               JSONObject.Create(
-                                                                                                   new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
-                                                                                                   new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
-                                                                                                   //new JProperty("roamingNetworkId",            RoamingNetwork.Id.   ToString()),
-                                                                                                   //EMPRoamingProviderId.HasValue
-                                                                                                   //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
-                                                                                                   //    : null,
-                                                                                                   //CSORoamingProviderId.HasValue
-                                                                                                   //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
-                                                                                                   //    : null,
-                                                                                                   //OperatorId.HasValue
-                                                                                                   //    ? new JProperty("operatorId",            OperatorId.          ToString())
-                                                                                                   //    : null,
-                                                                                                   new JProperty("Identification",               Identification.              ToJSON()),
-                                                                                                   //ChargingLocation.IsDefined()
-                                                                                                   //    ? new JProperty("chargingLocation",      ChargingLocation.    ToJSON())
-                                                                                                   //    : null,
-                                                                                                   //ChargingProduct != null
-                                                                                                   //    ? new JProperty("chargingProduct",       ChargingProduct.     ToJSON())
-                                                                                                   //    : null,
-                                                                                                   //SessionId.HasValue
-                                                                                                   //    ? new JProperty("sessionId",             SessionId.           ToString())
-                                                                                                   //    : null,
-                                                                                                   new JProperty("requestTimeout",                Math.Round(RequestTimeout.TotalSeconds, 0)),
-                                                                                                   new JProperty("result",                        Result.              ToJSON()),
-                                                                                                   new JProperty("runtime",                       Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                           JSONObject.Create(
+                                                                                                               new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                               new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                               //new JProperty("roamingNetworkId",            RoamingNetwork.Id.   ToString()),
+                                                                                                               //EMPRoamingProviderId.HasValue
+                                                                                                               //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                               //    : null,
+                                                                                                               //CSORoamingProviderId.HasValue
+                                                                                                               //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                               //    : null,
+                                                                                                               new JProperty("operatorId",                  OperatorId.          ToString()),
+                                                                                                               new JProperty("identification",              Identification.      ToJSON()),
+                                                                                                               EVSEId.HasValue
+                                                                                                                   ? new JProperty("EVSEId",                EVSEId.              ToString())
+                                                                                                                   : null,
+                                                                                                               SessionId.HasValue
+                                                                                                                   ? new JProperty("sessionId",             SessionId.           ToString())
+                                                                                                                   : null,
+                                                                                                               PartnerProductId.HasValue
+                                                                                                                   ? new JProperty("partnerProductId",      PartnerProductId.    ToString())
+                                                                                                                   : null,
+                                                                                                               CPOPartnerSessionId.HasValue
+                                                                                                                   ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId. ToString())
+                                                                                                                   : null,
+                                                                                                               EMPPartnerSessionId.HasValue
+                                                                                                                   ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId. ToString())
+                                                                                                                   : null,
+                                                                                                               new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                               new JProperty("result",                      Result.              ToJSON()),
+                                                                                                               new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                           ));
 
-                                                                                               ));
+            #endregion
+
+            #region OnAuthorizeStopRequest/-Response
+
+            CPOAdapter.CPOClient.OnAuthorizeStopRequest += async  (LogTimestamp,
+                                                                   RequestTimestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   OperatorId,
+                                                                   SessionId,
+                                                                   Identification,
+                                                                   EVSEId,
+                                                                   CPOPartnerSessionId,
+                                                                   EMPPartnerSessionId,
+                                                                   RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeStopRequest",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                                     //new JProperty("roamingNetworkId",            RoamingNetworkId.    ToString()),
+                                                                                                                     //EMPRoamingProviderId.HasValue
+                                                                                                                     //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                                     //    : null,
+                                                                                                                     //CSORoamingProviderId.HasValue
+                                                                                                                     //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                                     //    : null,
+                                                                                                                     new JProperty("operatorId",                  OperatorId.          ToString()),
+                                                                                                                     new JProperty("identification",              Identification.      ToJSON()),
+                                                                                                                     EVSEId.HasValue
+                                                                                                                         ? new JProperty("EVSEId",                EVSEId.              ToString())
+                                                                                                                         : null,
+                                                                                                                     CPOPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId. ToString())
+                                                                                                                         : null,
+                                                                                                                     EMPPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId. ToString())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("sessionId",                   SessionId.           ToString()),
+                                                                                                                     new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                ));
+
+            CPOAdapter.CPOClient.OnAuthorizeStopResponse += async (LogTimestamp,
+                                                                   RequestTimestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   OperatorId,
+                                                                   SessionId,
+                                                                   Identification,
+                                                                   EVSEId,
+                                                                   CPOPartnerSessionId,
+                                                                   EMPPartnerSessionId,
+                                                                   RequestTimeout,
+                                                                   Result,
+                                                                   Runtime) => await DebugLog.SubmitEvent("AuthorizeStopResponse",
+                                                                                                          JSONObject.Create(
+                                                                                                              new JProperty("timestamp",                   RequestTimestamp.    ToIso8601()),
+                                                                                                              new JProperty("eventTrackingId",             EventTrackingId.     ToString()),
+                                                                                                              //new JProperty("roamingNetworkId",            RoamingNetwork.Id.   ToString()),
+                                                                                                              //EMPRoamingProviderId.HasValue
+                                                                                                              //    ? new JProperty("EMPRoamingProviderId",  EMPRoamingProviderId.ToString())
+                                                                                                              //    : null,
+                                                                                                              //CSORoamingProviderId.HasValue
+                                                                                                              //    ? new JProperty("CSORoamingProviderId",  CSORoamingProviderId.ToString())
+                                                                                                              //    : null,
+                                                                                                              new JProperty("operatorId",                  OperatorId.          ToString()),
+                                                                                                              new JProperty("sessionId",                   SessionId.           ToString()),
+                                                                                                              new JProperty("identification",              Identification.      ToJSON()),
+                                                                                                              EVSEId.HasValue
+                                                                                                                  ? new JProperty("EVSEId",                EVSEId.              ToString())
+                                                                                                                  : null,
+                                                                                                              CPOPartnerSessionId.HasValue
+                                                                                                                  ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId. ToString())
+                                                                                                                  : null,
+                                                                                                              EMPPartnerSessionId.HasValue
+                                                                                                                  ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId. ToString())
+                                                                                                                  : null,
+                                                                                                              new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                              new JProperty("result",                      Result.              ToJSON()),
+                                                                                                              new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                          ));
+
+            #endregion
+
 
         }
 

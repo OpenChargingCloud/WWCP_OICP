@@ -501,7 +501,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         {
 
-            var JSON = new JObject(
+            var JSON = JSONObject.Create(
 
                            RFIDId.HasValue
                                ? new JProperty("RFIDMifareFamilyIdentification",  RFIDId.                     Value.ToString())

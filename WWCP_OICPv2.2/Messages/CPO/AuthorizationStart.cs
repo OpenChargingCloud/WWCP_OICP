@@ -858,8 +858,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomAuthorizationStartSerializer">A delegate to customize the serialization of AuthorizationStart respones.</param>
-        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON objects.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizationStart>  CustomAuthorizationStartSerializer   = null,
                               CustomJObjectSerializerDelegate<StatusCode>          CustomStatusCodeSerializer           = null,
                               CustomJObjectSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
@@ -869,7 +869,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             var JSON = JSONObject.Create(
 
                            SessionId.HasValue
-                               ? new JProperty("SessionID",            SessionId.          ToString())
+                               ? new JProperty("sessionID",            SessionId.          ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
@@ -881,16 +881,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                : null,
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",           ProviderId.         ToString())
+                               ? new JProperty("providerID",           ProviderId.         ToString())
                                : null,
 
-                           new JProperty("AuthorizationStatus",        AuthorizationStatus.ToString()),
+                           new JProperty("authorizationStatus",        AuthorizationStatus.ToString()),
 
 
-                           new JProperty("StatusCode",                 StatusCode.         ToJSON(CustomStatusCodeSerializer)),
+                           new JProperty("statusCode",                 StatusCode.         ToJSON(CustomStatusCodeSerializer)),
 
                            AuthorizationStopIdentifications.Any()
-                               ? new JProperty("AuthorizationStopIdentifications", new JArray(AuthorizationStopIdentifications.Select(identification => identification.ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer))))
+                               ? new JProperty("authorizationStopIdentifications", new JArray(AuthorizationStopIdentifications.Select(identification => identification.ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer))))
                                : null
 
                        );

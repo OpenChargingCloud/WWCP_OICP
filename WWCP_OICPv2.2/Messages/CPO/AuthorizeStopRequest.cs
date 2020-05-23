@@ -456,7 +456,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                                       Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer)
 
-                                  );;
+                                  );
 
             return CustomAuthorizeStopRequestSerializer != null
                        ? CustomAuthorizeStopRequestSerializer(this, XML)

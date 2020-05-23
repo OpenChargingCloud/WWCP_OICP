@@ -365,6 +365,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
+
         #region ToJSON(CustomStatusCodeSerializer = null)
 
         /// <summary>
@@ -377,14 +378,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("Code",  Code),
+                           new JProperty("code",  Code),
 
                            Description.IsNotNullOrEmpty()
-                               ? new JProperty("Description",     Description)
+                               ? new JProperty("description",     Description)
                                : null,
 
                            AdditionalInfo.IsNotNullOrEmpty()
-                               ? new JProperty("AdditionalInfo",  AdditionalInfo)
+                               ? new JProperty("additionalInfo",  AdditionalInfo)
                                : null
 
                        );

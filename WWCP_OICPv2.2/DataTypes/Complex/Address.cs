@@ -385,7 +385,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region ToXML(XName = null, CustomAddressSerializer = null)
 
         /// <summary>
-        /// Return an XML representation of this EVSE data record.
+        /// Return a XML representation of this EVSE data record.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>

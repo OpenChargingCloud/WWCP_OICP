@@ -22,8 +22,11 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -762,6 +765,51 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #endregion
 
 
+        #region ToJSON(CustomAuthorizationStopSerializer = null, CustomStatusCodeSerializer = null, CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomAuthorizationStopSerializer">A delegate to customize the serialization of AuthorizationStop respones.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizationStop> CustomAuthorizationStopSerializer   = null,
+                              CustomJObjectSerializerDelegate<StatusCode>        CustomStatusCodeSerializer          = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           SessionId.HasValue
+                               ? new JProperty("sessionID",            SessionId.          ToString())
+                               : null,
+
+                           CPOPartnerSessionId.HasValue
+                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                               : null,
+
+                           EMPPartnerSessionId.HasValue
+                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                               : null,
+
+                           ProviderId.HasValue
+                               ? new JProperty("providerID",           ProviderId.         ToString())
+                               : null,
+
+                           new JProperty("authorizationStatus",        AuthorizationStatus.ToString()),
+
+
+                           new JProperty("statusCode",                 StatusCode.         ToJSON(CustomStatusCodeSerializer))
+
+                       );
+
+            return CustomAuthorizationStopSerializer != null
+                       ? CustomAuthorizationStopSerializer(this, JSON)
+                       : JSON;
+
+        }
+
+        #endregion
+
+
         #region Operator overloading
 
         #region Operator == (AuthorizationStop1, AuthorizationStop2)
@@ -920,7 +968,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  : "");
 
         #endregion
-
 
 
         #region ToBuilder
