@@ -108,9 +108,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
 
         /// <summary>
-        /// An optional default charging station operator identification.
+        /// An optional default charging station operator.
         /// </summary>
-        public Operator_Id  DefaultOperatorId     { get; }
+        public ChargingStationOperator  DefaultOperator     { get; }
 
 
         public WWCP.OperatorIdFormats DefaultOperatorIdFormat { get; }
@@ -782,7 +782,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
             this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-            this.DefaultOperatorId                                = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+            this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given cahrging station operator must not be null!");
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
             this.DefaultOperatorName                              = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                            = OperatorNameSelector;
@@ -1632,7 +1632,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 var response = await CPORoaming.
                                          PushEVSEData(EVSEDataRecords,
-                                                      DefaultOperatorId,
+                                                      DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
                                                       DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
                                                       ServerAction,
                                                       null,
@@ -1718,7 +1718,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                             var FullLoadResponse = await CPORoaming.
                                                               PushEVSEData(FullLoadEVSEs,
-                                                                           DefaultOperatorId,
+                                                                           DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
                                                                            DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
                                                                            ActionTypes.fullLoad,
                                                                            null,
@@ -1981,7 +1981,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             var response = await CPORoaming.
                                      PushEVSEStatus(_EVSEStatus,
-                                                    DefaultOperatorId,
+                                                    DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
                                                     DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
                                                     ServerAction,
                                                     null,
@@ -5038,13 +5038,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 var response  = await CPORoaming.
-                                          AuthorizeStart(OperatorId.HasValue
-                                                            ? OperatorId.Value.        ToOICP(DefaultOperatorIdFormat)
-                                                            : DefaultOperatorId,
-                                                         LocalAuthentication.          ToOICP().RFIDId.Value,
-                                                         ChargingLocation.EVSEId.Value.ToOICP(),
-                                                         ChargingProduct?.Id.          ToOICP(),
-                                                         SessionId.                    ToOICP(),
+                                          AuthorizeStart((OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat),
+                                                         LocalAuthentication.               ToOICP().RFIDId.Value,
+                                                         ChargingLocation.EVSEId.Value.     ToOICP(),
+                                                         ChargingProduct?.Id.               ToOICP(),
+                                                         SessionId.                         ToOICP(),
                                                          null,
                                                          null,
 
@@ -5057,9 +5055,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 Endtime  = DateTime.UtcNow;
                 Runtime  = Endtime - StartTime;
 
-                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                    response.Content                     != null              &&
-                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                if (response?.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response?.Content                     != null              &&
+                    response?.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
                 {
 
                     result = AuthStartResult.Authorized(
@@ -5232,12 +5230,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             else
             {
 
-                var response  = await CPORoaming.AuthorizeStop(OperatorId.HasValue
-                                                                  ? OperatorId.Value.        ToOICP(DefaultOperatorIdFormat)
-                                                                  : DefaultOperatorId,
-                                                               SessionId.                    ToOICP(),
-                                                               LocalAuthentication.          ToOICP().RFIDId.Value,
-                                                               ChargingLocation.EVSEId.Value.ToOICP(),
+                var response  = await CPORoaming.AuthorizeStop((OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat),
+                                                               SessionId.                         ToOICP(),
+                                                               LocalAuthentication.               ToOICP().RFIDId.Value,
+                                                               ChargingLocation.EVSEId.Value.     ToOICP(),
                                                                null,
                                                                null,
 
@@ -5250,9 +5246,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 Endtime  = DateTime.UtcNow;
                 Runtime  = Endtime - StartTime;
 
-                if (response.HTTPStatusCode              == HTTPStatusCode.OK &&
-                    response.Content                     != null              &&
-                    response.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                if (response?.HTTPStatusCode              == HTTPStatusCode.OK &&
+                    response?.Content                     != null              &&
+                    response?.Content.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
                 {
 
                     result = AuthStopResult.Authorized(
