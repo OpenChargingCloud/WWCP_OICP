@@ -31,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using Org.BouncyCastle.Ocsp;
 
 #endregion
 
@@ -1005,146 +1006,238 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                              Sender,
                                                              Request) => {
 
-                #region Request mapping
-
-                ChargingReservation_Id? ReservationId      = null;
-                TimeSpan?               MinDuration        = null;
-                Single?                 PlannedEnergy      = null;
-                ChargingProduct_Id?     ProductId          = ChargingProduct_Id.Parse("AC1");
-                ChargingProduct         ChargingProduct    = null;
-                PartnerProduct_Id?      PartnerProductId   = Request.PartnerProductId;
-
-                if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
+                try
                 {
 
-                    // The PartnerProductId is a simple string...
-                    if (!PartnerProductId.Value.ToString().Contains("="))
+                    #region Request mapping
+
+                    ChargingReservation_Id? ReservationId      = null;
+                    TimeSpan?               MinDuration        = null;
+                    Single?                 PlannedEnergy      = null;
+                    ChargingProduct_Id?     ProductId          = ChargingProduct_Id.Parse("AC1");
+                    ChargingProduct         ChargingProduct    = null;
+                    PartnerProduct_Id?      PartnerProductId   = Request.PartnerProductId;
+
+                    if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
                     {
-                        ChargingProduct = new ChargingProduct(
-                                              ChargingProduct_Id.Parse(PartnerProductId.Value.ToString())
-                                          );
-                    }
 
-                    else
-                    {
+                        // The PartnerProductId is a simple string...
+                        if (!PartnerProductId.Value.ToString().Contains("="))
+                        {
+                            ChargingProduct = new ChargingProduct(
+                                                  ChargingProduct_Id.Parse(PartnerProductId.Value.ToString())
+                                              );
+                        }
 
-                        var ProductIdElements = PartnerProductId.ToString().DoubleSplit('|', '=');
-
-                        if (ProductIdElements.Any())
+                        else
                         {
 
-                            if (ProductIdElements.ContainsKey("R") &&
-                                ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value,
-                                                                ProductIdElements["R"],
-                                                                out ChargingReservation_Id _ReservationId))
-                                ReservationId = _ReservationId;
+                            var ProductIdElements = PartnerProductId.ToString().DoubleSplit('|', '=');
 
-
-                            if (ProductIdElements.ContainsKey("D"))
+                            if (ProductIdElements.Any())
                             {
 
-                                var MinDurationText = ProductIdElements["D"];
+                                if (ProductIdElements.ContainsKey("R") &&
+                                    ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                                    ProductIdElements["R"],
+                                                                    out ChargingReservation_Id _ReservationId))
+                                    ReservationId = _ReservationId;
 
-                                if (MinDurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                    MinDuration = TimeSpan.FromSeconds(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
 
-                                if (MinDurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                    MinDuration = TimeSpan.FromMinutes(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+                                if (ProductIdElements.ContainsKey("D"))
+                                {
+
+                                    var MinDurationText = ProductIdElements["D"];
+
+                                    if (MinDurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                        MinDuration = TimeSpan.FromSeconds(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+
+                                    if (MinDurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                        MinDuration = TimeSpan.FromMinutes(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+
+                                }
+
+
+                                if (ProductIdElements.ContainsKey("E") &&
+                                    Single.TryParse(ProductIdElements["E"], out Single _PlannedEnergy))
+                                    PlannedEnergy = _PlannedEnergy;
+
+
+                                if (ProductIdElements.ContainsKey("P") &&
+                                    ChargingProduct_Id.TryParse(ProductIdElements["P"], out ChargingProduct_Id _ProductId))
+                                    ProductId = _ProductId;
+
+
+                                ChargingProduct = new ChargingProduct(
+                                                          ProductId.Value,
+                                                          MinDuration
+                                                      );
 
                             }
-
-
-                            if (ProductIdElements.ContainsKey("E") &&
-                                Single.TryParse(ProductIdElements["E"], out Single _PlannedEnergy))
-                                PlannedEnergy = _PlannedEnergy;
-
-
-                            if (ProductIdElements.ContainsKey("P") &&
-                                ChargingProduct_Id.TryParse(ProductIdElements["P"], out ChargingProduct_Id _ProductId))
-                                ProductId = _ProductId;
-
-
-                            ChargingProduct = new ChargingProduct(
-                                                      ProductId.Value,
-                                                      MinDuration
-                                                  );
 
                         }
 
                     }
 
-                }
+                    #endregion
 
-                #endregion
+                    var response = await RoamingNetwork.
+                                             RemoteStart(EMPRoamingProvider:    this,
+                                                         ChargingLocation:      ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
+                                                         ChargingProduct:       ChargingProduct,
+                                                         ReservationId:         ReservationId,
+                                                         SessionId:             Request.SessionId.     ToWWCP(),
+                                                         ProviderId:            Request.ProviderId.    ToWWCP(),
+                                                         RemoteAuthentication:  Request.Identification.ToWWCP(),
 
-                var response = await RoamingNetwork.
-                                         RemoteStart(EMPRoamingProvider:    this,
-                                                     ChargingLocation:      ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
-                                                     ChargingProduct:       ChargingProduct,
-                                                     ReservationId:         ReservationId,
-                                                     SessionId:             Request.SessionId.     ToWWCP(),
-                                                     ProviderId:            Request.ProviderId.    ToWWCP(),
-                                                     RemoteAuthentication:  Request.Identification.ToWWCP(),
+                                                         Timestamp:             Request.Timestamp,
+                                                         CancellationToken:     Request.CancellationToken,
+                                                         EventTrackingId:       Request.EventTrackingId,
+                                                         RequestTimeout:        Request.RequestTimeout).
+                                             ConfigureAwait(false);
 
-                                                     Timestamp:             Request.Timestamp,
-                                                     CancellationToken:     Request.CancellationToken,
-                                                     EventTrackingId:       Request.EventTrackingId,
-                                                     RequestTimeout:        Request.RequestTimeout).
-                                         ConfigureAwait(false);
+                    #region Response mapping
 
-                #region Response mapping
-
-                if (response != null)
-                {
-                    switch (response.Result)
+                    if (response != null)
                     {
+                        switch (response.Result)
+                        {
 
-                        case RemoteStartResultTypes.Success:
-                        case RemoteStartResultTypes.AsyncOperation:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
-                                       Request,
-                                       response.Session.Id.ToOICP(),
-                                       StatusCodeDescription: "Ready to charge!"
-                                   );
+                            case RemoteStartResultTypes.Success:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
+                                           Request:                   Request,
+                                           SessionId:                 response.Session.Id.ToOICP(),
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to charge!",
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.InvalidSessionId:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SessionIsInvalid(
-                                       Request,
-                                       SessionId: Request.SessionId
-                                   );
+                            case RemoteStartResultTypes.AsyncOperation:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.Success(
+                                           Request:                   Request,
+                                           SessionId:                 response.Session.Id.ToOICP(),
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to charge (async)!",
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.InvalidCredentials:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract            (Request);
+                            case RemoteStartResultTypes.InvalidSessionId:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.SessionIsInvalid(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.NoEVConnectedToEVSE:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE        (Request);
+                            case RemoteStartResultTypes.InvalidCredentials:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoValidContract(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.Offline:
-                        case RemoteStartResultTypes.Timeout:
-                        case RemoteStartResultTypes.CommunicationError:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed  (Request);
+                            case RemoteStartResultTypes.NoEVConnectedToEVSE:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.Reserved:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved        (Request);
+                            case RemoteStartResultTypes.Offline:
+                            case RemoteStartResultTypes.Timeout:
+                            case RemoteStartResultTypes.CommunicationError:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.AlreadyInUse:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
+                            case RemoteStartResultTypes.Reserved:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.UnknownLocation:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID              (Request);
+                            case RemoteStartResultTypes.AlreadyInUse:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStartResultTypes.OutOfService:
-                            return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService           (Request);
+                            case RemoteStartResultTypes.UnknownLocation:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.UnknownEVSEID(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
+                            case RemoteStartResultTypes.OutOfService:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.EVSEOutOfService(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
+
+                            default:
+                                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                                    Request:                   Request,
+                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + "\n" +
+                                                               response.Description + "\n" +
+                                                               response.AdditionalInfo,
+                                    SessionId:                 Request.SessionId,
+                                    EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                    CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                );
+
+                        }
                     }
+
+                    return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                               Request:                   Request,
+                               StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStart result!",
+                               SessionId:                 Request.SessionId,
+                               EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                               CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                           );
+
+                    #endregion
+
                 }
-
-                return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.ServiceNotAvailable(
-                           Request,
-                           SessionId: Request.SessionId
-                       );
-
-                #endregion
+                catch (Exception e)
+                {
+                    return Acknowledgement<EMP.AuthorizeRemoteStartRequest>.ServiceNotAvailable(
+                        Request:                   Request,
+                        StatusCodeAdditionalInfo:  e.Message + "\n" + e.StackTrace,
+                        SessionId:                 Request.SessionId
+                    );
+                }
 
             };
 
@@ -1156,61 +1249,125 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                             Sender,
                                                             Request) => {
 
-                var response = await RoamingNetwork.
-                                         RemoteStop(EMPRoamingProvider:    this,
-                                                    //Request.EVSEId.     ToWWCP().Value,
-                                                    SessionId:             Request.SessionId.ToWWCP(),
-                                                    ReservationHandling:   ReservationHandling.Close,
-                                                    ProviderId:            Request.ProviderId.ToWWCP(),
-                                                    RemoteAuthentication:  null,
-
-                                                    Timestamp:             Request.Timestamp,
-                                                    CancellationToken:     Request.CancellationToken,
-                                                    EventTrackingId:       Request.EventTrackingId,
-                                                    RequestTimeout:        Request.RequestTimeout).
-                                         ConfigureAwait(false);
-
-                #region Response mapping
-
-                if (response != null)
+                try
                 {
-                    switch (response.Result)
+
+                    var response = await RoamingNetwork.
+                                             RemoteStop(EMPRoamingProvider:    this,
+                                                        //Request.EVSEId.     ToWWCP().Value,
+                                                        SessionId:             Request.SessionId.ToWWCP(),
+                                                        ReservationHandling:   ReservationHandling.Close,
+                                                        ProviderId:            Request.ProviderId.ToWWCP(),
+                                                        RemoteAuthentication:  null,
+
+                                                        Timestamp:             Request.Timestamp,
+                                                        CancellationToken:     Request.CancellationToken,
+                                                        EventTrackingId:       Request.EventTrackingId,
+                                                        RequestTimeout:        Request.RequestTimeout).
+                                             ConfigureAwait(false);
+
+                    #region Response mapping
+
+                    if (response != null)
                     {
+                        switch (response.Result)
+                        {
 
-                        case RemoteStopResultTypes.Success:
-                        case RemoteStopResultTypes.AsyncOperation:
-                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
-                                       Request,
-                                       response.SessionId.ToOICP(),
-                                       StatusCodeDescription: "Ready to stop charging!"
-                                   );
+                            case RemoteStopResultTypes.Success:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
+                                           Request:                   Request,
+                                           SessionId:                 response.SessionId.ToOICP(),
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to stop charging!",
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStopResultTypes.InvalidSessionId:
-                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SessionIsInvalid(
-                                       Request,
-                                       SessionId: Request.SessionId
-                                   );
+                            case RemoteStopResultTypes.AsyncOperation:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.Success(
+                                           Request:                   Request,
+                                           SessionId:                 response.SessionId.ToOICP(),
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to stop charging (async)!",
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStopResultTypes.Offline:
-                        case RemoteStopResultTypes.Timeout:
-                        case RemoteStopResultTypes.CommunicationError:
-                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(Request);
+                            case RemoteStopResultTypes.InvalidSessionId:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.SessionIsInvalid(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStopResultTypes.UnknownLocation:
-                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.UnknownEVSEID(Request);
+                            case RemoteStopResultTypes.Offline:
+                            case RemoteStopResultTypes.Timeout:
+                            case RemoteStopResultTypes.CommunicationError:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
-                        case RemoteStopResultTypes.OutOfService:
-                            return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.EVSEOutOfService(Request);
+                            case RemoteStopResultTypes.UnknownLocation:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.UnknownEVSEID(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
 
+                            case RemoteStopResultTypes.OutOfService:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.EVSEOutOfService(
+                                           Request:                   Request,
+                                           SessionId:                 Request.SessionId,
+                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeAdditionalInfo:  response.AdditionalInfo,
+                                           EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                           CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                       );
+
+                            default:
+                                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                                    Request:                   Request,
+                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStop result: " + response.Result.ToString() + "\n" +
+                                                               response.Description + "\n" +
+                                                               response.AdditionalInfo,
+                                    SessionId:                 Request.SessionId,
+                                    EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                                    CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                                );
+
+                        }
                     }
+
+                    return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                               Request:                   Request,
+                               StatusCodeAdditionalInfo:  "Invalid WWCP RemoteStop result!",
+                               SessionId:                 Request.SessionId,
+                               EMPPartnerSessionId:       Request.EMPPartnerSessionId,
+                               CPOPartnerSessionId:       Request.CPOPartnerSessionId
+                           );
+
+                    #endregion
+
                 }
-
-                return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.ServiceNotAvailable(
-                           Request,
-                           SessionId: Request.SessionId
-                       );
-
-                #endregion
+                catch (Exception e)
+                {
+                    return Acknowledgement<EMP.AuthorizeRemoteStopRequest>.ServiceNotAvailable(
+                        Request:                   Request,
+                        StatusCodeAdditionalInfo:  e.Message + "\n" + e.StackTrace,
+                        SessionId:                 Request.SessionId
+                    );
+                }
 
             };
 
