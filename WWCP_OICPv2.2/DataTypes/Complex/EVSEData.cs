@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(EVSEData1, EVSEData2))
+            if (ReferenceEquals(EVSEData1, EVSEData2))
                 return true;
 
             // If one is null, but not both, return false.

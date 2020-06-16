@@ -546,7 +546,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(Identification1, Identification2))
+            if (ReferenceEquals(Identification1, Identification2))
                 return true;
 
             // If one is null, but not both, return false.

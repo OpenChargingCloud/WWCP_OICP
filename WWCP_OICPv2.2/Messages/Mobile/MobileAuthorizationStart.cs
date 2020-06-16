@@ -562,7 +562,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(MobileAuthorizationStart1, MobileAuthorizationStart2))
+            if (ReferenceEquals(MobileAuthorizationStart1, MobileAuthorizationStart2))
                 return true;
 
             // If one is null, but not both, return false.

@@ -824,7 +824,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
+            if (ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
                 return true;
 
             // If one is null, but not both, return false.
@@ -1094,7 +1094,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 // If both are null, or both are same instance, return true.
-                if (Object.ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
+                if (ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
                     return true;
 
                 // If one is null, but not both, return false.

@@ -383,7 +383,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse2))
+            if (ReferenceEquals(GetChargeDetailRecordsResponse1, GetChargeDetailRecordsResponse2))
                 return true;
 
             // If one is null, but not both, return false.

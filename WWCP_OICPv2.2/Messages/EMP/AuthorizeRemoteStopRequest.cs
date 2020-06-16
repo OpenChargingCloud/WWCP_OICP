@@ -407,7 +407,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(AuthorizeRemoteStopRequest1, AuthorizeRemoteStopRequest2))
+            if (ReferenceEquals(AuthorizeRemoteStopRequest1, AuthorizeRemoteStopRequest2))
                 return true;
 
             // If one is null, but not both, return false.

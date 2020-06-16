@@ -627,7 +627,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ChargeDetailRecord1, ChargeDetailRecord2))
+            if (ReferenceEquals(ChargeDetailRecord1, ChargeDetailRecord2))
                 return true;
 
             // If one is null, but not both, return false.

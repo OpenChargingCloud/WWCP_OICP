@@ -413,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(PushEVSEData1, PushEVSEData2))
+            if (ReferenceEquals(PushEVSEData1, PushEVSEData2))
                 return true;
 
             // If one is null, but not both, return false.

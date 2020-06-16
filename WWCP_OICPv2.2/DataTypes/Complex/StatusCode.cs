@@ -413,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(StatusCode1, StatusCode2))
+            if (ReferenceEquals(StatusCode1, StatusCode2))
                 return true;
 
             // If one is null, but not both, return false.

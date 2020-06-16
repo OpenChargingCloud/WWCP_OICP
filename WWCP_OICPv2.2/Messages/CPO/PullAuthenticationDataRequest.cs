@@ -343,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(PullAuthenticationData1, PullAuthenticationData2))
+            if (ReferenceEquals(PullAuthenticationData1, PullAuthenticationData2))
                 return true;
 
             // If one is null, but not both, return false.

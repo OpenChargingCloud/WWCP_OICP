@@ -342,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(MobileRemoteStartRequest1, MobileRemoteStartRequest2))
+            if (ReferenceEquals(MobileRemoteStartRequest1, MobileRemoteStartRequest2))
                 return true;
 
             // If one is null, but not both, return false.

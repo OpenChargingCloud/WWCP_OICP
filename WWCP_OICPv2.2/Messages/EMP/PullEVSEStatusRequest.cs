@@ -472,7 +472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(PullEVSEStatus1, PullEVSEStatus2))
+            if (ReferenceEquals(PullEVSEStatus1, PullEVSEStatus2))
                 return true;
 
             // If one is null, but not both, return false.
