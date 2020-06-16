@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                  false,
                                                  new StatusCode(
                                                      StatusCodes.SessionIsInvalid,
-                                                     StatusCodeDescription ?? "Session is invalid",
+                                                     StatusCodeDescription ?? "Session is invalid!",
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
@@ -472,7 +472,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                  false,
                                                  new StatusCode(
                                                      StatusCodes.UnknownEVSEID,
-                                                     StatusCodeDescription ?? "Unknown EVSE ID!",
+                                                     StatusCodeDescription ?? "Unknown EVSE identification!",
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
@@ -571,7 +571,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                  false,
                                                  new StatusCode(
                                                      StatusCodes.NoEVConnectedToEVSE,
-                                                     StatusCodeDescription ?? "No electric vehicle connected to EVSE.!",
+                                                     StatusCodeDescription ?? "No electric vehicle connected to EVSE!",
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,

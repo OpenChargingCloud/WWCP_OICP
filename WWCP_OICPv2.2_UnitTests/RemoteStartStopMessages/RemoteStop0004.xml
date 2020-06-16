@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+      <tns:eRoamingAuthorizeRemoteStop xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.1"
+                                     xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.1">
+         <tns:SessionID>dca27427-af16-45a4-a700-f2cb0b784fad</tns:SessionID>
+         <tns:ProviderID>DE-NBW</tns:ProviderID>
+         <tns:EvseID>DE*BDO*E367056831*2</tns:EvseID>
+      </tns:eRoamingAuthorizeRemoteStop>
+  </soapenv:Body>
+</soapenv:Envelope>

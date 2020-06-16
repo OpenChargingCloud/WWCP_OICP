@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Body>
+      <tns:eRoamingAuthorizeRemoteStart xmlns:tns="http://www.hubject.com/b2b/services/authorization/v2.1"
+                                        xmlns:cmn="http://www.hubject.com/b2b/services/commontypes/v2.1">
+         <tns:SessionID>43ed5d9b-b41a-4828-ad57-ef9278a0d867</tns:SessionID>
+         <tns:ProviderID>DE-BDO</tns:ProviderID>
+         <tns:EvseID>DE*BDO*E463065088*2</tns:EvseID>
+         <tns:Identification>
+            <cmn:RemoteIdentification>
+               <cmn:EvcoID>DE-GDF-C12022187-X</cmn:EvcoID>
+            </cmn:RemoteIdentification>
+         </tns:Identification>
+      </tns:eRoamingAuthorizeRemoteStart>
+   </soapenv:Body>
+</soapenv:Envelope>
