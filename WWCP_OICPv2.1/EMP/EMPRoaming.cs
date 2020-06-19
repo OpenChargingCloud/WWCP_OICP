@@ -1709,7 +1709,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="RemoteClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="RemoteClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
         /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
@@ -1725,7 +1725,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
                           HTTPHostname?                        RemoteHTTPVirtualHost              = null,
-                          HTTPPath?                             URIPrefix                          = null,
+                          HTTPPath?                             URLPrefix                          = null,
                           String                               EVSEDataURI                        = EMPClient.DefaultEVSEDataURI,
                           String                               EVSEStatusURI                      = EMPClient.DefaultEVSEStatusURI,
                           String                               AuthenticationDataURI              = EMPClient.DefaultAuthenticationDataURI,
@@ -1743,7 +1743,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                           RemoteCertificateValidationCallback  RemoteClientCertificateValidator   = null,
                           LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,
                           SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12,
-                          HTTPPath?                             ServerURIPrefix                    = null,
+                          HTTPPath?                             ServerURLPrefix                    = null,
                           String                               ServerAuthorizationURI             = EMPServer.DefaultAuthorizationURI,
                           HTTPContentType                      ServerContentType                  = null,
                           Boolean                              ServerRegisterHTTPRootService      = true,
@@ -1761,7 +1761,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  RemoteCertificateValidator,
                                  ClientCertificateSelector,
                                  RemoteHTTPVirtualHost,
-                                 URIPrefix ?? EMPClient.DefaultURIPrefix,
+                                 URLPrefix ?? EMPClient.DefaultURLPrefix,
                                  EVSEDataURI,
                                  EVSEStatusURI,
                                  AuthenticationDataURI,
@@ -1783,7 +1783,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                                  RemoteClientCertificateValidator,
                                  RemoteClientCertificateSelector,
                                  AllowedTLSProtocols,
-                                 ServerURIPrefix ?? EMPServer.DefaultURIPrefix,
+                                 ServerURLPrefix ?? EMPServer.DefaultURLPrefix,
                                  ServerAuthorizationURI,
                                  ServerContentType,
                                  ServerRegisterHTTPRootService,

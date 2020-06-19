@@ -67,7 +67,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="RemoteClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="RemoteClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
         /// 
         /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
@@ -91,12 +91,12 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback       RemoteCertificateValidator         = null,
                                               LocalCertificateSelectionCallback         ClientCertificateSelector          = null,
                                               HTTPHostname?                             RemoteHTTPVirtualHost              = null,
-                                              HTTPPath?                                  URIPrefix                          = null,
-                                              String                                    EVSEDataURI                        = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURI,
-                                              String                                    EVSEStatusURI                      = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURI,
-                                              String                                    AuthenticationDataURI              = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURI,
-                                              String                                    ReservationURI                     = OICPv2_2.EMP.EMPClient.DefaultReservationURI,
-                                              String                                    AuthorizationURI                   = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURI,
+                                              HTTPPath?                                  URLPrefix                          = null,
+                                              String                                    EVSEDataURL                        = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURL,
+                                              String                                    EVSEStatusURL                      = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURL,
+                                              String                                    AuthenticationDataURL              = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURL,
+                                              String                                    ReservationURL                     = OICPv2_2.EMP.EMPClient.DefaultReservationURL,
+                                              String                                    AuthorizationURL                   = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURL,
                                               OICPv2_2.Provider_Id?                     DefaultProviderId                  = null,
 
                                               String                                    HTTPUserAgent                      = OICPv2_2.EMP.EMPClient.DefaultHTTPUserAgent,
@@ -110,8 +110,8 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback       RemoteClientCertificateValidator   = null,
                                               LocalCertificateSelectionCallback         RemoteClientCertificateSelector    = null,
                                               SslProtocols                              AllowedTLSProtocols                = SslProtocols.Tls12,
-                                              HTTPPath?                                  ServerURIPrefix                    = null,
-                                              String                                    ServerAuthorizationURI             = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURI,
+                                              HTTPPath?                                  ServerURLPrefix                    = null,
+                                              String                                    ServerAuthorizationURL             = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURL,
                                               HTTPContentType                           ServerContentType                  = null,
                                               Boolean                                   ServerRegisterHTTPRootService      = true,
                                               Boolean                                   ServerAutoStart                    = false,
@@ -168,12 +168,12 @@ namespace org.GraphDefined.WWCP
                                                                      RemoteCertificateValidator,
                                                                      ClientCertificateSelector,
                                                                      RemoteHTTPVirtualHost,
-                                                                     URIPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURIPrefix,
-                                                                     EVSEDataURI,
-                                                                     EVSEStatusURI,
-                                                                     AuthenticationDataURI,
-                                                                     ReservationURI,
-                                                                     AuthorizationURI,
+                                                                     URLPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURLPrefix,
+                                                                     EVSEDataURL,
+                                                                     EVSEStatusURL,
+                                                                     AuthenticationDataURL,
+                                                                     ReservationURL,
+                                                                     AuthorizationURL,
                                                                      DefaultProviderId,
 
                                                                      HTTPUserAgent,
@@ -187,8 +187,8 @@ namespace org.GraphDefined.WWCP
                                                                      RemoteClientCertificateValidator,
                                                                      RemoteClientCertificateSelector,
                                                                      AllowedTLSProtocols,
-                                                                     ServerURIPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURIPrefix,
-                                                                     ServerAuthorizationURI,
+                                                                     ServerURLPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURLPrefix,
+                                                                     ServerAuthorizationURL,
                                                                      ServerContentType,
                                                                      ServerRegisterHTTPRootService,
                                                                      ServerAutoStart,
@@ -238,7 +238,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="Id">The unique identification of the roaming provider.</param>
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="SOAPServer">An optional identification string for the HTTP server.</param>
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
@@ -271,12 +271,12 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback       RemoteCertificateValidator        = null,
                                               LocalCertificateSelectionCallback         ClientCertificateSelector         = null,
                                               HTTPHostname?                             RemoteHTTPVirtualHost             = null,
-                                              HTTPPath?                                  URIPrefix                         = null,
-                                              String                                    EVSEDataURI                       = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURI,
-                                              String                                    EVSEStatusURI                     = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURI,
-                                              String                                    AuthenticationDataURI             = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURI,
-                                              String                                    ReservationURI                    = OICPv2_2.EMP.EMPClient.DefaultReservationURI,
-                                              String                                    AuthorizationURI                  = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURI,
+                                              HTTPPath?                                  URLPrefix                         = null,
+                                              String                                    EVSEDataURL                       = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURL,
+                                              String                                    EVSEStatusURL                     = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURL,
+                                              String                                    AuthenticationDataURL             = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURL,
+                                              String                                    ReservationURL                    = OICPv2_2.EMP.EMPClient.DefaultReservationURL,
+                                              String                                    AuthorizationURL                  = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURL,
                                               OICPv2_2.Provider_Id?                     DefaultProviderId                 = null,
 
                                               String                                    HTTPUserAgent                     = OICPv2_2.EMP.EMPClient.DefaultHTTPUserAgent,
@@ -284,8 +284,8 @@ namespace org.GraphDefined.WWCP
                                               Byte?                                     MaxNumberOfRetries                = OICPv2_2.EMP.EMPClient.DefaultMaxNumberOfRetries,
 
                                               String                                    ServiceId                         = null,
-                                              HTTPPath?                                  ServerURIPrefix                   = null,
-                                              String                                    ServerAuthorizationURI            = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURI,
+                                              HTTPPath?                                  ServerURLPrefix                   = null,
+                                              String                                    ServerAuthorizationURL            = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURL,
 
                                               String                                    ClientLoggingContext              = OICPv2_2.EMP.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                    ServerLoggingContext              = OICPv2_2.EMP.EMPServerLogger.DefaultContext,
@@ -344,12 +344,12 @@ namespace org.GraphDefined.WWCP
                                                                                                 RemoteCertificateValidator,
                                                                                                 ClientCertificateSelector,
                                                                                                 RemoteHTTPVirtualHost,
-                                                                                                URIPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURIPrefix,
-                                                                                                EVSEDataURI,
-                                                                                                EVSEStatusURI,
-                                                                                                AuthenticationDataURI,
-                                                                                                ReservationURI,
-                                                                                                AuthorizationURI,
+                                                                                                URLPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURLPrefix,
+                                                                                                EVSEDataURL,
+                                                                                                EVSEStatusURL,
+                                                                                                AuthenticationDataURL,
+                                                                                                ReservationURL,
+                                                                                                AuthorizationURL,
                                                                                                 DefaultProviderId,
 
                                                                                                 HTTPUserAgent,
@@ -361,8 +361,8 @@ namespace org.GraphDefined.WWCP
 
                                                                      new OICPv2_2.EMP.EMPServer(SOAPServer,
                                                                                                 ServiceId,
-                                                                                                ServerURIPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURIPrefix,
-                                                                                                ServerAuthorizationURI),
+                                                                                                ServerURLPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURLPrefix,
+                                                                                                ServerAuthorizationURL),
 
                                                                      ServerLoggingContext,
                                                                      LogfileCreator,

@@ -56,58 +56,58 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public     static readonly IPPort    DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
-        /// The default URI prefix.
+        /// The default URL prefix.
         /// </summary>
-        public new static readonly HTTPPath  DefaultURIPrefix                = HTTPPath.Parse("/soap/v2.2");
+        public new static readonly HTTPPath  DefaultURLPrefix                = HTTPPath.Parse("/soap/v2.2");
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public     const           String    DefaultEVSEDataURI              = "/eRoamingEvseData_V2.2";
+        public     const           String    DefaultEVSEDataURL              = "/eRoamingEvseData_V2.2";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public     const           String    DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.1";
+        public     const           String    DefaultEVSEStatusURL            = "/eRoamingEvseStatus_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The default HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public     const           String    DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.1";
+        public     const           String    DefaultAuthorizationURL         = "/eRoamingAuthorization_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The default HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public     const           String    DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.1";
+        public     const           String    DefaultAuthenticationDataURL    = "/eRoamingAuthenticationData_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP DynamicPricing requests.
+        /// The default HTTP/SOAP/XML URL for OICP DynamicPricing requests.
         /// </summary>
-        public     const           String    DefaultDynamicPricingURI        = "/eRoamingDynamicPricing_V1.0";
+        public     const           String    DefaultDynamicPricingURL        = "/eRoamingDynamicPricing_V1.0";
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public String           EVSEDataURI             { get; }
+        public String           EVSEDataURL             { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public String           EVSEStatusURI           { get; }
+        public String           EVSEStatusURL           { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public String           AuthorizationURI        { get; }
+        public String           AuthorizationURL        { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public String           AuthenticationDataURI   { get; }
+        public String           AuthenticationDataURL   { get; }
 
         /// <summary>
         /// The attached OICP CPO client (HTTP/SOAP client) logger.
@@ -611,11 +611,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
-        /// <param name="URIPrefix">An default URI prefix.</param>
-        /// <param name="EVSEDataURI">The HTTP/SOAP/XML URI for OICP EvseData requests.</param>
-        /// <param name="AuthorizationStartURI">The HTTP/SOAP/XML URI for OICP EvseStatus requests.</param>
-        /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP Authorization requests.</param>
-        /// <param name="AuthenticationDataURI">The HTTP/SOAP/XML URI for OICP AuthenticationData requests.</param>
+        /// <param name="URLPrefix">An default URL prefix.</param>
+        /// <param name="EVSEDataURL">The HTTP/SOAP/XML URL for OICP EvseData requests.</param>
+        /// <param name="AuthorizationStartURL">The HTTP/SOAP/XML URL for OICP EvseStatus requests.</param>
+        /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP Authorization requests.</param>
+        /// <param name="AuthenticationDataURL">The HTTP/SOAP/XML URL for OICP AuthenticationData requests.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
@@ -628,11 +628,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPPath?                            URIPrefix                    = null,
-                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
-                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
-                         String                               AuthorizationURI             = DefaultAuthorizationURI,
-                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
+                         HTTPPath?                            URLPrefix                    = null,
+                         String                               EVSEDataURL                  = DefaultEVSEDataURL,
+                         String                               EVSEStatusURL                = DefaultEVSEStatusURL,
+                         String                               AuthorizationURL             = DefaultAuthorizationURL,
+                         String                               AuthenticationDataURL        = DefaultAuthenticationDataURL,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -646,7 +646,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -663,10 +663,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             #endregion
 
-            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
-            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
-            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+            this.EVSEDataURL            = EVSEDataURL           ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL          = EVSEStatusURL         ?? DefaultEVSEStatusURL;
+            this.AuthorizationURL       = AuthorizationURL      ?? DefaultAuthorizationURL;
+            this.AuthenticationDataURL  = AuthenticationDataURL ?? DefaultAuthenticationDataURL;
 
             this.Logger                 = new CPOClientLogger(this,
                                                               LoggingContext,
@@ -687,7 +687,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
-        /// <param name="URIPrefix">An default URI prefix.</param>
+        /// <param name="URLPrefix">An default URL prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
@@ -699,11 +699,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPPath?                            URIPrefix                    = null,
-                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
-                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
-                         String                               AuthorizationURI             = DefaultAuthorizationURI,
-                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
+                         HTTPPath?                            URLPrefix                    = null,
+                         String                               EVSEDataURL                  = DefaultEVSEDataURL,
+                         String                               EVSEStatusURL                = DefaultEVSEStatusURL,
+                         String                               AuthorizationURL             = DefaultAuthorizationURL,
+                         String                               AuthenticationDataURL        = DefaultAuthenticationDataURL,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -715,7 +715,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -732,10 +732,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             #endregion
 
-            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
-            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
-            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
+            this.EVSEDataURL            = EVSEDataURL           ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL          = EVSEStatusURL         ?? DefaultEVSEStatusURL;
+            this.AuthorizationURL       = AuthorizationURL      ?? DefaultAuthorizationURL;
+            this.AuthenticationDataURL  = AuthenticationDataURL ?? DefaultAuthenticationDataURL;
 
             this.Logger                 = Logger                ?? throw new ArgumentNullException(nameof(Logger), "The given mobile client logger must not be null!"); ;
 
@@ -824,7 +824,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + EVSEDataURI,
+                                                        URLPrefix + EVSEDataURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1082,7 +1082,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + EVSEStatusURI,
+                                                        URLPrefix + EVSEStatusURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1328,7 +1328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + AuthorizationURI,
+                                                        URLPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1557,7 +1557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + AuthorizationURI,
+                                                        URLPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1774,7 +1774,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + AuthorizationURI,
+                                                        URLPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -2014,7 +2014,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URIPrefix + AuthenticationDataURI,
+                                                        URLPrefix + AuthenticationDataURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,

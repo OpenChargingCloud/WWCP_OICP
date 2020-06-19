@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new static readonly HTTPPath          DefaultURIPrefix           = HTTPPath.Parse("/");
+        public new static readonly HTTPPath          DefaultURLPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #region Constructor(s)
 
-        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
@@ -255,7 +255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
@@ -269,7 +269,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPPath?                             URIPrefix                    = null,
+                         HTTPPath?                             URLPrefix                    = null,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          String                               ReservationURI               = DefaultReservationURI,
                          HTTPContentType                      ContentType                  = null,
@@ -283,7 +283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
-                   URIPrefix   ?? DefaultURIPrefix,
+                   URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -304,7 +304,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURI = default, ReservationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
@@ -312,7 +312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
@@ -322,7 +322,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
                          String           ServiceId                 = null,
                          IPPort?          TCPPort                   = null,
-                         HTTPPath?         URIPrefix                 = null,
+                         HTTPPath?         URLPrefix                 = null,
                          String           AuthorizationURI          = DefaultAuthorizationURI,
                          String           ReservationURI            = DefaultReservationURI,
                          HTTPContentType  ContentType               = null,
@@ -332,7 +332,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
-                   URIPrefix   ?? DefaultURIPrefix,
+                   URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -353,24 +353,24 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
 
         #endregion
 
-        #region CPOServer(SOAPServer, ServiceId = null, URIPrefix = default, AuthorizationURI = default, ReservationURI = default)
+        #region CPOServer(SOAPServer, ServiceId = null, URLPrefix = default, AuthorizationURI = default, ReservationURI = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">The HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ReservationURI">The HTTP/SOAP/XML URI for OICP reservation requests.</param>
         public CPOServer(SOAPServer  SOAPServer,
                          String      ServiceId          = null,
-                         HTTPPath?    URIPrefix          = null,
+                         HTTPPath?    URLPrefix          = null,
                          String      AuthorizationURI   = DefaultAuthorizationURI,
                          String      ReservationURI     = DefaultReservationURI)
 
             : base(SOAPServer,
-                   URIPrefix ?? DefaultURIPrefix)
+                   URLPrefix ?? DefaultURLPrefix)
 
         {
 
@@ -398,7 +398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region /Reservation   - AuthorizeRemoteReservationStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + ReservationURI,
+                                            URLPrefix + ReservationURI,
                                             "AuthorizeRemoteReservationStart",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeRemoteReservationStartXML) => {
@@ -586,7 +586,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region /Reservation   - AuthorizeRemoteReservationStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + ReservationURI,
+                                            URLPrefix + ReservationURI,
                                             "AuthorizeRemoteReservationStop",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeRemoteReservationStopXML) => {
@@ -769,7 +769,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region /Authorization - AuthorizeRemoteStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURI,
                                             "AuthorizeRemoteStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeRemoteStartXML) => {
@@ -957,7 +957,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
             #region /Authorization - AuthorizeRemoteStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURI,
                                             "AuthorizeRemoteStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeRemoteStopXML) => {

@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <summary>
         /// The default URI prefix.
         /// </summary>
-        public     static readonly HTTPPath  DefaultURIPrefix             = HTTPPath.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURLPrefix             = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -674,7 +674,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                              HTTPHostname?                        HTTPVirtualHost              = null,
-                             HTTPPath?                             URIPrefix                    = null,
+                             HTTPPath?                             URLPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
                              Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -688,7 +688,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -727,7 +727,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
-        /// <param name="URIPrefix">An default URI prefix.</param>
+        /// <param name="URLPrefix">An default URI prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
@@ -739,7 +739,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                              RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                              LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                              HTTPHostname?                        HTTPVirtualHost              = null,
-                             HTTPPath?                             URIPrefix                    = null,
+                             HTTPPath?                             URLPrefix                    = null,
                              String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                              TimeSpan?                            RequestTimeout               = null,
                              Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -751,7 +751,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix  ?? DefaultURIPrefix,
+                   URLPrefix  ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -843,7 +843,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + ReservationURI,
+                                                    URLPrefix + ReservationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1060,7 +1060,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + ReservationURI,
+                                                    URLPrefix + ReservationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1276,7 +1276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1494,7 +1494,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1713,7 +1713,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1909,7 +1909,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2097,7 +2097,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.Central
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURI,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,

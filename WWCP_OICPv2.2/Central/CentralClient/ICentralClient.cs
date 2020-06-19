@@ -41,14 +41,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         TimeSpan?                          RequestTimeout      { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// The HTTP/SOAP/XML URL for OICP Reservation requests.
         /// </summary>
-        String                             ReservationURI      { get; }
+        String                             ReservationURL      { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        String                             AuthorizationURI    { get; }
+        String                             AuthorizationURL    { get; }
 
         /// <summary>
         /// The attached OICP Mobile client (HTTP/SOAP client) logger.

@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server URI prefix.
         /// </summary>
-        public new static readonly HTTPPath          DefaultURIPrefix           = HTTPPath.Parse("/");
+        public new static readonly HTTPPath          DefaultURLPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URI for OICP authorization requests.
@@ -195,7 +195,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, ServiceId = null, TCPPort = default, URIPrefix = default, AuthorizationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region EMPServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURI = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP API.
@@ -207,7 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
@@ -220,7 +220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPPath?                             URIPrefix                    = null,
+                         HTTPPath?                             URLPrefix                    = null,
                          String                               AuthorizationURI             = DefaultAuthorizationURI,
                          HTTPContentType                      ContentType                  = null,
                          Boolean                              RegisterHTTPRootService      = true,
@@ -233,7 +233,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
-                   URIPrefix   ?? DefaultURIPrefix,
+                   URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -253,22 +253,22 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
         #endregion
 
-        #region EMPServer(SOAPServer, ServiceId = null, URIPrefix = default, AuthorizationURI = default)
+        #region EMPServer(SOAPServer, ServiceId = null, URLPrefix = default, AuthorizationURI = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="AuthorizationURI">An alternative HTTP/SOAP/XML URI for OICP authorization requests.</param>
         public EMPServer(SOAPServer  SOAPServer,
                          String      ServiceId          = null,
-                         HTTPPath?    URIPrefix          = null,
+                         HTTPPath?    URLPrefix          = null,
                          String      AuthorizationURI   = DefaultAuthorizationURI)
 
             : base(SOAPServer,
-                   URIPrefix ?? DefaultURIPrefix)
+                   URLPrefix ?? DefaultURLPrefix)
 
         {
 
@@ -295,7 +295,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region /Authorization - AuthorizeStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURI,
                                             "AuthorizeStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeStartXML) => {
@@ -496,7 +496,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
             #region /Authorization - AuthorizeStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURI,
                                             "AuthorizeStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
                                             async (HTTPRequest, AuthorizeStopXML) => {
@@ -696,7 +696,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.EMP
 
             // curl -v -X POST --data "@Testdata.xml" -H "Content-Type: text/xml" -H "Accept: text/xml" http://127.0.0.1:3114/RNs/PROD/Authorization
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURI,
                                             "ChargeDetailRecord",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
                                             async (HTTPRequest, ChargeDetailRecordXML) => {

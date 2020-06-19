@@ -1060,7 +1060,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URIs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
         /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
@@ -1076,7 +1076,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
                           HTTPHostname?                        RemoteHTTPVirtualHost           = null,
-                          HTTPPath?                             URIPrefix                       = null,
+                          HTTPPath?                             URLPrefix                       = null,
                           String                               EVSEDataURI                     = CPOClient.DefaultEVSEDataURI,
                           String                               EVSEStatusURI                   = CPOClient.DefaultEVSEStatusURI,
                           String                               AuthorizationURI                = CPOClient.DefaultAuthorizationURI,
@@ -1088,7 +1088,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                           String                               ServerName                      = CPOServer.DefaultHTTPServerName,
                           String                               ServiceId                       = null,
                           IPPort?                              ServerTCPPort                   = null,
-                          HTTPPath?                             ServerURIPrefix                 = null,
+                          HTTPPath?                             ServerURLPrefix                 = null,
                           String                               ServerAuthorizationURI          = CPOServer.DefaultAuthorizationURI,
                           String                               ServerReservationURI            = CPOServer.DefaultReservationURI,
                           HTTPContentType                      ServerContentType               = null,
@@ -1107,7 +1107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                                  RemoteCertificateValidator,
                                  ClientCertificateSelector,
                                  RemoteHTTPVirtualHost,
-                                 URIPrefix ?? CPOClient.DefaultURIPrefix,
+                                 URLPrefix ?? CPOClient.DefaultURLPrefix,
                                  EVSEDataURI,
                                  EVSEStatusURI,
                                  AuthorizationURI,
@@ -1122,7 +1122,7 @@ namespace org.GraphDefined.WWCP.OICPv2_1.CPO
                    new CPOServer(ServerName,
                                  ServiceId,
                                  ServerTCPPort,
-                                 ServerURIPrefix ?? CPOServer.DefaultURIPrefix,
+                                 ServerURLPrefix ?? CPOServer.DefaultURLPrefix,
                                  ServerAuthorizationURI,
                                  ServerReservationURI,
                                  ServerContentType,

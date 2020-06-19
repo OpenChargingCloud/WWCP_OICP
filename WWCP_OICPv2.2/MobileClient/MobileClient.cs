@@ -56,23 +56,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         public new static readonly IPPort  DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
-        /// The default URI prefix.
+        /// The default URL prefix.
         /// </summary>
-        public     static readonly HTTPPath DefaultURIPrefix                = HTTPPath.Parse("/ibis/ws");
+        public     static readonly HTTPPath DefaultURLPrefix                = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP MobileAuthorization requests.
+        /// The default HTTP/SOAP/XML URL for OICP MobileAuthorization requests.
         /// </summary>
-        public     const           String  DefaultMobileAuthorizationURI   = "/eRoamingMobileAuthorization_V2.0";
+        public     const           String  DefaultMobileAuthorizationURL   = "/eRoamingMobileAuthorization_V2.0";
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Mobile Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Mobile Authorization requests.
         /// </summary>
-        public String              MobileAuthorizationURI    { get; }
+        public String              MobileAuthorizationURL    { get; }
 
         /// <summary>
         /// The attached OICP Mobile client (HTTP/SOAP client) logger.
@@ -342,8 +342,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             HTTPHostname?                        HTTPVirtualHost              = null,
-                            HTTPPath?                             URIPrefix                    = null,
-                            String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
+                            HTTPPath?                             URLPrefix                    = null,
+                            String                               MobileAuthorizationURL       = DefaultMobileAuthorizationURL,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
                             Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -357,7 +357,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -374,7 +374,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
             #endregion
 
-            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+            this.MobileAuthorizationURL  = MobileAuthorizationURL ?? DefaultMobileAuthorizationURL;
 
             this.Logger                  = new MobileClientLogger(this,
                                                                   LoggingContext,
@@ -407,8 +407,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
                             RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             HTTPHostname?                        HTTPVirtualHost              = null,
-                            HTTPPath?                             URIPrefix                    = null,
-                            String                               MobileAuthorizationURI       = DefaultMobileAuthorizationURI,
+                            HTTPPath?                             URLPrefix                    = null,
+                            String                               MobileAuthorizationURL       = DefaultMobileAuthorizationURL,
                             String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                             TimeSpan?                            RequestTimeout               = null,
                             Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -420,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -437,7 +437,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
             #endregion
 
-            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+            this.MobileAuthorizationURL  = MobileAuthorizationURL ?? DefaultMobileAuthorizationURL;
 
             this.Logger                  = Logger                 ?? throw new ArgumentNullException(nameof(Logger), "The given mobile client logger must not be null!");
 
@@ -507,7 +507,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + MobileAuthorizationURI,
+                                                    URLPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -703,7 +703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + MobileAuthorizationURI,
+                                                    URLPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -912,7 +912,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + MobileAuthorizationURI,
+                                                    URLPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,

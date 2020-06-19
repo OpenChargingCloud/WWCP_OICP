@@ -57,39 +57,39 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public new static readonly IPPort   DefaultRemotePort               = IPPort.Parse(443);
 
         /// <summary>
-        /// The default URI prefix.
+        /// The default URL prefix.
         /// </summary>
-        public     static readonly HTTPPath  DefaultURIPrefix                = HTTPPath.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURLPrefix                = HTTPPath.Parse("/ibis/ws");
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public     const           String   DefaultEVSEDataURI              = "/eRoamingEvseData_V2.2";
+        public     const           String   DefaultEVSEDataURL              = "/eRoamingEvseData_V2.2";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public     const           String   DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.1";
+        public     const           String   DefaultEVSEStatusURL            = "/eRoamingEvseStatus_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The default HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public     const           String   DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.1";
+        public     const           String   DefaultAuthenticationDataURL    = "/eRoamingAuthenticationData_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// The default HTTP/SOAP/XML URL for OICP Reservation requests.
         /// </summary>
-        public     const           String   DefaultReservationURI           = "/eRoamingReservation_V1.1";
+        public     const           String   DefaultReservationURL           = "/eRoamingReservation_V1.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The default HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public     const           String   DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.1";
+        public     const           String   DefaultAuthorizationURL         = "/eRoamingAuthorization_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP DynamicPricing requests.
+        /// The default HTTP/SOAP/XML URL for OICP DynamicPricing requests.
         /// </summary>
-        public     const           String   DefaultDynamicPricingURI        = "/eRoamingDynamicPricing_V1.0";
+        public     const           String   DefaultDynamicPricingURL        = "/eRoamingDynamicPricing_V1.0";
 
         #endregion
 
@@ -101,29 +101,29 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public Provider_Id?     DefaultProviderId       { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public String           EVSEDataURI             { get; }
+        public String           EVSEDataURL             { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public String           EVSEStatusURI           { get; }
+        public String           EVSEStatusURL           { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public String           AuthenticationDataURI   { get; }
+        public String           AuthenticationDataURL   { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// The HTTP/SOAP/XML URL for OICP Reservation requests.
         /// </summary>
-        public String           ReservationURI          { get; }
+        public String           ReservationURL          { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public String           AuthorizationURI        { get; }
+        public String           AuthorizationURL        { get; }
 
         /// <summary>
         /// The attached OICP EMP client (HTTP/SOAP client) logger.
@@ -853,7 +853,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
         /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
-        /// <param name="URIPrefix">An default URI prefix.</param>
+        /// <param name="URLPrefix">An default URL prefix.</param>
         /// 
         /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
         /// 
@@ -869,12 +869,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPPath?                             URIPrefix                    = null,
-                         String                               EVSEDataURI                  = DefaultEVSEDataURI,
-                         String                               EVSEStatusURI                = DefaultEVSEStatusURI,
-                         String                               AuthenticationDataURI        = DefaultAuthenticationDataURI,
-                         String                               ReservationURI               = DefaultReservationURI,
-                         String                               AuthorizationURI             = DefaultAuthorizationURI,
+                         HTTPPath?                             URLPrefix                    = null,
+                         String                               EVSEDataURL                  = DefaultEVSEDataURL,
+                         String                               EVSEStatusURL                = DefaultEVSEStatusURL,
+                         String                               AuthenticationDataURL        = DefaultAuthenticationDataURL,
+                         String                               ReservationURL               = DefaultReservationURL,
+                         String                               AuthorizationURL             = DefaultAuthorizationURL,
 
                          Provider_Id?                         DefaultProviderId            = null,
 
@@ -891,7 +891,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -910,11 +910,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             this.DefaultProviderId      = DefaultProviderId;
 
-            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
-            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
-            this.ReservationURI         = ReservationURI        ?? DefaultReservationURI;
-            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+            this.EVSEDataURL            = EVSEDataURL           ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL          = EVSEStatusURL         ?? DefaultEVSEStatusURL;
+            this.AuthenticationDataURL  = AuthenticationDataURL ?? DefaultAuthenticationDataURL;
+            this.ReservationURL         = ReservationURL        ?? DefaultReservationURL;
+            this.AuthorizationURL       = AuthorizationURL      ?? DefaultAuthorizationURL;
 
             this.Logger                 = new EMPClientLogger(this,
                                                               LoggingContext,
@@ -938,7 +938,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="DefaultProviderId">An optional default e-mobility provider identification.</param>
         /// 
         /// <param name="HTTPVirtualHost">An optional HTTP virtual host name to use.</param>
-        /// <param name="URIPrefix">An default URI prefix.</param>
+        /// <param name="URLPrefix">An default URL prefix.</param>
         /// <param name="HTTPUserAgent">An optional HTTP user agent to use.</param>
         /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
@@ -953,7 +953,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                          Provider_Id?                         DefaultProviderId            = null,
 
                          HTTPHostname?                        HTTPVirtualHost              = null,
-                         HTTPPath?                             URIPrefix                    = null,
+                         HTTPPath?                             URLPrefix                    = null,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          Byte                                 MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -965,7 +965,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    HTTPVirtualHost,
-                   URIPrefix ?? DefaultURIPrefix,
+                   URLPrefix ?? DefaultURLPrefix,
                    null,
                    HTTPUserAgent,
                    RequestTimeout,
@@ -984,11 +984,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             this.DefaultProviderId      = DefaultProviderId;
 
-            this.EVSEDataURI            = EVSEDataURI           ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI          = EVSEStatusURI         ?? DefaultEVSEStatusURI;
-            this.AuthenticationDataURI  = AuthenticationDataURI ?? DefaultAuthenticationDataURI;
-            this.ReservationURI         = ReservationURI        ?? DefaultReservationURI;
-            this.AuthorizationURI       = AuthorizationURI      ?? DefaultAuthorizationURI;
+            this.EVSEDataURL            = EVSEDataURL           ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL          = EVSEStatusURL         ?? DefaultEVSEStatusURL;
+            this.AuthenticationDataURL  = AuthenticationDataURL ?? DefaultAuthenticationDataURL;
+            this.ReservationURL         = ReservationURL        ?? DefaultReservationURL;
+            this.AuthorizationURL       = AuthorizationURL      ?? DefaultAuthorizationURL;
 
             this.Logger                 = Logger                ?? throw new ArgumentNullException(nameof(Logger), "The given mobile client logger must not be null!"); ;
 
@@ -1061,7 +1061,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + EVSEDataURI,
+                                                    URLPrefix + EVSEDataURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1281,7 +1281,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + EVSEStatusURI,
+                                                    URLPrefix + EVSEStatusURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1473,7 +1473,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + EVSEStatusURI,
+                                                    URLPrefix + EVSEStatusURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1656,7 +1656,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthenticationDataURI,
+                                                    URLPrefix + AuthenticationDataURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1870,7 +1870,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + ReservationURI,
+                                                    URLPrefix + ReservationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2089,7 +2089,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + ReservationURI,
+                                                    URLPrefix + ReservationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2306,7 +2306,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2520,7 +2520,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2734,7 +2734,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URIPrefix + AuthorizationURI,
+                                                    URLPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,

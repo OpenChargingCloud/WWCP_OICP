@@ -51,44 +51,44 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public new static readonly IPPort           DefaultHTTPServerPort           = IPPort.Parse(2003);
 
         /// <summary>
-        /// The default HTTP/SOAP/XML server URI prefix.
+        /// The default HTTP/SOAP/XML server URL prefix.
         /// </summary>
-        public new static readonly HTTPPath         DefaultURIPrefix                = HTTPPath.Parse("/");
+        public new static readonly HTTPPath         DefaultURLPrefix                = HTTPPath.Parse("/");
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public     const           String           DefaultEVSEDataURI              = "/eRoamingEvseData_V2.2";
+        public     const           String           DefaultEVSEDataURL              = "/eRoamingEvseData_V2.2";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The default HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public     const           String           DefaultEVSEStatusURI            = "/eRoamingEvseStatus_V2.1";
+        public     const           String           DefaultEVSEStatusURL            = "/eRoamingEvseStatus_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The default HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public     const           String           DefaultAuthenticationDataURI    = "/eRoamingAuthenticationData_V2.1";
+        public     const           String           DefaultAuthenticationDataURL    = "/eRoamingAuthenticationData_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// The default HTTP/SOAP/XML URL for OICP Reservation requests.
         /// </summary>
-        public     const           String           DefaultReservationURI           = "/eRoamingReservation_V1.1";
+        public     const           String           DefaultReservationURL           = "/eRoamingReservation_V1.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The default HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public     const           String           DefaultAuthorizationURI         = "/eRoamingAuthorization_V2.1";
+        public     const           String           DefaultAuthorizationURL         = "/eRoamingAuthorization_V2.1";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP MobileAuthorization requests.
+        /// The default HTTP/SOAP/XML URL for OICP MobileAuthorization requests.
         /// </summary>
-        public     const           String           DefaultMobileAuthorizationURI   = "/eRoamingMobileAuthorization_V2.0";
+        public     const           String           DefaultMobileAuthorizationURL   = "/eRoamingMobileAuthorization_V2.0";
 
         /// <summary>
-        /// The default HTTP/SOAP/XML URI for OICP DynamicPricing requests.
+        /// The default HTTP/SOAP/XML URL for OICP DynamicPricing requests.
         /// </summary>
-        public     const           String           DefaultDynamicPricingURI        = "/eRoamingDynamicPricing_V1.0";
+        public     const           String           DefaultDynamicPricingURL        = "/eRoamingDynamicPricing_V1.0";
 
         /// <summary>
         /// The default HTTP/SOAP/XML content type.
@@ -110,34 +110,34 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public String           ServiceId                 { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseData requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseData requests.
         /// </summary>
-        public String           EVSEDataURI               { get; }
+        public String           EVSEDataURL               { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP EvseStatus requests.
+        /// The HTTP/SOAP/XML URL for OICP EvseStatus requests.
         /// </summary>
-        public String           EVSEStatusURI             { get; }
+        public String           EVSEStatusURL             { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP AuthenticationData requests.
+        /// The HTTP/SOAP/XML URL for OICP AuthenticationData requests.
         /// </summary>
-        public String           AuthenticationDataURI     { get; }
+        public String           AuthenticationDataURL     { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Reservation requests.
+        /// The HTTP/SOAP/XML URL for OICP Reservation requests.
         /// </summary>
-        public String           ReservationURI            { get; }
+        public String           ReservationURL            { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Authorization requests.
         /// </summary>
-        public String           AuthorizationURI          { get; }
+        public String           AuthorizationURL          { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Mobile Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Mobile Authorization requests.
         /// </summary>
-        public String           MobileAuthorizationURI    { get; }
+        public String           MobileAuthorizationURL    { get; }
 
         #endregion
 
@@ -775,14 +775,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
         #region Constructor(s)
 
-        #region CentralServer(HTTPServerName, TCPPort = default, URIPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CentralServer(HTTPServerName, TCPPort = default, URLPrefix = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML Central API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
@@ -790,13 +790,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         public CentralServer(String           HTTPServerName            = DefaultHTTPServerName,
                              String           ServiceId                 = null,
                              IPPort?          TCPPort                   = null,
-                             HTTPPath?         URIPrefix                 = null,
-                             String           EVSEDataURI               = DefaultAuthorizationURI,
-                             String           EVSEStatusURI             = DefaultAuthorizationURI,
-                             String           AuthenticationDataURI     = DefaultAuthenticationDataURI,
-                             String           ReservationURI            = DefaultReservationURI,
-                             String           AuthorizationURI          = DefaultAuthorizationURI,
-                             String           MobileAuthorizationURI    = DefaultMobileAuthorizationURI,
+                             HTTPPath?         URLPrefix                 = null,
+                             String           EVSEDataURL               = DefaultAuthorizationURL,
+                             String           EVSEStatusURL             = DefaultAuthorizationURL,
+                             String           AuthenticationDataURL     = DefaultAuthenticationDataURL,
+                             String           ReservationURL            = DefaultReservationURL,
+                             String           AuthorizationURL          = DefaultAuthorizationURL,
+                             String           MobileAuthorizationURL    = DefaultMobileAuthorizationURL,
                              HTTPContentType  ContentType               = null,
                              Boolean          RegisterHTTPRootService   = true,
                              DNSClient        DNSClient                 = null,
@@ -804,7 +804,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
-                   URIPrefix   ?? DefaultURIPrefix,
+                   URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -813,14 +813,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         {
 
             this.ServiceId               = ServiceId              ?? nameof(CentralServer);
-            this.EVSEDataURI             = EVSEDataURI            ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI           = EVSEStatusURI          ?? DefaultEVSEStatusURI;
-            this.AuthenticationDataURI   = AuthenticationDataURI  ?? DefaultAuthenticationDataURI;
-            this.ReservationURI          = ReservationURI         ?? DefaultReservationURI;
-            this.AuthorizationURI        = AuthorizationURI       ?? DefaultAuthorizationURI;
-            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+            this.EVSEDataURL             = EVSEDataURL            ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL           = EVSEStatusURL          ?? DefaultEVSEStatusURL;
+            this.AuthenticationDataURL   = AuthenticationDataURL  ?? DefaultAuthenticationDataURL;
+            this.ReservationURL          = ReservationURL         ?? DefaultReservationURL;
+            this.AuthorizationURL        = AuthorizationURL       ?? DefaultAuthorizationURL;
+            this.MobileAuthorizationURL  = MobileAuthorizationURL ?? DefaultMobileAuthorizationURL;
 
-            RegisterURITemplates();
+            RegisterURLTemplates();
 
             if (AutoStart)
                 Start();
@@ -829,36 +829,36 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
         #endregion
 
-        #region CentralServer(SOAPServer, URIPrefix = default)
+        #region CentralServer(SOAPServer, URLPrefix = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML Central API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
-        /// <param name="URIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         public CentralServer(SOAPServer  SOAPServer,
                              String      ServiceId                  = null,
-                             HTTPPath?    URIPrefix                  = null,
-                             String      EVSEDataURI                = DefaultAuthorizationURI,
-                             String      EVSEStatusURI              = DefaultAuthorizationURI,
-                             String      AuthorizationURI           = DefaultAuthorizationURI,
-                             String      ReservationURI             = DefaultReservationURI,
-                             String      MobileAuthorizationURI     = DefaultMobileAuthorizationURI)
+                             HTTPPath?    URLPrefix                  = null,
+                             String      EVSEDataURL                = DefaultAuthorizationURL,
+                             String      EVSEStatusURL              = DefaultAuthorizationURL,
+                             String      AuthorizationURL           = DefaultAuthorizationURL,
+                             String      ReservationURL             = DefaultReservationURL,
+                             String      MobileAuthorizationURL     = DefaultMobileAuthorizationURL)
 
             : base(SOAPServer,
-                   URIPrefix ?? DefaultURIPrefix)
+                   URLPrefix ?? DefaultURLPrefix)
 
         {
 
             this.ServiceId               = ServiceId              ?? nameof(CentralServer);
-            this.EVSEDataURI             = EVSEDataURI            ?? DefaultEVSEDataURI;
-            this.EVSEStatusURI           = EVSEStatusURI          ?? DefaultEVSEStatusURI;
-            this.AuthenticationDataURI   = AuthenticationDataURI  ?? DefaultAuthenticationDataURI;
-            this.ReservationURI          = ReservationURI         ?? DefaultReservationURI;
-            this.AuthorizationURI        = AuthorizationURI       ?? DefaultAuthorizationURI;
-            this.MobileAuthorizationURI  = MobileAuthorizationURI ?? DefaultMobileAuthorizationURI;
+            this.EVSEDataURL             = EVSEDataURL            ?? DefaultEVSEDataURL;
+            this.EVSEStatusURL           = EVSEStatusURL          ?? DefaultEVSEStatusURL;
+            this.AuthenticationDataURL   = AuthenticationDataURL  ?? DefaultAuthenticationDataURL;
+            this.ReservationURL          = ReservationURL         ?? DefaultReservationURL;
+            this.AuthorizationURL        = AuthorizationURL       ?? DefaultAuthorizationURL;
+            this.MobileAuthorizationURL  = MobileAuthorizationURL ?? DefaultMobileAuthorizationURL;
 
-            RegisterURITemplates();
+            RegisterURLTemplates();
 
         }
 
@@ -867,12 +867,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         #endregion
 
 
-        #region (override) RegisterURITemplates()
+        #region (override) RegisterURLTemplates()
 
         /// <summary>
-        /// Register all URI templates for this SOAP API.
+        /// Register all URL templates for this SOAP API.
         /// </summary>
-        protected void RegisterURITemplates()
+        protected void RegisterURLTemplates()
         {
 
             #region EMP methods
@@ -880,7 +880,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /EVSEData           - PullEVSEData
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + EVSEDataURI,
+                                            URLPrefix + EVSEDataURL,
                                             "PullEVSEData",
                                             XML => XML.Descendants(OICPNS.EVSEData + "eRoamingPullEvseData").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -1059,7 +1059,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /EVSEStatus         - PullEVSEStatus
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + EVSEStatusURI,
+                                            URLPrefix + EVSEStatusURL,
                                             "PullEVSEStatus",
                                             XML => XML.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatus").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseStatusXML) => {
@@ -1236,7 +1236,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /EVSEStatus         - PullEVSEStatusById
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + EVSEStatusURI,
+                                            URLPrefix + EVSEStatusURL,
                                             "PullEVSEStatusById",
                                             XML => XML.Descendants(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseStatusByIdXML) => {
@@ -1410,7 +1410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /AuthenticationData - PushAuthenticationData
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthenticationDataURI,
+                                            URLPrefix + AuthenticationDataURL,
                                             "PushAuthenticationData",
                                             XML => XML.Descendants(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData").FirstOrDefault(),
                                             async (HTTPRequest, PushAuthenticationDataXML) => {
@@ -1587,7 +1587,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Reservation        - AuthorizeRemoteReservationStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + ReservationURI,
+                                            URLPrefix + ReservationURL,
                                             "AuthorizeRemoteReservationStart",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStart").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -1772,7 +1772,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Reservation        - AuthorizeRemoteReservationStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + ReservationURI,
+                                            URLPrefix + ReservationURL,
                                             "AuthorizeRemoteReservationStop",
                                             XML => XML.Descendants(OICPNS.Reservation + "eRoamingAuthorizeRemoteReservationStop").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -1951,7 +1951,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - AuthorizeRemoteStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "AuthorizeRemoteStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStart").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -2136,7 +2136,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - AuthorizeRemoteStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "AuthorizeRemoteStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeRemoteStop").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -2316,7 +2316,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - GetChargeDetailRecords
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "GetChargeDetailRecords",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingGetChargeDetailRecords").FirstOrDefault(),
                                             async (HTTPRequest, PullEvseDataXML) => {
@@ -2496,7 +2496,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /EVSEData           - PushEVSEData
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + EVSEDataURI,
+                                            URLPrefix + EVSEDataURL,
                                             "PushEVSEData",
                                             XML => XML.Descendants(OICPNS.EVSEData + "eRoamingPushEvseData").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseDataXML) => {
@@ -2670,7 +2670,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /EVSEStatus         - PushEVSEStatus
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + EVSEStatusURI,
+                                            URLPrefix + EVSEStatusURL,
                                             "PushEVSEStatus",
                                             XML => XML.Descendants(OICPNS.EVSEStatus + "eRoamingPushEvseStatus").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseStatusXML) => {
@@ -2845,7 +2845,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - AuthorizeStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "AuthorizeStart",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStart").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseStatusXML) => {
@@ -3031,7 +3031,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - AuthorizeStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "AuthorizeStop",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingAuthorizeStop").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseStatusXML) => {
@@ -3214,7 +3214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /Authorization      - SendChargeDetailRecord
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthorizationURI,
+                                            URLPrefix + AuthorizationURL,
                                             "SendChargeDetailRecord",
                                             XML => XML.Descendants(OICPNS.Authorization + "eRoamingChargeDetailRecord").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseStatusXML) => {
@@ -3388,7 +3388,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /AuthenticationData - PullAuthenticationData
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + AuthenticationDataURI,
+                                            URLPrefix + AuthenticationDataURL,
                                             "PullAuthenticationData",
                                             XML => XML.Descendants(OICPNS.AuthenticationData + "eRoamingPullAuthenticationData").FirstOrDefault(),
                                             async (HTTPRequest, PullAuthenticationDataXML) => {
@@ -3564,7 +3564,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /MobileAuthorization - MobileAuthorizeStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + MobileAuthorizationURI,
+                                            URLPrefix + MobileAuthorizationURL,
                                             "MobileAuthorizeStart",
                                             XML => XML.Descendants(OICPNS.MobileAuthorization + "eRoamingMobileAuthorizeStart").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseDataXML) => {
@@ -3742,7 +3742,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /MobileAuthorization - MobileRemoteStart
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + MobileAuthorizationURI,
+                                            URLPrefix + MobileAuthorizationURL,
                                             "MobileRemoteStart",
                                             XML => XML.Descendants(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStart").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseDataXML) => {
@@ -3913,7 +3913,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
             #region /MobileAuthorization - MobileRemoteStop
 
             SOAPServer.RegisterSOAPDelegate(HTTPHostname.Any,
-                                            URIPrefix + MobileAuthorizationURI,
+                                            URLPrefix + MobileAuthorizationURL,
                                             "MobileRemoteStop",
                                             XML => XML.Descendants(OICPNS.MobileAuthorization + "eRoamingMobileRemoteStop").FirstOrDefault(),
                                             async (HTTPRequest, PushEvseDataXML) => {

@@ -41,9 +41,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         TimeSpan?                        RequestTimeout            { get; }
 
         /// <summary>
-        /// The HTTP/SOAP/XML URI for OICP Mobile Authorization requests.
+        /// The HTTP/SOAP/XML URL for OICP Mobile Authorization requests.
         /// </summary>
-        String                           MobileAuthorizationURI    { get; }
+        String                           MobileAuthorizationURL    { get; }
 
         /// <summary>
         /// The attached OICP Mobile client (HTTP/SOAP client) logger.

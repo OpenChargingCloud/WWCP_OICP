@@ -64,7 +64,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="ServerName"> An optional identification string for the HTTP server.</param>
         /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
         /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
@@ -105,11 +105,11 @@ namespace org.GraphDefined.WWCP
                                               HTTPHostname?                                                   RemoteHTTPVirtualHost                           = null,
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
                                               LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
-                                              HTTPPath?                                                        URIPrefix                                       = null,
-                                              String                                                          EVSEDataURI                                     = OICPv2_2.CPO.CPOClient.DefaultEVSEDataURI,
-                                              String                                                          EVSEStatusURI                                   = OICPv2_2.CPO.CPOClient.DefaultEVSEStatusURI,
-                                              String                                                          AuthorizationURI                                = OICPv2_2.CPO.CPOClient.DefaultAuthorizationURI,
-                                              String                                                          AuthenticationDataURI                           = OICPv2_2.CPO.CPOClient.DefaultAuthenticationDataURI,
+                                              HTTPPath?                                                       URLPrefix                                       = null,
+                                              String                                                          EVSEDataURL                                     = OICPv2_2.CPO.CPOClient.DefaultEVSEDataURL,
+                                              String                                                          EVSEStatusURL                                   = OICPv2_2.CPO.CPOClient.DefaultEVSEStatusURL,
+                                              String                                                          AuthorizationURL                                = OICPv2_2.CPO.CPOClient.DefaultAuthorizationURL,
+                                              String                                                          AuthenticationDataURL                           = OICPv2_2.CPO.CPOClient.DefaultAuthenticationDataURL,
                                               String                                                          HTTPUserAgent                                   = OICPv2_2.CPO.CPOClient.DefaultHTTPUserAgent,
                                               TimeSpan?                                                       RequestTimeout                                  = null,
                                               Byte?                                                           MaxNumberOfRetries                              = OICPv2_2.CPO.CPOClient.DefaultMaxNumberOfRetries,
@@ -117,9 +117,9 @@ namespace org.GraphDefined.WWCP
                                               String                                                          ServerName                                      = OICPv2_2.CPO.CPOServer.DefaultHTTPServerName,
                                               String                                                          ServiceId                                       = null,
                                               IPPort?                                                         ServerTCPPort                                   = null,
-                                              HTTPPath?                                                        ServerURIPrefix                                 = null,
-                                              String                                                          ServerAuthorizationURI                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURI,
-                                              String                                                          ServerReservationURI                            = OICPv2_2.CPO.CPOServer.DefaultReservationURI,
+                                              HTTPPath?                                                       ServerURLPrefix                                 = null,
+                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURL,
+                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOServer.DefaultReservationURL,
                                               HTTPContentType                                                 ServerContentType                               = null,
                                               Boolean                                                         ServerRegisterHTTPRootService                   = true,
                                               Boolean                                                         ServerAutoStart                                 = false,
@@ -187,11 +187,11 @@ namespace org.GraphDefined.WWCP
                                                                      RemoteCertificateValidator,
                                                                      ClientCertificateSelector,
                                                                      RemoteHTTPVirtualHost,
-                                                                     URIPrefix ?? OICPv2_2.CPO.CPOClient.DefaultURIPrefix,
-                                                                     EVSEDataURI,
-                                                                     EVSEStatusURI,
-                                                                     AuthorizationURI,
-                                                                     AuthenticationDataURI,
+                                                                     URLPrefix ?? OICPv2_2.CPO.CPOClient.DefaultURLPrefix,
+                                                                     EVSEDataURL,
+                                                                     EVSEStatusURL,
+                                                                     AuthorizationURL,
+                                                                     AuthenticationDataURL,
                                                                      HTTPUserAgent,
                                                                      RequestTimeout,
                                                                      MaxNumberOfRetries,
@@ -199,9 +199,9 @@ namespace org.GraphDefined.WWCP
                                                                      ServerName,
                                                                      ServiceId,
                                                                      ServerTCPPort,
-                                                                     ServerURIPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURIPrefix,
-                                                                     ServerAuthorizationURI,
-                                                                     ServerReservationURI,
+                                                                     ServerURLPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURLPrefix,
+                                                                     ServerAuthorizationURL,
+                                                                     ServerReservationURL,
                                                                      ServerContentType,
                                                                      ServerRegisterHTTPRootService,
                                                                      ServerAutoStart,
@@ -262,7 +262,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// <param name="SOAPServer">An optional identification string for the HTTP server.</param>
         /// 
-        /// <param name="ServerURIPrefix">An optional prefix for the HTTP URIs.</param>
+        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// 
         /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
         /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
@@ -310,19 +310,19 @@ namespace org.GraphDefined.WWCP
                                               RemoteCertificateValidationCallback                             RemoteCertificateValidator                      = null,
                                               LocalCertificateSelectionCallback                               ClientCertificateSelector                       = null,
                                               HTTPHostname?                                                   RemoteHTTPVirtualHost                           = null,
-                                              HTTPPath?                                                       URIPrefix                                       = null,
-                                              String                                                          EVSEDataURI                                     = OICPv2_2.CPO.CPOClient.DefaultEVSEDataURI,
-                                              String                                                          EVSEStatusURI                                   = OICPv2_2.CPO.CPOClient.DefaultEVSEStatusURI,
-                                              String                                                          AuthorizationURI                                = OICPv2_2.CPO.CPOClient.DefaultAuthorizationURI,
-                                              String                                                          AuthenticationDataURI                           = OICPv2_2.CPO.CPOClient.DefaultAuthenticationDataURI,
+                                              HTTPPath?                                                       URLPrefix                                       = null,
+                                              String                                                          EVSEDataURL                                     = OICPv2_2.CPO.CPOClient.DefaultEVSEDataURL,
+                                              String                                                          EVSEStatusURL                                   = OICPv2_2.CPO.CPOClient.DefaultEVSEStatusURL,
+                                              String                                                          AuthorizationURL                                = OICPv2_2.CPO.CPOClient.DefaultAuthorizationURL,
+                                              String                                                          AuthenticationDataURL                           = OICPv2_2.CPO.CPOClient.DefaultAuthenticationDataURL,
                                               String                                                          HTTPUserAgent                                   = OICPv2_2.CPO.CPOClient.DefaultHTTPUserAgent,
                                               TimeSpan?                                                       RequestTimeout                                  = null,
                                               Byte?                                                           MaxNumberOfRetries                              = OICPv2_2.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
-                                              HTTPPath?                                                       ServerURIPrefix                                 = null,
+                                              HTTPPath?                                                       ServerURLPrefix                                 = null,
                                               String                                                          ServiceId                                       = null,
-                                              String                                                          ServerAuthorizationURI                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURI,
-                                              String                                                          ServerReservationURI                            = OICPv2_2.CPO.CPOServer.DefaultReservationURI,
+                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURL,
+                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOServer.DefaultReservationURL,
 
                                               String                                                          ClientLoggingContext                            = OICPv2_2.CPO.CPOClient.CPOClientLogger.DefaultContext,
                                               String                                                          ServerLoggingContext                            = OICPv2_2.CPO.CPOServerLogger.DefaultContext,
@@ -392,11 +392,11 @@ namespace org.GraphDefined.WWCP
                                                                                                 RemoteCertificateValidator,
                                                                                                 ClientCertificateSelector,
                                                                                                 RemoteHTTPVirtualHost,
-                                                                                                URIPrefix ?? OICPv2_2.CPO.CPOClient.DefaultURIPrefix,
-                                                                                                EVSEDataURI,
-                                                                                                EVSEStatusURI,
-                                                                                                AuthorizationURI,
-                                                                                                AuthenticationDataURI,
+                                                                                                URLPrefix ?? OICPv2_2.CPO.CPOClient.DefaultURLPrefix,
+                                                                                                EVSEDataURL,
+                                                                                                EVSEStatusURL,
+                                                                                                AuthorizationURL,
+                                                                                                AuthenticationDataURL,
                                                                                                 HTTPUserAgent,
                                                                                                 RequestTimeout,
                                                                                                 MaxNumberOfRetries,
@@ -406,9 +406,9 @@ namespace org.GraphDefined.WWCP
 
                                                                      new OICPv2_2.CPO.CPOServer(SOAPServer,
                                                                                                 ServiceId,
-                                                                                                ServerURIPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURIPrefix,
-                                                                                                ServerAuthorizationURI,
-                                                                                                ServerReservationURI),
+                                                                                                ServerURLPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURLPrefix,
+                                                                                                ServerAuthorizationURL,
+                                                                                                ServerReservationURL),
 
                                                                      ServerLoggingContext,
                                                                      LogfileCreator,
