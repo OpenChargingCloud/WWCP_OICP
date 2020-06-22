@@ -11,7 +11,7 @@ on this protocol please visit http://www.intercharge.eu.
 ### Requirements & Configuration
 
 1. You must be a client of Hubject GmbH.
-2. You need .NET 4.7.1+
+2. You need .NET 4.7.2+
 3. The mutual authentication (TLS client certificates) with Hubject works best using stunnel/openssl (but a native .NET version is coming soon...)
 4. Your server must be registered within the Hubject firewalls
 
