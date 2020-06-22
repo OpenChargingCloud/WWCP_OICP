@@ -22,8 +22,11 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -31,9 +34,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An OICP acknowledgement.
+    /// An acknowledgement.
     /// </summary>
-    /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
+    /// <typeparam name="TRequest">The type of the request.</typeparam>
     public class Acknowledgement<TRequest> : AResponse<TRequest,
                                                        Acknowledgement<TRequest>>
 
@@ -724,7 +727,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region ToXML(CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
+        #region ToXML (CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
 
         /// <summary>
         /// Return a XML-representation of this object.
@@ -758,6 +761,45 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             return CustomAcknowledgementSerializer != null
                        ? CustomAcknowledgementSerializer(this, XML)
                        : XML;
+
+        }
+
+        #endregion
+
+        #region ToJSON(CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
+
+        /// <summary>
+        /// Return a JSON-representation of this object.
+        /// </summary>
+        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
+                              CustomJObjectSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("result",                 Result),
+
+                           new JProperty("StatusCode",             StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
+
+                           SessionId           != null
+                               ? new JProperty("sessionId",            SessionId.          ToString())
+                               : null,
+
+                           CPOPartnerSessionId != null
+                               ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.ToString())
+                               : null,
+
+                           EMPPartnerSessionId != null
+                               ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.ToString())
+                               : null
+
+                       );
+
+            return CustomAcknowledgementSerializer != null
+                       ? CustomAcknowledgementSerializer(this, JSON)
+                       : JSON;
 
         }
 

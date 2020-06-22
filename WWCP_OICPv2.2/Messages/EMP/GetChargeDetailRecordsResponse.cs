@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 {
 
     /// <summary>
-    /// An OICP get charge detail records response.
+    /// A GetChargeDetailRecords response.
     /// </summary>
     public class GetChargeDetailRecordsResponse : AResponse<GetChargeDetailRecordsRequest,
                                                             GetChargeDetailRecordsResponse>
@@ -44,7 +44,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         public IEnumerable<ChargeDetailRecord>  ChargeDetailRecords   { get; }
 
-
+        /// <summary>
+        /// The optional result status code for the request.
+        /// </summary>
         public StatusCode?                      StatusCode            { get; }
 
         #endregion
@@ -54,11 +56,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region GetChargeDetailRecordsResponse(Request, ChargeDetailRecords, StatusCode = null, CustomData = null)
 
         /// <summary>
-        /// Create a new group of OICP Charge Detail Records.
+        /// Create a new GetChargeDetailRecords response.
         /// </summary>
         /// <param name="Request">A GetChargeDetailRecords request.</param>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        /// <param name="StatusCode">An optional status code for this request.</param>
+        /// <param name="StatusCode">An optional status code for the request.</param>
         /// <param name="CustomData">Optional custom data.</param>
         public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest        Request,
                                               IEnumerable<ChargeDetailRecord>      ChargeDetailRecords,
@@ -70,14 +72,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            #region Initial checks
-
-            if (ChargeDetailRecords == null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecords),  "The given enumeration of charge detail records must not be null!");
-
-            #endregion
-
-            this.ChargeDetailRecords  = ChargeDetailRecords;
+            this.ChargeDetailRecords  = ChargeDetailRecords ?? throw new ArgumentNullException(nameof(ChargeDetailRecords),  "The given enumeration of charge detail records must not be null!");
             this.StatusCode           = StatusCode;
 
         }
@@ -87,10 +82,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region GetChargeDetailRecordsResponse(Request, StatusCode, Description = null, AdditionalInfo = null, CustomData = null)
 
         /// <summary>
-        /// Create a new OICP 'negative' acknowledgement.
+        /// Create a new GetChargeDetailRecords response.
         /// </summary>
         /// <param name="Request">A GetChargeDetailRecords request.</param>
-        /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="StatusCode">The status code of the request.</param>
         /// <param name="Description">An optional description of the status code.</param>
         /// <param name="AdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="CustomData">Optional custom data.</param>
@@ -352,7 +347,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             var XML = new XElement(OICPNS.Authorization + "eRoamingChargeDetailRecords",
 
-                          ChargeDetailRecords.Any()
+                          ChargeDetailRecords.SafeAny()
                                   ? ChargeDetailRecords.Select(cdr => cdr.ToXML(CustomChargeDetailRecordSerializer: CustomChargeDetailRecordSerializer,
                                                                                 CustomIdentificationSerializer:     CustomIdentificationSerializer))
                                   : null

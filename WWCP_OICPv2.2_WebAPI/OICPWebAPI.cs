@@ -29,7 +29,6 @@ using org.GraphDefined.WWCP.OICPv2_2.EMP;
 using org.GraphDefined.WWCP.OICPv2_2.CPO;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
@@ -217,6 +216,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
         public IEnumerable<WWCPCPOAdapter> CPOAdapters
             => _CPOAdapters;
+
+
+        private readonly List<WWCPEMPAdapter> _EMPAdapters;
+
+        public IEnumerable<WWCPEMPAdapter> EMPAdapters
+            => _EMPAdapters;
 
         #endregion
 
@@ -700,6 +705,103 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
             _CPOAdapters.Add(CPOAdapter);
 
+            // CPOClient
+
+            #region OnPushEVSEDataRequest/-Response
+
+            CPOAdapter.CPOClient.OnPushEVSEDataRequest += async (LogTimestamp,
+                                                                 RequestTimestamp,
+                                                                 Sender,
+                                                                 SenderId,
+                                                                 EventTrackingId,
+                                                                 Action,
+                                                                 NumberOfEVSEDataRecords,
+                                                                 EVSEDataRecords,
+                                                                 RequestTimeout) => await DebugLog.SubmitEvent("PushEVSEDataRequest",
+                                                                                                               JSONObject.Create(
+                                                                                                                   new JProperty("timestamp",                RequestTimestamp.ToIso8601()),
+                                                                                                                   new JProperty("eventTrackingId",          EventTrackingId. ToString()),
+
+                                                                                                                   new JProperty("action",                   Action.          ToString()),
+                                                                                                                   new JProperty("numberOfEVSEDataRecords",  NumberOfEVSEDataRecords),
+                                                                                                                   new JProperty("EVSEDataRecords",          new JArray(EVSEDataRecords.SafeSelect(evseDataRecord => evseDataRecord.Id.ToString()))),
+                                                                                                                   new JProperty("requestTimeout",           Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                               ));
+
+            CPOAdapter.CPOClient.OnPushEVSEDataResponse += async (LogTimestamp,
+                                                                  RequestTimestamp,
+                                                                  Sender,
+                                                                  SenderId,
+                                                                  EventTrackingId,
+                                                                  Action,
+                                                                  NumberOfEVSEDataRecords,
+                                                                  EVSEDataRecords,
+                                                                  RequestTimeout,
+                                                                  Result,
+                                                                  Runtime) => await DebugLog.SubmitEvent("PushEVSEDataResponse",
+                                                                                                         JSONObject.Create(
+                                                                                                             new JProperty("timestamp",                RequestTimestamp.ToIso8601()),
+                                                                                                             new JProperty("eventTrackingId",          EventTrackingId. ToString()),
+
+                                                                                                             new JProperty("action",                   Action.          ToString()),
+                                                                                                             new JProperty("numberOfEVSEDataRecords",  NumberOfEVSEDataRecords),
+                                                                                                             new JProperty("EVSEDataRecords",          new JArray(EVSEDataRecords.SafeSelect(evseDataRecord => evseDataRecord.Id.ToString()))),
+                                                                                                             new JProperty("requestTimeout",           Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                             new JProperty("result",                   Result.          ToJSON()),
+                                                                                                             new JProperty("runtime",                  Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                         ));
+
+            #endregion
+
+            #region OnPushEVSEStatusRequest/-Response
+
+            CPOAdapter.CPOClient.OnPushEVSEStatusRequest += async (LogTimestamp,
+                                                                   RequestTimestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   Action,
+                                                                   NumberOfEVSEDataRecords,
+                                                                   EVSEStatusRecords,
+                                                                   RequestTimeout) => await DebugLog.SubmitEvent("PushEVSEStatusRequest",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",                  RequestTimestamp.ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",            EventTrackingId. ToString()),
+
+                                                                                                                     new JProperty("action",                     Action.          ToString()),
+                                                                                                                     new JProperty("numberOfEVSEStatusRecords",  NumberOfEVSEDataRecords),
+                                                                                                                     new JProperty("EVSEStatusRecords",          new JArray(EVSEStatusRecords.SafeSelect(evseStatusRecord => new JArray(evseStatusRecord.Id.    ToString(),
+                                                                                                                                                                                                                                        evseStatusRecord.Status.ToString())))),
+                                                                                                                     new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                 ));
+
+            CPOAdapter.CPOClient.OnPushEVSEStatusResponse += async (LogTimestamp,
+                                                                    RequestTimestamp,
+                                                                    Sender,
+                                                                    SenderId,
+                                                                    EventTrackingId,
+                                                                    Action,
+                                                                    NumberOfEVSEDataRecords,
+                                                                    EVSEStatusRecords,
+                                                                    RequestTimeout,
+                                                                    Result,
+                                                                    Runtime) => await DebugLog.SubmitEvent("PushEVSEStatusResponse",
+                                                                                                           JSONObject.Create(
+                                                                                                               new JProperty("timestamp",                  RequestTimestamp.ToIso8601()),
+                                                                                                               new JProperty("eventTrackingId",            EventTrackingId. ToString()),
+
+                                                                                                               new JProperty("action",                     Action.          ToString()),
+                                                                                                               new JProperty("numberOfEVSEStatusRecords",  NumberOfEVSEDataRecords),
+                                                                                                               new JProperty("EVSEStatusRecords",          new JArray(EVSEStatusRecords.SafeSelect(evseStatusRecord => new JArray(evseStatusRecord.Id.    ToString(),
+                                                                                                                                                                                                                                  evseStatusRecord.Status.ToString())))),
+                                                                                                               new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                               new JProperty("result",                     Result.          ToJSON()),
+                                                                                                               new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                           ));
+
+            #endregion
+
+
             #region OnAuthorizeStartRequest/-Response
 
             CPOAdapter.CPOClient.OnAuthorizeStartRequest += async  (LogTimestamp,
@@ -873,6 +975,1161 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                                                                                               new JProperty("result",                      Result.              ToJSON()),
                                                                                                               new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
                                                                                                           ));
+
+            #endregion
+
+            #region OnSendChargeDetailRecordRequest/-Response
+
+            CPOAdapter.CPOClient.OnSendChargeDetailRecordRequest += async  (LogTimestamp,
+                                                                            RequestTimestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            ChargeDetailRecord,
+                                                                            RequestTimeout) => await DebugLog.SubmitEvent("SendChargeDetailRecordRequest",
+                                                                                                                          JSONObject.Create(
+                                                                                                                              new JProperty("timestamp",           RequestTimestamp.    ToIso8601()),
+                                                                                                                              new JProperty("eventTrackingId",     EventTrackingId.     ToString()),
+                                                                                                                              new JProperty("chargeDetailRecord",  ChargeDetailRecord.  ToJSON()),
+                                                                                                                              new JProperty("requestTimeout",      Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                         ));
+
+            CPOAdapter.CPOClient.OnSendChargeDetailRecordResponse += async (Timestamp,
+                                                                            RequestTimestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            ChargeDetailRecord,
+                                                                            RequestTimeout,
+                                                                            Result,
+                                                                            Runtime) => await DebugLog.SubmitEvent("SendChargeDetailRecordResponse",
+                                                                                                                   JSONObject.Create(
+                                                                                                                       new JProperty("timestamp",          RequestTimestamp.    ToIso8601()),
+                                                                                                                       new JProperty("eventTrackingId",    EventTrackingId.     ToString()),
+                                                                                                                       new JProperty("chargeDetailRecord", ChargeDetailRecord.  ToJSON()),
+                                                                                                                       new JProperty("requestTimeout",     Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                       new JProperty("result",             Result.              ToJSON()),
+                                                                                                                       new JProperty("runtime",            Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                   ));
+
+            #endregion
+
+
+            #region OnPullAuthenticationDataRequest/-Response
+
+            CPOAdapter.CPOClient.OnPullAuthenticationDataRequest += async  (LogTimestamp,
+                                                                            RequestTimestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            OperatorId,
+                                                                            RequestTimeout) => await DebugLog.SubmitEvent("PullAuthenticationDataRequest",
+                                                                                                                          JSONObject.Create(
+                                                                                                                              new JProperty("timestamp",        RequestTimestamp.ToIso8601()),
+                                                                                                                              new JProperty("eventTrackingId",  EventTrackingId. ToString()),
+                                                                                                                              new JProperty("operatorId",       OperatorId.      ToString()),
+                                                                                                                              new JProperty("requestTimeout",   Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                         ));
+
+            CPOAdapter.CPOClient.OnPullAuthenticationDataResponse += async (Timestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            OperatorId,
+                                                                            RequestTimeout,
+                                                                            Result,
+                                                                            Runtime) => await DebugLog.SubmitEvent("PullAuthenticationDataResponse",
+                                                                                                                   JSONObject.Create(
+                                                                                                                       new JProperty("timestamp",           Timestamp.           ToIso8601()),
+                                                                                                                       new JProperty("eventTrackingId",     EventTrackingId.     ToString()),
+                                                                                                                       new JProperty("operatorId",          OperatorId.          ToString()),
+                                                                                                                       new JProperty("requestTimeout",      Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                       new JProperty("numberOfRecords",     Result.ProviderAuthenticationDataRecords.Count()),
+                                                                                                                       Result.StatusCode.HasValue
+                                                                                                                           ? new JProperty("resultStatus",  Result.StatusCode.Value.ToJSON())
+                                                                                                                           : null,
+                                                                                                                       new JProperty("runtime",          Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                   ));
+
+            #endregion
+
+
+            // CPOServer
+
+            #region OnAuthorizeRemoteReservationStartRequest/-Response
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteReservationStartRequest += async  (LogTimestamp,
+                                                                                     RequestTimestamp,
+                                                                                     Sender,
+                                                                                     SenderId,
+                                                                                     EventTrackingId,
+                                                                                     EVSEId,
+                                                                                     PartnerProductId,
+                                                                                     SessionId,
+                                                                                     CPOPartnerSessionId,
+                                                                                     EMPPartnerSessionId,
+                                                                                     ProviderId,
+                                                                                     Identification,
+                                                                                     RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStartRequest",
+                                                                                                                                   JSONObject.Create(
+                                                                                                                                       new JProperty("timestamp",                   RequestTimestamp.         ToIso8601()),
+                                                                                                                                       new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                                       new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                                       PartnerProductId.HasValue
+                                                                                                                                           ? new JProperty("partnerProductId",      PartnerProductId.   Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       SessionId.HasValue
+                                                                                                                                           ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       CPOPartnerSessionId.HasValue
+                                                                                                                                           ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       EMPPartnerSessionId.HasValue
+                                                                                                                                           ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       ProviderId.HasValue
+                                                                                                                                           ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       new JProperty("Identification",              Identification.           ToJSON()),
+                                                                                                                                       new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                                  ));
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteReservationStartResponse += async (Timestamp,
+                                                                                     Sender,
+                                                                                     SenderId,
+                                                                                     EventTrackingId,
+                                                                                     EVSEId,
+                                                                                     PartnerProductId,
+                                                                                     SessionId,
+                                                                                     CPOPartnerSessionId,
+                                                                                     EMPPartnerSessionId,
+                                                                                     ProviderId,
+                                                                                     Identification,
+                                                                                     RequestTimeout,
+                                                                                     Result,
+                                                                                     Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStartResponse",
+                                                                                                                            JSONObject.Create(
+                                                                                                                                new JProperty("timestamp",                   Timestamp.                ToIso8601()),
+                                                                                                                                new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                                new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                                PartnerProductId.HasValue
+                                                                                                                                    ? new JProperty("partnerProductId",      PartnerProductId.   Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                SessionId.HasValue
+                                                                                                                                    ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                CPOPartnerSessionId.HasValue
+                                                                                                                                    ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                EMPPartnerSessionId.HasValue
+                                                                                                                                    ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                ProviderId.HasValue
+                                                                                                                                    ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                new JProperty("Identification",              Identification.           ToJSON()),
+                                                                                                                                new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                                new JProperty("result",                      Result.                   ToJSON()),
+                                                                                                                                new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                            ));
+
+            #endregion
+
+            #region OnAuthorizeRemoteReservationStopRequest/-Response
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteReservationStopRequest += async  (LogTimestamp,
+                                                                                    RequestTimestamp,
+                                                                                    Sender,
+                                                                                    SenderId,
+                                                                                    EventTrackingId,
+                                                                                    EVSEId,
+                                                                                    SessionId,
+                                                                                    CPOPartnerSessionId,
+                                                                                    EMPPartnerSessionId,
+                                                                                    ProviderId,
+                                                                                    RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStopRequest",
+                                                                                                                                   JSONObject.Create(
+                                                                                                                                       new JProperty("timestamp",                   RequestTimestamp.         ToIso8601()),
+                                                                                                                                       new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                                       new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                                       SessionId.HasValue
+                                                                                                                                           ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       CPOPartnerSessionId.HasValue
+                                                                                                                                           ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       EMPPartnerSessionId.HasValue
+                                                                                                                                           ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       ProviderId.HasValue
+                                                                                                                                           ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                           : null,
+                                                                                                                                       new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                                  ));
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteReservationStopResponse += async (Timestamp,
+                                                                                    Sender,
+                                                                                    SenderId,
+                                                                                    EventTrackingId,
+                                                                                    EVSEId,
+                                                                                    SessionId,
+                                                                                    CPOPartnerSessionId,
+                                                                                    EMPPartnerSessionId,
+                                                                                    ProviderId,
+                                                                                    RequestTimeout,
+                                                                                    Result,
+                                                                                    Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStopResponse",
+                                                                                                                           JSONObject.Create(
+                                                                                                                               new JProperty("timestamp",                   Timestamp.                ToIso8601()),
+                                                                                                                               new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                               new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                               SessionId.HasValue
+                                                                                                                                   ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               CPOPartnerSessionId.HasValue
+                                                                                                                                   ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               EMPPartnerSessionId.HasValue
+                                                                                                                                   ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               ProviderId.HasValue
+                                                                                                                                   ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                               new JProperty("result",                      Result.                   ToJSON()),
+                                                                                                                               new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                           ));
+
+            #endregion
+
+
+            #region OnAuthorizeRemoteStartRequest/-Response
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteStartRequest += async  (LogTimestamp,
+                                                                          RequestTimestamp,
+                                                                          Sender,
+                                                                          SenderId,
+                                                                          EventTrackingId,
+                                                                          EVSEId,
+                                                                          PartnerProductId,
+                                                                          SessionId,
+                                                                          CPOPartnerSessionId,
+                                                                          EMPPartnerSessionId,
+                                                                          ProviderId,
+                                                                          Identification,
+                                                                          RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteStartRequest",
+                                                                                                                        JSONObject.Create(
+                                                                                                                            new JProperty("timestamp",                   RequestTimestamp.         ToIso8601()),
+                                                                                                                            new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                            new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                            PartnerProductId.HasValue
+                                                                                                                                ? new JProperty("partnerProductId",      PartnerProductId.   Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            SessionId.HasValue
+                                                                                                                                ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            CPOPartnerSessionId.HasValue
+                                                                                                                                ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            EMPPartnerSessionId.HasValue
+                                                                                                                                ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            ProviderId.HasValue
+                                                                                                                                ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            new JProperty("Identification",              Identification.           ToJSON()),
+                                                                                                                            new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                       ));
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteStartResponse += async (Timestamp,
+                                                                          Sender,
+                                                                          SenderId,
+                                                                          EventTrackingId,
+                                                                          EVSEId,
+                                                                          PartnerProductId,
+                                                                          SessionId,
+                                                                          CPOPartnerSessionId,
+                                                                          EMPPartnerSessionId,
+                                                                          ProviderId,
+                                                                          Identification,
+                                                                          RequestTimeout,
+                                                                          Result,
+                                                                          Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteStartResponse",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",                   Timestamp.                ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                     new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                     PartnerProductId.HasValue
+                                                                                                                         ? new JProperty("partnerProductId",      PartnerProductId.   Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     SessionId.HasValue
+                                                                                                                         ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     CPOPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     EMPPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     ProviderId.HasValue
+                                                                                                                         ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("Identification",              Identification.           ToJSON()),
+                                                                                                                     new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                     new JProperty("result",                      Result.                   ToJSON()),
+                                                                                                                     new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                 ));
+
+            #endregion
+
+            #region OnAuthorizeRemoteStopRequest/-Response
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteStopRequest += async  (LogTimestamp,
+                                                                         RequestTimestamp,
+                                                                         Sender,
+                                                                         SenderId,
+                                                                         EventTrackingId,
+                                                                         EVSEId,
+                                                                         SessionId,
+                                                                         CPOPartnerSessionId,
+                                                                         EMPPartnerSessionId,
+                                                                         ProviderId,
+                                                                         RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteStopRequest",
+                                                                                                                        JSONObject.Create(
+                                                                                                                            new JProperty("timestamp",                   RequestTimestamp.         ToIso8601()),
+                                                                                                                            new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                            new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                            SessionId.HasValue
+                                                                                                                                ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            CPOPartnerSessionId.HasValue
+                                                                                                                                ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            EMPPartnerSessionId.HasValue
+                                                                                                                                ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            ProviderId.HasValue
+                                                                                                                                ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                                : null,
+                                                                                                                            new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                       ));
+
+            CPOAdapter.CPOServer.OnAuthorizeRemoteStopResponse += async (Timestamp,
+                                                                         Sender,
+                                                                         SenderId,
+                                                                         EventTrackingId,
+                                                                         EVSEId,
+                                                                         SessionId,
+                                                                         CPOPartnerSessionId,
+                                                                         EMPPartnerSessionId,
+                                                                         ProviderId,
+                                                                         RequestTimeout,
+                                                                         Result,
+                                                                         Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteStopResponse",
+                                                                                                                JSONObject.Create(
+                                                                                                                    new JProperty("timestamp",                   Timestamp.                ToIso8601()),
+                                                                                                                    new JProperty("eventTrackingId",             EventTrackingId.          ToString()),
+
+                                                                                                                    new JProperty("EVSEId",                      EVSEId.                   ToString()),
+                                                                                                                    SessionId.HasValue
+                                                                                                                        ? new JProperty("sessionId",             SessionId.          Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    CPOPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("CPOPartnerSessionId",   CPOPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    EMPPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("EMPPartnerSessionId",   EMPPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    ProviderId.HasValue
+                                                                                                                        ? new JProperty("providerId",            ProviderId.         Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    new JProperty("requestTimeout",              Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                    new JProperty("result",                      Result.                   ToJSON()),
+                                                                                                                    new JProperty("runtime",                     Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                ));
+
+            #endregion
+
+
+        }
+
+
+        public void Add(WWCPEMPAdapter EMPAdapter)
+        {
+
+            _EMPAdapters.Add(EMPAdapter);
+
+            // EMPClient
+
+            #region OnPullEVSEDataRequest/-Response
+
+            EMPAdapter.EMPClient.OnPullEVSEDataRequest += async (LogTimestamp,
+                                                                 RequestTimestamp,
+                                                                 Sender,
+                                                                 SenderId,
+                                                                 EventTrackingId,
+                                                                 ProviderId,
+                                                                 SearchCenter,
+                                                                 DistanceKM,
+                                                                 LastCall,
+                                                                 GeoCoordinatesResponseFormat,
+                                                                 RequestTimeout) => await DebugLog.SubmitEvent("PullEVSEDataRequest",
+                                                                                                               JSONObject.Create(
+                                                                                                                   new JProperty("timestamp",                     RequestTimestamp.                      ToIso8601()),
+                                                                                                                   new JProperty("eventTrackingId",               EventTrackingId.                       ToString()),
+
+                                                                                                                   new JProperty("providerId",                    ProviderId.                            ToString()),
+                                                                                                                   SearchCenter.HasValue
+                                                                                                                       ? new JProperty("searchCenter",            SearchCenter.                    Value.ToJSON())
+                                                                                                                       : null,
+                                                                                                                   new JProperty("distanceKM",                    DistanceKM.                            ToString()),
+                                                                                                                   LastCall.HasValue
+                                                                                                                       ? new JProperty("lastCall",                LastCall.                        Value.ToIso8601())
+                                                                                                                       : null,
+                                                                                                                   new JProperty("geoCoordinatesResponseFormat",  GeoCoordinatesResponseFormat.          ToString()),
+                                                                                                                   new JProperty("requestTimeout",                Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                               ));
+
+            EMPAdapter.EMPClient.OnPullEVSEDataResponse += async (Timestamp,
+                                                                  Sender,
+                                                                  SenderId,
+                                                                  EventTrackingId,
+                                                                  ProviderId,
+                                                                  SearchCenter,
+                                                                  DistanceKM,
+                                                                  LastCall,
+                                                                  GeoCoordinatesResponseFormat,
+                                                                  RequestTimeout,
+                                                                  EVSEData,
+                                                                  StatusCode,
+                                                                  Runtime) => await DebugLog.SubmitEvent("PullEVSEDataResponse",
+                                                                                                         JSONObject.Create(
+                                                                                                             new JProperty("timestamp",                     Timestamp.                             ToIso8601()),
+                                                                                                             new JProperty("eventTrackingId",               EventTrackingId.                       ToString()),
+
+                                                                                                             new JProperty("providerId",                    ProviderId.                            ToString()),
+                                                                                                             SearchCenter.HasValue
+                                                                                                                 ? new JProperty("searchCenter",            SearchCenter.                    Value.ToJSON())
+                                                                                                                 : null,
+                                                                                                             new JProperty("distanceKM",                    DistanceKM.                            ToString()),
+                                                                                                             LastCall.HasValue
+                                                                                                                 ? new JProperty("lastCall",                LastCall.                        Value.ToIso8601())
+                                                                                                                 : null,
+                                                                                                             new JProperty("geoCoordinatesResponseFormat",  GeoCoordinatesResponseFormat.          ToString()),
+                                                                                                             new JProperty("requestTimeout",                Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                             EVSEData.OperatorEVSEData.SafeAny()
+                                                                                                                   ? new JProperty("EVSEOperators",         EVSEData.OperatorEVSEData.SafeSelect(operatorData =>
+                                                                                                                                                                JSONObject.Create(
+                                                                                                                                                                    new JProperty("id",          operatorData.OperatorId.ToString()),
+                                                                                                                                                                    operatorData.OperatorName.IsNotNullOrEmpty()
+                                                                                                                                                                        ? new JProperty("name",  operatorData.OperatorName)
+                                                                                                                                                                        : null,
+                                                                                                                                                                    new JProperty("dataRecords",  new JArray(operatorData.EVSEDataRecords.SafeSelect(dataRecord => dataRecord.Id.    ToString())))
+                                                                                                                                                                ))
+                                                                                                                                                            )
+                                                                                                                   : null,
+                                                                                                             StatusCode.HasValue
+                                                                                                                 ? new JProperty("statusCode",              StatusCode.                      Value.ToJSON())
+                                                                                                                 : null,
+                                                                                                             new JProperty("runtime",                       Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                         ));
+
+            #endregion
+
+            #region OnPullEVSEStatusRequest/-Response
+
+            EMPAdapter.EMPClient.OnPullEVSEStatusRequest += async (LogTimestamp,
+                                                                   RequestTimestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   ProviderId,
+                                                                   SearchCenter,
+                                                                   DistanceKM,
+                                                                   EVSEStatusFilter,
+                                                                   RequestTimeout) => await DebugLog.SubmitEvent("PullEVSEStatusRequest",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",               RequestTimestamp.      ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",         EventTrackingId.       ToString()),
+
+                                                                                                                     new JProperty("providerId",              ProviderId.            ToString()),
+                                                                                                                     SearchCenter.HasValue
+                                                                                                                         ? new JProperty("searchCenter",      SearchCenter.    Value.ToJSON())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("distanceKM",              DistanceKM.            ToString()),
+                                                                                                                     EVSEStatusFilter.HasValue
+                                                                                                                         ? new JProperty("EVSEStatusFilter",  EVSEStatusFilter.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("requestTimeout",          Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                 ));
+
+            EMPAdapter.EMPClient.OnPullEVSEStatusResponse += async (Timestamp,
+                                                                    Sender,
+                                                                    SenderId,
+                                                                    EventTrackingId,
+                                                                    ProviderId,
+                                                                    SearchCenter,
+                                                                    DistanceKM,
+                                                                    EVSEStatusFilter,
+                                                                    RequestTimeout,
+                                                                    EVSEStatus,
+                                                                    Runtime) => await DebugLog.SubmitEvent("PullEVSEStatusResponse",
+                                                                                                           JSONObject.Create(
+                                                                                                               new JProperty("timestamp",               Timestamp.              ToIso8601()),
+                                                                                                               new JProperty("eventTrackingId",         EventTrackingId.        ToString()),
+
+                                                                                                               new JProperty("providerId",              ProviderId.             ToString()),
+                                                                                                               SearchCenter.HasValue
+                                                                                                                   ? new JProperty("searchCenter",      SearchCenter.     Value.ToJSON())
+                                                                                                                   : null,
+                                                                                                               new JProperty("distanceKM",              DistanceKM.             ToString()),
+                                                                                                               EVSEStatusFilter.HasValue
+                                                                                                                   ? new JProperty("EVSEStatusFilter",  EVSEStatusFilter. Value.ToString())
+                                                                                                                   : null,
+                                                                                                               new JProperty("requestTimeout",          Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                               EVSEStatus.OperatorEVSEStatus.SafeAny()
+                                                                                                                   ? new JProperty("EVSEOperators",     EVSEStatus.OperatorEVSEStatus.SafeSelect(operatorStatus =>
+                                                                                                                                                            JSONObject.Create(
+                                                                                                                                                                new JProperty("id",          operatorStatus.OperatorId.ToString()),
+                                                                                                                                                                operatorStatus.OperatorName.IsNotNullOrEmpty()
+                                                                                                                                                                    ? new JProperty("name",  operatorStatus.OperatorName)
+                                                                                                                                                                    : null,
+                                                                                                                                                                new JProperty("statusRecords",  new JArray(
+                                                                                                                                                                    operatorStatus.EVSEStatusRecords.SafeSelect(statusRecord => new JArray(statusRecord.Id.    ToString(),
+                                                                                                                                                                                                                                           statusRecord.Status.ToString()))))
+                                                                                                                                                            ))
+                                                                                                                                                        )
+                                                                                                                   : null,
+                                                                                                               EVSEStatus.StatusCode.HasValue
+                                                                                                                   ? new JProperty("resultStatus",      EVSEStatus.StatusCode.Value.ToJSON())
+                                                                                                                   : null,
+                                                                                                               new JProperty("runtime",                 Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                           ));
+
+            #endregion
+
+            #region OnPullEVSEStatusByIdRequest/-Response
+
+            EMPAdapter.EMPClient.OnPullEVSEStatusByIdRequest += async (LogTimestamp,
+                                                                       RequestTimestamp,
+                                                                       Sender,
+                                                                       SenderId,
+                                                                       EventTrackingId,
+                                                                       ProviderId,
+                                                                       EVSEIds,
+                                                                       RequestTimeout) => await DebugLog.SubmitEvent("PullEVSEStatusByIdRequest",
+                                                                                                                     JSONObject.Create(
+                                                                                                                         new JProperty("timestamp",        RequestTimestamp.ToIso8601()),
+                                                                                                                         new JProperty("eventTrackingId",  EventTrackingId. ToString()),
+
+                                                                                                                         new JProperty("providerId",       ProviderId.      ToString()),
+                                                                                                                         EVSEIds.SafeAny()
+                                                                                                                             ? new JProperty("EVSEIds",    new JArray(EVSEIds))
+                                                                                                                             : null,
+                                                                                                                         new JProperty("requestTimeout",   Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                     ));
+
+            EMPAdapter.EMPClient.OnPullEVSEStatusByIdResponse += async (Timestamp,
+                                                                        Sender,
+                                                                        SenderId,
+                                                                        EventTrackingId,
+                                                                        ProviderId,
+                                                                        EVSEIds,
+                                                                        RequestTimeout,
+                                                                        EVSEStatusById,
+                                                                        Runtime) => await DebugLog.SubmitEvent("PullEVSEStatusByIdResponse",
+                                                                                                               JSONObject.Create(
+                                                                                                                   new JProperty("timestamp",                Timestamp.              ToIso8601()),
+                                                                                                                   new JProperty("eventTrackingId",          EventTrackingId.        ToString()),
+
+                                                                                                                   new JProperty("providerId",               ProviderId.      ToString()),
+                                                                                                                   EVSEIds.SafeAny()
+                                                                                                                       ? new JProperty("EVSEIds",            new JArray(EVSEIds))
+                                                                                                                       : null,
+                                                                                                                   new JProperty("requestTimeout",           Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                   EVSEStatusById.EVSEStatusRecords.SafeAny()
+                                                                                                                       ? new JProperty("EVSEStatusRecords",  new JArray(
+                                                                                                                                                                 EVSEStatusById.EVSEStatusRecords.SafeSelect(statusRecord => new JArray(statusRecord.Id.    ToString(),
+                                                                                                                                                                                                                                        statusRecord.Status.ToString()))
+                                                                                                                                                             ))
+                                                                                                                       : null,
+                                                                                                                   EVSEStatusById.StatusCode.HasValue
+                                                                                                                       ? new JProperty("resultStatus",       EVSEStatusById.StatusCode.Value.ToJSON())
+                                                                                                                       : null,
+                                                                                                                   new JProperty("runtime",                  Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                               ));
+
+            #endregion
+
+
+            #region OnPushAuthenticationDataRequest/-Response
+
+            EMPAdapter.EMPClient.OnPushAuthenticationDataRequest += async (LogTimestamp,
+                                                                           RequestTimestamp,
+                                                                           Sender,
+                                                                           SenderId,
+                                                                           EventTrackingId,
+                                                                           ProviderAuthenticationData,
+                                                                           OICPAction,
+                                                                           RequestTimeout) => await DebugLog.SubmitEvent("PushAuthenticationDataRequest",
+                                                                                                                         JSONObject.Create(
+                                                                                                                             new JProperty("timestamp",        RequestTimestamp.ToIso8601()),
+                                                                                                                             new JProperty("eventTrackingId",  EventTrackingId. ToString()),
+
+                                                                                                                             ProviderAuthenticationData.AuthorizationIdentifications.SafeAny()
+                                                                                                                                 ? new JProperty("authorizationIdentifications",  new JArray(ProviderAuthenticationData.AuthorizationIdentifications.SafeSelect(auth => auth.ToJSON())))
+                                                                                                                                 : null,
+                                                                                                                             new JProperty("OICPAction",       OICPAction.      ToString()),
+                                                                                                                             new JProperty("requestTimeout",   Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                        ));
+
+            EMPAdapter.EMPClient.OnPushAuthenticationDataResponse += async (Timestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            ProviderAuthenticationData,
+                                                                            OICPAction,
+                                                                            RequestTimeout,
+                                                                            Acknowledgement,
+                                                                            Runtime) => await DebugLog.SubmitEvent("PushAuthenticationDataResponse",
+                                                                                                                   JSONObject.Create(
+                                                                                                                       new JProperty("timestamp",        Timestamp.      ToIso8601()),
+                                                                                                                       new JProperty("eventTrackingId",  EventTrackingId.ToString()),
+
+                                                                                                                       ProviderAuthenticationData.AuthorizationIdentifications.SafeAny()
+                                                                                                                           ? new JProperty("authorizationIdentifications",  new JArray(ProviderAuthenticationData.AuthorizationIdentifications.SafeSelect(auth => auth.ToJSON())))
+                                                                                                                           : null,
+                                                                                                                       new JProperty("OICPAction",       OICPAction.     ToString()),
+                                                                                                                       new JProperty("requestTimeout",   Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                       new JProperty("result",           Acknowledgement.ToJSON()),
+                                                                                                                       new JProperty("runtime",          Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                   ));
+
+            #endregion
+
+
+            #region OnAuthorizeRemoteReservationStartRequest/-Response
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteReservationStartRequest += async (LogTimestamp,
+                                                                                    RequestTimestamp,
+                                                                                    Sender,
+                                                                                    SenderId,
+                                                                                    EventTrackingId,
+                                                                                    ProviderId,
+                                                                                    EVSEId,
+                                                                                    Identification,
+                                                                                    SessionId,
+                                                                                    CPOPartnerSessionId,
+                                                                                    EMPPartnerSessionId,
+                                                                                    PartnerProductId,
+                                                                                    RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStartRequest",
+                                                                                                                                  JSONObject.Create(
+                                                                                                                                      new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                                      new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                                      new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                                      new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                                      new JProperty("identification",             Identification.           ToJSON()),
+                                                                                                                                      SessionId.HasValue
+                                                                                                                                          ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                                          : null,
+                                                                                                                                      CPOPartnerSessionId.HasValue
+                                                                                                                                          ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                                          : null,
+                                                                                                                                      EMPPartnerSessionId.HasValue
+                                                                                                                                          ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                                          : null,
+                                                                                                                                      PartnerProductId.HasValue
+                                                                                                                                          ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                                          : null,
+                                                                                                                                      new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                                 ));
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteReservationStartResponse += async (Timestamp,
+                                                                                     Sender,
+                                                                                     SenderId,
+                                                                                     EventTrackingId,
+                                                                                     ProviderId,
+                                                                                     EVSEId,
+                                                                                     Identification,
+                                                                                     SessionId,
+                                                                                     CPOPartnerSessionId,
+                                                                                     EMPPartnerSessionId,
+                                                                                     PartnerProductId,
+                                                                                     RequestTimeout,
+                                                                                     Acknowledgement,
+                                                                                     Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStartResponse",
+                                                                                                                            JSONObject.Create(
+                                                                                                                                new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                                                new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                                new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                                new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                                new JProperty("identification",             Identification.           ToJSON()),
+                                                                                                                                SessionId.HasValue
+                                                                                                                                    ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                CPOPartnerSessionId.HasValue
+                                                                                                                                    ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                EMPPartnerSessionId.HasValue
+                                                                                                                                    ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                PartnerProductId.HasValue
+                                                                                                                                    ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                                    : null,
+                                                                                                                                new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                                new JProperty("result",                     Acknowledgement.ToJSON()),
+                                                                                                                                new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                            ));
+
+            #endregion
+
+            #region OnAuthorizeRemoteReservationStopRequest/-Response
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteReservationStopRequest += async (LogTimestamp,
+                                                                                   RequestTimestamp,
+                                                                                   Sender,
+                                                                                   SenderId,
+                                                                                   EventTrackingId,
+                                                                                   SessionId,
+                                                                                   ProviderId,
+                                                                                   EVSEId,
+                                                                                   CPOPartnerSessionId,
+                                                                                   EMPPartnerSessionId,
+                                                                                   RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStopRequest",
+                                                                                                                                 JSONObject.Create(
+                                                                                                                                     new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                                     new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                                     new JProperty("sessionId",                  SessionId.                ToString()),
+                                                                                                                                     new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                                     new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                                     CPOPartnerSessionId.HasValue
+                                                                                                                                         ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                                         : null,
+                                                                                                                                     EMPPartnerSessionId.HasValue
+                                                                                                                                         ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                                         : null,
+                                                                                                                                     new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                                ));
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteReservationStopResponse += async (Timestamp,
+                                                                                    Sender,
+                                                                                    SenderId,
+                                                                                    EventTrackingId,
+                                                                                    SessionId,
+                                                                                    ProviderId,
+                                                                                    EVSEId,
+                                                                                    CPOPartnerSessionId,
+                                                                                    EMPPartnerSessionId,
+                                                                                    RequestTimeout,
+                                                                                    Acknowledgement,
+                                                                                    Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteReservationStopResponse",
+                                                                                                                           JSONObject.Create(
+                                                                                                                               new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                                               new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                               new JProperty("sessionId",                  SessionId.                ToString()),
+                                                                                                                               new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                               new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                               CPOPartnerSessionId.HasValue
+                                                                                                                                   ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               EMPPartnerSessionId.HasValue
+                                                                                                                                   ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                                   : null,
+                                                                                                                               new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                               new JProperty("result",                     Acknowledgement.ToJSON()),
+                                                                                                                               new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                           ));
+
+            #endregion
+
+            #region OnAuthorizeRemoteStartRequest/-Response
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteStartRequest += async (LogTimestamp,
+                                                                         RequestTimestamp,
+                                                                         Sender,
+                                                                         SenderId,
+                                                                         EventTrackingId,
+                                                                         ProviderId,
+                                                                         EVSEId,
+                                                                         Identification,
+                                                                         SessionId,
+                                                                         CPOPartnerSessionId,
+                                                                         EMPPartnerSessionId,
+                                                                         PartnerProductId,
+                                                                         RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteStartRequest",
+                                                                                                                       JSONObject.Create(
+                                                                                                                           new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                           new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                           new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                           new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                           new JProperty("identification",             Identification.           ToJSON()),
+                                                                                                                           SessionId.HasValue
+                                                                                                                               ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                               : null,
+                                                                                                                           CPOPartnerSessionId.HasValue
+                                                                                                                               ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                               : null,
+                                                                                                                           EMPPartnerSessionId.HasValue
+                                                                                                                               ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                               : null,
+                                                                                                                           PartnerProductId.HasValue
+                                                                                                                               ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                               : null,
+                                                                                                                           new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                      ));
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteStartResponse += async (Timestamp,
+                                                                          Sender,
+                                                                          SenderId,
+                                                                          EventTrackingId,
+                                                                          ProviderId,
+                                                                          EVSEId,
+                                                                          Identification,
+                                                                          SessionId,
+                                                                          CPOPartnerSessionId,
+                                                                          EMPPartnerSessionId,
+                                                                          PartnerProductId,
+                                                                          RequestTimeout,
+                                                                          Acknowledgement,
+                                                                          Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteStartResponse",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                     new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                     new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                     new JProperty("identification",             Identification.           ToJSON()),
+                                                                                                                     SessionId.HasValue
+                                                                                                                         ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     CPOPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     EMPPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     PartnerProductId.HasValue
+                                                                                                                         ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                     new JProperty("result",                     Acknowledgement.ToJSON()),
+                                                                                                                     new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                 ));
+
+            #endregion
+
+            #region OnAuthorizeRemoteStopRequest/-Response
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteStopRequest += async (LogTimestamp,
+                                                                        RequestTimestamp,
+                                                                        Sender,
+                                                                        SenderId,
+                                                                        EventTrackingId,
+                                                                        SessionId,
+                                                                        ProviderId,
+                                                                        EVSEId,
+                                                                        CPOPartnerSessionId,
+                                                                        EMPPartnerSessionId,
+                                                                        RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeRemoteStopRequest",
+                                                                                                                      JSONObject.Create(
+                                                                                                                          new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                          new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                          new JProperty("sessionId",                  SessionId.                ToString()),
+                                                                                                                          new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                          new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                          CPOPartnerSessionId.HasValue
+                                                                                                                              ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                              : null,
+                                                                                                                          EMPPartnerSessionId.HasValue
+                                                                                                                              ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                              : null,
+                                                                                                                          new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                     ));
+
+            EMPAdapter.EMPClient.OnAuthorizeRemoteStopResponse += async (Timestamp,
+                                                                         Sender,
+                                                                         SenderId,
+                                                                         EventTrackingId,
+                                                                         SessionId,
+                                                                         ProviderId,
+                                                                         EVSEId,
+                                                                         CPOPartnerSessionId,
+                                                                         EMPPartnerSessionId,
+                                                                         RequestTimeout,
+                                                                         Acknowledgement,
+                                                                         Runtime) => await DebugLog.SubmitEvent("AuthorizeRemoteStopResponse",
+                                                                                                                JSONObject.Create(
+                                                                                                                    new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                                    new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                    new JProperty("sessionId",                  SessionId.                ToString()),
+                                                                                                                    new JProperty("providerId",                 ProviderId.               ToString()),
+                                                                                                                    new JProperty("EVSEId",                     EVSEId.                   ToString()),
+                                                                                                                    CPOPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    EMPPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                    new JProperty("result",                     Acknowledgement.ToJSON()),
+                                                                                                                    new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                ));
+
+            #endregion
+
+
+            #region OnGetChargeDetailRecordsRequest/-Response
+
+            EMPAdapter.EMPClient.OnGetChargeDetailRecordsRequest += async  (LogTimestamp,
+                                                                            RequestTimestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            ProviderId,
+                                                                            From,
+                                                                            To,
+                                                                            RequestTimeout) => await DebugLog.SubmitEvent("GetChargeDetailRecordsRequest",
+                                                                                                                          JSONObject.Create(
+                                                                                                                              new JProperty("timestamp",        RequestTimestamp.    ToIso8601()),
+                                                                                                                              new JProperty("eventTrackingId",  EventTrackingId.     ToString()),
+                                                                                                                              new JProperty("providerId",       ProviderId.          ToString()),
+                                                                                                                              new JProperty("from",             From.                ToIso8601()),
+                                                                                                                              new JProperty("to",               To.                  ToIso8601()),
+                                                                                                                              new JProperty("requestTimeout",   Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                         ));
+
+            EMPAdapter.EMPClient.OnGetChargeDetailRecordsResponse += async (Timestamp,
+                                                                            Sender,
+                                                                            SenderId,
+                                                                            EventTrackingId,
+                                                                            ProviderId,
+                                                                            From,
+                                                                            To,
+                                                                            RequestTimeout,
+                                                                            ChargeDetailRecords,
+                                                                            StatusCode,
+                                                                            Runtime) => await DebugLog.SubmitEvent("GetChargeDetailRecordsResponse",
+                                                                                                                   JSONObject.Create(
+                                                                                                                       new JProperty("timestamp",            Timestamp.           ToIso8601()),
+                                                                                                                       new JProperty("eventTrackingId",      EventTrackingId.     ToString()),
+                                                                                                                       new JProperty("providerId",           ProviderId.          ToString()),
+                                                                                                                       new JProperty("from",                 From.                ToIso8601()),
+                                                                                                                       new JProperty("to",                   To.                  ToIso8601()),
+                                                                                                                       new JProperty("requestTimeout",       Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                       new JProperty("chargeDetailRecords",  new JArray(ChargeDetailRecords.SafeSelect(cdr => cdr.ToJSON()))),
+                                                                                                                       StatusCode.HasValue
+                                                                                                                           ? new JProperty("resultStatus",   StatusCode.Value.ToJSON())
+                                                                                                                           : null,
+                                                                                                                       new JProperty("runtime",              Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                                   ));
+
+            #endregion
+
+
+            // EMPServer
+
+            #region OnAuthorizeStartRequest/-Response
+
+            EMPAdapter.EMPServer.OnAuthorizeStartRequest += async (LogTimestamp,
+                                                                   RequestTimestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   OperatorId,
+                                                                   Identification,
+                                                                   EVSEId,
+                                                                   SessionId,
+                                                                   PartnerProductId,
+                                                                   CPOPartnerSessionId,
+                                                                   EMPPartnerSessionId,
+                                                                   RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeStartRequest",
+                                                                                                                 JSONObject.Create(
+                                                                                                                     new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                     new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                     new JProperty("operatorId",                 OperatorId.               ToString()),
+                                                                                                                     new JProperty("Identification",             Identification.           ToJSON()),
+                                                                                                                     EVSEId.HasValue
+                                                                                                                         ? new JProperty("EVSEId",               EVSEId.                   ToString())
+                                                                                                                         : null,
+                                                                                                                     SessionId.HasValue
+                                                                                                                         ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     PartnerProductId.HasValue
+                                                                                                                         ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     CPOPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     EMPPartnerSessionId.HasValue
+                                                                                                                         ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                         : null,
+                                                                                                                     new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                 ));
+
+            EMPAdapter.EMPServer.OnAuthorizeStartResponse += async (Timestamp,
+                                                                    Sender,
+                                                                    SenderId,
+                                                                    EventTrackingId,
+                                                                    OperatorId,
+                                                                    Identification,
+                                                                    EVSEId,
+                                                                    SessionId,
+                                                                    PartnerProductId,
+                                                                    CPOPartnerSessionId,
+                                                                    EMPPartnerSessionId,
+                                                                    RequestTimeout,
+                                                                    Result,
+                                                                    Runtime) => await DebugLog.SubmitEvent("AuthorizeStartResponse",
+                                                                                                           JSONObject.Create(
+                                                                                                               new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                               new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                               new JProperty("operatorId",                 OperatorId.               ToString()),
+                                                                                                               new JProperty("Identification",             Identification.           ToJSON()),
+                                                                                                               EVSEId.HasValue
+                                                                                                                   ? new JProperty("EVSEId",               EVSEId.                   ToString())
+                                                                                                                   : null,
+                                                                                                               SessionId.HasValue
+                                                                                                                   ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                   : null,
+                                                                                                               PartnerProductId.HasValue
+                                                                                                                   ? new JProperty("partnerProductId",     PartnerProductId.   Value.ToString())
+                                                                                                                   : null,
+                                                                                                               CPOPartnerSessionId.HasValue
+                                                                                                                   ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                   : null,
+                                                                                                               EMPPartnerSessionId.HasValue
+                                                                                                                   ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                   : null,
+                                                                                                               new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                               new JProperty("result",                     Result.                   ToJSON()),
+                                                                                                               new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                           ));
+
+            #endregion
+
+            #region OnAuthorizeStopRequest/-Response
+
+            EMPAdapter.EMPServer.OnAuthorizeStopRequest += async (LogTimestamp,
+                                                                  RequestTimestamp,
+                                                                  Sender,
+                                                                  SenderId,
+                                                                  EventTrackingId,
+                                                                  SessionId,
+                                                                  CPOPartnerSessionId,
+                                                                  EMPPartnerSessionId,
+                                                                  OperatorId,
+                                                                  EVSEId,
+                                                                  Identification,
+                                                                  RequestTimeout) => await DebugLog.SubmitEvent("AuthorizeStopRequest",
+                                                                                                                JSONObject.Create(
+                                                                                                                    new JProperty("timestamp",                  RequestTimestamp.         ToIso8601()),
+                                                                                                                    new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                                    SessionId.HasValue
+                                                                                                                        ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    CPOPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    EMPPartnerSessionId.HasValue
+                                                                                                                        ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                        : null,
+                                                                                                                    new JProperty("operatorId",                 OperatorId.               ToString()),
+                                                                                                                    EVSEId.HasValue
+                                                                                                                        ? new JProperty("EVSEId",               EVSEId.                   ToString())
+                                                                                                                        : null,
+                                                                                                                    new JProperty("Identification",             Identification.           ToJSON()),
+                                                                                                                    new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                ));
+
+            EMPAdapter.EMPServer.OnAuthorizeStopResponse += async (Timestamp,
+                                                                   Sender,
+                                                                   SenderId,
+                                                                   EventTrackingId,
+                                                                   SessionId,
+                                                                   CPOPartnerSessionId,
+                                                                   EMPPartnerSessionId,
+                                                                   OperatorId,
+                                                                   EVSEId,
+                                                                   Identification,
+                                                                   RequestTimeout,
+                                                                   Result,
+                                                                   Runtime) => await DebugLog.SubmitEvent("AuthorizeStopResponse",
+                                                                                                          JSONObject.Create(
+                                                                                                              new JProperty("timestamp",                  Timestamp.                ToIso8601()),
+                                                                                                              new JProperty("eventTrackingId",            EventTrackingId.          ToString()),
+
+                                                                                                              SessionId.HasValue
+                                                                                                                  ? new JProperty("sessionId",            SessionId.          Value.ToString())
+                                                                                                                  : null,
+                                                                                                              CPOPartnerSessionId.HasValue
+                                                                                                                  ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.Value.ToString())
+                                                                                                                  : null,
+                                                                                                              EMPPartnerSessionId.HasValue
+                                                                                                                  ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.Value.ToString())
+                                                                                                                  : null,
+                                                                                                              new JProperty("operatorId",                 OperatorId.               ToString()),
+                                                                                                              EVSEId.HasValue
+                                                                                                                  ? new JProperty("EVSEId",               EVSEId.                   ToString())
+                                                                                                                  : null,
+                                                                                                              new JProperty("Identification",             Identification.           ToJSON()),
+                                                                                                              new JProperty("requestTimeout",             Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                              new JProperty("result",                     Result.                   ToJSON()),
+                                                                                                              new JProperty("runtime",                    Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                          ));
+
+            #endregion
+
+            #region OnChargeDetailRecordRequest/-Response
+
+            EMPAdapter.EMPServer.OnChargeDetailRecordRequest += async (LogTimestamp,
+                                                                       RequestTimestamp,
+                                                                       Sender,
+                                                                       SenderId,
+                                                                       EventTrackingId,
+                                                                       ChargeDetailRecord,
+                                                                       RequestTimeout) => await DebugLog.SubmitEvent("ChargeDetailRecordRequest",
+                                                                                                                     JSONObject.Create(
+                                                                                                                         new JProperty("timestamp",           RequestTimestamp.  ToIso8601()),
+                                                                                                                         new JProperty("eventTrackingId",     EventTrackingId.   ToString()),
+
+                                                                                                                         new JProperty("chargeDetailRecord",  ChargeDetailRecord.ToJSON()),
+                                                                                                                         new JProperty("requestTimeout",      Math.Round(RequestTimeout.TotalSeconds, 0))
+                                                                                                                     ));
+
+            EMPAdapter.EMPServer.OnChargeDetailRecordResponse += async (Timestamp,
+                                                                        Sender,
+                                                                        SenderId,
+                                                                        EventTrackingId,
+                                                                        ChargeDetailRecord,
+                                                                        RequestTimeout,
+                                                                        Result,
+                                                                        Runtime) => await DebugLog.SubmitEvent("ChargeDetailRecordResponse",
+                                                                                                               JSONObject.Create(
+                                                                                                                   new JProperty("timestamp",           Timestamp.         ToIso8601()),
+                                                                                                                   new JProperty("eventTrackingId",     EventTrackingId.   ToString()),
+
+                                                                                                                   new JProperty("chargeDetailRecord",  ChargeDetailRecord.ToJSON()),
+                                                                                                                   new JProperty("requestTimeout",      Math.Round(RequestTimeout.TotalSeconds, 0)),
+                                                                                                                   new JProperty("result",              Result.            ToJSON()),
+                                                                                                                   new JProperty("runtime",             Math.Round(Runtime.TotalMilliseconds,   0))
+                                                                                                               ));
 
             #endregion
 

@@ -21,8 +21,8 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -59,8 +59,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                        DateTime?                       LastCall,
                                                        GeoCoordinatesResponseFormats   GeoCoordinatesResponseFormat,
                                                        TimeSpan                        RequestTimeout,
-                                                       PullEVSEDataResponse            Result,
-                                                       TimeSpan                        Duration);
+                                                       EVSEData                        EVSEData,
+                                                       StatusCode?                     StatusCode,
+                                                       TimeSpan                        Runtime);
 
     #endregion
 
@@ -92,8 +93,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                          Single               DistanceKM,
                                                          EVSEStatusTypes?     EVSEStatusFilter,
                                                          TimeSpan             RequestTimeout,
-                                                         EVSEStatus           Result,
-                                                         TimeSpan             Duration);
+                                                         EVSEStatus           EVSEStatus,
+                                                         TimeSpan             Runtime);
 
     #endregion
 
@@ -121,8 +122,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                              Provider_Id              ProviderId,
                                                              IEnumerable<EVSE_Id>     EVSEIds,
                                                              TimeSpan                 RequestTimeout,
-                                                             EVSEStatusById           Result,
-                                                             TimeSpan                 Duration);
+                                                             EVSEStatusById           EVSEStatusById,
+                                                             TimeSpan                 Runtime);
 
     #endregion
 
@@ -151,8 +152,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                  ProviderAuthenticationData                       ProviderAuthenticationData,
                                                                  ActionTypes                                      OICPAction,
                                                                  TimeSpan                                         RequestTimeout,
-                                                                 Acknowledgement<PushAuthenticationDataRequest>   Result,
-                                                                 TimeSpan                                         Duration);
+                                                                 Acknowledgement<PushAuthenticationDataRequest>   Acknowledgement,
+                                                                 TimeSpan                                         Runtime);
 
     #endregion
 
@@ -191,8 +192,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           PartnerProduct_Id?                                        PartnerProductId,
                                                                           TimeSpan                                                  RequestTimeout,
-                                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>   Result,
-                                                                          TimeSpan                                                  Duration);
+                                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>   Acknowledgement,
+                                                                          TimeSpan                                                  Runtime);
 
 
     /// <summary>
@@ -223,8 +224,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                           CPOPartnerSession_Id?                                     CPOPartnerSessionId,
                                                                           EMPPartnerSession_Id?                                     EMPPartnerSessionId,
                                                                           TimeSpan                                                  RequestTimeout,
-                                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>    Result,
-                                                                          TimeSpan                                                  Duration);
+                                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>    Acknowledgement,
+                                                                          TimeSpan                                                  Runtime);
 
     #endregion
 
@@ -262,8 +263,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                PartnerProduct_Id?                             PartnerProductId,
                                                                TimeSpan                                       RequestTimeout,
-                                                               Acknowledgement<AuthorizeRemoteStartRequest>   Result,
-                                                               TimeSpan                                       Duration);
+                                                               Acknowledgement<AuthorizeRemoteStartRequest>   Acknowledgement,
+                                                               TimeSpan                                       Runtime);
 
 
     /// <summary>
@@ -294,8 +295,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                CPOPartnerSession_Id?                          CPOPartnerSessionId,
                                                                EMPPartnerSession_Id?                          EMPPartnerSessionId,
                                                                TimeSpan                                       RequestTimeout,
-                                                               Acknowledgement<AuthorizeRemoteStopRequest>    Result,
-                                                               TimeSpan                                       Duration);
+                                                               Acknowledgement<AuthorizeRemoteStopRequest>    Acknowledgement,
+                                                               TimeSpan                                       Runtime);
 
     #endregion
 
@@ -326,8 +327,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                  DateTime                         From,
                                                                  DateTime                         To,
                                                                  TimeSpan                         RequestTimeout,
-                                                                 GetChargeDetailRecordsResponse   Result,
-                                                                 TimeSpan                         Duration);
+                                                                 IEnumerable<ChargeDetailRecord>  ChargeDetailRecords,
+                                                                 StatusCode?                      StatusCode,
+                                                                 TimeSpan                         Runtime);
 
     #endregion
 

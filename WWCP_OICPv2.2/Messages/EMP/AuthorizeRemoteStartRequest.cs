@@ -30,7 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 {
 
     /// <summary>
-    /// An OICP authorize remote start request.
+    /// An authorize remote start request.
     /// </summary>
     public class AuthorizeRemoteStartRequest : ARequest<AuthorizeRemoteStartRequest>
     {
@@ -77,7 +77,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region Constructor(s)
 
         /// <summary>
-        /// Create an OICP AuthorizeRemoteStartRequest XML/SOAP request.
+        /// Create an AuthorizeRemoteStartRequest request.
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>

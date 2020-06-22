@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// A group of OICP operator EVSE data records or a status code.
+    /// A group of operator EVSE data records.
     /// </summary>
     public class EVSEData : IEquatable<EVSEData>
     {
@@ -48,20 +48,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new group of OICP operator EVSE data records or a status code.
+        /// Create a new group of operator EVSE data records.
         /// </summary>
         /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
         public EVSEData(IEnumerable<OperatorEVSEData>  OperatorEVSEData)
         {
 
-            #region Initial checks
-
-            if (OperatorEVSEData == null)
-                throw new ArgumentNullException(nameof(OperatorEVSEData),  "The given operator EVSE data must not be null!");
-
-            #endregion
-
-            this.OperatorEVSEData  = OperatorEVSEData;
+            this.OperatorEVSEData  = OperatorEVSEData ?? throw new ArgumentNullException(nameof(OperatorEVSEData),  "The given OperatorEVSEData must not be null!");
 
         }
 

@@ -1204,7 +1204,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.LastCall,
                                                      Request.GeoCoordinatesResponseFormat,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     result.Content,
+                                                     result.Content.EVSEData,
+                                                     result.Content.StatusCode,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
 
@@ -2852,7 +2853,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      Request.From,
                                                      Request.To,
                                                      Request.RequestTimeout ?? RequestTimeout.Value,
-                                                     result.Content,
+                                                     result.Content.ChargeDetailRecords,
+                                                     result.Content.StatusCode,
                                                      EndTime - StartTime))).
                                        ConfigureAwait(false);
 

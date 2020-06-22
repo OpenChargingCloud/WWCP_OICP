@@ -55,7 +55,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// An OICP status code.
+    /// A result status code.
     /// </summary>
     public struct StatusCode
     {
@@ -88,7 +88,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new OICP status code.
+        /// Create a new result status code.
         /// </summary>
         /// <param name="Code">The result code of the operation.</param>
         /// <param name="Description">An optional description of the result code.</param>

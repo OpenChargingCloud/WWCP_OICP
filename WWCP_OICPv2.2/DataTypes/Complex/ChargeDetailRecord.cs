@@ -22,8 +22,11 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -31,7 +34,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An OICP charge detail record.
+    /// A charge detail record.
     /// </summary>
     public class ChargeDetailRecord : ACustomData,
                                       IEquatable <ChargeDetailRecord>,
@@ -148,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Constructor(s)
 
         /// <summary>
-        /// Create a charge detail record.
+        /// Create a new charge detail record.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="SessionId">A charging session identification.</param>
@@ -525,7 +528,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region ToXML(XName = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
+        #region ToXML (XName = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a XML representation of this object.
@@ -607,6 +610,91 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             return CustomChargeDetailRecordSerializer != null
                        ? CustomChargeDetailRecordSerializer(this, XML)
                        : XML;
+
+        }
+
+        #endregion
+
+        #region ToJSON(              CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
+
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("sessionID",                  SessionId.          ToString()),
+
+                           CPOPartnerSessionId.HasValue
+                               ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.ToString())
+                               : null,
+
+                           EMPPartnerSessionId.HasValue
+                               ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.ToString())
+                               : null,
+
+                           PartnerProductId.HasValue
+                               ? new JProperty("partnerProductId",     PartnerProductId.   ToString())
+                               : null,
+
+                           new JProperty("EvseId",                     EVSEId.             ToString()),
+
+                           new JProperty("identification",             Identification.ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
+
+                           ChargingStart.HasValue
+                               ? new JProperty("chargingStart",        ChargingStart.Value.ToIso8601())
+                               : null,
+
+                           ChargingEnd.HasValue
+                               ? new JProperty("chargingEnd",          ChargingEnd.  Value.ToIso8601())
+                               : null,
+
+                           new JProperty("sessionStart",               SessionStart.       ToIso8601()),
+                           new JProperty("sessionEnd",                 SessionEnd.         ToIso8601()),
+
+                           MeterValueStart.HasValue
+                               ? new JProperty("meterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", "."))
+                               : null,
+
+                           MeterValueEnd.HasValue
+                               ? new JProperty("meterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
+                               : null,
+
+                           MeterValuesInBetween != null
+                               ? new JProperty("meterValueInBetween",
+                                     MeterValuesInBetween.
+                                         SafeSelect(value => new JProperty("meterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
+                                         ToArray()
+                                 )
+                               : null,
+
+                           ConsumedEnergy.HasValue
+                               ? new JProperty("consumedEnergy",    String.Format("{0:0.###}", ConsumedEnergy).Replace(",", "."))
+                               : null,
+
+                           MeteringSignature != null
+                               ? new JProperty("meteringSignature", MeteringSignature)
+                               : null,
+
+                           HubOperatorId.HasValue
+                               ? new JProperty("hubOperatorID",     HubOperatorId.ToString())
+                               : null,
+
+                           HubProviderId.HasValue
+                               ? new JProperty("hubProviderID",     HubProviderId.ToString())
+                               : null
+
+                    );
+
+            return CustomChargeDetailRecordSerializer != null
+                       ? CustomChargeDetailRecordSerializer(this, JSON)
+                       : JSON;
 
         }
 

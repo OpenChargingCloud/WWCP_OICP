@@ -27,7 +27,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 {
 
-    #region OnAuthorizeRemoteReservationStartDelegate
+    #region OnAuthorizeRemoteReservationStartDelegates
 
     /// <summary>
     /// A delegate called whenever an 'authorize remote reservation start' request was received.
@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          EMPPartnerSession_Id?   EMPPartnerSessionId,
                                                          Provider_Id?            ProviderId,
                                                          Identification          Identification,
-                                                         TimeSpan?               RequestTimeout);
+                                                         TimeSpan                RequestTimeout);
 
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="Identification">The unique identification of the e-mobility account.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
-    /// <param name="Duration">The time between request and response.</param>
+    /// <param name="Runtime">The time between request and response.</param>
     public delegate Task
 
         OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                       Timestamp,
@@ -107,11 +107,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                           Identification                                                 Identification,
                                                           TimeSpan                                                       RequestTimeout,
                                                           Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>    Result,
-                                                          TimeSpan                                                       Duration);
+                                                          TimeSpan                                                       Runtime);
 
     #endregion
 
-    #region OnAuthorizeRemoteReservationStopDelegate
+    #region OnAuthorizeRemoteReservationStopDelegates
 
     /// <summary>
     /// A delegate called whenever an 'authorize remote reservation stop' request was received.
@@ -139,7 +139,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                         CPOPartnerSession_Id?   CPOPartnerSessionId,
                                                         EMPPartnerSession_Id?   EMPPartnerSessionId,
                                                         Provider_Id?            ProviderId,
-                                                        TimeSpan?               RequestTimeout);
+                                                        TimeSpan                RequestTimeout);
 
 
     /// <summary>
@@ -169,7 +169,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
-    /// <param name="Duration">The time between request and response.</param>
+    /// <param name="Runtime">The time between request and response.</param>
     public delegate Task
 
         OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                      Timestamp,
@@ -183,12 +183,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                          Provider_Id?                                                  ProviderId,
                                                          TimeSpan                                                      RequestTimeout,
                                                          Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>    Result,
-                                                         TimeSpan                                                      Duration);
+                                                         TimeSpan                                                      Runtime);
 
     #endregion
 
 
-    #region OnAuthorizeRemoteStartDelegate
+    #region OnAuthorizeRemoteStartDelegates
 
     /// <summary>
     /// A delegate called whenever an 'authorize remote start' request was received.
@@ -220,7 +220,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                               EMPPartnerSession_Id?   EMPPartnerSessionId,
                                               Provider_Id?            ProviderId,
                                               Identification          Identification,
-                                              TimeSpan?               RequestTimeout);
+                                              TimeSpan                RequestTimeout);
 
 
     /// <summary>
@@ -252,7 +252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="Identification">The user or contract identification.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
-    /// <param name="Duration">The time between request and response.</param>
+    /// <param name="Runtime">The time between request and response.</param>
     public delegate Task
 
         OnAuthorizeRemoteStartResponseDelegate(DateTime                                            Timestamp,
@@ -268,11 +268,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                Identification                                      Identification,
                                                TimeSpan                                            RequestTimeout,
                                                Acknowledgement<EMP.AuthorizeRemoteStartRequest>    Result,
-                                               TimeSpan                                            Duration);
+                                               TimeSpan                                            Runtime);
 
     #endregion
 
-    #region OnAuthorizeRemoteStopDelegate
+    #region OnAuthorizeRemoteStopDelegates
 
     /// <summary>
     /// A delegate called whenever an 'authorize remote stop' request was received.
@@ -300,7 +300,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                              CPOPartnerSession_Id?   CPOPartnerSessionId,
                                              EMPPartnerSession_Id?   EMPPartnerSessionId,
                                              Provider_Id?            ProviderId,
-                                             TimeSpan?               RequestTimeout);
+                                             TimeSpan                RequestTimeout);
 
 
     /// <summary>
@@ -330,7 +330,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// <param name="ProviderId">The unique identification of the e-mobility service provider for the case it is different from the current message sender.</param>
     /// <param name="RequestTimeout">An optional timeout for this request.</param>
     /// <param name="Result">The result of the request.</param>
-    /// <param name="Duration">The time between request and response.</param>
+    /// <param name="Runtime">The time between request and response.</param>
     public delegate Task
 
         OnAuthorizeRemoteStopResponseDelegate(DateTime                                           Timestamp,
@@ -344,7 +344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                               Provider_Id?                                       ProviderId,
                                               TimeSpan                                           RequestTimeout,
                                               Acknowledgement<EMP.AuthorizeRemoteStopRequest>    Result,
-                                              TimeSpan                                           Duration);
+                                              TimeSpan                                           Runtime);
 
     #endregion
 
