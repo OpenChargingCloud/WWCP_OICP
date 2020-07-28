@@ -24,7 +24,6 @@ using System.Threading;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
@@ -58,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Create an OICP PullEVSEStatus XML/SOAP request.
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="EVSEIds">Ab enumeration of upto 100 EVSE identifications to query.</param>
+        /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications to query.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -207,7 +206,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Try to parse the given XML representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
-        /// <param name="PullEVSEStatus">The parsed pull EVSE status by id request.</param>
+        /// <param name="PullEVSEStatusById">The parsed pull EVSE status by id request.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -275,7 +274,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Try to parse the given text representation of an OICP pull EVSE status by id request.
         /// </summary>
         /// <param name="PullEVSEStatusByIdText">The text to parse.</param>
-        /// <param name="PullEVSEStatus">The parsed pull EVSE status by id request.</param>
+        /// <param name="PullEVSEStatusById">The parsed pull EVSE status by id request.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
         /// 
@@ -328,7 +327,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// Return a XML representation of this object.
         /// </summary>
-        /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusById XML elements.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusById XML elements.</param>
         public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer = null)
         {
 
@@ -367,7 +366,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) PullEVSEStatusById1 == null) || ((Object) PullEVSEStatusById2 == null))
+            if ((PullEVSEStatusById1 is null) || (PullEVSEStatusById2 is null))
                 return false;
 
             return PullEVSEStatusById1.Equals(PullEVSEStatusById2);
@@ -404,14 +403,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
+            if (Object is null)
                 return false;
 
-            var PullEVSEStatus = Object as PullEVSEStatusByIdRequest;
-            if ((Object) PullEVSEStatus == null)
+            if (!(Object is PullEVSEStatusByIdRequest PullEVSEStatusByIdRequest))
                 return false;
 
-            return Equals(PullEVSEStatus);
+            return Equals(PullEVSEStatusByIdRequest);
 
         }
 
@@ -427,7 +425,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public override Boolean Equals(PullEVSEStatusByIdRequest PullEVSEStatus)
         {
 
-            if ((Object) PullEVSEStatus == null)
+            if (PullEVSEStatus is null)
                 return false;
 
             return ProviderId.     Equals(PullEVSEStatus.ProviderId) &&

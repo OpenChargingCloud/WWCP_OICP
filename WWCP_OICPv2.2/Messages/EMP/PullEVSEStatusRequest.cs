@@ -110,9 +110,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv             = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:EVSEStatus  = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
-        //                   xmlns:CommonTypes         = "http://www.hubject.com/b2b/services/commontypes/v2.0">
+        // <soapenv:Envelope xmlns:soapenv      = "http://schemas.xmlsoap.org/soap/envelope/"
+        //                   xmlns:EVSEStatus   = "http://www.hubject.com/b2b/services/evsestatus/v2.0"
+        //                   xmlns:CommonTypes  = "http://www.hubject.com/b2b/services/commontypes/v2.0">
         //
         //    <soapenv:Header/>
         //    <soapenv:Body>

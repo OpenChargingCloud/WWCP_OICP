@@ -59,7 +59,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The default URL prefix.
         /// </summary>
-        public     static readonly HTTPPath  DefaultURLPrefix                = HTTPPath.Parse("/ibis/ws");
+        public     static readonly HTTPPath  DefaultURLPrefix                = HTTPPath.Parse("/soap/v2.2");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URL for OICP EvseData requests.
@@ -281,6 +281,56 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #endregion
 
         //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByIdRequest>, Acknowledgement<PullEVSEStatusByIdRequest>.Builder> CustomPullEVSEStatusByIdResponseMapper  { get; set; }
+
+        #endregion
+
+        #region CustomPullEVSEStatusByOperatorId(SOAP)RequestMapper
+
+        #region CustomPullEVSEStatusByOperatorIdRequestMapper
+
+        private Func<PullEVSEStatusByOperatorIdRequest, PullEVSEStatusByOperatorIdRequest> _CustomPullEVSEStatusByOperatorIdRequestMapper = _ => _;
+
+        public Func<PullEVSEStatusByOperatorIdRequest, PullEVSEStatusByOperatorIdRequest> CustomPullEVSEStatusByOperatorIdRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEStatusByOperatorIdRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEStatusByOperatorIdRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        #region CustomPullEVSEStatusByOperatorIdSOAPRequestMapper
+
+        private Func<PullEVSEStatusByOperatorIdRequest, XElement, XElement> _CustomPullEVSEStatusByOperatorIdSOAPRequestMapper = (request, xml) => xml;
+
+        public Func<PullEVSEStatusByOperatorIdRequest, XElement, XElement> CustomPullEVSEStatusByOperatorIdSOAPRequestMapper
+        {
+
+            get
+            {
+                return _CustomPullEVSEStatusByOperatorIdSOAPRequestMapper;
+            }
+
+            set
+            {
+                if (value != null)
+                    _CustomPullEVSEStatusByOperatorIdSOAPRequestMapper = value;
+            }
+
+        }
+
+        #endregion
+
+        //public CustomMapperDelegate<Acknowledgement<PullEVSEStatusByOperatorIdRequest>, Acknowledgement<PullEVSEStatusByOperatorIdRequest>.Builder> CustomPullEVSEStatusByOperatorIdResponseMapper  { get; set; }
 
         #endregion
 
@@ -596,6 +646,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public CustomXMLParserDelegate<ChargingFacility>                            CustomChargingFacilityParser                              { get; set; }
 
         public CustomXMLParserDelegate<EVSEStatus>                                  CustomEVSEStatusParser                                    { get; set; }
+
+        public CustomXMLParserDelegate<EVSEStatus2>                                 CustomEVSEStatus2Parser                                   { get; set; }
         public CustomXMLParserDelegate<OperatorEVSEStatus>                          CustomOperatorEVSEStatusParser                            { get; set; }
         public CustomXMLParserDelegate<EVSEStatusById>                              CustomEVSEStatusByIdParser                                { get; set; }
         public CustomXMLParserDelegate<EVSEStatusRecord>                            CustomEVSEStatusRecordParser                              { get; set; }
@@ -685,6 +737,30 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// An event fired whenever a response to a 'pull EVSE status by id' request had been received.
         /// </summary>
         public event OnPullEVSEStatusByIdResponseHandler  OnPullEVSEStatusByIdResponse;
+
+        #endregion
+
+        #region OnPullEVSEStatusByOperatorIdRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdRequestHandler   OnPullEVSEStatusByOperatorIdRequest;
+
+        /// <summary>
+        /// An event fired whenever a 'pull EVSE status by id' SOAP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnPullEVSEStatusByOperatorIdSOAPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnPullEVSEStatusByOperatorIdSOAPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'pull EVSE status by id' request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdResponseHandler  OnPullEVSEStatusByOperatorIdResponse;
 
         #endregion
 
@@ -1589,6 +1665,189 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             catch (Exception e)
             {
                 e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusByOperatorId(Request)
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusByOperatorId request.</param>
+        public async Task<HTTPResponse<EVSEStatus2>>
+
+            PullEVSEStatusByOperatorId(PullEVSEStatusByOperatorIdRequest  Request)
+
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given PullEVSEStatusByOperatorId request must not be null!");
+
+            Request = _CustomPullEVSEStatusByOperatorIdRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEStatusByOperatorId request must not be null!");
+
+
+            HTTPResponse<EVSEStatus2> result = null;
+
+            #endregion
+
+            #region Send OnPullEVSEStatusByOperatorIdRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            try
+            {
+
+                if (OnPullEVSEStatusByOperatorIdRequest != null)
+                    await Task.WhenAll(OnPullEVSEStatusByOperatorIdRequest.GetInvocationList().
+                                       Cast<OnPullEVSEStatusByOperatorIdRequestHandler>().
+                                       Select(e => e(StartTime,
+                                                    Request.Timestamp.Value,
+                                                    this,
+                                                    ClientId,
+                                                    Request.EventTrackingId,
+                                                    Request.ProviderId,
+                                                    Request.OperatorIds,
+                                                    Request.RequestTimeout ?? RequestTimeout.Value))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdRequest));
+            }
+
+            #endregion
+
+
+            using (var _OICPClient = new SOAPClient(Hostname,
+                                                    URLPrefix + EVSEStatusURL,
+                                                    VirtualHostname,
+                                                    RemotePort,
+                                                    RemoteCertificateValidator,
+                                                    ClientCertificateSelector,
+                                                    UserAgent,
+                                                    RequestTimeout,
+                                                    DNSClient))
+            {
+
+                result = await _OICPClient.Query(_CustomPullEVSEStatusByOperatorIdSOAPRequestMapper(Request,
+                                                                                            SOAP.Encapsulation(Request.ToXML())),
+                                                 "eRoamingPullEvseStatusByOperatorId",
+                                                 RequestLogDelegate:   OnPullEVSEStatusByOperatorIdSOAPRequest,
+                                                 ResponseLogDelegate:  OnPullEVSEStatusByOperatorIdSOAPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout.Value,
+
+                                                 #region OnSuccess
+
+                                                 OnSuccess: XMLResponse => XMLResponse.ConvertContent((xml, e) => EVSEStatus2.Parse(Request,
+                                                                                                                                    xml,
+                                                                                                                                    CustomEVSEStatus2Parser,
+                                                                                                                                    CustomOperatorEVSEStatusParser,
+                                                                                                                                    CustomEVSEStatusRecordParser,
+                                                                                                                                    CustomStatusCodeParser,
+                                                                                                                                    e)),
+
+                                                 #endregion
+
+                                                 #region OnSOAPFault
+
+                                                 OnSOAPFault: (timestamp, soapclient, httpresponse) => {
+
+                                                     DebugX.Log("'PullEVSEStatusByOperatorIdRequest' lead to a SOAP fault!");
+
+                                                     return new HTTPResponse<EVSEStatus2>(httpresponse,
+                                                                                         IsFault: true);
+
+                                                 },
+
+                                                 #endregion
+
+                                                 #region OnHTTPError
+
+                                                 OnHTTPError: (timestamp, soapclient, httpresponse) => {
+
+                                                     SendHTTPError(timestamp, soapclient, httpresponse);
+
+                                                     return new HTTPResponse<EVSEStatus2>(httpresponse,
+                                                                                             new EVSEStatus2(Request,
+                                                                                                             StatusCodes.DataError,
+                                                                                                             Description:    httpresponse.HTTPStatusCode.ToString(),
+                                                                                                             AdditionalInfo: httpresponse.HTTPBody.      ToUTF8String()),
+                                                                                             IsFault: true);
+
+                                                 },
+
+                                                 #endregion
+
+                                                 #region OnException
+
+                                                 OnException: (timestamp, sender, exception) => {
+
+                                                     SendException(timestamp, sender, exception);
+
+                                                     return HTTPResponse<EVSEStatus2>.ExceptionThrown(new EVSEStatus2(Request,
+                                                                                                                      StatusCodes.ServiceNotAvailable,
+                                                                                                                      exception.Message,
+                                                                                                                      exception.StackTrace),
+                                                                                                      Exception: exception);
+
+                                                 }
+
+                                                 #endregion
+
+                                                ).ConfigureAwait(false);
+
+            }
+
+            if (result == null)
+                result = HTTPResponse<EVSEStatus2>.ClientError(
+                             new EVSEStatus2(
+                                 Request,
+                                 StatusCodes.SystemError,
+                                 "HTTP request failed!"
+                             )
+                         );
+
+
+            #region Send OnPullEVSEStatusByOperatorIdResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            try
+            {
+
+                if (OnPullEVSEStatusByOperatorIdResponse != null)
+                    await Task.WhenAll(OnPullEVSEStatusByOperatorIdResponse.GetInvocationList().
+                                       Cast<OnPullEVSEStatusByOperatorIdResponseHandler>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.ProviderId,
+                                                     Request.OperatorIds,
+                                                     Request.RequestTimeout ?? RequestTimeout.Value,
+                                                     result.Content,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
             }
 
             #endregion

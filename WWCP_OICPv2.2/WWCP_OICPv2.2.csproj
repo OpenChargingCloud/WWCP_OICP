@@ -151,6 +151,7 @@
     <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEDataResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
     <Compile Include="Messages\EMP\PushAuthenticationDataRequest.cs" />

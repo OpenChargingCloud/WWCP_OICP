@@ -127,6 +127,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
     #endregion
 
+    #region OnPullEVSEStatusByOperatorId
+
+    /// <summary>
+    /// A delegate called whenever a 'pull EVSE status by operator id' request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusByOperatorIdRequestHandler (DateTime                  LogTimestamp,
+                                                                     DateTime                  RequestTimestamp,
+                                                                     EMPClient                 Sender,
+                                                                     String                    SenderId,
+                                                                     EventTracking_Id          EventTrackingId,
+                                                                     Provider_Id               ProviderId,
+                                                                     IEnumerable<Operator_Id>  OperatorIds,
+                                                                     TimeSpan                  RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a 'pull EVSE status by operator id' request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusByOperatorIdResponseHandler(DateTime                  Timestamp,
+                                                                     EMPClient                 Sender,
+                                                                     String                    SenderId,
+                                                                     EventTracking_Id          EventTrackingId,
+                                                                     Provider_Id               ProviderId,
+                                                                     IEnumerable<Operator_Id>  OperatorIds,
+                                                                     TimeSpan                  RequestTimeout,
+                                                                     EVSEStatus2               EVSEStatus,
+                                                                     TimeSpan                  Runtime);
+
+    #endregion
+
 
     #region OnPushAuthenticationData
 
