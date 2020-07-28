@@ -783,7 +783,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
             this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-            this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given cahrging station operator must not be null!");
+            this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
             this.DefaultOperatorName                              = DefaultOperatorNameSelector(DefaultOperator.Name);
             this._OperatorNameSelector                            = OperatorNameSelector;
@@ -5914,12 +5914,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 if (EVSEsToAddTask.Result.Warnings.Any())
                 {
-
-                    SendOnWarnings(DateTime.UtcNow,
-                                   nameof(WWCPCPOAdapter) + Id,
-                                   "EVSEsToAddTask",
-                                   EVSEsToAddTask.Result.Warnings);
-
+                    try
+                    {
+                        SendOnWarnings(DateTime.UtcNow,
+                                       nameof(WWCPCPOAdapter) + Id,
+                                       "EVSEsToAddTask",
+                                       EVSEsToAddTask.Result.Warnings);
+                    }
+                    catch (Exception)
+                    { }
                 }
 
             }
@@ -5948,12 +5951,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                     if (PushEVSEDataTask.Result.Warnings.Any())
                     {
-
-                        SendOnWarnings(DateTime.UtcNow,
+                        try
+                        {
+                            SendOnWarnings(DateTime.UtcNow,
                                        nameof(WWCPCPOAdapter) + Id,
                                        "PushEVSEDataTask",
                                        PushEVSEDataTask.Result.Warnings);
-
+                        }
+                        catch (Exception)
+                        { }
                     }
 
                 }
@@ -5978,12 +5984,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 if (PushEVSEStatusTask.Result.Warnings.Any())
                 {
-
-                    SendOnWarnings(DateTime.UtcNow,
+                    try
+                    {
+                        SendOnWarnings(DateTime.UtcNow,
                                    nameof(WWCPCPOAdapter) + Id,
                                    "PushEVSEStatusTask",
                                    PushEVSEStatusTask.Result.Warnings);
-
+                    }
+                    catch (Exception)
+                    { }
                 }
 
             }
@@ -6008,12 +6017,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                     if (EVSEsToRemoveTask.Result.Warnings.Any())
                     {
-
-                        SendOnWarnings(DateTime.UtcNow,
+                        try
+                        {
+                            SendOnWarnings(DateTime.UtcNow,
                                        nameof(WWCPCPOAdapter) + Id,
                                        "EVSEsToRemoveTask",
                                        EVSEsToRemoveTask.Result.Warnings);
-
+                        }
+                        catch (Exception)
+                        { }
                     }
 
                 }
@@ -6087,12 +6099,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 if (pushEVSEStatusResult.Warnings.Any())
                 {
-
-                    SendOnWarnings(DateTime.UtcNow,
-                                   nameof(WWCPCPOAdapter) + Id,
-                                   "PushEVSEStatus",
-                                   pushEVSEStatusResult.Warnings);
-
+                    try
+                    {
+                        SendOnWarnings(DateTime.UtcNow,
+                                       nameof(WWCPCPOAdapter) + Id,
+                                       "PushEVSEStatus",
+                                       pushEVSEStatusResult.Warnings);
+                    }
+                    catch (Exception)
+                    { }
                 }
 
             }

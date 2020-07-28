@@ -694,6 +694,83 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
             #endregion
 
+
+
+            #region GET     ~/PushStatus
+
+            // -----------------------------------------------------------------------------------------
+            // curl -v -H "Accept: application/json" http://127.0.0.1:3004/RNs/Prod/ext/OICPPlus/EVSEs
+            // -----------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.GET,
+                                         URLPathPrefix + "/PushStatus",
+                                         HTTPContentType.XML_UTF8,
+                                         HTTPDelegate: async Request  => {
+
+                                             #region Check HTTP Basic Authentication
+
+                                             if (Request.Authorization == null ||
+                                                 !HTTPLogins.Any(kvp => kvp.Key   == Request.Authorization.Username &&
+                                                                        kvp.Value == Request.Authorization.Password))
+                                             {
+
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode   = HTTPStatusCode.Unauthorized,
+                                                            WWWAuthenticate  = @"Basic realm=""" + HTTPRealm + @"""",
+                                                            Server           = HTTPServer.DefaultServerName,
+                                                            Date             = DateTime.UtcNow,
+                                                            Connection       = "close"
+                                                        }.AsImmutable;
+
+                                             }
+
+                                             #endregion
+
+                                             #region Check parameters
+
+                                             if (!Request.ParseRoamingNetwork(HTTPServer, out RoamingNetwork _RoamingNetwork, out HTTPResponse _HTTPResponse))
+                                                 return _HTTPResponse;
+
+                                             #endregion
+
+
+                                             var response = await _CPOAdapters.FirstOrDefault()?.CPOClient.PushEVSEStatus(
+                                                                                         new PushEVSEStatusRequest(
+                                                                                             new OperatorEVSEStatus(
+                                                                                                 _RoamingNetwork.EVSEs.Select(evse => {
+                                                                                                     try
+                                                                                                     {
+                                                                                                         var s = evse.Id.ToString();
+                                                                                                         if (s.StartsWith("DE*BDO") || s.StartsWith("DE*SLB") || s.StartsWith("+49"))
+                                                                                                            return new EVSEStatusRecord(evse.Id.ToOICP().Value, evse.Status.Value.AsOICPEVSEStatus());
+                                                                                                         return null;
+                                                                                                     }
+                                                                                                     catch (Exception e)
+                                                                                                     {
+                                                                                                         return null;
+                                                                                                     }
+                                                                                                 }).Where(evse => evse != null),
+                                                                                                 Operator_Id.Parse("DE*BDO")
+                                                                                             ),
+                                                                                             ActionTypes.fullLoad));
+
+                                             return 
+                                                 new HTTPResponse.Builder(Request) {
+                                                     HTTPStatusCode                = HTTPStatusCode.OK,
+                                                     Server                        = HTTPServer.DefaultServerName,
+                                                     Date                          = DateTime.UtcNow,
+                                                     AccessControlAllowOrigin      = "*",
+                                                     AccessControlAllowMethods     = "GET",
+                                                     AccessControlAllowHeaders     = "Content-Type, Authorization",
+                                                     ETag                          = "1",
+                                                     ContentType                   = Request.Accept.FirstOrDefault()?.ContentType,
+                                                     Content                       = response.Content.ToXML().ToUTF8Bytes()
+                                                 }.AsImmutable;
+
+                                         });
+
+                                         #endregion
+
         }
 
         #endregion
