@@ -57,7 +57,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The default HTTP/SOAP/XML server URL prefix.
         /// </summary>
-        public new static readonly HTTPPath          DefaultURLPrefix           = HTTPPath.Parse("/");
+        public new static readonly HTTPPath         DefaultURLPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URL for OICP authorization requests.
@@ -244,13 +244,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #region Constructor(s)
 
-        #region CPOServer(HTTPServerName, ServiceName = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceName = null, HTTPServerPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="HTTPServerPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
@@ -264,7 +264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String                               HTTPServerName               = DefaultHTTPServerName,
-                         IPPort?                              TCPPort                      = null,
+                         IPPort?                              HTTPServerPort               = null,
                          String                               ServiceName                  = null,
                          ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
@@ -279,14 +279,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          Boolean                              AutoStart                    = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
-                   TCPPort     ?? DefaultHTTPServerPort,
-                   ServiceName ?? "OICP " + Version.Number + " " + nameof(CPOServer),
+                   HTTPServerPort ?? DefaultHTTPServerPort,
+                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOServer),
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
-                   URLPrefix   ?? DefaultURLPrefix,
-                   ContentType ?? DefaultContentType,
+                   URLPrefix      ?? DefaultURLPrefix,
+                   ContentType    ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
                    AutoStart: false)
@@ -306,14 +306,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region CPOServer(HTTPServerName, ServiceName = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceName = null, HTTPServerPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
+        /// <param name="HTTPServerPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServiceName">An optional identification for this SOAP service.</param>
-        /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ReservationURL">The HTTP/SOAP/XML URL for OICP reservation requests.</param>
@@ -322,8 +322,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
+                         IPPort?          HTTPServerPort            = null,
                          String           ServiceName               = null,
-                         IPPort?          TCPPort                   = null,
                          HTTPPath?        URLPrefix                 = null,
                          String           AuthorizationURL          = DefaultAuthorizationURL,
                          String           ReservationURL            = DefaultReservationURL,
@@ -333,10 +333,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          Boolean          AutoStart                 = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
-                   TCPPort     ?? DefaultHTTPServerPort,
-                   ServiceName ?? "OICP " + Version.Number + " " + nameof(CPOServer),
-                   URLPrefix   ?? DefaultURLPrefix,
-                   ContentType ?? DefaultContentType,
+                   HTTPServerPort ?? DefaultHTTPServerPort,
+                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOServer),
+                   URLPrefix      ?? DefaultURLPrefix,
+                   ContentType    ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
                    AutoStart: false)

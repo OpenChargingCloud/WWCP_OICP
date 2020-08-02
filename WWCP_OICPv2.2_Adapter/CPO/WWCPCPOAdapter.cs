@@ -1509,7 +1509,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
@@ -1555,7 +1555,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               Byte?                                              MaxNumberOfRetries                              = CPOClient.DefaultMaxNumberOfRetries,
 
                               String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
-                              String                                             ServiceId                                       = null,
+                              String                                             ServiceName                                       = null,
                               IPPort?                                            ServerTCPPort                                   = null,
                               HTTPPath?                                          ServerURLPrefix                                 = null,
                               String                                             ServerAuthorizationURL                          = CPOServer.DefaultAuthorizationURL,
@@ -1617,8 +1617,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                   MaxNumberOfRetries,
 
                                   ServerName,
-                                  ServiceId,
                                   ServerTCPPort,
+                                  ServiceName,
                                   ServerURLPrefix ?? CPOServer.DefaultURLPrefix,
                                   ServerAuthorizationURL,
                                   ServerReservationURL,

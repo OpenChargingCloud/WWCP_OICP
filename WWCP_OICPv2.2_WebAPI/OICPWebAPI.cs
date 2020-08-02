@@ -752,20 +752,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                                                                                  }).Where(evse => evse != null),
                                                                                                  Operator_Id.Parse("DE*BDO")
                                                                                              ),
-                                                                                             ActionTypes.fullLoad));
+                                                                                             ActionTypes.update));
 
-                                             return 
-                                                 new HTTPResponse.Builder(Request) {
-                                                     HTTPStatusCode                = HTTPStatusCode.OK,
-                                                     Server                        = HTTPServer.DefaultServerName,
-                                                     Date                          = DateTime.UtcNow,
-                                                     AccessControlAllowOrigin      = "*",
-                                                     AccessControlAllowMethods     = "GET",
-                                                     AccessControlAllowHeaders     = "Content-Type, Authorization",
-                                                     ETag                          = "1",
-                                                     ContentType                   = Request.Accept.FirstOrDefault()?.ContentType,
-                                                     Content                       = response.Content.ToXML().ToUTF8Bytes()
-                                                 }.AsImmutable;
+                                             return new HTTPResponse.Builder(Request) {
+                                                 HTTPStatusCode                = HTTPStatusCode.OK,
+                                                 Server                        = HTTPServer.DefaultServerName,
+                                                 Date                          = DateTime.UtcNow,
+                                                 AccessControlAllowOrigin      = "*",
+                                                 AccessControlAllowMethods     = "GET",
+                                                 AccessControlAllowHeaders     = "Content-Type, Authorization",
+                                                 ETag                          = "1",
+                                                 ContentType                   = Request.Accept.FirstOrDefault()?.ContentType,
+                                                 Content                       = response.Content.ToXML().ToUTF8Bytes()
+                                             }.AsImmutable;
 
                                          });
 

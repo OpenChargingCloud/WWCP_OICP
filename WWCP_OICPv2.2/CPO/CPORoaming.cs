@@ -1058,7 +1058,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="ServerContentType">An optional HTTP content type to use.</param>
@@ -1076,7 +1076,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                           RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
                           HTTPHostname?                        RemoteHTTPVirtualHost           = null,
-                          HTTPPath?                             URLPrefix                       = null,
+                          HTTPPath?                            URLPrefix                       = null,
                           String                               EVSEDataURL                     = CPOClient.DefaultEVSEDataURL,
                           String                               EVSEStatusURL                   = CPOClient.DefaultEVSEStatusURL,
                           String                               AuthorizationURL                = CPOClient.DefaultAuthorizationURL,
@@ -1086,9 +1086,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                           Byte?                                MaxNumberOfRetries              = CPOClient.DefaultMaxNumberOfRetries,
 
                           String                               ServerName                      = CPOServer.DefaultHTTPServerName,
-                          String                               ServiceId                       = null,
                           IPPort?                              ServerTCPPort                   = null,
-                          HTTPPath?                             ServerURLPrefix                 = null,
+                          String                               ServiceName                     = null,
+                          HTTPPath?                            ServerURLPrefix                 = null,
                           String                               ServerAuthorizationURL          = CPOServer.DefaultAuthorizationURL,
                           String                               ServerReservationURL            = CPOServer.DefaultReservationURL,
                           HTTPContentType                      ServerContentType               = null,
@@ -1120,8 +1120,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  LogfileCreator),
 
                    new CPOServer(ServerName,
-                                 ServiceId,
                                  ServerTCPPort,
+                                 ServiceName,
                                  ServerURLPrefix ?? CPOServer.DefaultURLPrefix,
                                  ServerAuthorizationURL,
                                  ServerReservationURL,
