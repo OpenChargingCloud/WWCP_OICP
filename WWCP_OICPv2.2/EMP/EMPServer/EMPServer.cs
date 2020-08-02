@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The identification of this HTTP/SOAP service.
         /// </summary>
-        public String  ServiceId           { get; }
+        public String  ServiceName         { get; }
 
         /// <summary>
         /// The HTTP/SOAP/XML URL for OICP authorization requests.
@@ -197,13 +197,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #region Constructor(s)
 
-        #region EMPServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region EMPServer(HTTPServerName, ServiceName = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
@@ -216,8 +216,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public EMPServer(String                               HTTPServerName               = DefaultHTTPServerName,
-                         String                               ServiceId                    = null,
                          IPPort?                              TCPPort                      = null,
+                         String                               ServiceName                  = null,
                          ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
@@ -231,6 +231,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
+                   ServiceName ?? "OICP " + Version.Number + " " + nameof(EMPServer),
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
@@ -243,7 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.ServiceId         = ServiceId        ?? nameof(EMPServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
 
             RegisterURLTemplates();
@@ -255,18 +256,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #endregion
 
-        #region EMPServer(SOAPServer, ServiceId = null, URLPrefix = default, AuthorizationURL = default)
+        #region EMPServer(SOAPServer, ServiceName = null, URLPrefix = default, AuthorizationURL = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML EMP API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">An alternative HTTP/SOAP/XML URL for OICP authorization requests.</param>
         public EMPServer(SOAPServer  SOAPServer,
-                         String      ServiceId          = null,
-                         HTTPPath?    URLPrefix          = null,
+                         String      ServiceName        = null,
+                         HTTPPath?   URLPrefix          = null,
                          String      AuthorizationURL   = DefaultAuthorizationURL)
 
             : base(SOAPServer,
@@ -274,7 +275,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         {
 
-            this.ServiceId         = ServiceId        ?? nameof(EMPServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
 
             RegisterURLTemplates();
@@ -357,7 +358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Select(e => e(StartTime,
                                                                   AuthorizeStartRequest.Timestamp.Value,
                                                                   this,
-                                                                  ServiceId,
+                                                                  ServiceName,
                                                                   AuthorizeStartRequest.EventTrackingId,
                                                                   AuthorizeStartRequest.OperatorId,
                                                                   AuthorizeStartRequest.Identification,
@@ -417,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Cast<OnAuthorizeStartResponseDelegate>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeStartRequest.EventTrackingId,
                                                                  AuthorizeStartRequest.OperatorId,
                                                                  AuthorizeStartRequest.Identification,
@@ -562,7 +563,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Select(e => e(StartTime,
                                                                  AuthorizeStopRequest.Timestamp.Value,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeStopRequest.EventTrackingId,
                                                                  AuthorizeStopRequest.SessionId,
                                                                  AuthorizeStopRequest.CPOPartnerSessionId,
@@ -621,7 +622,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Cast<OnAuthorizeStopResponseHandler>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeStopRequest.EventTrackingId,
                                                                  AuthorizeStopRequest.SessionId,
                                                                  AuthorizeStopRequest.CPOPartnerSessionId,
@@ -764,7 +765,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Select(e => e(StartTime,
                                                                  SendChargeDetailRecordRequest.Timestamp.Value,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  SendChargeDetailRecordRequest.EventTrackingId,
                                                                  SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                                  SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -815,7 +816,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                    Cast<OnChargeDetailRecordResponseHandler>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  SendChargeDetailRecordRequest.EventTrackingId,
                                                                  SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                                  SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,

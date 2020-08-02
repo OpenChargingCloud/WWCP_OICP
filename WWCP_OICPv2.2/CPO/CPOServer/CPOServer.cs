@@ -86,7 +86,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The identification of this HTTP/SOAP service.
         /// </summary>
-        public String  ServiceId           { get; }
+        public String  ServiceName         { get; }
 
         /// <summary>
         /// The HTTP/SOAP/XML URL for OICP authorization requests.
@@ -244,14 +244,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #region Constructor(s)
 
-        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceName = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
@@ -264,13 +264,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String                               HTTPServerName               = DefaultHTTPServerName,
-                         String                               ServiceId                    = null,
                          IPPort?                              TCPPort                      = null,
+                         String                               ServiceName                  = null,
                          ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
                          RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPPath?                             URLPrefix                    = null,
+                         HTTPPath?                            URLPrefix                    = null,
                          String                               AuthorizationURL             = DefaultAuthorizationURL,
                          String                               ReservationURL               = DefaultReservationURL,
                          HTTPContentType                      ContentType                  = null,
@@ -280,6 +280,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
+                   ServiceName ?? "OICP " + Version.Number + " " + nameof(CPOServer),
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
@@ -292,7 +293,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -305,13 +306,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region CPOServer(HTTPServerName, ServiceId = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
+        #region CPOServer(HTTPServerName, ServiceName = null, TCPPort = default, URLPrefix = default, AuthorizationURL = default, ReservationURL = default, ContentType = default, DNSClient = null, AutoStart = false)
 
         /// <summary>
         /// Initialize an new HTTP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="TCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
@@ -321,9 +322,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
-                         String           ServiceId                 = null,
+                         String           ServiceName               = null,
                          IPPort?          TCPPort                   = null,
-                         HTTPPath?         URLPrefix                 = null,
+                         HTTPPath?        URLPrefix                 = null,
                          String           AuthorizationURL          = DefaultAuthorizationURL,
                          String           ReservationURL            = DefaultReservationURL,
                          HTTPContentType  ContentType               = null,
@@ -333,6 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
+                   ServiceName ?? "OICP " + Version.Number + " " + nameof(CPOServer),
                    URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
@@ -341,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -354,19 +356,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region CPOServer(SOAPServer, ServiceId = null, URLPrefix = default, AuthorizationURL = default, ReservationURL = default)
+        #region CPOServer(SOAPServer, ServiceName = null, URLPrefix = default, AuthorizationURL = default, ReservationURL = default)
 
         /// <summary>
         /// Use the given SOAP server for the OICP HTTP/SOAP/XML CPO API.
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ReservationURL">The HTTP/SOAP/XML URL for OICP reservation requests.</param>
         public CPOServer(SOAPServer  SOAPServer,
-                         String      ServiceId          = null,
-                         HTTPPath?    URLPrefix          = null,
+                         String      ServiceName        = null,
+                         HTTPPath?   URLPrefix          = null,
                          String      AuthorizationURL   = DefaultAuthorizationURL,
                          String      ReservationURL     = DefaultReservationURL)
 
@@ -375,7 +377,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.ServiceId         = ServiceId        ?? nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -459,7 +461,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Select(e => e(StartTime,
                                                                  AuthorizeRemoteReservationStartRequest.Timestamp.Value,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                                  AuthorizeRemoteReservationStartRequest.EVSEId,
                                                                  AuthorizeRemoteReservationStartRequest.PartnerProductId,
@@ -519,7 +521,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                                  AuthorizeRemoteReservationStartRequest.EVSEId,
                                                                  AuthorizeRemoteReservationStartRequest.PartnerProductId,
@@ -663,7 +665,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Select(e => e(StartTime,
                                                                  AuthorizeRemoteReservationStopRequest.Timestamp.Value,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                                  AuthorizeRemoteReservationStopRequest.EVSEId,
                                                                  AuthorizeRemoteReservationStopRequest.SessionId,
@@ -721,7 +723,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                                  AuthorizeRemoteReservationStopRequest.EVSEId,
                                                                  AuthorizeRemoteReservationStopRequest.SessionId,
@@ -865,7 +867,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Select(e => e(StartTime,
                                                                   AuthorizeRemoteStartRequest.Timestamp.Value,
                                                                   this,
-                                                                  ServiceId,
+                                                                  ServiceName,
                                                                   AuthorizeRemoteStartRequest.EventTrackingId,
                                                                   AuthorizeRemoteStartRequest.EVSEId,
                                                                   AuthorizeRemoteStartRequest.PartnerProductId,
@@ -925,7 +927,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteStartRequest.EventTrackingId,
                                                                  AuthorizeRemoteStartRequest.EVSEId,
                                                                  AuthorizeRemoteStartRequest.PartnerProductId,
@@ -1070,7 +1072,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Select(e => e(StartTime,
                                                                  AuthorizeRemoteStopRequest.Timestamp.Value,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteStopRequest.EventTrackingId,
                                                                  AuthorizeRemoteStopRequest.EVSEId,
                                                                  AuthorizeRemoteStopRequest.SessionId,
@@ -1128,7 +1130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                    Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                    Select(e => e(EndTime,
                                                                  this,
-                                                                 ServiceId,
+                                                                 ServiceName,
                                                                  AuthorizeRemoteStopRequest.EventTrackingId,
                                                                  AuthorizeRemoteStopRequest.EVSEId,
                                                                  AuthorizeRemoteStopRequest.SessionId,

@@ -1703,7 +1703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
         /// 
         /// <param name="ServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceId">An optional identification for this SOAP service.</param>
+        /// <param name="ServiceName">An optional identification for this SOAP service.</param>
         /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
         /// <param name="RemoteClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
@@ -1725,7 +1725,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                           RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
                           LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
                           HTTPHostname?                        RemoteHTTPVirtualHost              = null,
-                          HTTPPath?                             URLPrefix                          = null,
+                          HTTPPath?                            URLPrefix                          = null,
                           String                               EVSEDataURL                        = EMPClient.DefaultEVSEDataURL,
                           String                               EVSEStatusURL                      = EMPClient.DefaultEVSEStatusURL,
                           String                               AuthenticationDataURL              = EMPClient.DefaultAuthenticationDataURL,
@@ -1737,13 +1737,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                           Byte?                                MaxNumberOfRetries                 = EMPClient.DefaultMaxNumberOfRetries,
 
                           String                               ServerName                         = EMPServer.DefaultHTTPServerName,
-                          String                               ServiceId                          = null,
                           IPPort?                              ServerTCPPort                      = null,
+                          String                               ServiceName                        = null,
                           ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
                           RemoteCertificateValidationCallback  RemoteClientCertificateValidator   = null,
                           LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,
                           SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12,
-                          HTTPPath?                             ServerURLPrefix                    = null,
+                          HTTPPath?                            ServerURLPrefix                    = null,
                           String                               ServerAuthorizationURL             = EMPServer.DefaultAuthorizationURL,
                           HTTPContentType                      ServerContentType                  = null,
                           Boolean                              ServerRegisterHTTPRootService      = true,
@@ -1777,8 +1777,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                  LogfileCreator),
 
                    new EMPServer(ServerName,
-                                 ServiceId,
                                  ServerTCPPort,
+                                 ServiceName,
                                  ServerCertificateSelector,
                                  RemoteClientCertificateValidator,
                                  RemoteClientCertificateSelector,

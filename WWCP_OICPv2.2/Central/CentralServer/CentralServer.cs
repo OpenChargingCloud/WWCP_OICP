@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <summary>
         /// The identification of this HTTP/SOAP service.
         /// </summary>
-        public String           ServiceId                 { get; }
+        public String           ServiceName                 { get; }
 
         /// <summary>
         /// The HTTP/SOAP/XML URL for OICP EvseData requests.
@@ -788,9 +788,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
         public CentralServer(String           HTTPServerName            = DefaultHTTPServerName,
-                             String           ServiceId                 = null,
                              IPPort?          TCPPort                   = null,
-                             HTTPPath?         URLPrefix                 = null,
+                             String           ServiceName               = null,
+                             HTTPPath?        URLPrefix                 = null,
                              String           EVSEDataURL               = DefaultAuthorizationURL,
                              String           EVSEStatusURL             = DefaultAuthorizationURL,
                              String           AuthenticationDataURL     = DefaultAuthenticationDataURL,
@@ -804,6 +804,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    TCPPort     ?? DefaultHTTPServerPort,
+                   ServiceName ?? "OCHP " + Version.Number + " " + nameof(CentralServer),
                    URLPrefix   ?? DefaultURLPrefix,
                    ContentType ?? DefaultContentType,
                    RegisterHTTPRootService,
@@ -812,7 +813,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
         {
 
-            this.ServiceId               = ServiceId              ?? nameof(CentralServer);
+            this.ServiceName             = ServiceName            ?? "OCHP " + Version.Number + " " + nameof(CentralServer);
             this.EVSEDataURL             = EVSEDataURL            ?? DefaultEVSEDataURL;
             this.EVSEStatusURL           = EVSEStatusURL          ?? DefaultEVSEStatusURL;
             this.AuthenticationDataURL   = AuthenticationDataURL  ?? DefaultAuthenticationDataURL;
@@ -837,8 +838,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
         public CentralServer(SOAPServer  SOAPServer,
-                             String      ServiceId                  = null,
-                             HTTPPath?    URLPrefix                  = null,
+                             String      ServiceName                = null,
+                             HTTPPath?   URLPrefix                  = null,
                              String      EVSEDataURL                = DefaultAuthorizationURL,
                              String      EVSEStatusURL              = DefaultAuthorizationURL,
                              String      AuthorizationURL           = DefaultAuthorizationURL,
@@ -850,7 +851,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
 
         {
 
-            this.ServiceId               = ServiceId              ?? nameof(CentralServer);
+            this.ServiceName             = ServiceName            ?? "OCHP " + Version.Number + " " + nameof(CentralServer);
             this.EVSEDataURL             = EVSEDataURL            ?? DefaultEVSEDataURL;
             this.EVSEStatusURL           = EVSEStatusURL          ?? DefaultEVSEStatusURL;
             this.AuthenticationDataURL   = AuthenticationDataURL  ?? DefaultAuthenticationDataURL;
@@ -935,7 +936,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PullEVSEDataRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEDataRequest.EventTrackingId,
                                                              PullEVSEDataRequest.ProviderId,
                                                              PullEVSEDataRequest.SearchCenter,
@@ -992,7 +993,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPullEVSEDataResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEDataRequest.EventTrackingId,
                                                              PullEVSEDataRequest.ProviderId,
                                                              PullEVSEDataRequest.SearchCenter,
@@ -1114,7 +1115,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PullEVSEStatusRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEStatusRequest.EventTrackingId,
                                                              PullEVSEStatusRequest.ProviderId,
                                                              PullEVSEStatusRequest.SearchCenter,
@@ -1170,7 +1171,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPullEVSEStatusResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEStatusRequest.EventTrackingId,
                                                              PullEVSEStatusRequest.ProviderId,
                                                              PullEVSEStatusRequest.SearchCenter,
@@ -1291,7 +1292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PullEVSEStatusByIdRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEStatusByIdRequest.EventTrackingId,
                                                              PullEVSEStatusByIdRequest.ProviderId,
                                                              PullEVSEStatusByIdRequest.EVSEIds,
@@ -1345,7 +1346,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPullEVSEStatusByIdResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullEVSEStatusByIdRequest.EventTrackingId,
                                                              PullEVSEStatusByIdRequest.ProviderId,
                                                              PullEVSEStatusByIdRequest.EVSEIds,
@@ -1468,7 +1469,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PushAuthenticationDataRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushAuthenticationDataRequest.EventTrackingId,
                                                              PushAuthenticationDataRequest.ProviderAuthenticationData,
                                                              PushAuthenticationDataRequest.OICPAction,
@@ -1522,7 +1523,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPushAuthenticationDataResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushAuthenticationDataRequest.EventTrackingId,
                                                              PushAuthenticationDataRequest.ProviderAuthenticationData,
                                                              PushAuthenticationDataRequest.OICPAction,
@@ -1644,7 +1645,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              AuthorizeRemoteReservationStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStartRequest.ProviderId,
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
@@ -1703,7 +1704,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteReservationStartRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStartRequest.ProviderId,
                                                              AuthorizeRemoteReservationStartRequest.EVSEId,
@@ -1827,7 +1828,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              AuthorizeRemoteReservationStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
                                                              AuthorizeRemoteReservationStopRequest.ProviderId,
@@ -1884,7 +1885,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteReservationStopRequest.EventTrackingId,
                                                              AuthorizeRemoteReservationStopRequest.SessionId,
                                                              AuthorizeRemoteReservationStopRequest.ProviderId,
@@ -2008,7 +2009,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              AuthorizeRemoteStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteStartRequest.EventTrackingId,
                                                              AuthorizeRemoteStartRequest.ProviderId,
                                                              AuthorizeRemoteStartRequest.EVSEId,
@@ -2067,7 +2068,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteStartRequest.EventTrackingId,
                                                              AuthorizeRemoteStartRequest.ProviderId,
                                                              AuthorizeRemoteStartRequest.EVSEId,
@@ -2191,7 +2192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              AuthorizeRemoteStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteStopRequest.EventTrackingId,
                                                              AuthorizeRemoteStopRequest.SessionId,
                                                              AuthorizeRemoteStopRequest.ProviderId,
@@ -2248,7 +2249,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeRemoteStopRequest.EventTrackingId,
                                                              AuthorizeRemoteStopRequest.SessionId,
                                                              AuthorizeRemoteStopRequest.ProviderId,
@@ -2371,7 +2372,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              GetChargeDetailRecordsRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              GetChargeDetailRecordsRequest.EventTrackingId,
                                                              GetChargeDetailRecordsRequest.ProviderId,
                                                              GetChargeDetailRecordsRequest.From,
@@ -2426,7 +2427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnGetChargeDetailRecordsResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              GetChargeDetailRecordsRequest.EventTrackingId,
                                                              GetChargeDetailRecordsRequest.ProviderId,
                                                              GetChargeDetailRecordsRequest.From,
@@ -2552,7 +2553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PushEVSEDataRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushEVSEDataRequest.EventTrackingId,
                                                              PushEVSEDataRequest.OperatorEVSEData,
                                                              PushEVSEDataRequest.Action,
@@ -2606,7 +2607,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPushEVSEDataResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushEVSEDataRequest.EventTrackingId,
                                                              PushEVSEDataRequest.OperatorEVSEData,
                                                              PushEVSEDataRequest.Action,
@@ -2726,7 +2727,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PushEVSEStatusRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushEVSEStatusRequest.EventTrackingId,
                                                              PushEVSEStatusRequest.OperatorEVSEStatus,
                                                              PushEVSEStatusRequest.Action,
@@ -2780,7 +2781,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPushEVSEStatusResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PushEVSEStatusRequest.EventTrackingId,
                                                              PushEVSEStatusRequest.OperatorEVSEStatus,
                                                              PushEVSEStatusRequest.Action,
@@ -2902,7 +2903,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              AuthorizeStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeStartRequest.EventTrackingId,
                                                              AuthorizeStartRequest.OperatorId,
                                                              AuthorizeStartRequest.Identification,
@@ -2961,7 +2962,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeStartRequest.EventTrackingId,
                                                              AuthorizeStartRequest.OperatorId,
                                                              AuthorizeStartRequest.Identification,
@@ -3088,7 +3089,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              AuthorizeStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.SessionId,
@@ -3146,7 +3147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnAuthorizeStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              AuthorizeStopRequest.EventTrackingId,
                                                              AuthorizeStopRequest.OperatorId,
                                                              AuthorizeStopRequest.SessionId,
@@ -3271,7 +3272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              SendChargeDetailRecordRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              SendChargeDetailRecordRequest.EventTrackingId,
                                                              SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                              SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -3324,7 +3325,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnSendChargeDetailRecordResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              SendChargeDetailRecordRequest.EventTrackingId,
                                                              SendChargeDetailRecordRequest.ChargeDetailRecord,
                                                              SendChargeDetailRecordRequest.RequestTimeout ?? DefaultRequestTimeout,
@@ -3443,7 +3444,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              PullAuthenticationDataRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullAuthenticationDataRequest.EventTrackingId,
                                                              PullAuthenticationDataRequest.OperatorId,
                                                              PullAuthenticationDataRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -3496,7 +3497,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnPullAuthenticationDataResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              PullAuthenticationDataRequest.EventTrackingId,
                                                              PullAuthenticationDataRequest.OperatorId,
                                                              PullAuthenticationDataRequest.RequestTimeout ?? DefaultRequestTimeout,
@@ -3619,7 +3620,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              MobileAuthorizeStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileAuthorizeStartRequest.EventTrackingId,
                                                              MobileAuthorizeStartRequest.EVSEId,
                                                              MobileAuthorizeStartRequest.QRCodeIdentification,
@@ -3675,7 +3676,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnMobileAuthorizeStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileAuthorizeStartRequest.EventTrackingId,
                                                              MobileAuthorizeStartRequest.EVSEId,
                                                              MobileAuthorizeStartRequest.QRCodeIdentification,
@@ -3797,7 +3798,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StartTime,
                                                              MobileRemoteStartRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileRemoteStartRequest.EventTrackingId,
                                                              MobileRemoteStartRequest.SessionId,
                                                              MobileRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -3850,7 +3851,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnMobileRemoteStartResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileRemoteStartRequest.EventTrackingId,
                                                              MobileRemoteStartRequest.SessionId,
                                                              MobileRemoteStartRequest.RequestTimeout ?? DefaultRequestTimeout,
@@ -3968,7 +3969,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Select(e => e(StopTime,
                                                              MobileRemoteStopRequest.Timestamp.Value,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileRemoteStopRequest.EventTrackingId,
                                                              MobileRemoteStopRequest.SessionId,
                                                              MobileRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout))).
@@ -4021,7 +4022,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Central
                                                Cast<OnMobileRemoteStopResponseDelegate>().
                                                Select(e => e(EndTime,
                                                              this,
-                                                             ServiceId,
+                                                             ServiceName,
                                                              MobileRemoteStopRequest.EventTrackingId,
                                                              MobileRemoteStopRequest.SessionId,
                                                              MobileRemoteStopRequest.RequestTimeout ?? DefaultRequestTimeout,
