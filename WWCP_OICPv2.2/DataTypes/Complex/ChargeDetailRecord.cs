@@ -666,11 +666,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                ? new JProperty("meterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
                                : null,
 
-                           MeterValuesInBetween != null
+                           MeterValuesInBetween.SafeAny()
                                ? new JProperty("meterValueInBetween",
-                                     MeterValuesInBetween.
-                                         SafeSelect(value => new JProperty("meterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-                                         ToArray()
+                                     new JArray(MeterValuesInBetween.
+                                                    SafeSelect(value => String.Format("{0:0.###}", value).Replace(",", ".")).
+                                                    ToArray())
                                  )
                                : null,
 
