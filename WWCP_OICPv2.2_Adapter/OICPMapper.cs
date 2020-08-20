@@ -251,7 +251,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                           EVSE.ChargingStation.Description, // AdditionalInfo
                                                           EVSE.ChargingStation.ChargingPool.EntranceLocation,
                                                           EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
-                                                          EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.ToString()    : null,
+                                                          EVSE.ChargingStation.OpeningTimes?.ToString(),
                                                           HubOperatorId,
                                                           ClearingHouseId,
                                                           EVSE.ChargingStation.IsHubjectCompatible,
