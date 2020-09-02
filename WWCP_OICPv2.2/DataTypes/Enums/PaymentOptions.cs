@@ -25,37 +25,41 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for payment options.
     /// </summary>
-    public static partial class XML_IO
+    public static class PaymentOptionsExtentions
     {
 
-        #region AsPaymetOptions(PaymetOption)
+        #region Parse(Text)
 
         /// <summary>
-        /// Maps an OICP paymet option to a WWCP paymet option.
+        /// Parses the given text-representation of a paymet option.
         /// </summary>
-        /// <param name="PaymentOption">A payment option.</param>
-        public static PaymentOptions AsPaymetOption(String PaymentOption)
+        /// <param name="Text">A text-representation of a payment option.</param>
+        public static PaymentOptions Parse(String Text)
 
-            => (PaymentOption.Trim()) switch {
-                "No Payment" => PaymentOptions.NoPayment,
-                "Direct"     => PaymentOptions.Direct,
-                "Contract"   => PaymentOptions.Contract,
-                _            => PaymentOptions.Unspecified,
+            => Text.Trim() switch {
+                "No Payment"  => PaymentOptions.NoPayment,
+                "Direct"      => PaymentOptions.Direct,
+                "Contract"    => PaymentOptions.Contract,
+                _             => PaymentOptions.Unspecified,
             };
 
         #endregion
 
         #region AsString(PaymentOption)
 
+        /// <summary>
+        /// Return a text-representation of the given paymet option.
+        /// </summary>
+        /// <param name="PaymentOption">A paymet option.</param>
         public static String AsString(this PaymentOptions PaymentOption)
 
             => PaymentOption switch {
-                PaymentOptions.NoPayment => "No Payment",
-                PaymentOptions.Direct    => "Direct",
-                PaymentOptions.Contract  => "Contract",
-                _                        => "Unspecified",
+                PaymentOptions.NoPayment  => "No Payment",
+                PaymentOptions.Direct     => "Direct",
+                PaymentOptions.Contract   => "Contract",
+                _                         => "Unspecified",
             };
 
         #endregion
@@ -64,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// OICP payment options.
+    /// Payment options.
     /// </summary>
     [Flags]
     public enum PaymentOptions
@@ -73,22 +77,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Unspecified
         /// </summary>
-        Unspecified     = 0,
+        Unspecified,
 
         /// <summary>
         /// No Payment.
         /// </summary>
-        NoPayment       = 1,
+        NoPayment,
 
         /// <summary>
         /// Direct payment via e.g. cash, credit/debit card, SMS or phone call.
         /// </summary>
-        Direct          = 2,
+        Direct,
 
         /// <summary>
         /// Payment via contract.
         /// </summary>
-        Contract        = 4
+        Contract
 
     }
 

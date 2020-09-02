@@ -192,7 +192,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) Parse(PushEVSEDataText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP push EVSE data request.
+        /// Parse the given text-representation of an OICP push EVSE data request.
         /// </summary>
         /// <param name="PushEVSEDataText">The text to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
@@ -276,7 +276,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                           CustomEVSEDataRecordParser),
 
                                    PushEVSEDataXML.MapValueOrFail(OICPNS.EVSEData + "ActionType",
-                                                                  XML_IO.AsActionType),
+                                                                  ActionTypesExtentions.Parse),
 
                                    Timestamp,
                                    CancellationToken,
@@ -305,7 +305,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) TryParse(PushEVSEDataText, out PushEVSEData, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP push EVSE data request.
+        /// Try to parse the given text-representation of an OICP push EVSE data request.
         /// </summary>
         /// <param name="PushEVSEDataText">The text to parse.</param>
         /// <param name="PushEVSEData">The parsed push EVSE data request.</param>
@@ -380,7 +380,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             var XML = new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
 
-                                       new XElement(OICPNS.EVSEData + "ActionType",  XML_IO.AsText(Action)),
+                                       new XElement(OICPNS.EVSEData + "ActionType", Action.AsString()),
 
                                        OperatorEVSEData.ToXML(OperatorEVSEDataXName,
                                                               CustomOperatorEVSEDataSerializer,
@@ -511,7 +511,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

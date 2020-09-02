@@ -272,7 +272,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) Parse   (AuthorizeRemoteReservationStartText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP authorize remote reservation start request.
+        /// Parse the given text-representation of an OICP authorize remote reservation start request.
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartText">The text to parse.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart requests.</param>
@@ -419,7 +419,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) TryParse(AuthorizeRemoteReservationStartText, out AuthorizeRemoteReservationStart, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP authorize remote reservation start request.
+        /// Try to parse the given text-representation of an OICP authorize remote reservation start request.
         /// </summary>
         /// <param name="AuthorizeRemoteReservationStartText">The text to parse.</param>
         /// <param name="AuthorizeRemoteReservationStart">The parsed authorize remote reservation start request.</param>
@@ -674,7 +674,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

@@ -156,7 +156,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse(OperatorEVSEStatusText, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP operator EVSE status request.
+        /// Parse the given text-representation of an OICP operator EVSE status request.
         /// </summary>
         /// <param name="OperatorEVSEStatusText">The text to parse.</param>
         /// <param name="CustomOperatorEVSEStatusParser">A delegate to parse custom OperatorEVSEStatus XML elements.</param>
@@ -248,7 +248,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(OperatorEVSEStatusText, out OperatorEVSEStatus, CustomOperatorEVSEStatusParser = null, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP operator EVSE status request.
+        /// Try to parse the given text-representation of an OICP operator EVSE status request.
         /// </summary>
         /// <param name="OperatorEVSEStatusText">The text to parse.</param>
         /// <param name="OperatorEVSEStatus">The parsed operator EVSE status request.</param>
@@ -556,7 +556,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

@@ -349,7 +349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (ChargeDetailRecordText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP charge detail record.
+        /// Parse the given text-representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
@@ -487,7 +487,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP charge detail record.
+        /// Try to parse the given text-representation of an OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecordText">The text to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
@@ -581,7 +581,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
                               : null,
 
-                          MeterValuesInBetween != null
+                          MeterValuesInBetween.SafeAny()
                               ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
                                     MeterValuesInBetween.
                                         SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
@@ -910,7 +910,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

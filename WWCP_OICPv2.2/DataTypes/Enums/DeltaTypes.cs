@@ -26,60 +26,42 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for delta types.
     /// </summary>
-    public static partial class XML_IO
+    public static class DeltaTypesExtentions
     {
 
-        #region AsDeltaType(Text)
+        #region Parse(Text)
 
-        public static DeltaTypes AsDeltaType(this String Text)
-        {
+        /// <summary>
+        /// Parses the given text-representation of a delta type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a delta type.</param>
+        public static DeltaTypes Parse(String Text)
 
-            switch (Text)
-            {
-
-                case "update":
-                    return DeltaTypes.update;
-
-                case "insert":
-                    return DeltaTypes.insert;
-
-                case "delete":
-                    return DeltaTypes.delete;
-
-                default:
-                    return DeltaTypes.Unknown;
-
-            }
-
-        }
+            => Text?.Trim() switch {
+                "update"  => DeltaTypes.update,
+                "insert"  => DeltaTypes.insert,
+                "delete"  => DeltaTypes.delete,
+                _         => DeltaTypes.Unknown,
+            };
 
         #endregion
 
-        #region AsText(this DeltaType)
+        #region AsString(this DeltaType)
 
-        public static String AsText(this DeltaTypes DeltaType)
-        {
+        /// <summary>
+        /// Return a text-representation of the given delta type.
+        /// </summary>
+        /// <param name="DeltaType">A delta type.</param>
+        public static String AsString(this DeltaTypes DeltaType)
 
-            switch (DeltaType)
-            {
-
-                case DeltaTypes.update:
-                    return "update";
-
-                case DeltaTypes.insert:
-                    return "insert";
-
-                case DeltaTypes.delete:
-                    return "delete";
-
-                default:
-                    return "Unknown";
-
-            }
-
-        }
+            => DeltaType switch {
+                DeltaTypes.update  => "update",
+                DeltaTypes.insert  => "insert",
+                DeltaTypes.delete  => "delete",
+                _                  => "Unknown",
+            };
 
         #endregion
 
@@ -87,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// OICP delta type for e.g. EVSE data records.
+    /// Delta types for e.g. EVSE data records.
     /// </summary>
     public enum DeltaTypes
     {

@@ -141,7 +141,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) Parse(PullAuthenticationDataText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP pull authentication data request.
+        /// Parse the given text-representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataText">The text to parse.</param>
         /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
@@ -253,7 +253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) TryParse(PullAuthenticationDataText, out PullAuthenticationData, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP pull authentication data request.
+        /// Try to parse the given text-representation of an OICP pull authentication data request.
         /// </summary>
         /// <param name="PullAuthenticationDataText">The text to parse.</param>
         /// <param name="PullAuthenticationData">The parsed pull authentication data request.</param>
@@ -433,7 +433,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

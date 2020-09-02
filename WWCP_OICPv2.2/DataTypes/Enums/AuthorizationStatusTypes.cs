@@ -15,8 +15,53 @@
  * limitations under the License.
  */
 
+
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+    /// <summary>
+    /// Extentions methods for authorization results.
+    /// </summary>
+    public static class AuthorizationStatusTypesExtentions
+    {
+
+        #region Parse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of an authorization result.
+        /// </summary>
+        /// <param name="Text">A text-representation of an authorization result.</param>
+        public static AuthorizationStatusTypes Parse(String Text)
+
+            => Text.Trim() switch {
+                "Authorized" => AuthorizationStatusTypes.Authorized,
+                _            => AuthorizationStatusTypes.NotAuthorized,
+            };
+
+        #endregion
+
+        #region AsString(AuthorizationStatusType)
+
+        /// <summary>
+        /// Return a text-representation of the given authorization result.
+        /// </summary>
+        /// <param name="AuthorizationStatusType">An authorization result.</param>
+        public static String AsString(this AuthorizationStatusTypes AuthorizationStatusType)
+
+            => AuthorizationStatusType switch {
+                AuthorizationStatusTypes.Authorized  => "Authorized",
+                _                                    => "NotAuthorized",
+            };
+
+        #endregion
+
+    }
 
     /// <summary>
     /// The result of an authorization.

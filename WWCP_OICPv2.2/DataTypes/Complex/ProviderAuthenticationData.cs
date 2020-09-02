@@ -161,7 +161,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (ProviderAuthenticationDataText, CustomProviderAuthenticationDataParser = null, CustomAuthorizationIdentificationParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP provider authentication data.
+        /// Parse the given text-representation of an OICP provider authentication data.
         /// </summary>
         /// <param name="ProviderAuthenticationDataText">The text to parse.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom ProviderAuthenticationData XML elements.</param>
@@ -258,7 +258,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(ProviderAuthenticationDataText, out ProviderAuthenticationData, CustomProviderAuthenticationDataParser = null, CustomAuthorizationIdentificationParser = null, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP provider authentication data.
+        /// Try to parse the given text-representation of an OICP provider authentication data.
         /// </summary>
         /// <param name="ProviderAuthenticationDataText">The text to parse.</param>
         /// <param name="ProviderAuthenticationData">The parsed provider authentication data.</param>
@@ -558,7 +558,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

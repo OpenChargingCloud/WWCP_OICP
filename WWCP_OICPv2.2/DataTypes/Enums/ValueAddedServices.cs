@@ -25,82 +25,48 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for value added services.
     /// </summary>
-    public static partial class XML_IO
+    public static class ValueAddedServicesExtentions
     {
 
-        #region AsValueAddedService(ValueAddedService)
+        #region Parse(Text)
 
         /// <summary>
-        /// Parses the OICP ValueAddedService.
+        /// Parses the given text-representation of a value added service.
         /// </summary>
-        /// <param name="ValueAddedService">A value added service.</param>
-        public static ValueAddedServices AsValueAddedService(String ValueAddedService)
-        {
+        /// <param name="Text">A text-representation of a value added service.</param>
+        public static ValueAddedServices Parse(String Text)
 
-            switch (ValueAddedService.Trim())
-            {
-
-                case "Reservation":
-                    return ValueAddedServices.Reservation;
-
-                case "DynamicPricing":
-                    return ValueAddedServices.DynamicPricing;
-
-                case "ParkingSensors":
-                    return ValueAddedServices.ParkingSensors;
-
-                case "MaximumPowerCharging":
-                    return ValueAddedServices.MaximumPowerCharging;
-
-                case "PredictiveChargePointUsage":
-                    return ValueAddedServices.PredictiveChargePointUsage;
-
-                case "ChargingPlans":
-                    return ValueAddedServices.ChargingPlans;
-
-                default:
-                    return ValueAddedServices.None;
-
-            }
-
-        }
+            => (Text?.Trim()) switch {
+                "Reservation"                 => ValueAddedServices.Reservation,
+                "DynamicPricing"              => ValueAddedServices.DynamicPricing,
+                "ParkingSensors"              => ValueAddedServices.ParkingSensors,
+                "MaximumPowerCharging"        => ValueAddedServices.MaximumPowerCharging,
+                "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
+                "ChargingPlans"               => ValueAddedServices.ChargingPlans,
+                _                             => ValueAddedServices.None,
+            };
 
         #endregion
 
         #region AsString(ValueAddedService)
 
+        /// <summary>
+        /// Return a text-representation of the given value added service.
+        /// </summary>
+        /// <param name="ValueAddedService">A value added service.</param>
         public static String AsString(this ValueAddedServices ValueAddedService)
-        {
 
-            switch (ValueAddedService)
-            {
-
-                case ValueAddedServices.Reservation:
-                    return "Reservation";
-
-                case ValueAddedServices.DynamicPricing:
-                    return "DynamicPricing";
-
-                case ValueAddedServices.ParkingSensors:
-                    return "ParkingSensors";
-
-                case ValueAddedServices.MaximumPowerCharging:
-                    return "MaximumPowerCharging";
-
-                case ValueAddedServices.PredictiveChargePointUsage:
-                    return "PredictiveChargePointUsage";
-
-                case ValueAddedServices.ChargingPlans:
-                    return "ChargingPlans";
-
-                default:
-                    return "None";
-
-            }
-
-        }
+            => ValueAddedService switch {
+                ValueAddedServices.Reservation                 => "Reservation",
+                ValueAddedServices.DynamicPricing              => "DynamicPricing",
+                ValueAddedServices.ParkingSensors              => "ParkingSensors",
+                ValueAddedServices.MaximumPowerCharging        => "MaximumPowerCharging",
+                ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
+                ValueAddedServices.ChargingPlans               => "ChargingPlans",
+                _                                              => "None",
+            };
 
         #endregion
 
@@ -110,45 +76,44 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// Value added services at charging stations and/or EVSEs.
     /// </summary>
-    [Flags]
     public enum ValueAddedServices
     {
 
         /// <summary>
         /// There are no value added services available.
         /// </summary>
-        None                        = 0,
+        None,
 
         /// <summary>
         /// Can an EV driver reserve the charging spot via remote services?
         /// </summary>
-        Reservation                 = 1,
+        Reservation,
 
         /// <summary>
         /// Does the EVSE support dynamic pricing? 
         /// </summary>
-        DynamicPricing              = 1 << 1,
+        DynamicPricing,
 
         /// <summary>
         /// Is for this EVSE a dynamic status of the corresponding
         /// parking lot in front of the EVSE available?
         /// </summary>
-        ParkingSensors              = 1 << 2,
+        ParkingSensors,
 
         /// <summary>
         /// Does the EVSE offer a dynamic maximum power charging?
         /// </summary>
-        MaximumPowerCharging        = 1 << 3,
+        MaximumPowerCharging,
 
         /// <summary>
         /// Is for the EVSE a predictive usage statistic available?
         /// </summary>
-        PredictiveChargePointUsage  = 1 << 4,
+        PredictiveChargePointUsage,
 
         /// <summary>
         /// Does the EVSE offer charging plans, e.g. ISO 15118-2?
         /// </summary>
-        ChargingPlans               = 1 << 5
+        ChargingPlans
 
     }
 

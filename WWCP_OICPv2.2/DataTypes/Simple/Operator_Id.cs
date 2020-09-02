@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of an operator.
     /// </summary>
-    public struct Operator_Id : IId,
-                                IEquatable<Operator_Id>,
-                                IComparable<Operator_Id>
+    public readonly struct Operator_Id : IId,
+                                         IEquatable<Operator_Id>,
+                                         IComparable<Operator_Id>
 
     {
 
@@ -129,9 +129,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Parse(Text)
 
         /// <summary>
-        /// Parse the given text representation of a charging station operator identification.
+        /// Parse the given text-representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station operator identification.</param>
+        /// <param name="Text">A text-representation of a charging station operator identification.</param>
         public static Operator_Id Parse(String Text)
         {
 
@@ -141,14 +141,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of an EVSE operator identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of an EVSE operator identification must not be null or empty!");
 
             #endregion
 
             var MatchCollection = OperatorId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Illegal text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
             Country _CountryCode;
 
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                        MatchCollection[0].Groups[5].Value,
                                        OperatorIdFormats.DIN);
 
-            throw new ArgumentException("Illegal text representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -217,9 +217,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given text representation of a charging station operator identification.
+        /// Try to parse the given text-representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station operator identification.</param>
+        /// <param name="Text">A text-representation of a charging station operator identification.</param>
         public static Operator_Id? TryParse(String Text)
         {
 
@@ -235,9 +235,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region TryParse(Text, out OperatorId)
 
         /// <summary>
-        /// Try to parse the given text representation of a charging station operator identification.
+        /// Try to parse the given text-representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station operator identification.</param>
+        /// <param name="Text">A text-representation of a charging station operator identification.</param>
         /// <param name="OperatorId">The parsed charging station operator identification.</param>
         public static Boolean TryParse(String           Text,
                                        out Operator_Id  OperatorId)
@@ -505,7 +505,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
         {

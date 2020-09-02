@@ -27,11 +27,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP clearing house.
+    /// The unique identification of a clearing house.
     /// </summary>
-    public struct ClearingHouse_Id : IId,
-                                     IEquatable <ClearingHouse_Id>,
-                                     IComparable<ClearingHouse_Id>
+    public readonly struct ClearingHouse_Id : IId,
+                                              IEquatable<ClearingHouse_Id>,
+                                              IComparable<ClearingHouse_Id>
 
     {
 
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a clearing house identification.
         /// </summary>
-        /// <param name="Text">A text representation of a clearing house identification.</param>
+        /// <param name="Text">A text-representation of a clearing house identification.</param>
         public static ClearingHouse_Id Parse(String Text)
         {
 
@@ -89,14 +89,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a clearing house identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a clearing house identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
                 return clearingHouseId;
 
-            throw new ArgumentException("Illegal text representation of an user identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of an user identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a clearing house identification.
         /// </summary>
-        /// <param name="Text">A text representation of a clearing house identification.</param>
+        /// <param name="Text">A text-representation of a clearing house identification.</param>
         public static ClearingHouse_Id? TryParse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a clearing house identification.
         /// </summary>
-        /// <param name="Text">A text representation of a clearing house identification.</param>
+        /// <param name="Text">A text-representation of a clearing house identification.</param>
         /// <param name="ClearingHouseId">The parsed clearing house identification.</param>
         public static Boolean TryParse(String Text, out ClearingHouse_Id ClearingHouseId)
         {
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

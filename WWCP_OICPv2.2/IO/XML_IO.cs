@@ -107,131 +107,131 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        public static PlugTypes Reduce(this IEnumerable<PlugTypes> OICPPlugTypes)
-        {
+        //public static PlugTypes Reduce(this IEnumerable<PlugTypes> OICPPlugTypes)
+        //{
 
-            var _PlugTypes = PlugTypes.Unspecified;
+        //    var _PlugTypes = PlugTypes.Unspecified;
 
-            foreach (var _PlugType in OICPPlugTypes)
-                _PlugTypes |= _PlugType;
+        //    foreach (var _PlugType in OICPPlugTypes)
+        //        _PlugTypes |= _PlugType;
 
-            return _PlugTypes;
+        //    return _PlugTypes;
 
-        }
+        //}
 
-        public static IEnumerable<PlugTypes> ToEnumeration(this PlugTypes e)
+        //public static IEnumerable<PlugTypes> ToEnumeration(this PlugTypes e)
 
-            => Enum.GetValues(typeof(PlugTypes)).
-                    Cast<PlugTypes>().
-                    Where(flag => e.HasFlag(flag) && flag != PlugTypes.Unspecified);
-
-
-
-
-        public static ChargingModes Reduce(this IEnumerable<ChargingModes> ChargingModes)
-        {
-
-            var _ChargingModes = OICPv2_2.ChargingModes.Unspecified;
-
-            foreach (var _ChargingMode in ChargingModes)
-                _ChargingModes |= _ChargingMode;
-
-            return _ChargingModes;
-
-        }
-
-        public static IEnumerable<ChargingModes> ToEnumeration(this ChargingModes e)
-        {
-
-            return Enum.GetValues(typeof(ChargingModes)).
-                        Cast<ChargingModes>().
-                        Where(flag => e.HasFlag(flag) && flag != ChargingModes.Unspecified);
-
-        }
+        //    => Enum.GetValues(typeof(PlugTypes)).
+        //            Cast<PlugTypes>().
+        //            Where(flag => e.HasFlag(flag) && flag != PlugTypes.Unspecified);
 
 
 
-        public static AuthenticationModes Reduce(this IEnumerable<AuthenticationModes> AuthenticationModes)
-        {
 
-            var _AuthenticationModes = OICPv2_2.AuthenticationModes.Unknown;
+        //public static ChargingModes Reduce(this IEnumerable<ChargingModes> ChargingModes)
+        //{
 
-            foreach (var _AuthenticationMode in AuthenticationModes)
-                _AuthenticationModes |= _AuthenticationMode;
+        //    var _ChargingModes = OICPv2_2.ChargingModes.Unspecified;
 
-            return _AuthenticationModes;
+        //    foreach (var _ChargingMode in ChargingModes)
+        //        _ChargingModes |= _ChargingMode;
 
-        }
+        //    return _ChargingModes;
 
-        public static IEnumerable<AuthenticationModes> ToEnumeration(this AuthenticationModes e)
+        //}
 
-            => Enum.GetValues(typeof(AuthenticationModes)).
-                    Cast<AuthenticationModes>().
-                    Where(flag => e.HasFlag(flag) && flag != AuthenticationModes.Unknown);
+        //public static IEnumerable<ChargingModes> ToEnumeration(this ChargingModes e)
+        //{
 
+        //    return Enum.GetValues(typeof(ChargingModes)).
+        //                Cast<ChargingModes>().
+        //                Where(flag => e.HasFlag(flag) && flag != ChargingModes.Unspecified);
 
-        public static PaymentOptions Reduce(this IEnumerable<PaymentOptions> OICPPaymentOptions)
-        {
-
-            var _PaymentOptions = PaymentOptions.Unspecified;
-
-            foreach (var PaymentOption in OICPPaymentOptions)
-                _PaymentOptions |= PaymentOption;
-
-            return _PaymentOptions;
-
-        }
-
-        public static IEnumerable<PaymentOptions> ToEnumeration(this PaymentOptions e)
-        {
-
-            return Enum.GetValues(typeof(PaymentOptions)).
-                        Cast<PaymentOptions>().
-                        Where(flag => e.HasFlag(flag) && flag != PaymentOptions.Unspecified);
-
-        }
+        //}
 
 
 
-        public static AccessibilityTypes Reduce(this IEnumerable<AccessibilityTypes> OICPAccessibilityTypes)
-        {
+        //public static AuthenticationModes Reduce(this IEnumerable<AuthenticationModes> AuthenticationModes)
+        //{
 
-            var _AccessibilityTypes = AccessibilityTypes.Unspecified;
+        //    var _AuthenticationModes = OICPv2_2.AuthenticationModes.Unknown;
 
-            foreach (var _AccessibilityType in OICPAccessibilityTypes)
-                _AccessibilityTypes |= _AccessibilityType;
+        //    foreach (var _AuthenticationMode in AuthenticationModes)
+        //        _AuthenticationModes |= _AuthenticationMode;
 
-            return _AccessibilityTypes;
+        //    return _AuthenticationModes;
 
-        }
+        //}
 
-        public static IEnumerable<AccessibilityTypes> ToEnumeration(this AccessibilityTypes e)
-        {
+        //public static IEnumerable<AuthenticationModes> ToEnumeration(this AuthenticationModes e)
 
-            return Enum.GetValues(typeof(AccessibilityTypes)).
-                        Cast<AccessibilityTypes>().
-                        Where(flag => e.HasFlag(flag) && flag != AccessibilityTypes.Unspecified);
-
-        }
+        //    => Enum.GetValues(typeof(AuthenticationModes)).
+        //            Cast<AuthenticationModes>().
+        //            Where(flag => e.HasFlag(flag) && flag != AuthenticationModes.Unknown);
 
 
-        public static ValueAddedServices Reduce(this IEnumerable<ValueAddedServices> OICPPlugTypes)
-        {
+        //public static PaymentOptions Reduce(this IEnumerable<PaymentOptions> OICPPaymentOptions)
+        //{
 
-            var _PlugTypes = ValueAddedServices.None;
+        //    var _PaymentOptions = PaymentOptions.Unspecified;
 
-            foreach (var _PlugType in OICPPlugTypes)
-                _PlugTypes |= _PlugType;
+        //    foreach (var PaymentOption in OICPPaymentOptions)
+        //        _PaymentOptions |= PaymentOption;
 
-            return _PlugTypes;
+        //    return _PaymentOptions;
 
-        }
+        //}
 
-        public static IEnumerable<ValueAddedServices> ToEnumeration(this ValueAddedServices e)
+        //public static IEnumerable<PaymentOptions> ToEnumeration(this PaymentOptions e)
+        //{
 
-            => Enum.GetValues(typeof(ValueAddedServices)).
-                    Cast<ValueAddedServices>().
-                    Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
+        //    return Enum.GetValues(typeof(PaymentOptions)).
+        //                Cast<PaymentOptions>().
+        //                Where(flag => e.HasFlag(flag) && flag != PaymentOptions.Unspecified);
+
+        //}
+
+
+
+        //public static AccessibilityTypes Reduce(this IEnumerable<AccessibilityTypes> OICPAccessibilityTypes)
+        //{
+
+        //    var _AccessibilityTypes = AccessibilityTypes.Unspecified;
+
+        //    foreach (var _AccessibilityType in OICPAccessibilityTypes)
+        //        _AccessibilityTypes |= _AccessibilityType;
+
+        //    return _AccessibilityTypes;
+
+        //}
+
+        //public static IEnumerable<AccessibilityTypes> ToEnumeration(this AccessibilityTypes e)
+        //{
+
+        //    return Enum.GetValues(typeof(AccessibilityTypes)).
+        //                Cast<AccessibilityTypes>().
+        //                Where(flag => e.HasFlag(flag) && flag != AccessibilityTypes.Unspecified);
+
+        //}
+
+
+        //public static ValueAddedServices Reduce(this IEnumerable<ValueAddedServices> OICPPlugTypes)
+        //{
+
+        //    var _PlugTypes = ValueAddedServices.None;
+
+        //    foreach (var _PlugType in OICPPlugTypes)
+        //        _PlugTypes |= _PlugType;
+
+        //    return _PlugTypes;
+
+        //}
+
+        //public static IEnumerable<ValueAddedServices> ToEnumeration(this ValueAddedServices e)
+
+        //    => Enum.GetValues(typeof(ValueAddedServices)).
+        //            Cast<ValueAddedServices>().
+        //            Where(flag => e.HasFlag(flag) && flag != ValueAddedServices.None);
 
 
     }

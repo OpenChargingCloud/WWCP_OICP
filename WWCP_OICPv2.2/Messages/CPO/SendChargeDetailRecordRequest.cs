@@ -154,7 +154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) Parse   (SendChargeDetailRecordText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP send charge detail record request.
+        /// Parse the given text-representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom CustomChargeDetailRecord XML elements.</param>
@@ -265,7 +265,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) TryParse(SendChargeDetailRecordText, out SendChargeDetailRecord, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP send charge detail record request.
+        /// Try to parse the given text-representation of an OICP send charge detail record request.
         /// </summary>
         /// <param name="SendChargeDetailRecordText">The text to parse.</param>
         /// <param name="SendChargeDetailRecord">The parsed send charge detail record request.</param>
@@ -445,7 +445,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

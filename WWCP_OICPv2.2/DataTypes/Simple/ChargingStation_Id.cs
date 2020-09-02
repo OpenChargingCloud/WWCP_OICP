@@ -29,9 +29,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a charging station.
     /// </summary>
-    public struct ChargingStation_Id : IId,
-                                       IEquatable <ChargingStation_Id>,
-                                       IComparable<ChargingStation_Id>
+    public readonly struct ChargingStation_Id : IId,
+                                                IEquatable<ChargingStation_Id>,
+                                                IComparable<ChargingStation_Id>
 
     {
 
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a charging station identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station identification.</param>
+        /// <param name="Text">A text-representation of a charging station identification.</param>
         public static ChargingStation_Id Parse(String Text)
         {
 
@@ -89,14 +89,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging station identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging station identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out ChargingStation_Id chargingStationId))
                 return chargingStationId;
 
-            throw new ArgumentException("Illegal text representation of a charging station identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a charging station identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging station identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station identification.</param>
+        /// <param name="Text">A text-representation of a charging station identification.</param>
         public static ChargingStation_Id? TryParse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging station identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging station identification.</param>
+        /// <param name="Text">A text-representation of a charging station identification.</param>
         /// <param name="ChargingStationId">The parsed charging station identification.</param>
         public static Boolean TryParse(String Text, out ChargingStation_Id ChargingStationId)
         {
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

@@ -27,11 +27,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP hub provider.
+    /// The unique identification of a hub provider.
     /// </summary>
-    public struct HubProvider_Id : IId,
-                                   IEquatable <HubProvider_Id>,
-                                   IComparable<HubProvider_Id>
+    public readonly struct HubProvider_Id : IId,
+                                            IEquatable <HubProvider_Id>,
+                                            IComparable<HubProvider_Id>
 
     {
 
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a hub provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub provider identification.</param>
+        /// <param name="Text">A text-representation of a hub provider identification.</param>
         public static HubProvider_Id Parse(String Text)
         {
 
@@ -89,14 +89,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a hub provider identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a hub provider identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out HubProvider_Id hubProviderId))
                 return hubProviderId;
 
-            throw new ArgumentException("Illegal text representation of a hub provider identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a hub provider identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a hub provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub provider identification.</param>
+        /// <param name="Text">A text-representation of a hub provider identification.</param>
         public static HubProvider_Id? TryParse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a hub provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub provider identification.</param>
+        /// <param name="Text">A text-representation of a hub provider identification.</param>
         /// <param name="HubProviderId">The parsed hub provider identification.</param>
         public static Boolean TryParse(String Text, out HubProvider_Id HubProviderId)
         {
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

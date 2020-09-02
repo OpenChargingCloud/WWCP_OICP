@@ -184,7 +184,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) Parse   (AuthorizeRemoteStopRequestText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP authorize remote stop request.
+        /// Parse the given text-representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop requests.</param>
@@ -308,7 +308,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) TryParse(AuthorizeRemoteStopRequestText, out AuthorizeRemoteStopRequest, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP authorize remote stop request.
+        /// Try to parse the given text-representation of an OICP authorize remote stop request.
         /// </summary>
         /// <param name="AuthorizeRemoteStopRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed authorize remote stop request.</param>
@@ -519,7 +519,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

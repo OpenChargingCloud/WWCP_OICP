@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a charging session.
     /// </summary>
-    public struct Session_Id : IId,
-                               IEquatable<Session_Id>,
-                               IComparable<Session_Id>
+    public readonly struct Session_Id : IId,
+                                        IEquatable<Session_Id>,
+                                        IComparable<Session_Id>
 
     {
 
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging session identification.</param>
+        /// <param name="Text">A text-representation of a charging session identification.</param>
         public static Session_Id Parse(String Text)
         {
 
@@ -108,14 +108,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging session identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging session identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out Session_Id sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Illegal text representation of a charging session identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a charging session identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -126,7 +126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging session identification.</param>
+        /// <param name="Text">A text-representation of a charging session identification.</param>
         public static Session_Id? TryParse(String Text)
         {
 
@@ -155,7 +155,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging session identification.</param>
+        /// <param name="Text">A text-representation of a charging session identification.</param>
         /// <param name="SessionId">The parsed charging session identification.</param>
         public static Boolean TryParse(String Text, out Session_Id SessionId)
         {
@@ -377,7 +377,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

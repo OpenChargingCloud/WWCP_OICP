@@ -25,67 +25,47 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for authentication modes.
     /// </summary>
-    public static partial class XML_IO
+    public static class AuthenticationModesExtentions
     {
 
-        #region AsAuthenticationMode(AuthenticationMode)
+        #region Parse(Text)
 
         /// <summary>
-        /// Maps a string to an OICP authentication mode.
+        /// Parses the given text-representation of an authentication mode.
         /// </summary>
-        /// <param name="AuthenticationMode">A text-representation of an authentication mode.</param>
-        public static AuthenticationModes AsAuthenticationMode(String AuthenticationMode)
-        {
+        /// <param name="Text">A text-representation of an authentication mode.</param>
+        public static AuthenticationModes Parse(String Text)
 
-            switch (AuthenticationMode.Trim())
-            {
-
-                case "NFC RFID Classic": return AuthenticationModes.NFC_RFID_Classic;
-                case "NFC RFID DESFire": return AuthenticationModes.NFC_RFID_DESFire;
-                case "PnC": return AuthenticationModes.PnC;
-                case "REMOTE": return AuthenticationModes.REMOTE;
-                case "Direct Payment": return AuthenticationModes.DirectPayment;
-
-                default: return AuthenticationModes.Unknown;
-
-            }
-
-        }
+            => Text.Trim() switch {
+                "NFC RFID Classic"  => AuthenticationModes.NFC_RFID_Classic,
+                "NFC RFID DESFire"  => AuthenticationModes.NFC_RFID_DESFire,
+                "PnC"               => AuthenticationModes.PnC,
+                "REMOTE"            => AuthenticationModes.REMOTE,
+                "Direct Payment"    => AuthenticationModes.DirectPayment,
+                _                   => AuthenticationModes.Unknown,
+            };
 
         #endregion
 
         #region AsString(AuthenticationMode)
 
+        /// <summary>
+        /// Return a text-representation of the given authentication mode.
+        /// </summary>
+        /// <param name="AuthenticationMode">An authentication mode.</param>
+        /// <returns></returns>
         public static String AsString(this AuthenticationModes AuthenticationMode)
-        {
 
-            switch (AuthenticationMode)
-            {
-
-                case AuthenticationModes.NFC_RFID_Classic:
-                    return "NFC RFID Classic";
-
-                case AuthenticationModes.NFC_RFID_DESFire:
-                    return "NFC RFID DESFire";
-
-                case AuthenticationModes.PnC:
-                    return "PnC";
-
-                case AuthenticationModes.REMOTE:
-                    return "REMOTE";
-
-                case AuthenticationModes.DirectPayment:
-                    return "Direct Payment";
-
-
-                default:
-                    return "Unkown";
-
-            }
-
-        }
+            => AuthenticationMode switch {
+                AuthenticationModes.NFC_RFID_Classic  => "NFC RFID Classic",
+                AuthenticationModes.NFC_RFID_DESFire  => "NFC RFID DESFire",
+                AuthenticationModes.PnC               => "PnC",
+                AuthenticationModes.REMOTE            => "REMOTE",
+                AuthenticationModes.DirectPayment     => "Direct Payment",
+                _                                     => "Unkown",
+            };
 
         #endregion
 
@@ -102,32 +82,32 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Unknown authentication mode.
         /// </summary>
-        Unknown             =  0,
+        Unknown,
 
         /// <summary>
         /// Using MiFare classic RFID cards.
         /// </summary>
-        NFC_RFID_Classic    =  1,
+        NFC_RFID_Classic,
 
         /// <summary>
         /// Using MiFare DESFire RFID cards.
         /// </summary>
-        NFC_RFID_DESFire    =  2,
+        NFC_RFID_DESFire,
 
         /// <summary>
         /// Using ISO/IEC 15118 Plug-and-Charge (PnC)
         /// </summary>
-        PnC                 =  4,
+        PnC,
 
         /// <summary>
         /// Using an eMAId/EVCOId via an app, QR-code or phone.
         /// </summary>
-        REMOTE              =  8,
+        REMOTE,
 
         /// <summary>
         /// Direct payment, e.g. via InterCharge Direct.
         /// </summary>
-        DirectPayment       = 16
+        DirectPayment
 
     }
 

@@ -15,39 +15,96 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP RFID types.
+    /// Extentions methods for RFID types.
+    /// </summary>
+    public static class RFIDTypesExtentions
+    {
+
+        #region Parse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a RFID type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a RFID type.</param>
+        public static RFIDTypes Parse(String Text)
+
+            => Text.Trim() switch {
+                "mifareCls"     => RFIDTypes.mifareCls,
+                "mifareDes"     => RFIDTypes.mifareDes,
+                "calypso"       => RFIDTypes.calypso,
+                "nfc"           => RFIDTypes.nfc,
+                "mifareFamily"  => RFIDTypes.mifareFamily,
+                _               => RFIDTypes.Unspecified,
+            };
+
+        #endregion
+
+        #region AsString(RFIDType)
+
+        /// <summary>
+        /// Return a text-representation of the given RFID type.
+        /// </summary>
+        /// <param name="RFIDType">A RFID type.</param>
+        public static String AsString(this RFIDTypes RFIDType)
+
+            => RFIDType switch {
+                RFIDTypes.mifareCls     => "mifareCls",
+                RFIDTypes.mifareDes     => "mifareDes",
+                RFIDTypes.calypso       => "calypso",
+                RFIDTypes.nfc           => "nfc",
+                RFIDTypes.mifareFamily  => "mifareFamily",
+                _                       => "Unspecified",
+            };
+
+        #endregion
+
+    }
+
+    /// <summary>
+    /// RFID types.
     /// </summary>
     public enum RFIDTypes
     {
 
         /// <summary>
+        /// Unspecified.
+        /// </summary>
+        Unspecified,
+
+        /// <summary>
         /// MiFare classic.
         /// </summary>
-        mifareCls       =  1,
+        mifareCls,
 
         /// <summary>
         /// MiFare DESFire.
         /// </summary>
-        mifareDes       =  2,
+        mifareDes,
 
         /// <summary>
         /// Calypso.
         /// </summary>
-        calypso         =  4,
+        calypso,
 
         /// <summary>
         /// NFC.
         /// </summary>
-        nfc             =  8,
+        nfc,
 
         /// <summary>
         /// MiFare family.
         /// </summary>
-        mifareFamily    = 16
+        mifareFamily
 
     }
 

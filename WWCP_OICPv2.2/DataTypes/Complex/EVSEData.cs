@@ -177,7 +177,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse(EVSEDataText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP EVSE data request.
+        /// Parse the given text-representation of an OICP EVSE data request.
         /// </summary>
         /// <param name="EVSEDataText">The text to parse.</param>
         /// <param name="CustomEVSEDataParser">A delegate to parse custom EVSEData XML elements.</param>
@@ -282,7 +282,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(EVSEDataText, out EVSEData, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP EVSE data request.
+        /// Try to parse the given text-representation of an OICP EVSE data request.
         /// </summary>
         /// <param name="EVSEDataText">The text to parse.</param>
         /// <param name="EVSEData">The parsed EVSEData request.</param>
@@ -488,7 +488,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

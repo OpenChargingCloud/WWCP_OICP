@@ -25,59 +25,42 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for accessibility types.
     /// </summary>
-    public static partial class XML_IO
+    public static class AccessibilityTypesExtentions
     {
 
-        #region AsAccessibilityType(AccessibilityType)
+        #region Parse(AccessibilityType)
 
         /// <summary>
-        /// Maps an OICP accessibility type to a WWCP accessibility type.
+        /// Parses the given text-representation of an accessibility type.
         /// </summary>
-        /// <param name="AccessibilityType">A accessibility type.</param>
-        public static AccessibilityTypes AsAccessibilityType(String AccessibilityType)
-        {
+        /// <param name="Text">A text-representation of an accessibility type.</param>
+        public static AccessibilityTypes Parse(String Text)
 
-            switch (AccessibilityType.Trim())
-            {
-
-                case "Free publicly accessible": return AccessibilityTypes.Free_publicly_accessible;
-                case "Restricted access": return AccessibilityTypes.Restricted_access;
-                case "Paying publicly accessible": return AccessibilityTypes.Paying_publicly_accessible;
-
-                default: return AccessibilityTypes.Unspecified;
-
-            }
-
-        }
+            => Text.Trim() switch {
+                "Free publicly accessible"    => AccessibilityTypes.Free_publicly_accessible,
+                "Restricted access"           => AccessibilityTypes.Restricted_access,
+                "Paying publicly accessible"  => AccessibilityTypes.Paying_publicly_accessible,
+                _                             => AccessibilityTypes.Unspecified,
+            };
 
         #endregion
 
         #region AsString(AccessibilityType)
 
+        /// <summary>
+        /// Return a text-representation of the given accessibility type.
+        /// </summary>
+        /// <param name="AccessibilityType">An accessibility type.</param>
         public static String AsString(this AccessibilityTypes AccessibilityType)
-        {
 
-            switch (AccessibilityType)
-            {
-
-                case AccessibilityTypes.Free_publicly_accessible:
-                    return "Free publicly accessible";
-
-                case AccessibilityTypes.Restricted_access:
-                    return "Restricted access";
-
-                case AccessibilityTypes.Paying_publicly_accessible:
-                    return "Paying publicly accessible";
-
-
-                default:
-                    return "Unspecified";
-
-            }
-
-        }
+            => AccessibilityType switch {
+                AccessibilityTypes.Free_publicly_accessible    => "Free publicly accessible",
+                AccessibilityTypes.Restricted_access           => "Restricted access",
+                AccessibilityTypes.Paying_publicly_accessible  => "Paying publicly accessible",
+                _ => "Unspecified",
+            };
 
         #endregion
 

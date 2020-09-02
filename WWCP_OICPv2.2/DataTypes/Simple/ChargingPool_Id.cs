@@ -27,11 +27,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP charging pool.
+    /// The unique identification of a charging pool.
     /// </summary>
-    public struct ChargingPool_Id : IId,
-                                    IEquatable <ChargingPool_Id>,
-                                    IComparable<ChargingPool_Id>
+    public readonly struct ChargingPool_Id : IId,
+                                             IEquatable<ChargingPool_Id>,
+                                             IComparable<ChargingPool_Id>
 
     {
 
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging pool identification.</param>
+        /// <param name="Text">A text-representation of a charging pool identification.</param>
         public static ChargingPool_Id Parse(String Text)
         {
 
@@ -92,14 +92,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a charging pool identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging pool identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out ChargingPool_Id chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Illegal text representation of a charging pool identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a charging pool identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -110,7 +110,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging pool identification.</param>
+        /// <param name="Text">A text-representation of a charging pool identification.</param>
         public static ChargingPool_Id? TryParse(String Text)
         {
 
@@ -128,7 +128,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text representation of a charging pool identification.</param>
+        /// <param name="Text">A text-representation of a charging pool identification.</param>
         /// <param name="ChargingPoolId">The parsed charging pool identification.</param>
         public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
         {
@@ -343,7 +343,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

@@ -215,7 +215,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) Parse(PushAuthenticationDataRequestText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP push authentication data request.
+        /// Parse the given text-representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData requests.</param>
@@ -317,7 +317,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                                                     OnException),
 
                                                     PushAuthenticationDataRequestXML.MapValueOrFail(OICPNS.AuthenticationData + "ActionType",
-                                                                                                    XML_IO.AsActionType),
+                                                                                                    ActionTypesExtentions.Parse),
 
                                                     Timestamp,
                                                     CancellationToken,
@@ -349,7 +349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) TryParse(PushAuthenticationDataRequestText, out PushAuthenticationDataRequest, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP push authentication data request.
+        /// Try to parse the given text-representation of an OICP push authentication data request.
         /// </summary>
         /// <param name="PushAuthenticationDataRequestText">The text to parse.</param>
         /// <param name="PushAuthenticationDataRequest">The parsed push authentication data request.</param>
@@ -420,7 +420,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             var XML = new XElement(OICPNS.AuthenticationData + "eRoamingPushAuthenticationData",
 
-                          new XElement(OICPNS.AuthenticationData + "ActionType",  XML_IO.AsText(OICPAction)),
+                          new XElement(OICPNS.AuthenticationData + "ActionType", OICPAction.AsString()),
 
                           ProviderAuthenticationData.ToXML()
 
@@ -550,7 +550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

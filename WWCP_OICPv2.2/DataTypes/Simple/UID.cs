@@ -32,9 +32,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a RFID card (user).
     /// </summary>
-    public struct UID : IId,
-                        IEquatable <UID>,
-                        IComparable<UID>
+    public readonly struct UID : IId,
+                                 IEquatable <UID>,
+                                 IComparable<UID>
 
     {
 
@@ -89,7 +89,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a user identification.
         /// </summary>
-        /// <param name="Text">A text representation of a user identification.</param>
+        /// <param name="Text">A text-representation of a user identification.</param>
         public static UID Parse(String Text)
         {
 
@@ -99,14 +99,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a user identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a user identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out UID uid))
                 return uid;
 
-            throw new ArgumentException("Illegal text representation of an user identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of an user identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -117,7 +117,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a RFID card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a RFID card identification.</param>
+        /// <param name="Text">A text-representation of a RFID card identification.</param>
         public static UID? TryParse(String Text)
         {
 
@@ -135,7 +135,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a RFID card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a RFID card identification.</param>
+        /// <param name="Text">A text-representation of a RFID card identification.</param>
         /// <param name="UID">The parsed RFID card identification.</param>
         public static Boolean TryParse(String Text, out UID UID)
         {
@@ -358,7 +358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

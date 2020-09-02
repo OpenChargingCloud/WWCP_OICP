@@ -15,14 +15,69 @@
  * limitations under the License.
  */
 
+
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
+
+    /// <summary>
+    /// Extentions methods for payment options.
+    /// </summary>
+    public static class GeoCoordinatesResponseFormatsExtentions
+    {
+
+        #region Parse(GeoCoordinatesResponseFormat)
+
+        /// <summary>
+        /// Parses the given text-representation of a geo coordinate response format.
+        /// </summary>
+        /// <param name="Text">A text-representation of a geo coordinate response format.</param>
+        public static GeoCoordinatesResponseFormats Parse(String Text)
+
+            => Text.Trim() switch {
+                "Google"               => GeoCoordinatesResponseFormats.Google,
+                "DegreeMinuteSeconds"  => GeoCoordinatesResponseFormats.DegreeMinuteSeconds,
+                "DecimalDegree"        => GeoCoordinatesResponseFormats.DecimalDegree,
+                _                      => GeoCoordinatesResponseFormats.Unspecified,
+            };
+
+        #endregion
+
+        #region AsString(GeoCoordinatesResponseFormat)
+
+        /// <summary>
+        /// Return a text-representation of the given geo coordinate response format.
+        /// </summary>
+        /// <param name="GeoCoordinatesResponseFormat">A geo coordinate response format.</param>
+        /// <returns></returns>
+        public static String AsString(this GeoCoordinatesResponseFormats GeoCoordinatesResponseFormat)
+
+            => GeoCoordinatesResponseFormat switch {
+                GeoCoordinatesResponseFormats.Google               => "Google",
+                GeoCoordinatesResponseFormats.DegreeMinuteSeconds  => "DegreeMinuteSeconds",
+                GeoCoordinatesResponseFormats.DecimalDegree        => "DecimalDegree",
+                _                                                  => "Unspecified",
+            };
+
+        #endregion
+
+    }
 
     /// <summary>
     /// Defines the format of geo coordinates that shall be provided with the response.
     /// </summary>
     public enum GeoCoordinatesResponseFormats
     {
+
+        /// <summary>
+        /// Unspecified.
+        /// </summary>
+        Unspecified,
 
         /// <summary>
         /// Google format.

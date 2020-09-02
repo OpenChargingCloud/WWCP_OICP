@@ -249,7 +249,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) Parse   (AuthorizeRemoteStartRequestText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP authorize remote start request.
+        /// Parse the given text-representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart requests.</param>
@@ -394,7 +394,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) TryParse(AuthorizeRemoteStartRequestText, out AuthorizeRemoteStartRequest, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP authorize remote start request.
+        /// Try to parse the given text-representation of an OICP authorize remote start request.
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequestText">The text to parse.</param>
         /// <param name="AuthorizeRemoteStartRequest">The parsed authorize remote start request.</param>
@@ -636,7 +636,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

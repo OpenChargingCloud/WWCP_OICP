@@ -204,7 +204,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) Parse(PullEVSEStatusText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP pull EVSE status request.
+        /// Parse the given text-representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusText">The text to parse.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
@@ -364,7 +364,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (static) TryParse(PullEVSEStatusText, out PullEVSEStatus, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP pull EVSE status request.
+        /// Try to parse the given text-representation of an OICP pull EVSE status request.
         /// </summary>
         /// <param name="PullEVSEStatusText">The text to parse.</param>
         /// <param name="PullEVSEStatus">The parsed pull EVSE status request.</param>
@@ -584,7 +584,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

@@ -154,7 +154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (StatusCodeText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP status code.
+        /// Parse the given text-representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
@@ -264,7 +264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(StatusCodeText,                 ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP status code.
+        /// Try to parse the given text-representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
@@ -296,7 +296,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(StatusCodeText, out StatusCode, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP status code.
+        /// Try to parse the given text-representation of an OICP status code.
         /// </summary>
         /// <param name="StatusCodeText">The text to parse.</param>
         /// <param name="StatusCode">The parsed status code.</param>
@@ -522,7 +522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

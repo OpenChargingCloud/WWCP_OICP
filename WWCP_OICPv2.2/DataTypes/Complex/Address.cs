@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (AddressText,              CustomAddressParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP address.
+        /// Parse the given text-representation of an OICP address.
         /// </summary>
         /// <param name="AddressText">The text to parse.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
@@ -347,7 +347,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(AddressText, out Address, CustomAddressParser = null, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OIOI address.
+        /// Try to parse the given text-representation of an OIOI address.
         /// </summary>
         /// <param name="AddressText">The text to parse.</param>
         /// <param name="Address">The parsed address.</param>
@@ -714,7 +714,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

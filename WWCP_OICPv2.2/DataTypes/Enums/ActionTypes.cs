@@ -25,66 +25,44 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for action types.
     /// </summary>
-    public static partial class XML_IO
+    public static class ActionTypesExtentions
     {
 
-        #region AsActionType(Text)
+        #region Parse(Text)
 
-        public static ActionTypes AsActionType(this String Text)
-        {
+        /// <summary>
+        /// Parses the given text-representation of an action type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an action type.</param>
+        public static ActionTypes Parse(String Text)
 
-            switch (Text)
-            {
-
-                case "fullLoad":
-                    return ActionTypes.fullLoad;
-
-                case "update":
-                    return ActionTypes.update;
-
-                case "insert":
-                    return ActionTypes.insert;
-
-                case "delete":
-                    return ActionTypes.delete;
-
-                default:
-                    return ActionTypes.Unknown;
-
-            }
-
-        }
+            => Text switch {
+                "fullLoad"  => ActionTypes.fullLoad,
+                "update"    => ActionTypes.update,
+                "insert"    => ActionTypes.insert,
+                "delete"    => ActionTypes.delete,
+                _           => ActionTypes.Unknown,
+            };
 
         #endregion
 
-        #region AsText(this ActionType)
+        #region AsString(this ActionType)
 
-        public static String AsText(this ActionTypes ActionType)
-        {
+        /// <summary>
+        /// Return a text-representation of the given action type.
+        /// </summary>
+        /// <param name="ActionType">An action type.</param>
+        public static String AsString(this ActionTypes ActionType)
 
-            switch (ActionType)
-            {
-
-                case ActionTypes.fullLoad:
-                    return "fullLoad";
-
-                case ActionTypes.update:
-                    return "update";
-
-                case ActionTypes.insert:
-                    return "insert";
-
-                case ActionTypes.delete:
-                    return "delete";
-
-                default:
-                    return "Unknown";
-
-            }
-
-        }
+            => ActionType switch {
+                ActionTypes.fullLoad  => "fullLoad",
+                ActionTypes.update    => "update",
+                ActionTypes.insert    => "insert",
+                ActionTypes.delete    => "delete",
+                _                     => "Unknown",
+            };
 
         #endregion
 

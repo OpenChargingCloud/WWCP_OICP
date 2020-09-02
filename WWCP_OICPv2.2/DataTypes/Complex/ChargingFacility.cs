@@ -133,7 +133,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (ChargingFacilityText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of a ChargingFacility object.
+        /// Parse the given text-representation of a ChargingFacility object.
         /// </summary>
         /// <param name="ChargingFacilityText">The text to parse.</param>
         /// <param name="CustomChargingFacilityParser">An optional delegate to parse custom ChargingFacility XML elements.</param>
@@ -205,7 +205,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(ChargingFacilityText, ..., out ChargingFacility, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of a ChargingFacility object.
+        /// Try to parse the given text-representation of a ChargingFacility object.
         /// </summary>
         /// <param name="ChargingFacilityText">The text to parse.</param>
         /// <param name="CustomChargingFacilityParser">An optional delegate to parse custom ChargingFacility XML elements.</param>
@@ -413,7 +413,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 
@@ -438,9 +438,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region AsPowerType(Text)
 
         /// <summary>
-        /// Parse the given text representation of a power type.
+        /// Parse the given text-representation of a power type.
         /// </summary>
-        /// <param name="Text">A text representation of a power type.</param>
+        /// <param name="Text">A text-representation of a power type.</param>
         public static PowerTypes AsPowerType(String Text)
         {
 
@@ -468,7 +468,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region AsText(this PowerType)
 
         /// <summary>
-        /// Return a text representation of the given power type.
+        /// Return a text-representation of the given power type.
         /// </summary>
         /// <param name="BusyStatus">A power type.</param>
         public static String AsText(this PowerTypes PowerType)

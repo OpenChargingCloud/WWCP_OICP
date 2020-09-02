@@ -27,11 +27,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP hub operator.
+    /// The unique identification of a hub operator.
     /// </summary>
-    public struct HubOperator_Id : IId,
-                                   IEquatable <HubOperator_Id>,
-                                   IComparable<HubOperator_Id>
+    public readonly struct HubOperator_Id : IId,
+                                            IEquatable <HubOperator_Id>,
+                                            IComparable<HubOperator_Id>
 
     {
 
@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a hub operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub operator identification.</param>
+        /// <param name="Text">A text-representation of a hub operator identification.</param>
         public static HubOperator_Id Parse(String Text)
         {
 
@@ -89,14 +89,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a hub operator must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a hub operator must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out HubOperator_Id hubOperatorId))
                 return hubOperatorId;
 
-            throw new ArgumentException("Illegal text representation of a hub operator identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a hub operator identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -107,7 +107,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a hub operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub operator identification.</param>
+        /// <param name="Text">A text-representation of a hub operator identification.</param>
         public static HubOperator_Id? TryParse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a hub operator identification.
         /// </summary>
-        /// <param name="Text">A text representation of a hub operator identification.</param>
+        /// <param name="Text">A text-representation of a hub operator identification.</param>
         /// <param name="HubOperatorId">The parsed hub operator identification.</param>
         public static Boolean TryParse(String Text, out HubOperator_Id HubOperatorId)
         {
@@ -340,7 +340,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

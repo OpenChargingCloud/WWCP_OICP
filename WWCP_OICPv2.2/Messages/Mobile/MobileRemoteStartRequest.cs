@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (static) Parse   (MobileRemoteStartText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP mobile authorize start request.
+        /// Parse the given text-representation of an OICP mobile authorize start request.
         /// </summary>
         /// <param name="MobileRemoteStartText">The text to parse.</param>
         /// <param name="CustomMobileRemoteStartRequestParser">A delegate to parse custom MobileRemoteStart requests.</param>
@@ -253,7 +253,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (static) TryParse(MobileRemoteStartText, out MobileRemoteStart, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP mobile authorize start request.
+        /// Try to parse the given text-representation of an OICP mobile authorize start request.
         /// </summary>
         /// <param name="MobileRemoteStartText">The text to parse.</param>
         /// <param name="MobileRemoteStart">The parsed mobile authorize start request.</param>
@@ -432,7 +432,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

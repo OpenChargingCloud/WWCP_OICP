@@ -181,7 +181,7 @@
 //        #region (static) Parse(ResultText, OnException = null)
 
 //        /// <summary>
-//        /// Parse the given text representation of an OICP result.
+//        /// Parse the given text-representation of an OICP result.
 //        /// </summary>
 //        /// <param name="ResultText">The text to parse.</param>
 //        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
@@ -248,7 +248,7 @@
 //        #region (static) TryParse(ResultText, out Result, OnException = null)
 
 //        /// <summary>
-//        /// Try to parse the given text representation of an OICP result.
+//        /// Try to parse the given text-representation of an OICP result.
 //        /// </summary>
 //        /// <param name="ResultText">The text to parse.</param>
 //        /// <param name="Result">The parsed result.</param>
@@ -416,7 +416,7 @@
 //        #region (override) ToString()
 
 //        /// <summary>
-//        /// Return a text representation of this object.
+//        /// Return a text-representation of this object.
 //        /// </summary>
 //        public override String ToString()
 

@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (static) Parse(MobileRemoteStopText, ..., OnException = null, ...)
 
         /// <summary>
-        /// Parse the given text representation of an OICP mobile remote stop request.
+        /// Parse the given text-representation of an OICP mobile remote stop request.
         /// </summary>
         /// <param name="MobileRemoteStopText">The text to parse.</param>
         /// <param name="CustomMobileRemoteStopRequestParser">A delegate to parse custom MobileRemoteStop requests.</param>
@@ -252,7 +252,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (static) TryParse(MobileRemoteStopText, out MobileRemoteStop, ..., OnException = null, ...)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP mobile remote stop request.
+        /// Try to parse the given text-representation of an OICP mobile remote stop request.
         /// </summary>
         /// <param name="MobileRemoteStopText">The text to parse.</param>
         /// <param name="MobileRemoteStop">The parsed mobile remote stop request.</param>
@@ -431,7 +431,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

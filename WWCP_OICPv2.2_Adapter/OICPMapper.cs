@@ -42,30 +42,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="ActionType">An OICP v2.0 action type.</param>
         /// <returns>The corresponding WWCP action type.</returns>
-        public static WWCP.ActionType ToWWCP(this ActionTypes ActionType)
-        {
+        public static WWCP.ActionTypes ToWWCP(this ActionTypes ActionType)
 
-            switch (ActionType)
-            {
-
-                case ActionTypes.fullLoad:
-                    return WWCP.ActionType.fullLoad;
-
-                case ActionTypes.update:
-                    return WWCP.ActionType.update;
-
-                case ActionTypes.insert:
-                    return WWCP.ActionType.insert;
-
-                case ActionTypes.delete:
-                    return WWCP.ActionType.delete;
-
-                default:
-                    return WWCP.ActionType.fullLoad;
-
-            }
-
-        }
+            => ActionType switch {
+                ActionTypes.fullLoad  => WWCP.ActionTypes.fullLoad,
+                ActionTypes.update    => WWCP.ActionTypes.update,
+                ActionTypes.insert    => WWCP.ActionTypes.insert,
+                ActionTypes.delete    => WWCP.ActionTypes.delete,
+                _                     => WWCP.ActionTypes.fullLoad,
+            };
 
         #endregion
 
@@ -76,30 +61,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="ActionType">An WWCP action type.</param>
         /// <returns>The corresponding OICP v2.0 action type.</returns>
-        public static ActionTypes ToOICP(this WWCP.ActionType ActionType)
-        {
+        public static ActionTypes ToOICP(this WWCP.ActionTypes ActionType)
 
-            switch (ActionType)
-            {
-
-                case WWCP.ActionType.fullLoad:
-                    return OICPv2_2.ActionTypes.fullLoad;
-
-                case WWCP.ActionType.update:
-                    return OICPv2_2.ActionTypes.update;
-
-                case WWCP.ActionType.insert:
-                    return OICPv2_2.ActionTypes.insert;
-
-                case WWCP.ActionType.delete:
-                    return OICPv2_2.ActionTypes.delete;
-
-                default:
-                    return OICPv2_2.ActionTypes.fullLoad;
-
-            }
-
-        }
+            => ActionType switch {
+                WWCP.ActionTypes.fullLoad  => ActionTypes.fullLoad,
+                WWCP.ActionTypes.update    => ActionTypes.update,
+                WWCP.ActionTypes.insert    => ActionTypes.insert,
+                WWCP.ActionTypes.delete    => ActionTypes.delete,
+                _                          => ActionTypes.fullLoad,
+            };
 
         #endregion
 
@@ -228,34 +198,35 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 #endregion
 
 
-                var _EVSEDataRecord  = new EVSEDataRecord(_EVSEId.Value,
+                var _EVSEDataRecord = new EVSEDataRecord(_EVSEId.Value,
+
+                                                          EVSE.ChargingStation.Address.ToOICP(),
+                                                          EVSE.ChargingStation.GeoLocation.Value,
+                                                          EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.AsOICPPlugTypes()),
+                                                          EVSE.ChargingStation.AuthenticationModes.Select(mode => mode.AsOICPAuthenticationMode()).
+                                                                                                   Where (mode => mode != AuthenticationModes.Unknown),
+                                                          new ValueAddedServices[] { ValueAddedServices.None },
+                                                          EVSE.ChargingStation.Accessibility.ToOICP(),
+                                                          EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
+                                                          EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
+                                                          EVSE.ChargingStation.IsHubjectCompatible,
+                                                          EVSE.ChargingStation.DynamicInfoAvailable,
+
                                                           DeltaType  ?? new DeltaTypes?(),
                                                           LastUpdate ?? new DateTime?(),
+
                                                           ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
                                                           ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
                                                           EVSE.ChargingStation.Name,
-                                                          EVSE.ChargingStation.Address.ToOICP(),
-                                                          EVSE.ChargingStation.GeoLocation,
-                                                          EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug).AsOICPPlugTypes(),
                                                           EVSE.AsChargingFacilities(),
-                                                          EVSE.ChargingModes.AsOICPChargingMode(),
-                                                          EVSE.ChargingStation.AuthenticationModes.
-                                                                                   Select(AsOICPAuthenticationMode).
-                                                                                   Where(mode => mode != AuthenticationModes.Unknown).
-                                                                                   Reduce(),
+                                                          EVSE.ChargingModes.SafeSelect(mode => mode.AsOICPChargingMode()),
                                                           null, // MaxCapacity [kWh]
-                                                          EVSE.ChargingStation.PaymentOptions.SafeSelect(AsOICPPaymentOption).Reduce(),
-                                                          ValueAddedServices.None,
-                                                          EVSE.ChargingStation.Accessibility.ToOICP(),
-                                                          EVSE.ChargingStation.HotlinePhoneNumber.FirstText(),
+                                                          EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.AsOICPPaymentOption()),
                                                           EVSE.ChargingStation.Description, // AdditionalInfo
                                                           EVSE.ChargingStation.ChargingPool.EntranceLocation,
-                                                          EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
                                                           EVSE.ChargingStation.OpeningTimes?.ToString(),
                                                           HubOperatorId,
                                                           ClearingHouseId,
-                                                          EVSE.ChargingStation.IsHubjectCompatible,
-                                                          EVSE.ChargingStation.DynamicInfoAvailable,
 
                                                           CustomData);
 
@@ -283,32 +254,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
         public static WWCP.EVSEStatusTypes AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatusTypes)
-        {
 
-            switch (EVSEStatusTypes)
-            {
-
-                case EVSEStatusTypes.Available:
-                    return WWCP.EVSEStatusTypes.Available;
-
-                case EVSEStatusTypes.Reserved:
-                    return WWCP.EVSEStatusTypes.Reserved;
-
-                case EVSEStatusTypes.Occupied:
-                    return WWCP.EVSEStatusTypes.Charging;
-
-                case EVSEStatusTypes.OutOfService:
-                    return WWCP.EVSEStatusTypes.OutOfService;
-
-                case EVSEStatusTypes.EvseNotFound:
-                    return WWCP.EVSEStatusTypes.UnknownEVSE;
-
-                default:
-                    return WWCP.EVSEStatusTypes.OutOfService;
-
-            }
-
-        }
+            => EVSEStatusTypes switch {
+                EVSEStatusTypes.Available     => WWCP.EVSEStatusTypes.Available,
+                EVSEStatusTypes.Reserved      => WWCP.EVSEStatusTypes.Reserved,
+                EVSEStatusTypes.Occupied      => WWCP.EVSEStatusTypes.Charging,
+                EVSEStatusTypes.OutOfService  => WWCP.EVSEStatusTypes.OutOfService,
+                EVSEStatusTypes.EvseNotFound  => WWCP.EVSEStatusTypes.UnknownEVSE,
+                _                             => WWCP.EVSEStatusTypes.OutOfService,
+            };
 
         #endregion
 
@@ -320,32 +274,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
         public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusTypes EVSEStatusType)
-        {
 
-            switch (EVSEStatusType)
-            {
-
-                case WWCP.EVSEStatusTypes.Available:
-                    return EVSEStatusTypes.Available;
-
-                case WWCP.EVSEStatusTypes.Reserved:
-                    return EVSEStatusTypes.Reserved;
-
-                case WWCP.EVSEStatusTypes.Charging:
-                    return EVSEStatusTypes.Occupied;
-
-                case WWCP.EVSEStatusTypes.OutOfService:
-                    return EVSEStatusTypes.OutOfService;
-
-                case WWCP.EVSEStatusTypes.UnknownEVSE:
-                    return EVSEStatusTypes.EvseNotFound;
-
-                default:
-                    return EVSEStatusTypes.OutOfService;
-
-            }
-
-        }
+            => EVSEStatusType switch {
+                WWCP.EVSEStatusTypes.Available     => EVSEStatusTypes.Available,
+                WWCP.EVSEStatusTypes.Reserved      => EVSEStatusTypes.Reserved,
+                WWCP.EVSEStatusTypes.Charging      => EVSEStatusTypes.Occupied,
+                WWCP.EVSEStatusTypes.OutOfService  => EVSEStatusTypes.OutOfService,
+                WWCP.EVSEStatusTypes.UnknownEVSE   => EVSEStatusTypes.EvseNotFound,
+                _                                  => EVSEStatusTypes.OutOfService,
+            };
 
         #endregion
 
@@ -521,16 +458,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (!CurrentType.HasValue)
                 return null;
 
-            switch (CurrentType.Value)
-            {
-
-                case CurrentTypes.AC_OnePhase:    return PowerTypes.AC_1_PHASE;
-                case CurrentTypes.AC_ThreePhases: return PowerTypes.AC_3_PHASE;
-                case CurrentTypes.DC:             return PowerTypes.DC;
-
-                default: return PowerTypes.Unspecified;
-
-            }
+            return CurrentType.Value switch {
+                CurrentTypes.AC_OnePhase     => PowerTypes.AC_1_PHASE,
+                CurrentTypes.AC_ThreePhases  => PowerTypes.AC_3_PHASE,
+                CurrentTypes.DC              => PowerTypes.DC,
+                _                            => PowerTypes.Unspecified,
+            };
 
         }
 
@@ -548,16 +481,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (!PowerType.HasValue)
                 return null;
 
-            switch (PowerType.Value)
-            {
-
-                case PowerTypes.AC_1_PHASE: return CurrentTypes.AC_OnePhase;
-                case PowerTypes.AC_3_PHASE: return CurrentTypes.AC_ThreePhases;
-                case PowerTypes.DC:         return CurrentTypes.DC;
-
-                default: return CurrentTypes.Unspecified;
-
-            }
+            return PowerType.Value switch {
+                PowerTypes.AC_1_PHASE  => CurrentTypes.AC_OnePhase,
+                PowerTypes.AC_3_PHASE  => CurrentTypes.AC_ThreePhases,
+                PowerTypes.DC          => CurrentTypes.DC,
+                _                      => CurrentTypes.Unspecified,
+            };
 
         }
 
@@ -567,47 +496,34 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region ToOICP(this AccessibilityType)
 
         /// <summary>
-        /// Maps a WWCP accessibility type to an OICP  accessibility type.
+        /// Maps a WWCP accessibility type to an OICP accessibility type.
         /// </summary>
         /// <param name="AccessibilityType">A accessibility type.</param>
         public static AccessibilityTypes ToOICP(this WWCP.AccessibilityTypes AccessibilityType)
-        {
 
-            switch (AccessibilityType)
-            {
-
-                case WWCP.AccessibilityTypes.Free_publicly_accessible:   return AccessibilityTypes.Free_publicly_accessible;
-                case WWCP.AccessibilityTypes.Restricted_access:          return AccessibilityTypes.Restricted_access;
-                case WWCP.AccessibilityTypes.Paying_publicly_accessible: return AccessibilityTypes.Paying_publicly_accessible;
-
-                default: return AccessibilityTypes.Unspecified;
-
-            }
-
-        }
+            => AccessibilityType switch {
+                WWCP.AccessibilityTypes.Free_publicly_accessible    => AccessibilityTypes.Free_publicly_accessible,
+                WWCP.AccessibilityTypes.Restricted_access           => AccessibilityTypes.Restricted_access,
+                WWCP.AccessibilityTypes.Paying_publicly_accessible  => AccessibilityTypes.Paying_publicly_accessible,
+                _ => AccessibilityTypes.Unspecified,
+            };
 
         /// <summary>
-        /// Maps a WWCP accessibility type to an OICP  accessibility type.
+        /// Maps a WWCP accessibility type to an OICP accessibility type.
         /// </summary>
         /// <param name="AccessibilityType">A accessibility type.</param>
         public static AccessibilityTypes ToOICP(this WWCP.AccessibilityTypes? AccessibilityType)
-        {
 
-            if (!AccessibilityType.HasValue)
-                return AccessibilityTypes.Free_publicly_accessible;
+            => AccessibilityType.HasValue
 
-            switch (AccessibilityType.Value)
-            {
+                ? AccessibilityType.Value switch {
+                      WWCP.AccessibilityTypes.Free_publicly_accessible    => AccessibilityTypes.Free_publicly_accessible,
+                      WWCP.AccessibilityTypes.Restricted_access           => AccessibilityTypes.Restricted_access,
+                      WWCP.AccessibilityTypes.Paying_publicly_accessible  => AccessibilityTypes.Paying_publicly_accessible,
+                      _                                                   => AccessibilityTypes.Unspecified,
+                  }
 
-                case WWCP.AccessibilityTypes.Free_publicly_accessible:   return AccessibilityTypes.Free_publicly_accessible;
-                case WWCP.AccessibilityTypes.Restricted_access:          return AccessibilityTypes.Restricted_access;
-                case WWCP.AccessibilityTypes.Paying_publicly_accessible: return AccessibilityTypes.Paying_publicly_accessible;
-
-                default: return AccessibilityTypes.Unspecified;
-
-            }
-
-        }
+                : AccessibilityTypes.Free_publicly_accessible;
 
         #endregion
 
@@ -618,20 +534,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="AccessibilityType">A accessibility type.</param>
         public static WWCP.AccessibilityTypes ToWWCP(this AccessibilityTypes AccessibilityType)
-        {
 
-            switch (AccessibilityType)
-            {
-
-                case AccessibilityTypes.Free_publicly_accessible:   return WWCP.AccessibilityTypes.Free_publicly_accessible;
-                case AccessibilityTypes.Restricted_access:          return WWCP.AccessibilityTypes.Restricted_access;
-                case AccessibilityTypes.Paying_publicly_accessible: return WWCP.AccessibilityTypes.Paying_publicly_accessible;
-
-                default: return WWCP.AccessibilityTypes.Unspecified;
-
-            }
-
-        }
+            => AccessibilityType switch {
+                AccessibilityTypes.Free_publicly_accessible    => WWCP.AccessibilityTypes.Free_publicly_accessible,
+                AccessibilityTypes.Restricted_access           => WWCP.AccessibilityTypes.Restricted_access,
+                AccessibilityTypes.Paying_publicly_accessible  => WWCP.AccessibilityTypes.Paying_publicly_accessible,
+                _                                              => WWCP.AccessibilityTypes.Unspecified,
+            };
 
         #endregion
 
@@ -643,19 +552,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="PinCrypto">A pin crypto type.</param>
         public static PINCrypto ToOICP(this WWCP.PINCrypto PinCrypto)
-        {
 
-            switch (PinCrypto)
-            {
-
-                case WWCP.PINCrypto.MD5:   return PINCrypto.MD5;
-                case WWCP.PINCrypto.SHA1:  return PINCrypto.SHA1;
-
-                default: return PINCrypto.none;
-
-            }
-
-        }
+            => PinCrypto switch {
+                WWCP.PINCrypto.MD5   => PINCrypto.MD5,
+                WWCP.PINCrypto.SHA1  => PINCrypto.SHA1,
+                _                    => PINCrypto.None,
+            };
 
         #endregion
 
@@ -666,19 +568,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// </summary>
         /// <param name="PinCrypto">A pin crypto type.</param>
         public static WWCP.PINCrypto ToWWCP(this PINCrypto PinCrypto)
-        {
 
-            switch (PinCrypto)
-            {
-
-                case PINCrypto.MD5:  return WWCP.PINCrypto.MD5;
-                case PINCrypto.SHA1: return WWCP.PINCrypto.SHA1;
-
-                default: return WWCP.PINCrypto.none;
-
-            }
-
-        }
+            => PinCrypto switch {
+                PINCrypto.MD5   => WWCP.PINCrypto.MD5,
+                PINCrypto.SHA1  => WWCP.PINCrypto.SHA1,
+                _               => WWCP.PINCrypto.none,
+            };
 
         #endregion
 
@@ -720,68 +615,40 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region AsWWCPPaymentOption(PaymentOption)
 
         public static WWCP.PaymentOptions AsWWCPPaymentOption(this PaymentOptions PaymentOption)
-        {
 
-            switch (PaymentOption)
-            {
-
-                case PaymentOptions.NoPayment:
-                    return WWCP.PaymentOptions.Free;
-
-                case PaymentOptions.Direct:
-                    return WWCP.PaymentOptions.Direct;
-
-                case PaymentOptions.Contract:
-                    return WWCP.PaymentOptions.Contract;
-
-
-                default:
-                    return WWCP.PaymentOptions.Unspecified;
-
-            }
-
-        }
+            => PaymentOption switch {
+                PaymentOptions.NoPayment  => WWCP.PaymentOptions.Free,
+                PaymentOptions.Direct     => WWCP.PaymentOptions.Direct,
+                PaymentOptions.Contract   => WWCP.PaymentOptions.Contract,
+                _                         => WWCP.PaymentOptions.Unspecified,
+            };
 
         #endregion
 
         #region AsOICPPaymentOption(PaymentOption)
 
         public static PaymentOptions AsOICPPaymentOption(this WWCP.PaymentOptions PaymentOption)
-        {
 
-            switch (PaymentOption)
-            {
-
-                case WWCP.PaymentOptions.Free:
-                    return PaymentOptions.NoPayment;
-
-                case WWCP.PaymentOptions.Direct:
-                    return PaymentOptions.Direct;
-
-                case WWCP.PaymentOptions.Contract:
-                    return PaymentOptions.Contract;
-
-
-                default:
-                    return PaymentOptions.Unspecified;
-
-            }
-
-        }
+            => PaymentOption switch {
+                WWCP.PaymentOptions.Free      => PaymentOptions.NoPayment,
+                WWCP.PaymentOptions.Direct    => PaymentOptions.Direct,
+                WWCP.PaymentOptions.Contract  => PaymentOptions.Contract,
+                _                             => PaymentOptions.Unspecified,
+            };
 
         #endregion
 
-        public static PaymentOptions AsOICPPaymentOptions(this IEnumerable<WWCP.PaymentOptions> WWCPPaymentOptions)
-        {
+        //public static PaymentOptions AsOICPPaymentOptions(this IEnumerable<WWCP.PaymentOptions> WWCPPaymentOptions)
+        //{
 
-            var _PaymentOptions = PaymentOptions.Unspecified;
+        //    var _PaymentOptions = PaymentOptions.Unspecified;
 
-            foreach (var WWCPPaymentOption in WWCPPaymentOptions)
-                _PaymentOptions |= WWCPPaymentOption.AsOICPPaymentOption();
+        //    foreach (var WWCPPaymentOption in WWCPPaymentOptions)
+        //        _PaymentOptions |= WWCPPaymentOption.AsOICPPaymentOption();
 
-            return _PaymentOptions;
+        //    return _PaymentOptions;
 
-        }
+        //}
 
         #endregion
 
@@ -802,21 +669,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             {
 
                 case "RFID":
-                    _AuthenticationModes |= AuthenticationModes.NFC_RFID_Classic;
-                    _AuthenticationModes |= AuthenticationModes.NFC_RFID_DESFire;
+                    _AuthenticationModes = AuthenticationModes.NFC_RFID_Classic;
+                    _AuthenticationModes = AuthenticationModes.NFC_RFID_DESFire;
                     break;
 
                 //case "RFIDMifareDESFire":  return AuthenticationModes.NFC_RFID_DESFire;
                 case "ISO/IEC 15118 PLC":
-                    _AuthenticationModes |= AuthenticationModes.PnC;
+                    _AuthenticationModes = AuthenticationModes.PnC;
                     break;
 
                 case "REMOTE":
-                    _AuthenticationModes |= AuthenticationModes.REMOTE;
+                    _AuthenticationModes = AuthenticationModes.REMOTE;
                     break;
 
                 case "Direct payment":
-                    _AuthenticationModes |= AuthenticationModes.DirectPayment;
+                    _AuthenticationModes = AuthenticationModes.DirectPayment;
                     break;
 
             }
@@ -830,158 +697,89 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region AsWWCPAuthenticationMode(AuthenticationMode)
 
         public static WWCP.AuthenticationModes AsWWCPAuthenticationMode(this AuthenticationModes AuthMode)
-        {
 
-            switch (AuthMode)
-            {
-
-                case AuthenticationModes.NFC_RFID_Classic:
-                    return WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareClassic);
-
-                case AuthenticationModes.NFC_RFID_DESFire:
-                    return WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareDESFire);
-
-                case AuthenticationModes.PnC:
-                    return WWCP.AuthenticationModes.ISO15118_PLC;
-
-                case AuthenticationModes.REMOTE:
-                    return WWCP.AuthenticationModes.REMOTE;
-
-                case AuthenticationModes.DirectPayment:
-                    return WWCP.AuthenticationModes.DirectPayment;
-
-
-                default:
-                    return WWCP.AuthenticationModes.Unkown;
-
-            }
-
-        }
+            => AuthMode switch {
+                AuthenticationModes.NFC_RFID_Classic  => WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareClassic),
+                AuthenticationModes.NFC_RFID_DESFire  => WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareDESFire),
+                AuthenticationModes.PnC               => WWCP.AuthenticationModes.ISO15118_PLC,
+                AuthenticationModes.REMOTE            => WWCP.AuthenticationModes.REMOTE,
+                AuthenticationModes.DirectPayment     => WWCP.AuthenticationModes.DirectPayment,
+                _                                     => WWCP.AuthenticationModes.Unkown,
+            };
 
         #endregion
 
-        public static AuthenticationModes AsOICPAuthenticationModes(this IEnumerable<WWCP.AuthenticationModes> WWCPAuthenticationModes)
-        {
+        //public static AuthenticationModes AsOICPAuthenticationModes(this IEnumerable<WWCP.AuthenticationModes> WWCPAuthenticationModes)
+        //{
 
-            var _AuthenticationModes = AuthenticationModes.Unknown;
+        //    var _AuthenticationModes = AuthenticationModes.Unknown;
 
-            foreach (var WWCPAuthenticationMode in WWCPAuthenticationModes)
-                _AuthenticationModes |= WWCPAuthenticationMode.AsOICPAuthenticationMode();
+        //    foreach (var WWCPAuthenticationMode in WWCPAuthenticationModes)
+        //        _AuthenticationModes |= WWCPAuthenticationMode.AsOICPAuthenticationMode();
 
-            return _AuthenticationModes;
+        //    return _AuthenticationModes;
 
-        }
+        //}
 
         #endregion
 
+
+        #region ChargingMode
 
         #region AsWWCPChargingMode(ChargingMode)
 
         public static WWCP.ChargingModes AsWWCPChargingMode(this ChargingModes ChargingMode)
-        {
 
-            switch (ChargingMode)
-            {
-
-                case ChargingModes.Mode_1:
-                    return WWCP.ChargingModes.Mode_1;
-
-                case ChargingModes.Mode_2:
-                    return WWCP.ChargingModes.Mode_2;
-
-                case ChargingModes.Mode_3:
-                    return WWCP.ChargingModes.Mode_3;
-
-                case ChargingModes.Mode_4:
-                    return WWCP.ChargingModes.Mode_4;
-
-                case ChargingModes.CHAdeMO:
-                    return WWCP.ChargingModes.CHAdeMO;
-
-
-                default:
-                    return WWCP.ChargingModes.Unspecified;
-
-            }
-
-        }
+            => ChargingMode switch {
+                ChargingModes.Mode_1   => WWCP.ChargingModes.Mode_1,
+                ChargingModes.Mode_2   => WWCP.ChargingModes.Mode_2,
+                ChargingModes.Mode_3   => WWCP.ChargingModes.Mode_3,
+                ChargingModes.Mode_4   => WWCP.ChargingModes.Mode_4,
+                ChargingModes.CHAdeMO  => WWCP.ChargingModes.CHAdeMO,
+                _                      => WWCP.ChargingModes.Unspecified,
+            };
 
         #endregion
 
         #region AsOICPChargingMode(ChargingMode)
 
         public static ChargingModes AsOICPChargingMode(this WWCP.ChargingModes ChargingMode)
-        {
 
-            switch (ChargingMode)
-            {
-
-                case WWCP.ChargingModes.Mode_1:
-                    return ChargingModes.Mode_1;
-
-                case WWCP.ChargingModes.Mode_2:
-                    return ChargingModes.Mode_2;
-
-                case WWCP.ChargingModes.Mode_3:
-                    return ChargingModes.Mode_3;
-
-                case WWCP.ChargingModes.Mode_4:
-                    return ChargingModes.Mode_4;
-
-                case WWCP.ChargingModes.CHAdeMO:
-                    return ChargingModes.CHAdeMO;
-
-
-                default:
-                    return ChargingModes.Unspecified;
-
-            }
-
-        }
+            => ChargingMode switch {
+                WWCP.ChargingModes.Mode_1   => ChargingModes.Mode_1,
+                WWCP.ChargingModes.Mode_2   => ChargingModes.Mode_2,
+                WWCP.ChargingModes.Mode_3   => ChargingModes.Mode_3,
+                WWCP.ChargingModes.Mode_4   => ChargingModes.Mode_4,
+                WWCP.ChargingModes.CHAdeMO  => ChargingModes.CHAdeMO,
+                _                           => ChargingModes.Unspecified,
+            };
 
         public static ChargingModes AsOICPChargingMode(this WWCP.ChargingModes? ChargingMode)
-        {
 
-            if (!ChargingMode.HasValue)
-                return ChargingModes.Unspecified;
+            => ChargingMode.HasValue
+                   ? ChargingMode switch {
+                         WWCP.ChargingModes.Mode_1 => ChargingModes.Mode_1,
+                         WWCP.ChargingModes.Mode_2 => ChargingModes.Mode_2,
+                         WWCP.ChargingModes.Mode_3 => ChargingModes.Mode_3,
+                         WWCP.ChargingModes.Mode_4 => ChargingModes.Mode_4,
+                         WWCP.ChargingModes.CHAdeMO => ChargingModes.CHAdeMO,
+                         _ => ChargingModes.Unspecified,
+                     }
+                   : ChargingModes.Unspecified;
 
-            switch (ChargingMode)
-            {
+        #endregion
 
-                case WWCP.ChargingModes.Mode_1:
-                    return ChargingModes.Mode_1;
+        //public static ChargingModes AsOICPChargingMode(this IEnumerable<WWCP.ChargingModes> WWCPChargingModes)
+        //{
 
-                case WWCP.ChargingModes.Mode_2:
-                    return ChargingModes.Mode_2;
+        //    var _ChargingModes = ChargingModes.Unspecified;
 
-                case WWCP.ChargingModes.Mode_3:
-                    return ChargingModes.Mode_3;
+        //    foreach (var WWCPChargingMode in WWCPChargingModes)
+        //        _ChargingModes |= WWCPChargingMode.AsOICPChargingMode();
 
-                case WWCP.ChargingModes.Mode_4:
-                    return ChargingModes.Mode_4;
+        //    return _ChargingModes;
 
-                case WWCP.ChargingModes.CHAdeMO:
-                    return ChargingModes.CHAdeMO;
-
-
-                default:
-                    return ChargingModes.Unspecified;
-
-            }
-
-        }
-
-        public static ChargingModes AsOICPChargingMode(this IEnumerable<WWCP.ChargingModes> WWCPChargingModes)
-        {
-
-            var _ChargingModes = ChargingModes.Unspecified;
-
-            foreach (var WWCPChargingMode in WWCPChargingModes)
-                _ChargingModes |= WWCPChargingMode.AsOICPChargingMode();
-
-            return _ChargingModes;
-
-        }
+        //}
 
         #endregion
 
@@ -1131,17 +929,17 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        public static PlugTypes AsOICPPlugTypes(this IEnumerable<WWCP.PlugTypes> WWCPPlugTypes)
-        {
+        //public static PlugTypes AsOICPPlugTypes(this IEnumerable<WWCP.PlugTypes> WWCPPlugTypes)
+        //{
 
-            var _PlugTypes = PlugTypes.Unspecified;
+        //    var _PlugTypes = PlugTypes.Unspecified;
 
-            foreach (var WWCPPlugType in WWCPPlugTypes)
-                _PlugTypes |= WWCPPlugType.AsOICPPlugTypes();
+        //    foreach (var WWCPPlugType in WWCPPlugTypes)
+        //        _PlugTypes |= WWCPPlugType.AsOICPPlugTypes();
 
-            return _PlugTypes;
+        //    return _PlugTypes;
 
-        }
+        //}
 
         #endregion
 
@@ -1288,9 +1086,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             if (Identification.RFIDId.HasValue)
                 return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
 
+            if (Identification.RFIDIdentification.HasValue)
+                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDIdentification.Value.UID.ToString()));
+
             if (Identification.QRCodeIdentification.HasValue)
                 return RemoteAuthentication.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),
-                                                         Identification.QRCodeIdentification.Value.PIN);
+                                                                     Identification.QRCodeIdentification.Value.PIN);
 
             if (Identification.PlugAndChargeIdentification.HasValue)
                 return RemoteAuthentication.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP_eMAId());
@@ -1379,24 +1180,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                                                    AuthenticationStart:   ChargeDetailRecord.Identification.ToWWCP(),
 
-                                                   EnergyMeteringValues:  (ChargeDetailRecord.ChargingStart.HasValue &&
-                                                                           ChargeDetailRecord.ChargingEnd  .HasValue)
-                                                                              ? new Timestamped<Decimal>[] {
+                                                   EnergyMeteringValues:  new Timestamped<Decimal>[] {
 
-                                                                                    new Timestamped<Decimal>(
-                                                                                        ChargeDetailRecord.ChargingStart.  Value,
-                                                                                        ChargeDetailRecord.MeterValueStart.Value
-                                                                                    ),
+                                                                              new Timestamped<Decimal>(
+                                                                                  ChargeDetailRecord.ChargingStart   ?? ChargeDetailRecord.SessionStart,
+                                                                                  ChargeDetailRecord.MeterValueStart ?? 0
+                                                                              ),
 
-                                                                                    //ToDo: Meter values in between... but we don't have timestamps for them!
+                                                                              //ToDo: Meter values in between... but we don't have timestamps for them!
 
-                                                                                    new Timestamped<Decimal>(
-                                                                                        ChargeDetailRecord.ChargingEnd.  Value,
-                                                                                        ChargeDetailRecord.MeterValueEnd.Value
-                                                                                    )
+                                                                              new Timestamped<Decimal>(
+                                                                                  ChargeDetailRecord.ChargingEnd     ?? ChargeDetailRecord.SessionEnd,
+                                                                                  ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy ?? 0
+                                                                              )
 
-                                                                                }
-                                                                              : new Timestamped<Decimal>[0],
+                                                                          },
 
                                                    //ConsumedEnergy:      Will be calculated!
 

@@ -30,11 +30,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP Electric Vehicle Supply Equipment (EVSE).
+    /// The unique identification of an Electric Vehicle Supply Equipment (EVSE).
     /// </summary>
-    public struct EVSE_Id : IId,
-                            IEquatable<EVSE_Id>,
-                            IComparable<EVSE_Id>
+    public readonly struct EVSE_Id : IId,
+                                     IEquatable<EVSE_Id>,
+                                     IComparable<EVSE_Id>
 
     {
 
@@ -132,7 +132,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EVSE identification.</param>
+        /// <param name="Text">A text-representation of an EVSE identification.</param>
         public static EVSE_Id Parse(String Text)
         {
 
@@ -142,7 +142,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text),  "The given text representation of an EVSE identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text),  "The given text-representation of an EVSE identification must not be null or empty!");
 
             #endregion
 
@@ -187,7 +187,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Suffix = Suffix.Trim();
 
             if (Suffix.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Suffix), "The given text representation of an EVSE identification suffix must not be null or empty!");
+                throw new ArgumentNullException(nameof(Suffix), "The given text-representation of an EVSE identification suffix must not be null or empty!");
 
             #endregion
 
@@ -214,7 +214,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EVSE identification.</param>
+        /// <param name="Text">A text-representation of an EVSE identification.</param>
         public static EVSE_Id? TryParse(String Text)
         {
 
@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text representation of an EVSE identification.</param>
+        /// <param name="Text">A text-representation of an EVSE identification.</param>
         /// <param name="EVSEId">The parsed EVSE identification.</param>
         public static Boolean TryParse(String Text, out EVSE_Id EVSEId)
         {
@@ -491,7 +491,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
         {

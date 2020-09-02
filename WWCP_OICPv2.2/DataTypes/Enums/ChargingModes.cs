@@ -26,67 +26,46 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for charging modes.
     /// </summary>
-    public static partial class XML_IO
+    public static class ChargingModesExtentions
     {
 
-        #region AsChargingMode(ChargingMode)
+        #region Parse(Text)
 
         /// <summary>
-        /// Maps an OICP charging mode to a WWCP charging mode.
+        /// Parses the given text-representation of a charging mode.
         /// </summary>
-        /// <param name="ChargingMode">A charging mode.</param>
-        public static ChargingModes AsChargingMode(String ChargingMode)
-        {
+        /// <param name="Text">A text-representation of a charging mode.</param>
+        public static ChargingModes Parse(String Text)
 
-            switch (ChargingMode.Trim())
-            {
-
-                case "Mode_1":   return ChargingModes.Mode_1;
-                case "Mode_2":   return ChargingModes.Mode_2;
-                case "Mode_3":   return ChargingModes.Mode_3;
-                case "Mode_4":   return ChargingModes.Mode_4;
-                case "CHAdeMO":  return ChargingModes.CHAdeMO;
-
-                default: return ChargingModes.Unspecified;
-
-            }
-
-        }
+            => Text.Trim() switch {
+                "Mode_1"   => ChargingModes.Mode_1,
+                "Mode_2"   => ChargingModes.Mode_2,
+                "Mode_3"   => ChargingModes.Mode_3,
+                "Mode_4"   => ChargingModes.Mode_4,
+                "CHAdeMO"  => ChargingModes.CHAdeMO,
+                _          => ChargingModes.Unspecified,
+            };
 
         #endregion
 
         #region AsString(ChargingMode)
 
+        /// <summary>
+        /// Return a text-representation of the given charging mode.
+        /// </summary>
+        /// <param name="ChargingMode">A charging mode.</param>
         public static String AsString(this ChargingModes ChargingMode)
-        {
 
-            switch (ChargingMode)
-            {
-
-                case ChargingModes.Mode_1:
-                    return "Mode_1";
-
-                case ChargingModes.Mode_2:
-                    return "Mode_2";
-
-                case ChargingModes.Mode_3:
-                    return "Mode_3";
-
-                case ChargingModes.Mode_4:
-                    return "Mode_4";
-
-                case ChargingModes.CHAdeMO:
-                    return "CHAdeMO";
-
-
-                default:
-                    return "Unspecified";
-
-            }
-
-        }
+            => ChargingMode switch {
+                ChargingModes.Mode_1   => "Mode_1",
+                ChargingModes.Mode_2   => "Mode_2",
+                ChargingModes.Mode_3   => "Mode_3",
+                ChargingModes.Mode_4   => "Mode_4",
+                ChargingModes.CHAdeMO  => "CHAdeMO",
+                _                      => "Unspecified",
+            };
 
         #endregion
 
@@ -94,7 +73,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
 
     /// <summary>
-    /// OICP charging modes.
+    /// Charging modes.
     /// </summary>
     [Flags]
     public enum ChargingModes

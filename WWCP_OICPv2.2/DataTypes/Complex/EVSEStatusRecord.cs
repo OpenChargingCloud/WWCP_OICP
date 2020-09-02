@@ -126,7 +126,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (EVSEStatusRecordText, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP EVSE status record.
+        /// Parse the given text-representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom XML elements.</param>
@@ -179,7 +179,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                                           EVSE_Id.Parse),
 
                                        EVSEStatusRecordXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseStatus",
-                                                                          XML_IO.AsEVSEStatusType)
+                                                                          EVSEStatusTypesExtentions.Parse)
 
                                    );
 
@@ -207,7 +207,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(EVSEStatusRecordText, out EVSEStatusRecord, CustomEVSEStatusRecordParser = null, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP EVSE status record.
+        /// Try to parse the given text-representation of an OICP EVSE status record.
         /// </summary>
         /// <param name="EVSEStatusRecordText">The text to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var XML = new XElement(XName ?? OICPNS.EVSEStatus + "EvseStatusRecord",
                           new XElement(OICPNS.EVSEStatus + "EvseID",      Id.    ToString()),
-                          new XElement(OICPNS.EVSEStatus + "EvseStatus",  XML_IO.AsText(Status))
+                          new XElement(OICPNS.EVSEStatus + "EvseStatus",  Status.AsString())
                       );
 
             return CustomEVSEStatusRecordSerializer != null
@@ -492,7 +492,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of an electric vehicle contract identification (EVCOId).
     /// </summary>
-    public struct EVCO_Id : IId,
-                            IEquatable<EVCO_Id>,
-                            IComparable<EVCO_Id>
+    public readonly struct EVCO_Id : IId,
+                                     IEquatable<EVCO_Id>,
+                                     IComparable<EVCO_Id>
     {
 
         #region Data
@@ -107,9 +107,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given text representation of an electric vehicle contract identification.
+        /// Parse the given text-representation of an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
         public static EVCO_Id Parse(String Text)
         {
 
@@ -173,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
         public static EVCO_Id? TryParse(String Text)
         {
 
@@ -191,7 +191,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
         /// <param name="EVCOId">The parsed electric vehicle contract identification.</param>
         public static Boolean TryParse(String Text, out EVCO_Id EVCOId)
         {
@@ -441,7 +441,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

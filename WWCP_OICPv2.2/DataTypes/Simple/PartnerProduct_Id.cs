@@ -29,11 +29,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP partner product.
+    /// The unique identification of a partner product.
     /// </summary>
-    public struct PartnerProduct_Id : IId,
-                                      IEquatable <PartnerProduct_Id>,
-                                      IComparable<PartnerProduct_Id>
+    public readonly struct PartnerProduct_Id : IId,
+                                               IEquatable <PartnerProduct_Id>,
+                                               IComparable<PartnerProduct_Id>
 
     {
 
@@ -81,7 +81,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text representation of a partner product identification.</param>
+        /// <param name="Text">A text-representation of a partner product identification.</param>
         public static PartnerProduct_Id Parse(String Text)
         {
 
@@ -91,14 +91,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a partner product identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a partner product identification must not be null or empty!");
 
             #endregion
 
             if (TryParse(Text, out PartnerProduct_Id partnerProductId))
                 return partnerProductId;
 
-            throw new ArgumentException("Illegal text representation of a partner product identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Illegal text-representation of a partner product identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -109,7 +109,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Try to parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text representation of a partner product identification.</param>
+        /// <param name="Text">A text-representation of a partner product identification.</param>
         public static PartnerProduct_Id? TryParse(String Text)
         {
 
@@ -138,7 +138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// Parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text representation of a partner product identification.</param>
+        /// <param name="Text">A text-representation of a partner product identification.</param>
         /// <param name="PartnerProductId">The parsed partner product identification.</param>
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
@@ -353,7 +353,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => InternalId;

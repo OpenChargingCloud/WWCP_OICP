@@ -31,9 +31,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// An RFID identification.
     /// </summary>
-    public struct RFIDIdentification : IEquatable <RFIDIdentification>,
-                                       IComparable<RFIDIdentification>,
-                                       IComparable
+    public readonly struct RFIDIdentification : IEquatable<RFIDIdentification>,
+                                                IComparable<RFIDIdentification>,
+                                                IComparable
     {
 
         #region Properties
@@ -83,13 +83,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                   DateTime?   ExpiryDate     = null)
         {
 
-            if (PrintedNumber != null)
-                PrintedNumber = PrintedNumber.Trim();
-
             this.UID            = UID;
             this.RFIDType       = RFIDType;
             this.EVCOId         = EVCOId;
-            this.PrintedNumber  = PrintedNumber?.SubstringMax(150);
+            this.PrintedNumber  = PrintedNumber?.Trim()?.SubstringMax(150);
             this.ExpiryDate     = ExpiryDate;
 
         }
@@ -157,7 +154,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (RFIDIdentificationText, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP RFID identification.
+        /// Parse the given text-representation of an OICP RFID identification.
         /// </summary>
         /// <param name="RFIDIdentificationText">The text to parse.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
@@ -210,8 +207,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                          RFIDIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "UID",
                                                                                      UID.Parse),
 
-                                         RFIDIdentificationXML.MapEnumValuesOrFail  (OICPNS.CommonTypes + "RFIDType",
-                                                                                     s => (RFIDTypes) Enum.Parse(typeof(RFIDTypes), s)),
+                                         RFIDIdentificationXML.MapValueOrFail       (OICPNS.CommonTypes + "RFIDType",
+                                                                                     RFIDTypesExtentions.Parse),
 
                                          RFIDIdentificationXML.MapValueOrNullable   (OICPNS.EVSEStatus + "EvcoID",
                                                                                      EVCO_Id.Parse),
@@ -247,7 +244,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(RFIDIdentificationText, out RFIDIdentification, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP RFID identification.
+        /// Try to parse the given text-representation of an OICP RFID identification.
         /// </summary>
         /// <param name="RFIDIdentificationText">The text to parse.</param>
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
@@ -571,7 +568,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

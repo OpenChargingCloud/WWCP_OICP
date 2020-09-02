@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An OICP identification (RFID or EVCO identification).
+    /// An user identification (RFID or EVCO identification).
     /// </summary>
     public class Identification : ACustomData,
                                   IEquatable <Identification>,
@@ -71,6 +71,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new user identification (RFID or EVCO identification).
+        /// </summary>
         private Identification(UID?                                 RFIDId                        = null,
                                RFIDIdentification?                  RFIDIdentification            = null,
                                QRCodeIdentification?                QRCodeIdentification          = null,
@@ -281,12 +284,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(IdentificationXML,
-                         out Identification _Identification,
+                         out Identification identification,
                          CustomIdentificationParser,
                          CustomRFIDIdentificationParser,
                          OnException))
 
-                return _Identification;
+                return identification;
 
             return null;
 
@@ -297,7 +300,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (IdentificationText, CustomIdentificationParser = null, OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP identification.
+        /// Parse the given text-representation of an OICP identification.
         /// </summary>
         /// <param name="IdentificationText">The text to parse.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
@@ -310,12 +313,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (TryParse(IdentificationText,
-                         out Identification _Identification,
+                         out Identification identification,
                          CustomIdentificationParser,
                          CustomRFIDIdentificationParser,
                          OnException))
 
-                return _Identification;
+                return identification;
 
             return null;
 
@@ -407,7 +410,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(IdentificationText, out Identification, CustomIdentificationParser = null, OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP identification.
+        /// Try to parse the given text-representation of an OICP identification.
         /// </summary>
         /// <param name="IdentificationText">The text to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
@@ -792,7 +795,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
         {

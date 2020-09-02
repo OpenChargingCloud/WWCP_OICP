@@ -240,7 +240,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (OperatorEVSEDataText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP operator EVSE data request.
+        /// Parse the given text-representation of an OICP operator EVSE data request.
         /// </summary>
         /// <param name="OperatorEVSEDataText">The text to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
@@ -345,7 +345,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(OperatorEVSEDataText, out OperatorEVSEData, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP operator EVSE data request.
+        /// Try to parse the given text-representation of an OICP operator EVSE data request.
         /// </summary>
         /// <param name="OperatorEVSEDataText">The text to parse.</param>
         /// <param name="OperatorEVSEData">The parsed operator EVSE data request.</param>
@@ -670,7 +670,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

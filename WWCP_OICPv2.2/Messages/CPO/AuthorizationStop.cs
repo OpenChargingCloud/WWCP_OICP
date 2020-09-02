@@ -570,7 +570,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) Parse   (Request, AuthorizationStopText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP authorization stop request.
+        /// Parse the given text-representation of an OICP authorization stop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopText">The text to parse.</param>
@@ -678,7 +678,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (static) TryParse(Request, AuthorizationStopText, out AuthorizationStop, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP authorization stop request.
+        /// Try to parse the given text-representation of an OICP authorization stop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStopRequest request.</param>
         /// <param name="AuthorizationStopText">The text to parse.</param>
@@ -949,7 +949,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
 

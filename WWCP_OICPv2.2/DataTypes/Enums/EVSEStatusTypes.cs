@@ -25,78 +25,46 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// OICP XML I/O.
+    /// Extentions methods for EVSE status types.
     /// </summary>
-    public static partial class XML_IO
+    public static class EVSEStatusTypesExtentions
     {
 
-        #region AsEVSEStatusType(EVSEStatusType)
+        #region Parse(Text)
 
         /// <summary>
-        /// Parses OICP EVSE status.
+        /// Parses the given text-representation of an EVSE status.
         /// </summary>
-        /// <param name="EVSEStatusType">An EVSE status.</param>
-        public static EVSEStatusTypes AsEVSEStatusType(String EVSEStatusType)
-        {
+        /// <param name="Text">Parses the given text-representation of an EVSE status.</param>
+        public static EVSEStatusTypes Parse(String Text)
 
-            switch (EVSEStatusType.Trim())
-            {
-
-                case "Available":
-                    return EVSEStatusTypes.Available;
-
-                case "Reserved":
-                    return EVSEStatusTypes.Reserved;
-
-                case "Occupied":
-                    return EVSEStatusTypes.Occupied;
-
-                case "OutOfService":
-                    return EVSEStatusTypes.OutOfService;
-
-                case "EvseNotFound":
-                    return EVSEStatusTypes.EvseNotFound;
-
-
-                default:
-                    return EVSEStatusTypes.Unknown;
-
-            }
-
-        }
+            => Text.Trim() switch {
+                "Available"     => EVSEStatusTypes.Available,
+                "Reserved"      => EVSEStatusTypes.Reserved,
+                "Occupied"      => EVSEStatusTypes.Occupied,
+                "OutOfService"  => EVSEStatusTypes.OutOfService,
+                "EvseNotFound"  => EVSEStatusTypes.EvseNotFound,
+                _               => EVSEStatusTypes.Unknown,
+            };
 
         #endregion
 
         #region AsString(EVSEStatusType)
 
-        public static String AsText(this EVSEStatusTypes EVSEStatusType)
-        {
+        /// <summary>
+        /// Return a text-representation of the given EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatusType">An EVSE status.</param>
+        public static String AsString(this EVSEStatusTypes EVSEStatusType)
 
-            switch (EVSEStatusType)
-            {
-
-                case EVSEStatusTypes.Available:
-                    return "Available";
-
-                case EVSEStatusTypes.Reserved:
-                    return "Reserved";
-
-                case EVSEStatusTypes.Occupied:
-                    return "Occupied";
-
-                case EVSEStatusTypes.OutOfService:
-                    return "OutOfService";
-
-                case EVSEStatusTypes.EvseNotFound:
-                    return "EvseNotFound";
-
-
-                default:
-                    return "Unknown";
-
-            }
-
-        }
+            => EVSEStatusType switch {
+                EVSEStatusTypes.Available     => "Available",
+                EVSEStatusTypes.Reserved      => "Reserved",
+                EVSEStatusTypes.Occupied      => "Occupied",
+                EVSEStatusTypes.OutOfService  => "OutOfService",
+                EVSEStatusTypes.EvseNotFound  => "EvseNotFound",
+                _                             => "Unknown",
+            };
 
         #endregion
 

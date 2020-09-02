@@ -28,11 +28,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// The unique identification of an OICP e-mobility provider.
+    /// The unique identification of an e-mobility provider.
     /// </summary>
-    public struct Provider_Id : IId,
-                                IEquatable<Provider_Id>,
-                                IComparable<Provider_Id>
+    public readonly struct Provider_Id : IId,
+                                         IEquatable<Provider_Id>,
+                                         IComparable<Provider_Id>
 
     {
 
@@ -128,9 +128,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region Parse(Text)
 
         /// <summary>
-        /// Parse the given text representation of an e-mobility provider identification.
+        /// Parse the given text-representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
         public static Provider_Id Parse(String Text)
         {
 
@@ -140,14 +140,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of an e-mobility provider identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of an e-mobility provider identification must not be null or empty!");
 
             #endregion
 
             var MatchCollection = ProviderId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Illegal text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
 
             if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
             {
@@ -176,7 +176,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                        Separator);
             }
 
-            throw new ArgumentException("Unknown country code in the given text representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Unknown country code in the given text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -236,9 +236,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given text representation of an e-mobility provider identification.
+        /// Try to parse the given text-representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
         public static Provider_Id? TryParse(String Text)
         {
 
@@ -254,9 +254,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region TryParse(Text, out ProviderId)
 
         /// <summary>
-        /// Try to parse the given text representation of an e-mobility provider identification.
+        /// Try to parse the given text-representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
         /// <param name="ProviderId">The parsed e-mobility provider identification.</param>
         public static Boolean TryParse(String           Text,
                                        out Provider_Id  ProviderId)
@@ -335,7 +335,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region TryParse(CountryCode, Suffix, out ProviderId, IdFormat = ProviderIdFormats.ISO_HYPHEN)
 
         /// <summary>
-        /// Try to parse the given text representation of an e-mobility provider identification.
+        /// Try to parse the given text-representation of an e-mobility provider identification.
         /// </summary>
         /// <param name="CountryCode">A country code.</param>
         /// <param name="Suffix">The suffix of an e-mobility provider identification.</param>
@@ -577,7 +577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
         {

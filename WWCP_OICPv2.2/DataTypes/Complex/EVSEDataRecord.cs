@@ -53,129 +53,129 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
-        public EVSE_Id                        Id                          { get; }
+        public EVSE_Id                           Id                          { get; }
 
 
         /// <summary>
         /// The delta type when this EVSE data record was just downloaded.
         /// </summary>
-        public DeltaTypes?                    DeltaType                   { get; }
+        public DeltaTypes?                       DeltaType                   { get; }
 
         /// <summary>
         /// The last update timestamp of this EVSE data record.
         /// </summary>
-        public DateTime?                      LastUpdate                  { get; }
+        public DateTime?                         LastUpdate                  { get; }
 
 
         /// <summary>
         /// The identification of the charging station hosting this EVSE.
         /// </summary>
-        public ChargingStation_Id?            ChargingStationId           { get; }
+        public ChargingStation_Id?               ChargingStationId           { get; }
 
         /// <summary>
         /// The identification of the charging pool hosting this EVSE.
         /// </summary>
-        public ChargingPool_Id?               ChargingPoolId              { get; }
+        public ChargingPool_Id?                  ChargingPoolId              { get; }
 
         /// <summary>
         /// The multi-language name of the charging station hosting this EVSE.
         /// </summary>
-        public I18NString                     ChargingStationName         { get; }
+        public I18NString                        ChargingStationName         { get; }
 
         /// <summary>
         /// The address of this EVSE.
         /// </summary>
-        public Address                        Address                     { get; }
+        public Address                           Address                     { get; }
 
         /// <summary>
         /// The geo coordinate of this EVSE.
         /// </summary>
-        public GeoCoordinate?                 GeoCoordinate               { get; }
+        public GeoCoordinate                     GeoCoordinate               { get; }
 
         /// <summary>
         /// The types of charging plugs attached to this EVSE.
         /// </summary>
-        public PlugTypes                      Plugs                       { get; }
+        public IEnumerable<PlugTypes>            PlugTypes                   { get; }
 
         /// <summary>
         /// The charging facilities at this EVSE.
         /// </summary>
-        public IEnumerable<ChargingFacility>  ChargingFacilities          { get; }
+        public IEnumerable<ChargingFacility>     ChargingFacilities          { get; }
 
         /// <summary>
         /// The charging modes this EVSE supports.
         /// </summary>
-        public ChargingModes                  ChargingModes               { get; }
+        public IEnumerable<ChargingModes>        ChargingModes               { get; }
 
         /// <summary>
         /// The authentication modes this EVSE supports.
         /// </summary>
-        public AuthenticationModes            AuthenticationModes         { get; }
+        public IEnumerable<AuthenticationModes>  AuthenticationModes         { get; }
 
         /// <summary>
         /// The maximum capacity this EVSE provides.
         /// </summary>
-        public Single?                        MaxCapacity                 { get; }
+        public Single?                           MaxCapacity                 { get; }
 
         /// <summary>
         /// The payment options this EVSE supports.
         /// </summary>
-        public PaymentOptions                 PaymentOptions              { get; }
+        public IEnumerable<PaymentOptions>       PaymentOptions              { get; }
 
         /// <summary>
         /// A list of "value added services" this EVSE supports.
         /// </summary>
-        public ValueAddedServices             ValueAddedServices          { get; }
+        public IEnumerable<ValueAddedServices>   ValueAddedServices          { get; }
 
         /// <summary>
         /// The accessibility of this EVSE.
         /// </summary>
-        public AccessibilityTypes             Accessibility               { get; }
+        public AccessibilityTypes                Accessibility               { get; }
 
         /// <summary>
         /// The phone number of the Charging Station Operators hotline.
         /// </summary>
-        public String                         HotlinePhoneNumber          { get; }
+        public String                            HotlinePhoneNumber          { get; }
 
         /// <summary>
         /// Additional multi-language information about this EVSE.
         /// </summary>
-        public I18NString                     AdditionalInfo              { get; }
+        public I18NString                        AdditionalInfo              { get; }
 
         /// <summary>
         /// The geo coordinate of the entrance to this EVSE.
         /// </summary>
-        public GeoCoordinate?                 GeoChargingPointEntrance    { get; }
+        public GeoCoordinate?                    GeoChargingPointEntrance    { get; }
 
         /// <summary>
         /// Whether this EVSE is open 24/7.
         /// </summary>
-        public Boolean                        IsOpen24Hours               { get; }
+        public Boolean                           IsOpen24Hours               { get; }
 
         /// <summary>
         /// The opening times of this EVSE.
         /// </summary>
-        public String                         OpeningTimes                 { get; }
+        public String                            OpeningTimes                 { get; }
 
         /// <summary>
         /// An optional hub operator of this EVSE.
         /// </summary>
-        public HubOperator_Id?                HubOperatorId               { get; }
+        public HubOperator_Id?                   HubOperatorId               { get; }
 
         /// <summary>
         /// An optional clearing house of this EVSE.
         /// </summary>
-        public ClearingHouse_Id?              ClearingHouseId             { get; }
+        public ClearingHouse_Id?                 ClearingHouseId             { get; }
 
         /// <summary>
         /// Whether this EVSE is Hubject compatible.
         /// </summary>
-        public Boolean                        IsHubjectCompatible         { get; }
+        public Boolean                           IsHubjectCompatible         { get; }
 
         /// <summary>
         /// Whether this EVSE provides dynamic status information.
         /// </summary>
-        public Boolean                        DynamicInfoAvailable        { get; }
+        public Boolean                           DynamicInfoAvailable        { get; }
 
         #endregion
 
@@ -185,61 +185,65 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// Create a new EVSE data record.
         /// </summary>
         /// <param name="Id">A unique EVSE identification.</param>
+        /// 
+        /// <param name="Address">The address of this EVSE.</param>
+        /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
+        /// <param name="PlugTypes">The types of charging plugs attached to this EVSE.</param>
+        /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
+        /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
+        /// <param name="Accessibility">The accessibility of this EVSE.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the charging station operators hotline.</param>
+        /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
+        /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
+        /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+        /// 
         /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
         /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
         /// 
         /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
         /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
-        /// <param name="Address">The address of this EVSE.</param>
-        /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
-        /// <param name="Plugs">The types of charging plugs attached to this EVSE.</param>
         /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
         /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
-        /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
         /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
         /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
-        /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
-        /// <param name="Accessibility">The accessibility of this EVSE.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
         /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
         /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
-        /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
         /// <param name="OpeningTimes">The opening times of this EVSE.</param>
         /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
         /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
-        /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
-        /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
         /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
         public EVSEDataRecord(EVSE_Id                              Id,
-                              DeltaTypes?                          DeltaType,
-                              DateTime?                            LastUpdate,
 
-                              ChargingStation_Id?                  ChargingStationId           = null,
-                              ChargingPool_Id?                     ChargingPoolId              = null,
-                              I18NString                           ChargingStationName         = null,
-                              Address                              Address                     = null,
-                              GeoCoordinate?                       GeoCoordinate               = null,
-                              PlugTypes                            Plugs                       = PlugTypes.Unspecified,
-                              IEnumerable<ChargingFacility>        ChargingFacilities          = null,
-                              ChargingModes                        ChargingModes               = ChargingModes.Unspecified,
-                              AuthenticationModes                  AuthenticationModes         = AuthenticationModes.Unknown,
-                              Single?                              MaxCapacity                 = null,
-                              PaymentOptions                       PaymentOptions              = PaymentOptions.Unspecified,
-                              ValueAddedServices                   ValueAddedServices          = ValueAddedServices.None,
-                              AccessibilityTypes                   Accessibility               = AccessibilityTypes.Free_publicly_accessible,
-                              String                               HotlinePhoneNumber          = null,
-                              I18NString                           AdditionalInfo              = null,
-                              GeoCoordinate?                       GeoChargingPointEntrance    = null,
-                              Boolean                              IsOpen24Hours               = true,
-                              String                               OpeningTimes                = null,
-                              HubOperator_Id?                      HubOperatorId               = null,
-                              ClearingHouse_Id?                    ClearingHouseId             = null,
-                              Boolean                              IsHubjectCompatible         = true,
-                              Boolean                              DynamicInfoAvailable        = true,
+                              Address                              Address,
+                              GeoCoordinate                        GeoCoordinate,
+                              IEnumerable<PlugTypes>               PlugTypes,
+                              IEnumerable<AuthenticationModes>     AuthenticationModes,
+                              IEnumerable<ValueAddedServices>      ValueAddedServices,
+                              AccessibilityTypes                   Accessibility,
+                              String                               HotlinePhoneNumber,
+                              Boolean                              IsOpen24Hours,
+                              Boolean                              IsHubjectCompatible,
+                              Boolean                              DynamicInfoAvailable,
 
-                              IReadOnlyDictionary<String, Object>  CustomData                  = null)
+                              DeltaTypes?                          DeltaType                  = null,
+                              DateTime?                            LastUpdate                 = null,
+
+                              ChargingStation_Id?                  ChargingStationId          = null,
+                              ChargingPool_Id?                     ChargingPoolId             = null,
+                              I18NString                           ChargingStationName        = null,
+                              IEnumerable<ChargingFacility>        ChargingFacilities         = null,
+                              IEnumerable<ChargingModes>           ChargingModes              = null,
+                              Single?                              MaxCapacity                = null,
+                              IEnumerable<PaymentOptions>          PaymentOptions             = null,
+                              I18NString                           AdditionalInfo             = null,
+                              GeoCoordinate?                       GeoChargingPointEntrance   = null,
+                              String                               OpeningTimes               = null,
+                              HubOperator_Id?                      HubOperatorId              = null,
+                              ClearingHouse_Id?                    ClearingHouseId            = null,
+
+                              IReadOnlyDictionary<String, Object>  CustomData                 = null)
 
             : base(CustomData)
 
@@ -247,50 +251,48 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             #region Initial checks
 
-            if (Address == null)
-                throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
+            if (PlugTypes.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
 
-            if (GeoCoordinate == null)
-                throw new ArgumentNullException(nameof(GeoCoordinate),        "The given geo coordinate must not be null!");
+            if (AuthenticationModes.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(AuthenticationModes),  "The given enumeration of authentication modes must not be null or empty!");
 
-            if (Plugs == PlugTypes.Unspecified)
-                throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
+            if (ValueAddedServices.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(ValueAddedServices),   "The given enumeration of value added services must not be null or empty!");
 
-            if (AuthenticationModes == AuthenticationModes.Unknown)
-                throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
-
-            if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
+            if (HotlinePhoneNumber?.Trim().IsNullOrEmpty() == true)
                 throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
 
             #endregion
 
-            this.Id                         = Id;
+            this.Id                        = Id;
 
-            this.DeltaType                  = DeltaType;
-            this.LastUpdate                 = LastUpdate;
+            this.Address                   = Address                          ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
+            this.GeoCoordinate             = GeoCoordinate;
+            this.PlugTypes                 = PlugTypes;
+            this.AuthenticationModes       = AuthenticationModes;
+            this.ValueAddedServices        = ValueAddedServices;
+            this.Accessibility             = Accessibility;
+            this.HotlinePhoneNumber        = HotlinePhoneNumber?.Trim();
+            this.IsOpen24Hours             = IsOpen24Hours;
+            this.IsHubjectCompatible       = IsHubjectCompatible;
+            this.DynamicInfoAvailable      = DynamicInfoAvailable;
 
-            this.ChargingStationId          = ChargingStationId;
-            this.ChargingPoolId             = ChargingPoolId;
-            this.ChargingStationName        = ChargingStationName              ?? new I18NString();
-            this.Address                    = Address;
-            this.GeoCoordinate              = GeoCoordinate;
-            this.Plugs                      = Plugs;
-            this.ChargingModes              = ChargingModes;
-            this.ChargingFacilities         = ChargingFacilities               ?? new ChargingFacility[0];
-            this.AuthenticationModes        = AuthenticationModes;
-            this.MaxCapacity                = MaxCapacity;
-            this.PaymentOptions             = PaymentOptions;
-            this.ValueAddedServices         = ValueAddedServices;
-            this.Accessibility              = Accessibility;
-            this.HotlinePhoneNumber         = HotlinePhoneNumber;
-            this.AdditionalInfo             = AdditionalInfo.SubstringMax(200) ?? new I18NString();
-            this.GeoChargingPointEntrance   = GeoChargingPointEntrance;
-            this.IsOpen24Hours              = IsOpen24Hours;
-            this.OpeningTimes               = OpeningTimes;
-            this.HubOperatorId              = HubOperatorId;
-            this.ClearingHouseId            = ClearingHouseId;
-            this.IsHubjectCompatible        = IsHubjectCompatible;
-            this.DynamicInfoAvailable       = DynamicInfoAvailable;
+            this.DeltaType                 = DeltaType;
+            this.LastUpdate                = LastUpdate;
+
+            this.ChargingStationId         = ChargingStationId;
+            this.ChargingPoolId            = ChargingPoolId;
+            this.ChargingStationName       = ChargingStationName              ?? new I18NString();
+            this.ChargingModes             = ChargingModes                    ?? new ChargingModes[0];
+            this.ChargingFacilities        = ChargingFacilities               ?? new ChargingFacility[0];
+            this.MaxCapacity               = MaxCapacity;
+            this.PaymentOptions            = PaymentOptions                   ?? new PaymentOptions[0];
+            this.AdditionalInfo            = AdditionalInfo.SubstringMax(200) ?? new I18NString();
+            this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
+            this.OpeningTimes              = OpeningTimes;
+            this.HubOperatorId             = HubOperatorId;
+            this.ClearingHouseId           = ClearingHouseId;
 
         }
 
@@ -463,7 +465,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) Parse   (EVSEDataRecordText, ..., OnException = null)
 
         /// <summary>
-        /// Parse the given text representation of an OICP EVSE data record.
+        /// Parse the given text-representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
@@ -576,18 +578,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                     EVSEId,
 
-                    XML_IO.AsDeltaType(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
-
-                    _LastUpdate,
-
-                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingStationId",
-                                                         ChargingStation_Id.Parse),
-
-                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingPoolId",
-                                                         ChargingPool_Id.Parse),
-
-                    _ChargingStationName,
-
                     EVSEDataRecordXML.MapElementOrFail  (OICPNS.EVSEData + "Address",
                                                          (xml, e) => Address.Parse(xml,
                                                                                    CustomAddressParser,
@@ -598,56 +588,69 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                     EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
                                                          OICPNS.EVSEData + "Plug",
-                                                         XML_IO.AsPlugType).
-                                                         Reduce(),
+                                                         PlugTypesExtentions.Parse),
 
-                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingFacilities",
+                    EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "AuthenticationModes",
+                                                         OICPNS.EVSEData + "AuthenticationMode",
+                                                         AuthenticationModesExtentions.Parse),
+
+                    EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "ValueAddedServices",
+                                                         OICPNS.EVSEData + "ValueAddedService",
+                                                         ValueAddedServicesExtentions.Parse),
+
+                    AccessibilityTypesExtentions.Parse  (EVSEDataRecordXML.
+                                                         ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
+                                                         Trim()),
+
+
+                    EVSEDataRecordXML.                   ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum").
+                                                         Trim(),
+
+                    EVSEDataRecordXML.MapValueOrFail    (OICPNS.EVSEData + "IsOpen24Hours",
+                                                         s => s == "true"),
+
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
+                                      Trim() == "true",
+
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
+                                      Trim() != "false",
+
+
+
+                    DeltaTypesExtentions.Parse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
+
+                    _LastUpdate,
+
+
+
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingStationId",
+                                                         ChargingStation_Id.Parse),
+
+                    EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingPoolId",
+                                                         ChargingPool_Id.Parse),
+
+                    _ChargingStationName,
+
+                    EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "ChargingFacilities",
                                                          OICPNS.EVSEData + "ChargingFacility",
                                                          xml => ChargingFacility.Parse(xml,
                                                                                        CustomChargingFacilityParser,
-                                                                                       OnException),
-                                                         null), //new ChargingFacility[0] as IEnumerable<ChargingFacility>),
+                                                                                       OnException)),
 
-                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ChargingModes",
+                    EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "ChargingModes",
                                                          OICPNS.EVSEData + "ChargingMode",
-                                                         XML_IO.AsChargingMode,
-                                                         ChargingModes.Unspecified).
-                                                         Reduce(),
-
-                    EVSEDataRecordXML.MapValuesOrFail(OICPNS.EVSEData + "AuthenticationModes",
-                                                         OICPNS.EVSEData + "AuthenticationMode",
-                                                         XML_IO.AsAuthenticationMode).
-                                                         Reduce(),
+                                                         ChargingModesExtentions.Parse),
 
                     _MaxCapacity,
 
-                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "PaymentOptions",
+                    EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "PaymentOptions",
                                                          OICPNS.EVSEData + "PaymentOption",
-                                                         XML_IO.AsPaymetOption,
-                                                         PaymentOptions.Unspecified).
-                                                         Reduce(),
-
-                    EVSEDataRecordXML.MapValuesOrDefault(OICPNS.EVSEData + "ValueAddedServices",
-                                                         OICPNS.EVSEData + "ValueAddedService",
-                                                         XML_IO.AsValueAddedService,
-                                                         ValueAddedServices.None).
-                                                         Reduce(),
-
-                    XML_IO.AsAccessibilityType(EVSEDataRecordXML.
-                                                   ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
-                                                   Trim()),
-
-                    EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum").
-                                      Trim(),
-
+                                                         PaymentOptionsExtentions.Parse),
 
                     _AdditionalInfo,
 
                     EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
                                                  XML_IO.ParseGeoCoordinatesXML),
-
-                    EVSEDataRecordXML.MapValueOrFail(OICPNS.EVSEData + "IsOpen24Hours",
-                                                     s => s == "true"),
 
                     //ToDo!!!!!!!!!!!!!!!!!!!!
                     EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTimes"),
@@ -656,13 +659,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                          HubOperator_Id.Parse),
 
                     EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ClearinghouseID",
-                                                         ClearingHouse_Id.Parse),
-
-                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
-                                      Trim() == "true",
-
-                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
-                                      Trim() != "false"
+                                                         ClearingHouse_Id.Parse)
 
                 );
 
@@ -689,7 +686,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (static) TryParse(EVSEDataRecordText, out EVSEDataRecord, ..., OnException = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an OICP EVSE data record.
+        /// Try to parse the given text-representation of an OICP EVSE data record.
         /// </summary>
         /// <param name="EVSEDataRecordText">The text to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
@@ -758,12 +755,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               : null,
 
                           new XElement(OICPNS.EVSEData + "EvseID",                Id.ToString()),
-                          new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId),
-                          new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50)),
-                          new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50)),
 
                           ChargingPoolId.HasValue
-                              ? new XElement(OICPNS.EVSEData + "ChargingPoolID",  ChargingPoolId.Value.ToString())
+                              ? new XElement(OICPNS.EVSEData + "ChargingPoolID",        ChargingPoolId.   Value.ToString())
+                              : null,
+
+                          ChargingStationId.HasValue
+                              ? new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId.Value.ToString())
+                              : null,
+
+                          ChargingStationName[Languages.deu] != null
+                              ? new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50))
+                              : null,
+
+                          ChargingStationName[Languages.eng] != null
+                              ? new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50))
                               : null,
 
                           Address.ToXML(OICPNS.EVSEData + "Address",
@@ -771,49 +777,48 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           new XElement(OICPNS.EVSEData + "GeoCoordinates",
                               new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-                                  new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-                                  new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
+                                  new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
+                                  new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
                               )
                           ),
 
                           new XElement(OICPNS.EVSEData + "Plugs",
-                              Plugs.ToEnumeration().SafeSelect(Plug               => new XElement(OICPNS.EVSEData + "Plug",               XML_IO.AsString(Plug)))
+                              PlugTypes.SafeSelect(Plug => new XElement(OICPNS.EVSEData + "Plug", PlugTypesExtentions.AsString(Plug)))
                           ),
 
-                          ChargingFacilities.IsNeitherNullNorEmpty()
+                          ChargingFacilities.SafeAny()
                               ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
                                     ChargingFacilities.Select(chargingFacility    => chargingFacility.ToXML(CustomChargingFacilitySerializer)))
                               : null,
 
-                          ChargingModes.ToEnumeration().IsNeitherNullNorEmpty()
+                          ChargingModes.SafeAny()
                               ? new XElement(OICPNS.EVSEData + "ChargingModes",
-                                    ChargingModes.ToEnumeration().Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", XML_IO.AsString(ChargingMode))))
+                                    ChargingModes.Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", ChargingModesExtentions.AsString(ChargingMode))))
                               : null,
 
                           new XElement(OICPNS.EVSEData + "AuthenticationModes",
-                              AuthenticationModes.     ToEnumeration().
-                                                       Select(AuthenticationMode => XML_IO.AsString(AuthenticationMode)).
-                                                       Where (AuthenticationMode => AuthenticationMode != "Unknown").
-                                                       Select(AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
+                              AuthenticationModes.SafeSelect(AuthenticationMode => AuthenticationModesExtentions.AsString(AuthenticationMode)).
+                                                  Where     (AuthenticationMode => AuthenticationMode != "Unknown").
+                                                  Select    (AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
                           ),
 
                           MaxCapacity.HasValue
                               ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
                               : null,
 
-                          PaymentOptions.ToEnumeration().IsNeitherNullNorEmpty()
+                          PaymentOptions.SafeAny()
                               ? new XElement(OICPNS.EVSEData + "PaymentOptions",
-                                    PaymentOptions.ToEnumeration().SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption",      XML_IO.AsString(PaymentOption)))
+                                    PaymentOptions.SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption", PaymentOptionsExtentions.AsString(PaymentOption)))
                                 )
                               : null,
 
-                          ValueAddedServices.ToEnumeration().IsNeitherNullNorEmpty()
+                          ValueAddedServices.SafeAny()
                               ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
-                                    ValueAddedServices.ToEnumeration().SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", XML_IO.AsString(ValueAddedService)))
+                                    ValueAddedServices.SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", ValueAddedServicesExtentions.AsString(ValueAddedService)))
                                 )
                               : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
 
-                          new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.ToString().Replace("_", " ")),
+                          new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.AsString()),
 
                           HotlinePhoneNumber.IsNotNullOrEmpty()
                               ? new XElement(OICPNS.EVSEData + "HotlinePhoneNumber", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
@@ -1077,7 +1082,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text representation of this object.
+        /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
             => Id.ToString();
@@ -1095,32 +1100,33 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             => new Builder(
                    NewEVSEId ?? Id,
-
                    DeltaType,
                    LastUpdate,
+
+                   Address,
+                   GeoCoordinate,
+                   PlugTypes,
+                   AuthenticationModes,
+                   ValueAddedServices,
+                   Accessibility,
+                   HotlinePhoneNumber,
+                   IsOpen24Hours,
+                   IsHubjectCompatible,
+                   DynamicInfoAvailable,
 
                    ChargingStationId,
                    ChargingPoolId,
                    ChargingStationName,
-                   Address,
-                   GeoCoordinate,
-                   Plugs,
                    ChargingFacilities,
                    ChargingModes,
-                   AuthenticationModes,
                    MaxCapacity,
                    PaymentOptions,
-                   ValueAddedServices,
-                   Accessibility,
-                   HotlinePhoneNumber,
                    AdditionalInfo,
                    GeoChargingPointEntrance,
-                   IsOpen24Hours,
                    OpeningTimes,
                    HubOperatorId,
                    ClearingHouseId,
-                   IsHubjectCompatible,
-                   DynamicInfoAvailable,
+
                    CustomData);
 
         #endregion
@@ -1139,129 +1145,129 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <summary>
             /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
             /// </summary>
-            public EVSE_Id                        Id                          { get; }
+            public EVSE_Id                           Id                          { get; }
 
 
             /// <summary>
             /// The delta type when this EVSE data record was just downloaded.
             /// </summary>
-            public DeltaTypes?                    DeltaType                   { get; set; }
+            public DeltaTypes?                       DeltaType                   { get; set; }
 
             /// <summary>
             /// The last update timestamp of this EVSE data record.
             /// </summary>
-            public DateTime?                      LastUpdate                  { get; set; }
+            public DateTime?                         LastUpdate                  { get; set; }
 
 
             /// <summary>
             /// The identification of the charging station hosting this EVSE.
             /// </summary>
-            public ChargingStation_Id?            ChargingStationId           { get; set; }
+            public ChargingStation_Id?               ChargingStationId           { get; set; }
 
             /// <summary>
             /// The identification of the charging pool hosting this EVSE.
             /// </summary>
-            public ChargingPool_Id?               ChargingPoolId              { get; set; }
+            public ChargingPool_Id?                  ChargingPoolId              { get; set; }
 
             /// <summary>
             /// The multi-language name of the charging station hosting this EVSE.
             /// </summary>
-            public I18NString                     ChargingStationName         { get; set; }
+            public I18NString                        ChargingStationName         { get; set; }
 
             /// <summary>
             /// The address of this EVSE.
             /// </summary>
-            public Address                        Address                     { get; set; }
+            public Address                           Address                     { get; set; }
 
             /// <summary>
             /// The geo coordinate of this EVSE.
             /// </summary>
-            public GeoCoordinate?                 GeoCoordinate               { get; set; }
+            public GeoCoordinate?                    GeoCoordinate               { get; set; }
 
             /// <summary>
             /// The types of charging plugs attached to this EVSE.
             /// </summary>
-            public PlugTypes                      Plugs                       { get; set; }
+            public IEnumerable<PlugTypes>            PlugTypes                   { get; set; }
 
             /// <summary>
             /// The charging facilities at this EVSE.
             /// </summary>
-            public IEnumerable<ChargingFacility>  ChargingFacilities          { get; set; }
+            public IEnumerable<ChargingFacility>     ChargingFacilities          { get; set; }
 
             /// <summary>
             /// The charging modes this EVSE supports.
             /// </summary>
-            public ChargingModes                  ChargingModes               { get; set; }
+            public IEnumerable<ChargingModes>        ChargingModes               { get; set; }
 
             /// <summary>
             /// The authentication modes this EVSE supports.
             /// </summary>
-            public AuthenticationModes            AuthenticationModes         { get; set; }
+            public IEnumerable<AuthenticationModes>  AuthenticationModes         { get; set; }
 
             /// <summary>
             /// The maximum capacity this EVSE provides.
             /// </summary>
-            public Single?                        MaxCapacity                 { get; set; }
+            public Single?                           MaxCapacity                 { get; set; }
 
             /// <summary>
             /// The payment options this EVSE supports.
             /// </summary>
-            public PaymentOptions                 PaymentOptions              { get; set; }
+            public IEnumerable<PaymentOptions>       PaymentOptions              { get; set; }
 
             /// <summary>
             /// A list of "value added services" this EVSE supports.
             /// </summary>
-            public ValueAddedServices             ValueAddedServices          { get; set; }
+            public IEnumerable<ValueAddedServices>   ValueAddedServices          { get; set; }
 
             /// <summary>
             /// The accessibility of this EVSE.
             /// </summary>
-            public AccessibilityTypes             Accessibility               { get; set; }
+            public AccessibilityTypes?               Accessibility               { get; set; }
 
             /// <summary>
             /// The phone number of the Charging Station Operators hotline.
             /// </summary>
-            public String                         HotlinePhoneNumber          { get; set; }
+            public String                            HotlinePhoneNumber          { get; set; }
 
             /// <summary>
             /// Additional multi-language information about this EVSE.
             /// </summary>
-            public I18NString                     AdditionalInfo              { get; set; }
+            public I18NString                        AdditionalInfo              { get; set; }
 
             /// <summary>
             /// The geo coordinate of the entrance to this EVSE.
             /// </summary>
-            public GeoCoordinate?                 GeoChargingPointEntrance    { get; set; }
+            public GeoCoordinate?                    GeoChargingPointEntrance    { get; set; }
 
             /// <summary>
             /// Whether this EVSE is open 24/7.
             /// </summary>
-            public Boolean                        IsOpen24Hours               { get; set; }
+            public Boolean?                          IsOpen24Hours               { get; set; }
 
             /// <summary>
             /// The opening times of this EVSE.
             /// </summary>
-            public String                         OpeningTime                 { get; set; }
+            public String                            OpeningTimes                { get; set; }
 
             /// <summary>
             /// An optional hub operator of this EVSE.
             /// </summary>
-            public HubOperator_Id?                HubOperatorId               { get; set; }
+            public HubOperator_Id?                   HubOperatorId               { get; set; }
 
             /// <summary>
             /// An optional clearing house of this EVSE.
             /// </summary>
-            public ClearingHouse_Id?              ClearingHouseId             { get; set; }
+            public ClearingHouse_Id?                 ClearingHouseId             { get; set; }
 
             /// <summary>
             /// Whether this EVSE is Hubject compatible.
             /// </summary>
-            public Boolean                        IsHubjectCompatible         { get; set; }
+            public Boolean?                          IsHubjectCompatible         { get; set; }
 
             /// <summary>
             /// Whether this EVSE provides dynamic status information.
             /// </summary>
-            public Boolean                        DynamicInfoAvailable        { get; set; }
+            public Boolean?                          DynamicInfoAvailable        { get; set; }
 
             #endregion
 
@@ -1273,54 +1279,59 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <param name="Id">A unique EVSE identification.</param>
             /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
             /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
-            /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
-            /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
+            /// 
             /// <param name="Address">The address of this EVSE.</param>
             /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
-            /// <param name="Plugs">The types of charging plugs attached to this EVSE.</param>
-            /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
-            /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
+            /// <param name="PlugTypes">The types of charging plugs attached to this EVSE.</param>
             /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
-            /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
-            /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
             /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
             /// <param name="Accessibility">The accessibility of this EVSE.</param>
-            /// <param name="HotlinePhoneNumber">The phone number of the Charging Station Operators hotline.</param>
-            /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
-            /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
+            /// <param name="HotlinePhoneNumber">The phone number of the charging station operators hotline.</param>
             /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
-            /// <param name="OpeningTime">The opening times of this EVSE.</param>
-            /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
-            /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
             /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
             /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+            /// 
+            /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
+            /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
+            /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
+            /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
+            /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
+            /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
+            /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
+            /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
+            /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
+            /// <param name="OpeningTimes">The opening times of this EVSE.</param>
+            /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
+            /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
+            /// 
+            /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
             public Builder(EVSE_Id                                    Id,
-
                            DeltaTypes?                                DeltaType                  = null,
                            DateTime?                                  LastUpdate                 = null,
+
+                           Address                                    Address                    = null,
+                           GeoCoordinate?                             GeoCoordinate              = null,
+                           IEnumerable<PlugTypes>                     PlugTypes                  = null,
+                           IEnumerable<AuthenticationModes>           AuthenticationModes        = null,
+                           IEnumerable<ValueAddedServices>            ValueAddedServices         = null,
+                           AccessibilityTypes?                        Accessibility              = null,
+                           String                                     HotlinePhoneNumber         = null,
+                           Boolean?                                   IsOpen24Hours              = null,
+                           Boolean?                                   IsHubjectCompatible        = null,
+                           Boolean?                                   DynamicInfoAvailable       = null,
 
                            ChargingStation_Id?                        ChargingStationId          = null,
                            ChargingPool_Id?                           ChargingPoolId             = null,
                            I18NString                                 ChargingStationName        = null,
-                           Address                                    Address                    = null,
-                           GeoCoordinate?                             GeoCoordinate              = null,
-                           PlugTypes                                  Plugs                      = PlugTypes.Unspecified,
                            IEnumerable<ChargingFacility>              ChargingFacilities         = null,
-                           ChargingModes                              ChargingModes              = ChargingModes.Unspecified,
-                           AuthenticationModes                        AuthenticationModes        = AuthenticationModes.Unknown,
+                           IEnumerable<ChargingModes>                 ChargingModes              = null,
                            Single?                                    MaxCapacity                = null,
-                           PaymentOptions                             PaymentOptions             = PaymentOptions.Unspecified,
-                           ValueAddedServices                         ValueAddedServices         = ValueAddedServices.None,
-                           AccessibilityTypes                         Accessibility              = AccessibilityTypes.Free_publicly_accessible,
-                           String                                     HotlinePhoneNumber         = null,
+                           IEnumerable<PaymentOptions>                PaymentOptions             = null,
                            I18NString                                 AdditionalInfo             = null,
                            GeoCoordinate?                             GeoChargingPointEntrance   = null,
-                           Boolean                                    IsOpen24Hours              = true,
-                           String                                     OpeningTime                = null,
+                           String                                     OpeningTimes               = null,
                            HubOperator_Id?                            HubOperatorId              = null,
                            ClearingHouse_Id?                          ClearingHouseId            = null,
-                           Boolean                                    IsHubjectCompatible        = true,
-                           Boolean                                    DynamicInfoAvailable       = true,
 
                            IEnumerable<KeyValuePair<String, Object>>  CustomData                 = null)
 
@@ -1328,55 +1339,33 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             {
 
-                #region Initial checks
-
-                if (Id == null)
-                    throw new ArgumentNullException(nameof(Id),                   "The given unique EVSE identification must not be null!");
-
-                if (Address == null)
-                    throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
-
-                if (GeoCoordinate == null)
-                    throw new ArgumentNullException(nameof(GeoCoordinate),        "The given geo coordinate must not be null!");
-
-                if (Plugs == PlugTypes.Unspecified)
-                    throw new ArgumentNullException(nameof(Plugs),                "The given plugs must not be empty!");
-
-                if (AuthenticationModes == AuthenticationModes.Unknown)
-                    throw new ArgumentNullException(nameof(AuthenticationModes),  "The given authentication modes must not be null or empty!");
-
-                if (HotlinePhoneNumber == null || HotlinePhoneNumber.IsNullOrEmpty())
-                    throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
-
-                #endregion
-
                 this.Id                        = Id;
-
                 this.DeltaType                 = DeltaType;
                 this.LastUpdate                = LastUpdate;
 
-                this.ChargingStationId         = ChargingStationId;
-                this.ChargingPoolId            = ChargingPoolId;
-                this.ChargingStationName       = ChargingStationName ?? new I18NString();
-                this.Address                   = Address;
+                this.Address                   = Address                          ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
                 this.GeoCoordinate             = GeoCoordinate;
-                this.Plugs                     = Plugs;
-                this.ChargingModes             = ChargingModes;
-                this.ChargingFacilities        = ChargingFacilities  ?? new ChargingFacility[0];
+                this.PlugTypes                 = PlugTypes;
                 this.AuthenticationModes       = AuthenticationModes;
-                this.MaxCapacity               = MaxCapacity;
-                this.PaymentOptions            = PaymentOptions;
                 this.ValueAddedServices        = ValueAddedServices;
                 this.Accessibility             = Accessibility;
-                this.HotlinePhoneNumber        = HotlinePhoneNumber;
-                this.AdditionalInfo            = AdditionalInfo      ?? new I18NString();
-                this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
+                this.HotlinePhoneNumber        = HotlinePhoneNumber?.Trim();
                 this.IsOpen24Hours             = IsOpen24Hours;
-                this.OpeningTime               = OpeningTime;
-                this.HubOperatorId             = HubOperatorId;
-                this.ClearingHouseId           = ClearingHouseId;
                 this.IsHubjectCompatible       = IsHubjectCompatible;
                 this.DynamicInfoAvailable      = DynamicInfoAvailable;
+
+                this.ChargingStationId         = ChargingStationId;
+                this.ChargingPoolId            = ChargingPoolId;
+                this.ChargingStationName       = ChargingStationName              ?? new I18NString();
+                this.ChargingModes             = ChargingModes                    ?? new ChargingModes[0];
+                this.ChargingFacilities        = ChargingFacilities               ?? new ChargingFacility[0];
+                this.MaxCapacity               = MaxCapacity;
+                this.PaymentOptions            = PaymentOptions                   ?? new PaymentOptions[0];
+                this.AdditionalInfo            = AdditionalInfo.SubstringMax(200) ?? new I18NString();
+                this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
+                this.OpeningTimes              = OpeningTimes;
+                this.HubOperatorId             = HubOperatorId;
+                this.ClearingHouseId           = ClearingHouseId;
 
             }
 
@@ -1391,30 +1380,34 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             public EVSEDataRecord Build()
 
                 => new EVSEDataRecord(Id,
+
+                                      Address,
+                                      GeoCoordinate        ?? Vanaheimr.Aegir.GeoCoordinate.Parse(0, 0),
+                                      PlugTypes,
+                                      AuthenticationModes,
+                                      ValueAddedServices,
+                                      Accessibility        ?? AccessibilityTypes.Test_Station,
+                                      HotlinePhoneNumber,
+                                      IsOpen24Hours        ?? true,
+                                      IsHubjectCompatible  ?? false,
+                                      DynamicInfoAvailable ?? false,
+
                                       DeltaType,
                                       LastUpdate,
+
                                       ChargingStationId,
                                       ChargingPoolId,
                                       ChargingStationName,
-                                      Address,
-                                      GeoCoordinate,
-                                      Plugs,
                                       ChargingFacilities,
                                       ChargingModes,
-                                      AuthenticationModes,
                                       MaxCapacity,
                                       PaymentOptions,
-                                      ValueAddedServices,
-                                      Accessibility,
-                                      HotlinePhoneNumber,
                                       AdditionalInfo,
                                       GeoChargingPointEntrance,
-                                      IsOpen24Hours,
-                                      OpeningTime,
+                                      OpeningTimes,
                                       HubOperatorId,
                                       ClearingHouseId,
-                                      IsHubjectCompatible,
-                                      DynamicInfoAvailable,
+
                                       CustomData);
 
             #endregion

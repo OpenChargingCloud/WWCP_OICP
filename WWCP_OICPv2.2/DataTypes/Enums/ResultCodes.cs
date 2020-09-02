@@ -15,11 +15,67 @@
  * limitations under the License.
  */
 
+
+#region Usings
+
+using System;
+
+#endregion
+
 namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
+
     /// <summary>
-    /// Result and error codes for the class Result as return value for method calls.
+    /// Extentions methods for result codes.
+    /// </summary>
+    public static class ResultCodesExtentions
+    {
+
+        #region Parse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a result code.
+        /// </summary>
+        /// <param name="Text">A text-representation of a result code.</param>
+        public static ResultCodes Parse(String Text)
+
+            => Text?.Trim() switch {
+                "OK"             => ResultCodes.OK,
+                "Partly"         => ResultCodes.Partly,
+                "NotAuthorized"  => ResultCodes.NotAuthorized,
+                "InvalidId"      => ResultCodes.InvalidId,
+                "Server"         => ResultCodes.Server,
+                "Format"         => ResultCodes.Format,
+                _                => ResultCodes.Unknown,
+            };
+
+        #endregion
+
+        #region AsString(this DeltaType)
+
+        /// <summary>
+        /// Return a text-representation of the given result code.
+        /// </summary>
+        /// <param name="DeltaType">A result code.</param>
+        public static String AsString(this ResultCodes DeltaType)
+
+            => DeltaType switch {
+                ResultCodes.OK             => "OK",
+                ResultCodes.Partly         => "Partly",
+                ResultCodes.NotAuthorized  => "NotAuthorized",
+                ResultCodes.InvalidId      => "InvalidId",
+                ResultCodes.Server         => "Server",
+                ResultCodes.Format         => "Format",
+                _                          => "Unknown",
+            };
+
+        #endregion
+
+    }
+
+    /// <summary>
+    /// Result and error codes for the class result as return value for method calls.
     /// </summary>
     public enum ResultCodes
     {
