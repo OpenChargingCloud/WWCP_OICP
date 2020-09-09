@@ -20,8 +20,11 @@
 using System;
 using System.Xml.Linq;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -306,6 +309,41 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                        : null
 
                    );
+
+        #endregion
+
+        #region ToJSON(CustomRFIDIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomRFIDIdentificationSerializer">A delegate to serialize custom RFID identification JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<RFIDIdentification> CustomRFIDIdentificationSerializer = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("UID",                  UID.       ToString()),
+
+                           EVCOId.HasValue
+                               ? new JProperty("EvcoID",         EVCOId.    ToString())
+                               : null,
+
+                           new JProperty("RFIDType",             RFIDType.  ToString()),
+
+                           PrintedNumber.IsNeitherNullNorEmpty()
+                               ? new JProperty("PrintedNumber",  PrintedNumber)
+                               : null,
+
+                           ExpiryDate.HasValue
+                               ? new JProperty("ExpiryDate",     ExpiryDate.ToString())
+                               : null);
+
+            return CustomRFIDIdentificationSerializer != null
+                       ? CustomRFIDIdentificationSerializer(this, JSON)
+                       : JSON;
+
+        }
 
         #endregion
 

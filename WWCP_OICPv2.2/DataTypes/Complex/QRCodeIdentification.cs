@@ -20,7 +20,11 @@
 using System;
 using System.Xml.Linq;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.SOAP;
+using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -30,9 +34,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// An QR code identification with (hashed) pin.
     /// </summary>
-    public struct QRCodeIdentification : IEquatable <QRCodeIdentification>,
-                                         IComparable<QRCodeIdentification>,
-                                         IComparable
+    public readonly struct QRCodeIdentification : IEquatable<QRCodeIdentification>,
+                                                  IComparable<QRCodeIdentification>,
+                                                  IComparable
     {
 
         #region Properties
@@ -304,10 +308,40 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                        : new XElement(OICPNS.CommonTypes + "HashedPIN",
                              new XElement(OICPNS.CommonTypes + "Value",     PIN),
-                             new XElement(OICPNS.CommonTypes + "Function",  Function == PINCrypto.MD5 ? "MD5" : "SHA-1"),
+                             new XElement(OICPNS.CommonTypes + "Function",  Function.AsString()),
                              new XElement(OICPNS.CommonTypes + "Salt",      Salt))
 
-                   );
+               );
+
+        #endregion
+
+        #region ToJSON(CustomQRCodeIdentificationSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomQRCodeIdentificationSerializer">A delegate to serialize custom QR code identification JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<QRCodeIdentification> CustomQRCodeIdentificationSerializer = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("EvcoID", EVCOId.ToString(),
+
+                           Function == PINCrypto.None
+
+                               ? new JProperty("PIN", PIN)
+
+                               : new JProperty("HashedPIN",
+                                     new JProperty("Value",     PIN),
+                                     new JProperty("Function",  Function.AsString()),
+                                     new JProperty("Salt",      Salt))));
+
+            return CustomQRCodeIdentificationSerializer != null
+                       ? CustomQRCodeIdentificationSerializer(this, JSON)
+                       : JSON;
+
+        }
 
         #endregion
 
@@ -552,10 +586,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             => String.Concat(EVCOId.ToString(),
                              Function != PINCrypto.None
-                                 ? " -" + Function
-                                 : "",
-                             "-> ",
-                             PIN ?? "");
+                                 ? String.Concat(" -", Function.AsString(), "-> ",
+                                                 PIN,
+                                                 Salt.IsNotNullOrEmpty() ? " (" + Salt + ")" : "")
+                                 : PIN);
 
         #endregion
 

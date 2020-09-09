@@ -21,9 +21,10 @@ using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using Newtonsoft.Json.Linq;
 using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
@@ -96,7 +97,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #endregion
 
 
-        #region (static) FromUID                        (MifareUID,                   CustomData = null)
+        #region (static) FromUID                        (MifareUID,                              CustomData = null)
 
         /// <summary>
         /// Create a new Mifare identification.
@@ -113,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) FromRFIDId                     (UID,                         CustomData = null)
+        #region (static) FromRFIDId                     (UID,                                    CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -130,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (EVCOId, PIN,                 CustomData = null)
+        #region (static) FromQRCodeIdentification       (EVCOId, PIN,                            CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -150,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (QRCodeIdentification,        CustomData = null)
+        #region (static) FromQRCodeIdentification       (QRCodeIdentification,                   CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -167,7 +168,31 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification, CustomData = null)
+        #region (static) FromQRCodeIdentification       (EVCOId, HashedPIN, Function, Salt = "", CustomData = null)
+
+        /// <summary>
+        /// Create a new identification.
+        /// </summary>
+        /// <param name="EVCOId">An QR code identification.</param>
+        /// <param name="HashedPIN">A hashed pin.</param>
+        /// <param name="Function">A crypto function.</param>
+        /// <param name="Salt">A salt of the crypto function.</param>
+        /// <param name="CustomData">Optional custom data.</param>
+        public static Identification FromQRCodeIdentification(EVCO_Id                              EVCOId,
+                                                              String                               HashedPIN,
+                                                              PINCrypto                            Function,
+                                                              String                               Salt         = "",
+                                                              IReadOnlyDictionary<String, Object>  CustomData   = null)
+
+            => new Identification(QRCodeIdentification:  new QRCodeIdentification(EVCOId,
+                                                                                  HashedPIN,
+                                                                                  Function,
+                                                                                  Salt),
+                                  CustomData:            CustomData);
+
+        #endregion
+
+        #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification,            CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -184,7 +209,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region (static) FromRemoteIdentification       (RemoteIdentification,        CustomData = null)
+        #region (static) FromRemoteIdentification       (RemoteIdentification,                   CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -468,7 +493,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               : null,
 
                           RFIDIdentification.HasValue
-                              ? RFIDIdentification.Value.ToXML()
+                              ? RFIDIdentification.  Value.ToXML()
                               : null,
 
                           QRCodeIdentification.HasValue
@@ -482,7 +507,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           RemoteIdentification.HasValue
                               ? new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                    new XElement(OICPNS.CommonTypes + "EvcoID",  RemoteIdentification.ToString()))
+                                    new XElement(OICPNS.CommonTypes + "EvcoID",  RemoteIdentification.       ToString()))
                               : null);
 
             return CustomIdentificationSerializer != null
@@ -493,13 +518,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-
         #region ToJSON(CustomIdentificationSerializer = null)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
+        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
 
         {
@@ -511,11 +535,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                : null,
 
                            RFIDIdentification.HasValue
-                               ? new JProperty("RFIDIdentification",              RFIDIdentification.         Value.ToString())
+                               ? new JProperty("RFIDIdentification",              RFIDIdentification.         Value.ToJSON())
                                : null,
 
                            QRCodeIdentification.HasValue
-                               ? new JProperty("QRCodeIdentification",            QRCodeIdentification.       Value.ToString())
+                               ? new JProperty("QRCodeIdentification",            QRCodeIdentification.       Value.ToJSON())
                                : null,
 
                            PlugAndChargeIdentification.HasValue
@@ -801,19 +825,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (RFIDId.HasValue)
-                return RFIDId.ToString();
+                return RFIDId.                     Value.       ToString();
 
             if (RFIDIdentification.HasValue)
-                return RFIDIdentification.ToString();
+                return RFIDIdentification.         Value.UID.   ToString();
 
             if (QRCodeIdentification.HasValue)
-                return QRCodeIdentification.ToString();
+                return QRCodeIdentification.       Value.EVCOId.ToString();
 
             if (PlugAndChargeIdentification.HasValue)
-                return PlugAndChargeIdentification.ToString();
+                return PlugAndChargeIdentification.Value.       ToString();
 
             if (RemoteIdentification.HasValue)
-                return RemoteIdentification.ToString();
+                return RemoteIdentification.       Value.       ToString();
 
             return String.Empty;
 

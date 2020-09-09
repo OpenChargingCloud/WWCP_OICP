@@ -33,7 +33,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An OICP Electric Vehicle Supply Equipment (EVSE).
+    /// An Electric Vehicle Supply Equipment (EVSE).
     /// This is meant to be one electrical circuit which can charge an electric vehicle.
     /// </summary>
     public class EVSEDataRecord : ACustomData,
@@ -1134,7 +1134,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         #region (class) Builder
 
         /// <summary>
-        /// An OICP Electric Vehicle Supply Equipment (EVSE).
+        /// An Electric Vehicle Supply Equipment (EVSE).
         /// This is meant to be one electrical circuit which can charge a electric vehicle.
         /// </summary>
         public new class Builder : ACustomData.Builder
@@ -1187,22 +1187,22 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <summary>
             /// The types of charging plugs attached to this EVSE.
             /// </summary>
-            public IEnumerable<PlugTypes>            PlugTypes                   { get; set; }
+            public ReactiveSet<PlugTypes>            PlugTypes                   { get; }
 
             /// <summary>
             /// The charging facilities at this EVSE.
             /// </summary>
-            public IEnumerable<ChargingFacility>     ChargingFacilities          { get; set; }
+            public ReactiveSet<ChargingFacility>     ChargingFacilities          { get; }
 
             /// <summary>
             /// The charging modes this EVSE supports.
             /// </summary>
-            public IEnumerable<ChargingModes>        ChargingModes               { get; set; }
+            public ReactiveSet<ChargingModes>        ChargingModes               { get; }
 
             /// <summary>
             /// The authentication modes this EVSE supports.
             /// </summary>
-            public IEnumerable<AuthenticationModes>  AuthenticationModes         { get; set; }
+            public ReactiveSet<AuthenticationModes>  AuthenticationModes         { get; }
 
             /// <summary>
             /// The maximum capacity this EVSE provides.
@@ -1212,12 +1212,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             /// <summary>
             /// The payment options this EVSE supports.
             /// </summary>
-            public IEnumerable<PaymentOptions>       PaymentOptions              { get; set; }
+            public ReactiveSet<PaymentOptions>       PaymentOptions              { get; }
 
             /// <summary>
             /// A list of "value added services" this EVSE supports.
             /// </summary>
-            public IEnumerable<ValueAddedServices>   ValueAddedServices          { get; set; }
+            public ReactiveSet<ValueAddedServices>   ValueAddedServices          { get; }
 
             /// <summary>
             /// The accessibility of this EVSE.
@@ -1345,9 +1345,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 this.Address                   = Address                          ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
                 this.GeoCoordinate             = GeoCoordinate;
-                this.PlugTypes                 = PlugTypes;
-                this.AuthenticationModes       = AuthenticationModes;
-                this.ValueAddedServices        = ValueAddedServices;
+                this.PlugTypes                 = PlugTypes           != null ? new ReactiveSet<PlugTypes>          (PlugTypes)           : new ReactiveSet<PlugTypes>();
+                this.AuthenticationModes       = AuthenticationModes != null ? new ReactiveSet<AuthenticationModes>(AuthenticationModes) : new ReactiveSet<AuthenticationModes>();
+                this.ValueAddedServices        = ValueAddedServices  != null ? new ReactiveSet<ValueAddedServices> (ValueAddedServices)  : new ReactiveSet<ValueAddedServices>();
                 this.Accessibility             = Accessibility;
                 this.HotlinePhoneNumber        = HotlinePhoneNumber?.Trim();
                 this.IsOpen24Hours             = IsOpen24Hours;
@@ -1357,10 +1357,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 this.ChargingStationId         = ChargingStationId;
                 this.ChargingPoolId            = ChargingPoolId;
                 this.ChargingStationName       = ChargingStationName              ?? new I18NString();
-                this.ChargingModes             = ChargingModes                    ?? new ChargingModes[0];
-                this.ChargingFacilities        = ChargingFacilities               ?? new ChargingFacility[0];
+                this.ChargingModes             = ChargingModes        != null ? new ReactiveSet<ChargingModes>     (ChargingModes)       : new ReactiveSet<ChargingModes>();
+                this.ChargingFacilities        = ChargingFacilities   != null ? new ReactiveSet<ChargingFacility>  (ChargingFacilities)  : new ReactiveSet<ChargingFacility>();
                 this.MaxCapacity               = MaxCapacity;
-                this.PaymentOptions            = PaymentOptions                   ?? new PaymentOptions[0];
+                this.PaymentOptions            = PaymentOptions       != null ? new ReactiveSet<PaymentOptions>    (PaymentOptions)      : new ReactiveSet<PaymentOptions>();
                 this.AdditionalInfo            = AdditionalInfo.SubstringMax(200) ?? new I18NString();
                 this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
                 this.OpeningTimes              = OpeningTimes;

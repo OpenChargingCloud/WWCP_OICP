@@ -572,7 +572,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             => PinCrypto switch {
                 PINCrypto.MD5   => WWCP.PINCrypto.MD5,
                 PINCrypto.SHA1  => WWCP.PINCrypto.SHA1,
-                _               => WWCP.PINCrypto.none,
+                _               => WWCP.PINCrypto.None,
             };
 
         #endregion
@@ -1084,20 +1084,26 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         {
 
             if (Identification.RFIDId.HasValue)
-                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDId.ToString()));
+                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse (Identification.RFIDId.ToString()));
 
             if (Identification.RFIDIdentification.HasValue)
-                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse(Identification.RFIDIdentification.Value.UID.ToString()));
+                return RemoteAuthentication.FromAuthToken(Auth_Token.Parse (Identification.RFIDIdentification.         Value.UID.   ToString()));
 
-            if (Identification.QRCodeIdentification.HasValue)
-                return RemoteAuthentication.FromQRCodeIdentification(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),
-                                                                     Identification.QRCodeIdentification.Value.PIN);
+            if (Identification.QRCodeIdentification.HasValue && Identification.QRCodeIdentification.Value.Function == PINCrypto.None)
+                return RemoteAuthentication.FromQRCodeIdentification       (Identification.QRCodeIdentification.       Value.EVCOId.ToWWCP_eMAId(),
+                                                                            Identification.QRCodeIdentification.       Value.PIN);
+
+            if (Identification.QRCodeIdentification.HasValue && Identification.QRCodeIdentification.Value.Function != PINCrypto.None)
+                return RemoteAuthentication.FromQRCodeIdentification       (new eMAIdWithPIN2(Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),
+                                                                                              Identification.QRCodeIdentification.Value.PIN,
+                                                                                              Identification.QRCodeIdentification.Value.Function.ToWWCP(),
+                                                                                              Identification.QRCodeIdentification.Value.Salt));
 
             if (Identification.PlugAndChargeIdentification.HasValue)
                 return RemoteAuthentication.FromPlugAndChargeIdentification(Identification.PlugAndChargeIdentification.Value.ToWWCP_eMAId());
 
             if (Identification.RemoteIdentification.HasValue)
-                return RemoteAuthentication.FromRemoteIdentification(Identification.RemoteIdentification.Value.ToWWCP_eMAId());
+                return RemoteAuthentication.FromRemoteIdentification       (Identification.RemoteIdentification.       Value.ToWWCP_eMAId());
 
             return null;
 
@@ -1116,20 +1122,20 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static Identification ToOICP(this AAuthentication Authentication)
         {
 
-            if (Authentication.AuthToken                   != null)
-                return Identification.FromUID                     (Authentication.AuthToken.ToOICP());
+            if (Authentication.AuthToken.                  HasValue)
+                return Identification.FromUID                        (Authentication.AuthToken.                                 ToOICP());
 
-            if (Authentication.QRCodeIdentification        != null)
-                return Identification.FromQRCodeIdentification       (new QRCodeIdentification(Authentication.QRCodeIdentification.eMAId.ToOICP(),
-                                                                                               Authentication.QRCodeIdentification.PIN,
-                                                                                               Authentication.QRCodeIdentification.Function.ToOICP(),
-                                                                                               Authentication.QRCodeIdentification.Salt));
+            if (Authentication.QRCodeIdentification.       HasValue)
+                return Identification.FromQRCodeIdentification       (Authentication.QRCodeIdentification.       Value.eMAId.   ToOICP(),
+                                                                      Authentication.QRCodeIdentification.       Value.PIN,
+                                                                      Authentication.QRCodeIdentification.       Value.Function.ToOICP(),
+                                                                      Authentication.QRCodeIdentification.       Value.Salt);
 
             if (Authentication.PlugAndChargeIdentification.HasValue)
-                return Identification.FromPlugAndChargeIdentification(Authentication.PlugAndChargeIdentification.Value.ToOICP());
+                return Identification.FromPlugAndChargeIdentification(Authentication.PlugAndChargeIdentification.Value.         ToOICP());
 
             if (Authentication.RemoteIdentification.       HasValue)
-                return Identification.FromRemoteIdentification       (Authentication.RemoteIdentification.       Value.ToOICP());
+                return Identification.FromRemoteIdentification       (Authentication.RemoteIdentification.       Value.         ToOICP());
 
             throw new ArgumentException("Invalid AuthInfo!", nameof(Authentication));
 
