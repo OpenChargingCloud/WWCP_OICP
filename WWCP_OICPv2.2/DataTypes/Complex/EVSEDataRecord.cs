@@ -756,10 +756,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           new XElement(OICPNS.EVSEData + "EvseID",                Id.ToString()),
 
-                          ChargingPoolId.HasValue
-                              ? new XElement(OICPNS.EVSEData + "ChargingPoolID",        ChargingPoolId.   Value.ToString())
-                              : null,
-
                           ChargingStationId.HasValue
                               ? new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId.Value.ToString())
                               : null,
@@ -770,6 +766,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                           ChargingStationName[Languages.eng] != null
                               ? new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50))
+                              : null,
+
+                          ChargingPoolId.HasValue
+                              ? new XElement(OICPNS.EVSEData + "ChargingPoolID", ChargingPoolId.Value.ToString())
                               : null,
 
                           Address.ToXML(OICPNS.EVSEData + "Address",
