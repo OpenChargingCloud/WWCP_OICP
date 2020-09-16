@@ -736,17 +736,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object is null)
-                return false;
-
-            if (!(Object is Identification Identification))
-                return false;
-
-            return Equals(Identification);
-
-        }
+            => Object is Identification Identification &&
+                   Equals(Identification);
 
         #endregion
 

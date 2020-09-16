@@ -30,9 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of an electric vehicle contract identification (EVCOId).
     /// </summary>
-    public readonly struct EVCO_Id : IId,
-                                     IEquatable<EVCO_Id>,
-                                     IComparable<EVCO_Id>
+    public readonly struct EVCO_Id : IId<EVCO_Id>
     {
 
         #region Data

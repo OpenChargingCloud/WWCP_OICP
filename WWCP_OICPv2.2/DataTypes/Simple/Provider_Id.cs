@@ -30,10 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of an e-mobility provider.
     /// </summary>
-    public readonly struct Provider_Id : IId,
-                                         IEquatable<Provider_Id>,
-                                         IComparable<Provider_Id>
-
+    public readonly struct Provider_Id : IId<Provider_Id>
     {
 
         #region Data

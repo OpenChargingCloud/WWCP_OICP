@@ -3603,14 +3603,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+            if (Object is WWCPEMPAdapter WWCPEMPAdapter)
+                return CompareTo(WWCPEMPAdapter);
 
-            var WWCPEMPAdapter = Object as WWCPEMPAdapter;
-            if ((Object) WWCPEMPAdapter == null)
-                throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
-
-            return CompareTo(WWCPEMPAdapter);
+            throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
 
         }
 
@@ -3625,7 +3621,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public Int32 CompareTo(WWCPEMPAdapter WWCPEMPAdapter)
         {
 
-            if ((Object) WWCPEMPAdapter == null)
+            if (WWCPEMPAdapter is null)
                 throw new ArgumentNullException(nameof(WWCPEMPAdapter), "The given WWCPEMPAdapter must not be null!");
 
             return Id.CompareTo(WWCPEMPAdapter.Id);
@@ -3646,18 +3642,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            var WWCPEMPAdapter = Object as WWCPEMPAdapter;
-            if ((Object) WWCPEMPAdapter == null)
-                return false;
-
-            return Equals(WWCPEMPAdapter);
-
-        }
+            => Object is WWCPEMPAdapter WWCPEMPAdapter &&
+                   Equals(WWCPEMPAdapter);
 
         #endregion
 
@@ -3669,14 +3656,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(WWCPEMPAdapter WWCPEMPAdapter)
-        {
 
-            if ((Object) WWCPEMPAdapter == null)
-                return false;
-
-            return Id.Equals(WWCPEMPAdapter.Id);
-
-        }
+            => WWCPEMPAdapter is null
+                   ? false
+                   : Id.Equals(WWCPEMPAdapter.Id);
 
         #endregion
 

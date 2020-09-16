@@ -6309,13 +6309,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object is null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+            if (Object is WWCPCPOAdapter WWCPCPOAdapter)
+                return CompareTo(WWCPCPOAdapter);
 
-            if (!(Object is WWCPCPOAdapter WWCPCPOAdapter))
-                throw new ArgumentException("The given object is not an WWCPCPOAdapter!", nameof(Object));
-
-            return CompareTo(WWCPCPOAdapter);
+            throw new ArgumentException("The given object is not an WWCPCPOAdapter!", nameof(Object));
 
         }
 
@@ -6351,17 +6348,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object is null)
-                return false;
-
-            if (!(Object is WWCPCPOAdapter WWCPCPOAdapter))
-                return false;
-
-            return Equals(WWCPCPOAdapter);
-
-        }
+            => Object is WWCPCPOAdapter WWCPCPOAdapter &&
+                   Equals(WWCPCPOAdapter);
 
         #endregion
 
@@ -6373,14 +6362,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="WWCPCPOAdapter">An WWCPCPOAdapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(WWCPCPOAdapter WWCPCPOAdapter)
-        {
 
-            if (WWCPCPOAdapter is null)
-                return false;
-
-            return Id.Equals(WWCPCPOAdapter.Id);
-
-        }
+            => WWCPCPOAdapter is null
+                   ? false
+                   : Id.Equals(WWCPCPOAdapter.Id);
 
         #endregion
 

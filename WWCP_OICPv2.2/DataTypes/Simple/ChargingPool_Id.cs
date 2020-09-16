@@ -29,10 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a charging pool.
     /// </summary>
-    public readonly struct ChargingPool_Id : IId,
-                                             IEquatable<ChargingPool_Id>,
-                                             IComparable<ChargingPool_Id>
-
+    public readonly struct ChargingPool_Id : IId<ChargingPool_Id>
     {
 
         #region Data

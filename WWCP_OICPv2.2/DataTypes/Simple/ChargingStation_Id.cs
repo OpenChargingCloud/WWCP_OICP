@@ -29,10 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a charging station.
     /// </summary>
-    public readonly struct ChargingStation_Id : IId,
-                                                IEquatable<ChargingStation_Id>,
-                                                IComparable<ChargingStation_Id>
-
+    public readonly struct ChargingStation_Id : IId<ChargingStation_Id>
     {
 
         #region Data

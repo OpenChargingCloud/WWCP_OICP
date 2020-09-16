@@ -32,10 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a charging session.
     /// </summary>
-    public readonly struct Session_Id : IId,
-                                        IEquatable<Session_Id>,
-                                        IComparable<Session_Id>
-
+    public readonly struct Session_Id : IId<Session_Id>
     {
 
         #region Data

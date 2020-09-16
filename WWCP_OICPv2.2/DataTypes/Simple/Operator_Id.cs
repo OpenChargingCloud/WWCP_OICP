@@ -30,10 +30,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of an operator.
     /// </summary>
-    public readonly struct Operator_Id : IId,
-                                         IEquatable<Operator_Id>,
-                                         IComparable<Operator_Id>
-
+    public readonly struct Operator_Id : IId<Operator_Id>
     {
 
         #region Data

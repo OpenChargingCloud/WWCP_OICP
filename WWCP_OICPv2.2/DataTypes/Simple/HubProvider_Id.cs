@@ -29,10 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a hub provider.
     /// </summary>
-    public readonly struct HubProvider_Id : IId,
-                                            IEquatable <HubProvider_Id>,
-                                            IComparable<HubProvider_Id>
-
+    public readonly struct HubProvider_Id : IId<HubProvider_Id>
     {
 
         #region Data

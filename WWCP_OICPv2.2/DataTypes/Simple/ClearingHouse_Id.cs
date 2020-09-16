@@ -29,10 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a clearing house.
     /// </summary>
-    public readonly struct ClearingHouse_Id : IId,
-                                              IEquatable<ClearingHouse_Id>,
-                                              IComparable<ClearingHouse_Id>
-
+    public readonly struct ClearingHouse_Id : IId<ClearingHouse_Id>
     {
 
         #region Data
@@ -259,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region IComparable<HubProviderId> Members
+        #region IComparable<ClearingHouseId> Members
 
         #region CompareTo(Object)
 
@@ -276,23 +273,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
         #endregion
 
-        #region CompareTo(HubProviderId)
+        #region CompareTo(ClearingHouseId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HubProviderId">An object to compare with.</param>
-        public Int32 CompareTo(ClearingHouse_Id HubProviderId)
+        /// <param name="ClearingHouseId">An object to compare with.</param>
+        public Int32 CompareTo(ClearingHouse_Id ClearingHouseId)
 
             => String.Compare(InternalId,
-                              HubProviderId.InternalId,
+                              ClearingHouseId.InternalId,
                               StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<HubProviderId> Members
+        #region IEquatable<ClearingHouseId> Members
 
         #region Equals(Object)
 
@@ -303,23 +300,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is ClearingHouse_Id HubProviderId
-                   ? Equals(HubProviderId)
+            => Object is ClearingHouse_Id ClearingHouseId
+                   ? Equals(ClearingHouseId)
                    : false;
 
         #endregion
 
-        #region Equals(HubProviderId)
+        #region Equals(ClearingHouseId)
 
         /// <summary>
-        /// Compares two HubProviderIds for equality.
+        /// Compares two ClearingHouseIds for equality.
         /// </summary>
-        /// <param name="HubProviderId">A clearing house identification to compare with.</param>
+        /// <param name="ClearingHouseId">A clearing house identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ClearingHouse_Id HubProviderId)
+        public Boolean Equals(ClearingHouse_Id ClearingHouseId)
 
             => String.Equals(InternalId,
-                             HubProviderId.InternalId,
+                             ClearingHouseId.InternalId,
                              StringComparison.OrdinalIgnoreCase);
 
         #endregion

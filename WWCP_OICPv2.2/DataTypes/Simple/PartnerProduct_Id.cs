@@ -31,10 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a partner product.
     /// </summary>
-    public readonly struct PartnerProduct_Id : IId,
-                                               IEquatable <PartnerProduct_Id>,
-                                               IComparable<PartnerProduct_Id>
-
+    public readonly struct PartnerProduct_Id : IId<PartnerProduct_Id>
     {
 
         #region Data

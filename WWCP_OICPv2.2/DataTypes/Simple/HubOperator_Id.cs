@@ -29,10 +29,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
     /// <summary>
     /// The unique identification of a hub operator.
     /// </summary>
-    public readonly struct HubOperator_Id : IId,
-                                            IEquatable <HubOperator_Id>,
-                                            IComparable<HubOperator_Id>
-
+    public readonly struct HubOperator_Id : IId<HubOperator_Id>
     {
 
         #region Data
