@@ -143,7 +143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #region PullDataService
 
-        public Boolean  DisablePullData { get; set; }
+        public Boolean  DisablePullPOIData { get; set; }
 
         private UInt32 _PullDataServiceEvery;
 
@@ -418,7 +418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             this.PullDataServiceRequestTimeout    = PullDataServiceRequestTimeout ?? DefaultPullDataServiceRequestTimeout;
             //this.PullDataServiceLock              = new Object();
             this.PullDataServiceTimer             = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
-            this.DisablePullData                  = DisablePullData;
+            this.DisablePullPOIData                  = DisablePullData;
 
 
             this._PullStatusServiceEvery          = (UInt32) (PullStatusServiceEvery.HasValue
@@ -1140,7 +1140,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<EVSEDataPull>
+        public async Task<POIDataPull<EVSE>>
 
             PullEVSEData(DateTime?                                LastCall            = null,
                          GeoCoordinate?                           SearchCenter        = null,
@@ -1225,11 +1225,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             }
 
-            return new EVSEDataPull(new EVSE[0],
-                                    result.HTTPStatusCode +
-                                    (result.ContentLength.HasValue && result.ContentLength.Value > 0
-                                         ? Environment.NewLine + result.HTTPBody.ToUTF8String()
-                                         : ""));
+            return new POIDataPull<EVSE>(new EVSE[0],
+                                         Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode +
+                                                                                         (result.ContentLength.HasValue && result.ContentLength.Value > 0
+                                                                                              ? Environment.NewLine + result.HTTPBody.ToUTF8String()
+                                                                                              : ""))));
 
         }
 
@@ -1249,7 +1249,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<EVSEStatusPull>
+        public async Task<StatusPull<WWCP.EVSEStatus>>
 
             PullEVSEStatus(DateTime?              LastCall            = null,
                            GeoCoordinate?         SearchCenter        = null,
@@ -1326,7 +1326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             {
 
                 var EVSEStatusList = new List<WWCP.EVSEStatus>();
-                var Warnings       = new List<String>();
+                var Warnings       = new List<Warning>();
                 WWCP.EVSE_Id? EVSEId = null;
 
                 foreach (var operatorevsestatus in result.Content.OperatorEVSEStatus)
@@ -1344,19 +1344,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    evsestatusrecord.CustomData));
 
                         else
-                            Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");
+                            Warnings.Add(Warning.Create(I18NString.Create(Languages.eng, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
 
                     }
 
-                return new EVSEStatusPull(EVSEStatusList, Warnings);
+                return new StatusPull<WWCP.EVSEStatus>(EVSEStatusList, Warnings);
 
             }
 
-            return new EVSEStatusPull(new WWCP.EVSEStatus[0],
-                                      new String[] {
-                                          result.HTTPStatusCode.ToString(),
-                                          result.HTTPBody.ToUTF8String()
-                                      });
+            return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
+                                                   new Warning[] {
+                                                       Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode.ToString())),
+                                                       Warning.Create(I18NString.Create(Languages.eng, result.HTTPBody.ToUTF8String()))
+                                                   });
 
         }
 
@@ -1374,7 +1374,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<EVSEStatusPull>
+        public async Task<StatusPull<WWCP.EVSEStatus>>
 
             PullEVSEStatusById(WWCP.EVSE_Id           EVSEId,
                                eMobilityProvider_Id?  ProviderId          = null,
@@ -1389,8 +1389,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #region Initial checks
 
             if (EVSEId == null)
-                return new EVSEStatusPull(new WWCP.EVSEStatus[0],
-                                          new String[] { "Parameter 'EVSEId' was null!" });
+                return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
+                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.eng, "Parameter 'EVSEId' was null!")) });
 
             #endregion
 
@@ -1418,7 +1418,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<EVSEStatusPull>
+        public async Task<StatusPull<WWCP.EVSEStatus>>
 
             PullEVSEStatusById(IEnumerable<WWCP.EVSE_Id>  EVSEIds,
                                eMobilityProvider_Id?      ProviderId          = null,
@@ -1433,14 +1433,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #region Initial checks
 
             if (EVSEIds.IsNullOrEmpty())
-                return new EVSEStatusPull(new WWCP.EVSEStatus[0],
-                                          new String[] { "Parameter 'EVSEIds' was null or empty!" });
+                return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
+                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.eng, "Parameter 'EVSEIds' was null or empty!")) });
 
             #endregion
 
 
             var EVSEStatusList  = new List<WWCP.EVSEStatus>();
-            var Warnings        = new List<String>();
+            var Warnings        = new List<Warning>();
 
             // Hubject has a limit of 100 EVSEIds per request!
             // Do not make concurrent requests!
@@ -1480,21 +1480,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    )));
 
                         else
-                            Warnings.Add("Invalid EVSE identification '" + evsestatusrecord.Id + "'!");
+                            Warnings.Add(Warning.Create(I18NString.Create(Languages.eng, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
 
                     }
 
                 }
 
                 else
-                    Warnings.AddRange(new String[] {
-                                          result.HTTPStatusCode.ToString(),
-                                          result.HTTPBody.ToUTF8String()
+                    Warnings.AddRange(new Warning[] {
+                                          Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode.ToString())),
+                                          Warning.Create(I18NString.Create(Languages.eng, result.HTTPBody.ToUTF8String()))
                                       });
 
             }
 
-            return new EVSEStatusPull(EVSEStatusList, Warnings);
+            return new StatusPull<WWCP.EVSEStatus>(EVSEStatusList, Warnings);
 
         }
 
@@ -2558,7 +2558,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         private void PullDataService(Object State)
         {
 
-            if (!DisablePullData)
+            if (!DisablePullPOIData)
             {
 
                 try

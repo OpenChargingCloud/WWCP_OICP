@@ -37,10 +37,10 @@ namespace org.GraphDefined.WWCP
     /// <summary>
     /// Extentions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
     /// </summary>
-    public static class EMPExtentions
+    public static class CPOExtentions
     {
 
-        #region CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ...)
+        #region CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -82,7 +82,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static OICPv2_2.EMP.WWCPCSOAdapter
 
-            CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
+            CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               CSORoamingProvider_Id                     Id,
                                               I18NString                                Name,
 
@@ -226,7 +226,7 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
+        #region CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -261,7 +261,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static OICPv2_2.EMP.WWCPCSOAdapter
 
-            CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
+            CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               CSORoamingProvider_Id                     Id,
                                               I18NString                                Name,
                                               SOAPServer                                SOAPServer,

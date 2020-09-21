@@ -48,10 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CPO\CPODelegates.cs" />
-    <Compile Include="CPO\CPOExtentions.cs" />
+    <Compile Include="CPO\EMPExtentions.cs" />
     <Compile Include="CPO\WWCPEMPAdapter.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
-    <Compile Include="EMP\EMPExtentions.cs" />
+    <Compile Include="EMP\CPOExtentions.cs" />
     <Compile Include="EMP\OICPImporter.cs" />
     <Compile Include="EMP\WWCPCSOAdapter.cs" />
     <Compile Include="Helper\ChargeStationInfo.cs" />

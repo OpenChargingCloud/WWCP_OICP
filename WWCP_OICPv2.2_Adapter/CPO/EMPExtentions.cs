@@ -37,10 +37,10 @@ namespace org.GraphDefined.WWCP
     /// <summary>
     /// Extentions methods for the WWCP wrapper for OICP roaming clients for charging station operators.
     /// </summary>
-    public static class CPOExtentions
+    public static class EMPExtentions
     {
 
-        #region CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
+        #region CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ... , Action = null)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -95,7 +95,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_2.CPO.WWCPEMPAdapter
 
-            CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
+            CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               EMPRoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
                                               I18NString                                                      Description,
@@ -249,7 +249,7 @@ namespace org.GraphDefined.WWCP
 
         #endregion
 
-        #region CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
+        #region CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -299,7 +299,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_2.CPO.WWCPEMPAdapter
 
-            CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
+            CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               EMPRoamingProvider_Id                                           Id,
                                               I18NString                                                      Name,
                                               I18NString                                                      Description,
