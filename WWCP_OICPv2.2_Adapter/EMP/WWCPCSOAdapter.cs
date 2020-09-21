@@ -42,7 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     /// A WWCP wrapper for the OICP EMP roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCSOAdapter : ABaseEMobilityEntity<CSORoamingProvider_Id>,
+    public class WWCPCSOAdapter : ACryptoEMobilityEntity<CSORoamingProvider_Id>,
                                   ICSORoamingProvider,
                                   ISendAuthenticationData
     {
@@ -119,13 +119,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         public DNSClient DNSClient
             => EMPRoaming?.DNSClient;
-
-
-        /// <summary>
-        /// The offical (multi-language) name of the roaming provider.
-        /// </summary>
-        [Mandatory]
-        public I18NString    Name                { get; }
 
 
         /// <summary>
@@ -409,11 +402,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               UInt64?                      DefaultDistanceKM                 = null)
 
             : base(Id,
+                   Name,
                    RoamingNetwork)
 
         {
 
-            this.Name                             = Name;
             this.EMPRoaming                       = EMPRoaming ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this._EVSEDataRecord2EVSE             = EVSEDataRecord2EVSE;
 
@@ -2702,8 +2695,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                      " => ", WWCPChargingStationOperatorId, ")"));
 
                                             // Update name (via events)!
-                                            WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown,
-                                                                                                 CurrentOperatorEVSEData.OperatorName);
+                                            //WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown,
+                                            //                                                     CurrentOperatorEVSEData.OperatorName);
 
                                         }
 
@@ -3267,9 +3260,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                             WWCPChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
                                                                                                                        I18NString.Create(Languages.unknown, CurrentOperatorEVSEStatus.OperatorName));
 
-                                        else
+                                        //else
                                             // Update name (via events)!
-                                            WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown, CurrentOperatorEVSEStatus.OperatorName);
+                                            //WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown, CurrentOperatorEVSEStatus.OperatorName);
 
                                         WWCP.EVSE             CurrentEVSE     = null;
                                         WWCP.EVSE_Id?         CurrentEVSEId   = null;
@@ -3590,7 +3583,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public override Int32 CompareTo(Object Object)
         {
 
             if (Object is WWCPCSOAdapter WWCPCSOAdapter)
