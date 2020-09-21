@@ -64,7 +64,7 @@
     <Compile Include="CPO\CPOClient\ICPOClientExtentions.cs" />
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\CPORoaming.cs" />
-    <Compile Include="CPO\CPOServer\CPOServer.cs" />
+    <Compile Include="CPO\CPOServer\CPOSOAPServer.cs" />
     <Compile Include="CPO\CPOServer\CPOServerDelegates.cs" />
     <Compile Include="CPO\CPOServer\CPOServerLogger.cs" />
     <Compile Include="DataTypes\Complex\Address.cs" />
@@ -120,7 +120,7 @@
     <Compile Include="EMP\EMPClient\IEMPClientExtentions.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
-    <Compile Include="EMP\EMPServer\EMPServer.cs" />
+    <Compile Include="EMP\EMPServer\EMPSOAPServer.cs" />
     <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
     <Compile Include="IO\OICPClientHelper.cs" />

@@ -49,7 +49,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         OnAuthorizeRemoteReservationStartRequestDelegate(DateTime                LogTimestamp,
                                                          DateTime                RequestTimestamp,
-                                                         CPOServer               Sender,
+                                                         CPOSOAPServer           Sender,
                                                          String                  SenderId,
                                                          EventTracking_Id        EventTrackingId,
                                                          EVSE_Id                 EVSEId,
@@ -71,7 +71,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task<Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>>
 
         OnAuthorizeRemoteReservationStartDelegate(DateTime                                    Timestamp,
-                                                  CPOServer                                   Sender,
+                                                  CPOSOAPServer                               Sender,
                                                   EMP.AuthorizeRemoteReservationStartRequest  Request);
 
 
@@ -95,7 +95,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task
 
         OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                       Timestamp,
-                                                          CPOServer                                                      Sender,
+                                                          CPOSOAPServer                                                  Sender,
                                                           String                                                         SenderId,
                                                           EventTracking_Id                                               EventTrackingId,
                                                           EVSE_Id                                                        EVSEId,
@@ -131,7 +131,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         OnAuthorizeRemoteReservationStopRequestDelegate(DateTime                LogTimestamp,
                                                         DateTime                RequestTimestamp,
-                                                        CPOServer               Sender,
+                                                        CPOSOAPServer           Sender,
                                                         String                  SenderId,
                                                         EventTracking_Id        EventTrackingId,
                                                         EVSE_Id                 EVSEId,
@@ -151,7 +151,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task<Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>>
 
         OnAuthorizeRemoteReservationStopDelegate(DateTime                                   Timestamp,
-                                                 CPOServer                                  Sender,
+                                                 CPOSOAPServer                              Sender,
                                                  EMP.AuthorizeRemoteReservationStopRequest  Request);
 
 
@@ -173,7 +173,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task
 
         OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                      Timestamp,
-                                                         CPOServer                                                     Sender,
+                                                         CPOSOAPServer                                                 Sender,
                                                          String                                                        SenderId,
                                                          EventTracking_Id                                              EventTrackingId,
                                                          EVSE_Id                                                       EVSEId,
@@ -210,7 +210,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         OnAuthorizeRemoteStartRequestDelegate(DateTime                LogTimestamp,
                                               DateTime                RequestTimestamp,
-                                              CPOServer               Sender,
+                                              CPOSOAPServer           Sender,
                                               String                  SenderId,
                                               EventTracking_Id        EventTrackingId,
                                               EVSE_Id                 EVSEId,
@@ -232,7 +232,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task<Acknowledgement<EMP.AuthorizeRemoteStartRequest>>
 
         OnAuthorizeRemoteStartDelegate(DateTime                         Timestamp,
-                                       CPOServer                        Sender,
+                                       CPOSOAPServer                    Sender,
                                        EMP.AuthorizeRemoteStartRequest  Request);
 
 
@@ -256,7 +256,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task
 
         OnAuthorizeRemoteStartResponseDelegate(DateTime                                            Timestamp,
-                                               CPOServer                                           Sender,
+                                               CPOSOAPServer                                       Sender,
                                                String                                              SenderId,
                                                EventTracking_Id                                    EventTrackingId,
                                                EVSE_Id                                             EVSEId,
@@ -292,7 +292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         OnAuthorizeRemoteStopRequestDelegate(DateTime                LogTimestamp,
                                              DateTime                RequestTimestamp,
-                                             CPOServer               Sender,
+                                             CPOSOAPServer           Sender,
                                              String                  SenderId,
                                              EventTracking_Id        EventTrackingId,
                                              EVSE_Id                 EVSEId,
@@ -312,7 +312,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task<Acknowledgement<EMP.AuthorizeRemoteStopRequest>>
 
         OnAuthorizeRemoteStopDelegate(DateTime                        Timestamp,
-                                      CPOServer                       Sender,
+                                      CPOSOAPServer                   Sender,
                                       EMP.AuthorizeRemoteStopRequest  Request);
 
 
@@ -334,7 +334,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate Task
 
         OnAuthorizeRemoteStopResponseDelegate(DateTime                                           Timestamp,
-                                              CPOServer                                          Sender,
+                                              CPOSOAPServer                                      Sender,
                                               String                                             SenderId,
                                               EventTracking_Id                                   EventTrackingId,
                                               EVSE_Id                                            EVSEId,

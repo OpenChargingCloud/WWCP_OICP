@@ -49,11 +49,11 @@
   <ItemGroup>
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\CPOExtentions.cs" />
-    <Compile Include="CPO\WWCPCPOAdapter.cs" />
+    <Compile Include="CPO\WWCPEMPAdapter.cs" />
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\EMPExtentions.cs" />
     <Compile Include="EMP\OICPImporter.cs" />
-    <Compile Include="EMP\WWCPEMPAdapter.cs" />
+    <Compile Include="EMP\WWCPCSOAdapter.cs" />
     <Compile Include="Helper\ChargeStationInfo.cs" />
     <Compile Include="Helper\ChargingPoolInfo.cs" />
     <Compile Include="Helper\CPInfoList.cs" />

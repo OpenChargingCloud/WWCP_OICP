@@ -62,7 +62,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer        CPOServer         { get; }
+        public CPOSOAPServer        CPOServer         { get; }
 
         /// <summary>
         /// The CPO server logger.
@@ -1022,7 +1022,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and logfile name.</param>
         public CPORoaming(CPOClient               CPOClient,
-                          CPOServer               CPOServer,
+                          CPOSOAPServer               CPOServer,
                           String                  ServerLoggingContext  = CPOServerLogger.DefaultContext,
                           LogfileCreatorDelegate  LogfileCreator        = null)
         {
@@ -1085,12 +1085,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                           TimeSpan?                            RequestTimeout                  = null,
                           Byte?                                MaxNumberOfRetries              = CPOClient.DefaultMaxNumberOfRetries,
 
-                          String                               ServerName                      = CPOServer.DefaultHTTPServerName,
+                          String                               ServerName                      = CPOSOAPServer.DefaultHTTPServerName,
                           IPPort?                              ServerTCPPort                   = null,
                           String                               ServiceName                     = null,
                           HTTPPath?                            ServerURLPrefix                 = null,
-                          String                               ServerAuthorizationURL          = CPOServer.DefaultAuthorizationURL,
-                          String                               ServerReservationURL            = CPOServer.DefaultReservationURL,
+                          String                               ServerAuthorizationURL          = CPOSOAPServer.DefaultAuthorizationURL,
+                          String                               ServerReservationURL            = CPOSOAPServer.DefaultReservationURL,
                           HTTPContentType                      ServerContentType               = null,
                           Boolean                              ServerRegisterHTTPRootService   = true,
                           Boolean                              ServerAutoStart                 = false,
@@ -1119,10 +1119,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                  ClientLoggingContext,
                                  LogfileCreator),
 
-                   new CPOServer(ServerName,
+                   new CPOSOAPServer(ServerName,
                                  ServerTCPPort,
                                  ServiceName,
-                                 ServerURLPrefix ?? CPOServer.DefaultURLPrefix,
+                                 ServerURLPrefix ?? CPOSOAPServer.DefaultURLPathPrefix,
                                  ServerAuthorizationURL,
                                  ServerReservationURL,
                                  ServerContentType,

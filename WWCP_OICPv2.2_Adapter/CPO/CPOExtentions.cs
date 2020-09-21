@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static OICPv2_2.CPO.WWCPCPOAdapter
+        public static OICPv2_2.CPO.WWCPEMPAdapter
 
             CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               EMPRoamingProvider_Id                                           Id,
@@ -114,12 +114,12 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                                                       RequestTimeout                                  = null,
                                               Byte?                                                           MaxNumberOfRetries                              = OICPv2_2.CPO.CPOClient.DefaultMaxNumberOfRetries,
 
-                                              String                                                          ServerName                                      = OICPv2_2.CPO.CPOServer.DefaultHTTPServerName,
+                                              String                                                          ServerName                                      = OICPv2_2.CPO.CPOSOAPServer.DefaultHTTPServerName,
                                               String                                                          ServiceId                                       = null,
                                               IPPort?                                                         ServerTCPPort                                   = null,
                                               HTTPPath?                                                       ServerURLPrefix                                 = null,
-                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURL,
-                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOServer.DefaultReservationURL,
+                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOSOAPServer.DefaultAuthorizationURL,
+                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOSOAPServer.DefaultReservationURL,
                                               HTTPContentType                                                 ServerContentType                               = null,
                                               Boolean                                                         ServerRegisterHTTPRootService                   = true,
                                               Boolean                                                         ServerAutoStart                                 = false,
@@ -150,7 +150,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                                         DisableAuthentication                           = false,
                                               Boolean                                                         DisableSendChargeDetailRecords                  = false,
 
-                                              Action<OICPv2_2.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
+                                              Action<OICPv2_2.CPO.WWCPEMPAdapter>                             OICPConfigurator                                = null,
                                               Action<IEMPRoamingProvider>                                     Configurator                                    = null,
 
                                               String                                                          EllipticCurve                                   = "P-256",
@@ -177,7 +177,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_2.CPO.WWCPCPOAdapter(Id,
+            var NewRoamingProvider = new OICPv2_2.CPO.WWCPEMPAdapter(Id,
                                                                      Name,
                                                                      Description,
                                                                      RoamingNetwork,
@@ -199,7 +199,7 @@ namespace org.GraphDefined.WWCP
                                                                      ServerName,
                                                                      ServiceId,
                                                                      ServerTCPPort,
-                                                                     ServerURLPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURLPrefix,
+                                                                     ServerURLPrefix ?? OICPv2_2.CPO.CPOSOAPServer.DefaultURLPathPrefix,
                                                                      ServerAuthorizationURL,
                                                                      ServerReservationURL,
                                                                      ServerContentType,
@@ -243,7 +243,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator) as OICPv2_2.CPO.WWCPCPOAdapter;
+                                                Configurator) as OICPv2_2.CPO.WWCPEMPAdapter;
 
         }
 
@@ -297,7 +297,7 @@ namespace org.GraphDefined.WWCP
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public static OICPv2_2.CPO.WWCPCPOAdapter
+        public static OICPv2_2.CPO.WWCPEMPAdapter
 
             CreateOICPv2_2_CSORoamingProvider(this RoamingNetwork                                             RoamingNetwork,
                                               EMPRoamingProvider_Id                                           Id,
@@ -321,8 +321,8 @@ namespace org.GraphDefined.WWCP
 
                                               HTTPPath?                                                       ServerURLPrefix                                 = null,
                                               String                                                          ServiceId                                       = null,
-                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOServer.DefaultAuthorizationURL,
-                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOServer.DefaultReservationURL,
+                                              String                                                          ServerAuthorizationURL                          = OICPv2_2.CPO.CPOSOAPServer.DefaultAuthorizationURL,
+                                              String                                                          ServerReservationURL                            = OICPv2_2.CPO.CPOSOAPServer.DefaultReservationURL,
 
                                               String                                                          ClientLoggingContext                            = OICPv2_2.CPO.CPOClient.CPOClientLogger.DefaultContext,
                                               String                                                          ServerLoggingContext                            = OICPv2_2.CPO.CPOServerLogger.DefaultContext,
@@ -350,7 +350,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                                         DisableAuthentication                           = false,
                                               Boolean                                                         DisableSendChargeDetailRecords                  = false,
 
-                                              Action<OICPv2_2.CPO.WWCPCPOAdapter>                             OICPConfigurator                                = null,
+                                              Action<OICPv2_2.CPO.WWCPEMPAdapter>                             OICPConfigurator                                = null,
                                               Action<IEMPRoamingProvider>                                     Configurator                                    = null,
 
                                               String                                                          EllipticCurve                                   = "P-256",
@@ -381,7 +381,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_2.CPO.WWCPCPOAdapter(Id,
+            var NewRoamingProvider = new OICPv2_2.CPO.WWCPEMPAdapter(Id,
                                                                      Name,
                                                                      Description,
                                                                      RoamingNetwork,
@@ -404,9 +404,9 @@ namespace org.GraphDefined.WWCP
                                                                                                 ClientLoggingContext,
                                                                                                 LogfileCreator),
 
-                                                                     new OICPv2_2.CPO.CPOServer(SOAPServer,
+                                                                     new OICPv2_2.CPO.CPOSOAPServer(SOAPServer,
                                                                                                 ServiceId,
-                                                                                                ServerURLPrefix ?? OICPv2_2.CPO.CPOServer.DefaultURLPrefix,
+                                                                                                ServerURLPrefix ?? OICPv2_2.CPO.CPOSOAPServer.DefaultURLPathPrefix,
                                                                                                 ServerAuthorizationURL,
                                                                                                 ServerReservationURL),
 
@@ -445,7 +445,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator) as OICPv2_2.CPO.WWCPCPOAdapter;
+                                                Configurator) as OICPv2_2.CPO.WWCPEMPAdapter;
 
         }
 

@@ -19,8 +19,9 @@
 
 using System;
 using System.Linq;
+using System.Net.Security;
 using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -28,8 +29,6 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
-using System.Net.Security;
-using System.Security.Authentication;
 
 #endregion
 
@@ -37,9 +36,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 {
 
     /// <summary>
-    /// An OICP CPO HTTP/SOAP/XML Server API.
+    /// The CPO HTTP/SOAP/XML Server API.
     /// </summary>
-    public class CPOServer : ASOAPServer
+    public class CPOSOAPServer : ASOAPServer
     {
 
         #region Data
@@ -57,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The default HTTP/SOAP/XML server URL prefix.
         /// </summary>
-        public new static readonly HTTPPath         DefaultURLPrefix           = HTTPPath.Parse("/");
+        public new static readonly HTTPPath         DefaultURLPathPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URL for OICP authorization requests.
@@ -256,36 +255,36 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for all HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ReservationURL">The HTTP/SOAP/XML URL for OICP reservation requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public CPOServer(String                               HTTPServerName               = DefaultHTTPServerName,
-                         IPPort?                              HTTPServerPort               = null,
-                         String                               ServiceName                  = null,
-                         ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
-                         RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
-                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                         SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPPath?                            URLPrefix                    = null,
-                         String                               AuthorizationURL             = DefaultAuthorizationURL,
-                         String                               ReservationURL               = DefaultReservationURL,
-                         HTTPContentType                      ContentType                  = null,
-                         Boolean                              RegisterHTTPRootService      = true,
-                         DNSClient                            DNSClient                    = null,
-                         Boolean                              AutoStart                    = false)
+        public CPOSOAPServer(String                               HTTPServerName               = DefaultHTTPServerName,
+                             IPPort?                              HTTPServerPort               = null,
+                             String                               ServiceName                  = null,
+                             ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                             RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                             SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
+                             HTTPPath?                            URLPathPrefix                = null,
+                             String                               AuthorizationURL             = DefaultAuthorizationURL,
+                             String                               ReservationURL               = DefaultReservationURL,
+                             HTTPContentType                      ContentType                  = null,
+                             Boolean                              RegisterHTTPRootService      = true,
+                             DNSClient                            DNSClient                    = null,
+                             Boolean                              AutoStart                    = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    HTTPServerPort ?? DefaultHTTPServerPort,
-                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOServer),
+                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOSOAPServer),
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
-                   URLPrefix      ?? DefaultURLPrefix,
+                   URLPathPrefix  ?? DefaultURLPathPrefix,
                    ContentType    ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -293,7 +292,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOSOAPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -314,28 +313,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="HTTPServerName">An optional identification string for the HTTP server.</param>
         /// <param name="HTTPServerPort">An optional TCP port for the HTTP server.</param>
         /// <param name="ServiceName">An optional identification for this SOAP service.</param>
-        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ReservationURL">The HTTP/SOAP/XML URL for OICP reservation requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public CPOServer(String           HTTPServerName            = DefaultHTTPServerName,
-                         IPPort?          HTTPServerPort            = null,
-                         String           ServiceName               = null,
-                         HTTPPath?        URLPrefix                 = null,
-                         String           AuthorizationURL          = DefaultAuthorizationURL,
-                         String           ReservationURL            = DefaultReservationURL,
-                         HTTPContentType  ContentType               = null,
-                         Boolean          RegisterHTTPRootService   = true,
-                         DNSClient        DNSClient                 = null,
-                         Boolean          AutoStart                 = false)
+        public CPOSOAPServer(String           HTTPServerName            = DefaultHTTPServerName,
+                             IPPort?          HTTPServerPort            = null,
+                             String           ServiceName               = null,
+                             HTTPPath?        URLPathPrefix             = null,
+                             String           AuthorizationURL          = DefaultAuthorizationURL,
+                             String           ReservationURL            = DefaultReservationURL,
+                             HTTPContentType  ContentType               = null,
+                             Boolean          RegisterHTTPRootService   = true,
+                             DNSClient        DNSClient                 = null,
+                             Boolean          AutoStart                 = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
                    HTTPServerPort ?? DefaultHTTPServerPort,
-                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOServer),
-                   URLPrefix      ?? DefaultURLPrefix,
+                   ServiceName    ?? "OICP " + Version.Number + " " + nameof(CPOSOAPServer),
+                   URLPathPrefix  ?? DefaultURLPathPrefix,
                    ContentType    ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
@@ -343,7 +342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOSOAPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -363,21 +362,21 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="ServiceName">An optional identification for this SOAP service.</param>
-        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">The HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ReservationURL">The HTTP/SOAP/XML URL for OICP reservation requests.</param>
-        public CPOServer(SOAPServer  SOAPServer,
-                         String      ServiceName        = null,
-                         HTTPPath?   URLPrefix          = null,
-                         String      AuthorizationURL   = DefaultAuthorizationURL,
-                         String      ReservationURL     = DefaultReservationURL)
+        public CPOSOAPServer(SOAPServer  SOAPServer,
+                             String      ServiceName        = null,
+                             HTTPPath?   URLPathPrefix      = null,
+                             String      AuthorizationURL   = DefaultAuthorizationURL,
+                             String      ReservationURL     = DefaultReservationURL)
 
             : base(SOAPServer,
-                   URLPrefix ?? DefaultURLPrefix)
+                   URLPathPrefix ?? DefaultURLPathPrefix)
 
         {
 
-            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(CPOSOAPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
             this.ReservationURL    = ReservationURL   ?? DefaultReservationURL;
 
@@ -428,7 +427,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPRequest));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPRequest));
                 }
 
                 #endregion
@@ -476,7 +475,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
                         }
 
                         #endregion
@@ -538,7 +537,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
                         }
 
                         #endregion
@@ -593,7 +592,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPResponse));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStartSOAPResponse));
                 }
 
                 #endregion
@@ -634,7 +633,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopSOAPRequest));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStopSOAPRequest));
                 }
 
                 #endregion
@@ -678,7 +677,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
                         }
 
                         #endregion
@@ -738,7 +737,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
                         }
 
                         #endregion
@@ -793,7 +792,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteReservationStopSOAPResponse));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteReservationStopSOAPResponse));
                 }
 
                 #endregion
@@ -834,7 +833,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartSOAPRequest));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStartSOAPRequest));
                 }
 
                 #endregion
@@ -882,7 +881,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStartRequest));
                         }
 
                         #endregion
@@ -944,7 +943,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStartResponse));
                         }
 
                         #endregion
@@ -999,7 +998,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStartSOAPResponse));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStartSOAPResponse));
                 }
 
                 #endregion
@@ -1041,7 +1040,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopSOAPRequest));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStopSOAPRequest));
                 }
 
                 #endregion
@@ -1085,7 +1084,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStopRequest));
                         }
 
                         #endregion
@@ -1145,7 +1144,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                            e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStopResponse));
                         }
 
                         #endregion
@@ -1200,7 +1199,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(CPOServer) + "." + nameof(OnAuthorizeRemoteStopSOAPResponse));
+                    e.Log(nameof(CPOSOAPServer) + "." + nameof(OnAuthorizeRemoteStopSOAPResponse));
                 }
 
                 #endregion

@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 {
 
     /// <summary>
-    /// An OICP EMP server logger.
+    /// The EMP server logger.
     /// </summary>
     public class EMPServerLogger : HTTPServerLogger
     {
@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The attached EMP server.
         /// </summary>
-        public EMPServer  EMPServer   { get; }
+        public EMPSOAPServer  EMPServer   { get; }
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EMPServer">A OICP EMP server.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPServerLogger(EMPServer               EMPServer,
+        public EMPServerLogger(EMPSOAPServer               EMPServer,
                                String                  Context         = DefaultContext,
                                LogfileCreatorDelegate  LogfileCreator  = null)
 
@@ -101,7 +101,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
         /// 
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPServerLogger(EMPServer                   EMPServer,
+        public EMPServerLogger(EMPSOAPServer                   EMPServer,
                                String                      Context,
 
                                HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,

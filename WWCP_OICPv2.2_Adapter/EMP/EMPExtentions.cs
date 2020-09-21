@@ -80,7 +80,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static OICPv2_2.EMP.WWCPEMPAdapter
+        public static OICPv2_2.EMP.WWCPCSOAdapter
 
             CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               CSORoamingProvider_Id                     Id,
@@ -103,7 +103,7 @@ namespace org.GraphDefined.WWCP
                                               TimeSpan?                                 RequestTimeout                     = null,
                                               Byte?                                     MaxNumberOfRetries                 = OICPv2_2.EMP.EMPClient.DefaultMaxNumberOfRetries,
 
-                                              String                                    ServerName                         = OICPv2_2.EMP.EMPServer.DefaultHTTPServerName,
+                                              String                                    ServerName                         = OICPv2_2.EMP.EMPSOAPServer.DefaultHTTPServerName,
                                               IPPort?                                   ServerTCPPort                      = null,
                                               String                                    ServiceName                        = null,
                                               ServerCertificateSelectorDelegate         ServerCertificateSelector          = null,
@@ -111,7 +111,7 @@ namespace org.GraphDefined.WWCP
                                               LocalCertificateSelectionCallback         RemoteClientCertificateSelector    = null,
                                               SslProtocols                              AllowedTLSProtocols                = SslProtocols.Tls12,
                                               HTTPPath?                                 ServerURLPrefix                    = null,
-                                              String                                    ServerAuthorizationURL             = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURL,
+                                              String                                    ServerAuthorizationURL             = OICPv2_2.EMP.EMPSOAPServer.DefaultAuthorizationURL,
                                               HTTPContentType                           ServerContentType                  = null,
                                               Boolean                                   ServerRegisterHTTPRootService      = true,
                                               Boolean                                   ServerAutoStart                    = false,
@@ -138,7 +138,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                                 DNSClient                          = null,
 
-                                              Action<OICPv2_2.EMP.WWCPEMPAdapter>       OICPConfigurator                   = null,
+                                              Action<OICPv2_2.EMP.WWCPCSOAdapter>       OICPConfigurator                   = null,
                                               Action<ICSORoamingProvider>               Configurator                       = null)
 
         {
@@ -159,7 +159,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_2.EMP.WWCPEMPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_2.EMP.WWCPCSOAdapter(Id,
                                                                      Name,
                                                                      RoamingNetwork,
 
@@ -187,7 +187,7 @@ namespace org.GraphDefined.WWCP
                                                                      RemoteClientCertificateValidator,
                                                                      RemoteClientCertificateSelector,
                                                                      AllowedTLSProtocols,
-                                                                     ServerURLPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURLPrefix,
+                                                                     ServerURLPrefix ?? OICPv2_2.EMP.EMPSOAPServer.DefaultURLPathPrefix,
                                                                      ServerAuthorizationURL,
                                                                      ServerContentType,
                                                                      ServerRegisterHTTPRootService,
@@ -220,7 +220,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator) as OICPv2_2.EMP.WWCPEMPAdapter;
+                                                Configurator) as OICPv2_2.EMP.WWCPCSOAdapter;
 
         }
 
@@ -259,7 +259,7 @@ namespace org.GraphDefined.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static OICPv2_2.EMP.WWCPEMPAdapter
+        public static OICPv2_2.EMP.WWCPCSOAdapter
 
             CreateOICPv2_2_EMPRoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               CSORoamingProvider_Id                     Id,
@@ -285,7 +285,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                    ServiceId                         = null,
                                               HTTPPath?                                  ServerURLPrefix                   = null,
-                                              String                                    ServerAuthorizationURL            = OICPv2_2.EMP.EMPServer.DefaultAuthorizationURL,
+                                              String                                    ServerAuthorizationURL            = OICPv2_2.EMP.EMPSOAPServer.DefaultAuthorizationURL,
 
                                               String                                    ClientLoggingContext              = OICPv2_2.EMP.EMPClient.EMPClientLogger.DefaultContext,
                                               String                                    ServerLoggingContext              = OICPv2_2.EMP.EMPServerLogger.DefaultContext,
@@ -309,7 +309,7 @@ namespace org.GraphDefined.WWCP
 
                                               DNSClient                                 DNSClient                         = null,
 
-                                              Action<OICPv2_2.EMP.WWCPEMPAdapter>       OICPConfigurator                  = null,
+                                              Action<OICPv2_2.EMP.WWCPCSOAdapter>       OICPConfigurator                  = null,
                                               Action<ICSORoamingProvider>               Configurator                      = null)
 
         {
@@ -334,7 +334,7 @@ namespace org.GraphDefined.WWCP
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_2.EMP.WWCPEMPAdapter(Id,
+            var NewRoamingProvider = new OICPv2_2.EMP.WWCPCSOAdapter(Id,
                                                                      Name,
                                                                      RoamingNetwork,
 
@@ -359,9 +359,9 @@ namespace org.GraphDefined.WWCP
                                                                                                 ClientLoggingContext,
                                                                                                 LogfileCreator),
 
-                                                                     new OICPv2_2.EMP.EMPServer(SOAPServer,
+                                                                     new OICPv2_2.EMP.EMPSOAPServer(SOAPServer,
                                                                                                 ServiceId,
-                                                                                                ServerURLPrefix ?? OICPv2_2.EMP.EMPServer.DefaultURLPrefix,
+                                                                                                ServerURLPrefix ?? OICPv2_2.EMP.EMPSOAPServer.DefaultURLPathPrefix,
                                                                                                 ServerAuthorizationURL),
 
                                                                      ServerLoggingContext,
@@ -388,7 +388,7 @@ namespace org.GraphDefined.WWCP
 
             return RoamingNetwork.
                        CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator) as OICPv2_2.EMP.WWCPEMPAdapter;
+                                                Configurator) as OICPv2_2.EMP.WWCPCSOAdapter;
 
         }
 

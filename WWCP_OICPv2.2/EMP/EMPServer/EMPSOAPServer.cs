@@ -19,15 +19,15 @@
 
 using System;
 using System.Linq;
+using System.Net.Security;
 using System.Threading.Tasks;
+using System.Security.Authentication;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using System.Security.Authentication;
-using System.Net.Security;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
@@ -36,9 +36,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 {
 
     /// <summary>
-    /// An OICP EMP HTTP/SOAP/XML server.
+    /// The EMP HTTP/SOAP/XML server.
     /// </summary>
-    public class EMPServer : ASOAPServer
+    public class EMPSOAPServer : ASOAPServer
     {
 
         #region Data
@@ -56,7 +56,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The default HTTP/SOAP/XML server URL prefix.
         /// </summary>
-        public new static readonly HTTPPath         DefaultURLPrefix           = HTTPPath.Parse("/");
+        public new static readonly HTTPPath         DefaultURLPathPrefix           = HTTPPath.Parse("/");
 
         /// <summary>
         /// The default HTTP/SOAP/XML URL for OICP authorization requests.
@@ -209,42 +209,42 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
         /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for all HTTP URLs.</param>
         /// <param name="AuthorizationURL">An alternative HTTP/SOAP/XML URL for OICP authorization requests.</param>
         /// <param name="ContentType">An optional HTTP content type to use.</param>
         /// <param name="RegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
         /// <param name="AutoStart">Start the server immediately.</param>
-        public EMPServer(String                               HTTPServerName               = DefaultHTTPServerName,
-                         IPPort?                              TCPPort                      = null,
-                         String                               ServiceName                  = null,
-                         ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
-                         RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
-                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                         SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
-                         HTTPPath?                             URLPrefix                    = null,
-                         String                               AuthorizationURL             = DefaultAuthorizationURL,
-                         HTTPContentType                      ContentType                  = null,
-                         Boolean                              RegisterHTTPRootService      = true,
-                         DNSClient                            DNSClient                    = null,
-                         Boolean                              AutoStart                    = false)
+        public EMPSOAPServer(String                               HTTPServerName               = DefaultHTTPServerName,
+                             IPPort?                              TCPPort                      = null,
+                             String                               ServiceName                  = null,
+                             ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                             RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                             SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12,
+                             HTTPPath?                            URLPathPrefix                = null,
+                             String                               AuthorizationURL             = DefaultAuthorizationURL,
+                             HTTPContentType                      ContentType                  = null,
+                             Boolean                              RegisterHTTPRootService      = true,
+                             DNSClient                            DNSClient                    = null,
+                             Boolean                              AutoStart                    = false)
 
             : base(HTTPServerName.IsNotNullOrEmpty() ? HTTPServerName : DefaultHTTPServerName,
-                   TCPPort     ?? DefaultHTTPServerPort,
-                   ServiceName ?? "OICP " + Version.Number + " " + nameof(EMPServer),
+                   TCPPort       ?? DefaultHTTPServerPort,
+                   ServiceName   ?? "OICP " + Version.Number + " " + nameof(EMPSOAPServer),
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
-                   URLPrefix   ?? DefaultURLPrefix,
-                   ContentType ?? DefaultContentType,
+                   URLPathPrefix ?? DefaultURLPathPrefix,
+                   ContentType   ?? DefaultContentType,
                    RegisterHTTPRootService,
                    DNSClient,
                    AutoStart: false)
 
         {
 
-            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPSOAPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
 
             RegisterURLTemplates();
@@ -263,19 +263,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         /// <param name="SOAPServer">A SOAP server.</param>
         /// <param name="ServiceName">An optional identification for this SOAP service.</param>
-        /// <param name="URLPrefix">An optional prefix for the HTTP URLs.</param>
+        /// <param name="URLPathPrefix">An optional prefix for the HTTP URLs.</param>
         /// <param name="AuthorizationURL">An alternative HTTP/SOAP/XML URL for OICP authorization requests.</param>
-        public EMPServer(SOAPServer  SOAPServer,
-                         String      ServiceName        = null,
-                         HTTPPath?   URLPrefix          = null,
-                         String      AuthorizationURL   = DefaultAuthorizationURL)
+        public EMPSOAPServer(SOAPServer  SOAPServer,
+                             String      ServiceName        = null,
+                             HTTPPath?   URLPathPrefix      = null,
+                             String      AuthorizationURL   = DefaultAuthorizationURL)
 
             : base(SOAPServer,
-                   URLPrefix ?? DefaultURLPrefix)
+                   URLPathPrefix ?? DefaultURLPathPrefix)
 
         {
 
-            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPServer);
+            this.ServiceName       = ServiceName      ?? "OICP " + Version.Number + " " + nameof(EMPSOAPServer);
             this.AuthorizationURL  = AuthorizationURL ?? DefaultAuthorizationURL;
 
             RegisterURLTemplates();
@@ -326,7 +326,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
                 }
 
                 #endregion
@@ -373,7 +373,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartRequest));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStartRequest));
                         }
 
                         #endregion
@@ -435,7 +435,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartResponse));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStartResponse));
                         }
 
                         #endregion
@@ -489,7 +489,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPResponse));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStartSOAPResponse));
                 }
 
                 #endregion
@@ -530,7 +530,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStartSOAPRequest));
                 }
 
                 #endregion
@@ -577,7 +577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopRequest));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStopRequest));
                         }
 
                         #endregion
@@ -638,7 +638,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopResponse));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStopResponse));
                         }
 
                         #endregion
@@ -692,7 +692,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnAuthorizeStopSOAPResponse));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnAuthorizeStopSOAPResponse));
                 }
 
                 #endregion
@@ -733,7 +733,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPRequest));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnChargeDetailRecordSOAPRequest));
                 }
 
                 #endregion
@@ -774,7 +774,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordRequest));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnChargeDetailRecordRequest));
                         }
 
                         #endregion
@@ -827,7 +827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordResponse));
+                            e.Log(nameof(EMPSOAPServer) + "." + nameof(OnChargeDetailRecordResponse));
                         }
 
                         #endregion
@@ -881,7 +881,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(EMPServer) + "." + nameof(OnChargeDetailRecordSOAPResponse));
+                    e.Log(nameof(EMPSOAPServer) + "." + nameof(OnChargeDetailRecordSOAPResponse));
                 }
 
                 #endregion

@@ -36,7 +36,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         OnAuthorizeStartRequestDelegate (DateTime                 LogTimestamp,
                                          DateTime                 RequestTimestamp,
-                                         EMPServer                Sender,
+                                         EMPSOAPServer            Sender,
                                          String                   SenderId,
                                          EventTracking_Id         EventTrackingId,
                                          Operator_Id              OperatorId,
@@ -58,7 +58,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task<CPO.AuthorizationStart>
 
         OnAuthorizeStartDelegate(DateTime                   Timestamp,
-                                 EMPServer                  Sender,
+                                 EMPSOAPServer              Sender,
                                  CPO.AuthorizeStartRequest  Request);
 
 
@@ -68,7 +68,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task
 
         OnAuthorizeStartResponseDelegate(DateTime                 Timestamp,
-                                         EMPServer                Sender,
+                                         EMPSOAPServer            Sender,
                                          String                   SenderId,
                                          EventTracking_Id         EventTrackingId,
                                          Operator_Id              OperatorId,
@@ -93,7 +93,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         OnAuthorizeStopRequestHandler (DateTime               LogTimestamp,
                                        DateTime               RequestTimestamp,
-                                       EMPServer              Sender,
+                                       EMPSOAPServer          Sender,
                                        String                 SenderId,
                                        EventTracking_Id       EventTrackingId,
                                        Session_Id?            SessionId,
@@ -114,7 +114,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task<CPO.AuthorizationStop>
 
         OnAuthorizeStopDelegate(DateTime                  Timestamp,
-                                EMPServer                 Sender,
+                                EMPSOAPServer             Sender,
                                 CPO.AuthorizeStopRequest  Request);
 
 
@@ -124,7 +124,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task
 
         OnAuthorizeStopResponseHandler(DateTime                Timestamp,
-                                       EMPServer               Sender,
+                                       EMPSOAPServer           Sender,
                                        String                  SenderId,
                                        EventTracking_Id        EventTrackingId,
                                        Session_Id?             SessionId,
@@ -148,7 +148,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         OnChargeDetailRecordRequestHandler (DateTime              LogTimestamp,
                                             DateTime              RequestTimestamp,
-                                            EMPServer             Sender,
+                                            EMPSOAPServer         Sender,
                                             String                SenderId,
                                             EventTracking_Id      EventTrackingId,
                                             ChargeDetailRecord    ChargeDetailRecord,
@@ -164,7 +164,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task<Acknowledgement<CPO.SendChargeDetailRecordRequest>>
 
         OnChargeDetailRecordDelegate       (DateTime                           Timestamp,
-                                            EMPServer                          Sender,
+                                            EMPSOAPServer                      Sender,
                                             CPO.SendChargeDetailRecordRequest  Request);
 
 
@@ -174,7 +174,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
     public delegate Task
 
         OnChargeDetailRecordResponseHandler(DateTime                                              Timestamp,
-                                            EMPServer                                             Sender,
+                                            EMPSOAPServer                                         Sender,
                                             String                                                SenderId,
                                             EventTracking_Id                                      EventTrackingId,
                                             ChargeDetailRecord                                    ChargeDetailRecord,

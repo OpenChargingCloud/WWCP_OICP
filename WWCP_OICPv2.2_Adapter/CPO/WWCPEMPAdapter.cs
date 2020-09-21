@@ -42,10 +42,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCPOAdapter : AWWCPEMPAdapter<ChargeDetailRecord>,
+    public class WWCPEMPAdapter : AWWCPEMPAdapter<ChargeDetailRecord>,
                                   IEMPRoamingProvider,
-                                  IEquatable <WWCPCPOAdapter>,
-                                  IComparable<WWCPCPOAdapter>,
+                                  IEquatable <WWCPEMPAdapter>,
+                                  IComparable<WWCPEMPAdapter>,
                                   IComparable
     {
 
@@ -98,7 +98,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServer CPOServer
+        public CPOSOAPServer CPOServer
             => CPORoaming?.CPOServer;
 
         /// <summary>
@@ -672,7 +672,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #region Constructor(s)
 
-        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, CPORoaming, EVSE2EVSEDataRecord = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -703,7 +703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">The attached DNS service.</param>
-        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
@@ -768,17 +768,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         {
 
-            #region Initial checks
-
-            if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Name),        "The given roaming provider name must not be null or empty!");
-
-            if (CPORoaming == null)
-                throw new ArgumentNullException(nameof(CPORoaming),  "The given OICP CPO Roaming object must not be null!");
-
-            #endregion
-
-            this.CPORoaming                                       = CPORoaming;
+            this.CPORoaming                                       = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
             this._EVSE2EVSEDataRecord                             = EVSE2EVSEDataRecord;
             this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
             this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
@@ -1377,7 +1367,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, CPOClient, CPOServer, EVSEDataRecordProcessing = null)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -1409,13 +1399,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
 
                               CPOClient                                          CPOClient,
-                              CPOServer                                          CPOServer,
+                              CPOSOAPServer                                          CPOServer,
                               String                                             ServerLoggingContext                            = CPOServerLogger.DefaultContext,
                               LogfileCreatorDelegate                             LogfileCreator                                  = null,
 
@@ -1489,7 +1479,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region WWCPCPOAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
+        #region WWCPEMPAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
 
         /// <summary>
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
@@ -1535,7 +1525,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="PublicKeyRing">The public key ring of the entity.</param>
         /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
         /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCPOAdapter(EMPRoamingProvider_Id                              Id,
+        public WWCPEMPAdapter(EMPRoamingProvider_Id                              Id,
                               I18NString                                         Name,
                               I18NString                                         Description,
                               RoamingNetwork                                     RoamingNetwork,
@@ -1554,12 +1544,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                               TimeSpan?                                          RequestTimeout                                  = null,
                               Byte?                                              MaxNumberOfRetries                              = CPOClient.DefaultMaxNumberOfRetries,
 
-                              String                                             ServerName                                      = CPOServer.DefaultHTTPServerName,
+                              String                                             ServerName                                      = CPOSOAPServer.DefaultHTTPServerName,
                               String                                             ServiceName                                       = null,
                               IPPort?                                            ServerTCPPort                                   = null,
                               HTTPPath?                                          ServerURLPrefix                                 = null,
-                              String                                             ServerAuthorizationURL                          = CPOServer.DefaultAuthorizationURL,
-                              String                                             ServerReservationURL                            = CPOServer.DefaultReservationURL,
+                              String                                             ServerAuthorizationURL                          = CPOSOAPServer.DefaultAuthorizationURL,
+                              String                                             ServerReservationURL                            = CPOSOAPServer.DefaultReservationURL,
                               HTTPContentType                                    ServerContentType                               = null,
                               Boolean                                            ServerRegisterHTTPRootService                   = true,
                               Boolean                                            ServerAutoStart                                 = false,
@@ -1619,7 +1609,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                   ServerName,
                                   ServerTCPPort,
                                   ServiceName,
-                                  ServerURLPrefix ?? CPOServer.DefaultURLPrefix,
+                                  ServerURLPrefix ?? CPOSOAPServer.DefaultURLPathPrefix,
                                   ServerAuthorizationURL,
                                   ServerReservationURL,
                                   ServerContentType,
@@ -1776,7 +1766,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
             }
 
             #endregion
@@ -2009,7 +1999,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
             }
 
             #endregion
@@ -2130,7 +2120,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
             }
 
             #endregion
@@ -2208,7 +2198,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
             }
 
             #endregion
@@ -2274,7 +2264,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2371,7 +2361,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2478,7 +2468,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2587,7 +2577,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2685,7 +2675,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2794,7 +2784,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2902,7 +2892,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3010,7 +3000,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3148,7 +3138,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3278,7 +3268,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3385,7 +3375,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3500,7 +3490,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3899,7 +3889,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -4008,7 +3998,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -4123,7 +4113,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRRequest));
+                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -5157,7 +5147,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStartRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
@@ -5270,7 +5260,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStartResponse));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartResponse));
             }
 
             #endregion
@@ -5352,7 +5342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopRequest));
             }
 
             #endregion
@@ -5463,7 +5453,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnAuthorizeStopResponse));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopResponse));
             }
 
             #endregion
@@ -5563,7 +5553,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
             }
 
             #endregion
@@ -5622,7 +5612,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                             }
                             catch (Exception e)
                             {
-                                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsRequest));
+                                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
                             }
 
                             #endregion
@@ -5787,7 +5777,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCPOAdapter) + "." + nameof(OnSendCDRsResponse));
+                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsResponse));
             }
 
             #endregion
@@ -5875,7 +5865,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
                 DebugX.LogT(GetType().Name + ".DataAndStatusLock '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
 
-                //OnWWCPCPOAdapterException?.Invoke(DateTime.UtcNow,
+                //OnWWCPEMPAdapterException?.Invoke(DateTime.UtcNow,
                 //                                  this,
                 //                                  e);
 
@@ -5917,7 +5907,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     try
                     {
                         SendOnWarnings(DateTime.UtcNow,
-                                       nameof(WWCPCPOAdapter) + Id,
+                                       nameof(WWCPEMPAdapter) + Id,
                                        "EVSEsToAddTask",
                                        EVSEsToAddTask.Result.Warnings);
                     }
@@ -5954,7 +5944,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         try
                         {
                             SendOnWarnings(DateTime.UtcNow,
-                                       nameof(WWCPCPOAdapter) + Id,
+                                       nameof(WWCPEMPAdapter) + Id,
                                        "PushEVSEDataTask",
                                        PushEVSEDataTask.Result.Warnings);
                         }
@@ -5987,7 +5977,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     try
                     {
                         SendOnWarnings(DateTime.UtcNow,
-                                   nameof(WWCPCPOAdapter) + Id,
+                                   nameof(WWCPEMPAdapter) + Id,
                                    "PushEVSEStatusTask",
                                    PushEVSEStatusTask.Result.Warnings);
                     }
@@ -6020,7 +6010,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                         try
                         {
                             SendOnWarnings(DateTime.UtcNow,
-                                       nameof(WWCPCPOAdapter) + Id,
+                                       nameof(WWCPEMPAdapter) + Id,
                                        "EVSEsToRemoveTask",
                                        EVSEsToRemoveTask.Result.Warnings);
                         }
@@ -6102,7 +6092,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                     try
                     {
                         SendOnWarnings(DateTime.UtcNow,
-                                       nameof(WWCPCPOAdapter) + Id,
+                                       nameof(WWCPEMPAdapter) + Id,
                                        "PushEVSEStatus",
                                        pushEVSEStatusResult.Warnings);
                     }
@@ -6183,122 +6173,122 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #region Operator overloading
 
-        #region Operator == (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator == (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
-        /// Compares two WWCPCPOAdapters for equality.
+        /// Compares two WWCPEMPAdapters for equality.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (WWCPCPOAdapter WWCPCPOAdapter1,
-                                           WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator == (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(WWCPCPOAdapter1, WWCPCPOAdapter2))
+            if (Object.ReferenceEquals(WWCPEMPAdapter1, WWCPEMPAdapter2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (WWCPCPOAdapter1 is null || WWCPCPOAdapter2 is null)
+            if (WWCPEMPAdapter1 is null || WWCPEMPAdapter2 is null)
                 return false;
 
-            return WWCPCPOAdapter1.Equals(WWCPCPOAdapter2);
+            return WWCPEMPAdapter1.Equals(WWCPEMPAdapter2);
 
         }
 
         #endregion
 
-        #region Operator != (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator != (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
-        /// Compares two WWCPCPOAdapters for inequality.
+        /// Compares two WWCPEMPAdapters for inequality.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (WWCPCPOAdapter WWCPCPOAdapter1,
-                                           WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator != (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
 
-            => !(WWCPCPOAdapter1 == WWCPCPOAdapter2);
+            => !(WWCPEMPAdapter1 == WWCPEMPAdapter2);
 
         #endregion
 
-        #region Operator <  (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator <  (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (WWCPCPOAdapter  WWCPCPOAdapter1,
-                                          WWCPCPOAdapter  WWCPCPOAdapter2)
+        public static Boolean operator < (WWCPEMPAdapter  WWCPEMPAdapter1,
+                                          WWCPEMPAdapter  WWCPEMPAdapter2)
         {
 
-            if (WWCPCPOAdapter1 is null)
-                throw new ArgumentNullException(nameof(WWCPCPOAdapter1),  "The given WWCPCPOAdapter1 must not be null!");
+            if (WWCPEMPAdapter1 is null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter1 must not be null!");
 
-            return WWCPCPOAdapter1.CompareTo(WWCPCPOAdapter2) < 0;
+            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator <= (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (WWCPCPOAdapter WWCPCPOAdapter1,
-                                           WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator <= (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
 
-            => !(WWCPCPOAdapter1 > WWCPCPOAdapter2);
+            => !(WWCPEMPAdapter1 > WWCPEMPAdapter2);
 
         #endregion
 
-        #region Operator >  (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator >  (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (WWCPCPOAdapter WWCPCPOAdapter1,
-                                          WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator > (WWCPEMPAdapter WWCPEMPAdapter1,
+                                          WWCPEMPAdapter WWCPEMPAdapter2)
         {
 
-            if (WWCPCPOAdapter1 is null)
-                throw new ArgumentNullException(nameof(WWCPCPOAdapter1),  "The given WWCPCPOAdapter must not be null!");
+            if (WWCPEMPAdapter1 is null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter must not be null!");
 
-            return WWCPCPOAdapter1.CompareTo(WWCPCPOAdapter2) > 0;
+            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (WWCPCPOAdapter1, WWCPCPOAdapter2)
+        #region Operator >= (WWCPEMPAdapter1, WWCPEMPAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCPOAdapter1">A WWCPCPOAdapter.</param>
-        /// <param name="WWCPCPOAdapter2">Another WWCPCPOAdapter.</param>
+        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
+        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (WWCPCPOAdapter WWCPCPOAdapter1,
-                                           WWCPCPOAdapter WWCPCPOAdapter2)
+        public static Boolean operator >= (WWCPEMPAdapter WWCPEMPAdapter1,
+                                           WWCPEMPAdapter WWCPEMPAdapter2)
 
-            => !(WWCPCPOAdapter1 < WWCPCPOAdapter2);
-
-        #endregion
+            => !(WWCPEMPAdapter1 < WWCPEMPAdapter2);
 
         #endregion
 
-        #region IComparable<WWCPCPOAdapter> Members
+        #endregion
+
+        #region IComparable<WWCPEMPAdapter> Members
 
         #region CompareTo(Object)
 
@@ -6309,28 +6299,28 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object is WWCPCPOAdapter WWCPCPOAdapter)
-                return CompareTo(WWCPCPOAdapter);
+            if (Object is WWCPEMPAdapter WWCPEMPAdapter)
+                return CompareTo(WWCPEMPAdapter);
 
-            throw new ArgumentException("The given object is not an WWCPCPOAdapter!", nameof(Object));
+            throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
 
         }
 
         #endregion
 
-        #region CompareTo(WWCPCPOAdapter)
+        #region CompareTo(WWCPEMPAdapter)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCPOAdapter">An WWCPCPOAdapter object to compare with.</param>
-        public Int32 CompareTo(WWCPCPOAdapter WWCPCPOAdapter)
+        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter object to compare with.</param>
+        public Int32 CompareTo(WWCPEMPAdapter WWCPEMPAdapter)
         {
 
-            if (WWCPCPOAdapter is null)
-                throw new ArgumentNullException(nameof(WWCPCPOAdapter), "The given WWCPCPOAdapter must not be null!");
+            if (WWCPEMPAdapter is null)
+                throw new ArgumentNullException(nameof(WWCPEMPAdapter), "The given WWCPEMPAdapter must not be null!");
 
-            return Id.CompareTo(WWCPCPOAdapter.Id);
+            return Id.CompareTo(WWCPEMPAdapter.Id);
 
         }
 
@@ -6338,7 +6328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
         #endregion
 
-        #region IEquatable<WWCPCPOAdapter> Members
+        #region IEquatable<WWCPEMPAdapter> Members
 
         #region Equals(Object)
 
@@ -6349,23 +6339,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is WWCPCPOAdapter WWCPCPOAdapter &&
-                   Equals(WWCPCPOAdapter);
+            => Object is WWCPEMPAdapter WWCPEMPAdapter &&
+                   Equals(WWCPEMPAdapter);
 
         #endregion
 
-        #region Equals(WWCPCPOAdapter)
+        #region Equals(WWCPEMPAdapter)
 
         /// <summary>
-        /// Compares two WWCPCPOAdapter for equality.
+        /// Compares two WWCPEMPAdapter for equality.
         /// </summary>
-        /// <param name="WWCPCPOAdapter">An WWCPCPOAdapter to compare with.</param>
+        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(WWCPCPOAdapter WWCPCPOAdapter)
+        public Boolean Equals(WWCPEMPAdapter WWCPEMPAdapter)
 
-            => WWCPCPOAdapter is null
+            => WWCPEMPAdapter is null
                    ? false
-                   : Id.Equals(WWCPCPOAdapter.Id);
+                   : Id.Equals(WWCPEMPAdapter.Id);
 
         #endregion
 

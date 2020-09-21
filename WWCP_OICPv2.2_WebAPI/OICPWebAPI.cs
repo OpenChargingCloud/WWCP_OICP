@@ -212,15 +212,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
 
 
-        private readonly List<WWCPCPOAdapter> _CPOAdapters;
+        private readonly List<WWCPEMPAdapter> _CPOAdapters;
 
-        public IEnumerable<WWCPCPOAdapter> CPOAdapters
+        public IEnumerable<WWCPEMPAdapter> CPOAdapters
             => _CPOAdapters;
 
 
-        private readonly List<WWCPEMPAdapter> _EMPAdapters;
+        private readonly List<WWCPCSOAdapter> _EMPAdapters;
 
-        public IEnumerable<WWCPEMPAdapter> EMPAdapters
+        public IEnumerable<WWCPCSOAdapter> EMPAdapters
             => _EMPAdapters;
 
         #endregion
@@ -289,7 +289,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             //this.EVSEStatusRecord2XML               = EVSEStatusRecord2XML;
             this.XMLPostProcessing                  = XMLPostProcessing;
 
-            this._CPOAdapters                       = new List<WWCPCPOAdapter>();
+            this._CPOAdapters                       = new List<WWCPEMPAdapter>();
 
             // Link HTTP events...
             HTTPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
@@ -776,7 +776,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
 
 
-        public void Add(WWCPCPOAdapter CPOAdapter)
+        public void Add(WWCPEMPAdapter CPOAdapter)
         {
 
             _CPOAdapters.Add(CPOAdapter);
@@ -1437,7 +1437,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
         }
 
 
-        public void Add(WWCPEMPAdapter EMPAdapter)
+        public void Add(WWCPCSOAdapter EMPAdapter)
         {
 
             _EMPAdapters.Add(EMPAdapter);

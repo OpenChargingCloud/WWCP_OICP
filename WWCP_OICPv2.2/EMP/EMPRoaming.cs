@@ -69,7 +69,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServer        EMPServer           { get; }
+        public EMPSOAPServer        EMPServer           { get; }
 
         /// <summary>
         /// The EMP server logger.
@@ -1667,7 +1667,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and logfile name.</param>
         public EMPRoaming(EMPClient               EMPClient,
-                          EMPServer               EMPServer,
+                          EMPSOAPServer               EMPServer,
                           String                  ServerLoggingContext  = EMPServerLogger.DefaultContext,
                           LogfileCreatorDelegate  LogfileCreator        = null)
         {
@@ -1736,7 +1736,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                           TimeSpan?                            RequestTimeout                     = null,
                           Byte?                                MaxNumberOfRetries                 = EMPClient.DefaultMaxNumberOfRetries,
 
-                          String                               ServerName                         = EMPServer.DefaultHTTPServerName,
+                          String                               ServerName                         = EMPSOAPServer.DefaultHTTPServerName,
                           IPPort?                              ServerTCPPort                      = null,
                           String                               ServiceName                        = null,
                           ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
@@ -1744,7 +1744,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                           LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,
                           SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12,
                           HTTPPath?                            ServerURLPrefix                    = null,
-                          String                               ServerAuthorizationURL             = EMPServer.DefaultAuthorizationURL,
+                          String                               ServerAuthorizationURL             = EMPSOAPServer.DefaultAuthorizationURL,
                           HTTPContentType                      ServerContentType                  = null,
                           Boolean                              ServerRegisterHTTPRootService      = true,
                           Boolean                              ServerAutoStart                    = false,
@@ -1776,14 +1776,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                  ClientLoggingContext,
                                  LogfileCreator),
 
-                   new EMPServer(ServerName,
+                   new EMPSOAPServer(ServerName,
                                  ServerTCPPort,
                                  ServiceName,
                                  ServerCertificateSelector,
                                  RemoteClientCertificateValidator,
                                  RemoteClientCertificateSelector,
                                  AllowedTLSProtocols,
-                                 ServerURLPrefix ?? EMPServer.DefaultURLPrefix,
+                                 ServerURLPrefix ?? EMPSOAPServer.DefaultURLPathPrefix,
                                  ServerAuthorizationURL,
                                  ServerContentType,
                                  ServerRegisterHTTPRootService,

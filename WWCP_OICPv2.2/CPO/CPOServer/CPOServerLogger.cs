@@ -28,7 +28,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 {
 
     /// <summary>
-    /// An OICP CPO server logger.
+    /// The CPO server logger.
     /// </summary>
     public class CPOServerLogger : HTTPServerLogger
     {
@@ -47,7 +47,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <summary>
         /// The attached CPO server.
         /// </summary>
-        public CPOServer  CPOServer   { get; }
+        public CPOSOAPServer  CPOServer   { get; }
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="CPOServer">A OICP CPO server.</param>
         /// <param name="Context">A context of this API.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOServerLogger(CPOServer               CPOServer,
+        public CPOServerLogger(CPOSOAPServer               CPOServer,
                                String                  Context         = DefaultContext,
                                LogfileCreatorDelegate  LogfileCreator  = null)
 
@@ -102,7 +102,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
         /// 
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public CPOServerLogger(CPOServer                   CPOServer,
+        public CPOServerLogger(CPOSOAPServer                   CPOServer,
                                String                      Context,
 
                                HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
