@@ -326,16 +326,23 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("EvcoID", EVCOId.ToString(),
+                           new JProperty("EvcoID", EVCOId.ToString()),
 
-                           Function == PINCrypto.None
+                           PIN.IsNotNullOrEmpty()
 
-                               ? new JProperty("PIN", PIN)
+                               ? Function == PINCrypto.None
 
-                               : new JProperty("HashedPIN",
-                                     new JProperty("Value",     PIN),
-                                     new JProperty("Function",  Function.AsString()),
-                                     new JProperty("Salt",      Salt))));
+                                     ? new JProperty("PIN", PIN)
+
+                                     : new JProperty("HashedPIN", JSONObject.Create(
+                                             new JProperty("Value",     PIN),
+                                             new JProperty("Function",  Function.AsString()),
+                                             new JProperty("Salt",      Salt)
+                                       ))
+
+                               : null
+
+                       );
 
             return CustomQRCodeIdentificationSerializer != null
                        ? CustomQRCodeIdentificationSerializer(this, JSON)
