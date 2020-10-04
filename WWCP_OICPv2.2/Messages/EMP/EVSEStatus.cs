@@ -31,7 +31,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 {
 
     /// <summary>
-    /// A group of OICP operator EVSE status records or a status code.
+    /// A group of operator EVSE status records or a status code.
     /// </summary>
     public class EVSEStatus : AResponse<PullEVSEStatusRequest,
                                         EVSEStatus>
@@ -421,15 +421,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus1">An EVSE status.</param>
         /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (EVSEStatus EVSEStatus1, EVSEStatus EVSEStatus2)
+        public static Boolean operator == (EVSEStatus EVSEStatus1,
+                                           EVSEStatus EVSEStatus2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(EVSEStatus1, EVSEStatus2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) EVSEStatus1 == null) || ((Object) EVSEStatus2 == null))
+            if ((EVSEStatus1 is null) || (EVSEStatus2 is null))
                 return false;
 
             return EVSEStatus1.Equals(EVSEStatus2);
@@ -446,7 +445,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus1">An EVSE status.</param>
         /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (EVSEStatus EVSEStatus1, EVSEStatus EVSEStatus2)
+        public static Boolean operator != (EVSEStatus EVSEStatus1,
+                                           EVSEStatus EVSEStatus2)
 
             => !(EVSEStatus1 == EVSEStatus2);
 
@@ -464,18 +464,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            var EVSEStatus = Object as EVSEStatus;
-            if ((Object) EVSEStatus == null)
-                return false;
-
-            return Equals(EVSEStatus);
-
-        }
+            => Object is EVSEStatus evseStatus &&
+                   Equals(evseStatus);
 
         #endregion
 
@@ -487,18 +478,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus">An EVSE status to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(EVSEStatus EVSEStatus)
-        {
 
-            if ((Object) EVSEStatus == null)
-                return false;
+            => !(EVSEStatus is null) &&
 
-            return (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
-                    (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
+               (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
+               (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
 
-                    (StatusCode == null && EVSEStatus.StatusCode == null) ||
-                    (StatusCode != null && EVSEStatus.StatusCode != null && StatusCode.Equals(EVSEStatus.StatusCode));
-
-        }
+               (!StatusCode.HasValue && !EVSEStatus.StatusCode.HasValue) ||
+                (StatusCode.HasValue &&  EVSEStatus.StatusCode.HasValue && StatusCode.Value.Equals(EVSEStatus.StatusCode.Value));
 
         #endregion
 
@@ -515,11 +502,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return (OperatorEVSEStatus.Any()
-                           ? OperatorEVSEStatus.GetHashCode() * 5
+                return (OperatorEVSEStatus != null
+                           ? OperatorEVSEStatus.GetHashCode() * 3
                            : 0) ^
 
-                       StatusCode.GetHashCode();
+                       (StatusCode.HasValue
+                            ? StatusCode.GetHashCode()
+                            : 0);
 
             }
         }
@@ -533,7 +522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEStatus.Count() + " operator EVSE status record(s)",
+            => String.Concat((OperatorEVSEStatus?.Count() ?? 0) + " operator EVSE status record(s)",
                              StatusCode.HasValue
                                  ? " -> " + StatusCode.Value.Code
                                  : "");
@@ -556,8 +545,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An EVSEStatus response builder.
         /// </summary>
-        public class Builder : AResponseBuilder<PullEVSEStatusRequest,
-                                                EVSEStatus>
+        public new class Builder : AResponseBuilder<PullEVSEStatusRequest,
+                                                    EVSEStatus>
         {
 
             #region Properties
@@ -635,18 +624,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             /// <param name="EVSEStatus">An EVSE status response to compare with.</param>
             /// <returns>True if both match; False otherwise.</returns>
             public override Boolean Equals(EVSEStatus EVSEStatus)
-            {
 
-                if ((Object) EVSEStatus == null)
-                    return false;
+                => !(EVSEStatus is null) &&
 
-                return (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
-                        (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
+                   (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
+                   (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
 
-                        (StatusCode != null && EVSEStatus.StatusCode != null) ||
-                        (StatusCode == null && EVSEStatus.StatusCode == null && StatusCode.Equals(EVSEStatus.StatusCode));
-
-            }
+                   (!StatusCode.HasValue && !EVSEStatus.StatusCode.HasValue) ||
+                    (StatusCode.HasValue &&  EVSEStatus.StatusCode.HasValue && StatusCode.Value.Equals(EVSEStatus.StatusCode.Value));
 
             #endregion
 
@@ -667,7 +652,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
     /// <summary>
-    /// A group of OICP operator EVSE status records or a status code.
+    /// A group of operator EVSE status records or a status code.
     /// </summary>
     public class EVSEStatus2 : AResponse<PullEVSEStatusByOperatorIdRequest,
                                          EVSEStatus2>
@@ -1057,15 +1042,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus1">An EVSE status.</param>
         /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (EVSEStatus2 EVSEStatus1, EVSEStatus2 EVSEStatus2)
+        public static Boolean operator == (EVSEStatus2 EVSEStatus1,
+                                           EVSEStatus2 EVSEStatus2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(EVSEStatus1, EVSEStatus2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) EVSEStatus1 == null) || ((Object) EVSEStatus2 == null))
+            if (EVSEStatus1 is null || EVSEStatus2 is null)
                 return false;
 
             return EVSEStatus1.Equals(EVSEStatus2);
@@ -1082,7 +1066,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus1">An EVSE status.</param>
         /// <param name="EVSEStatus2">Another EVSE status.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (EVSEStatus2 EVSEStatus1, EVSEStatus2 EVSEStatus2)
+        public static Boolean operator != (EVSEStatus2 EVSEStatus1,
+                                           EVSEStatus2 EVSEStatus2)
 
             => !(EVSEStatus1 == EVSEStatus2);
 
@@ -1100,18 +1085,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            var EVSEStatus = Object as EVSEStatus;
-            if ((Object) EVSEStatus == null)
-                return false;
-
-            return Equals(EVSEStatus);
-
-        }
+            => Object is EVSEStatus2 evseStatus &&
+                   Equals(evseStatus);
 
         #endregion
 
@@ -1123,18 +1099,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <param name="EVSEStatus">An EVSE status to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(EVSEStatus2 EVSEStatus)
-        {
 
-            if ((Object) EVSEStatus == null)
-                return false;
+            => !(EVSEStatus is null) &&
 
-            return (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
-                    (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
+               (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
+               (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
 
-                    (StatusCode == null && EVSEStatus.StatusCode == null) ||
-                    (StatusCode != null && EVSEStatus.StatusCode != null && StatusCode.Equals(EVSEStatus.StatusCode));
-
-        }
+               (!StatusCode.HasValue && !EVSEStatus.StatusCode.HasValue) ||
+                (StatusCode.HasValue &&  EVSEStatus.StatusCode.HasValue && StatusCode.Value.Equals(EVSEStatus.StatusCode.Value));
 
         #endregion
 
@@ -1151,11 +1123,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             unchecked
             {
 
-                return (OperatorEVSEStatus.Any()
-                           ? OperatorEVSEStatus.GetHashCode() * 5
+                return (OperatorEVSEStatus != null
+                           ? OperatorEVSEStatus.GetHashCode() * 3
                            : 0) ^
 
-                       StatusCode.GetHashCode();
+                       (StatusCode.HasValue
+                            ? StatusCode.GetHashCode()
+                            : 0);
 
             }
         }
@@ -1169,7 +1143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEStatus.Count() + " operator EVSE status record(s)",
+            => String.Concat((OperatorEVSEStatus?.Count() ?? 0) + " operator EVSE status record(s)",
                              StatusCode.HasValue
                                  ? " -> " + StatusCode.Value.Code
                                  : "");
@@ -1192,8 +1166,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         /// <summary>
         /// An EVSEStatus response builder.
         /// </summary>
-        public class Builder : AResponseBuilder<PullEVSEStatusByOperatorIdRequest,
-                                                EVSEStatus2>
+        public new class Builder : AResponseBuilder<PullEVSEStatusByOperatorIdRequest,
+                                                    EVSEStatus2>
         {
 
             #region Properties
@@ -1266,23 +1240,19 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #region Equals(EVSEStatus)
 
             /// <summary>
-            /// Compares two EVSE status responses for equality.
+            /// Compares two EVSE status for equality.
             /// </summary>
-            /// <param name="EVSEStatus">An EVSE status response to compare with.</param>
+            /// <param name="EVSEStatus">An EVSE status to compare with.</param>
             /// <returns>True if both match; False otherwise.</returns>
             public override Boolean Equals(EVSEStatus2 EVSEStatus)
-            {
 
-                if ((Object) EVSEStatus == null)
-                    return false;
+                => !(EVSEStatus is null) &&
 
-                return (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
-                        (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
+                   (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
+                   (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
 
-                        (StatusCode != null && EVSEStatus.StatusCode != null) ||
-                        (StatusCode == null && EVSEStatus.StatusCode == null && StatusCode.Equals(EVSEStatus.StatusCode));
-
-            }
+                   (!StatusCode.HasValue && !EVSEStatus.StatusCode.HasValue) ||
+                    (StatusCode.HasValue &&  EVSEStatus.StatusCode.HasValue && StatusCode.Value.Equals(EVSEStatus.StatusCode.Value));
 
             #endregion
 
