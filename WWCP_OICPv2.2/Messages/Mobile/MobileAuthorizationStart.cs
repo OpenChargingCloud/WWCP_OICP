@@ -370,15 +370,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
                 var ChargingStationName  = new I18NString();
                 MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "ChargingStationName",
-                                                                    v => ChargingStationName.Add(Languages.deu, v));
+                                                                    v => ChargingStationName.Add(Languages.de, v));
                 MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnChargingStationName",
-                                                                    v => ChargingStationName.Add(Languages.eng, v));
+                                                                    v => ChargingStationName.Add(Languages.en, v));
 
                 var AdditionalInfo       = new I18NString();
                 MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "AdditionalInfo",
-                                                                    v => AdditionalInfo.     Add(Languages.deu, v));
+                                                                    v => AdditionalInfo.     Add(Languages.de, v));
                 MobileAuthorizationStartXML.IfValueIsNotNullOrEmpty(OICPNS.MobileAuthorization + "EnAdditionalInfo",
-                                                                    v => AdditionalInfo.     Add(Languages.eng, v));
+                                                                    v => AdditionalInfo.     Add(Languages.en, v));
 
 
                 MobileAuthorizationStart  = new MobileAuthorizationStart(

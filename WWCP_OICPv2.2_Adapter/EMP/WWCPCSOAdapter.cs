@@ -1226,7 +1226,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             }
 
             return new POIDataPull<EVSE>(new EVSE[0],
-                                         Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode +
+                                         Warning.Create(I18NString.Create(Languages.en, result.HTTPStatusCode +
                                                                                          (result.ContentLength.HasValue && result.ContentLength.Value > 0
                                                                                               ? Environment.NewLine + result.HTTPBody.ToUTF8String()
                                                                                               : ""))));
@@ -1344,7 +1344,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    evsestatusrecord.CustomData));
 
                         else
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.eng, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
+                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
 
                     }
 
@@ -1354,8 +1354,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
                                                    new Warning[] {
-                                                       Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode.ToString())),
-                                                       Warning.Create(I18NString.Create(Languages.eng, result.HTTPBody.ToUTF8String()))
+                                                       Warning.Create(I18NString.Create(Languages.en, result.HTTPStatusCode.ToString())),
+                                                       Warning.Create(I18NString.Create(Languages.en, result.HTTPBody.ToUTF8String()))
                                                    });
 
         }
@@ -1390,7 +1390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             if (EVSEId == null)
                 return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
-                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.eng, "Parameter 'EVSEId' was null!")) });
+                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.en, "Parameter 'EVSEId' was null!")) });
 
             #endregion
 
@@ -1434,7 +1434,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
             if (EVSEIds.IsNullOrEmpty())
                 return new StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
-                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.eng, "Parameter 'EVSEIds' was null or empty!")) });
+                                                       new Warning[] { Warning.Create(I18NString.Create(Languages.en, "Parameter 'EVSEIds' was null or empty!")) });
 
             #endregion
 
@@ -1480,7 +1480,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    )));
 
                         else
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.eng, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
+                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, "Invalid EVSE identification '" + evsestatusrecord.Id + "'!")));
 
                     }
 
@@ -1488,8 +1488,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 else
                     Warnings.AddRange(new Warning[] {
-                                          Warning.Create(I18NString.Create(Languages.eng, result.HTTPStatusCode.ToString())),
-                                          Warning.Create(I18NString.Create(Languages.eng, result.HTTPBody.ToUTF8String()))
+                                          Warning.Create(I18NString.Create(Languages.en, result.HTTPStatusCode.ToString())),
+                                          Warning.Create(I18NString.Create(Languages.en, result.HTTPBody.ToUTF8String()))
                                       });
 
             }
@@ -2827,18 +2827,18 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
                                                     {
 
-                                                        case "de": LocationLanguage = Languages.deu; break;
+                                                        case "de": LocationLanguage = Languages.de; break;
                                                         case "fr": LocationLanguage = Languages.fra; break;
-                                                        case "dk": LocationLanguage = Languages.dk; break;
+                                                  //      case "dk": LocationLanguage = Languages.dk; break;
                                                         case "no": LocationLanguage = Languages.no; break;
                                                         case "fi": LocationLanguage = Languages.fin; break;
                                                         case "se": LocationLanguage = Languages.swe; break;
 
                                                         case "sk": LocationLanguage = Languages.sk; break;
                                                         case "it": LocationLanguage = Languages.ita; break;
-                                                        case "us": LocationLanguage = Languages.eng; break;
+                                                        case "us": LocationLanguage = Languages.en; break;
                                                         case "nl": LocationLanguage = Languages.nld; break;
-                                                        case "at": LocationLanguage = Languages.deu; break;
+                                                        case "at": LocationLanguage = Languages.de; break;
                                                         case "ru": LocationLanguage = Languages.ru; break;
                                                         case "il": LocationLanguage = Languages.heb; break;
 
@@ -2850,10 +2850,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     }
 
                                                     if (EVSEInfo.PoolAddress.Country == Country.Germany)
-                                                        LocalChargingStationLanguage = Languages.deu;
+                                                        LocalChargingStationLanguage = Languages.de;
 
-                                                    else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
-                                                        LocalChargingStationLanguage = Languages.dk;
+                                                    //else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
+                                                    //    LocalChargingStationLanguage = Languages.dk;
 
                                                     else if (EVSEInfo.PoolAddress.Country == Country.France)
                                                         LocalChargingStationLanguage = Languages.fra;

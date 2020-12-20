@@ -1,4 +1,4 @@
-WWCP OICP v2.2
+WWCP OICP v2.3
 ==============
 
 This software will allow the communication between WWCP entities and

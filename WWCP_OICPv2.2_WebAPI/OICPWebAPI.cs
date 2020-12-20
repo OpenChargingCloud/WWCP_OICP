@@ -79,7 +79,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                               RoamingNetwork    = null;
                               HTTPResponse      = null;
 
-            if (HTTPRequest.ParsedURIParameters.Length < 1)
+            if (HTTPRequest.ParsedURLParameters.Length < 1)
             {
 
                 HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
@@ -92,7 +92,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
 
             }
 
-            if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURIParameters[0], out RoamingNetworkId))
+            if (!RoamingNetwork_Id.TryParse(HTTPRequest.ParsedURLParameters[0], out RoamingNetworkId))
             {
 
                 HTTPResponse = new HTTPResponse.Builder(HTTPRequest) {
@@ -336,8 +336,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 #region Check HTTP Basic Authentication
 
                 if (Request.Authorization == null ||
-                    !HTTPLogins.Any(kvp => kvp.Key   == Request.Authorization.Username &&
-                                           kvp.Value == Request.Authorization.Password))
+                    !HTTPLogins.Any(kvp => kvp.Key   == (Request.Authorization as HTTPBasicAuthentication).Username &&
+                                           kvp.Value == (Request.Authorization as HTTPBasicAuthentication).Password))
                 {
 
                     return Task.FromResult(
@@ -438,8 +438,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 #region Check HTTP Basic Authentication
 
                 if (Request.Authorization == null ||
-                    !HTTPLogins.Any(kvp => kvp.Key   == Request.Authorization.Username &&
-                                           kvp.Value == Request.Authorization.Password))
+                    !HTTPLogins.Any(kvp => kvp.Key   == (Request.Authorization as HTTPBasicAuthentication).Username &&
+                                           kvp.Value == (Request.Authorization as HTTPBasicAuthentication).Password))
                 {
 
                     return Task.FromResult(
@@ -564,8 +564,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                 #region Check HTTP Basic Authentication
 
                 if (Request.Authorization == null ||
-                    !HTTPLogins.Any(kvp => kvp.Key   == Request.Authorization.Username &&
-                                           kvp.Value == Request.Authorization.Password))
+                    !HTTPLogins.Any(kvp => kvp.Key   == (Request.Authorization as HTTPBasicAuthentication).Username &&
+                                           kvp.Value == (Request.Authorization as HTTPBasicAuthentication).Password))
                 {
 
                     return Task.FromResult(
@@ -710,8 +710,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
                                              #region Check HTTP Basic Authentication
 
                                              if (Request.Authorization == null ||
-                                                 !HTTPLogins.Any(kvp => kvp.Key   == Request.Authorization.Username &&
-                                                                        kvp.Value == Request.Authorization.Password))
+                                                 !HTTPLogins.Any(kvp => kvp.Key   == (Request.Authorization as HTTPBasicAuthentication).Username &&
+                                                                        kvp.Value == (Request.Authorization as HTTPBasicAuthentication).Password))
                                              {
 
                                                  return new HTTPResponse.Builder(Request) {

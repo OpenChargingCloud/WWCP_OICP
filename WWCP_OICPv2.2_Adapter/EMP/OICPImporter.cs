@@ -179,7 +179,7 @@
 //                                                              switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
 //                                                              {
 
-//                                                                  case "de": LocationLanguage = Languages.deu; break;
+//                                                                  case "de": LocationLanguage = Languages.de; break;
 //                                                                  case "fr": LocationLanguage = Languages.fra; break;
 //                                                                  case "dk": LocationLanguage = Languages.dk; break;
 //                                                                  case "no": LocationLanguage = Languages.no; break;
@@ -188,10 +188,10 @@
 
 //                                                                  case "sk": LocationLanguage = Languages.sk; break;
 //                                                                  //case "be": LocationLanguage = Languages.; break;
-//                                                                  case "us": LocationLanguage = Languages.eng; break;
+//                                                                  case "us": LocationLanguage = Languages.en; break;
 //                                                                  case "nl": LocationLanguage = Languages.nld; break;
 //                                                                  //case "fo": LocationLanguage = Languages.; break;
-//                                                                  case "at": LocationLanguage = Languages.deu; break;
+//                                                                  case "at": LocationLanguage = Languages.de; break;
 //                                                                  case "ru": LocationLanguage = Languages.ru; break;
 //                                                                  //case "ch": LocationLanguage = Languages.; break;
 
@@ -200,7 +200,7 @@
 //                                                              }
 
 //                                                              if (EVSEInfo.PoolAddress.Country == Country.Germany)
-//                                                                  LocalChargingStationLanguage = Languages.deu;
+//                                                                  LocalChargingStationLanguage = Languages.de;
 
 //                                                              else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
 //                                                                  LocalChargingStationLanguage = Languages.dk;

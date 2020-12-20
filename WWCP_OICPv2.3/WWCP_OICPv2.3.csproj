@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C892DD5F-DB66-4E48-9D1A-99ECBA01BFD5}</ProjectGuid>
+    <ProjectGuid>{337CE1CC-2C12-4E1D-81FF-9E521C27D4E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>cloud.charging.open.protocols.OCPIv2_2.tests</RootNamespace>
-    <AssemblyName>cloud.charging.open.protocols.OCPIv2_2.tests</AssemblyName>
+    <RootNamespace>cloud.charging.open.protocols.OICPv2_3</RootNamespace>
+    <AssemblyName>cloud.charging.open.protocols.OICPv2_3</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\cloud.charging.open.protocols.OCPIv2_2.tests.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\cloud.charging.open.protocols.OICPv2_3.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -38,9 +37,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Styx\libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\Styx\libs\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,8 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LocationIdTests.cs" />
+    <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
+    <Compile Include="DataTypes\Simple\Operator_Id.cs" />
+    <Compile Include="Delegates.cs" />
+    <Compile Include="Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BouncyCastle\crypto\crypto.csproj">
@@ -66,18 +69,6 @@
     <ProjectReference Include="..\..\Styx\Styx\Styx.csproj">
       <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
       <Name>Styx</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2\WWCP_OCPIv2.2.csproj">
-      <Project>{820584ca-46a2-4eb7-8b26-ef43025d042a}</Project>
-      <Name>WWCP_OCPIv2.2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2_Adapter\WWCP_OCPIv2.2_Adapter.csproj">
-      <Project>{688b9ebc-81a4-4aa3-a663-2bd357de1100}</Project>
-      <Name>WWCP_OCPIv2.2_Adapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2_WebAPI\WWCP_OCPIv2.2_WebAPI.csproj">
-      <Project>{439be8cf-a416-4fa1-bbef-8ea4a4794d87}</Project>
-      <Name>WWCP_OCPIv2.2_WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

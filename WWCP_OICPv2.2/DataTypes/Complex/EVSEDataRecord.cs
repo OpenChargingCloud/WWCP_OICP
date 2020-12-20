@@ -535,10 +535,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 var _ChargingStationName = new I18NString();
 
                 EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
-                                                          v => _ChargingStationName.Add(Languages.deu, v));
+                                                          v => _ChargingStationName.Add(Languages.de, v));
 
                 EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
-                                                          v => _ChargingStationName.Add(Languages.eng, v));
+                                                          v => _ChargingStationName.Add(Languages.en, v));
 
                 #endregion
 
@@ -760,12 +760,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                               ? new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId.Value.ToString())
                               : null,
 
-                          ChargingStationName[Languages.deu] != null
-                              ? new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.deu].SubstringMax(50))
+                          ChargingStationName[Languages.de] != null
+                              ? new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50))
                               : null,
 
-                          ChargingStationName[Languages.eng] != null
-                              ? new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.eng].SubstringMax(50))
+                          ChargingStationName[Languages.en] != null
+                              ? new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50))
                               : null,
 
                           ChargingPoolId.HasValue
