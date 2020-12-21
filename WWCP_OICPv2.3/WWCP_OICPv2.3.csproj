@@ -51,16 +51,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\Complex\HourMinute.cs" />
     <Compile Include="DataTypes\Complex\Period.cs" />
     <Compile Include="DataTypes\Complex\OpeningTime.cs" />
     <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityLocationTypes.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
+    <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
     <Compile Include="DataTypes\Enums\DaysOfWeek.cs" />
+    <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
     <Compile Include="DataTypes\Enums\CalibrationLawDataAvailabilities.cs" />
+    <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
+    <Compile Include="DataTypes\Enums\EnergyTypes.cs" />
+    <Compile Include="DataTypes\Enums\PlugTypes.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
+    <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\Simple\Phone_Number.cs" />
+    <Compile Include="DataTypes\Simple\Time_Zone.cs" />
+    <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
+    <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />
     <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\Operator_Id.cs" />

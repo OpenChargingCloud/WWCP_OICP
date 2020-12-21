@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a EVSE status record.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EVSEStatusRecord">The parsed connector.</param>
+        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject               JSON,
                                        out EVSEStatusRecord  EVSEStatusRecord,
@@ -166,12 +166,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a EVSE status record.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EVSEStatusRecord">The parsed connector.</param>
+        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(JObject                                       JSON,
+        public static Boolean TryParse(JObject                                        JSON,
                                        out EVSEStatusRecord                           EVSEStatusRecord,
-                                       out String                                    ErrorResponse,
+                                       out String                                     ErrorResponse,
                                        CustomJObjectParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser)
         {
 
@@ -247,7 +247,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a EVSE status record.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="EVSEStatusRecord">The parsed connector.</param>
+        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
         public static Boolean TryParse(String                                         Text,

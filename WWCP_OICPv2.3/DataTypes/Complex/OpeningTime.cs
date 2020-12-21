@@ -111,23 +111,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (JSON, CustomOpeningTimesParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of a EVSE status record.
+        /// Parse the given JSON representation of an opening time.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom EVSE status records JSON objects.</param>
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static OpeningTime Parse(JObject                                        JSON,
                                              CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(JSON,
-                         out OpeningTime evseStatusRecord,
-                         out String           ErrorResponse,
+                         out OpeningTime openingTime,
+                         out String      ErrorResponse,
                          CustomOpeningTimesParser))
             {
-                return evseStatusRecord;
+                return openingTime;
             }
 
-            throw new ArgumentException("The given JSON representation of a EVSE status record is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an opening time is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
@@ -136,23 +136,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text, CustomOpeningTimesParser = null)
 
         /// <summary>
-        /// Parse the given text representation of a EVSE status record.
+        /// Parse the given text representation of an opening time.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom EVSE status records JSON objects.</param>
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static OpeningTime Parse(String                                         Text,
                                              CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(Text,
-                         out OpeningTime evseStatusRecord,
-                         out String           ErrorResponse,
+                         out OpeningTime openingTime,
+                         out String      ErrorResponse,
                          CustomOpeningTimesParser))
             {
-                return evseStatusRecord;
+                return openingTime;
             }
 
-            throw new ArgumentException("The given text representation of a EVSE status record is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an opening time is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
@@ -163,14 +163,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given JSON representation of a EVSE status record.
+        /// Try to parse the given JSON representation of an opening time.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpeningTimes">The parsed connector.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
+        public static Boolean TryParse(JObject          JSON,
                                        out OpeningTime  OpeningTimes,
-                                       out String            ErrorResponse)
+                                       out String       ErrorResponse)
 
             => TryParse(JSON,
                         out OpeningTimes,
@@ -179,15 +179,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         /// <summary>
-        /// Try to parse the given JSON representation of a EVSE status record.
+        /// Try to parse the given JSON representation of an opening time.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpeningTimes">The parsed connector.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(JObject                                       JSON,
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
+        public static Boolean TryParse(JObject                                   JSON,
                                        out OpeningTime                           OpeningTimes,
-                                       out String                                    ErrorResponse,
+                                       out String                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser)
         {
 
@@ -202,24 +202,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse EVSEId         [mandatory]
+                #region Parse Periods               [mandatory]
 
-                if (!JSON.ParseMandatory("EvseID",
-                                         "EVSE identification",
-                                         EVSE_Id.TryParse,
-                                         out EVSE_Id EVSEId,
-                                         out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse EVSEStatus     [mandatory]
-
-                if (!JSON.ParseMandatoryEnum("EvseStatus",
-                                             "EVSE status",
-                                             out EVSEStatusTypes EVSEStatus,
+                if (!JSON.ParseMandatoryJSON("EvseID",
+                                             "EVSE identification",
+                                             Period.TryParse,
+                                             out IEnumerable<Period> Periods,
                                              out ErrorResponse))
                 {
                     return false;
@@ -227,29 +215,48 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Custom Data    [optional]
+                #region Parse On                    [mandatory]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                if (!JSON.ParseMandatoryEnum("on",
+                                             "on days of the week",
+                                             out DaysOfWeek On,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Unstructured Text     [optional]
+
+                var UnstructuredText  = JSON["unstructuredOpeningTime"]?.Value<String>();
+
+                #endregion#
+
+                #region Parse Custom Data           [optional]
+
+                var CustomData        = JSON["CustomData"] as JObject;
 
                 #endregion
 
 
-                OpeningTimes = new OpeningTime(EVSEId,
-                                                        EVSEStatus,
-                                                        CustomData);
+                OpeningTimes = new OpeningTime(Periods,
+                                               On,
+                                               UnstructuredText,
+                                               CustomData);
 
 
                 if (CustomOpeningTimesParser != null)
                     OpeningTimes = CustomOpeningTimesParser(JSON,
-                                                                    OpeningTimes);
+                                                            OpeningTimes);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                OpeningTimes  = default;
-                ErrorResponse     = "The given JSON representation of a EVSE status record is invalid: " + e.Message;
+                OpeningTimes   = default;
+                ErrorResponse  = "The given JSON representation of an opening time is invalid: " + e.Message;
                 return false;
             }
 
@@ -260,15 +267,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text, out OpeningTimes, out ErrorResponse, CustomOpeningTimesParser = null)
 
         /// <summary>
-        /// Try to parse the given text representation of a EVSE status record.
+        /// Try to parse the given text representation of an opening time.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="OpeningTimes">The parsed connector.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(String                                         Text,
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
+        public static Boolean TryParse(String                                    Text,
                                        out OpeningTime                           OpeningTimes,
-                                       out String                                     ErrorResponse,
+                                       out String                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser)
         {
 
@@ -283,8 +290,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
             catch (Exception e)
             {
-                OpeningTimes  = default;
-                ErrorResponse     = "The given text representation of a EVSE status record is invalid: " + e.Message;
+                OpeningTimes   = default;
+                ErrorResponse  = "The given text representation of an opening time is invalid: " + e.Message;
                 return false;
             }
 
@@ -297,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom EVSE status record JSON objects.</param>
+        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<OpeningTime> CustomOpeningTimesSerializer = null)
         {
 
@@ -331,8 +338,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="OpeningTimes1">An EVSE status record.</param>
-        /// <param name="OpeningTimes2">Another EVSE status record.</param>
+        /// <param name="OpeningTimes1">An opening time.</param>
+        /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (OpeningTime OpeningTimes1, OpeningTime OpeningTimes2)
             => OpeningTimes1.Equals(OpeningTimes2);
@@ -344,8 +351,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="OpeningTimes1">An EVSE status record.</param>
-        /// <param name="OpeningTimes2">Another EVSE status record.</param>
+        /// <param name="OpeningTimes1">An opening time.</param>
+        /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (OpeningTime OpeningTimes1, OpeningTime OpeningTimes2)
             => !(OpeningTimes1 == OpeningTimes2);
@@ -365,17 +372,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is OpeningTime evseStatusRecord &&
-                   Equals(evseStatusRecord);
+            => Object is OpeningTime openingTime &&
+                   Equals(openingTime);
 
         #endregion
 
         #region Equals(OpeningTimes)
 
         /// <summary>
-        /// Compares two EVSE status records for equality.
+        /// Compares two opening times for equality.
         /// </summary>
-        /// <param name="OpeningTimes">An EVSE status record to compare with.</param>
+        /// <param name="OpeningTimes">An opening time to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(OpeningTime OpeningTimes)
 
