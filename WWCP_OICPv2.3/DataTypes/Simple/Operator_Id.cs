@@ -37,7 +37,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         /// <summary>
         /// The regular expression for parsing an operator identification.
+        /// Official regular expression: ^(([A-Za-z]{2}\*?[A-Za-z0-9]{3})|(\+?[0-9]{1,3}\*[0-9]{3}))$
         /// </summary>
+        /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorIDType</remarks>
         public static readonly Regex  OperatorId_RegEx  = new Regex(@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
                                                                     @"^\+?([0-9]{1,3})\*([0-9]{3})$",
                                                                     RegexOptions.IgnorePatternWhitespace);
@@ -107,12 +109,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             OperatorIdFormats  Format = OperatorIdFormats.ISO)
         {
 
-            #region Initial checks
-
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix), "The charging station operator identification suffix must not be null or empty!");
-
-            #endregion
 
             this.CountryCode  = CountryCode;
             this.Suffix       = Suffix;
@@ -464,9 +462,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is Operator_Id operatorId
-                   ? Equals(operatorId)
-                   : false;
+            => Object is Operator_Id operatorId &&
+                   Equals(operatorId);
 
         #endregion
 

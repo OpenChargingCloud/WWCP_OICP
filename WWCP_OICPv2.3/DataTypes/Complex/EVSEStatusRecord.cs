@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -317,19 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-        {
-
-            // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(EVSEStatusRecord1, EVSEStatusRecord2))
-                return true;
-
-            // If one is null, but not both, return false.
-            if (((Object) EVSEStatusRecord1 == null) || ((Object) EVSEStatusRecord2 == null))
-                return false;
-
-            return EVSEStatusRecord1.Equals(EVSEStatusRecord2);
-
-        }
+            => EVSEStatusRecord1.Equals(EVSEStatusRecord2);
 
         #endregion
 
@@ -355,14 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-        {
-
-            if ((Object) EVSEStatusRecord1 == null)
-                throw new ArgumentNullException(nameof(EVSEStatusRecord1), "The given EVSEStatusRecord1 must not be null!");
-
-            return EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) < 0;
-
-        }
+            => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) < 0;
 
         #endregion
 
@@ -388,14 +368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-        {
-
-            if ((Object) EVSEStatusRecord1 == null)
-                throw new ArgumentNullException(nameof(EVSEStatusRecord1), "The given EVSEStatusRecord1 must not be null!");
-
-            return EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) > 0;
-
-        }
+            => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) > 0;
 
         #endregion
 

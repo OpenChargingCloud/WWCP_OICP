@@ -111,12 +111,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         String       Suffix)
         {
 
-            #region Initial checks
-
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),  "The EVSE identification suffix must not be null or empty!");
-
-            #endregion
 
             this.OperatorId  = OperatorId;
             this.Suffix      = Suffix;

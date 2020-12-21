@@ -23,7 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\cloud.charging.open.protocols.OICPv2_3.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\WWCP_Core\WWCP.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -48,10 +51,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
+    <Compile Include="DataTypes\Complex\HourMinute.cs" />
+    <Compile Include="DataTypes\Complex\Period.cs" />
+    <Compile Include="DataTypes\Complex\OpeningTime.cs" />
     <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
+    <Compile Include="DataTypes\Enums\DaysOfWeek.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\CalibrationLawDataAvailabilities.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
+    <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\Operator_Id.cs" />
     <Compile Include="Delegates.cs" />
