@@ -424,10 +424,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(EnvironmentalImpact EnvironmentalImpact)
         {
 
-            var result = CO2Emission.CompareTo(EnvironmentalImpact.CO2Emission);
+            var result = CO2Emission.HasValue && EnvironmentalImpact.CO2Emission.HasValue
+                             ? CO2Emission.Value.CompareTo(EnvironmentalImpact.CO2Emission.Value)
+                             : 0;
 
-            return result == 0
-                       ? NuclearWaste.CompareTo(EnvironmentalImpact.NuclearWaste)
+            return result == 0 && NuclearWaste.HasValue && EnvironmentalImpact.NuclearWaste.HasValue
+                       ? NuclearWaste.Value.CompareTo(EnvironmentalImpact.NuclearWaste.Value)
                        : result;
 
         }

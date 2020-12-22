@@ -51,10 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\Complex\ChargingFacility.cs" />
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\Complex\EnvironmentalImpact.cs" />
+    <Compile Include="DataTypes\Complex\GeoCoordinates.cs" />
     <Compile Include="DataTypes\Complex\HourMinute.cs" />
     <Compile Include="DataTypes\Complex\Period.cs" />
     <Compile Include="DataTypes\Complex\OpeningTime.cs" />

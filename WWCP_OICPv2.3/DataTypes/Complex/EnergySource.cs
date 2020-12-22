@@ -67,7 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Percentage  = Percentage.HasValue && Percentage.Value < 100
                                    ? Percentage
-                                   : new Byte ?();
+                                   : new Byte?();
 
         }
 
@@ -295,8 +295,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EnergySource Clone
 
-            => new EnergySource(CO2Emission,
-                                       NuclearWaste);
+            => new EnergySource(EnergyType,
+                                Percentage);
 
         #endregion
 
@@ -420,10 +420,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(EnergySource EnergySource)
         {
 
-            var result = CO2Emission.CompareTo(EnergySource.CO2Emission);
+            var result = EnergyType.CompareTo(EnergySource.EnergyType);
 
-            return result == 0
-                       ? NuclearWaste.CompareTo(EnergySource.NuclearWaste)
+            return result == 0 && Percentage.HasValue && EnergySource.Percentage.HasValue
+                       ? Percentage.Value.CompareTo(EnergySource.Percentage.Value)
                        : result;
 
         }
@@ -457,8 +457,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EnergySource EnergySource)
 
-            => CO2Emission. Equals(EnergySource.CO2Emission) &&
-               NuclearWaste.Equals(EnergySource.NuclearWaste);
+            => EnergyType.Equals(EnergySource.EnergyType) &&
+
+            ((!Percentage.HasValue && !EnergySource.Percentage.HasValue) ||
+              (Percentage.HasValue &&  EnergySource.Percentage.HasValue && Percentage.Value.Equals(EnergySource.Percentage.Value)));
 
         #endregion
 
@@ -475,8 +477,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return CO2Emission. GetHashCode() * 3 ^
-                       NuclearWaste.GetHashCode();
+                return EnergyType.GetHashCode() * 3 ^
+
+                      (Percentage.HasValue
+                           ? Percentage.Value.GetHashCode()
+                           : 0);
 
             }
         }
@@ -490,9 +495,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(CO2Emission,
-                             ", ",
-                             NuclearWaste);
+            => String.Concat(EnergyType,
+                             Percentage.HasValue
+                                 ? " " + Percentage.Value + "%"
+                                 : "");
 
         #endregion
 
