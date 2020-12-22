@@ -42,94 +42,92 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   IComparable
     {
 
-        #region Data
-
-        private static readonly Regex HotlinePhoneNumberRegExpr  = new Regex("\\+[^0-9]");
-
-        #endregion
-
         #region Properties
 
         /// <summary>
         /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
         /// </summary>
         [Mandatory]
-        public EVSE_Id                              Id                          { get; }
+        public EVSE_Id                              Id                                     { get; }
 
 
         /// <summary>
-        /// The delta type when this EVSE data record was just downloaded.
+        /// The delta type when the EVSE data record was just downloaded.
         /// </summary>
         [Optional]
-        public DeltaTypes?                          DeltaType                   { get; }
+        public DeltaTypes?                          DeltaType                              { get; }
 
         /// <summary>
-        /// The last update timestamp of this EVSE data record.
+        /// The last update timestamp of the EVSE data record.
         /// </summary>
         [Optional]
-        public DateTime?                            LastUpdate                  { get; }
+        public DateTime?                            LastUpdate                             { get; }
 
 
         /// <summary>
-        /// The identification of the charging station hosting this EVSE.
+        /// The identification of the charging station hosting the EVSE.
         /// </summary>
         [Optional]
-        public ChargingStation_Id?                  ChargingStationId           { get; }
+        public ChargingStation_Id?                  ChargingStationId                      { get; }
 
         /// <summary>
-        /// The identification of the charging pool hosting this EVSE.
+        /// The identification of the charging pool hosting the EVSE.
         /// </summary>
         [Optional]
-        public ChargingPool_Id?                     ChargingPoolId              { get; }
+        public ChargingPool_Id?                     ChargingPoolId                         { get; }
 
         /// <summary>
-        /// The multi-language name of the charging station hosting this EVSE.
+        /// The multi-language name of the charging station hosting the EVSE.
         /// </summary>
         [Mandatory]
-        public I18NString                           ChargingStationName         { get; }
+        public I18NString                           ChargingStationName                    { get; }
 
         /// <summary>
-        /// Name of the charging point manufacturer
+        /// Optional name of the EVSE manufacturer.
         /// </summary>
         [Optional]
-        public String                               HardwareManufacturer        { get; }
+        public String                               HardwareManufacturer                   { get; }
 
         /// <summary>
-        /// URL that redirect to an online image of the related EVSEID.
+        /// Optional URL to an image of the EVSE.
         /// </summary>
         [Optional]
-        public String                               ChargingStationImage        { get; }
+        public String                               ChargingStationImageURL                { get; }
 
         /// <summary>
-        /// Name of the Sub Operator owning the Charging Station.
+        /// Optional name of the sub operator owning the EVSE.
         /// </summary>
         [Optional]
-        public String                               SubOperatorName             { get; }
+        public String                               SubOperatorName                        { get; }
 
         /// <summary>
-        /// 
+        /// Whether the EVSE is able to deliver different power outputs.
         /// </summary>
         [Optional]
-        public Boolean?                             DynamicPowerLevel           { get; }
+        public Boolean?                             DynamicPowerLevel                      { get; }
 
         /// <summary>
-        /// The address of this EVSE.
+        /// The address of the EVSE.
         /// </summary>
-        public Address                              Address                     { get; }
+        [Mandatory]
+        public Address                              Address                                { get; }
 
         /// <summary>
-        /// The geo coordinate of this EVSE.
+        /// The geo coordinate of the EVSE.
         /// </summary>
-        public GeoCoordinate                        GeoCoordinate               { get; }
+        [Optional]
+        public GeoCoordinate?                       GeoCoordinate                          { get; }
 
         /// <summary>
-        /// The types of charging plugs attached to this EVSE.
+        /// The types of charging plugs attached to the EVSE.
         /// </summary>
+        [Mandatory]
         public IEnumerable<PlugTypes>               PlugTypes                              { get; }
 
         /// <summary>
-        /// The charging facilities at this EVSE.
+        /// An enumeration of supported charging facilities at the EVSE.
         /// </summary>
+        [Mandatory]
         public IEnumerable<ChargingFacility>        ChargingFacilities                     { get; }
 
 
@@ -140,25 +138,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public CalibrationLawDataAvailabilities     CalibrationLawDataAvailability         { get; }
 
         /// <summary>
-        /// The authentication modes this EVSE supports.
+        /// The authentication modes the EVSE supports.
         /// </summary>
         [Mandatory]
         public IEnumerable<AuthenticationModes>     AuthenticationModes                    { get; }
 
         /// <summary>
-        /// The maximum capacity this EVSE provides.
+        /// If the EVSE provides only renewable energy then the value MUST be” true”,
+        /// if it use grey energy then value MUST be “false”.
+        /// </summary>
+        [Mandatory]
+        public Boolean                              RenewableEnergy                        { get; }
+
+        /// <summary>
+        /// Optional enumeration of energy sources that the EVSE uses to supply electric energy.
+        /// </summary>
+        public IEnumerable<EnergySource>            EnergySources                          { get; }
+
+        /// <summary>
+        /// Optional environmental impact produced by the energy sources used by the EVSE.
+        /// </summary>
+        [Optional]
+        public EnvironmentalImpact?                 EnvironmentalImpact                    { get; }
+
+        /// <summary>
+        /// The maximum in kWh capacity the EVSE provides.
         /// </summary>
         [Optional]
         public UInt32?                              MaxCapacity                            { get; }
 
         /// <summary>
-        /// List of payment options that are supported.
+        /// An enumeration of payment options that are supported.
         /// </summary>
         [Mandatory]
         public IEnumerable<PaymentOptions>          PaymentOptions                         { get; }
 
         /// <summary>
-        /// A list of "value added services" this EVSE supports.
+        /// An enumeration of "value added services" the EVSE supports.
         /// </summary>
         [Mandatory]
         public IEnumerable<ValueAddedServices>      ValueAddedServices                     { get; }
@@ -170,70 +186,72 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public AccessibilityTypes                   Accessibility                          { get; }
 
         /// <summary>
-        /// Inform the EV driver where the ChargingPoint could be accessed.
+        /// Optional information where the EVSE could be accessed.
         /// </summary>
         [Optional]
         public AccessibilityLocationTypes?          AccessibilityLocation                  { get; }
 
         /// <summary>
-        /// The phone number of the Charging Station Operators hotline.
+        /// The phone number of the charging station operator's hotline.
         /// </summary>
         [Mandatory]
         public Phone_Number                         HotlinePhoneNumber                     { get; }
 
         /// <summary>
-        /// Additional multi-language information about this EVSE.
+        /// Optional multi-language information about the EVSE.
         /// </summary>
         [Optional]
         public I18NString                           AdditionalInfo                         { get; }
 
         /// <summary>
-        /// Additional multi-language information about this EVSE.
+        /// Optional last meters information regarding the location of the EVSE.
         /// </summary>
         [Optional]
         public I18NString                           ChargingStationLocationReference       { get; }
 
         /// <summary>
-        /// The geo coordinate of the entrance to this EVSE.
+        /// In case that the EVSE is part of a bigger facility (e.g. parking place),
+        /// this optional attribute specifies the facilities entrance coordinates.
         /// </summary>
         [Optional]
         public GeoCoordinate?                       GeoChargingPointEntrance               { get; }
 
         /// <summary>
-        /// Whether this EVSE is open 24/7.
+        /// Whether the EVSE is open 24/7.
         /// </summary>
         [Mandatory]
         public Boolean                              IsOpen24Hours                          { get; }
 
         /// <summary>
-        /// The opening times of this EVSE.
+        /// Optional opening times in case that the EVSE cannot be accessed around the clock.
         /// </summary>
         [Optional]
         public IEnumerable<OpeningTime>             OpeningTimes                           { get; }
 
         /// <summary>
-        /// An optional hub operator of this EVSE.
+        /// The optional hub operator of the EVSE.
         /// </summary>
         [Optional]
         public Operator_Id?                         HubOperatorId                          { get; }
 
         /// <summary>
-        /// An optional clearing house of this EVSE.
+        /// Optional clearing house for all charging sessions at the EVSE.
         /// </summary>
         [Optional]
         public ClearingHouse_Id?                    ClearingHouseId                        { get; }
 
         /// <summary>
-        /// Whether this EVSE is Hubject compatible.
+        /// Whether ev roaming via Intercharge at the EVSE is possible.
+        /// If set to "false" the EVSE will not be started/stopped remotely via Hubject.
         /// </summary>
         [Mandatory]
         public Boolean                              IsHubjectCompatible                    { get; }
 
         /// <summary>
-        /// Whether this EVSE provides dynamic status information.
+        /// Whether the CPO provides dynamic EVSE status information.
         /// </summary>
         [Mandatory]
-        public Boolean                              DynamicInfoAvailable                   { get; }
+        public FalseTrueAuto                        DynamicInfoAvailable                   { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
@@ -250,39 +268,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Id">A unique EVSE identification.</param>
         /// 
-        /// <param name="Address">The address of this EVSE.</param>
-        /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
-        /// <param name="PlugTypes">The types of charging plugs attached to this EVSE.</param>
+        /// <param name="Address">The address of the EVSE.</param>
+        /// <param name="PlugTypes">The types of charging plugs attached to the EVSE.</param>
+        /// <param name="ChargingFacilities">An enumeration of supported charging facilities at the EVSE.</param>
+        /// <param name="RenewableEnergy">If the EVSE provides only renewable energy then the value MUST be” true”, if it use grey energy then value MUST be “false”.</param>
         /// <param name="CalibrationLawDataAvailability">This field gives the information how the charging station provides metering law data.</param>
-        /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
-        /// <param name="PaymentOptions">List of payment options that are supported.</param>
-        /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
+        /// <param name="AuthenticationModes">The authentication modes the EVSE supports.</param>
+        /// <param name="PaymentOptions">An enumeration of payment options that are supported.</param>
+        /// <param name="ValueAddedServices">An enumeration of "value added services" the EVSE supports.</param>
         /// <param name="Accessibility">Specifies how the charging station can be accessed.</param>
-        /// <param name="HotlinePhoneNumber">The phone number of the charging station operators hotline.</param>
-        /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
-        /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
-        /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+        /// <param name="HotlinePhoneNumber">The phone number of the charging station operator's hotline.</param>
+        /// <param name="IsOpen24Hours">Whether the EVSE is open 24/7.</param>
+        /// <param name="IsHubjectCompatible">Whether ev roaming via Intercharge at the EVSE is possible. If set to "false" the EVSE will not be started/stopped remotely via Hubject.</param>
+        /// <param name="DynamicInfoAvailable">Whether the CPO provides dynamic EVSE status information.</param>
         /// 
-        /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
-        /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
+        /// <param name="DeltaType">The delta type when the EVSE data record was just downloaded.</param>
+        /// <param name="LastUpdate">The last update timestamp of the EVSE data record.</param>
         /// 
-        /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
-        /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
-        /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
-        /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
-        /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
-        /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
-        /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
-        /// <param name="OpeningTimes">The opening times of this EVSE.</param>
-        /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
-        /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
+        /// <param name="ChargingStationId">The identification of the charging station hosting the EVSE.</param>
+        /// <param name="ChargingPoolId">The identification of the charging pool hosting the EVSE.</param>
+        /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
+        /// <param name="HardwareManufacturer">Optional name of the EVSE manufacturer.</param>
+        /// <param name="ChargingStationImageURL">Optional URL to an image of the EVSE.</param>
+        /// <param name="SubOperatorName">Optional name of the sub operator owning the EVSE.</param>
+        /// <param name="GeoCoordinate">The geo coordinate of the EVSE.</param>
+        /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
+        /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
+        /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
+        /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides.</param>
+        /// <param name="AccessibilityLocation">Optional information where the EVSE could be accessed.</param>
+        /// <param name="AdditionalInfo">Optional multi-language information about the EVSE.</param>
+        /// <param name="ChargingStationLocationReference">Optional last meters information regarding the location of the EVSE.</param>
+        /// <param name="GeoChargingPointEntrance">In case that the EVSE is part of a bigger facility (e.g. parking place), this optional attribute specifies the facilities entrance coordinates.</param>
+        /// <param name="OpeningTimes">Optional opening times in case that the EVSE cannot be accessed around the clock.</param>
+        /// <param name="HubOperatorId">The optional hub operator of the EVSE.</param>
+        /// <param name="ClearingHouseId">Optional clearing house for all charging sessions at the EVSE.</param>
         /// 
-        /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEDataRecord(EVSE_Id                           Id,
 
                               Address                           Address,
-                              GeoCoordinate                     GeoCoordinate,
                               IEnumerable<PlugTypes>            PlugTypes,
+                              IEnumerable<ChargingFacility>     ChargingFacilities,
+                              Boolean                           RenewableEnergy,
                               CalibrationLawDataAvailabilities  CalibrationLawDataAvailability,
                               IEnumerable<AuthenticationModes>  AuthenticationModes,
                               IEnumerable<PaymentOptions>       PaymentOptions,
@@ -291,7 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               Phone_Number                      HotlinePhoneNumber,
                               Boolean                           IsOpen24Hours,
                               Boolean                           IsHubjectCompatible,
-                              Boolean                           DynamicInfoAvailable,
+                              FalseTrueAuto                     DynamicInfoAvailable,
 
                               DeltaTypes?                       DeltaType                          = null,
                               DateTime?                         LastUpdate                         = null,
@@ -300,10 +328,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               ChargingPool_Id?                  ChargingPoolId                     = null,
                               I18NString                        ChargingStationName                = null,
                               String                            HardwareManufacturer               = null,
-                              String                            ChargingStationImage               = null,
+                              String                            ChargingStationImageURL            = null,
                               String                            SubOperatorName                    = null,
+                              GeoCoordinate?                    GeoCoordinate                      = null,
                               Boolean?                          DynamicPowerLevel                  = null,
-                              IEnumerable<ChargingFacility>     ChargingFacilities                 = null,
+                              IEnumerable<EnergySource>         EnergySources                      = null,
+                              EnvironmentalImpact?              EnvironmentalImpact                = null,
                               UInt32?                           MaxCapacity                        = null,
                               AccessibilityLocationTypes?       AccessibilityLocation              = null,
                               I18NString                        AdditionalInfo                     = null,
@@ -322,27 +352,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (PlugTypes.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
 
+            if (ChargingFacilities.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(ChargingFacilities),   "The given enumeration of charging facilities must not be null or empty!");
+
             if (AuthenticationModes.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(AuthenticationModes),  "The given enumeration of authentication modes must not be null or empty!");
 
             if (ValueAddedServices.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(ValueAddedServices),   "The given enumeration of value added services must not be null or empty!");
 
-            if (HotlinePhoneNumber?.Trim().IsNullOrEmpty() == true)
-                throw new ArgumentNullException(nameof(HotlinePhoneNumber),   "The given hotline phone number must not be null or empty!");
-
             #endregion
 
             this.Id                                = Id;
 
-            this.Address                           = Address                          ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
-            this.GeoCoordinate                     = GeoCoordinate;
-            this.PlugTypes                         = PlugTypes;
+            this.Address                           = Address                ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
+            this.PlugTypes                         = PlugTypes?.          Distinct();
+            this.ChargingFacilities                = ChargingFacilities?. Distinct();
+            this.RenewableEnergy                   = RenewableEnergy;
             this.CalibrationLawDataAvailability    = CalibrationLawDataAvailability;
-            this.AuthenticationModes               = AuthenticationModes;
-            this.ValueAddedServices                = ValueAddedServices;
+            this.AuthenticationModes               = AuthenticationModes?.Distinct();
+            this.PaymentOptions                    = PaymentOptions?.     Distinct();
+            this.ValueAddedServices                = ValueAddedServices?. Distinct();
             this.Accessibility                     = Accessibility;
-            this.HotlinePhoneNumber                = HotlinePhoneNumber?.Trim();
+            this.HotlinePhoneNumber                = HotlinePhoneNumber;
             this.IsOpen24Hours                     = IsOpen24Hours;
             this.IsHubjectCompatible               = IsHubjectCompatible;
             this.DynamicInfoAvailable              = DynamicInfoAvailable;
@@ -352,20 +384,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.ChargingStationId                 = ChargingStationId;
             this.ChargingPoolId                    = ChargingPoolId;
-            this.ChargingStationName               = ChargingStationName              ?? new I18NString();
+            this.ChargingStationName               = ChargingStationName;
             this.HardwareManufacturer              = HardwareManufacturer;
-            this.ChargingStationImage              = ChargingStationImage;
+            this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
+            this.GeoCoordinate                     = GeoCoordinate;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
-            this.ChargingFacilities                = ChargingFacilities               ?? new ChargingFacility[0];
+            this.EnergySources                     = EnergySources?.      Distinct();
+            this.EnvironmentalImpact               = EnvironmentalImpact;
             this.MaxCapacity                       = MaxCapacity;
-            this.PaymentOptions                    = PaymentOptions                   ?? new PaymentOptions[0];
-            this.AdditionalInfo                    = AdditionalInfo.SubstringMax(200) ?? new I18NString();
+            this.AccessibilityLocation             = AccessibilityLocation;
+            this.AdditionalInfo                    = AdditionalInfo;
             this.ChargingStationLocationReference  = ChargingStationLocationReference;
             this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
-            this.OpeningTimes                      = OpeningTimes.SafeAny() ? new List<OpeningTime>(OpeningTimes) : new List<OpeningTime>();
+            this.OpeningTimes                      = OpeningTimes;
             this.HubOperatorId                     = HubOperatorId;
             this.ClearingHouseId                   = ClearingHouseId;
+
             this.CustomData                        = CustomData;
 
         }
@@ -804,7 +839,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToXML(XName = null, IncludeMetadata = false, CustomEVSEDataRecordSerializer = null, CustomAddressSerializer = null)
 
         /// <summary>
-        /// Return a XML representation of this EVSE data record.
+        /// Return a XML representation of the EVSE data record.
         /// </summary>
         /// <param name="XName">The XML name to use.</param>
         /// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
@@ -1170,7 +1205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToBuilder(NewEVSEId = null)
 
         /// <summary>
-        /// Return a builder for this EVSE data record.
+        /// Return a builder for the EVSE data record.
         /// </summary>
         /// <param name="NewEVSEId">An optional new EVSE identification.</param>
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
@@ -1226,78 +1261,78 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
             /// <summary>
-            /// The delta type when this EVSE data record was just downloaded.
+            /// The delta type when the EVSE data record was just downloaded.
             /// </summary>
             public DeltaTypes?                       DeltaType                   { get; set; }
 
             /// <summary>
-            /// The last update timestamp of this EVSE data record.
+            /// The last update timestamp of the EVSE data record.
             /// </summary>
             public DateTime?                         LastUpdate                  { get; set; }
 
 
             /// <summary>
-            /// The identification of the charging station hosting this EVSE.
+            /// The identification of the charging station hosting the EVSE.
             /// </summary>
             public ChargingStation_Id?               ChargingStationId           { get; set; }
 
             /// <summary>
-            /// The identification of the charging pool hosting this EVSE.
+            /// The identification of the charging pool hosting the EVSE.
             /// </summary>
             public ChargingPool_Id?                  ChargingPoolId              { get; set; }
 
             /// <summary>
-            /// The multi-language name of the charging station hosting this EVSE.
+            /// The multi-language name of the charging station hosting the EVSE.
             /// </summary>
             public I18NString                        ChargingStationName         { get; set; }
 
             /// <summary>
-            /// The address of this EVSE.
+            /// The address of the EVSE.
             /// </summary>
             public Address                           Address                     { get; set; }
 
             /// <summary>
-            /// The geo coordinate of this EVSE.
+            /// The geo coordinate of the EVSE.
             /// </summary>
             public GeoCoordinate?                    GeoCoordinate               { get; set; }
 
             /// <summary>
-            /// The types of charging plugs attached to this EVSE.
+            /// The types of charging plugs attached to the EVSE.
             /// </summary>
             public ReactiveSet<PlugTypes>            PlugTypes                   { get; }
 
             /// <summary>
-            /// The charging facilities at this EVSE.
+            /// The charging facilities at the EVSE.
             /// </summary>
             public ReactiveSet<ChargingFacility>     ChargingFacilities          { get; }
 
             /// <summary>
-            /// The charging modes this EVSE supports.
+            /// The charging modes the EVSE supports.
             /// </summary>
             public ReactiveSet<ChargingModes>        ChargingModes               { get; }
 
             /// <summary>
-            /// The authentication modes this EVSE supports.
+            /// The authentication modes the EVSE supports.
             /// </summary>
             public ReactiveSet<AuthenticationModes>  AuthenticationModes         { get; }
 
             /// <summary>
-            /// The maximum capacity this EVSE provides.
+            /// The maximum capacity the EVSE provides.
             /// </summary>
             public Single?                           MaxCapacity                 { get; set; }
 
             /// <summary>
-            /// The payment options this EVSE supports.
+            /// The payment options the EVSE supports.
             /// </summary>
             public ReactiveSet<PaymentOptions>       PaymentOptions              { get; }
 
             /// <summary>
-            /// A list of "value added services" this EVSE supports.
+            /// A list of "value added services" the EVSE supports.
             /// </summary>
             public ReactiveSet<ValueAddedServices>   ValueAddedServices          { get; }
 
             /// <summary>
-            /// The accessibility of this EVSE.
+            /// The accessibility of the EVSE.
             /// </summary>
             public AccessibilityTypes?               Accessibility               { get; set; }
 
@@ -1307,42 +1342,42 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public String                            HotlinePhoneNumber          { get; set; }
 
             /// <summary>
-            /// Additional multi-language information about this EVSE.
+            /// Additional multi-language information about the EVSE.
             /// </summary>
             public I18NString                        AdditionalInfo              { get; set; }
 
             /// <summary>
-            /// The geo coordinate of the entrance to this EVSE.
+            /// The geo coordinate of the entrance to the EVSE.
             /// </summary>
             public GeoCoordinate?                    GeoChargingPointEntrance    { get; set; }
 
             /// <summary>
-            /// Whether this EVSE is open 24/7.
+            /// Whether the EVSE is open 24/7.
             /// </summary>
             public Boolean?                          IsOpen24Hours               { get; set; }
 
             /// <summary>
-            /// The opening times of this EVSE.
+            /// The opening times of the EVSE.
             /// </summary>
             public String                            OpeningTimes                { get; set; }
 
             /// <summary>
-            /// An optional hub operator of this EVSE.
+            /// An optional hub operator of the EVSE.
             /// </summary>
             public HubOperator_Id?                   HubOperatorId               { get; set; }
 
             /// <summary>
-            /// An optional clearing house of this EVSE.
+            /// An optional clearing house of the EVSE.
             /// </summary>
             public ClearingHouse_Id?                 ClearingHouseId             { get; set; }
 
             /// <summary>
-            /// Whether this EVSE is Hubject compatible.
+            /// Whether the EVSE is Hubject compatible.
             /// </summary>
             public Boolean?                          IsHubjectCompatible         { get; set; }
 
             /// <summary>
-            /// Whether this EVSE provides dynamic status information.
+            /// Whether the EVSE provides dynamic status information.
             /// </summary>
             public Boolean?                          DynamicInfoAvailable        { get; set; }
 
@@ -1354,32 +1389,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new EVSE data record builder.
             /// </summary>
             /// <param name="Id">A unique EVSE identification.</param>
-            /// <param name="DeltaType">The delta type when this EVSE data record was just downloaded.</param>
-            /// <param name="LastUpdate">The last update timestamp of this EVSE data record.</param>
+            /// <param name="DeltaType">The delta type when the EVSE data record was just downloaded.</param>
+            /// <param name="LastUpdate">The last update timestamp of the EVSE data record.</param>
             /// 
-            /// <param name="Address">The address of this EVSE.</param>
-            /// <param name="GeoCoordinate">The geo coordinate of this EVSE.</param>
-            /// <param name="PlugTypes">The types of charging plugs attached to this EVSE.</param>
-            /// <param name="AuthenticationModes">The authentication modes this EVSE supports.</param>
-            /// <param name="ValueAddedServices">A list of "value added services" this EVSE supports.</param>
-            /// <param name="Accessibility">The accessibility of this EVSE.</param>
+            /// <param name="Address">The address of the EVSE.</param>
+            /// <param name="GeoCoordinate">The geo coordinate of the EVSE.</param>
+            /// <param name="PlugTypes">The types of charging plugs attached to the EVSE.</param>
+            /// <param name="AuthenticationModes">The authentication modes the EVSE supports.</param>
+            /// <param name="ValueAddedServices">A list of "value added services" the EVSE supports.</param>
+            /// <param name="Accessibility">The accessibility of the EVSE.</param>
             /// <param name="HotlinePhoneNumber">The phone number of the charging station operators hotline.</param>
-            /// <param name="IsOpen24Hours">Whether this EVSE is open 24/7.</param>
-            /// <param name="IsHubjectCompatible">Whether this EVSE is Hubject compatible.</param>
-            /// <param name="DynamicInfoAvailable">Whether this EVSE provides dynamic status information.</param>
+            /// <param name="IsOpen24Hours">Whether the EVSE is open 24/7.</param>
+            /// <param name="IsHubjectCompatible">Whether the EVSE is Hubject compatible.</param>
+            /// <param name="DynamicInfoAvailable">Whether the EVSE provides dynamic status information.</param>
             /// 
-            /// <param name="ChargingStationId">The identification of the charging station hosting this EVSE.</param>
-            /// <param name="ChargingPoolId">The identification of the charging pool hosting this EVSE.</param>
-            /// <param name="ChargingStationName">The multi-language name of the charging station hosting this EVSE.</param>
-            /// <param name="ChargingFacilities">The charging facilities at this EVSE.</param>
-            /// <param name="ChargingModes">The charging modes this EVSE supports.</param>
-            /// <param name="MaxCapacity">The maximum capacity this EVSE provides.</param>
-            /// <param name="PaymentOptions">The payment options this EVSE supports.</param>
-            /// <param name="AdditionalInfo">Additional multi-language information about this EVSE.</param>
-            /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to this EVSE.</param>
-            /// <param name="OpeningTimes">The opening times of this EVSE.</param>
-            /// <param name="HubOperatorId">An optional hub operator of this EVSE.</param>
-            /// <param name="ClearingHouseId">An optional clearing house of this EVSE.</param>
+            /// <param name="ChargingStationId">The identification of the charging station hosting the EVSE.</param>
+            /// <param name="ChargingPoolId">The identification of the charging pool hosting the EVSE.</param>
+            /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
+            /// <param name="ChargingFacilities">The charging facilities at the EVSE.</param>
+            /// <param name="ChargingModes">The charging modes the EVSE supports.</param>
+            /// <param name="MaxCapacity">The maximum capacity the EVSE provides.</param>
+            /// <param name="PaymentOptions">The payment options the EVSE supports.</param>
+            /// <param name="AdditionalInfo">Additional multi-language information about the EVSE.</param>
+            /// <param name="GeoChargingPointEntrance">The geo coordinate of the entrance to the EVSE.</param>
+            /// <param name="OpeningTimes">The opening times of the EVSE.</param>
+            /// <param name="HubOperatorId">An optional hub operator of the EVSE.</param>
+            /// <param name="ClearingHouseId">An optional clearing house of the EVSE.</param>
             /// 
             /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
             public Builder(EVSE_Id                                    Id,

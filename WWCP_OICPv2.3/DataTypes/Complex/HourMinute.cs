@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create new hour/minute.
+        /// Create a new hour/minute.
         /// </summary>
         /// <param name="Hour">The hour.</param>
         /// <param name="Minute">The minute.</param>

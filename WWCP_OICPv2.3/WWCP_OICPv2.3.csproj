@@ -52,12 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\Complex\Address.cs" />
+    <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
+    <Compile Include="DataTypes\Complex\EnvironmentalImpact.cs" />
     <Compile Include="DataTypes\Complex\HourMinute.cs" />
     <Compile Include="DataTypes\Complex\Period.cs" />
     <Compile Include="DataTypes\Complex\OpeningTime.cs" />
     <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityLocationTypes.cs" />
+    <Compile Include="DataTypes\Enums\FalseTrueAuto.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
     <Compile Include="DataTypes\Enums\DaysOfWeek.cs" />

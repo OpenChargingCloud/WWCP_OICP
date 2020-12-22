@@ -657,15 +657,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (c != 0)
                 return c;
 
-            c = PostalCode.      CompareTo(Address.PostalCode);
+            c = City.CompareTo(Address.City);
             if (c != 0)
                 return c;
 
-            c = City.FirstText().CompareTo(Address.City.FirstText());
+            c = Street.CompareTo(Address.Street);
             if (c != 0)
                 return c;
 
-            return Street.       CompareTo(Address.Street);
+            c = PostalCode.CompareTo(Address.PostalCode);
+            if (c != 0)
+                return c;
+
+            c = HouseNumber.CompareTo(Address.HouseNumber);
+            if (c != 0)
+                return c;
+
+            c = (Floor ?? "").CompareTo(Address.Floor ?? "");
+            if (c != 0)
+                return c;
+
+            c = (Floor ?? "").CompareTo(Address.Floor ?? "");
+            if (c != 0)
+                return c;
+
+            c = (Region ?? "").CompareTo(Address.Region ?? "");
+            if (c != 0)
+                return c;
+
+            //c = (ParkingFacility ?? "").CompareTo(Address.ParkingFacility ?? "");
+            //if (c != 0)
+            //    return c;
+
+            return (TimeZone?.ToString() ?? "").CompareTo(Address.TimeZone?.ToString() ?? "");
 
         }
 
@@ -697,29 +721,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Address">An address to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Address Address)
-        {
 
-            if (Address is null)
-                return false;
-
-            try
-            {
-
-            return Street.        Equals(Address.Street)        &&
-                   HouseNumber.   Equals(Address.HouseNumber)   &&
-                   FloorLevel.    Equals(Address.FloorLevel)    &&
-                   PostalCode.    Equals(Address.PostalCode)    &&
-                   PostalCodeSub. Equals(Address.PostalCodeSub) &&
-                   City.          Equals(Address.City)          &&
-                   Country.       Equals(Address.Country);
-
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-        }
+            => !(Address is null) &&
+                 Country         == Address.Country         &&
+                 City            == Address.City            &&
+                 Street          == Address.Street          &&
+                 PostalCode      == Address.PostalCode      &&
+                 HouseNumber     == Address.HouseNumber     &&
+                 Floor           == Address.Floor           &&
+                 Region          == Address.Region          &&
+                 ParkingFacility == Address.ParkingFacility &&
+                 ParkingSpot     == Address.ParkingSpot     &&
+                 TimeZone        == Address.TimeZone;
 
         #endregion
 
@@ -736,13 +749,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Street.        GetHashCode() * 17 ^
-                       HouseNumber.   GetHashCode() * 13 ^
-                       FloorLevel.    GetHashCode() * 11 ^
-                       PostalCode.    GetHashCode() *  7 ^
-                       PostalCodeSub. GetHashCode() *  5 ^
-                       City.          GetHashCode() *  3 ^
-                       Country.       GetHashCode();
+                return Country.         GetHashCode()       * 27 ^
+                       City.            GetHashCode()       * 23 ^
+                       Street.          GetHashCode()       * 19 ^
+                       PostalCode.      GetHashCode()       * 17^
+                       HouseNumber.     GetHashCode()       * 13 ^
+
+                      (Floor?.          GetHashCode() ?? 0) * 11 ^
+                      (Region?.         GetHashCode() ?? 0) *  7 ^
+                      (ParkingFacility?.GetHashCode() ?? 0) *  5 ^
+                      (ParkingSpot?.    GetHashCode() ?? 0) *  3 ^
+                      (TimeZone?.       GetHashCode() ?? 0);
 
             }
         }
@@ -756,14 +773,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => Street                          + " " +
-               HouseNumber                     + " " +
-               FloorLevel                      + ", " +
-               PostalCode                      + " " +
-               PostalCodeSub                   + " " +
-               City                            + ", " +
-               Country.CountryName.FirstText() + " / " +
-               Comment;
+            => String.Concat(Country, " ",
+                             City,    " ",
+                             Street,  " ",
+                             HouseNumber);
 
         #endregion
 
