@@ -18,6 +18,8 @@
 #region Usings
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -31,78 +33,48 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A charging facility.
     /// </summary>
-    public class ChargingFacility : IEquatable<ChargingFacility>,
-                                    IComparable<ChargingFacility>,
-                                    IComparable
+    public readonly struct ChargingFacility : IEquatable<ChargingFacility>,
+                                              IComparable<ChargingFacility>,
+                                              IComparable
     {
 
         #region Properties
 
         /// <summary>
-        /// The country.
+        /// The power type  of the charging facility, e.g. AC or DC.
         /// </summary>
         [Mandatory]
-        public Country     Country            { get; }
+        public readonly PowerTypes                  PowerType        { get; }
 
         /// <summary>
-        /// The city.
+        /// Optional voltage of the charging facility.
+        /// </summary>
+        [Optional]
+        public readonly UInt32?                     Voltage          { get; }
+
+        /// <summary>
+        /// Optional amperage of the charging facility.
+        /// </summary>
+        [Optional]
+        public readonly UInt32?                     Amperage         { get; }
+
+        /// <summary>
+        /// The power of the charging facility (kW).
         /// </summary>
         [Mandatory]
-        public String      City               { get; }
+        public readonly UInt32                      Power            { get; }
 
         /// <summary>
-        /// The name of the street.
-        /// </summary>
-        [Mandatory]
-        public String      Street             { get; }
-
-        /// <summary>
-        /// The postal code.
-        /// </summary>
-        [Mandatory]
-        public String      PostalCode         { get; }
-
-        /// <summary>
-        /// The house number.
-        /// </summary>
-        [Mandatory]
-        public String      HouseNumber        { get; }
-
-        /// <summary>
-        /// The optional floor level.
+        /// Optional enumeration of supported charging modes.
         /// </summary>
         [Optional]
-        public String      Floor              { get; }
-
-        /// <summary>
-        /// The optional region.
-        /// </summary>
-        [Optional]
-        public String      Region             { get; }
-
-        /// <summary>
-        /// Whether a parking facility exists.
-        /// </summary>
-        [Optional]
-        public Boolean?    ParkingFacility    { get; }
-
-        /// <summary>
-        /// The optional parking spot.
-        /// </summary>
-        [Optional]
-        public String      ParkingSpot        { get; }
-
-        /// <summary>
-        /// The optional time zone.
-        /// </summary>
-        [Optional]
-        public Time_Zone?  TimeZone           { get; }
+        public readonly IEnumerable<ChargingModes>  ChargingModes    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject     CustomData         { get; }
+        public readonly JObject                     CustomData       { get; }
 
         #endregion
 
@@ -111,42 +83,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new charging facility.
         /// </summary>
-        /// <param name="Country">The country.</param>
-        /// <param name="City">The city.</param>
-        /// <param name="Street">The name of the street.</param>
-        /// <param name="PostalCode">The postal code.</param>
-        /// <param name="HouseNumber">The house number.</param>
-        /// <param name="Floor">The optional floor level.</param>
-        /// <param name="Region">The optional region.</param>
-        /// <param name="ParkingFacility">Whether a parking facility exists.</param>
-        /// <param name="ParkingSpot">The optional parking spot.</param>
-        /// <param name="TimeZone">The optional time zone.</param>
+        /// <param name="PowerType">The power type  of the charging facility, e.g. AC or DC.</param>
+        /// <param name="Power">The power of the charging facility (kW).</param>
+        /// 
+        /// <param name="Voltage">Optional voltage of the charging facility.</param>
+        /// <param name="Amperage">Optional amperage of the charging facility.</param>
+        /// <param name="ChargingModes">Optional enumeration of supported charging modes.</param>
+        /// 
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        public ChargingFacility(Country     Country,
-                       String      City,
-                       String      Street,
-                       String      PostalCode,
-                       String      HouseNumber,
-                       String      Floor             = null,
-                       String      Region            = null,
-                       Boolean?    ParkingFacility   = null,
-                       String      ParkingSpot       = null,
-                       Time_Zone?  TimeZone          = null,
-                       JObject     CustomData        = null)
+        public ChargingFacility(PowerTypes                  PowerType,
+                                UInt32                      Power,
+
+                                UInt32?                     Voltage         = null,
+                                UInt32?                     Amperage        = null,
+                                IEnumerable<ChargingModes>  ChargingModes   = null,
+
+                                JObject                     CustomData      = null)
 
         {
 
-            this.Country          = Country;
-            this.City             = City;
-            this.Street           = Street;
-            this.PostalCode       = PostalCode;
-            this.HouseNumber      = HouseNumber;
-            this.Floor            = Floor;
-            this.Region           = Region;
-            this.ParkingFacility  = ParkingFacility;
-            this.ParkingSpot      = ParkingSpot;
-            this.TimeZone         = TimeZone;
-            this.CustomData       = CustomData;
+            this.PowerType      = PowerType;
+            this.Power          = Power;
+
+            this.Voltage        = Voltage;
+            this.Amperage       = Amperage;
+            this.ChargingModes  = ChargingModes?.Distinct() ?? new ChargingModes[0];
+
+            this.CustomData     = CustomData;
 
         }
 
@@ -155,19 +118,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#ChargingFacilityIso19773Type
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#ChargingFacilityType
 
         // {
-        //   "City":            "string",
-        //   "Country":         "string",
-        //   "Floor":           "string",
-        //   "HouseNum":        "string",
-        //   "ParkingFacility":  false,
-        //   "ParkingSpot":     "string",
-        //   "PostalCode":      "string",
-        //   "Region":          "string",
-        //   "Street":          "string",
-        //   "TimeZone":        "string"
+        //   "PowerType":  "AC_1_PHASE",
+        //   "Power":       50,
+        //   "Voltage":     400,
+        //   "Amperage":    125,
+        //   "ChargingModes": [
+        //     "Mode_1"
+        //   ],
         // }
 
         #endregion
@@ -175,23 +135,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (JSON, CustomChargingFacilityParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of an charging facility.
+        /// Parse the given JSON representation of a charging facility.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility Parse(JObject                               JSON,
-                                    CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
+        public static ChargingFacility Parse(JObject                                        JSON,
+                                             CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
         {
 
             if (TryParse(JSON,
                          out ChargingFacility chargingFacility,
-                         out String  ErrorResponse,
+                         out String           ErrorResponse,
                          CustomChargingFacilityParser))
             {
                 return chargingFacility;
             }
 
-            throw new ArgumentException("The given JSON representation of an charging facility is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charging facility is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
@@ -200,23 +160,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text, CustomChargingFacilityParser = null)
 
         /// <summary>
-        /// Parse the given text representation of an charging facility.
+        /// Parse the given text representation of a charging facility.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility Parse(String                                Text,
-                                    CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
+        public static ChargingFacility Parse(String                                         Text,
+                                             CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
         {
 
             if (TryParse(Text,
                          out ChargingFacility chargingFacility,
-                         out String  ErrorResponse,
+                         out String           ErrorResponse,
                          CustomChargingFacilityParser))
             {
                 return chargingFacility;
             }
 
-            throw new ArgumentException("The given text representation of an charging facility is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charging facility is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
@@ -227,14 +187,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given JSON representation of an charging facility.
+        /// Try to parse the given JSON representation of a charging facility.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject      JSON,
+        public static Boolean TryParse(JObject               JSON,
                                        out ChargingFacility  ChargingFacility,
-                                       out String   ErrorResponse)
+                                       out String            ErrorResponse)
 
             => TryParse(JSON,
                         out ChargingFacility,
@@ -243,15 +203,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         /// <summary>
-        /// Try to parse the given JSON representation of an charging facility.
+        /// Try to parse the given JSON representation of a charging facility.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
-        public static Boolean TryParse(JObject                               JSON,
+        public static Boolean TryParse(JObject                                        JSON,
                                        out ChargingFacility                           ChargingFacility,
-                                       out String                            ErrorResponse,
+                                       out String                                     ErrorResponse,
                                        CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser)
         {
 
@@ -266,12 +226,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse Country           [mandatory]
+                #region Parse PowerType         [mandatory]
 
-                if (!JSON.ParseMandatory("Country",
-                                         "country",
-                                         org.GraphDefined.Vanaheimr.Illias.Country.TryParse,
-                                         out Country Country,
+                if (!JSON.ParseMandatoryEnum("PowerType",
+                                             "power type",
+                                             out PowerTypes PowerType,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Power             [mandatory]
+
+                if (!JSON.ParseMandatory("Power",
+                                         "power",
+                                         out UInt32 Power,
                                          out ErrorResponse))
                 {
                     return false;
@@ -279,59 +250,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse City              [mandatory]
+                #region Parse Voltage           [optional]
 
-                if (!JSON.ParseMandatoryText("City",
-                                             "city",
-                                             out String City,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse Street            [mandatory]
-
-                if (!JSON.ParseMandatoryText("Street",
-                                             "street",
-                                             out String Street,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse PostalCode        [mandatory]
-
-                if (!JSON.ParseMandatoryText("PostalCode",
-                                             "postal code",
-                                             out String PostalCode,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse HouseNumber       [mandatory]
-
-                if (!JSON.ParseMandatoryText("HouseNum",
-                                             "house number",
-                                             out String HouseNumber,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse Floor             [optional]
-
-                if (JSON.ParseOptional("Floor",
-                                       "floor",
-                                       out String Floor,
+                if (JSON.ParseOptional("Voltage",
+                                       "voltage",
+                                       out UInt32? Voltage,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse != null)
@@ -340,11 +263,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Region            [optional]
+                #region Parse Amperage          [optional]
 
-                if (JSON.ParseOptional("Region",
-                                       "region",
-                                       out String Region,
+                if (JSON.ParseOptional("Amperage",
+                                       "amperage",
+                                       out UInt32? Amperage,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse != null)
@@ -353,39 +276,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ParkingFacility   [optional]
+                #region Parse ChargingModes     [optional]
 
-                if (JSON.ParseOptional("ParkingFacility",
-                                       "parking facility",
-                                       out Boolean? ParkingFacility,
-                                       out ErrorResponse))
-                {
-                    if (ErrorResponse != null)
-                        return false;
-                }
-
-                #endregion
-
-                #region Parse ParkingSpot       [optional]
-
-                if (JSON.ParseOptional("ParkingSpot",
-                                       "parking spot",
-                                       out String ParkingSpot,
-                                       out ErrorResponse))
-                {
-                    if (ErrorResponse != null)
-                        return false;
-                }
-
-                #endregion
-
-                #region Parse TimeZone          [optional]
-
-                if (JSON.ParseOptional("TimeZone",
-                                       "time zone",
-                                       Time_Zone.TryParse,
-                                       out Time_Zone TimeZone,
-                                       out ErrorResponse))
+                if (JSON.ParseOptionalHashSet("ChargingModes",
+                                              "charging modes",
+                                              ChargingModesExtentions.TryParse,
+                                              out HashSet<ChargingModes> ChargingModes,
+                                              out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;
@@ -400,21 +297,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingFacility = new ChargingFacility(Country,
-                                      City,
-                                      Street,
-                                      PostalCode,
-                                      HouseNumber,
-                                      Floor,
-                                      Region,
-                                      ParkingFacility,
-                                      ParkingSpot,
-                                      TimeZone,
-                                      CustomData);
+                ChargingFacility = new ChargingFacility(PowerType,
+                                                        Power,
+                                                        Voltage,
+                                                        Amperage,
+                                                        ChargingModes,
+                                                        CustomData);
 
                 if (CustomChargingFacilityParser != null)
                     ChargingFacility = CustomChargingFacilityParser(JSON,
-                                                  ChargingFacility);
+                                                                    ChargingFacility);
 
                 return true;
 
@@ -422,7 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 ChargingFacility        = default;
-                ErrorResponse  = "The given JSON representation of an charging facility is invalid: " + e.Message;
+                ErrorResponse  = "The given JSON representation of a charging facility is invalid: " + e.Message;
                 return false;
             }
 
@@ -439,9 +331,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
-        public static Boolean TryParse(String                                Text,
+        public static Boolean TryParse(String                                         Text,
                                        out ChargingFacility                           ChargingFacility,
-                                       out String                            ErrorResponse,
+                                       out String                                     ErrorResponse,
                                        CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser)
         {
 
@@ -456,8 +348,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
             catch (Exception e)
             {
-                ChargingFacility        = default;
-                ErrorResponse  = "The given text representation of an charging facility is invalid: " + e.Message;
+                ChargingFacility  = default;
+                ErrorResponse     = "The given text representation of a charging facility is invalid: " + e.Message;
                 return false;
             }
 
@@ -476,30 +368,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("Country",                Country.Alpha3Code),
-                           new JProperty("City",                   City),
-                           new JProperty("Street",                 Street),
-                           new JProperty("PostalCode",             PostalCode),
-                           new JProperty("HouseNum",               HouseNumber),
+                           new JProperty("PowerType",              PowerType.AsString()),
+                           new JProperty("Power",                  Power),
 
-                           Floor.IsNotNullOrEmpty()
-                               ? new JProperty("Floor",            Floor)
+                           Voltage.HasValue
+                               ? new JProperty("Voltage",          Voltage. Value)
                                : null,
 
-                           Region.IsNotNullOrEmpty()
-                               ? new JProperty("Region",           Region)
+                           Amperage.HasValue
+                               ? new JProperty("Amperage",         Amperage.Value)
                                : null,
 
-                           ParkingFacility.HasValue
-                               ? new JProperty("ParkingFacility",  ParkingFacility.Value)
-                               : null,
-
-                           ParkingSpot.IsNotNullOrEmpty()
-                               ? new JProperty("ParkingSpot",      ParkingSpot)
-                               : null,
-
-                           TimeZone.HasValue
-                               ? new JProperty("TimeZone",         TimeZone.ToString())
+                           ChargingModes.SafeAny()
+                               ? new JProperty("ChargingModes",    new JArray(ChargingModes.Select(chargingMode => chargingMode.AsString())))
                                : null,
 
                            CustomData != null
@@ -524,22 +405,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two charging facilityes for equality.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
-        {
+        public static Boolean operator == (ChargingFacility ChargingFacility1,
+                                           ChargingFacility ChargingFacility2)
 
-            // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(ChargingFacility1, ChargingFacility2))
-                return true;
-
-            if (ChargingFacility1 is null || ChargingFacility2 is null)
-                return false;
-
-            return ChargingFacility1.Equals(ChargingFacility2);
-
-        }
+            => ChargingFacility1.Equals(ChargingFacility2);
 
         #endregion
 
@@ -548,10 +420,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two charging facilityes for inequality.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
+        public static Boolean operator != (ChargingFacility ChargingFacility1,
+                                           ChargingFacility ChargingFacility2)
+
             => !(ChargingFacility1 == ChargingFacility2);
 
         #endregion
@@ -561,18 +435,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
-        {
+        public static Boolean operator < (ChargingFacility ChargingFacility1,
+                                          ChargingFacility ChargingFacility2)
 
-            if (ChargingFacility1 is null)
-                throw new ArgumentNullException(nameof(ChargingFacility1), "The given charging facility must not be null!");
-
-            return ChargingFacility1.CompareTo(ChargingFacility2) < 0;
-
-        }
+            => ChargingFacility1.CompareTo(ChargingFacility2) < 0;
 
         #endregion
 
@@ -581,10 +450,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
+        public static Boolean operator <= (ChargingFacility ChargingFacility1,
+                                           ChargingFacility ChargingFacility2)
+
             => !(ChargingFacility1 > ChargingFacility2);
 
         #endregion
@@ -594,18 +465,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
-        {
+        public static Boolean operator > (ChargingFacility ChargingFacility1,
+                                          ChargingFacility ChargingFacility2)
 
-            if (ChargingFacility1 is null)
-                throw new ArgumentNullException(nameof(ChargingFacility1), "The given charging facility must not be null!");
-
-            return ChargingFacility1.CompareTo(ChargingFacility2) > 0;
-
-        }
+            => ChargingFacility1.CompareTo(ChargingFacility2) > 0;
 
         #endregion
 
@@ -614,10 +480,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingFacility1">An charging facility.</param>
+        /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargingFacility ChargingFacility1, ChargingFacility ChargingFacility2)
+        public static Boolean operator >= (ChargingFacility ChargingFacility1,
+                                           ChargingFacility ChargingFacility2)
+
             => !(ChargingFacility1 < ChargingFacility2);
 
         #endregion
@@ -636,7 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Object is ChargingFacility chargingFacility
                    ? CompareTo(chargingFacility)
-                   : throw new ArgumentException("The given object is not an charging facility!",
+                   : throw new ArgumentException("The given object is not a charging facility!",
                                                  nameof(Object));
 
         #endregion
@@ -650,46 +518,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(ChargingFacility ChargingFacility)
         {
 
-            if (ChargingFacility is null)
-                throw new ArgumentNullException(nameof(ChargingFacility), "The given charging facility must not be null!");
+            var result =  PowerType.     CompareTo(ChargingFacility.PowerType);
 
-            var c = Country.     CompareTo(ChargingFacility.Country);
-            if (c != 0)
-                return c;
+            if (result == 0)
+                result =  Power.         CompareTo(ChargingFacility.Power);
 
-            c = City.CompareTo(ChargingFacility.City);
-            if (c != 0)
-                return c;
+            if (result == 0)
+                result = (Voltage  ?? 0).CompareTo(ChargingFacility.Voltage  ?? 0);
 
-            c = Street.CompareTo(ChargingFacility.Street);
-            if (c != 0)
-                return c;
+            if (result == 0)
+                result = (Amperage ?? 0).CompareTo(ChargingFacility.Amperage ?? 0);
 
-            c = PostalCode.CompareTo(ChargingFacility.PostalCode);
-            if (c != 0)
-                return c;
-
-            c = HouseNumber.CompareTo(ChargingFacility.HouseNumber);
-            if (c != 0)
-                return c;
-
-            c = (Floor ?? "").CompareTo(ChargingFacility.Floor ?? "");
-            if (c != 0)
-                return c;
-
-            c = (Floor ?? "").CompareTo(ChargingFacility.Floor ?? "");
-            if (c != 0)
-                return c;
-
-            c = (Region ?? "").CompareTo(ChargingFacility.Region ?? "");
-            if (c != 0)
-                return c;
-
-            //c = (ParkingFacility ?? "").CompareTo(ChargingFacility.ParkingFacility ?? "");
-            //if (c != 0)
-            //    return c;
-
-            return (TimeZone?.ToString() ?? "").CompareTo(ChargingFacility.TimeZone?.ToString() ?? "");
+            return result;
 
         }
 
@@ -718,21 +558,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two charging facilityes for equality.
         /// </summary>
-        /// <param name="ChargingFacility">An charging facility to compare with.</param>
+        /// <param name="ChargingFacility">A charging facility to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(ChargingFacility ChargingFacility)
 
-            => !(ChargingFacility is null) &&
-                 Country         == ChargingFacility.Country         &&
-                 City            == ChargingFacility.City            &&
-                 Street          == ChargingFacility.Street          &&
-                 PostalCode      == ChargingFacility.PostalCode      &&
-                 HouseNumber     == ChargingFacility.HouseNumber     &&
-                 Floor           == ChargingFacility.Floor           &&
-                 Region          == ChargingFacility.Region          &&
-                 ParkingFacility == ChargingFacility.ParkingFacility &&
-                 ParkingSpot     == ChargingFacility.ParkingSpot     &&
-                 TimeZone        == ChargingFacility.TimeZone;
+            => PowerType.            Equals(ChargingFacility.PowerType)             &&
+               Power.                Equals(ChargingFacility.Power)                 &&
+               Voltage.              Equals(ChargingFacility.Voltage)               &&
+               Amperage.             Equals(ChargingFacility.Amperage)              &&
+               ChargingModes.Count().Equals(ChargingFacility.ChargingModes.Count()) &&
+               ChargingModes.All(chargingMode => ChargingFacility.ChargingModes.Contains(chargingMode));
 
         #endregion
 
@@ -749,17 +584,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Country.         GetHashCode()       * 27 ^
-                       City.            GetHashCode()       * 23 ^
-                       Street.          GetHashCode()       * 19 ^
-                       PostalCode.      GetHashCode()       * 17^
-                       HouseNumber.     GetHashCode()       * 13 ^
-
-                      (Floor?.          GetHashCode() ?? 0) * 11 ^
-                      (Region?.         GetHashCode() ?? 0) *  7 ^
-                      (ParkingFacility?.GetHashCode() ?? 0) *  5 ^
-                      (ParkingSpot?.    GetHashCode() ?? 0) *  3 ^
-                      (TimeZone?.       GetHashCode() ?? 0);
+                return PowerType.GetHashCode()       * 11 ^
+                       Power.    GetHashCode()       *  7 ^
+                      (Voltage?. GetHashCode() ?? 0) *  5 ^
+                      (Amperage?.GetHashCode() ?? 0) *  3 ^
+                      ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
 
             }
         }
@@ -773,10 +602,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Country, " ",
-                             City,    " ",
-                             Street,  " ",
-                             HouseNumber);
+            => String.Concat(PowerType, ", ",
+                             Power,     " kW, ",
+                             Voltage. HasValue ? Voltage. Value + " V " : "",
+                             Amperage.HasValue ? Amperage.Value + " A " : "");
 
         #endregion
 

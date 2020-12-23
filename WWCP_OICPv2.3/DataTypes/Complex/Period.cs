@@ -43,13 +43,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The begin of the period.
         /// </summary>
         [Mandatory]
-        public HourMinute  Begin    { get; }
+        public readonly HourMinute Begin    { get; }
 
         /// <summary>
         /// The end of the period.
         /// </summary>
         [Mandatory]
-        public HourMinute  End      { get; }
+        public readonly HourMinute End      { get; }
 
         #endregion
 

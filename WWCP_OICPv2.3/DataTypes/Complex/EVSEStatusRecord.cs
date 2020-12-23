@@ -43,19 +43,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The ID that identifies the charging spot.
         /// </summary>
         [Mandatory]
-        public EVSE_Id          Id            { get; }
+        public readonly EVSE_Id          Id            { get; }
 
         /// <summary>
         /// The status of the charging spot.
         /// </summary>
         [Mandatory]
-        public EVSEStatusTypes  Status        { get; }
+        public readonly EVSEStatusTypes  Status        { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject          CustomData    { get; }
+        public readonly JObject          CustomData    { get; }
 
         #endregion
 

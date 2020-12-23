@@ -10,7 +10,7 @@
     <RootNamespace>cloud.charging.open.protocols.OICPv2_3</RootNamespace>
     <AssemblyName>cloud.charging.open.protocols.OICPv2_3</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	<LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -63,6 +63,8 @@
     <Compile Include="DataTypes\Complex\OpeningTime.cs" />
     <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityLocationTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\PowerTypes.cs" />
     <Compile Include="DataTypes\Enums\FalseTrueAuto.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
     <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />

@@ -37,21 +37,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an energy type.</param>
         public static EnergyTypes Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "Solar"                : return EnergyTypes.Solar;
-                case "Wind"                 : return EnergyTypes.Wind;
-                case "Hydro Power"          : return EnergyTypes.HydroPower;
-                case "Geothermal Energy"    : return EnergyTypes.GeothermalEnergy;
-                case "Biomass"              : return EnergyTypes.Biomass;
-                case "Coal"                 : return EnergyTypes.Coal;
-                case "Nuclear Energy"       : return EnergyTypes.NuclearEnergy;
-                case "Petroleum"            : return EnergyTypes.Petroleum;
-                case "Natural Gas"          : return EnergyTypes.NaturalGas;
-                default                     : return EnergyTypes.Unspecified;
-            };
-        }
+
+            => Text?.Trim() switch {
+                   "Solar"              => EnergyTypes.Solar,
+                   "Wind"               => EnergyTypes.Wind,
+                   "Hydro Power"        => EnergyTypes.HydroPower,
+                   "Geothermal Energy"  => EnergyTypes.GeothermalEnergy,
+                   "Biomass"            => EnergyTypes.Biomass,
+                   "Coal"               => EnergyTypes.Coal,
+                   "Nuclear Energy"     => EnergyTypes.NuclearEnergy,
+                   "Petroleum"          => EnergyTypes.Petroleum,
+                   "Natural Gas"        => EnergyTypes.NaturalGas,
+                   _                    => EnergyTypes.Unspecified,
+               };
 
         #endregion
 
@@ -62,21 +60,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyType">An energy type.</param>
         public static String AsString(this EnergyTypes EnergyType)
-        {
-            switch (EnergyType)
-            {
-                case EnergyTypes.Solar            : return "Solar";
-                case EnergyTypes.Wind             : return "Wind";
-                case EnergyTypes.HydroPower       : return "Hydro Power";
-                case EnergyTypes.GeothermalEnergy : return "Geothermal Energy";
-                case EnergyTypes.Biomass          : return "Biomass";
-                case EnergyTypes.Coal             : return "Coal";
-                case EnergyTypes.NuclearEnergy    : return "Nuclear Energy";
-                case EnergyTypes.Petroleum        : return "Petroleum";
-                case EnergyTypes.NaturalGas       : return "Natural Gas";
-                default                           : return "Unspecified";
-            };
-        }
+
+            => EnergyType switch {
+                   EnergyTypes.Solar             => "Solar",
+                   EnergyTypes.Wind              => "Wind",
+                   EnergyTypes.HydroPower        => "Hydro Power",
+                   EnergyTypes.GeothermalEnergy  => "Geothermal Energy",
+                   EnergyTypes.Biomass           => "Biomass",
+                   EnergyTypes.Coal              => "Coal",
+                   EnergyTypes.NuclearEnergy     => "Nuclear Energy",
+                   EnergyTypes.Petroleum         => "Petroleum",
+                   EnergyTypes.NaturalGas        => "Natural Gas",
+                   _                             => "Unspecified",
+               };
 
         #endregion
 

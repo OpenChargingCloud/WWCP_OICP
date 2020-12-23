@@ -42,24 +42,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The periods of the opening time.
         /// </summary>
         [Mandatory]
-        public IEnumerable<Period>  Periods             { get; }
+        public readonly IEnumerable<Period>  Periods             { get; }
 
         /// <summary>
         /// The day of the weeks of the opening time.
         /// </summary>
         [Mandatory]
-        public DaysOfWeek           On                  { get; }
+        public readonly DaysOfWeek           On                  { get; }
 
         /// <summary>
         /// Optional unstructured information about the opening time.
         /// </summary>
-        public String               UnstructuredText    { get; }
+        public readonly String               UnstructuredText    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject              CustomData          { get; }
+        public readonly JObject              CustomData          { get; }
 
         #endregion
 
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Periods.Aggregate(0, (hashCode, price) => hashCode ^ price.GetHashCode()) ^
+                return Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
                        On.     GetHashCode() * 3 ^
 
                        (UnstructuredText.IsNullOrEmpty()

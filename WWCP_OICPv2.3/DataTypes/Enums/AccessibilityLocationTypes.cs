@@ -37,16 +37,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an accessibility location type.</param>
         public static AccessibilityLocationTypes Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "OnStreet"                 : return AccessibilityLocationTypes.OnStreet;
-                case "ParkingLot"               : return AccessibilityLocationTypes.ParkingLot;
-                case "ParkingGarage"            : return AccessibilityLocationTypes.ParkingGarage;
-                case "UndergroundParkingGarage" : return AccessibilityLocationTypes.UndergroundParkingGarage;
-                default                         : return AccessibilityLocationTypes.Unspecified;
-            };
-        }
+
+            => Text?.Trim() switch {
+                   "OnStreet"                  => AccessibilityLocationTypes.OnStreet,
+                   "ParkingLot"                => AccessibilityLocationTypes.ParkingLot,
+                   "ParkingGarage"             => AccessibilityLocationTypes.ParkingGarage,
+                   "UndergroundParkingGarage"  => AccessibilityLocationTypes.UndergroundParkingGarage,
+                   _                           => AccessibilityLocationTypes.Unspecified
+               };
 
         #endregion
 
@@ -57,16 +55,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AccessibilityLocationType">An accessibility location type.</param>
         public static String AsString(this AccessibilityLocationTypes AccessibilityLocationType)
-        {
-            switch (AccessibilityLocationType)
-            {
-                case AccessibilityLocationTypes.OnStreet                 : return "OnStreet";
-                case AccessibilityLocationTypes.ParkingLot               : return "ParkingLot";
-                case AccessibilityLocationTypes.ParkingGarage            : return "ParkingGarage";
-                case AccessibilityLocationTypes.UndergroundParkingGarage : return "UndergroundParkingGarage";
-                default                                                  : return "Unspecified";
-            };
-        }
+
+            => AccessibilityLocationType switch {
+                   AccessibilityLocationTypes.OnStreet                  => "OnStreet",
+                   AccessibilityLocationTypes.ParkingLot                => "ParkingLot",
+                   AccessibilityLocationTypes.ParkingGarage             => "ParkingGarage",
+                   AccessibilityLocationTypes.UndergroundParkingGarage  => "UndergroundParkingGarage",
+                   _                                                    => "Unspecified"
+               };
 
         #endregion
 

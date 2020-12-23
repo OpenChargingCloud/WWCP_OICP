@@ -42,13 +42,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The energy type.
         /// </summary>
         [Mandatory]
-        public EnergyTypes  EnergyType    { get; }
+        public readonly EnergyTypes  EnergyType    { get; }
 
         /// <summary>
         /// Percentage of EnergyType being used by the charging stations.
         /// </summary>
         [Optional]
-        public Byte?        Percentage    { get; }
+        public readonly Byte?        Percentage    { get; }
 
         #endregion
 

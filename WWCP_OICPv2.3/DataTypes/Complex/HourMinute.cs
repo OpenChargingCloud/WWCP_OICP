@@ -39,12 +39,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The hour.
         /// </summary>
-        public Byte Hour      { get; }
+        public readonly Byte Hour      { get; }
 
         /// <summary>
         /// The minute.
         /// </summary>
-        public Byte Minute    { get; }
+        public readonly Byte Minute    { get; }
 
         #endregion
 

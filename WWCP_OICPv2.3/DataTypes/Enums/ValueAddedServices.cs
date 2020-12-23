@@ -38,16 +38,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">A text-representation of a value added service.</param>
         public static ValueAddedServices Parse(String Text)
 
-            => (Text?.Trim()) switch {
-                "Reservation"                 => ValueAddedServices.Reservation,
-                "DynamicPricing"              => ValueAddedServices.DynamicPricing,
-                "ParkingSensors"              => ValueAddedServices.ParkingSensors,
-                "MaximumPowerCharging"        => ValueAddedServices.MaximumPowerCharging,
-                "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
-                "ChargingPlans"               => ValueAddedServices.ChargingPlans,
-                "RoofProvided"                => ValueAddedServices.RoofProvided,
-                _                             => ValueAddedServices.None,
-            };
+            => Text?.Trim() switch {
+                   "Reservation"                 => ValueAddedServices.Reservation,
+                   "DynamicPricing"              => ValueAddedServices.DynamicPricing,
+                   "ParkingSensors"              => ValueAddedServices.ParkingSensors,
+                   "MaximumPowerCharging"        => ValueAddedServices.MaximumPowerCharging,
+                   "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
+                   "ChargingPlans"               => ValueAddedServices.ChargingPlans,
+                   "RoofProvided"                => ValueAddedServices.RoofProvided,
+                   _                             => ValueAddedServices.None,
+               };
 
         #endregion
 
@@ -60,15 +60,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static String AsString(this ValueAddedServices ValueAddedService)
 
             => ValueAddedService switch {
-                ValueAddedServices.Reservation                 => "Reservation",
-                ValueAddedServices.DynamicPricing              => "DynamicPricing",
-                ValueAddedServices.ParkingSensors              => "ParkingSensors",
-                ValueAddedServices.MaximumPowerCharging        => "MaximumPowerCharging",
-                ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
-                ValueAddedServices.ChargingPlans               => "ChargingPlans",
-                ValueAddedServices.RoofProvided                => "RoofProvided",
-                _ => "None",
-            };
+                   ValueAddedServices.Reservation                 => "Reservation",
+                   ValueAddedServices.DynamicPricing              => "DynamicPricing",
+                   ValueAddedServices.ParkingSensors              => "ParkingSensors",
+                   ValueAddedServices.MaximumPowerCharging        => "MaximumPowerCharging",
+                   ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
+                   ValueAddedServices.ChargingPlans               => "ChargingPlans",
+                   ValueAddedServices.RoofProvided                => "RoofProvided",
+                   _                                              => "None",
+               };
 
         #endregion
 

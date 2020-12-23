@@ -26,41 +26,41 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// Extentions methods for delta types.
+    /// Extentions methods for power types.
     /// </summary>
-    public static class DeltaTypesExtentions
+    public static class PowerTypesExtentions
     {
 
         #region Parse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a delta type.
+        /// Parses the given text-representation of a power type.
         /// </summary>
-        /// <param name="Text">A text-representation of a delta type.</param>
-        public static DeltaTypes Parse(String Text)
+        /// <param name="Text">A text-representation of a power type.</param>
+        public static PowerTypes Parse(String Text)
 
             => Text?.Trim() switch {
-                   "update"  => DeltaTypes.update,
-                   "insert"  => DeltaTypes.insert,
-                   "delete"  => DeltaTypes.delete,
-                   _         => DeltaTypes.unknown,
+                   "AC_1_PHASE"  => PowerTypes.AC_1_PHASE,
+                   "AC_3_PHASE"  => PowerTypes.AC_3_PHASE,
+                   "DC"          => PowerTypes.DC,
+                   _             => PowerTypes.Unspecified,
                };
 
         #endregion
 
-        #region AsString(this DeltaType)
+        #region AsString(this PowerType)
 
         /// <summary>
-        /// Return a text-representation of the given delta type.
+        /// Return a text-representation of the given power type.
         /// </summary>
-        /// <param name="DeltaType">A delta type.</param>
-        public static String AsString(this DeltaTypes DeltaType)
+        /// <param name="PowerType">A power type.</param>
+        public static String AsString(this PowerTypes PowerType)
 
-            => DeltaType switch {
-                   DeltaTypes.update  => "update",
-                   DeltaTypes.insert  => "insert",
-                   DeltaTypes.delete  => "delete",
-                   _                  => "unknown",
+            => PowerType switch {
+                   PowerTypes.AC_1_PHASE  => "AC_1_PHASE",
+                   PowerTypes.AC_3_PHASE  => "AC_3_PHASE",
+                   PowerTypes.DC          => "DC",
+                   _                      => "Unspecified",
                };
 
         #endregion
@@ -69,30 +69,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// Delta types for e.g. EVSE data records.
+    /// Power types.
     /// </summary>
-    public enum DeltaTypes
+    public enum PowerTypes
     {
 
         /// <summary>
-        /// Unknown delta type.
+        /// Unspecified power type.
         /// </summary>
-        unknown,
+        Unspecified,
 
         /// <summary>
-        /// Updated record.
+        /// AC_1_PHASE
         /// </summary>
-        update,
+        AC_1_PHASE,
 
         /// <summary>
-        /// Inserted record.
+        /// AC_3_PHASE
         /// </summary>
-        insert,
+        AC_3_PHASE,
 
         /// <summary>
-        /// Deleted record.
+        /// DC
         /// </summary>
-        delete
+        DC
 
     }
 

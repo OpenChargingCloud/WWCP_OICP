@@ -41,12 +41,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Total CO2 emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh.
         /// </summary>
-        public Decimal?  CO2Emission     { get; }
+        public readonly Decimal?  CO2Emission     { get; }
 
         /// <summary>
         /// Total NuclearWaste emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh.
         /// </summary>
-        public Decimal?  NuclearWaste    { get; }
+        public readonly Decimal?  NuclearWaste    { get; }
 
         #endregion
 

@@ -37,30 +37,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a plug type.</param>
         public static PlugTypes Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "Small Paddle Inductive"            : return PlugTypes.SmallPaddleInductive;
-                case "Large Paddle Inductive"            : return PlugTypes.LargePaddleInductive;
-                case "AVCON Connector"                   : return PlugTypes.AVCONConnector;
-                case "Tesla Connector"                   : return PlugTypes.TeslaConnector;
-                case "NEMA 5-20"                         : return PlugTypes.NEMA5_20;
-                case "Type E French Standard"            : return PlugTypes.TypeEFrenchStandard;
-                case "Type F Schuko"                     : return PlugTypes.TypeFSchuko;
-                case "Type G British Standard"           : return PlugTypes.TypeGBritishStandard;
-                case "Type J Swiss Standard"             : return PlugTypes.TypeJSwissStandard;
-                case "Type 1 Connector (Cable Attached)" : return PlugTypes.Type1Connector_CableAttached;
-                case "Type 2 Outlet"                     : return PlugTypes.Type2Outlet;
-                case "Type 2 Connector (Cable Attached)" : return PlugTypes.Type2Connector_CableAttached;
-                case "Type 3 Outlet"                     : return PlugTypes.Type3Outlet;
-                case "IEC 60309 Single Phase"            : return PlugTypes.IEC60309SinglePhase;
-                case "IEC 60309 Three Phase"             : return PlugTypes.IEC60309ThreePhase;
-                case "CCS Combo 2 Plug (Cable Attached)" : return PlugTypes.CCSCombo2Plug_CableAttached;
-                case "CCS Combo 1 Plug (Cable Attached)" : return PlugTypes.CCSCombo1Plug_CableAttached;
-                case "CHAdeMO"                           : return PlugTypes.CHAdeMO;
-                default                                  : return PlugTypes.Unspecified;
-            };
-        }
+
+            => Text?.Trim() switch {
+                   "Small Paddle Inductive"             => PlugTypes.SmallPaddleInductive,
+                   "Large Paddle Inductive"             => PlugTypes.LargePaddleInductive,
+                   "AVCON Connector"                    => PlugTypes.AVCONConnector,
+                   "Tesla Connector"                    => PlugTypes.TeslaConnector,
+                   "NEMA 5-20"                          => PlugTypes.NEMA5_20,
+                   "Type E French Standard"             => PlugTypes.TypeEFrenchStandard,
+                   "Type F Schuko"                      => PlugTypes.TypeFSchuko,
+                   "Type G British Standard"            => PlugTypes.TypeGBritishStandard,
+                   "Type J Swiss Standard"              => PlugTypes.TypeJSwissStandard,
+                   "Type 1 Connector (Cable Attached)"  => PlugTypes.Type1Connector_CableAttached,
+                   "Type 2 Outlet"                      => PlugTypes.Type2Outlet,
+                   "Type 2 Connector (Cable Attached)"  => PlugTypes.Type2Connector_CableAttached,
+                   "Type 3 Outlet"                      => PlugTypes.Type3Outlet,
+                   "IEC 60309 Single Phase"             => PlugTypes.IEC60309SinglePhase,
+                   "IEC 60309 Three Phase"              => PlugTypes.IEC60309ThreePhase,
+                   "CCS Combo 2 Plug (Cable Attached)"  => PlugTypes.CCSCombo2Plug_CableAttached,
+                   "CCS Combo 1 Plug (Cable Attached)"  => PlugTypes.CCSCombo1Plug_CableAttached,
+                   "CHAdeMO"                            => PlugTypes.CHAdeMO,
+                   _                                    => PlugTypes.Unspecified,
+               };
 
         #endregion
 
@@ -71,30 +69,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PlugType">A plug type.</param>
         public static String AsString(this PlugTypes PlugType)
-        {
-            switch (PlugType)
-            {
-                case PlugTypes.SmallPaddleInductive         : return "Small Paddle Inductive";
-                case PlugTypes.LargePaddleInductive         : return "Large Paddle Inductive";
-                case PlugTypes.AVCONConnector               : return "AVCON Connector";
-                case PlugTypes.TeslaConnector               : return "Tesla Connector";
-                case PlugTypes.NEMA5_20                     : return "NEMA 5-20";
-                case PlugTypes.TypeEFrenchStandard          : return "Type E French Standard";
-                case PlugTypes.TypeFSchuko                  : return "Type F Schuko";
-                case PlugTypes.TypeGBritishStandard         : return "Type G British Standard";
-                case PlugTypes.TypeJSwissStandard           : return "Type J Swiss Standard";
-                case PlugTypes.Type1Connector_CableAttached : return "Type 1 Connector (Cable Attached)";
-                case PlugTypes.Type2Outlet                  : return "Type 2 Outlet";
-                case PlugTypes.Type2Connector_CableAttached : return "Type 2 Connector (Cable Attached)";
-                case PlugTypes.Type3Outlet                  : return "Type 3 Outlet";
-                case PlugTypes.IEC60309SinglePhase          : return "IEC 60309 Single Phase";
-                case PlugTypes.IEC60309ThreePhase           : return "IEC 60309 Three Phase";
-                case PlugTypes.CCSCombo2Plug_CableAttached  : return "CCS Combo 2 Plug (Cable Attached)";
-                case PlugTypes.CCSCombo1Plug_CableAttached  : return "CCS Combo 1 Plug (Cable Attached)";
-                case PlugTypes.CHAdeMO                      : return "CHAdeMO";
-                default                                     : return "Unspecified";
-            };
-        }
+
+            => PlugType switch {
+                   PlugTypes.SmallPaddleInductive          => "Small Paddle Inductive",
+                   PlugTypes.LargePaddleInductive          => "Large Paddle Inductive",
+                   PlugTypes.AVCONConnector                => "AVCON Connector",
+                   PlugTypes.TeslaConnector                => "Tesla Connector",
+                   PlugTypes.NEMA5_20                      => "NEMA 5-20",
+                   PlugTypes.TypeEFrenchStandard           => "Type E French Standard",
+                   PlugTypes.TypeFSchuko                   => "Type F Schuko",
+                   PlugTypes.TypeGBritishStandard          => "Type G British Standard",
+                   PlugTypes.TypeJSwissStandard            => "Type J Swiss Standard",
+                   PlugTypes.Type1Connector_CableAttached  => "Type 1 Connector (Cable Attached)",
+                   PlugTypes.Type2Outlet                   => "Type 2 Outlet",
+                   PlugTypes.Type2Connector_CableAttached  => "Type 2 Connector (Cable Attached)",
+                   PlugTypes.Type3Outlet                   => "Type 3 Outlet",
+                   PlugTypes.IEC60309SinglePhase           => "IEC 60309 Single Phase",
+                   PlugTypes.IEC60309ThreePhase            => "IEC 60309 Three Phase",
+                   PlugTypes.CCSCombo2Plug_CableAttached   => "CCS Combo 2 Plug (Cable Attached)",
+                   PlugTypes.CCSCombo1Plug_CableAttached   => "CCS Combo 1 Plug (Cable Attached)",
+                   PlugTypes.CHAdeMO                       => "CHAdeMO",
+                   _                                       => "Unspecified",
+               };
 
         #endregion
 

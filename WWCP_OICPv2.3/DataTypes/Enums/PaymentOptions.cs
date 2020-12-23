@@ -37,15 +37,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a payment option.</param>
         public static PaymentOptions Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "No Payment" : return PaymentOptions.NoPayment;
-                case "Direct"     : return PaymentOptions.Direct;
-                case "Contract"   : return PaymentOptions.Contract;
-                default           : return PaymentOptions.Unspecified;
-            }
-        }
+
+            => Text?.Trim() switch {
+                   "No Payment"  => PaymentOptions.NoPayment,
+                   "Direct"      => PaymentOptions.Direct,
+                   "Contract"    => PaymentOptions.Contract,
+                   _             => PaymentOptions.Unspecified,
+               };
 
         #endregion
 
@@ -56,15 +54,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PaymentOption">A paymet option.</param>
         public static String AsString(this PaymentOptions PaymentOption)
-        {
-            switch (PaymentOption)
-            {
-                case PaymentOptions.NoPayment : return "No Payment";
-                case PaymentOptions.Direct    : return "Direct";
-                case PaymentOptions.Contract  : return "Contract";
-                default                       : return "Unspecified";
-            }
-        }
+
+            => PaymentOption switch {
+                PaymentOptions.NoPayment  => "No Payment",
+                PaymentOptions.Direct     => "Direct",
+                PaymentOptions.Contract   => "Contract",
+                _                         => "Unspecified",
+            };
 
         #endregion
 

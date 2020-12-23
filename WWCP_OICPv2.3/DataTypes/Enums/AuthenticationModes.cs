@@ -37,18 +37,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an authentication mode.</param>
         public static AuthenticationModes Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "NFC RFID Classic"           : return AuthenticationModes.NFC_RFID_Classic;
-                case "NFC RFID DESFire"           : return AuthenticationModes.NFC_RFID_DESFire;
-                case "PnC"                        : return AuthenticationModes.PnC;
-                case "REMOTE"                     : return AuthenticationModes.REMOTE;
-                case "Direct Payment"             : return AuthenticationModes.DirectPayment;
-                case "No Authentication Required" : return AuthenticationModes.NoAuthenticationRequired;
-                default                           : return AuthenticationModes.Unknown;
-            }
-        }
+
+            => Text?.Trim() switch {
+                   "NFC RFID Classic"            => AuthenticationModes.NFC_RFID_Classic,
+                   "NFC RFID DESFire"            => AuthenticationModes.NFC_RFID_DESFire,
+                   "PnC"                         => AuthenticationModes.PnC,
+                   "REMOTE"                      => AuthenticationModes.REMOTE,
+                   "Direct Payment"              => AuthenticationModes.DirectPayment,
+                   "No Authentication Required"  => AuthenticationModes.NoAuthenticationRequired,
+                   _                             => AuthenticationModes.Unknown
+               };
 
         #endregion
 
@@ -60,18 +58,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="AuthenticationMode">An authentication mode.</param>
         /// <returns></returns>
         public static String AsString(this AuthenticationModes AuthenticationMode)
-        {
-            switch (AuthenticationMode)
-            {
-                case AuthenticationModes.NFC_RFID_Classic         : return "NFC RFID Classic";
-                case AuthenticationModes.NFC_RFID_DESFire         : return "NFC RFID DESFire";
-                case AuthenticationModes.PnC                      : return "PnC";
-                case AuthenticationModes.REMOTE                   : return "REMOTE";
-                case AuthenticationModes.DirectPayment            : return "Direct Payment";
-                case AuthenticationModes.NoAuthenticationRequired : return "No Authentication Required";
-                default                                           : return "Unkown";
-            }
-        }
+
+            => AuthenticationMode switch {
+                   AuthenticationModes.NFC_RFID_Classic          => "NFC RFID Classic",
+                   AuthenticationModes.NFC_RFID_DESFire          => "NFC RFID DESFire",
+                   AuthenticationModes.PnC                       => "PnC",
+                   AuthenticationModes.REMOTE                    => "REMOTE",
+                   AuthenticationModes.DirectPayment             => "Direct Payment",
+                   AuthenticationModes.NoAuthenticationRequired  => "No Authentication Required",
+                   _                                             => "Unkown"
+               };
 
         #endregion
 

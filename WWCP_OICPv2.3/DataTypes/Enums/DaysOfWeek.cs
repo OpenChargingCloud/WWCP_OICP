@@ -37,25 +37,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">Parses the given text-representation of an EVSE status.</param>
         public static DaysOfWeek Parse(String Text)
-        {
-            switch (Text?.Trim()) {
 
-                case "Everyday":   return DaysOfWeek.Everyday;
-                case "Workdays":   return DaysOfWeek.Workdays;
-                case "Weekend":    return DaysOfWeek.Weekend;
-
-                case "Monday":     return DaysOfWeek.Monday;
-                case "Tuesday":    return DaysOfWeek.Tuesday;
-                case "Wednesday":  return DaysOfWeek.Wednesday;
-                case "Thursday":   return DaysOfWeek.Thursday;
-                case "Friday":     return DaysOfWeek.Friday;
-                case "Saturday":   return DaysOfWeek.Saturday;
-                case "Sunday":     return DaysOfWeek.Sunday;
-
-                default:           return DaysOfWeek.Unknown;
-
-            };
-        }
+            => Text?.Trim() switch {
+                   "Everyday"   => DaysOfWeek.Everyday,
+                   "Workdays"   => DaysOfWeek.Workdays,
+                   "Weekend"    => DaysOfWeek.Weekend,
+                   "Monday"     => DaysOfWeek.Monday,
+                   "Tuesday"    => DaysOfWeek.Tuesday,
+                   "Wednesday"  => DaysOfWeek.Wednesday,
+                   "Thursday"   => DaysOfWeek.Thursday,
+                   "Friday"     => DaysOfWeek.Friday,
+                   "Saturday"   => DaysOfWeek.Saturday,
+                   "Sunday"     => DaysOfWeek.Sunday,
+                   _            => DaysOfWeek.Unknown,
+               };
 
         #endregion
 
@@ -77,19 +72,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (EVSEStatusType.HasFlag(DaysOfWeek.Weekend))
                 return "Weekend";
 
-            switch (EVSEStatusType) {
+            return EVSEStatusType switch {
+                       DaysOfWeek.Monday     => "Monday",
+                       DaysOfWeek.Tuesday    => "Tuesday",
+                       DaysOfWeek.Wednesday  => "Wednesday",
+                       DaysOfWeek.Thursday   => "Thursday",
+                       DaysOfWeek.Friday     => "Friday",
+                       DaysOfWeek.Saturday   => "Saturday",
+                       DaysOfWeek.Sunday     => "Sunday",
+                       _                     => "Unknown",
+                   };
 
-                case DaysOfWeek.Monday:     return "Monday";
-                case DaysOfWeek.Tuesday:    return "Tuesday";
-                case DaysOfWeek.Wednesday:  return "Wednesday";
-                case DaysOfWeek.Thursday:   return "Thursday";
-                case DaysOfWeek.Friday:     return "Friday";
-                case DaysOfWeek.Saturday:   return "Saturday";
-                case DaysOfWeek.Sunday:     return "Sunday";
-
-                default:                    return "Unknown";
-
-            };
         }
 
         #endregion

@@ -37,14 +37,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
         public static FalseTrueAuto Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "false" : return FalseTrueAuto.False;
-                case "true"  : return FalseTrueAuto.True;
-                default      : return FalseTrueAuto.Auto;
-            };
-        }
+
+            => Text?.Trim() switch {
+                   "false"  => FalseTrueAuto.False,
+                   "true"   => FalseTrueAuto.True,
+                   _        => FalseTrueAuto.Auto,
+               };
 
         #endregion
 
@@ -55,14 +53,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AccessibilityType">A FalseTrueAuto type.</param>
         public static String AsString(this FalseTrueAuto AccessibilityType)
-        {
-            switch (AccessibilityType)
-            {
-                case FalseTrueAuto.False : return "false";
-                case FalseTrueAuto.True  : return "true";
-                default                  : return "auto";
-            };
-        }
+
+            => AccessibilityType switch {
+                   FalseTrueAuto.False  => "false",
+                   FalseTrueAuto.True   => "true",
+                   _                    => "auto",
+               };
 
         #endregion
 

@@ -37,13 +37,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">Parses the given text-representation of a calibration law data availability object.</param>
         public static CalibrationLawDataAvailabilities Parse(String Text)
-        {
-            switch (Text?.Trim()) {
-                case "Local"    : return CalibrationLawDataAvailabilities.Local;
-                case "External" : return CalibrationLawDataAvailabilities.External;
-                default         : return CalibrationLawDataAvailabilities.NotAvailable;
-            };
-        }
+
+            => Text?.Trim() switch {
+                   "Local"     => CalibrationLawDataAvailabilities.Local,
+                   "External"  => CalibrationLawDataAvailabilities.External,
+                   _           => CalibrationLawDataAvailabilities.NotAvailable,
+               };
 
         #endregion
 
@@ -53,15 +52,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of the given calibration law data availability object.
         /// </summary>
         /// <param name="CalibrationLawDataAvailability">A calibration law data availability object.</param>
-        public static String AsString(this CalibrationLawDataAvailabilities CalibrationLawDataAvailability
-            )
-        {
-            switch (CalibrationLawDataAvailability) {
-                case CalibrationLawDataAvailabilities.Local    : return "Local";
-                case CalibrationLawDataAvailabilities.External : return "External";
-                default:                                         return "Not Available";
-            };
-        }
+        public static String AsString(this CalibrationLawDataAvailabilities CalibrationLawDataAvailability)
+
+            => CalibrationLawDataAvailability switch {
+                   CalibrationLawDataAvailabilities.Local     => "Local",
+                   CalibrationLawDataAvailabilities.External  => "External",
+                   _                                          => "Not Available",
+               };
 
         #endregion
 
