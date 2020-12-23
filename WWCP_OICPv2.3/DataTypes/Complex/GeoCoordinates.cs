@@ -31,29 +31,8 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-    public enum GeoCoordinatesFormats
-    {
-
-        /// <summary>
-        /// Google geo format, e.g. "47.662249 9.360922".
-        /// </summary>
-        Google,
-
-        /// <summary>
-        /// DecimalDegree geo format, e.g. "9.360922" "-21.568201".
-        /// </summary>
-        DecimalDegree,
-
-        /// <summary>
-        /// DegreeMinuteSeconds geo format, e.g. "9° 21' 39.32''", "-21° 34' 23.16".
-        /// </summary>
-        DegreeMinuteSeconds
-
-    }
-
-
     /// <summary>
-    /// A geographical coordinate or position on a map.
+    /// Geographical coordinates.
     /// </summary>
     public readonly struct GeoCoordinates: IEquatable<GeoCoordinates>
     {
@@ -72,17 +51,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The latitude ("Breitengrad": South -90° to Nord +90°).
         /// </summary>
-        public Double                 Latitude     { get; }
+        public readonly Double                 Latitude     { get; }
 
         /// <summary>
         /// The longitude ("Längengrad": West -180° to East +180°).
         /// </summary>
-        public Double                 Longitude    { get; }
+        public readonly Double                 Longitude    { get; }
 
         /// <summary>
         /// The format of the geo coordinates.
         /// </summary>
-        public GeoCoordinatesFormats  GeoFormat    { get; }
+        public readonly GeoCoordinatesFormats  GeoFormat    { get; }
 
         #endregion
 

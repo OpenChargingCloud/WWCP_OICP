@@ -37,19 +37,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a value added service.</param>
         public static ValueAddedServices Parse(String Text)
-        {
-            switch (Text?.Trim())
-            {
-                case "Reservation"                : return ValueAddedServices.Reservation;
-                case "DynamicPricing"             : return ValueAddedServices.DynamicPricing;
-                case "ParkingSensors"             : return ValueAddedServices.ParkingSensors;
-                case "MaximumPowerCharging"       : return ValueAddedServices.MaximumPowerCharging;
-                case "PredictiveChargePointUsage" : return ValueAddedServices.PredictiveChargePointUsage;
-                case "ChargingPlans"              : return ValueAddedServices.ChargingPlans;
-                case "RoofProvided"               : return ValueAddedServices.RoofProvided;
-                default                           : return ValueAddedServices.None;
-            }
-        }
+
+            => (Text?.Trim()) switch {
+                "Reservation"                 => ValueAddedServices.Reservation,
+                "DynamicPricing"              => ValueAddedServices.DynamicPricing,
+                "ParkingSensors"              => ValueAddedServices.ParkingSensors,
+                "MaximumPowerCharging"        => ValueAddedServices.MaximumPowerCharging,
+                "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
+                "ChargingPlans"               => ValueAddedServices.ChargingPlans,
+                "RoofProvided"                => ValueAddedServices.RoofProvided,
+                _                             => ValueAddedServices.None,
+            };
 
         #endregion
 
@@ -60,19 +58,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValueAddedService">A value added service.</param>
         public static String AsString(this ValueAddedServices ValueAddedService)
-        {
-            switch (ValueAddedService)
-            {
-                case ValueAddedServices.Reservation                : return "Reservation";
-                case ValueAddedServices.DynamicPricing             : return "DynamicPricing";
-                case ValueAddedServices.ParkingSensors             : return "ParkingSensors";
-                case ValueAddedServices.MaximumPowerCharging       : return "MaximumPowerCharging";
-                case ValueAddedServices.PredictiveChargePointUsage : return "PredictiveChargePointUsage";
-                case ValueAddedServices.ChargingPlans              : return "ChargingPlans";
-                case ValueAddedServices.RoofProvided               : return "RoofProvided";
-                default                                            : return "None";
-            }
-        }
+
+            => ValueAddedService switch {
+                ValueAddedServices.Reservation                 => "Reservation",
+                ValueAddedServices.DynamicPricing              => "DynamicPricing",
+                ValueAddedServices.ParkingSensors              => "ParkingSensors",
+                ValueAddedServices.MaximumPowerCharging        => "MaximumPowerCharging",
+                ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
+                ValueAddedServices.ChargingPlans               => "ChargingPlans",
+                ValueAddedServices.RoofProvided                => "RoofProvided",
+                _ => "None",
+            };
 
         #endregion
 

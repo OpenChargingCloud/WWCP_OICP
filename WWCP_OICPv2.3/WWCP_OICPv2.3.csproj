@@ -10,6 +10,7 @@
     <RootNamespace>cloud.charging.open.protocols.OICPv2_3</RootNamespace>
     <AssemblyName>cloud.charging.open.protocols.OICPv2_3</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+	<LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -68,6 +69,7 @@
     <Compile Include="DataTypes\Enums\DaysOfWeek.cs" />
     <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
     <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\GeoCoordinatesFormats.cs" />
     <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
     <Compile Include="DataTypes\Enums\CalibrationLawDataAvailabilities.cs" />
     <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
