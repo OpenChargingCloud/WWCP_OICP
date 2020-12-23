@@ -646,12 +646,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (JSON["Google"] is JObject GoogleFormat)
             {
 
-                var geoCoordinates = GoogleFormat["Coordinates"]?.Value<String>();
-
-                if (TryParse(geoCoordinates, out GeoCoordinates, out ErrorResponse))
+                if (TryParse(GoogleFormat["Coordinates"]?.Value<String>(),
+                             out GeoCoordinates geoCoordinates,
+                             out ErrorResponse))
                     return true;
 
-                return false;
+                GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
+                                                    geoCoordinates.Longitude,
+                                                    GeoCoordinatesFormats.Google);
+
+                return true;
 
             }
 
@@ -665,10 +669,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     longitude != null &&
                     TryParseLatLng(latitude,
                                    longitude,
-                                   out GeoCoordinates,
+                                   out GeoCoordinates geoCoordinates,
                                    out ErrorResponse))
                     {
+
+                        GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
+                                                            geoCoordinates.Longitude,
+                                                            GeoCoordinatesFormats.DecimalDegree);
+
                         return true;
+
                     }
 
                 ErrorResponse = "Invalid 'DecimalDegree' format!";
@@ -686,10 +696,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     longitude != null &&
                     TryParseLatLng(latitude,
                                    longitude,
-                                   out GeoCoordinates,
+                                   out GeoCoordinates geoCoordinates,
                                    out ErrorResponse))
                     {
+
+                        GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
+                                                            geoCoordinates.Longitude,
+                                                            GeoCoordinatesFormats.DegreeMinuteSeconds);
+
                         return true;
+
                     }
 
                 ErrorResponse = "Invalid 'DegreeMinuteSeconds' format!";
@@ -761,18 +777,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region (private) ToDegreeMinuteSeconds(Value)
+
         private String ToDegreeMinuteSeconds(Double Value)
         {
 
-            var Grad         = (UInt32) Math.Abs(Math.Floor(Value));
-            var Minute_dec   = (Math.Abs(Value) - Grad) * 60;
-            var Minute       = (UInt32) Math.Floor(Minute_dec);
-            var Second_dec   = (Minute_dec - Minute) * 60;
+            var grad       = (UInt32) Math.Abs(Math.Floor(Value));
+            var minuteDec  = (Math.Abs(Value) - grad) * 60;
+            var minute     = (UInt32) Math.Floor(minuteDec);
+            var secondDec  = (minuteDec - minute) * 60;
 
-            return String.Format("{0}{1}° {2}' {3}''", Value < 0 ? "-" : "", Grad, Minute, Second_dec).Replace(",", ".");
+            return String.Format("{0}{1}° {2}' {3}''", Value < 0 ? "-" : "", grad, minute, secondDec).Replace(",", ".");
 
         }
 
+        #endregion
 
         #region DistanceKM(Target, EarthRadiusInKM = 6371)
 
