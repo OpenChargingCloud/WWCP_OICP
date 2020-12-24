@@ -52,9 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\ChargeDetailRecord.cs" />
     <Compile Include="DataTypes\Complex\ChargingFacility.cs" />
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
+    <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
+    <Compile Include="DataTypes\Complex\SignedMeteringValue.cs" />
     <Compile Include="DataTypes\Complex\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\Complex\EnvironmentalImpact.cs" />
     <Compile Include="DataTypes\Complex\GeoCoordinates.cs" />
@@ -64,6 +67,7 @@
     <Compile Include="DataTypes\Complex\EVSEStatusRecord.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityLocationTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\MeteringStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\PowerTypes.cs" />
     <Compile Include="DataTypes\Enums\FalseTrueAuto.cs" />
     <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
@@ -77,9 +81,15 @@
     <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
     <Compile Include="DataTypes\Enums\EnergyTypes.cs" />
     <Compile Include="DataTypes\Enums\PlugTypes.cs" />
+    <Compile Include="DataTypes\Enums\ProviderIdFormats.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\Simple\CPOPartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
     <Compile Include="DataTypes\Simple\Phone_Number.cs" />
+    <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="DataTypes\Simple\Session_Id.cs" />
     <Compile Include="DataTypes\Simple\Time_Zone.cs" />
     <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
     <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />
