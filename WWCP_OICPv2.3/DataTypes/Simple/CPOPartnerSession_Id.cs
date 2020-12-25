@@ -106,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out CPOPartnerSession_Id sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Illegal text-representation of a CPO charging session identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a CPO charging session identification: '" + Text + "'!", nameof(Text));
 
         }
 

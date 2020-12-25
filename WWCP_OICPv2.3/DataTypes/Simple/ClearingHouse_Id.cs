@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
                 return clearingHouseId;
 
-            throw new ArgumentException("Illegal text-representation of an user identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an user identification: '" + Text + "'!", nameof(Text));
 
         }
 

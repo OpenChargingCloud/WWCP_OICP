@@ -144,7 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var MatchCollection = EVSEId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal EVSE identification '" + Text + "'!",
+                throw new ArgumentException("Invalid EVSE identification '" + Text + "'!",
                                             nameof(Text));
 
             Operator_Id _OperatorId;
@@ -158,7 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    MatchCollection[0].Groups[4].Value);
 
 
-            throw new ArgumentException("Illegal EVSE identification '" + Text + "'!",
+            throw new ArgumentException("Invalid EVSE identification '" + Text + "'!",
                                         nameof(Text));
 
         }

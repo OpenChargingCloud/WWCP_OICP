@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var MatchCollection = OperatorId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
             Country _CountryCode;
 
@@ -159,7 +159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        MatchCollection[0].Groups[5].Value,
                                        OperatorIdFormats.DIN);
 
-            throw new ArgumentException("Illegal text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
 
         }
 

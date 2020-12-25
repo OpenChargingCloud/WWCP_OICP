@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ChargingPool_Id chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Illegal text-representation of a charging pool identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a charging pool identification: '" + Text + "'!", nameof(Text));
 
         }
 

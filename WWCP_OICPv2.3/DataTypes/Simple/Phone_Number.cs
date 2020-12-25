@@ -97,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Phone_Number chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Illegal text-representation of a phone number: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a phone number: '" + Text + "'!", nameof(Text));
 
         }
 

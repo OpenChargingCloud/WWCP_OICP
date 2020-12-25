@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return geoCoordinates;
             }
 
-            throw new ArgumentException("Illegal text representation of geo coordinates: '" + ErrorResponse + "'!");
+            throw new ArgumentException("Invalid text representation of geo coordinates: '" + ErrorResponse + "'!");
 
         }
 
@@ -427,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-            ErrorResponse = "Illegal text representation of geo coordinates: '" + Latitude + "', '" + Longitude + "'!";
+            ErrorResponse = "Invalid text representation of geo coordinates: '" + Latitude + "', '" + Longitude + "'!";
             return false;
 
         }
@@ -481,7 +481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return geoCoordinates;
             }
 
-            throw new ArgumentException("Illegal text representation of geo coordinates: '" + ErrorResponse + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text representation of geo coordinates: '" + ErrorResponse + "'!", nameof(Text));
 
         }
 
@@ -594,7 +594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return geoCoordinates;
             }
 
-            throw new ArgumentException("Illegal JSON representation of geo coordinates: '" + ErrorResponse + "'!", nameof(JSON));
+            throw new ArgumentException("Invalid JSON representation of geo coordinates: '" + ErrorResponse + "'!", nameof(JSON));
 
         }
 

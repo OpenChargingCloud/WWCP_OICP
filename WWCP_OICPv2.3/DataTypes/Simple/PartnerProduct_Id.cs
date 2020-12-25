@@ -95,7 +95,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PartnerProduct_Id partnerProductId))
                 return partnerProductId;
 
-            throw new ArgumentException("Illegal text-representation of a partner product identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a partner product identification: '" + Text + "'!", nameof(Text));
 
         }
 

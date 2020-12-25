@@ -97,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Time_Zone chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Illegal text-representation of a time zone identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a time zone identification: '" + Text + "'!", nameof(Text));
 
         }
 

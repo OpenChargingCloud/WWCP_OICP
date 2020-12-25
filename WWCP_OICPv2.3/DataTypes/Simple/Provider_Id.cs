@@ -144,7 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var MatchCollection = ProviderId_RegEx.Matches(Text);
 
             if (MatchCollection.Count != 1)
-                throw new ArgumentException("Illegal text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
+                throw new ArgumentException("Invalid text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
 
             if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
             {

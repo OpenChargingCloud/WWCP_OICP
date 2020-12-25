@@ -32,7 +32,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 {
 
     /// <summary>
-    /// An RFID identification.
+    /// A RFID identification.
     /// </summary>
     public readonly struct RFIDIdentification : IEquatable<RFIDIdentification>,
                                                 IComparable<RFIDIdentification>,
@@ -44,27 +44,32 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// The UID from the RFID-Card. It should be read from left to right using big-endian format.
         /// </summary>
+        [Mandatory]
         public UID        UID              { get; }
-
-        /// <summary>
-        /// The type of the used RFID card like mifareclassic, desfire.
-        /// </summary>
-        public RFIDTypes  RFIDType         { get; }
 
         /// <summary>
         /// An optional EVCOId for the given UID.
         /// </summary>
+        [Optional]
         public EVCO_Id?   EVCOId           { get; }
+
+        /// <summary>
+        /// The type of the used RFID card like mifareclassic, desfire.
+        /// </summary>
+        [Mandatory]
+        public RFIDTypes  RFIDType         { get; }
 
         /// <summary>
         /// A number printed on a customer’s card for manual authorization (e.q. via a call center).
         /// (1 - 150 characters).
         /// </summary>
+        [Optional]
         public String     PrintedNumber    { get; }
 
         /// <summary>
         /// Until when this card is valid. Should not be set if card does not have an expiration yet.
         /// </summary>
+        [Optional]
         public DateTime?  ExpiryDate       { get; }
 
         #endregion
@@ -89,7 +94,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.UID            = UID;
             this.RFIDType       = RFIDType;
             this.EVCOId         = EVCOId;
-            this.PrintedNumber  = PrintedNumber?.Trim()?.SubstringMax(150);
+            this.PrintedNumber  = PrintedNumber?.Trim();
             this.ExpiryDate     = ExpiryDate;
 
         }
@@ -583,8 +588,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             unchecked
             {
 
-                return EVCOId.  GetHashCode() * 9 ^
-                       RFIDType.GetHashCode() * 7 ^
+                return EVCOId.  GetHashCode() * 11 ^
+                       RFIDType.GetHashCode() *  7 ^
 
                        (EVCOId.HasValue
                             ? EVCOId.GetHashCode() * 5

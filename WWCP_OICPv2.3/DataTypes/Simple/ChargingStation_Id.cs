@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ChargingStation_Id chargingStationId))
                 return chargingStationId;
 
-            throw new ArgumentException("Illegal text-representation of a charging station identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a charging station identification: '" + Text + "'!", nameof(Text));
 
         }
 
