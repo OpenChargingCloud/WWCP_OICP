@@ -411,7 +411,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Object is EnvironmentalImpact EnvironmentalImpact
                    ? CompareTo(EnvironmentalImpact)
-                   : throw new ArgumentException("The given object is not an environmental impact!", nameof(Object));
+                   : throw new ArgumentException("The given object is not an environmental impact!",
+                                                 nameof(Object));
 
         #endregion
 

@@ -1099,18 +1099,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            var EVSEDataRecord = Object as EVSEDataRecord;
-            if ((Object) EVSEDataRecord == null)
-                throw new ArgumentException("The given object is not an EVSE data record identification!", nameof(Object));
-
-            return CompareTo(EVSEDataRecord);
-
-        }
+            => Object is EVSEDataRecord evseDataRecord
+                   ? CompareTo(evseDataRecord)
+                   : throw new ArgumentException("The given object is not an EVSE data record!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -1123,7 +1116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(EVSEDataRecord EVSEDataRecord)
         {
 
-            if ((Object) EVSEDataRecord == null)
+            if (EVSEDataRecord is null)
                 throw new ArgumentNullException(nameof(EVSEDataRecord), "The given EVSE data record must not be null!");
 
             return Id.CompareTo(EVSEDataRecord.Id);
@@ -1144,18 +1137,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            var EVSEDataRecord = Object as EVSEDataRecord;
-            if ((Object) EVSEDataRecord == null)
-                return false;
-
-            return Equals(EVSEDataRecord);
-
-        }
+            => Object is EVSEDataRecord evseDataRecord &&
+                   Equals(evseDataRecord);
 
         #endregion
 
@@ -1169,7 +1153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean Equals(EVSEDataRecord EVSEDataRecord)
         {
 
-            if ((Object) EVSEDataRecord == null)
+            if (EVSEDataRecord is null)
                 return false;
 
             return Id.Equals(EVSEDataRecord.Id);

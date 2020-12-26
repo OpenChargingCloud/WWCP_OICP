@@ -466,7 +466,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Object is CalibrationLawVerification CalibrationLawVerification
                    ? CompareTo(CalibrationLawVerification)
-                   : throw new ArgumentException("The given object is not a calibration law verification!", nameof(Object));
+                   : throw new ArgumentException("The given object is not a calibration law verification!",
+                                                 nameof(Object));
 
         #endregion
 

@@ -58,8 +58,12 @@
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
     <Compile Include="DataTypes\Complex\Identification.cs" />
+    <Compile Include="DataTypes\Complex\HashedPIN.cs" />
+    <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Complex\RFIDIdentification.cs" />
     <Compile Include="DataTypes\Complex\SignedMeteringValue.cs" />
+    <Compile Include="DataTypes\Enums\HashFunction.cs" />
+    <Compile Include="DataTypes\Enums\PINCrypto.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
     <Compile Include="DataTypes\Complex\EnvironmentalImpact.cs" />
     <Compile Include="DataTypes\Complex\GeoCoordinates.cs" />
@@ -91,6 +95,7 @@
     <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\EVCO_Id.cs" />
     <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
+    <Compile Include="DataTypes\Simple\Hash_Value.cs" />
     <Compile Include="DataTypes\Simple\Phone_Number.cs" />
     <Compile Include="DataTypes\Simple\Provider_Id.cs" />
     <Compile Include="DataTypes\Simple\Session_Id.cs" />
@@ -100,6 +105,7 @@
     <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
     <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
     <Compile Include="DataTypes\Simple\Operator_Id.cs" />
+    <Compile Include="DataTypes\Simple\PIN.cs" />
     <Compile Include="DataTypes\Simple\UID.cs" />
     <Compile Include="DataTypes\Simple\URL.cs" />
     <Compile Include="Delegates.cs" />

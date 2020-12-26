@@ -407,7 +407,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Object is EnergySource EnergySource
                    ? CompareTo(EnergySource)
-                   : throw new ArgumentException("The given object is not an energy source!", nameof(Object));
+                   : throw new ArgumentException("The given object is not an energy source!",
+                                                 nameof(Object));
 
         #endregion
 

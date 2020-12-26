@@ -432,7 +432,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Object is SignedMeteringValue signedMeteringValue
                    ? CompareTo(signedMeteringValue)
-                   : throw new ArgumentException("The given object is not a signed metering value!", nameof(Object));
+                   : throw new ArgumentException("The given object is not a signed metering value!",
+                                                 nameof(Object));
 
         #endregion
 

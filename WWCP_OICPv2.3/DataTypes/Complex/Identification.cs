@@ -18,14 +18,10 @@
 #region Usings
 
 using System;
-using System.Xml.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -53,7 +49,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public RFIDIdentification?    RFIDIdentification             { get; }
 
         /// <summary>
-        /// An e-mobility account identification (EVCO Id) and a PIN.
+        /// An e-mobility account identification (EVCO Id) and a (hashed) PIN.
         /// </summary>
         public QRCodeIdentification?  QRCodeIdentification           { get; }
 
@@ -80,11 +76,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new user identification (RFID or EVCO identification).
         /// </summary>
+        /// <param name="RFIDId">A RFID Mifare identification.</param>
+        /// <param name="RFIDIdentification">A RFID identification.</param>
+        /// <param name="QRCodeIdentification">An e-mobility account identification (EVCO Id) and a (hashed) PIN.</param>
+        /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
+        /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
+        /// 
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         private Identification(UID?                   RFIDId                        = null,
                                RFIDIdentification?    RFIDIdentification            = null,
                                QRCodeIdentification?  QRCodeIdentification          = null,
                                EVCO_Id?               PlugAndChargeIdentification   = null,
                                EVCO_Id?               RemoteIdentification          = null,
+
                                JObject                CustomData                    = null)
         {
 
@@ -101,41 +105,52 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) FromUID                        (MifareUID,                              CustomData = null)
+        #region (static) FromUID                        (MifareUID,                       CustomData = null)
 
         /// <summary>
         /// Create a new Mifare identification.
         /// </summary>
         /// <param name="MifareUID">A Mifare user identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromUID(UID?                                 MifareUID,
-                                             IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromUID(UID      MifareUID,
+                                             JObject  CustomData  = null)
 
-            => MifareUID.HasValue
-                   ? new Identification(RFIDId:  MifareUID.Value,
-                                        CustomData:    CustomData)
-                   : null;
+            => new Identification(RFIDId:      MifareUID,
+                                  CustomData:  CustomData);
 
         #endregion
 
-        #region (static) FromRFIDId                     (UID,                                    CustomData = null)
+        #region (static) FromRFIDId                     (UID,                             CustomData = null)
 
         /// <summary>
         /// Create a new identification.
         /// </summary>
         /// <param name="UID">An user identification.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromRFID(UID?                                 UID,
-                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromRFID(UID      UID,
+                                              JObject  CustomData  = null)
 
-            => UID.HasValue
-                   ? new Identification(RFIDId:      UID.Value,
-                                        CustomData:  CustomData)
-                   : null;
+            => new Identification(RFIDId:      UID,
+                                  CustomData:  CustomData);
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (EVCOId, PIN,                            CustomData = null)
+        #region (static) FromQRCodeIdentification       (QRCodeIdentification,            CustomData = null)
+
+        /// <summary>
+        /// Create a new identification.
+        /// </summary>
+        /// <param name="QRCodeIdentification">A QR-code identification (EVCO Id).</param>
+        /// <param name="CustomData">Optional custom data.</param>
+        public static Identification FromQRCodeIdentification(QRCodeIdentification  QRCodeIdentification,
+                                                              JObject               CustomData   = null)
+
+            => new Identification(QRCodeIdentification:  QRCodeIdentification,
+                                  CustomData:            CustomData);
+
+        #endregion
+
+        #region (static) FromQRCodeIdentification       (EVCOId, PIN,                     CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -143,380 +158,394 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVCOId">An electric vehicle contract identification (EVCO Id).</param>
         /// <param name="PIN">A PIN.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(EVCO_Id?                             EVCOId,
-                                                              String                               PIN,
-                                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromQRCodeIdentification(EVCO_Id  EVCOId,
+                                                              PIN      PIN,
+                                                              JObject  CustomData   = null)
 
-            => EVCOId.HasValue
-                   ? new Identification(QRCodeIdentification:  new QRCodeIdentification(EVCOId.Value,
-                                                                                        PIN),
-                                        CustomData:            CustomData)
-                   : null;
-
-        #endregion
-
-        #region (static) FromQRCodeIdentification       (QRCodeIdentification,                   CustomData = null)
-
-        /// <summary>
-        /// Create a new identification.
-        /// </summary>
-        /// <param name="QRCodeIdentification">A QR-code identification (EVCO Id).</param>
-        /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(QRCodeIdentification?                QRCodeIdentification,
-                                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
-
-            => QRCodeIdentification.HasValue
-                   ? new Identification(QRCodeIdentification:  QRCodeIdentification.Value,
-                                        CustomData:            CustomData)
-                   : null;
-
-        #endregion
-
-        #region (static) FromQRCodeIdentification       (EVCOId, HashedPIN, Function, Salt = "", CustomData = null)
-
-        /// <summary>
-        /// Create a new identification.
-        /// </summary>
-        /// <param name="EVCOId">An QR code identification.</param>
-        /// <param name="HashedPIN">A hashed pin.</param>
-        /// <param name="Function">A crypto function.</param>
-        /// <param name="Salt">A salt of the crypto function.</param>
-        /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(EVCO_Id                              EVCOId,
-                                                              String                               HashedPIN,
-                                                              PINCrypto                            Function,
-                                                              String                               Salt         = "",
-                                                              IReadOnlyDictionary<String, Object>  CustomData   = null)
-
-            => new Identification(QRCodeIdentification:  new QRCodeIdentification(EVCOId,
-                                                                                  HashedPIN,
-                                                                                  Function,
-                                                                                  Salt),
+            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
+                                                             EVCOId,
+                                                             PIN
+                                                         ),
                                   CustomData:            CustomData);
 
         #endregion
 
-        #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification,            CustomData = null)
+        #region (static) FromQRCodeIdentification       (EVCOId, HashedPIN,               CustomData = null)
+
+        /// <summary>
+        /// Create a new identification.
+        /// </summary>
+        /// <param name="EVCOId">A QR code identification.</param>
+        /// <param name="HashedPIN">A hashed PIN.</param>
+        /// <param name="CustomData">Optional custom data.</param>
+        public static Identification FromQRCodeIdentification(EVCO_Id    EVCOId,
+                                                              HashedPIN  HashedPIN,
+                                                              JObject    CustomData   = null)
+
+            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
+                                                             EVCOId,
+                                                             HashedPIN
+                                                         ),
+                                  CustomData:            CustomData);
+
+        #endregion
+
+        #region (static) FromQRCodeIdentification       (EVCOId, HashValue, HashFunction, CustomData = null)
+
+        /// <summary>
+        /// Create a new identification.
+        /// </summary>
+        /// <param name="EVCOId">A QR code identification.</param>
+        /// <param name="HashValue">Hash value created by partner.</param>
+        /// <param name="HashFunction">Function that was used to generate the hash value.</param>
+        /// <param name="CustomData">Optional custom data.</param>
+        public static Identification FromQRCodeIdentification(EVCO_Id       EVCOId,
+                                                              Hash_Value    HashValue,
+                                                              HashFunction  HashFunction,
+                                                              JObject       CustomData   = null)
+
+            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
+                                                             EVCOId,
+                                                             new HashedPIN(
+                                                                 HashValue,
+                                                                 HashFunction
+                                                             )
+                                                         ),
+                                  CustomData:            CustomData);
+
+        #endregion
+
+        #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification,     CustomData = null)
 
         /// <summary>
         /// Create a new identification.
         /// </summary>
         /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromPlugAndChargeIdentification(EVCO_Id?                             PlugAndChargeIdentification,
-                                                                     IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromPlugAndChargeIdentification(EVCO_Id  PlugAndChargeIdentification,
+                                                                     JObject  CustomData   = null)
 
-            => PlugAndChargeIdentification.HasValue
-                   ? new Identification(PlugAndChargeIdentification:  PlugAndChargeIdentification.Value,
-                                        CustomData:                   CustomData)
-                   : null;
+            => new Identification(PlugAndChargeIdentification:  PlugAndChargeIdentification,
+                                  CustomData:                   CustomData);
 
         #endregion
 
-        #region (static) FromRemoteIdentification       (RemoteIdentification,                   CustomData = null)
+        #region (static) FromRemoteIdentification       (RemoteIdentification,            CustomData = null)
 
         /// <summary>
         /// Create a new identification.
         /// </summary>
         /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromRemoteIdentification(EVCO_Id?                             RemoteIdentification,
-                                                              IReadOnlyDictionary<String, Object>  CustomData  = null)
+        public static Identification FromRemoteIdentification(EVCO_Id  RemoteIdentification,
+                                                              JObject  CustomData   = null)
 
-            => RemoteIdentification.HasValue
-                   ? new Identification(RemoteIdentification: RemoteIdentification.Value,
-                                        CustomData:           CustomData)
-                   : null;
+            => new Identification(RemoteIdentification:  RemoteIdentification,
+                                  CustomData:            CustomData);
 
         #endregion
 
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv            = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:AuthenticationData = "http://www.hubject.com/b2b/services/authenticationdata/v2.1"
-        //                   xmlns:CommonTypes        = "http://www.hubject.com/b2b/services/commontypes/v2.1">
-        // 
-        // [...]
-        // 
-        // <Authorization:Identification>
-        //    <!--You have a CHOICE of the next 5 items at this level-->
-        //
-        //    <CommonTypes:RFIDMifareFamilyIdentification>
-        //       <CommonTypes:UID>?</CommonTypes:UID>
-        //    </CommonTypes:RFIDMifareFamilyIdentification>
-        //
-        //
-        //    <CommonTypes:RFIDIdentification>
-        //
-        //       <CommonTypes:UID>?</CommonTypes:UID>
-        //
-        //       <!--Optional:-->
-        //       <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
-        //
-        //       <CommonTypes:RFIDType>?</CommonTypes:RFIDType>
-        //
-        //       <!--Optional:-->
-        //       <CommonTypes:PrintedNumber>?</CommonTypes:PrintedNumber>
-        //
-        //       <!--Optional:-->
-        //       <CommonTypes:ExpiryDate>?</CommonTypes:ExpiryDate>
-        //
-        //    </CommonTypes:RFIDIdentification>
-        //
-        //
-        //    <CommonTypes:QRCodeIdentification>
-        //
-        //       <CommonTypes:EvcoID>?</CommonTypes:EvcoID>
-        //
-        //       <!--You have a CHOICE of the next 2 items at this level-->
-        //       <CommonTypes:PIN>?</CommonTypes:PIN>
-        //
-        //       <CommonTypes:HashedPIN>
-        //          <CommonTypes:Value>?</CommonTypes:Value>
-        //          <CommonTypes:Function>?</CommonTypes:Function>
-        //       </CommonTypes:HashedPIN>
-        //
-        //    </CommonTypes:QRCodeIdentification>
-        //
-        //
-        //    <CommonTypes:PlugAndChargeIdentification>
-        //       <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
-        //    </CommonTypes:PlugAndChargeIdentification>
-        //
-        //
-        //    <CommonTypes:RemoteIdentification>
-        //      <CommonTypes:EvcoID>DE-MEG-C10145984-1</CommonTypes:EvcoID>
-        //    </CommonTypes:RemoteIdentification>
-        //
-        // </Authorization:Identification>
-        // 
-        // [...]
-        // 
-        // </soapenv:Envelope>
+        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#IdentificationType
+
+        // {
+        //   "RFIDMifareFamilyIdentification": {
+        //     "UID": "string"
+        //   },
+        //   "QRCodeIdentification": {
+        //     "EvcoID": "string",
+        //     "HashedPIN": {
+        //       "Function": "Bcrypt",
+        //       "LegacyHashData": {
+        //         "Function": "MD5",
+        //         "Salt": "string",
+        //         "Value": "string"
+        //       },
+        //       "Value": "string"
+        //     },
+        //     "PIN": "string"
+        //   },
+        //   "PlugAndChargeIdentification": {
+        //     "EvcoID": "string"
+        //   },
+        //   "RemoteIdentification": {
+        //     "EvcoID": "string"
+        //   },
+        //   "RFIDIdentification": {
+        //     "EvcoID": "string",
+        //     "ExpiryDate": "2020-12-24T07:17:30.354Z",
+        //     "PrintedNumber": "string",
+        //     "RFID": "mifareCls",
+        //     "UID": "string"
+        //   }
+        // }
 
         #endregion
 
-        #region (static) Parse   (IdentificationXML,  CustomIdentificationParser = null, OnException = null)
+        #region (static) Parse   (JSON, CustomIdentificationParser = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP identification.
+        /// Parse the given JSON representation of an identification.
         /// </summary>
-        /// <param name="IdentificationXML">The XML to parse.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(XElement                                     IdentificationXML,
-                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                           CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-                                           OnExceptionDelegate                          OnException                      = null)
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
+        public static Identification Parse(JObject                                      JSON,
+                                           CustomJObjectParserDelegate<Identification>  CustomIdentificationParser   = null)
         {
 
-            if (TryParse(IdentificationXML,
+            if (TryParse(JSON,
                          out Identification identification,
-                         CustomIdentificationParser,
-                         CustomRFIDIdentificationParser,
-                         OnException))
-
+                         out String         ErrorResponse,
+                         CustomIdentificationParser))
+            {
                 return identification;
+            }
 
-            return null;
+            throw new ArgumentException("The given JSON representation of an identification is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (IdentificationText, CustomIdentificationParser = null, OnException = null)
+        #region (static) Parse   (Text, CustomIdentificationParser = null)
 
         /// <summary>
-        /// Parse the given text-representation of an OICP identification.
+        /// Parse the given text representation of an identification.
         /// </summary>
-        /// <param name="IdentificationText">The text to parse.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Identification Parse(String                                       IdentificationText,
-                                           CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                           CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-                                           OnExceptionDelegate                          OnException                      = null)
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
+        public static Identification Parse(String                                       Text,
+                                           CustomJObjectParserDelegate<Identification>  CustomIdentificationParser   = null)
         {
 
-            if (TryParse(IdentificationText,
+            if (TryParse(Text,
                          out Identification identification,
-                         CustomIdentificationParser,
-                         CustomRFIDIdentificationParser,
-                         OnException))
-
+                         out String         ErrorResponse,
+                         CustomIdentificationParser))
+            {
                 return identification;
+            }
 
-            return null;
+            throw new ArgumentException("The given text representation of an identification is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(IdentificationXML,  out Identification, CustomIdentificationParser = null, OnException = null)
+        #region (static) TryParse(JSON, out Identification, out ErrorResponse, CustomIdentificationParser = null)
+
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given XML representation of an OICP identification.
+        /// Try to parse the given JSON representation of an identification.
         /// </summary>
-        /// <param name="IdentificationXML">The XML to parse.</param>
+        /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(XElement                                     IdentificationXML,
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject             JSON,
+                                       out Identification  Identification,
+                                       out String          ErrorResponse)
+
+            => TryParse(JSON,
+                        out Identification,
+                        out ErrorResponse,
+                        null);
+
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an identification.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="Identification">The parsed identification.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
+        public static Boolean TryParse(JObject                                      JSON,
                                        out Identification                           Identification,
-                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-                                       OnExceptionDelegate                          OnException                      = null)
+                                       out String                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<Identification>  CustomIdentificationParser)
         {
 
             try
             {
 
-                if (!(IdentificationXML.Name == OICPNS.Authorization      + "Identification" ||
-                      IdentificationXML.Name == OICPNS.Reservation        + "Identification" ||
-                      IdentificationXML.Name == OICPNS.AuthenticationData + "Identification"))
+                Identification = default;
+
+                if (JSON?.HasValues != true)
                 {
-                    Identification = null;
+                    ErrorResponse = "The given JSON object must not be null or empty!";
                     return false;
                 }
 
-                Identification = new Identification(
+                #region Parse RFIDMifareFamilyIdentification    [optional]
 
-                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RFIDMifareFamilyIdentification",
-                                                                            OICPNS.CommonTypes + "UID",
-                                                                            UID.Parse),
+                UID? UID = default;
 
-                                     IdentificationXML.MapElement          (OICPNS.CommonTypes + "RFIDIdentification",
-                                                                            (xml, e) => OICPv2_2.RFIDIdentification.Parse(xml,
-                                                                                                                          CustomRFIDIdentificationParser,
-                                                                                                                          e),
-                                                                            OnException),
+                if (JSON.ParseOptional("RFIDMifareFamilyIdentification",
+                                       "RFID mifare family identification",
+                                       out JObject RFIDMifareFamilyIdentification,
+                                       out ErrorResponse))
+                {
 
-                                     IdentificationXML.MapElement          (OICPNS.CommonTypes + "QRCodeIdentification",
-                                                                            OICPv2_2.QRCodeIdentification.Parse,
-                                                                            OnException),
+                    if (ErrorResponse != null)
+                        return false;
 
-                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "PlugAndChargeIdentification",
-                                                                            OICPNS.CommonTypes + "EvcoID",
-                                                                            EVCO_Id.Parse),
+                    if (!RFIDMifareFamilyIdentification.ParseMandatory("UID",
+                                                                       "RFID mifare family identification -> UID",
+                                                                       OICPv2_3.UID.TryParse,
+                                                                       out UID uid,
+                                                                       out ErrorResponse))
+                    {
+                        return false;
+                    }
 
-                                     IdentificationXML.MapValueOrNullable  (OICPNS.CommonTypes + "RemoteIdentification",
-                                                                            OICPNS.CommonTypes + "EvcoID",
-                                                                            EVCO_Id.Parse)
+                    UID = uid;
 
-                                 );
+                }
+
+                #endregion
+
+                #region Parse RFIDIdentification                [optional]
+
+                if (JSON.ParseOptionalJSON("RFIDIdentification",
+                                           "RFID identification",
+                                           OICPv2_3.RFIDIdentification.TryParse,
+                                           out RFIDIdentification RFIDIdentification,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse QRCodeIdentification              [optional]
+
+                if (JSON.ParseOptionalJSON("QRCodeIdentification",
+                                           "QR code identification",
+                                           OICPv2_3.QRCodeIdentification.TryParse,
+                                           out QRCodeIdentification? QRCodeIdentification,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse PlugAndChargeIdentification       [optional]
+
+                EVCO_Id? PnC_EVCOId = default;
+
+                if (JSON.ParseOptional("PlugAndChargeIdentification",
+                                       "plug & charge identification",
+                                       out JObject plugAndChargeIdentification,
+                                       out ErrorResponse))
+                {
+
+                    if (ErrorResponse != null)
+                        return false;
+
+                    if (!plugAndChargeIdentification.ParseMandatory("EvcoID",
+                                                                    "plug & charge identification -> EVCOId",
+                                                                    EVCO_Id.TryParse,
+                                                                    out EVCO_Id evcoId,
+                                                                    out ErrorResponse))
+                    {
+                        return false;
+                    }
+
+                    PnC_EVCOId = evcoId;
+
+                }
+
+                #endregion
+
+                #region Parse RemoteIdentification              [optional]
+
+                EVCO_Id? Remote_EVCOId = default;
+
+                if (JSON.ParseOptional("RemoteIdentification",
+                                       "remote identification",
+                                       out JObject RemoteIdentification,
+                                       out ErrorResponse))
+                {
+
+                    if (ErrorResponse != null)
+                        return false;
+
+                    if (!RFIDMifareFamilyIdentification.ParseMandatory("EvcoID",
+                                                                       "remote identification -> EVCOId",
+                                                                       EVCO_Id.TryParse,
+                                                                       out EVCO_Id evcoId,
+                                                                       out ErrorResponse))
+                    {
+                        return false;
+                    }
+
+                    Remote_EVCOId = evcoId;
+
+                }
+
+                #endregion
+
+
+                Identification = new Identification(UID,
+                                                    RFIDIdentification,
+                                                    QRCodeIdentification,
+                                                    PnC_EVCOId,
+                                                    Remote_EVCOId);
 
 
                 if (CustomIdentificationParser != null)
-                    Identification = CustomIdentificationParser(IdentificationXML,
+                    Identification = CustomIdentificationParser(JSON,
                                                                 Identification);
 
-                // Returns 'false' when nothing was found...
-                return Identification.RFIDId.                     HasValue ||
-                       Identification.RFIDIdentification.         HasValue ||
-                       Identification.QRCodeIdentification.       HasValue ||
-                       Identification.PlugAndChargeIdentification.HasValue ||
-                       Identification.RemoteIdentification.       HasValue;
+                return true;
 
             }
             catch (Exception e)
             {
-
-                OnException?.Invoke(DateTime.UtcNow, IdentificationXML, e);
-
-                Identification = null;
+                Identification  = default;
+                ErrorResponse   = "The given JSON representation of an identification is invalid: " + e.Message;
                 return false;
-
             }
 
         }
 
         #endregion
 
-        #region (static) TryParse(IdentificationText, out Identification, CustomIdentificationParser = null, OnException = null)
+        #region (static) TryParse(Text, out Identification, out ErrorResponse, CustomIdentificationParser = null)
 
         /// <summary>
-        /// Try to parse the given text-representation of an OICP identification.
+        /// Try to parse the given text representation of an identification.
         /// </summary>
-        /// <param name="IdentificationText">The text to parse.</param>
+        /// <param name="Text">The text to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        public static Boolean TryParse(String                                       IdentificationText,
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
+        public static Boolean TryParse(String                                       Text,
                                        out Identification                           Identification,
-                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-                                       OnExceptionDelegate                          OnException                      = null)
+                                       out String                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<Identification>  CustomIdentificationParser)
         {
 
             try
             {
 
-                if (TryParse(XDocument.Parse(IdentificationText).Root,
-                             out Identification,
-                             CustomIdentificationParser,
-                             CustomRFIDIdentificationParser,
-                             OnException))
-
-                    return true;
+                return TryParse(JObject.Parse(Text),
+                                out Identification,
+                                out ErrorResponse,
+                                CustomIdentificationParser);
 
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.UtcNow, IdentificationText, e);
+                Identification  = default;
+                ErrorResponse   = "The given text representation of an identification is invalid: " + e.Message;
+                return false;
             }
-
-            Identification = null;
-            return false;
-
-        }
-
-        #endregion
-
-        #region ToXML(XName = null, CustomIdentificationSerializer = null)
-
-        /// <summary>
-        /// Return a XML representation of this object.
-        /// </summary>
-        /// <param name="XName">The XML name to use.</param>
-        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        public XElement ToXML(XName                                        XName                            = null,
-                              CustomXMLSerializerDelegate<Identification>  CustomIdentificationSerializer   = null)
-
-        {
-
-            var XML = new XElement(XName ?? OICPNS.Authorization + "Identification",
-
-                          RFIDId.HasValue
-                              ? new XElement(OICPNS.CommonTypes + "RFIDMifareFamilyIdentification",
-                                    new XElement(OICPNS.CommonTypes + "UID",     RFIDId.ToString()))
-                              : null,
-
-                          RFIDIdentification.HasValue
-                              ? RFIDIdentification.  Value.ToXML()
-                              : null,
-
-                          QRCodeIdentification.HasValue
-                              ? QRCodeIdentification.Value.ToXML()
-                              : null,
-
-                          PlugAndChargeIdentification.HasValue
-                              ? new XElement(OICPNS.CommonTypes + "PlugAndChargeIdentification",
-                                    new XElement(OICPNS.CommonTypes + "EvcoID",  PlugAndChargeIdentification.ToString()))
-                              : null,
-
-                          RemoteIdentification.HasValue
-                              ? new XElement(OICPNS.CommonTypes + "RemoteIdentification",
-                                    new XElement(OICPNS.CommonTypes + "EvcoID",  RemoteIdentification.       ToString()))
-                              : null);
-
-            return CustomIdentificationSerializer != null
-                       ? CustomIdentificationSerializer(this, XML)
-                       : XML;
 
         }
 
@@ -538,8 +567,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("RFIDMifareFamilyIdentification",  RFIDId.                     Value.ToString())
                                : null,
 
-                           RFIDIdentification.HasValue
-                               ? new JProperty("RFIDIdentification",              RFIDIdentification.         Value.ToJSON())
+                           RFIDIdentification != null
+                               ? new JProperty("RFIDIdentification",              RFIDIdentification.               ToJSON())
                                : null,
 
                            QRCodeIdentification.HasValue
@@ -554,9 +583,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("RemoteIdentification",            RemoteIdentification.       Value.ToString())
                                : null);
 
-            return CustomIdentificationSerializer != null
-                       ? CustomIdentificationSerializer(this, JSON)
-                       : JSON;
+            var JSON2 = CustomIdentificationSerializer != null
+                            ? CustomIdentificationSerializer(this, JSON)
+                            : JSON;
+
+            return JSON2.HasValues
+                       ? JSON2
+                       : null;
 
         }
 
@@ -573,7 +606,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Identification Identification1, Identification Identification2)
+        public static Boolean operator == (Identification Identification1,
+                                           Identification Identification2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -581,7 +615,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) Identification1 == null) || ((Object) Identification2 == null))
+            if (Identification1 is null || Identification2 is null)
                 return false;
 
             return Identification1.Equals(Identification2);
@@ -598,8 +632,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Identification Identification1, Identification Identification2)
-            => !(Identification1 == Identification2);
+        public static Boolean operator != (Identification Identification1,
+                                           Identification Identification2)
+
+            => !(Identification1.Equals(Identification2));
 
         #endregion
 
@@ -611,10 +647,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Identification Identification1, Identification Identification2)
+        public static Boolean operator < (Identification Identification1,
+                                          Identification Identification2)
         {
 
-            if ((Object) Identification1 == null)
+            if (Identification1 is null)
                 throw new ArgumentNullException(nameof(Identification1), "The given identification must not be null!");
 
             return Identification1.CompareTo(Identification2) < 0;
@@ -631,7 +668,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Identification Identification1, Identification Identification2)
+        public static Boolean operator <= (Identification Identification1,
+                                           Identification Identification2)
+
             => !(Identification1 > Identification2);
 
         #endregion
@@ -644,10 +683,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Identification Identification1, Identification Identification2)
+        public static Boolean operator > (Identification Identification1,
+                                          Identification Identification2)
         {
 
-            if ((Object) Identification1 == null)
+            if (Identification1 is null)
                 throw new ArgumentNullException(nameof(Identification1), "The given identification must not be null!");
 
             return Identification1.CompareTo(Identification2) > 0;
@@ -664,7 +704,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Identification Identification1, Identification Identification2)
+        public static Boolean operator >= (Identification Identification1,
+                                           Identification Identification2)
+
             => !(Identification1 < Identification2);
 
         #endregion
@@ -680,17 +722,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
-        {
 
-            if (Object is null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
-
-            if (!(Object is Identification Identification))
-                throw new ArgumentException("The given object is not an identification identification!", nameof(Object));
-
-            return CompareTo(Identification);
-
-        }
+            => Object is Identification identification
+                   ? CompareTo(identification)
+                   : throw new ArgumentException("The given object is not an identification!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -709,8 +745,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
                 return RFIDId.                     Value.CompareTo(Identification.RFIDId.                     Value);
 
-            if (RFIDIdentification.         HasValue && Identification.RFIDIdentification.         HasValue)
-                return RFIDIdentification.         Value.CompareTo(Identification.RFIDIdentification.         Value);
+            if (RFIDIdentification != null           && Identification.RFIDIdentification != null)
+                return RFIDIdentification.               CompareTo(Identification.RFIDIdentification);
 
             if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
                 return QRCodeIdentification.       Value.CompareTo(Identification.QRCodeIdentification.       Value);
@@ -754,29 +790,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification">An identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Identification Identification)
-        {
 
-            if (Identification is null)
-                return false;
+            => !(Identification is null) &&
 
-            if (RFIDId.                     HasValue && Identification.RFIDId.                     HasValue)
-                return RFIDId.                     Value.Equals(Identification.RFIDId.                     Value);
+               ((!RFIDId.                     HasValue && !Identification.RFIDId.                     HasValue) ||
+                 (RFIDId.                     HasValue &&  Identification.RFIDId.                     HasValue && RFIDId.Value.                     Equals(Identification.RFIDId.Value))) &&
 
-            if (RFIDIdentification.         HasValue && Identification.RFIDIdentification.         HasValue)
-                return RFIDIdentification.         Value.Equals(Identification.RFIDIdentification.         Value);
+                ((RFIDIdentification == null           &&  Identification.RFIDIdentification == null) ||
+                 (RFIDIdentification != null           &&  Identification.RFIDIdentification != null           && RFIDIdentification.               Equals(Identification.RFIDIdentification))) &&
 
-            if (QRCodeIdentification.       HasValue && Identification.QRCodeIdentification.       HasValue)
-                return QRCodeIdentification.       Value.Equals(Identification.QRCodeIdentification.       Value);
+               ((!QRCodeIdentification.       HasValue && !Identification.QRCodeIdentification.       HasValue) ||
+                 (QRCodeIdentification.       HasValue &&  Identification.QRCodeIdentification.       HasValue && QRCodeIdentification.Value.       Equals(Identification.QRCodeIdentification.Value))) &&
 
-            if (PlugAndChargeIdentification.HasValue && Identification.PlugAndChargeIdentification.HasValue)
-                return PlugAndChargeIdentification.Value.Equals(Identification.PlugAndChargeIdentification.Value);
+               ((!PlugAndChargeIdentification.HasValue && !Identification.PlugAndChargeIdentification.HasValue) ||
+                 (PlugAndChargeIdentification.HasValue &&  Identification.PlugAndChargeIdentification.HasValue && PlugAndChargeIdentification.Value.Equals(Identification.PlugAndChargeIdentification.Value))) &&
 
-            if (RemoteIdentification.       HasValue && Identification.RemoteIdentification.       HasValue)
-                return RemoteIdentification.       Value.Equals(Identification.RemoteIdentification.       Value);
-
-            return ToString().Equals(Identification.ToString());
-
-        }
+               ((!RemoteIdentification.       HasValue && !Identification.RemoteIdentification.       HasValue) ||
+                 (RemoteIdentification.       HasValue &&  Identification.RemoteIdentification.       HasValue && RemoteIdentification.Value.       Equals(Identification.RemoteIdentification.Value)));
 
         #endregion
 
@@ -789,26 +819,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The HashCode of this object.</returns>
         public override Int32 GetHashCode()
-        {
 
-            if (RFIDId.HasValue)
-                return RFIDId.GetHashCode();
-
-            if (RFIDIdentification.HasValue)
-                return RFIDIdentification.GetHashCode();
-
-            if (QRCodeIdentification.HasValue)
-                return QRCodeIdentification.GetHashCode();
-
-            if (PlugAndChargeIdentification.HasValue)
-                return PlugAndChargeIdentification.GetHashCode();
-
-            if (RemoteIdentification.HasValue)
-                return RemoteIdentification.GetHashCode();
-
-            return 0;
-
-        }
+            => (RFIDId?.                     GetHashCode() ?? 0) * 11 ^
+               (RFIDIdentification?.         GetHashCode() ?? 0) *  7 ^
+               (QRCodeIdentification?.       GetHashCode() ?? 0) *  5 ^
+               (PlugAndChargeIdentification?.GetHashCode() ?? 0) *  3 ^
+               (RemoteIdentification?.       GetHashCode() ?? 0);
 
         #endregion
 
@@ -823,8 +839,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (RFIDId.HasValue)
                 return RFIDId.                     Value.       ToString();
 
-            if (RFIDIdentification.HasValue)
-                return RFIDIdentification.         Value.UID.   ToString();
+            if (RFIDIdentification != null)
+                return RFIDIdentification.               UID.   ToString();
 
             if (QRCodeIdentification.HasValue)
                 return QRCodeIdentification.       Value.EVCOId.ToString();
