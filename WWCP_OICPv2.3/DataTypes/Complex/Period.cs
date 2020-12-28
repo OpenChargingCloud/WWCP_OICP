@@ -282,6 +282,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this object.
+        /// </summary>
+        public Period Clone
+
+            => new Period(Begin,
+                          End);
+
+        #endregion
+
 
         #region Operator overloading
 

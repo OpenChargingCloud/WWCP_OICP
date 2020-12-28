@@ -318,7 +318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public SignedMeteringValue Clone
 
-            => new SignedMeteringValue(Value,
+            => new SignedMeteringValue(new String(Value.ToCharArray()),
                                        MeteringStatus,
                                        JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 

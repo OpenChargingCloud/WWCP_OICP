@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class FalseTrueAutoExtentions
     {
 
-        #region Parse(AccessibilityType)
+        #region Parse   (AccessibilityType)
 
         /// <summary>
         /// Parses the given text-representation of a FalseTrueAuto type.
@@ -41,8 +41,42 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => Text?.Trim() switch {
                    "false"  => FalseTrueAuto.False,
                    "true"   => FalseTrueAuto.True,
-                   _        => FalseTrueAuto.Auto,
+                   "auto"   => FalseTrueAuto.Auto,
+                   _        => throw new ArgumentException("Undefined FalseTrueAuto '" + Text + "'!")
                };
+
+        #endregion
+
+        #region TryParse(AccessibilityType, out FalseTrueAuto)
+
+        /// <summary>
+        /// Parses the given text-representation of a FalseTrueAuto type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
+        /// <param name="FalseTrueAuto">The parsed FalseTrueAuto.</param>
+        public static Boolean TryParse(String Text, out FalseTrueAuto FalseTrueAuto)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "false":
+                    FalseTrueAuto = FalseTrueAuto.False;
+                    return true;
+ 
+                case "true":
+                    FalseTrueAuto = FalseTrueAuto.True;
+                    return true;
+
+                case "auto":
+                    FalseTrueAuto = FalseTrueAuto.Auto;
+                    return false;
+
+                default:
+                    FalseTrueAuto = FalseTrueAuto.Auto;
+                    return false;
+
+            }
+        }
 
         #endregion
 

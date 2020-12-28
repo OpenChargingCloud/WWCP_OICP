@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this hash value.
+        /// Clone this object.
         /// </summary>
         public Hash_Value Clone
 

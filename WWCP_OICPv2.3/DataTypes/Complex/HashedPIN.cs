@@ -286,6 +286,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this object.
+        /// </summary>
+        public HashedPIN Clone
+
+            => new HashedPIN(Value.Clone,
+                             Function);
+
+        #endregion
+
 
         #region Operator overloading
 

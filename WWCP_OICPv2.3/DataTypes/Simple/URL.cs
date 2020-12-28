@@ -229,9 +229,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new URL(
                    new String(InternalId?.ToCharArray()),
                    Protocol,
-                   Hostname,
-                   Port,
-                   Path
+                   Hostname.Clone,
+                   Port?.   Clone,
+                   Path.    Clone
                );
 
         #endregion

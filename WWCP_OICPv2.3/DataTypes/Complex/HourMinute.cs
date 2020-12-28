@@ -153,12 +153,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this HourMinute.
+        /// Clone this object.
         /// </summary>
         public HourMinute Clone
 
             => new HourMinute(Hour,
-                           Minute);
+                              Minute);
 
         #endregion
 

@@ -90,14 +90,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="MeteringSignatureURL">In this field CPO can also provide an url to a external data set. This data set can give calibration law information which can be simply added to the end customer invoice of the EMP.</param>
         /// <param name="MeteringSignatureEncodingFormat">Encoding format of the metering signature data as well as the version.</param>
         /// <param name="SignedMeteringValuesVerificationInstruction">Additional information (e.g. instruction on how to use the transparency software).</param>
-        /// 
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public CalibrationLawVerification(String  CalibrationLawCertificateId                   = null,
                                           String  PublicKey                                     = null,
                                           URL?    MeteringSignatureURL                          = null,
                                           String  MeteringSignatureEncodingFormat               = null,
                                           String  SignedMeteringValuesVerificationInstruction   = null,
-
                                           JObject CustomData                                    = null)
 
         {
@@ -107,7 +105,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.MeteringSignatureURL                         = MeteringSignatureURL;
             this.MeteringSignatureEncodingFormat              = MeteringSignatureEncodingFormat;
             this.SignedMeteringValuesVerificationInstruction  = SignedMeteringValuesVerificationInstruction;
-
             this.CustomData                                   = CustomData;
 
         }
@@ -351,15 +348,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this calibration law verification.
+        /// Clone this object.
         /// </summary>
         public CalibrationLawVerification Clone
 
-            => new CalibrationLawVerification(new String(CalibrationLawCertificateId.                ToCharArray()),
-                                              new String(PublicKey.                                  ToCharArray()),
-                                              MeteringSignatureURL,
-                                              new String(MeteringSignatureEncodingFormat.            ToCharArray()),
-                                              new String(SignedMeteringValuesVerificationInstruction.ToCharArray()),
+            => new CalibrationLawVerification(CalibrationLawCertificateId                 != null ? new String(CalibrationLawCertificateId.                ToCharArray()) : null,
+                                              PublicKey                                   != null ? new String(PublicKey.                                  ToCharArray()) : null,
+                                              MeteringSignatureURL?.Clone,
+                                              MeteringSignatureEncodingFormat             != null ? new String(MeteringSignatureEncodingFormat.            ToCharArray()) : null,
+                                              SignedMeteringValuesVerificationInstruction != null ? new String(SignedMeteringValuesVerificationInstruction.ToCharArray()) : null,
                                               JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
         #endregion

@@ -53,6 +53,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Optional unstructured information about the opening time.
         /// </summary>
+        [Optional]
         public readonly String               UnstructuredText    { get; }
 
         /// <summary>
@@ -327,6 +328,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        : JSON;
 
         }
+
+        #endregion
+
+        #region Clone
+
+        /// <summary>
+        /// Clone this energy source.
+        /// </summary>
+        public OpeningTime Clone
+
+            => new OpeningTime(Periods.SafeSelect(period => period.Clone).ToArray(),
+                               On,
+                               UnstructuredText != null ? new String(UnstructuredText.ToCharArray()) : null,
+                               JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
         #endregion
 

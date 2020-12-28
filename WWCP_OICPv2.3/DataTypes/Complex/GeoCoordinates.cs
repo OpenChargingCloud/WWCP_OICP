@@ -777,6 +777,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this energy source.
+        /// </summary>
+        public GeoCoordinates Clone
+
+            => new GeoCoordinates(Latitude,
+                                  Longitude,
+                                  GeoFormat);
+
+        #endregion
+
+
         #region (private) ToDegreeMinuteSeconds(Value)
 
         private String ToDegreeMinuteSeconds(Double Value)

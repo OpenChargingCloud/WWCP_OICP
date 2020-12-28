@@ -516,6 +516,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this energy source.
+        /// </summary>
+        public Address Clone
+
+            => new Address(Country.Clone,
+                           City        != null ? new String(City.       ToCharArray()) : null,
+                           Street      != null ? new String(Street.     ToCharArray()) : null,
+                           PostalCode  != null ? new String(PostalCode. ToCharArray()) : null,
+                           HouseNumber != null ? new String(HouseNumber.ToCharArray()) : null,
+                           Floor       != null ? new String(Floor.      ToCharArray()) : null,
+                           Region      != null ? new String(Region.     ToCharArray()) : null,
+                           ParkingFacility,
+                           ParkingSpot != null ? new String(ParkingSpot.ToCharArray()) : null,
+                           TimeZone?.Clone,
+                           JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+
+        #endregion
+
 
         #region Operator overloading
 

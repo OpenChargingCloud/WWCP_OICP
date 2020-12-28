@@ -397,6 +397,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this energy source.
+        /// </summary>
+        public ChargingFacility Clone
+
+            => new ChargingFacility(PowerType,
+                                    Power,
+                                    Voltage,
+                                    Amperage,
+                                    ChargingModes?.ToArray(),
+                                    JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+
+        #endregion
+
 
         #region Operator overloading
 

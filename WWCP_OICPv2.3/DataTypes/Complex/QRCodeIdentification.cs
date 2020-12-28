@@ -366,6 +366,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this object.
+        /// </summary>
+        public QRCodeIdentification Clone
+
+            => new QRCodeIdentification(EVCOId.    Clone,
+                                        HashedPIN?.Clone,
+                                        PIN?.      Clone);
+
+        #endregion
+
 
         #region Operator overloading
 

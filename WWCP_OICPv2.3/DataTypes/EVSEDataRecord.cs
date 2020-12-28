@@ -799,7 +799,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("DynamicInfoAvailable",
                                          "dynamic info available",
-                                         FalseTrueAuto.TryParse,
+                                         FalseTrueAutoExtentions.TryParse,
                                          out FalseTrueAuto DynamicInfoAvailable,
                                          out ErrorResponse))
                 {
@@ -1062,7 +1062,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                     ChargingStationId,
                                                     ChargingPoolId,
-                                                    null,
+                                                    null,//ChargingStationName,
                                                     HardwareManufacturer,
                                                     ChargingStationImageURL,
                                                     SubOperatorName,
@@ -1072,8 +1072,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                     EnvironmentalImpact,
                                                     MaxCapacity,
                                                     AccessibilityLocationType,
-                                                    null,
-                                                    null,
+                                                    null,//AdditionalInfo,
+                                                    null,//ChargingStationLocationReference,
                                                     GeoChargingPointEntrance,
                                                     OpeningTimes,
                                                     HubOperatorId,
@@ -1270,22 +1270,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this dynamic data of an EVSE.
+        /// Clone this object.
         /// </summary>
         public EVSEDataRecord Clone
 
-            => new EVSEDataRecord(Id,
+            => new EVSEDataRecord(Id.                       Clone,
 
-                                  Address,
-                                  PlugTypes,
-                                  ChargingFacilities,
+                                  Address.                  Clone,
+                                  PlugTypes.                ToArray(),
+                                  ChargingFacilities.       ToArray(),
                                   RenewableEnergy,
                                   CalibrationLawDataAvailability,
-                                  AuthenticationModes,
-                                  PaymentOptions,
-                                  ValueAddedServices,
+                                  AuthenticationModes.      ToArray(),
+                                  PaymentOptions.           ToArray(),
+                                  ValueAddedServices.       ToArray(),
                                   Accessibility,
-                                  HotlinePhoneNumber,
+                                  HotlinePhoneNumber.       Clone,
                                   IsOpen24Hours,
                                   IsHubjectCompatible,
                                   DynamicInfoAvailable,
@@ -1293,24 +1293,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   DeltaType,
                                   LastUpdate,
 
-                                  ChargingStationId,
-                                  ChargingPoolId,
-                                  ChargingStationName,
-                                  HardwareManufacturer,
-                                  ChargingStationImageURL,
-                                  SubOperatorName,
-                                  GeoCoordinates,
+                                  ChargingStationId?.       Clone,
+                                  ChargingPoolId?.          Clone,
+                                  null,
+                                  HardwareManufacturer != null ? new String(HardwareManufacturer.ToCharArray()) : null,
+                                  ChargingStationImageURL?. Clone,
+                                  SubOperatorName      != null ? new String(SubOperatorName.     ToCharArray()) : null,
+                                  GeoCoordinates?.          Clone,
                                   DynamicPowerLevel,
-                                  EnergySources,
-                                  EnvironmentalImpact,
+                                  EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray(),
+                                  EnvironmentalImpact?.     Clone,
                                   MaxCapacity,
                                   AccessibilityLocationType,
-                                  AdditionalInfo,
-                                  ChargingStationLocationReference,
-                                  GeoChargingPointEntrance,
-                                  OpeningTimes,
-                                  HubOperatorId,
-                                  ClearingHouseId,
+                                  null,
+                                  null,
+                                  GeoChargingPointEntrance?.Clone,
+                                  OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray(),
+                                  HubOperatorId?.           Clone,
+                                  ClearingHouseId?.         Clone,
 
                                   JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 

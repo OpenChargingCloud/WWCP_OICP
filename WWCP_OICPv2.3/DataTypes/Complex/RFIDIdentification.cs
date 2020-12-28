@@ -389,10 +389,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public RFIDIdentification Clone
 
-            => new RFIDIdentification(UID,
+            => new RFIDIdentification(UID.Clone,
                                       RFIDType,
-                                      EVCOId,
-                                      new String(PrintedNumber.ToCharArray()),
+                                      EVCOId?.Clone,
+                                      PrintedNumber != null ? new String(PrintedNumber.ToCharArray()) : null,
                                       ExpiryDate,
                                       JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
