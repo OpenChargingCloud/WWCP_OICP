@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// A RFID identification.
         /// </summary>
-        public RFIDIdentification?    RFIDIdentification             { get; }
+        public RFIDIdentification     RFIDIdentification             { get; }
 
         /// <summary>
         /// An e-mobility account identification (EVCO Id) and a (hashed) PIN.
@@ -608,6 +608,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   PlugAndChargeIdentification?.Clone,
                                   RemoteIdentification?.       Clone,
                                   CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+
+        #endregion
+
+
+        #region IsNullOrEmpty
+
+        /// <summary>
+        /// Indicates whether this identification is null or empty.
+        /// </summary>
+        public Boolean IsNullOrEmpty
+
+            => !RFIDId.                     HasValue &&
+                RFIDIdentification          == null  &&
+               !QRCodeIdentification.       HasValue &&
+               !PlugAndChargeIdentification.HasValue &&
+               !RemoteIdentification.       HasValue;
 
         #endregion
 
