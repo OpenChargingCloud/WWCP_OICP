@@ -267,7 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EnergySource> CustomEnergySourceSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EnergySource>  CustomEnergySourceSerializer   = null)
         {
 
             var JSON = JSONObject.Create(

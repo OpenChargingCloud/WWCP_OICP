@@ -392,9 +392,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new RFIDIdentification(UID.Clone,
                                       RFIDType,
                                       EVCOId?.Clone,
-                                      PrintedNumber != null ? new String(PrintedNumber.ToCharArray()) : null,
+                                      PrintedNumber != null ? new String(PrintedNumber.ToCharArray())                             : null,
                                       ExpiryDate,
-                                      JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+                                      CustomData    != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

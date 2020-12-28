@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     Voltage,
                                     Amperage,
                                     ChargingModes?.ToArray(),
-                                    JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+                                    CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

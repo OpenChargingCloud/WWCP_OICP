@@ -357,7 +357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               MeteringSignatureURL?.Clone,
                                               MeteringSignatureEncodingFormat             != null ? new String(MeteringSignatureEncodingFormat.            ToCharArray()) : null,
                                               SignedMeteringValuesVerificationInstruction != null ? new String(SignedMeteringValuesVerificationInstruction.ToCharArray()) : null,
-                                              JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+                                              CustomData                                  != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))   : null);
 
         #endregion
 

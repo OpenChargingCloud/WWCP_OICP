@@ -313,7 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new EVSEStatusRecord(Id,
                                     Status,
-                                    JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+                                    CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

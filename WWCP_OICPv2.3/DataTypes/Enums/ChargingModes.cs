@@ -31,7 +31,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class ChargingModesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a charging mode.
@@ -39,38 +39,54 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">A text-representation of a charging mode.</param>
         public static ChargingModes Parse(String Text)
 
-            => Text.Trim() switch {
+            => Text?.Trim() switch {
                    "Mode_1"   => ChargingModes.Mode_1,
                    "Mode_2"   => ChargingModes.Mode_2,
                    "Mode_3"   => ChargingModes.Mode_3,
                    "Mode_4"   => ChargingModes.Mode_4,
                    "CHAdeMO"  => ChargingModes.CHAdeMO,
-                   _          => ChargingModes.Unspecified,
+                   _          => throw new ArgumentException("Undefined charging mode '" + Text + "'!")
                };
 
         #endregion
 
-        #region Parse(Text)
+        #region TryParse(Text, out ChargingMode)
 
         /// <summary>
         /// Parses the given text-representation of a charging mode.
         /// </summary>
         /// <param name="Text">A text-representation of a charging mode.</param>
-        public static Boolean TryParse(String Text, out ChargingModes ChargingMode, out String ErrorResponse)
+        /// <param name="ChargingMode">The parsed charging mode.</param>
+        public static Boolean TryParse(String Text, out ChargingModes ChargingMode)
         {
-
-            ErrorResponse = default;
-
-            switch (Text.Trim())
+            switch (Text?.Trim())
             {
-                case "Mode_1":  ChargingMode = ChargingModes.Mode_1;      return true;
-                case "Mode_2":  ChargingMode = ChargingModes.Mode_2;      return true;
-                case "Mode_3":  ChargingMode = ChargingModes.Mode_3;      return true;
-                case "Mode_4":  ChargingMode = ChargingModes.Mode_4;      return true;
-                case "CHAdeMO": ChargingMode = ChargingModes.CHAdeMO;     return true;
-                default:        ChargingMode = ChargingModes.Unspecified; return false;
-            }
 
+                case "Mode_1":
+                    ChargingMode = ChargingModes.Mode_1;
+                    return true;
+
+                case "Mode_2":
+                    ChargingMode = ChargingModes.Mode_2;
+                    return true;
+
+                case "Mode_3":
+                    ChargingMode = ChargingModes.Mode_3;
+                    return true;
+
+                case "Mode_4":
+                    ChargingMode = ChargingModes.Mode_4;
+                    return true;
+
+                case "CHAdeMO":
+                    ChargingMode = ChargingModes.CHAdeMO;
+                    return true;
+
+                default:
+                    ChargingMode = ChargingModes.Mode_1;
+                    return false;
+
+            }
         }
 
         #endregion
@@ -102,11 +118,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum ChargingModes
     {
-
-        /// <summary>
-        /// Unknown charging mode.
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// IEC 61851-1 Mode 1

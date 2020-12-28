@@ -726,7 +726,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GeoCoordinates> CustomGeoCoordinatesSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GeoCoordinates>  CustomGeoCoordinatesSerializer   = null)
         {
 
             JObject JSON = default;

@@ -19,13 +19,11 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -329,9 +327,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public OperatorEVSEData Clone
 
-            => new OperatorEVSEData(Id,
-                                    Status,
-                                    JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+            => new OperatorEVSEData(EVSEDataRecords.SafeSelect(evseDataRecord => evseDataRecord.Clone).ToArray(),
+                                    OperatorId.Clone,
+                                    OperatorName != null ? new String(OperatorName.ToCharArray())                              : null,
+                                    CustomData   != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

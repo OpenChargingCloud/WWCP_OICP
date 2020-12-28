@@ -607,7 +607,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   QRCodeIdentification?.       Clone,
                                   PlugAndChargeIdentification?.Clone,
                                   RemoteIdentification?.       Clone,
-                                  JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+                                  CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

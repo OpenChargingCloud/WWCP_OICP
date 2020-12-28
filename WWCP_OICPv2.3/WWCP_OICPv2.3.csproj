@@ -59,6 +59,7 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
+    <Compile Include="DataTypes\Complex\I18NText.cs" />
     <Compile Include="DataTypes\Complex\Identification.cs" />
     <Compile Include="DataTypes\Complex\HashedPIN.cs" />
     <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />

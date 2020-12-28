@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EnvironmentalImpact> CustomEnvironmentalImpactSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null)
         {
 
             if (!CO2Emission. HasValue &&
