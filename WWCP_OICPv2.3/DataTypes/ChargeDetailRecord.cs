@@ -237,401 +237,476 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv       = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:Authorization = "http://www.hubject.com/b2b/services/authorization/v2.0"
-        //                   xmlns:CommonTypes   = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        // [...]
-        //
-        //    <Authorization:eRoamingChargeDetailRecord>
-        //
-        //       <Authorization:SessionID>de164e08-1c88-1293-537b-be355041070e</Authorization:SessionID>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:PartnerProductID>AC1</Authorization:PartnerProductID>
-        //
-        //       <Authorization:EvseID>DE*GEF*E123456789*1</Authorization:EvseID>
-        //
-        //       <Authorization:Identification>
-        //         <!--You have a CHOICE of the next 4 items at this level-->
-        //
-        //         <CommonTypes:RFIDmifarefamilyIdentification>
-        //            <CommonTypes:UID>08152305</CommonTypes:UID>
-        //         </CommonTypes:RFIDmifarefamilyIdentification>
-        //
-        //         <CommonTypes:QRCodeIdentification>
-        //
-        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //
-        //            <!--You have a CHOICE of the next 2 items at this level-->
-        //            <CommonTypes:PIN>1234</CommonTypes:PIN>
-        //
-        //            <CommonTypes:HashedPIN>
-        //               <CommonTypes:Value>f7cf02826ba923e3d31c1c3015899076</CommonTypes:Value>
-        //               <CommonTypes:Function>MD5|SHA-1</CommonTypes:Function>
-        //               <CommonTypes:Salt>22c7c09370af2a3f07fe8665b140498a</CommonTypes:Salt>
-        //            </CommonTypes:HashedPIN>
-        //
-        //         </CommonTypes:QRCodeIdentification>
-        //
-        //         <CommonTypes:PlugAndChargeIdentification>
-        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //         </CommonTypes:PlugAndChargeIdentification>
-        //
-        //         <CommonTypes:RemoteIdentification>
-        //            <CommonTypes:EVCOID>DE*GDF*01234ABCD*Z</CommonTypes:EVCOID>
-        //         </CommonTypes:RemoteIdentification>
-        //
-        //       </Authorization:Identification>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:ChargingStart>2015-10-23T15:45:30.000Z</Authorization:ChargingStart>
-        //       <!--Optional:-->
-        //       <Authorization:ChargingEnd>2015-10-23T16:59:31.000Z</Authorization:ChargingEnd>
-        //
-        //       <Authorization:SessionStart>2015-10-23T15:45:00.000Z</Authorization:SessionStart>
-        //       <Authorization:SessionEnd>2015-10-23T17:45:00.000Z</Authorization:SessionEnd>
-        //
-        //       <!--Optional: \d\.\d{0,3} -->
-        //       <Authorization:MeterValueStart>123.456</Authorization:MeterValueStart>
-        //       <!--Optional: \d\.\d{0,3} -->
-        //       <Authorization:MeterValueEnd>234.567</Authorization:MeterValueEnd>
-        //       <!--Optional:-->
-        //       <Authorization:MeterValueInBetween>
-        //         <!--1 or more repetitions: \d\.\d{0,3} -->
-        //         <Authorization:MeterValue>123.456</Authorization:MeterValue>
-        //         <Authorization:MeterValue>189.768</Authorization:MeterValue>
-        //         <Authorization:MeterValue>223.312</Authorization:MeterValue>
-        //         <Authorization:MeterValue>234.560</Authorization:MeterValue>
-        //         <Authorization:MeterValue>234.567</Authorization:MeterValue>
-        //       </Authorization:MeterValueInBetween>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:ConsumedEnergy>111.111</Authorization:ConsumedEnergy>
-        //       <!--Optional:-->
-        //       <Authorization:MeteringSignature>?</Authorization:MeteringSignature>
-        //
-        //       <!--Optional:-->
-        //       <Authorization:HubOperatorID>?</Authorization:HubOperatorID>
-        //       <!--Optional:-->
-        //       <Authorization:HubProviderID>?</Authorization:HubProviderID>
-        //
-        //    </Authorization:eRoamingChargeDetailRecord>
-        //
-        // [...]
-        //
-        // </soapenv:Envelope>
+        // {
+        //     "CPOPartnerSessionID":                               "string",
+        //     "CalibrationLawVerificationInfo": {
+        //         "CalibrationLawCertificateID":                   "string",
+        //         "PublicKey":                                     "string",
+        //         "MeteringSignatureUrl":                          "string",
+        //         "MeteringSignatureEncodingFormat":               "string",
+        //         "SignedMeteringValuesVerificationInstruction":   "string"
+        //     },
+        //     "ChargingEnd":                                       "2020-12-24T07:17:30.354Z",
+        //     "ChargingStart":                                     "2020-12-24T07:17:30.354Z",
+        //     "ConsumedEnergy":                                     0,
+        //     "EMPPartnerSessionID":                               "string",
+        //     "EvseID":                                            "string",
+        //     "HubOperatorID":                                     "string",
+        //     "HubProviderID":                                     "string",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":                                       "string"
+        //         },
+        //         "QRCodeIdentification": {
+        //             "EvcoID":                                    "string",
+        //             "HashedPIN": {
+        //                 "Function":                              "Bcrypt",
+        //                 "LegacyHashData": {
+        //                     "Function":                          "MD5",
+        //                     "Salt":                              "string",
+        //                     "Value":                             "string"
+        //                 },
+        //                 "Value":                                 "string"
+        //             },
+        //             "PIN":                                       "string"
+        //         },
+        //         "PlugAndChargeIdentification": {
+        //             "EvcoID":                                    "string"
+        //         },
+        //         "RemoteIdentification": {
+        //             "EvcoID":                                    "string"
+        //         },
+        //         "RFIDIdentification": {
+        //             "EvcoID":                                    "string",
+        //             "ExpiryDate":                                "2020-12-24T07:17:30.354Z",
+        //             "PrintedNumber":                             "string",
+        //             "RFID":                                      "mifareCls",
+        //             "UID":                                       "string"
+        //         }
+        //     },
+        //     "MeterValueEnd":                                      0,
+        //     "MeterValueInBetween": {
+        //         "meterValues":                                   [ 0 ]
+        //     },
+        //     "MeterValueStart":                                    0,
+        //     "PartnerProductID":                                  "string",
+        //     "SessionEnd":                                        "2020-12-24T07:17:30.354Z",
+        //     "SessionID":                                         "string",
+        //     "SessionStart":                                      "2020-12-24T07:17:30.354Z",
+        //     "SignedMeteringValues": [{
+        //         "SignedMeteringValue":                           "string",
+        //         "MeteringStatus":                                "Start"
+        // 
+        //     }]
+        // }
 
         #endregion
 
-        //#region (static) Parse   (ChargeDetailRecordXML,  ..., OnException = null)
-
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP charge detail record.
-        ///// </summary>
-        ///// <param name="ChargeDetailRecordXML">The XML to parse.</param>
-        ///// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        ///// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        ///// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static ChargeDetailRecord Parse(XElement                                     ChargeDetailRecordXML,
-        //                                       CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-        //                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-        //                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-        //                                       OnExceptionDelegate                          OnException                      = null)
-        //{
-
-        //    if (TryParse(ChargeDetailRecordXML,
-        //                 out ChargeDetailRecord _ChargeDetailRecord,
-        //                 CustomChargeDetailRecordParser,
-        //                 CustomIdentificationParser,
-        //                 CustomRFIDIdentificationParser,
-        //                 OnException))
-
-        //        return _ChargeDetailRecord;
-
-        //    return null;
-
-        //}
-
-        //#endregion
-
-        //#region (static) Parse   (ChargeDetailRecordText, ..., OnException = null)
-
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP charge detail record.
-        ///// </summary>
-        ///// <param name="ChargeDetailRecordText">The text to parse.</param>
-        ///// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        ///// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        ///// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static ChargeDetailRecord Parse(String                                       ChargeDetailRecordText,
-        //                                       CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-        //                                       CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-        //                                       CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-        //                                       OnExceptionDelegate                          OnException                      = null)
-        //{
+        #region (static) Parse   (JSON, CustomChargeDetailRecordParser = null)
+
+        /// <summary>
+        /// Parse the given JSON representation of a charge detail record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
+        public static ChargeDetailRecord Parse(JObject                                      JSON,
+                                           CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out ChargeDetailRecord chargeDetailRecord,
+                         out String             ErrorResponse,
+                         CustomChargeDetailRecordParser))
+            {
+                return chargeDetailRecord;
+            }
+
+            throw new ArgumentException("The given JSON representation of a charge detail record is invalid: " + ErrorResponse, nameof(JSON));
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (Text, CustomChargeDetailRecordParser = null)
+
+        /// <summary>
+        /// Parse the given text representation of a charge detail record.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
+        public static ChargeDetailRecord Parse(String                                           Text,
+                                               CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out ChargeDetailRecord chargeDetailRecord,
+                         out String             ErrorResponse,
+                         CustomChargeDetailRecordParser))
+            {
+                return chargeDetailRecord;
+            }
+
+            throw new ArgumentException("The given text representation of a charge detail record is invalid: " + ErrorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, out ChargeDetailRecord, out ErrorResponse, CustomChargeDetailRecordParser = null)
+
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a charge detail record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject                 JSON,
+                                       out ChargeDetailRecord  ChargeDetailRecord,
+                                       out String              ErrorResponse)
+
+            => TryParse(JSON,
+                        out ChargeDetailRecord,
+                        out ErrorResponse,
+                        null);
+
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a charge detail record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
+        public static Boolean TryParse(JObject                                          JSON,
+                                       out ChargeDetailRecord                           ChargeDetailRecord,
+                                       out String                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser)
+        {
+
+            try
+            {
+
+                ChargeDetailRecord = default;
+
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
+
+                #region Parse SessionId                         [mandatory]
+
+                if (!JSON.ParseMandatory("SessionID",
+                                         "session identification",
+                                         Session_Id.TryParse,
+                                         out Session_Id SessionId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse EVSEId                            [mandatory]
 
-        //    if (TryParse(ChargeDetailRecordText,
-        //                 out ChargeDetailRecord _ChargeDetailRecord,
-        //                 CustomChargeDetailRecordParser,
-        //                 CustomIdentificationParser,
-        //                 CustomRFIDIdentificationParser,
-        //                 OnException))
+                if (!JSON.ParseMandatory("EvseID",
+                                         "EVSE identification",
+                                         EVSE_Id.TryParse,
+                                         out EVSE_Id EVSEId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Identification                    [mandatory]
+
+                if (!JSON.ParseMandatoryJSON2("Identification",
+                                              "identification",
+                                              OICPv2_3.Identification.TryParse,
+                                              out Identification Identification,
+                                              out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse SessionStart                      [mandatory]
+
+                if (!JSON.ParseMandatory("SessionStart",
+                                         "session start",
+                                         out DateTime SessionStart,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse SessionEnd                        [mandatory]
+
+                if (!JSON.ParseMandatory("SessionEnd",
+                                         "session end",
+                                         out DateTime SessionEnd,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingStart                     [mandatory]
+
+                if (!JSON.ParseMandatory("ChargingStart",
+                                         "charging start",
+                                         out DateTime ChargingStart,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingEnd                       [mandatory]
+
+                if (!JSON.ParseMandatory("ChargingEnd",
+                                         "charging start",
+                                         out DateTime ChargingEnd,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ConsumedEnergy                    [mandatory]
+
+                if (!JSON.ParseMandatory("ConsumedEnergy",
+                                         "consumed energy",
+                                         out Decimal ConsumedEnergy,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse PartnerProductId                  [optional]
+
+                if (JSON.ParseOptional("PartnerProductID",
+                                       "partner product identification",
+                                       PartnerProduct_Id.TryParse,
+                                       out PartnerProduct_Id? PartnerProductId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse CPOPartnerSessionId               [optional]
+
+                if (JSON.ParseOptional("CPOPartnerSessionID",
+                                       "CPO product session identification",
+                                       CPOPartnerSession_Id.TryParse,
+                                       out CPOPartnerSession_Id? CPOPartnerSessionId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse EMPPartnerSessionId               [optional]
+
+                if (JSON.ParseOptional("EMPPartnerSessionID",
+                                       "EMP product session identification",
+                                       EMPPartnerSession_Id.TryParse,
+                                       out EMPPartnerSession_Id? EMPPartnerSessionId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //        return _ChargeDetailRecord;
+                #endregion
 
-        //    return null;
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(ChargeDetailRecordXML,  out ChargeDetailRecord, ..., OnException = null)
-
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP charge detail record.
-        ///// </summary>
-        ///// <param name="ChargeDetailRecordXML">The XML to parse.</param>
-        ///// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        ///// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        ///// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        ///// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(XElement                                     ChargeDetailRecordXML,
-        //                               out ChargeDetailRecord                       ChargeDetailRecord,
-        //                               CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-        //                               CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-        //                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-        //                               OnExceptionDelegate                          OnException                      = null)
-        //{
-
-        //    try
-        //    {
-
-        //        if (ChargeDetailRecordXML.Name != OICPNS.Authorization + "eRoamingChargeDetailRecord")
-        //            throw new Exception("Invalid eRoamingChargeDetailRecord XML!");
-
-        //        var Identification = ChargeDetailRecordXML.MapElementOrFail(OICPNS.Authorization + "Identification",
-        //                                                                    (xml, e) => OICPv2_2.Identification.Parse(xml,
-        //                                                                                                              CustomIdentificationParser,
-        //                                                                                                              CustomRFIDIdentificationParser,
-        //                                                                                                              e),
-        //                                                                    OnException);
-
-        //        ChargeDetailRecord = new ChargeDetailRecord(
-
-        //                                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "EvseID",
-        //                                                                             EVSE_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionID",
-        //                                                                             Session_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionStart",
-        //                                                                             DateTime.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrFail       (OICPNS.Authorization + "SessionEnd",
-        //                                                                             DateTime.Parse),
-
-        //                                 Identification,
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "PartnerProductID",
-        //                                                                             PartnerProduct_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "CPOPartnerSessionID",
-        //                                                                             CPOPartnerSession_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "EMPPartnerSessionID",
-        //                                                                             EMPPartnerSession_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ChargingStart",
-        //                                                                             DateTime.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ChargingEnd",
-        //                                                                             DateTime.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueStart",
-        //                                                                             Decimal.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "MeterValueEnd",
-        //                                                                             Decimal.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValues            (OICPNS.Authorization + "MeterValuesInBetween",
-        //                                                                             OICPNS.Authorization + "MeterValue",
-        //                                                                             Decimal.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "ConsumedEnergy",
-        //                                                                             Decimal.Parse),
-
-        //                                 ChargeDetailRecordXML.ElementValueOrDefault(OICPNS.Authorization + "MeteringSignature"),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "HubOperatorID",
-        //                                                                             HubOperator_Id.Parse),
-
-        //                                 ChargeDetailRecordXML.MapValueOrNullable   (OICPNS.Authorization + "HubProviderID",
-        //                                                                             HubProvider_Id.Parse)
-
-        //                             );
-
-        //        if (CustomChargeDetailRecordParser != null)
-        //            ChargeDetailRecord = CustomChargeDetailRecordParser(ChargeDetailRecordXML, ChargeDetailRecord);
-
-        //        return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordXML, e);
-
-        //        ChargeDetailRecord = null;
-        //        return false;
-
-        //    }
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(ChargeDetailRecordText, out ChargeDetailRecord, ..., OnException = null)
-
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP charge detail record.
-        ///// </summary>
-        ///// <param name="ChargeDetailRecordText">The text to parse.</param>
-        ///// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        ///// <param name="CustomChargeDetailRecordParser">A delegate to parse custom ChargeDetailRecord XML elements.</param>
-        ///// <param name="CustomIdentificationParser">A delegate to parse custom Identification XML elements.</param>
-        ///// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identification XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(String                                       ChargeDetailRecordText,
-        //                               out ChargeDetailRecord                       ChargeDetailRecord,
-        //                               CustomXMLParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null,
-        //                               CustomXMLParserDelegate<Identification>      CustomIdentificationParser       = null,
-        //                               CustomXMLParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null,
-        //                               OnExceptionDelegate                          OnException                      = null)
-        //{
-
-        //    try
-        //    {
-
-        //        if (TryParse(XDocument.Parse(ChargeDetailRecordText).Root,
-        //                     out ChargeDetailRecord,
-        //                     CustomChargeDetailRecordParser,
-        //                     CustomIdentificationParser,
-        //                     CustomRFIDIdentificationParser,
-        //                     OnException))
-
-        //            return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, ChargeDetailRecordText, e);
-        //    }
-
-        //    ChargeDetailRecord = null;
-        //    return false;
-
-        //}
-
-        //#endregion
-
-        //#region ToXML (XName = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
-
-        ///// <summary>
-        ///// Return a XML representation of this object.
-        ///// </summary>
-        ///// <param name="XName">The XML name to use.</param>
-        ///// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
-        ///// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification XML elements.</param>
-        //public XElement ToXML(XName                                            XName                                = null,
-        //                      CustomXMLSerializerDelegate<ChargeDetailRecord>  CustomChargeDetailRecordSerializer   = null,
-        //                      CustomXMLSerializerDelegate<Identification>      CustomIdentificationSerializer       = null)
-
-        //{
-
-        //    var XML = new XElement(XName ?? OICPNS.Authorization + "eRoamingChargeDetailRecord",
-
-        //                  new XElement(OICPNS.Authorization + "SessionID",                  SessionId.          ToString()),
-
-        //                  CPOPartnerSessionId.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
-        //                      : null,
-
-        //                  EMPPartnerSessionId.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
-        //                      : null,
-
-        //                  PartnerProductId.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "PartnerProductID",     PartnerProductId.   ToString())
-        //                      : null,
-
-        //                  new XElement(OICPNS.Authorization + "EvseID",                     EVSEId.             ToString()),
-
-        //                  Identification.ToXML(CustomIdentificationSerializer: CustomIdentificationSerializer),
-
-        //                  ChargingStart.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "ChargingStart",        ChargingStart.Value.ToIso8601())
-        //                      : null,
-
-        //                  ChargingEnd.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "ChargingEnd",          ChargingEnd.  Value.ToIso8601())
-        //                      : null,
-
-        //                  new XElement(OICPNS.Authorization + "SessionStart",               SessionStart.       ToIso8601()),
-        //                  new XElement(OICPNS.Authorization + "SessionEnd",                 SessionEnd.         ToIso8601()),
-
-        //                  MeterValueStart.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "MeterValueStart",  String.Format("{0:0.###}", MeterValueStart).Replace(",", "."))
-        //                      : null,
-
-        //                  MeterValueEnd.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "MeterValueEnd",    String.Format("{0:0.###}", MeterValueEnd).  Replace(",", "."))
-        //                      : null,
-
-        //                  MeterValuesInBetween.SafeAny()
-        //                      ? new XElement(OICPNS.Authorization + "MeterValueInBetween",
-        //                            MeterValuesInBetween.
-        //                                SafeSelect(value => new XElement(OICPNS.Authorization + "MeterValue", String.Format("{0:0.###}", value).Replace(",", "."))).
-        //                                ToArray()
-        //                        )
-        //                      : null,
-
-        //                  ConsumedEnergy.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "ConsumedEnergy",    String.Format("{0:0.###}", ConsumedEnergy).Replace(",", "."))
-        //                      : null,
-
-        //                  MeteringSignature != null
-        //                      ? new XElement(OICPNS.Authorization + "MeteringSignature", MeteringSignature)
-        //                      : null,
-
-        //                  HubOperatorId.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "HubOperatorID",     HubOperatorId.ToString())
-        //                      : null,
-
-        //                  HubProviderId.HasValue
-        //                      ? new XElement(OICPNS.Authorization + "HubProviderID",     HubProviderId.ToString())
-        //                      : null
-
-        //            );
-
-        //    return CustomChargeDetailRecordSerializer != null
-        //               ? CustomChargeDetailRecordSerializer(this, XML)
-        //               : XML;
-
-        //}
-
-        //#endregion
-
-        #region ToJSON(              CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null, ...)
+                #region Parse MeterValueStart                   [optional]
+
+                if (JSON.ParseOptional("MeterValueStart",
+                                       "meter value start",
+                                       out Decimal? MeterValueStart,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse MeterValueEnd                     [optional]
+
+                if (JSON.ParseOptional("MeterValueEnd",
+                                       "meter value end",
+                                       out Decimal? MeterValueEnd,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse MeterValuesInBetween              [optional]
+
+                if (JSON.ParseOptionalJSON("MeterValueInBetween",
+                                           "meter values in between",
+                                           Decimal.TryParse,
+                                           out IEnumerable<Decimal> MeterValuesInBetween,
+                                           out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse SignedMeteringValues              [optional]
+
+                if (JSON.ParseOptionalJSON("SignedMeteringValues",
+                                           "signed metering values",
+                                           SignedMeteringValue.TryParse,
+                                           out IEnumerable<SignedMeteringValue> SignedMeteringValues,
+                                           out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse CalibrationLawVerificationInfo    [optional]
+
+                if (JSON.ParseOptionalJSON("CalibrationLawVerificationInfo",
+                                           "calibration law verification info",
+                                           OICPv2_3.CalibrationLawVerification.TryParse,
+                                           out CalibrationLawVerification CalibrationLawVerification,
+                                           out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse HubOperatorId                     [optional]
+
+                if (JSON.ParseOptional("HubOperatorID",
+                                       "hub operator identification",
+                                       Operator_Id.TryParse,
+                                       out Operator_Id? HubOperatorId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse HubProviderId                     [optional]
+
+                if (JSON.ParseOptional("HubProviderID",
+                                       "hub provider identification",
+                                       Provider_Id.TryParse,
+                                       out Provider_Id? HubProviderId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+
+                #region Parse Custom Data                       [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
+
+                ChargeDetailRecord = new ChargeDetailRecord(SessionId,
+                                                            EVSEId,
+                                                            Identification,
+                                                            SessionStart,
+                                                            SessionEnd,
+                                                            ChargingStart,
+                                                            ChargingEnd,
+                                                            ConsumedEnergy,
+
+                                                            PartnerProductId,
+                                                            CPOPartnerSessionId,
+                                                            EMPPartnerSessionId,
+                                                            MeterValueStart,
+                                                            MeterValueEnd,
+                                                            MeterValuesInBetween,
+                                                            SignedMeteringValues,
+                                                            CalibrationLawVerification,
+                                                            HubOperatorId,
+                                                            HubProviderId,
+
+                                                            CustomData);
+
+                if (CustomChargeDetailRecordParser != null)
+                    ChargeDetailRecord = CustomChargeDetailRecordParser(JSON,
+                                                                        ChargeDetailRecord);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ChargeDetailRecord  = default;
+                ErrorResponse       = "The given JSON representation of a charge detail record is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, out ChargeDetailRecord, out ErrorResponse, CustomChargeDetailRecordParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a charge detail record.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
+        public static Boolean TryParse(String                                           Text,
+                                       out ChargeDetailRecord                           ChargeDetailRecord,
+                                       out String                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser)
+        {
+
+            try
+            {
+
+                return TryParse(JObject.Parse(Text),
+                                out ChargeDetailRecord,
+                                out ErrorResponse,
+                                CustomChargeDetailRecordParser);
+
+            }
+            catch (Exception e)
+            {
+                ChargeDetailRecord  = default;
+                ErrorResponse       = "The given text representation of a charge detail record is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region ToJSON(CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
@@ -716,6 +791,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        : JSON;
 
         }
+
+        #endregion
+
+        #region Clone
+
+        /// <summary>
+        /// Clone this object.
+        /// </summary>
+        public ChargeDetailRecord Clone
+
+            => new ChargeDetailRecord(SessionId.                      Clone,
+                                      EVSEId.                         Clone,
+                                      Identification.                 Clone,
+                                      SessionStart,
+                                      SessionEnd,
+                                      ChargingStart,
+                                      ChargingEnd,
+                                      ConsumedEnergy,
+
+                                      PartnerProductId?.              Clone,
+                                      CPOPartnerSessionId?.           Clone,
+                                      EMPPartnerSessionId?.           Clone,
+                                      MeterValueStart,
+                                      MeterValueEnd,
+                                      MeterValuesInBetween?.                                                            ToArray(),
+                                      SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray(),
+                                      CalibrationLawVerificationInfo?.Clone,
+                                      HubOperatorId?.                 Clone,
+                                      HubProviderId?.                 Clone,
+
+                                      CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 
@@ -1051,7 +1157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToBuilder(NewEVSEId = null)
+        #region ToBuilder(NewSessionId = null)
 
         ///// <summary>
         ///// Return a builder for this charge detail record.
@@ -1082,9 +1188,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (class) Builder
 
         ///// <summary>
-        ///// An OICP charge detail record.
+        ///// A charge detail record builder.
         ///// </summary>
-        //public new class Builder : ACustomData.Builder
+        //public new class Builder
         //{
 
         //    #region Properties

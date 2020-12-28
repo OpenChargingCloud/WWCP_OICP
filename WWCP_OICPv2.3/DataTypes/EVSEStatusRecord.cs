@@ -311,7 +311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EVSEStatusRecord Clone
 
-            => new EVSEStatusRecord(Id,
+            => new EVSEStatusRecord(Id.Clone,
                                     Status,
                                     CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
