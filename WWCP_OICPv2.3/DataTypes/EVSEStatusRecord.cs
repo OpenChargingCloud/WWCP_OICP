@@ -304,6 +304,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region Clone
+
+        /// <summary>
+        /// Clone this dynamic status of an EVSE.
+        /// </summary>
+        public EVSEStatusRecord Clone
+
+            => new EVSEStatusRecord(Id,
+                                    Status,
+                                    JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+
+        #endregion
+
 
         #region Operator overloading
 

@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class AccessibilityTypesExtentions
     {
 
-        #region Parse(AccessibilityType)
+        #region Parse   (AccessibilityType)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility type.
@@ -39,12 +39,54 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityTypes Parse(String Text)
 
             => Text?.Trim() switch {
-                   "Free publicly accessible"    => AccessibilityTypes.Free_publicly_accessible,
-                   "Restricted access"           => AccessibilityTypes.Restricted_access,
-                   "Paying publicly accessible"  => AccessibilityTypes.Paying_publicly_accessible,
-                   "Test Station"                => AccessibilityTypes.Test_Station,
-                   _                             => AccessibilityTypes.Unspecified
-               };
+                   "Unspecified"                 => AccessibilityTypes.Unspecified,
+                   "Free publicly accessible"    => AccessibilityTypes.FreePubliclyAccessible,
+                   "Restricted access"           => AccessibilityTypes.RestrictedAccess,
+                   "Paying publicly accessible"  => AccessibilityTypes.PayingPubliclyAccessible,
+                   "Test Station"                => AccessibilityTypes.TestStation,
+                   _                             => throw new ArgumentException("Undefined accessibility type '" + Text + "'!")
+            };
+
+        #endregion
+
+        #region TryParse(AccessibilityType, out AccessibilityType)
+
+        /// <summary>
+        /// Parses the given text-representation of an accessibility type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an accessibility type.</param>
+        /// <param name="AccessibilityType">The parsed accessibility type.</param>
+        public static Boolean TryParse(String Text, out AccessibilityTypes AccessibilityType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Unspecified":
+                    AccessibilityType = AccessibilityTypes.Unspecified;
+                    return true;
+
+                case "Free publicly accessible":
+                    AccessibilityType = AccessibilityTypes.FreePubliclyAccessible;
+                    return true;
+
+                case "Restricted access":
+                    AccessibilityType = AccessibilityTypes.RestrictedAccess;
+                    return true;
+
+                case "Paying publicly accessible":
+                    AccessibilityType = AccessibilityTypes.PayingPubliclyAccessible;
+                    return true;
+
+                case "Test Station":
+                    AccessibilityType = AccessibilityTypes.TestStation;
+                    return true;
+
+                default:
+                    AccessibilityType = AccessibilityTypes.Unspecified;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -57,11 +99,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static String AsString(this AccessibilityTypes AccessibilityType)
 
             => AccessibilityType switch {
-                   AccessibilityTypes.Free_publicly_accessible    => "Free publicly accessible",
-                   AccessibilityTypes.Restricted_access           => "Restricted access",
-                   AccessibilityTypes.Paying_publicly_accessible  => "Paying publicly accessible",
-                   AccessibilityTypes.Test_Station                => "Test Station",
-                   _                                              => "Unspecified"
+                   AccessibilityTypes.Unspecified               => "Unspecified",
+                   AccessibilityTypes.FreePubliclyAccessible    => "Free publicly accessible",
+                   AccessibilityTypes.RestrictedAccess          => "Restricted access",
+                   AccessibilityTypes.PayingPubliclyAccessible  => "Paying publicly accessible",
+                   AccessibilityTypes.TestStation               => "Test Station",
+                   _                                            => "Unknown"
                };
 
         #endregion
@@ -83,22 +126,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Free for everyone.
         /// </summary>
-        Free_publicly_accessible,
+        FreePubliclyAccessible,
 
         /// <summary>
         /// Limited access, e.g. only for customers or employees.
         /// </summary>
-        Restricted_access,
+        RestrictedAccess,
 
         /// <summary>
         /// Free for everyone who pays.
         /// </summary>
-        Paying_publicly_accessible,
+        PayingPubliclyAccessible,
 
         /// <summary>
         /// This station is only usable for testing.
         /// </summary>
-        Test_Station
+        TestStation
 
     }
 

@@ -366,6 +366,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            ExpiryDate.HasValue
                                ? new JProperty("ExpiryDate",        ExpiryDate.Value.ToIso8601())
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",        CustomData)
                                : null
 
                        );
@@ -375,6 +379,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        : JSON;
 
         }
+
+        #endregion
+
+        #region Clone
+
+        /// <summary>
+        /// Clone this RFID identification.
+        /// </summary>
+        public RFIDIdentification Clone
+
+            => new RFIDIdentification(UID,
+                                      RFIDType,
+                                      EVCOId,
+                                      new String(PrintedNumber.ToCharArray()),
+                                      ExpiryDate,
+                                      JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
         #endregion
 

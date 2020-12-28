@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPO\CPOClient.cs" />
+    <Compile Include="CPO\CPOClientLogger.cs" />
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
     <Compile Include="DataTypes\Complex\ChargingFacility.cs" />
     <Compile Include="DataTypes\Complex\Address.cs" />
@@ -59,9 +61,11 @@
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
     <Compile Include="DataTypes\Complex\Identification.cs" />
     <Compile Include="DataTypes\Complex\HashedPIN.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />
     <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Complex\RFIDIdentification.cs" />
     <Compile Include="DataTypes\Complex\SignedMeteringValue.cs" />
+    <Compile Include="DataTypes\Enums\ActionTypes.cs" />
     <Compile Include="DataTypes\Enums\HashFunction.cs" />
     <Compile Include="DataTypes\Enums\PINCrypto.cs" />
     <Compile Include="DataTypes\EVSEDataRecord.cs" />
@@ -109,6 +113,9 @@
     <Compile Include="DataTypes\Simple\UID.cs" />
     <Compile Include="DataTypes\Simple\URL.cs" />
     <Compile Include="Delegates.cs" />
+    <Compile Include="Messages\ARequest.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

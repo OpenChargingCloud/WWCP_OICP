@@ -19,14 +19,11 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -634,13 +631,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         //#endregion
 
-        #region ToJSON(              CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
+        #region ToJSON(              CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
+        /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<ChargeDetailRecord>          CustomChargeDetailRecordSerializer           = null,
                               CustomJObjectSerializerDelegate<Identification>              CustomIdentificationSerializer               = null,
                               CustomJObjectSerializerDelegate<SignedMeteringValue>         CustomSignedMeteringValueSerializer          = null,
@@ -657,7 +656,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("SessionEnd",                            SessionEnd.         ToIso8601()),
                            new JProperty("ChargingStart",                         ChargingStart.      ToIso8601()),
                            new JProperty("ChargingEnd",                           ChargingEnd.        ToIso8601()),
-                           new JProperty("consumedEnergy",                        String.Format("{0:0.###}", ConsumedEnergy).Replace(",", ".")),
+                           new JProperty("ConsumedEnergy",                        String.Format("{0:0.###}", ConsumedEnergy).Replace(",", ".")),
 
                            PartnerProductId.   HasValue
                                ? new JProperty("PartnerProductID",                PartnerProductId.   Value.ToString())
@@ -704,6 +703,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            HubProviderId.HasValue
                                ? new JProperty("HubProviderID",                   HubProviderId.Value.ToString())
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",                      CustomData)
                                : null
 
                     );
@@ -727,7 +730,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator == (ChargeDetailRecord ChargeDetailRecord1,
+                                           ChargeDetailRecord ChargeDetailRecord2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -752,7 +756,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator != (ChargeDetailRecord ChargeDetailRecord1,
+                                           ChargeDetailRecord ChargeDetailRecord2)
+
             => !(ChargeDetailRecord1 == ChargeDetailRecord2);
 
         #endregion
@@ -765,7 +771,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator < (ChargeDetailRecord ChargeDetailRecord1,
+                                          ChargeDetailRecord ChargeDetailRecord2)
         {
 
             if (ChargeDetailRecord1 is null)
@@ -785,7 +792,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator <= (ChargeDetailRecord ChargeDetailRecord1,
+                                           ChargeDetailRecord ChargeDetailRecord2)
+
             => !(ChargeDetailRecord1 > ChargeDetailRecord2);
 
         #endregion
@@ -798,7 +807,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator > (ChargeDetailRecord ChargeDetailRecord1,
+                                          ChargeDetailRecord ChargeDetailRecord2)
         {
 
             if (ChargeDetailRecord1 is null)
@@ -818,7 +828,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord1">A charge detail record.</param>
         /// <param name="ChargeDetailRecord2">Another charge detail record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargeDetailRecord ChargeDetailRecord1, ChargeDetailRecord ChargeDetailRecord2)
+        public static Boolean operator >= (ChargeDetailRecord ChargeDetailRecord1,
+                                           ChargeDetailRecord ChargeDetailRecord2)
+
             => !(ChargeDetailRecord1 < ChargeDetailRecord2);
 
         #endregion

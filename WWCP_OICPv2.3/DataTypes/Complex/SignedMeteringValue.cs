@@ -50,6 +50,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public MeteringStatusTypes?  MeteringStatus    { get; }
 
+        /// <summary>
+        /// Optional custom data, e.g. in combination with custom parsers and serializers.
+        /// </summary>
+        [Optional]
+        public JObject               CustomData        { get; }
+
         #endregion
 
         #region Constructor(s)
@@ -59,8 +65,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Value">Signed metering value for a transparency software.</param>
         /// <param name="MeteringStatus">The status of the given signed metering value.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public SignedMeteringValue(String                Value,
-                                   MeteringStatusTypes?  MeteringStatus   = null)
+                                   MeteringStatusTypes?  MeteringStatus   = null,
+                                   JObject               CustomData       = null)
+
         {
 
             Value = Value?.Trim();
@@ -70,6 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Value           = Value;
             this.MeteringStatus  = MeteringStatus;
+            this.CustomData      = CustomData;
 
         }
 
@@ -81,8 +91,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#SignedMeteringValueType
 
         // {
-        //     "CO2Emission":   0,
-        //     "NuclearWaste":  0
+        //   "SignedMeteringValue":  "string",
+        //   "MeteringStatus":       "Start"
         // }
 
         #endregion
@@ -206,9 +216,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse Custom Data    [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
 
                 SignedMeteringValue = new SignedMeteringValue(Value,
-                                                              MeteringStatus);
+                                                              MeteringStatus,
+                                                              CustomData);
 
                 if (CustomSignedMeteringValueParser != null)
                     SignedMeteringValue = CustomSignedMeteringValueParser(JSON,
@@ -278,6 +295,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            MeteringStatus.HasValue
                                ? new JProperty("MeteringStatus",  MeteringStatus.Value.AsString())
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",      CustomData)
                                : null
 
                        );
@@ -298,7 +319,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public SignedMeteringValue Clone
 
             => new SignedMeteringValue(Value,
-                                       MeteringStatus);
+                                       MeteringStatus,
+                                       JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class AuthenticationModesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of an authentication mode.
@@ -45,8 +45,53 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    "REMOTE"                      => AuthenticationModes.REMOTE,
                    "Direct Payment"              => AuthenticationModes.DirectPayment,
                    "No Authentication Required"  => AuthenticationModes.NoAuthenticationRequired,
-                   _                             => AuthenticationModes.Unknown
+                   _                             => throw new ArgumentException("Undefined authentication mode '" + Text + "'!")
                };
+
+        #endregion
+
+        #region TryParse(Text, out AuthenticationMode)
+
+        /// <summary>
+        /// Parses the given text-representation of an authentication mode.
+        /// </summary>
+        /// <param name="Text">A text-representation of an authentication mode.</param>
+        /// <param name="AuthenticationMode">The parsed authentication mode</param>
+        public static Boolean TryParse(String Text, out AuthenticationModes AuthenticationMode)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "NFC RFID Classic":
+                    AuthenticationMode = AuthenticationModes.NFC_RFID_Classic;
+                    return true;
+
+                case "NFC RFID DESFire":
+                    AuthenticationMode = AuthenticationModes.NFC_RFID_DESFire;
+                    return true;
+
+                case "PnC":
+                    AuthenticationMode = AuthenticationModes.PnC;
+                    return true;
+
+                case "REMOTE":
+                    AuthenticationMode = AuthenticationModes.REMOTE;
+                    return true;
+
+                case "Direct Payment":
+                    AuthenticationMode = AuthenticationModes.DirectPayment;
+                    return true;
+
+                case "No Authentication Required":
+                    AuthenticationMode = AuthenticationModes.NoAuthenticationRequired;
+                    return true;
+
+                default:
+                    AuthenticationMode = AuthenticationModes.NoAuthenticationRequired;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -66,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    AuthenticationModes.REMOTE                    => "REMOTE",
                    AuthenticationModes.DirectPayment             => "Direct Payment",
                    AuthenticationModes.NoAuthenticationRequired  => "No Authentication Required",
-                   _                                             => "Unkown"
+                   _                                             => "Undefined"
                };
 
         #endregion
@@ -79,11 +124,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum AuthenticationModes
     {
-
-        /// <summary>
-        /// Unknown authentication mode
-        /// </summary>
-        Unknown,
 
         /// <summary>
         /// Using MiFare classic RFID cards

@@ -44,33 +44,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <example>PTB - X-X-XXXX : V1 : 01Jan2020</example>
         [Optional]
-        public String  CalibrationLawCertificateId                    { get; }
+        public String   CalibrationLawCertificateId                    { get; }
 
         /// <summary>
         /// Unique PublicKey for EVSEID (or the smart energy meter within the charging station) can be provided here.
         /// </summary>
         [Optional]
-        public String  PublicKey                                      { get; }
+        public String   PublicKey                                      { get; }
 
         /// <summary>
         /// In this field CPO can also provide an url to a external data set. This data set can give calibration law information which can be simply added to the end customer invoice of the EMP.
         /// The information can contain for eg Charging Station Details, Charging Session Date/Time, SignedMeteringValues(Transparency Software format), SignedMeterValuesVerificationInstruction etc.
         /// </summary>
         [Optional]
-        public URL?    MeteringSignatureURL                           { get; }
+        public URL?     MeteringSignatureURL                           { get; }
 
         /// <summary>
         /// Encoding format of the metering signature data as well as the version.
         /// </summary>
         /// <example>EDL40 Mennekes: V1</example>
         [Optional]
-        public String  MeteringSignatureEncodingFormat                { get; }
+        public String   MeteringSignatureEncodingFormat                { get; }
 
         /// <summary>
         /// Additional information (e.g. instruction on how to use the transparency software).
         /// </summary>
         [Optional]
-        public String  SignedMeteringValuesVerificationInstruction    { get; }
+        public String   SignedMeteringValuesVerificationInstruction    { get; }
+
+        /// <summary>
+        /// Optional custom data, e.g. in combination with custom parsers and serializers.
+        /// </summary>
+        [Optional]
+        public JObject  CustomData                                     { get; }
 
         #endregion
 
@@ -81,14 +87,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CalibrationLawCertificateId">The Calibration Law Compliance ID from respective authority along with the revision and issueing date.</param>
         /// <param name="PublicKey">Unique PublicKey for EVSEID (or the smart energy meter within the charging station) can be provided here.</param>
-        /// <param name="MeteringSignatureURL"></param>
-        /// <param name="MeteringSignatureEncodingFormat"></param>
-        /// <param name="SignedMeteringValuesVerificationInstruction"></param>
-        public CalibrationLawVerification(String CalibrationLawCertificateId                   = null,
-                                          String PublicKey                                     = null,
-                                          URL?   MeteringSignatureURL                          = null,
-                                          String MeteringSignatureEncodingFormat               = null,
-                                          String SignedMeteringValuesVerificationInstruction   = null)
+        /// <param name="MeteringSignatureURL">In this field CPO can also provide an url to a external data set. This data set can give calibration law information which can be simply added to the end customer invoice of the EMP.</param>
+        /// <param name="MeteringSignatureEncodingFormat">Encoding format of the metering signature data as well as the version.</param>
+        /// <param name="SignedMeteringValuesVerificationInstruction">Additional information (e.g. instruction on how to use the transparency software).</param>
+        /// 
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        public CalibrationLawVerification(String  CalibrationLawCertificateId                   = null,
+                                          String  PublicKey                                     = null,
+                                          URL?    MeteringSignatureURL                          = null,
+                                          String  MeteringSignatureEncodingFormat               = null,
+                                          String  SignedMeteringValuesVerificationInstruction   = null,
+
+                                          JObject CustomData                                    = null)
+
         {
 
             this.CalibrationLawCertificateId                  = CalibrationLawCertificateId;
@@ -96,6 +107,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.MeteringSignatureURL                         = MeteringSignatureURL;
             this.MeteringSignatureEncodingFormat              = MeteringSignatureEncodingFormat;
             this.SignedMeteringValuesVerificationInstruction  = SignedMeteringValuesVerificationInstruction;
+
+            this.CustomData                                   = CustomData;
 
         }
 
@@ -107,8 +120,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#CalibrationLawVerificationType
 
         // {
-        //     "CO2Emission":   0,
-        //     "NuclearWaste":  0
+        //   "CalibrationLawCertificateID":                  "string",
+        //   "PublicKey":                                    "string",
+        //   "MeteringSignatureUrl":                         "string",
+        //   "MeteringSignatureEncodingFormat":              "string",
+        //   "SignedMeteringValuesVerificationInstruction":  "string"
         // }
 
         #endregion
@@ -202,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 CalibrationLawVerification  = default;
                 ErrorResponse               = default;
 
-                #region Parse MeteringSignatureURL    [optional]
+                #region Parse MeteringSignatureURL      [optional]
 
                 if (JSON.ParseOptional("MeteringSignatureUrl",
                                        "metering signature URL",
@@ -216,12 +232,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse Custom Data               [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
 
                 CalibrationLawVerification  = new CalibrationLawVerification(JSON["CalibrationLawCertificateID"                ]?.Value<String>(),
                                                                              JSON["PublicKey"                                  ]?.Value<String>(),
                                                                              MeteringSignatureURL,
                                                                              JSON["MeteringSignatureEncodingFormat"            ]?.Value<String>(),
-                                                                             JSON["SignedMeteringValuesVerificationInstruction"]?.Value<String>());
+                                                                             JSON["SignedMeteringValuesVerificationInstruction"]?.Value<String>(),
+                                                                             CustomData);
 
                 if (CustomCalibrationLawVerificationParser != null)
                     CalibrationLawVerification = CustomCalibrationLawVerificationParser(JSON,
@@ -305,6 +328,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            SignedMeteringValuesVerificationInstruction.IsNullOrEmpty()
                                ? new JProperty("SignedMeteringValuesVerificationInstruction",  SignedMeteringValuesVerificationInstruction)
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",                                   CustomData)
                                : null
 
                        );
@@ -332,7 +359,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               new String(PublicKey.                                  ToCharArray()),
                                               MeteringSignatureURL,
                                               new String(MeteringSignatureEncodingFormat.            ToCharArray()),
-                                              new String(SignedMeteringValuesVerificationInstruction.ToCharArray()));
+                                              new String(SignedMeteringValuesVerificationInstruction.ToCharArray()),
+                                              JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
 
         #endregion
 

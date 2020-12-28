@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class PaymentOptionsExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a paymet option.
@@ -42,8 +42,41 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    "No Payment"  => PaymentOptions.NoPayment,
                    "Direct"      => PaymentOptions.Direct,
                    "Contract"    => PaymentOptions.Contract,
-                   _             => PaymentOptions.Unspecified,
-               };
+                   _             => throw new ArgumentException("Undefined paymet option '" + Text + "'!")
+            };
+
+        #endregion
+
+        #region TryParse(Text, out PaymentOption)
+
+        /// <summary>
+        /// Parses the given text-representation of a paymet option.
+        /// </summary>
+        /// <param name="Text">A text-representation of a payment option.</param>
+        /// <param name="PaymentOption">The parsed payment option.</param>
+        public static Boolean TryParse(String Text, out PaymentOptions PaymentOption)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "No Payment":
+                    PaymentOption = PaymentOptions.NoPayment;
+                    return true;
+
+                case "Direct":
+                    PaymentOption = PaymentOptions.Direct;
+                    return true;
+
+                case "Contract":
+                    PaymentOption = PaymentOptions.Contract;
+                    return true;
+
+                default:
+                    PaymentOption = PaymentOptions.Contract;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -72,11 +105,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum PaymentOptions
     {
-
-        /// <summary>
-        /// Unspecified
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// No payment / free.

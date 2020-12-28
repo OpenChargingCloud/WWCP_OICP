@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class ValueAddedServicesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a value added service.
@@ -46,8 +46,62 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
                    "ChargingPlans"               => ValueAddedServices.ChargingPlans,
                    "RoofProvided"                => ValueAddedServices.RoofProvided,
-                   _                             => ValueAddedServices.None,
+                   "None"                        => ValueAddedServices.None,
+                    _                            => throw new ArgumentException("Undefined value added service '" + Text + "'!")
                };
+
+        #endregion
+
+        #region TryParse(Text, out ValueAddedService)
+
+        /// <summary>
+        /// Parses the given text-representation of a value added service.
+        /// </summary>
+        /// <param name="Text">A text-representation of a value added service.</param>
+        /// <param name="ValueAddedService">The parsed value added service.</param>
+        public static Boolean TryParse(String Text, out ValueAddedServices ValueAddedService)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Reservation":
+                    ValueAddedService = ValueAddedServices.Reservation;
+                    return true;
+
+                case "DynamicPricing":
+                    ValueAddedService = ValueAddedServices.DynamicPricing;
+                    return true;
+
+                case "ParkingSensors":
+                    ValueAddedService = ValueAddedServices.ParkingSensors;
+                    return true;
+
+                case "MaximumPowerCharging":
+                    ValueAddedService = ValueAddedServices.MaximumPowerCharging;
+                    return true;
+
+                case "PredictiveChargePointUsage":
+                    ValueAddedService = ValueAddedServices.PredictiveChargePointUsage;
+                    return true;
+
+                case "ChargingPlans":
+                    ValueAddedService = ValueAddedServices.ChargingPlans;
+                    return true;
+
+                case "RoofProvided":
+                    ValueAddedService = ValueAddedServices.RoofProvided;
+                    return true;
+
+                case "None":
+                    ValueAddedService = ValueAddedServices.None;
+                    return true;
+
+                default:
+                    ValueAddedService = ValueAddedServices.None;
+                    return false;
+
+            };
+        }
 
         #endregion
 
@@ -67,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
                    ValueAddedServices.ChargingPlans               => "ChargingPlans",
                    ValueAddedServices.RoofProvided                => "RoofProvided",
-                   _                                              => "None",
+                   ValueAddedServices.None                        => "None"
                };
 
         #endregion

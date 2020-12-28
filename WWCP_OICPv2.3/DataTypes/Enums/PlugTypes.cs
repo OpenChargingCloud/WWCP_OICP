@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class PlugTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a plug type.
@@ -57,8 +57,106 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    "CCS Combo 2 Plug (Cable Attached)"  => PlugTypes.CCSCombo2Plug_CableAttached,
                    "CCS Combo 1 Plug (Cable Attached)"  => PlugTypes.CCSCombo1Plug_CableAttached,
                    "CHAdeMO"                            => PlugTypes.CHAdeMO,
-                   _                                    => PlugTypes.Unspecified,
+                   "Unspecified"                        => PlugTypes.Unspecified,
+                   _                                    => throw new ArgumentException("Undefined plug type '" + Text + "'!")
                };
+
+        #endregion
+
+        #region TryParse(Text, out PlugType)
+
+        /// <summary>
+        /// Parses the given text-representation of a plug type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a plug type.</param>
+        /// <param name="PlugType">The parsed plug type.</param>
+        public static Boolean TryParse(String Text, out PlugTypes PlugType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Small Paddle Inductive":
+                    PlugType = PlugTypes.SmallPaddleInductive;
+                    return true;
+
+                case "Large Paddle Inductive":
+                    PlugType = PlugTypes.LargePaddleInductive;
+                    return true;
+
+                case "AVCON Connector":
+                    PlugType = PlugTypes.AVCONConnector;
+                    return true;
+
+                case "Tesla Connector":
+                    PlugType = PlugTypes.TeslaConnector;
+                    return true;
+
+                case "NEMA 5-20":
+                    PlugType = PlugTypes.NEMA5_20;
+                    return true;
+
+                case "Type E French Standard":
+                    PlugType = PlugTypes.TypeEFrenchStandard;
+                    return true;
+
+                case "Type F Schuko":
+                    PlugType = PlugTypes.TypeFSchuko;
+                    return true;
+
+                case "Type G British Standard":
+                    PlugType = PlugTypes.TypeGBritishStandard;
+                    return true;
+
+                case "Type J Swiss Standard":
+                    PlugType = PlugTypes.TypeJSwissStandard;
+                    return true;
+
+                case "Type 1 Connector (Cable Attached)":
+                    PlugType = PlugTypes.Type1Connector_CableAttached;
+                    return true;
+
+                case "Type 2 Outlet":
+                    PlugType = PlugTypes.Type2Outlet;
+                    return true;
+
+                case "Type 2 Connector (Cable Attached)":
+                    PlugType = PlugTypes.Type2Connector_CableAttached;
+                    return true;
+
+                case "Type 3 Outlet":
+                    PlugType = PlugTypes.Type3Outlet;
+                    return true;
+
+                case "IEC 60309 Single Phase":
+                    PlugType = PlugTypes.IEC60309SinglePhase;
+                    return true;
+
+                case "IEC 60309 Three Phase":
+                    PlugType = PlugTypes.IEC60309ThreePhase;
+                    return true;
+
+                case "CCS Combo 2 Plug (Cable Attached)":
+                    PlugType = PlugTypes.CCSCombo2Plug_CableAttached;
+                    return true;
+
+                case "CCS Combo 1 Plug (Cable Attached)":
+                    PlugType = PlugTypes.CCSCombo1Plug_CableAttached;
+                    return true;
+
+                case "CHAdeMO":
+                    PlugType = PlugTypes.CHAdeMO;
+                    return true;
+
+                case "Unspecified":
+                    PlugType = PlugTypes.Unspecified;
+                    return true;
+
+                default:
+                    PlugType = PlugTypes.Unspecified;
+                    return false;
+
+            };
+        }
 
         #endregion
 

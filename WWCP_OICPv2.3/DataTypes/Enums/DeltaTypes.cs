@@ -31,7 +31,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class DeltaTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a delta type.
@@ -40,11 +40,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static DeltaTypes Parse(String Text)
 
             => Text?.Trim() switch {
-                   "update"  => DeltaTypes.update,
                    "insert"  => DeltaTypes.insert,
+                   "update"  => DeltaTypes.update,
                    "delete"  => DeltaTypes.delete,
-                   _         => DeltaTypes.unknown,
+                   _         => throw new ArgumentException("Undefined delta type '" + Text + "'!")
                };
+
+        #endregion
+
+        #region TryParse(Text, out DeltaType)
+
+        /// <summary>
+        /// Parses the given text-representation of a delta type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a delta type.</param>
+        /// <param name="DeltaType">The parsed delta type.</param>
+        public static Boolean TryParse(String Text, out DeltaTypes DeltaType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "insert":
+                    DeltaType = DeltaTypes.insert;
+                    return true;
+
+                case "update":
+                    DeltaType = DeltaTypes.update;
+                    return true;
+
+                case "delete":
+                    DeltaType = DeltaTypes.delete;
+                    return true;
+
+                default:
+                    DeltaType = DeltaTypes.delete;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -75,19 +108,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// Unknown delta type.
+        /// Inserted record.
         /// </summary>
-        unknown,
+        insert,
 
         /// <summary>
         /// Updated record.
         /// </summary>
         update,
-
-        /// <summary>
-        /// Inserted record.
-        /// </summary>
-        insert,
 
         /// <summary>
         /// Deleted record.

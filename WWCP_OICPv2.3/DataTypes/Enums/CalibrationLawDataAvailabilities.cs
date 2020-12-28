@@ -30,34 +30,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class CalibrationLawDataAvailabilitiesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a calibration law data availability object.
+        /// Parses the given text-representation of a calibration law data availability.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of a calibration law data availability object.</param>
+        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
         public static CalibrationLawDataAvailabilities Parse(String Text)
 
             => Text?.Trim() switch {
-                   "Local"     => CalibrationLawDataAvailabilities.Local,
-                   "External"  => CalibrationLawDataAvailabilities.External,
-                   _           => CalibrationLawDataAvailabilities.NotAvailable,
-               };
+                   "Local"          => CalibrationLawDataAvailabilities.Local,
+                   "External"       => CalibrationLawDataAvailabilities.External,
+                   "Not Available"  => CalibrationLawDataAvailabilities.NotAvailable,
+                   _                => throw new ArgumentException("Undefined calibration law data availability '" + Text + "'!")
+            };
+
+        #endregion
+
+        #region TryParse(Text, out CalibrationLawDataAvailability)
+
+        /// <summary>
+        /// Parses the given text-representation of a calibration law data availability.
+        /// </summary>
+        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
+        /// <param name="CalibrationLawDataAvailability">The parsed calibration law data availability.</param>
+        public static Boolean TryParse(String Text, out CalibrationLawDataAvailabilities CalibrationLawDataAvailability)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Local":
+                    CalibrationLawDataAvailability = CalibrationLawDataAvailabilities.Local;
+                    return true;
+
+                case "External":
+                    CalibrationLawDataAvailability = CalibrationLawDataAvailabilities.External;
+                    return true;
+
+                case "Not Available":
+                    CalibrationLawDataAvailability = CalibrationLawDataAvailabilities.NotAvailable;
+                    return true;
+
+                default:
+                    CalibrationLawDataAvailability = CalibrationLawDataAvailabilities.NotAvailable;
+                    return false;
+
+            }
+        }
 
         #endregion
 
         #region AsString(CalibrationLawDataAvailability)
 
         /// <summary>
-        /// Return a text-representation of the given calibration law data availability object.
+        /// Return a text-representation of the given calibration law data availability.
         /// </summary>
-        /// <param name="CalibrationLawDataAvailability">A calibration law data availability object.</param>
+        /// <param name="CalibrationLawDataAvailability">A calibration law data availability.</param>
         public static String AsString(this CalibrationLawDataAvailabilities CalibrationLawDataAvailability)
 
             => CalibrationLawDataAvailability switch {
-                   CalibrationLawDataAvailabilities.Local     => "Local",
-                   CalibrationLawDataAvailabilities.External  => "External",
-                   _                                          => "Not Available",
+                   CalibrationLawDataAvailabilities.Local         => "Local",
+                   CalibrationLawDataAvailabilities.External      => "External",
+                   CalibrationLawDataAvailabilities.NotAvailable  => "Not Available",
+                   _                                              => "Undefined"
                };
 
         #endregion

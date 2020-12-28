@@ -19,14 +19,11 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
-using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -92,7 +89,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional URL to an image of the EVSE.
         /// </summary>
         [Optional]
-        public String                               ChargingStationImageURL                { get; }
+        public URL?                                 ChargingStationImageURL                { get; }
 
         /// <summary>
         /// Optional name of the sub operator owning the EVSE.
@@ -116,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The geo coordinate of the EVSE.
         /// </summary>
         [Optional]
-        public GeoCoordinates?                      GeoCoordinate                          { get; }
+        public GeoCoordinates?                      GeoCoordinates                          { get; }
 
         /// <summary>
         /// The types of charging plugs attached to the EVSE.
@@ -189,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional information where the EVSE could be accessed.
         /// </summary>
         [Optional]
-        public AccessibilityLocationTypes?          AccessibilityLocation                  { get; }
+        public AccessibilityLocationTypes?          AccessibilityLocationType              { get; }
 
         /// <summary>
         /// The phone number of the charging station operator's hotline.
@@ -248,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean                              IsHubjectCompatible                    { get; }
 
         /// <summary>
-        /// Whether the CPO provides dynamic EVSE status information.
+        /// Whether the CPO provides dynamic EVSE data information.
         /// </summary>
         [Mandatory]
         public FalseTrueAuto                        DynamicInfoAvailable                   { get; }
@@ -280,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HotlinePhoneNumber">The phone number of the charging station operator's hotline.</param>
         /// <param name="IsOpen24Hours">Whether the EVSE is open 24/7.</param>
         /// <param name="IsHubjectCompatible">Whether ev roaming via Intercharge at the EVSE is possible. If set to "false" the EVSE will not be started/stopped remotely via Hubject.</param>
-        /// <param name="DynamicInfoAvailable">Whether the CPO provides dynamic EVSE status information.</param>
+        /// <param name="DynamicInfoAvailable">Whether the CPO provides dynamic EVSE data information.</param>
         /// 
         /// <param name="DeltaType">The delta type when the EVSE data record was just downloaded.</param>
         /// <param name="LastUpdate">The last update timestamp of the EVSE data record.</param>
@@ -291,12 +288,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HardwareManufacturer">Optional name of the EVSE manufacturer.</param>
         /// <param name="ChargingStationImageURL">Optional URL to an image of the EVSE.</param>
         /// <param name="SubOperatorName">Optional name of the sub operator owning the EVSE.</param>
-        /// <param name="GeoCoordinate">The geo coordinate of the EVSE.</param>
+        /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
         /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
         /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
         /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
         /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides.</param>
-        /// <param name="AccessibilityLocation">Optional information where the EVSE could be accessed.</param>
+        /// <param name="AccessibilityLocationType">Optional information where the EVSE could be accessed.</param>
         /// <param name="AdditionalInfo">Optional multi-language information about the EVSE.</param>
         /// <param name="ChargingStationLocationReference">Optional last meters information regarding the location of the EVSE.</param>
         /// <param name="GeoChargingPointEntrance">In case that the EVSE is part of a bigger facility (e.g. parking place), this optional attribute specifies the facilities entrance coordinates.</param>
@@ -328,14 +325,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               ChargingPool_Id?                  ChargingPoolId                     = null,
                               I18NString                        ChargingStationName                = null,
                               String                            HardwareManufacturer               = null,
-                              String                            ChargingStationImageURL            = null,
+                              URL?                              ChargingStationImageURL            = null,
                               String                            SubOperatorName                    = null,
-                              GeoCoordinates?                   GeoCoordinate                      = null,
+                              GeoCoordinates?                   GeoCoordinates                     = null,
                               Boolean?                          DynamicPowerLevel                  = null,
                               IEnumerable<EnergySource>         EnergySources                      = null,
                               EnvironmentalImpact?              EnvironmentalImpact                = null,
                               UInt32?                           MaxCapacity                        = null,
-                              AccessibilityLocationTypes?       AccessibilityLocation              = null,
+                              AccessibilityLocationTypes?       AccessibilityLocationType          = null,
                               I18NString                        AdditionalInfo                     = null,
                               I18NString                        ChargingStationLocationReference   = null,
                               GeoCoordinates?                   GeoChargingPointEntrance           = null,
@@ -388,12 +385,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.HardwareManufacturer              = HardwareManufacturer;
             this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
-            this.GeoCoordinate                     = GeoCoordinate;
+            this.GeoCoordinates                    = GeoCoordinates;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
             this.EnergySources                     = EnergySources?.      Distinct();
             this.EnvironmentalImpact               = EnvironmentalImpact;
             this.MaxCapacity                       = MaxCapacity;
-            this.AccessibilityLocation             = AccessibilityLocation;
+            this.AccessibilityLocationType         = AccessibilityLocationType;
             this.AdditionalInfo                    = AdditionalInfo;
             this.ChargingStationLocationReference  = ChargingStationLocationReference;
             this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
@@ -538,448 +535,786 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        //#region (static) Parse   (EVSEDataRecordXML,  ..., OnException = null)
-
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP EVSE data record.
-        ///// </summary>
-        ///// <param name="EVSEDataRecordXML">The XML to parse.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static EVSEDataRecord Parse(XElement                                   EVSEDataRecordXML,
-        //                                   CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
-        //                                   CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
-        //                                   CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
-        //                                   OnExceptionDelegate                        OnException                    = null)
-        //{
-
-        //    if (TryParse(EVSEDataRecordXML,
-        //                 out EVSEDataRecord evseDataRecord,
-        //                 CustomEVSEDataRecordParser,
-        //                 CustomAddressParser,
-        //                 CustomChargingFacilityParser,
-        //                 OnException))
+        #region (static) Parse   (JSON, CustomEVSEDataRecordParser = null)
+
+        /// <summary>
+        /// Parse the given JSON representation of an EVSE data record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
+        public static EVSEDataRecord Parse(JObject                                      JSON,
+                                           CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out EVSEDataRecord evseDataRecord,
+                         out String         ErrorResponse,
+                         CustomEVSEDataRecordParser))
+            {
+                return evseDataRecord;
+            }
+
+            throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + ErrorResponse, nameof(JSON));
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (Text, CustomEVSEDataRecordParser = null)
+
+        /// <summary>
+        /// Parse the given text representation of an EVSE data record.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
+        public static EVSEDataRecord Parse(String                                       Text,
+                                           CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out EVSEDataRecord evseDataRecord,
+                         out String         ErrorResponse,
+                         CustomEVSEDataRecordParser))
+            {
+                return evseDataRecord;
+            }
+
+            throw new ArgumentException("The given text representation of an EVSE data record is invalid: " + ErrorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, out EVSEDataRecord, out ErrorResponse, CustomEVSEDataRecordParser = null)
+
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an EVSE data record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject             JSON,
+                                       out EVSEDataRecord  EVSEDataRecord,
+                                       out String          ErrorResponse)
+
+            => TryParse(JSON,
+                        out EVSEDataRecord,
+                        out ErrorResponse,
+                        null);
+
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an EVSE data record.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
+        public static Boolean TryParse(JObject                                      JSON,
+                                       out EVSEDataRecord                           EVSEDataRecord,
+                                       out String                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser)
+        {
+
+            try
+            {
+
+                EVSEDataRecord = default;
+
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
+
+                #region Parse EVSEId                            [mandatory]
+
+                if (!JSON.ParseMandatory("EvseID",
+                                         "EVSE identification",
+                                         EVSE_Id.TryParse,
+                                         out EVSE_Id EVSEId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Address                           [mandatory]
+
+                if (!JSON.ParseMandatoryJSON2("Address",
+                                              "address",
+                                              OICPv2_3.Address.TryParse,
+                                              out Address Address,
+                                              out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse PlugTypes                         [mandatory]
+
+                if (!JSON.ParseMandatory("PlugTypes",
+                                         "plug types",
+                                         PlugTypesExtentions.TryParse,
+                                         out IEnumerable<PlugTypes> PlugTypes,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingFacilities                [mandatory]
+
+                if (!JSON.ParseMandatoryJSON("ChargingFacilities",
+                                             "charging facilities",
+                                             ChargingFacility.TryParse,
+                                             out IEnumerable<ChargingFacility> ChargingFacilities,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse RenewableEnergy                   [mandatory]
+
+                if (!JSON.ParseMandatory("RenewableEnergy",
+                                         "renewable energy",
+                                         out Boolean RenewableEnergy,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse CalibrationLawDataAvailability    [mandatory]
+
+                if (!JSON.ParseMandatory("CalibrationLawDataAvailability",
+                                         "calibration law data availability",
+                                         CalibrationLawDataAvailabilitiesExtentions.TryParse,
+                                         out CalibrationLawDataAvailabilities CalibrationLawDataAvailability,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse AuthenticationModes               [mandatory]
+
+                if (!JSON.ParseMandatory("AuthenticationModes",
+                                         "address",
+                                         AuthenticationModesExtentions.TryParse,
+                                         out IEnumerable<AuthenticationModes> AuthenticationModes,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse PaymentOptions                    [mandatory]
+
+                if (!JSON.ParseMandatory("PaymentOptions",
+                                         "payment options",
+                                         PaymentOptionsExtentions.TryParse,
+                                         out IEnumerable<PaymentOptions> PaymentOptions,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ValueAddedServices                [mandatory]
+
+                if (!JSON.ParseMandatory("ValueAddedServices",
+                                         "value added services",
+                                         ValueAddedServicesExtentions.TryParse,
+                                         out IEnumerable<ValueAddedServices> ValueAddedServices,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Accessibility                     [mandatory]
+
+                if (!JSON.ParseMandatory("Accessibility",
+                                         "accessibility",
+                                         AccessibilityTypesExtentions.TryParse,
+                                         out AccessibilityTypes Accessibility,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse HotlinePhoneNumber                [mandatory]
+
+                if (!JSON.ParseMandatory("HotlinePhoneNumber",
+                                         "hotline phone number",
+                                         Phone_Number.TryParse,
+                                         out Phone_Number HotlinePhoneNumber,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse IsOpen24Hours                     [mandatory]
+
+                if (!JSON.ParseMandatory("IsOpen24Hours",
+                                         "is open 24 hours",
+                                         out Boolean IsOpen24Hours,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse IsHubjectCompatible               [mandatory]
+
+                if (!JSON.ParseMandatory("IsHubjectCompatible",
+                                         "is hubject compatible",
+                                         out Boolean IsHubjectCompatible,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
 
-        //        return evseDataRecord;
+                #region Parse DynamicInfoAvailable              [mandatory]
 
-        //    return null;
+                if (!JSON.ParseMandatory("DynamicInfoAvailable",
+                                         "dynamic info available",
+                                         FalseTrueAuto.TryParse,
+                                         out FalseTrueAuto DynamicInfoAvailable,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
 
-        //}
+
+                #region Parse DeltaType                         [optional]
 
-        //#endregion
+                if (JSON.ParseOptionalStruct("deltaType",
+                                             "delta type",
+                                             DeltaTypesExtentions.TryParse,
+                                             out DeltaTypes? DeltaType,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
 
-        //#region (static) Parse   (EVSEDataRecordText, ..., OnException = null)
-
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP EVSE data record.
-        ///// </summary>
-        ///// <param name="EVSEDataRecordText">The text to parse.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static EVSEDataRecord Parse(String                                     EVSEDataRecordText,
-        //                                   CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
-        //                                   CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
-        //                                   CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
-        //                                   OnExceptionDelegate                        OnException                    = null)
-        //{
-
-        //    if (TryParse(EVSEDataRecordText,
-        //                 out EVSEDataRecord evseDataRecord,
-        //                 CustomEVSEDataRecordParser,
-        //                 CustomAddressParser,
-        //                 CustomChargingFacilityParser,
-        //                 OnException))
-
-        //        return evseDataRecord;
-
-        //    return null;
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(EVSEDataRecordXML,  out EVSEDataRecord, ..., OnException = null)
-
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP EVSE data record.
-        ///// </summary>
-        ///// <param name="EVSEDataRecordXML">The XML to parse.</param>
-        ///// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(XElement                                   EVSEDataRecordXML,
-        //                               out EVSEDataRecord                         EVSEDataRecord,
-        //                               CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
-        //                               CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
-        //                               CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
-        //                               OnExceptionDelegate                        OnException                    = null)
-        //{
-
-        //    try
-        //    {
-
-        //        if (EVSEDataRecordXML.Name != OICPNS.EVSEData + "EvseDataRecord")
-        //        {
-        //            EVSEDataRecord = null;
-        //            return false;
-        //        }
-
-        //        var EVSEId = EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!"));
-
-        //        #region XML Attribute: LastUpdate
-
-        //        DateTime.TryParse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("lastUpdate"), ""), out DateTime _LastUpdate);
-
-        //        #endregion
-
-        //        #region ChargingStationName
-
-        //        var _ChargingStationName = new I18NString();
-
-        //        EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "ChargingStationName",
-        //                                                  v => _ChargingStationName.Add(Languages.de, v));
-
-        //        EVSEDataRecordXML.IfValueIsNotNullOrEmpty(OICPNS.EVSEData + "EnChargingStationName",
-        //                                                  v => _ChargingStationName.Add(Languages.en, v));
-
-        //        #endregion
-
-        //        #region MaxCapacity in kWh
-
-        //        var _MaxCapacity_kWh = EVSEDataRecordXML.
-        //                                   ElementValueOrDefault(OICPNS.EVSEData + "MaxCapacity", String.Empty).
-        //                                   Trim();
-
-        //        Single _MaxCapacity = 0.0f;
-
-        //        if (_MaxCapacity_kWh.IsNotNullOrEmpty())
-        //            Single.TryParse(_MaxCapacity_kWh, out _MaxCapacity);
-
-        //        #endregion
-
-        //        #region AdditionalInfo
-
-        //        var _AdditionalInfo = new I18NString();
-
-        //        foreach (var infoTextXML in EVSEDataRecordXML.
-        //                                        Element (OICPNS.EVSEData + "AdditionalInfo").
-        //                                        Elements(OICPNS.EVSEData + "InfoText"))
-        //        {
-
-        //            var lang = infoTextXML.Attribute("lang").Value?.Trim().ToLower();
-
-        //            if (lang.Length == 2 && Enum.TryParse(lang, out Languages Language))
-        //                _AdditionalInfo.Add(Language, infoTextXML.Value);
-
-        //        }
-
-        //        #endregion
-
-
-        //        EVSEDataRecord = new EVSEDataRecord(
-
-        //            EVSEId,
-
-        //            EVSEDataRecordXML.MapElementOrFail  (OICPNS.EVSEData + "Address",
-        //                                                 (xml, e) => Address.Parse(xml,
-        //                                                                           CustomAddressParser,
-        //                                                                           e),
-        //                                                 OnException),
-
-        //            XML_IO.ParseGeoCoordinatesXML(EVSEDataRecordXML.ElementOrFail(OICPNS.EVSEData + "GeoCoordinates", "Missing 'GeoCoordinates'-XML tag!")),
-
-        //            EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "Plugs",
-        //                                                 OICPNS.EVSEData + "Plug",
-        //                                                 PlugTypesExtentions.Parse),
-
-        //            EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "AuthenticationModes",
-        //                                                 OICPNS.EVSEData + "AuthenticationMode",
-        //                                                 AuthenticationModesExtentions.Parse),
-
-        //            EVSEDataRecordXML.MapValuesOrFail   (OICPNS.EVSEData + "ValueAddedServices",
-        //                                                 OICPNS.EVSEData + "ValueAddedService",
-        //                                                 ValueAddedServicesExtentions.Parse),
-
-        //            AccessibilityTypesExtentions.Parse  (EVSEDataRecordXML.
-        //                                                 ElementValueOrFail(OICPNS.EVSEData + "Accessibility").
-        //                                                 Trim()),
-
-
-        //            EVSEDataRecordXML.                   ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum").
-        //                                                 Trim(),
-
-        //            EVSEDataRecordXML.MapValueOrFail    (OICPNS.EVSEData + "IsOpen24Hours",
-        //                                                 s => s == "true"),
-
-        //            EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
-        //                              Trim() == "true",
-
-        //            EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
-        //                              Trim() != "false",
-
-
-
-        //            DeltaTypesExtentions.Parse(EVSEDataRecordXML.AttributeValueOrDefault(XName.Get("deltaType"), "")),
-
-        //            _LastUpdate,
-
-
-
-        //            EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingStationId",
-        //                                                 ChargingStation_Id.Parse),
-
-        //            EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ChargingPoolId",
-        //                                                 ChargingPool_Id.Parse),
-
-        //            _ChargingStationName,
-
-        //            HardwareManufacturer,
-
-        //            EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "ChargingFacilities",
-        //                                                 OICPNS.EVSEData + "ChargingFacility",
-        //                                                 xml => ChargingFacility.Parse(xml,
-        //                                                                               CustomChargingFacilityParser,
-        //                                                                               OnException)),
-
-        //            EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "ChargingModes",
-        //                                                 OICPNS.EVSEData + "ChargingMode",
-        //                                                 ChargingModesExtentions.Parse),
-
-        //            _MaxCapacity,
-
-        //            EVSEDataRecordXML.MapValues         (OICPNS.EVSEData + "PaymentOptions",
-        //                                                 OICPNS.EVSEData + "PaymentOption",
-        //                                                 PaymentOptionsExtentions.Parse),
-
-        //            _AdditionalInfo,
-
-        //            EVSEDataRecordXML.MapElement(OICPNS.CommonTypes + "GeoChargingPointEntrance",
-        //                                         XML_IO.ParseGeoCoordinatesXML),
-
-        //            //ToDo!!!!!!!!!!!!!!!!!!!!
-        //            EVSEDataRecordXML.ElementValueOrDefault(OICPNS.EVSEData + "OpeningTimes"),
-
-        //            EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "HubOperatorID",
-        //                                                 HubOperator_Id.Parse),
-
-        //            EVSEDataRecordXML.MapValueOrNullable(OICPNS.EVSEData + "ClearinghouseID",
-        //                                                 ClearingHouse_Id.Parse)
-
-        //        );
-
-        //        if (CustomEVSEDataRecordParser != null)
-        //            EVSEDataRecord = CustomEVSEDataRecordParser(EVSEDataRecordXML, EVSEDataRecord);
-
-        //        return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordXML, e);
-
-        //        EVSEDataRecord = null;
-        //        return false;
-
-        //    }
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(EVSEDataRecordText, out EVSEDataRecord, ..., OnException = null)
-
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP EVSE data record.
-        ///// </summary>
-        ///// <param name="EVSEDataRecordText">The text to parse.</param>
-        ///// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(String                                     EVSEDataRecordText,
-        //                               out EVSEDataRecord                         EVSEDataRecord,
-        //                               CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser     = null,
-        //                               CustomXMLParserDelegate<Address>           CustomAddressParser            = null,
-        //                               CustomXMLParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null,
-        //                               OnExceptionDelegate                        OnException                    = null)
-        //{
-
-        //    try
-        //    {
-
-        //        if (TryParse(XDocument.Parse(EVSEDataRecordText).Root,
-        //                     out EVSEDataRecord,
-        //                     CustomEVSEDataRecordParser,
-        //                     CustomAddressParser,
-        //                     CustomChargingFacilityParser,
-        //                     OnException))
-
-        //            return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, EVSEDataRecordText, e);
-        //    }
-
-        //    EVSEDataRecord = null;
-        //    return false;
-
-        //}
-
-        //#endregion
-
-        //#region ToXML(XName = null, IncludeMetadata = false, CustomEVSEDataRecordSerializer = null, CustomAddressSerializer = null)
-
-        ///// <summary>
-        ///// Return a XML representation of the EVSE data record.
-        ///// </summary>
-        ///// <param name="XName">The XML name to use.</param>
-        ///// <param name="IncludeMetadata">Include deltaType and lastUpdate meta data.</param>
-        ///// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom ChargingFacility XML elements.</param>
-        //public XElement ToXML(XName                                          XName                              = null,
-        //                      Boolean                                        IncludeMetadata                    = false,
-        //                      CustomXMLSerializerDelegate<EVSEDataRecord>    CustomEVSEDataRecordSerializer     = null,
-        //                      CustomXMLSerializerDelegate<Address>           CustomAddressSerializer            = null,
-        //                      CustomXMLSerializerDelegate<ChargingFacility>  CustomChargingFacilitySerializer   = null)
-
-        //{
-
-        //    var XML = new XElement(OICPNS.EVSEData + "EvseDataRecord",
-
-        //                  IncludeMetadata && DeltaType.HasValue
-        //                      ? new XAttribute(OICPNS.EVSEData + "deltaType",  DeltaType.ToString())
-        //                      : null,
-
-        //                  IncludeMetadata && LastUpdate.HasValue
-        //                      ? new XAttribute(OICPNS.EVSEData + "lastUpdate", LastUpdate.ToString())
-        //                      : null,
-
-        //                  new XElement(OICPNS.EVSEData + "EvseID",                Id.ToString()),
-
-        //                  ChargingStationId.HasValue
-        //                      ? new XElement(OICPNS.EVSEData + "ChargingStationID",     ChargingStationId.Value.ToString())
-        //                      : null,
-
-        //                  ChargingStationName[Languages.de] != null
-        //                      ? new XElement(OICPNS.EVSEData + "ChargingStationName",   ChargingStationName[Languages.de].SubstringMax(50))
-        //                      : null,
-
-        //                  HardwareManufacturer,
-
-        //                  ChargingStationName[Languages.en] != null
-        //                      ? new XElement(OICPNS.EVSEData + "EnChargingStationName", ChargingStationName[Languages.en].SubstringMax(50))
-        //                      : null,
-
-        //                  ChargingPoolId.HasValue
-        //                      ? new XElement(OICPNS.EVSEData + "ChargingPoolID", ChargingPoolId.Value.ToString())
-        //                      : null,
-
-        //                  Address.ToXML(OICPNS.EVSEData + "Address",
-        //                                CustomAddressSerializer),
-
-        //                  new XElement(OICPNS.EVSEData + "GeoCoordinates",
-        //                      new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-        //                          new XElement(OICPNS.CommonTypes + "Longitude",  GeoCoordinate.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-        //                          new XElement(OICPNS.CommonTypes + "Latitude",   GeoCoordinate.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-        //                      )
-        //                  ),
-
-        //                  new XElement(OICPNS.EVSEData + "Plugs",
-        //                      PlugTypes.SafeSelect(Plug => new XElement(OICPNS.EVSEData + "Plug", PlugTypesExtentions.AsString(Plug)))
-        //                  ),
-
-        //                  ChargingFacilities.SafeAny()
-        //                      ? new XElement(OICPNS.EVSEData + "ChargingFacilities",
-        //                            ChargingFacilities.Select(chargingFacility    => chargingFacility.ToXML(CustomChargingFacilitySerializer)))
-        //                      : null,
-
-        //                  ChargingModes.SafeAny()
-        //                      ? new XElement(OICPNS.EVSEData + "ChargingModes",
-        //                            ChargingModes.Select(ChargingMode => new XElement(OICPNS.EVSEData + "ChargingMode", ChargingModesExtentions.AsString(ChargingMode))))
-        //                      : null,
-
-        //                  new XElement(OICPNS.EVSEData + "AuthenticationModes",
-        //                      AuthenticationModes.SafeSelect(AuthenticationMode => AuthenticationModesExtentions.AsString(AuthenticationMode)).
-        //                                          Where     (AuthenticationMode => AuthenticationMode != "Unknown").
-        //                                          Select    (AuthenticationMode => new XElement(OICPNS.EVSEData + "AuthenticationMode", AuthenticationMode))
-        //                  ),
-
-        //                  MaxCapacity.HasValue
-        //                      ? new XElement(OICPNS.EVSEData + "MaxCapacity", MaxCapacity)
-        //                      : null,
-
-        //                  PaymentOptions.SafeAny()
-        //                      ? new XElement(OICPNS.EVSEData + "PaymentOptions",
-        //                            PaymentOptions.SafeSelect(PaymentOption      => new XElement(OICPNS.EVSEData + "PaymentOption", PaymentOptionsExtentions.AsString(PaymentOption)))
-        //                        )
-        //                      : null,
-
-        //                  ValueAddedServices.SafeAny()
-        //                      ? new XElement(OICPNS.EVSEData + "ValueAddedServices",
-        //                            ValueAddedServices.SafeSelect(ValueAddedService => new XElement(OICPNS.EVSEData + "ValueAddedService", ValueAddedServicesExtentions.AsString(ValueAddedService)))
-        //                        )
-        //                      : new XElement(OICPNS.EVSEData + "ValueAddedServices", new XElement(OICPNS.EVSEData + "ValueAddedService", "None")),
-
-        //                  new XElement(OICPNS.EVSEData + "Accessibility",     Accessibility.AsString()),
-
-        //                  HotlinePhoneNumber.IsNotNullOrEmpty()
-        //                      ? new XElement(OICPNS.EVSEData + "HotlinePhoneNumber", HotlinePhoneNumberRegExpr.Replace(HotlinePhoneNumber, ""))  // RegEx: \+[0-9]{5,15}
-        //                      : null,
-
-        //                  AdditionalInfo.IsNeitherNullNorEmpty()
-        //                      ? new XElement(OICPNS.EVSEData + "AdditionalInfo",
-        //                                     AdditionalInfo.
-        //                                         Select(info => new XElement(OICPNS.EVSEData + "InfoText",
-        //                                                                     new XAttribute("lang", info.Language), //ToDo: ISO 639-3 codes for languages is not what OICP expects! Pattern: [a-z]{2,3}(-[A-Z]{2,3}(-[a-zA-Z]{4})?)?(-x-[a-zA-Z0-9]{1,8})?
-        //                                                                     info.Text)))
-        //                      : null,
-
-        //                  GeoChargingPointEntrance != null
-        //                      ? new XElement(OICPNS.EVSEData + "GeoChargingPointEntrance",
-        //                          new XElement(OICPNS.CommonTypes + "DecimalDegree",  // Force 0.00... (dot) format!
-        //                              new XElement(OICPNS.CommonTypes + "Longitude", GeoChargingPointEntrance.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),// CultureInfo.InvariantCulture.NumberFormat)),
-        //                              new XElement(OICPNS.CommonTypes + "Latitude",  GeoChargingPointEntrance.Value.Latitude. ToString("{0:0.######}").Replace(",", ".")) // CultureInfo.InvariantCulture.NumberFormat))
-        //                          )
-        //                      )
-        //                      : null,
-
-        //                  new XElement(OICPNS.EVSEData + "IsOpen24Hours",         IsOpen24Hours ? "true" : "false"),
-
-        //                  //ToDo: Implement new OpeningTimes complex type!
-        //                  //OpeningTimes.IsNotNullOrEmpty()
-        //                  //    ? new XElement(OICPNS.EVSEData + "OpeningTime",     OpeningTimes)
-        //                  //    : null,
-
-        //                  HubOperatorId != null
-        //                      ? new XElement(OICPNS.EVSEData + "HubOperatorID",   HubOperatorId.ToString())
-        //                      : null,
-
-        //                  ClearingHouseId != null
-        //                      ? new XElement(OICPNS.EVSEData + "ClearinghouseID", ClearingHouseId.ToString())
-        //                      : null,
-
-        //                  new XElement(OICPNS.EVSEData + "IsHubjectCompatible",   IsHubjectCompatible  ? "true" : "false"),
-        //                  new XElement(OICPNS.EVSEData + "DynamicInfoAvailable",  DynamicInfoAvailable ? "true" : "false")
-
-        //           );
-
-        //    return CustomEVSEDataRecordSerializer != null
-        //               ? CustomEVSEDataRecordSerializer(this, XML)
-        //               : XML;
-
-        //}
-
-        //#endregion
+                #region Parse LastUpdate                        [optional]
+
+                if (JSON.ParseOptional("lastUpdate",
+                                       "last update",
+                                       out DateTime? LastUpdate,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+
+                #region Parse ChargingStationId                 [optional]
+
+                if (JSON.ParseOptionalStruct("ChargingStationID",
+                                             "charging station identification",
+                                             ChargingStation_Id.TryParse,
+                                             out ChargingStation_Id? ChargingStationId,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingPoolId                    [optional]
+
+                if (JSON.ParseOptionalStruct("ChargingPoolID",
+                                             "charging pool identification",
+                                             ChargingPool_Id.TryParse,
+                                             out ChargingPool_Id? ChargingPoolId,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                // ChargingStationName
+
+                #region HardwareManufacturer                    [optional]
+
+                var HardwareManufacturer = JSON["HardwareManufacturer"]?.Value<String>();
+
+                #endregion
+
+                #region Parse ChargingStationImageURL           [optional]
+
+                if (JSON.ParseOptionalStruct("ChargingStationImage",
+                                             "charging station image URL",
+                                             URL.TryParse,
+                                             out URL? ChargingStationImageURL,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region SubOperatorName                         [optional]
+
+                var SubOperatorName = JSON["SubOperatorName"]?.Value<String>();
+
+                #endregion
+
+                #region Parse GeoCoordinates                    [optional]
+
+                if (JSON.ParseOptionalStruct("GeoCoordinates",
+                                             "geo coordinates",
+                                             OICPv2_3.GeoCoordinates.TryParse,
+                                             out GeoCoordinates? GeoCoordinates,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse DynamicPowerLevel                 [optional]
+
+                if (JSON.ParseOptional("DynamicPowerLevel",
+                                       "dynamic power level",
+                                       out Boolean? DynamicPowerLevel,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse EnergySources                     [optional]
+
+                if (JSON.ParseOptionalJSON("EnergySource",
+                                           "delta type",
+                                           EnergySource.TryParse,
+                                           out IEnumerable<EnergySource> EnergySources,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse EnvironmentalImpact               [optional]
+
+                if (JSON.ParseOptionalJSON("EnvironmentalImpact",
+                                           "environmental impact",
+                                           OICPv2_3.EnvironmentalImpact.TryParse,
+                                           out EnvironmentalImpact? EnvironmentalImpact,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse MaxCapacity                       [optional]
+
+                if (JSON.ParseOptional("MaxCapacity",
+                                       "max capacity",
+                                       out UInt32? MaxCapacity,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse AccessibilityLocationType         [optional]
+
+                if (JSON.ParseOptionalStruct("AccessibilityLocation",
+                                             "accessibility location",
+                                             AccessibilityLocationTypesExtentions.TryParse,
+                                             out AccessibilityLocationTypes? AccessibilityLocationType,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                // AdditionalInfo
+                // ChargingStationLocationReference
+
+                #region Parse GeoChargingPointEntrance          [optional]
+
+                if (JSON.ParseOptionalStruct("GeoChargingPointEntrance",
+                                             "geo charging point entrance",
+                                             OICPv2_3.GeoCoordinates.TryParse,
+                                             out GeoCoordinates? GeoChargingPointEntrance,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse OpeningTimes                      [optional]
+
+                if (JSON.ParseOptionalJSON("OpeningTimes",
+                                           "opening times",
+                                           OpeningTime.TryParse,
+                                           out IEnumerable<OpeningTime> OpeningTimes,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse HubOperatorId                     [optional]
+
+                if (JSON.ParseOptionalStruct("HubOperatorID",
+                                             "hub operator identification",
+                                             Operator_Id.TryParse,
+                                             out Operator_Id? HubOperatorId,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse ClearingHouseId                   [optional]
+
+                if (JSON.ParseOptionalStruct("ClearingHouseID",
+                                             "clearing house identification",
+                                             ClearingHouse_Id.TryParse,
+                                             out ClearingHouse_Id? ClearingHouseId,
+                                             out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+
+                #region Parse Custom Data                       [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
+
+                EVSEDataRecord = new EVSEDataRecord(EVSEId,
+                                                    Address,
+                                                    PlugTypes,
+                                                    ChargingFacilities,
+                                                    RenewableEnergy,
+                                                    CalibrationLawDataAvailability,
+                                                    AuthenticationModes,
+                                                    PaymentOptions,
+                                                    ValueAddedServices,
+                                                    Accessibility,
+                                                    HotlinePhoneNumber,
+                                                    IsOpen24Hours,
+                                                    IsHubjectCompatible,
+                                                    DynamicInfoAvailable,
+
+                                                    DeltaType,
+                                                    LastUpdate,
+
+                                                    ChargingStationId,
+                                                    ChargingPoolId,
+                                                    null,
+                                                    HardwareManufacturer,
+                                                    ChargingStationImageURL,
+                                                    SubOperatorName,
+                                                    GeoCoordinates,
+                                                    DynamicPowerLevel,
+                                                    EnergySources,
+                                                    EnvironmentalImpact,
+                                                    MaxCapacity,
+                                                    AccessibilityLocationType,
+                                                    null,
+                                                    null,
+                                                    GeoChargingPointEntrance,
+                                                    OpeningTimes,
+                                                    HubOperatorId,
+                                                    ClearingHouseId,
+
+                                                    CustomData);
+
+
+                if (CustomEVSEDataRecordParser != null)
+                    EVSEDataRecord = CustomEVSEDataRecordParser(JSON,
+                                                                EVSEDataRecord);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                EVSEDataRecord  = default;
+                ErrorResponse   = "The given JSON representation of an EVSE data record is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, out EVSEDataRecord, out ErrorResponse, CustomEVSEDataRecordParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an EVSE data record.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
+        public static Boolean TryParse(String                                       Text,
+                                       out EVSEDataRecord                           EVSEDataRecord,
+                                       out String                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser)
+        {
+
+            try
+            {
+
+                return TryParse(JObject.Parse(Text),
+                                out EVSEDataRecord,
+                                out ErrorResponse,
+                                CustomEVSEDataRecordParser);
+
+            }
+            catch (Exception e)
+            {
+                EVSEDataRecord  = default;
+                ErrorResponse   = "The given text representation of an EVSE data record is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region ToJSON(CustomEVSEDataRecordSerializer = null)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord> CustomEVSEDataRecordSerializer = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("EvseID",                                  Id.                            ToString()),
+
+                           new JProperty("Address",                                 Address.                       ToJSON()),
+                           new JProperty("PlugTypes",                               new JArray(PlugTypes.          SafeSelect(plugType           => plugType.          AsString()))),
+                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. SafeSelect(chargingFacility   => chargingFacility.  ToString()))),
+                           new JProperty("RenewableEnergy",                         RenewableEnergy),
+                           new JProperty("CalibrationLawDataAvailability",          CalibrationLawDataAvailability.AsString()),
+                           new JProperty("AuthenticationModes",                     new JArray(AuthenticationModes.SafeSelect(authenticationMode => authenticationMode.AsString()))),
+                           new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     SafeSelect(paymentOption      => paymentOption.     AsString()))),
+                           new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
+                           new JProperty("Accessibility",                           Accessibility.                 AsString()),
+                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.            ToString()),
+                           new JProperty("IsOpen24Hours",                           IsOpen24Hours),
+                           new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
+                           new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.          ToString()),
+
+
+                           DeltaType.                       HasValue
+                               ? new JProperty("deltaType",                         DeltaType.               Value)
+                               : null,
+
+                           LastUpdate.                      HasValue
+                               ? new JProperty("lastUpdate",                        LastUpdate.              Value.ToIso8601())
+                               : null,
+
+
+                           ChargingStationId.               HasValue
+                               ? new JProperty("ChargingStationID",                 ChargingStationId.       Value)
+                               : null,
+
+                           ChargingPoolId.                  HasValue
+                               ? new JProperty("ChargingPoolID",                    ChargingPoolId.          Value)
+                               : null,
+
+                           ChargingStationName.             IsNeitherNullNorEmpty()
+                               ? new JProperty("ChargingStationNames",              new JArray(ChargingStationName.Select(i18n => new JObject(
+                                                                                                                                      new JProperty("lang",  i18n.Language.ToString()),
+                                                                                                                                      new JProperty("value", i18n.Text)
+                                                                                                                                  ))))
+                               : null,
+
+                           HardwareManufacturer.            IsNeitherNullNorEmpty()
+                               ? new JProperty("HardwareManufacturer",              HardwareManufacturer)
+                               : null,
+
+                           ChargingStationImageURL.         HasValue
+                               ? new JProperty("ChargingStationImage",              ChargingStationImageURL. Value.ToString())
+                               : null,
+
+                           SubOperatorName.                 IsNeitherNullNorEmpty()
+                               ? new JProperty("SubOperatorName",                   SubOperatorName)
+                               : null,
+
+                           GeoCoordinates.                  HasValue
+                               ? new JProperty("GeoCoordinates",                    GeoCoordinates.          Value.ToJSON())
+                               : null,
+
+                           DynamicPowerLevel.               HasValue
+                               ? new JProperty("DynamicPowerLevel",                 DynamicPowerLevel.       Value)
+                               : null,
+
+                           EnergySources.                   IsNeitherNullNorEmpty()
+                               ? new JProperty("EnergySource",                      new JArray(EnergySources.Select(energySource => energySource.ToJSON())))
+                               : null,
+
+                           EnvironmentalImpact.             HasValue
+                               ? new JProperty("EnvironmentalImpact",               EnvironmentalImpact.     Value.ToJSON())
+                               : null,
+
+                           MaxCapacity.                     HasValue
+                               ? new JProperty("MaxCapacity",                       MaxCapacity.             Value)
+                               : null,
+
+                           AccessibilityLocationType.           HasValue
+                               ? new JProperty("AccessibilityLocation",             AccessibilityLocationType.   Value.AsString())
+                               : null,
+
+                           AdditionalInfo.                  IsNeitherNullNorEmpty()
+                               ? new JProperty("AdditionalInfo",                    new JArray(AdditionalInfo.Select(i18n => new JObject(
+                                                                                                                                 new JProperty("lang",  i18n.Language.ToString()),
+                                                                                                                                 new JProperty("value", i18n.Text)
+                                                                                                                             ))))
+                               : null,
+
+                           ChargingStationLocationReference.IsNeitherNullNorEmpty()
+                               ? new JProperty("ChargingStationLocationReference",  new JArray(ChargingStationLocationReference.Select(i18n => new JObject(
+                                                                                                                                                   new JProperty("lang",  i18n.Language.ToString()),
+                                                                                                                                                   new JProperty("value", i18n.Text)
+                                                                                                                                               ))))
+                               : null,
+
+                           GeoChargingPointEntrance.        HasValue
+                               ? new JProperty("GeoChargingPointEntrance",          GeoChargingPointEntrance.Value.ToJSON())
+                               : null,
+
+                           OpeningTimes.                    IsNeitherNullNorEmpty()
+                               ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON())))
+                               : null,
+
+                           HubOperatorId.                   HasValue
+                               ? new JProperty("HubOperatorID",                     HubOperatorId.           Value.ToString())
+                               : null,
+
+                           ClearingHouseId.                 HasValue
+                               ? new JProperty("ClearinghouseID",                   ClearingHouseId.         Value.ToString())
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",                        CustomData)
+                               : null
+
+                       );
+
+            return CustomEVSEDataRecordSerializer != null
+                       ? CustomEVSEDataRecordSerializer(this, JSON)
+                       : JSON;
+
+        }
+
+        #endregion
+
+        #region Clone
+
+        /// <summary>
+        /// Clone this dynamic data of an EVSE.
+        /// </summary>
+        public EVSEDataRecord Clone
+
+            => new EVSEDataRecord(Id,
+
+                                  Address,
+                                  PlugTypes,
+                                  ChargingFacilities,
+                                  RenewableEnergy,
+                                  CalibrationLawDataAvailability,
+                                  AuthenticationModes,
+                                  PaymentOptions,
+                                  ValueAddedServices,
+                                  Accessibility,
+                                  HotlinePhoneNumber,
+                                  IsOpen24Hours,
+                                  IsHubjectCompatible,
+                                  DynamicInfoAvailable,
+
+                                  DeltaType,
+                                  LastUpdate,
+
+                                  ChargingStationId,
+                                  ChargingPoolId,
+                                  ChargingStationName,
+                                  HardwareManufacturer,
+                                  ChargingStationImageURL,
+                                  SubOperatorName,
+                                  GeoCoordinates,
+                                  DynamicPowerLevel,
+                                  EnergySources,
+                                  EnvironmentalImpact,
+                                  MaxCapacity,
+                                  AccessibilityLocationType,
+                                  AdditionalInfo,
+                                  ChargingStationLocationReference,
+                                  GeoChargingPointEntrance,
+                                  OpeningTimes,
+                                  HubOperatorId,
+                                  ClearingHouseId,
+
+                                  JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)));
+
+        #endregion
 
 
         #region Operator overloading
@@ -992,7 +1327,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator == (EVSEDataRecord EVSEDataRecord1,
+                                           EVSEDataRecord EVSEDataRecord2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -1000,7 +1336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) EVSEDataRecord1 == null) || ((Object) EVSEDataRecord2 == null))
+            if (EVSEDataRecord1 is null || EVSEDataRecord2 is null)
                 return false;
 
             return EVSEDataRecord1.Equals(EVSEDataRecord2);
@@ -1017,7 +1353,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator != (EVSEDataRecord EVSEDataRecord1,
+                                           EVSEDataRecord EVSEDataRecord2)
+
             => !(EVSEDataRecord1 == EVSEDataRecord2);
 
         #endregion
@@ -1030,11 +1368,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator < (EVSEDataRecord EVSEDataRecord1,
+                                          EVSEDataRecord EVSEDataRecord2)
         {
 
-            if ((Object) EVSEDataRecord1 == null)
-                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSEDataRecord1 must not be null!");
+            if (EVSEDataRecord1 is null)
+                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSE data record must not be null!");
 
             return EVSEDataRecord1.CompareTo(EVSEDataRecord2) < 0;
 
@@ -1050,7 +1389,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator <= (EVSEDataRecord EVSEDataRecord1,
+                                           EVSEDataRecord EVSEDataRecord2)
+
             => !(EVSEDataRecord1 > EVSEDataRecord2);
 
         #endregion
@@ -1063,11 +1404,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator > (EVSEDataRecord EVSEDataRecord1,
+                                          EVSEDataRecord EVSEDataRecord2)
         {
 
-            if ((Object) EVSEDataRecord1 == null)
-                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSEDataRecord1 must not be null!");
+            if (EVSEDataRecord1 is null)
+                throw new ArgumentNullException(nameof(EVSEDataRecord1), "The given EVSE data record must not be null!");
 
             return EVSEDataRecord1.CompareTo(EVSEDataRecord2) > 0;
 
@@ -1083,7 +1425,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EVSEDataRecord EVSEDataRecord1, EVSEDataRecord EVSEDataRecord2)
+        public static Boolean operator >= (EVSEDataRecord EVSEDataRecord1,
+                                           EVSEDataRecord EVSEDataRecord2)
+
             => !(EVSEDataRecord1 < EVSEDataRecord2);
 
         #endregion
@@ -1361,7 +1705,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    public Boolean?                          IsHubjectCompatible         { get; set; }
 
         //    /// <summary>
-        //    /// Whether the EVSE provides dynamic status information.
+        //    /// Whether the EVSE provides dynamic data information.
         //    /// </summary>
         //    public Boolean?                          DynamicInfoAvailable        { get; set; }
 
@@ -1385,7 +1729,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    /// <param name="HotlinePhoneNumber">The phone number of the charging station operators hotline.</param>
         //    /// <param name="IsOpen24Hours">Whether the EVSE is open 24/7.</param>
         //    /// <param name="IsHubjectCompatible">Whether the EVSE is Hubject compatible.</param>
-        //    /// <param name="DynamicInfoAvailable">Whether the EVSE provides dynamic status information.</param>
+        //    /// <param name="DynamicInfoAvailable">Whether the EVSE provides dynamic data information.</param>
         //    /// 
         //    /// <param name="ChargingStationId">The identification of the charging station hosting the EVSE.</param>
         //    /// <param name="ChargingPoolId">The identification of the charging pool hosting the EVSE.</param>

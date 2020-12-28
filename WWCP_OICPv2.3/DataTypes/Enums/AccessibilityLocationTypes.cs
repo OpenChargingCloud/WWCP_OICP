@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class AccessibilityLocationTypesExtentions
     {
 
-        #region Parse(AccessibilityLocationType)
+        #region Parse   (AccessibilityLocationType)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility location type.
@@ -43,8 +43,45 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    "ParkingLot"                => AccessibilityLocationTypes.ParkingLot,
                    "ParkingGarage"             => AccessibilityLocationTypes.ParkingGarage,
                    "UndergroundParkingGarage"  => AccessibilityLocationTypes.UndergroundParkingGarage,
-                   _                           => AccessibilityLocationTypes.Unspecified
-               };
+                   _                           => throw new ArgumentException("Undefined accessibility location type '" + Text + "'!")
+            };
+
+        #endregion
+
+        #region TryParse(AccessibilityLocationType, out AccessibilityLocationType)
+
+        /// <summary>
+        /// Parses the given text-representation of an accessibility location type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an accessibility location type.</param>
+        /// <param name="AccessibilityLocationType">The parsed accessibility location type.</param>
+        public static Boolean TryParse(String Text, out AccessibilityLocationTypes AccessibilityLocationType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "OnStreet":
+                    AccessibilityLocationType = AccessibilityLocationTypes.OnStreet;
+                    return true;
+
+                case "ParkingLot":
+                    AccessibilityLocationType = AccessibilityLocationTypes.ParkingLot;
+                    return true;
+
+                case "ParkingGarage":
+                    AccessibilityLocationType = AccessibilityLocationTypes.ParkingGarage;
+                    return true;
+
+                case "UndergroundParkingGarage":
+                    AccessibilityLocationType = AccessibilityLocationTypes.UndergroundParkingGarage;
+                    return true;
+
+                default:
+                    AccessibilityLocationType = AccessibilityLocationTypes.OnStreet;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -61,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    AccessibilityLocationTypes.ParkingLot                => "ParkingLot",
                    AccessibilityLocationTypes.ParkingGarage             => "ParkingGarage",
                    AccessibilityLocationTypes.UndergroundParkingGarage  => "UndergroundParkingGarage",
-                   _                                                    => "Unspecified"
+                   _                                                    => "OnStreet"
                };
 
         #endregion
@@ -74,11 +111,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum AccessibilityLocationTypes
     {
-
-        /// <summary>
-        /// Unknown accessibility.
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// The charging station is located on the street.
