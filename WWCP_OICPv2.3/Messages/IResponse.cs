@@ -33,11 +33,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// The machine-readable result code.
-        /// </summary>
-   //     Result    Result              { get; }
-
-        /// <summary>
         /// The timestamp of the response message creation.
         /// </summary>
         DateTime  ResponseTimestamp    { get; }

@@ -18,13 +18,10 @@
 #region Usings
 
 using System;
-using System.Xml.Linq;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -32,32 +29,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extention methods for status codes.
-    /// </summary>
-    public static class StatusCodeExtentions
-    {
-
-        /// <summary>
-        /// Whether the given status code is valid and has results.
-        /// </summary>
-        /// <param name="StatusCode">A status code.</param>
-        public static Boolean HasResult(this StatusCode? StatusCode)
-        {
-
-            if (!StatusCode.HasValue)
-                return false;
-
-            return StatusCode.Value.HasResult;
-
-        }
-
-    }
-
-
-    /// <summary>
     /// A result status code.
     /// </summary>
-    public readonly struct StatusCode
+    public class StatusCode
     {
 
         #region Properties
@@ -66,25 +40,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The result code of the operation.
         /// </summary>
         [Mandatory]
-        public readonly  StatusCodes  Code              { get; }
+        public StatusCodes  Code              { get; }
 
         /// <summary>
         /// Whether the operation was successful and returned a valid result.
         /// </summary>
-        public readonly  Boolean      HasResult
+        public Boolean      HasResult
             => Code == 0;
 
         /// <summary>
         /// An optional description of the result code.
         /// </summary>
         [Optional]
-        public readonly  String       Description       { get; }
+        public String       Description       { get; }
 
         /// <summary>
         /// Optional additional information.
         /// </summary>
         [Optional]
-        public readonly  String       AdditionalInfo    { get; }
+        public String       AdditionalInfo    { get; }
 
         #endregion
 
@@ -413,9 +387,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region GetHashCode()
 
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
         {
             unchecked
@@ -446,6 +420,113 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              AdditionalInfo.IsNotNullOrEmpty()
                                  ? ", additional Info: " + AdditionalInfo
                                  : "");
+
+        #endregion
+
+
+        #region ToBuilder()
+
+        /// <summary>
+        /// Return a status code builder.
+        /// </summary>
+        public Builder ToBuilder()
+
+            => new Builder(Code,
+                           Description,
+                           AdditionalInfo);
+
+        #endregion
+
+        #region (class) Builder
+
+        /// <summary>
+        /// A status code builder.
+        /// </summary>
+        public class Builder
+        {
+
+            #region Properties
+
+            /// <summary>
+            /// The result code of the operation.
+            /// </summary>
+            [Mandatory]
+            public StatusCodes?  Code              { get; set; }
+
+            /// <summary>
+            /// Whether the operation was successful and returned a valid result.
+            /// </summary>
+            public Boolean       HasResult
+                => Code == 0;
+
+            /// <summary>
+            /// An optional description of the result code.
+            /// </summary>
+            [Optional]
+            public String        Description       { get; set; }
+
+            /// <summary>
+            /// Optional additional information.
+            /// </summary>
+            [Optional]
+            public String        AdditionalInfo    { get; set; }
+
+            #endregion
+
+            #region Constructor(s)
+
+            /// <summary>
+            /// Create a new status code builder.
+            /// </summary>
+            /// <param name="Code">The result code of the operation.</param>
+            /// <param name="Description">An optional description of the result code.</param>
+            /// <param name="AdditionalInfo">Optional additional information.</param>
+            public Builder(StatusCodes?  Code             = null,
+                           String        Description      = null,
+                           String        AdditionalInfo   = null)
+            {
+
+                this.Code            = Code;
+                this.Description     = Description;
+                this.AdditionalInfo  = AdditionalInfo;
+
+            }
+
+            #endregion
+
+            #region ToImmutable()
+
+            /// <summary>
+            /// Return an immutable version of the status code.
+            /// </summary>
+            /// <param name="Builder">A status code builder.</param>
+            public static implicit operator StatusCode(Builder Builder)
+
+                => Builder?.ToImmutable();
+
+
+            /// <summary>
+            /// Return an immutable version of the status code.
+            /// </summary>
+            public StatusCode ToImmutable()
+            {
+
+                #region Check mandatory parameters
+
+                if (!Code.HasValue)
+                    throw new ArgumentException("The given result code must not be null!", nameof(Code));
+
+                #endregion
+
+                return new StatusCode(Code.Value,
+                                      Description,
+                                      AdditionalInfo);
+
+            }
+
+            #endregion
+
+        }
 
         #endregion
 

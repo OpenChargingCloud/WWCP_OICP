@@ -447,192 +447,192 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         #region GetLocation    (CountryCode, PartyId, LocationId, ...)
 
-        /// <summary>
-        /// Get the charging location specified by the given location identification from the remote API.
-        /// </summary>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional location to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public async Task<OICPResponse<Location>>
+        ///// <summary>
+        ///// Get the charging location specified by the given location identification from the remote API.
+        ///// </summary>
+        ///// <param name="Timestamp">The optional timestamp of the request.</param>
+        ///// <param name="CancellationToken">An optional location to cancel this request.</param>
+        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
+        //public async Task<OICPResponse<Location>>
 
-            GetLocation(CountryCode         CountryCode,
-                        Party_Id            PartyId,
-                        Location_Id         LocationId,
+        //    GetLocation(CountryCode         CountryCode,
+        //                Party_Id            PartyId,
+        //                Location_Id         LocationId,
 
-                        Request_Id?         RequestId           = null,
-                        Correlation_Id?     CorrelationId       = null,
-                        Version_Id?         VersionId           = null,
+        //                Request_Id?         RequestId           = null,
+        //                Correlation_Id?     CorrelationId       = null,
+        //                Version_Id?         VersionId           = null,
 
-                        DateTime?           Timestamp           = null,
-                        CancellationToken?  CancellationToken   = null,
-                        EventTracking_Id    EventTrackingId     = null,
-                        TimeSpan?           RequestTimeout      = null)
+        //                DateTime?           Timestamp           = null,
+        //                CancellationToken?  CancellationToken   = null,
+        //                EventTracking_Id    EventTrackingId     = null,
+        //                TimeSpan?           RequestTimeout      = null)
 
-        {
+        //{
 
-            OICPResponse<Location> response;
+        //    OICPResponse<Location> response;
 
-            #region Send OnGetLocationRequest event
+        //    #region Send OnGetLocationRequest event
 
-            var StartTime = DateTime.UtcNow;
+        //    var StartTime = DateTime.UtcNow;
 
-            try
-            {
+        //    try
+        //    {
 
-                //Counters.GetLocation.IncRequests();
+        //        //Counters.GetLocation.IncRequests();
 
-                //if (OnGetLocationRequest != null)
-                //    await Task.WhenAll(OnGetLocationRequest.GetInvocationList().
-                //                       Cast<OnGetLocationRequestDelegate>().
-                //                       Select(e => e(StartTime,
-                //                                     Request.Timestamp.Value,
-                //                                     this,
-                //                                     ClientId,
-                //                                     Request.EventTrackingId,
+        //        //if (OnGetLocationRequest != null)
+        //        //    await Task.WhenAll(OnGetLocationRequest.GetInvocationList().
+        //        //                       Cast<OnGetLocationRequestDelegate>().
+        //        //                       Select(e => e(StartTime,
+        //        //                                     Request.Timestamp.Value,
+        //        //                                     this,
+        //        //                                     ClientId,
+        //        //                                     Request.EventTrackingId,
 
-                //                                     Request.PartnerId,
-                //                                     Request.OperatorId,
-                //                                     Request.ChargingPoolId,
-                //                                     Request.StatusEventDate,
-                //                                     Request.AvailabilityStatus,
-                //                                     Request.TransactionId,
-                //                                     Request.AvailabilityStatusUntil,
-                //                                     Request.AvailabilityStatusComment,
+        //        //                                     Request.PartnerId,
+        //        //                                     Request.OperatorId,
+        //        //                                     Request.ChargingPoolId,
+        //        //                                     Request.StatusEventDate,
+        //        //                                     Request.AvailabilityStatus,
+        //        //                                     Request.TransactionId,
+        //        //                                     Request.AvailabilityStatusUntil,
+        //        //                                     Request.AvailabilityStatusComment,
 
-                //                                     Request.RequestTimeout ?? RequestTimeout.Value))).
-                //                       ConfigureAwait(false);
+        //        //                                     Request.RequestTimeout ?? RequestTimeout.Value))).
+        //        //                       ConfigureAwait(false);
 
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(CPOClient) + "." + nameof(OnGetLocationRequest));
-            }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.Log(nameof(CPOClient) + "." + nameof(OnGetLocationRequest));
+        //    }
 
-            #endregion
-
-
-            try
-            {
-
-                var requestId      = RequestId     ?? Request_Id.Random();
-                var correlationId  = CorrelationId ?? Correlation_Id.Random();
-                var remoteURL      = await GetRemoteURL(VersionId,
-                                                        ModuleIDs.Locations,
-                                                        InterfaceRoles.RECEIVER);
-
-                if (remoteURL.HasValue)
-                {
-
-                    #region Upstream HTTP request...
-
-                    var HTTPResponse = await (remoteURL.Value.Protocol == HTTPProtocols.http
-
-                                                  ? new HTTPClient (remoteURL.Value.Hostname,
-                                                                    RemotePort:  remoteURL.Value.Port ?? IPPort.HTTP,
-                                                                    DNSClient:   DNSClient)
-
-                                                  : new HTTPSClient(remoteURL.Value.Hostname,
-                                                                    RemoteCertificateValidator,
-                                                                    RemotePort:  remoteURL.Value.Port ?? IPPort.HTTPS,
-                                                                    DNSClient:   DNSClient)).
-
-                                              Execute(client => client.CreateRequest(HTTPMethod.GET,
-                                                                                     remoteURL.Value.Path + CountryCode.ToString() +
-                                                                                                            PartyId.    ToString() +
-                                                                                                            LocationId. ToString(),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Authorization = TokenAuth;
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.Set("X-Request-ID",      requestId);
-                                                                                         requestbuilder.Set("X-Correlation-ID",  correlationId);
-                                                                                     }),
-
-                                                      RequestLogDelegate:   OnGetLocationHTTPRequest,
-                                                      ResponseLogDelegate:  OnGetLocationHTTPResponse,
-                                                      CancellationToken:    CancellationToken,
-                                                      EventTrackingId:      EventTrackingId,
-                                                      RequestTimeout:       RequestTimeout ?? this.RequestTimeout).
-
-                                              ConfigureAwait(false);
-
-                    #endregion
-
-                    response = OICPResponse<Location>.ParseJObject(HTTPResponse,
-                                                                   requestId,
-                                                                   correlationId,
-                                                                   json => Location.Parse(json));
-
-                }
-
-                else
-                    response = new OICPResponse<String, Location>("",
-                                                                  default,
-                                                                  -1,
-                                                                  "No remote URL available!");
-
-            }
-
-            catch (Exception e)
-            {
-
-                response = new OICPResponse<String, Location>("",
-                                                              default,
-                                                              -1,
-                                                              e.Message,
-                                                              e.StackTrace);
-
-            }
+        //    #endregion
 
 
-            #region Send OnGetLocationResponse event
+        //    try
+        //    {
 
-            var Endtime = DateTime.UtcNow;
+        //        var requestId      = RequestId     ?? Request_Id.Random();
+        //        var correlationId  = CorrelationId ?? Correlation_Id.Random();
+        //        var remoteURL      = await GetRemoteURL(VersionId,
+        //                                                ModuleIDs.Locations,
+        //                                                InterfaceRoles.RECEIVER);
 
-            try
-            {
+        //        if (remoteURL.HasValue)
+        //        {
 
-                // Update counters
-                //if (response.HTTPStatusCode == HTTPStatusCode.OK && response.Content.RequestStatus.Code == 1)
-                //    Counters.SetChargingPoolAvailabilityStatus.IncResponses_OK();
-                //else
-                //    Counters.SetChargingPoolAvailabilityStatus.IncResponses_Error();
+        //            #region Upstream HTTP request...
+
+        //            var HTTPResponse = await (remoteURL.Value.Protocol == HTTPProtocols.http
+
+        //                                          ? new HTTPClient (remoteURL.Value.Hostname,
+        //                                                            RemotePort:  remoteURL.Value.Port ?? IPPort.HTTP,
+        //                                                            DNSClient:   DNSClient)
+
+        //                                          : new HTTPSClient(remoteURL.Value.Hostname,
+        //                                                            RemoteCertificateValidator,
+        //                                                            RemotePort:  remoteURL.Value.Port ?? IPPort.HTTPS,
+        //                                                            DNSClient:   DNSClient)).
+
+        //                                      Execute(client => client.CreateRequest(HTTPMethod.GET,
+        //                                                                             remoteURL.Value.Path + CountryCode.ToString() +
+        //                                                                                                    PartyId.    ToString() +
+        //                                                                                                    LocationId. ToString(),
+        //                                                                             requestbuilder => {
+        //                                                                                 requestbuilder.Authorization = TokenAuth;
+        //                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+        //                                                                                 requestbuilder.Set("X-Request-ID",      requestId);
+        //                                                                                 requestbuilder.Set("X-Correlation-ID",  correlationId);
+        //                                                                             }),
+
+        //                                              RequestLogDelegate:   OnGetLocationHTTPRequest,
+        //                                              ResponseLogDelegate:  OnGetLocationHTTPResponse,
+        //                                              CancellationToken:    CancellationToken,
+        //                                              EventTrackingId:      EventTrackingId,
+        //                                              RequestTimeout:       RequestTimeout ?? this.RequestTimeout).
+
+        //                                      ConfigureAwait(false);
+
+        //            #endregion
+
+        //            response = OICPResponse<Location>.ParseJObject(HTTPResponse,
+        //                                                           requestId,
+        //                                                           correlationId,
+        //                                                           json => Location.Parse(json));
+
+        //        }
+
+        //        else
+        //            response = new OICPResponse<String, Location>("",
+        //                                                          default,
+        //                                                          -1,
+        //                                                          "No remote URL available!");
+
+        //    }
+
+        //    catch (Exception e)
+        //    {
+
+        //        response = new OICPResponse<String, Location>("",
+        //                                                      default,
+        //                                                      -1,
+        //                                                      e.Message,
+        //                                                      e.StackTrace);
+
+        //    }
 
 
-                //if (OnGetLocationResponse != null)
-                //    await Task.WhenAll(OnGetLocationResponse.GetInvocationList().
-                //                       Cast<OnGetLocationResponseDelegate>().
-                //                       Select(e => e(Endtime,
-                //                                     Request.Timestamp.Value,
-                //                                     this,
-                //                                     ClientId,
-                //                                     Request.EventTrackingId,
+        //    #region Send OnGetLocationResponse event
 
-                //                                     Request.PartnerId,
-                //                                     Request.OperatorId,
-                //                                     Request.ChargingPoolId,
-                //                                     Request.StatusEventDate,
-                //                                     Request.AvailabilityStatus,
-                //                                     Request.TransactionId,
-                //                                     Request.AvailabilityStatusUntil,
-                //                                     Request.AvailabilityStatusComment,
+        //    var Endtime = DateTime.UtcNow;
 
-                //                                     Request.RequestTimeout ?? RequestTimeout.Value,
-                //                                     result.Content,
-                //                                     Endtime - StartTime))).
-                //                       ConfigureAwait(false);
+        //    try
+        //    {
 
-            }
-            catch (Exception e)
-            {
-                e.Log(nameof(CPOClient) + "." + nameof(OnGetLocationResponse));
-            }
+        //        // Update counters
+        //        //if (response.HTTPStatusCode == HTTPStatusCode.OK && response.Content.RequestStatus.Code == 1)
+        //        //    Counters.SetChargingPoolAvailabilityStatus.IncResponses_OK();
+        //        //else
+        //        //    Counters.SetChargingPoolAvailabilityStatus.IncResponses_Error();
 
-            #endregion
 
-            return response;
+        //        //if (OnGetLocationResponse != null)
+        //        //    await Task.WhenAll(OnGetLocationResponse.GetInvocationList().
+        //        //                       Cast<OnGetLocationResponseDelegate>().
+        //        //                       Select(e => e(Endtime,
+        //        //                                     Request.Timestamp.Value,
+        //        //                                     this,
+        //        //                                     ClientId,
+        //        //                                     Request.EventTrackingId,
 
-        }
+        //        //                                     Request.PartnerId,
+        //        //                                     Request.OperatorId,
+        //        //                                     Request.ChargingPoolId,
+        //        //                                     Request.StatusEventDate,
+        //        //                                     Request.AvailabilityStatus,
+        //        //                                     Request.TransactionId,
+        //        //                                     Request.AvailabilityStatusUntil,
+        //        //                                     Request.AvailabilityStatusComment,
+
+        //        //                                     Request.RequestTimeout ?? RequestTimeout.Value,
+        //        //                                     result.Content,
+        //        //                                     Endtime - StartTime))).
+        //        //                       ConfigureAwait(false);
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.Log(nameof(CPOClient) + "." + nameof(OnGetLocationResponse));
+        //    }
+
+        //    #endregion
+
+        //    return response;
+
+        //}
 
         #endregion
 

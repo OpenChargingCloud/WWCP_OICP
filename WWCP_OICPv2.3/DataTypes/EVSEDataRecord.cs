@@ -1545,9 +1545,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region GetHashCode()
 
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
             => Id.GetHashCode();
 
@@ -1629,216 +1629,216 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The unique identification of the Electric Vehicle Supply Equipment (EVSE).
             /// </summary>
             [Mandatory]
-            public EVSE_Id? Id { get; set; }
+            public EVSE_Id?                           Id                                  { get; set; }
 
 
             /// <summary>
             /// The delta type when the EVSE data record was just downloaded.
             /// </summary>
             [Optional]
-            public DeltaTypes? DeltaType { get; set; }
+            public DeltaTypes?                        DeltaType                           { get; set; }
 
             /// <summary>
             /// The last update timestamp of the EVSE data record.
             /// </summary>
             [Optional]
-            public DateTime? LastUpdate { get; set; }
+            public DateTime?                          LastUpdate                          { get; set; }
 
 
             /// <summary>
             /// The identification of the charging station hosting the EVSE.
             /// </summary>
             [Optional]
-            public ChargingStation_Id? ChargingStationId { get; set; }
+            public ChargingStation_Id?                ChargingStationId                   { get; set; }
 
             /// <summary>
             /// The identification of the charging pool hosting the EVSE.
             /// </summary>
             [Optional]
-            public ChargingPool_Id? ChargingPoolId { get; set; }
+            public ChargingPool_Id?                   ChargingPoolId                      { get; set; }
 
             /// <summary>
             /// The multi-language name of the charging station hosting the EVSE.
             /// </summary>
             [Mandatory]
-            public I18NText ChargingStationName { get; set; }
+            public I18NText                           ChargingStationName                 { get; set; }
 
             /// <summary>
             /// Optional name of the EVSE manufacturer.
             /// </summary>
             [Optional]
-            public String HardwareManufacturer { get; set; }
+            public String                             HardwareManufacturer                { get; set; }
 
             /// <summary>
             /// Optional URL to an image of the EVSE.
             /// </summary>
             [Optional]
-            public URL? ChargingStationImageURL { get; set; }
+            public URL?                               ChargingStationImageURL             { get; set; }
 
             /// <summary>
             /// Optional name of the sub operator owning the EVSE.
             /// </summary>
             [Optional]
-            public String SubOperatorName { get; set; }
+            public String                             SubOperatorName                     { get; set; }
 
             /// <summary>
             /// Whether the EVSE is able to deliver different power outputs.
             /// </summary>
             [Optional]
-            public Boolean? DynamicPowerLevel { get; set; }
+            public Boolean?                           DynamicPowerLevel                   { get; set; }
 
             /// <summary>
             /// The address of the EVSE.
             /// </summary>
             [Mandatory]
-            public Address Address { get; set; }
+            public Address                            Address                             { get; set; }
 
             /// <summary>
             /// The geo coordinate of the EVSE.
             /// </summary>
             [Optional]
-            public GeoCoordinates? GeoCoordinates { get; set; }
+            public GeoCoordinates?                    GeoCoordinates                      { get; set; }
 
             /// <summary>
             /// The types of charging plugs attached to the EVSE.
             /// </summary>
             [Mandatory]
-            public HashSet<PlugTypes> PlugTypes { get; }
+            public HashSet<PlugTypes>                 PlugTypes                           { get; }
 
             /// <summary>
             /// An enumeration of supported charging facilities at the EVSE.
             /// </summary>
             [Mandatory]
-            public HashSet<ChargingFacility> ChargingFacilities { get; }
+            public HashSet<ChargingFacility>          ChargingFacilities                  { get; }
 
 
             /// <summary>
             /// This field gives the information how the charging station provides metering law data.
             /// </summary>
             [Mandatory]
-            public CalibrationLawDataAvailabilities? CalibrationLawDataAvailability { get; set; }
+            public CalibrationLawDataAvailabilities?  CalibrationLawDataAvailability      { get; set; }
 
             /// <summary>
             /// The authentication modes the EVSE supports.
             /// </summary>
             [Mandatory]
-            public HashSet<AuthenticationModes> AuthenticationModes { get; }
+            public HashSet<AuthenticationModes>       AuthenticationModes                 { get; }
 
             /// <summary>
             /// If the EVSE provides only renewable energy then the value MUST be” true”,
             /// if it use grey energy then value MUST be “false”.
             /// </summary>
             [Mandatory]
-            public Boolean? RenewableEnergy { get; set; }
+            public Boolean?                           RenewableEnergy                     { get; set; }
 
             /// <summary>
             /// Optional enumeration of energy sources that the EVSE uses to supply electric energy.
             /// </summary>
-            public HashSet<EnergySource> EnergySources { get; }
+            public HashSet<EnergySource>              EnergySources                       { get; }
 
             /// <summary>
             /// Optional environmental impact produced by the energy sources used by the EVSE.
             /// </summary>
             [Optional]
-            public EnvironmentalImpact? EnvironmentalImpact { get; set; }
+            public EnvironmentalImpact?               EnvironmentalImpact                 { get; set; }
 
             /// <summary>
             /// The maximum in kWh capacity the EVSE provides.
             /// </summary>
             [Optional]
-            public UInt32? MaxCapacity { get; set; }
+            public UInt32?                            MaxCapacity                         { get; set; }
 
             /// <summary>
             /// An enumeration of payment options that are supported.
             /// </summary>
             [Mandatory]
-            public HashSet<PaymentOptions> PaymentOptions { get; }
+            public HashSet<PaymentOptions>            PaymentOptions                      { get; }
 
             /// <summary>
             /// An enumeration of "value added services" the EVSE supports.
             /// </summary>
             [Mandatory]
-            public HashSet<ValueAddedServices> ValueAddedServices { get; }
+            public HashSet<ValueAddedServices>        ValueAddedServices                  { get; }
 
             /// <summary>
             /// Specifies how the charging station can be accessed.
             /// </summary>
             [Mandatory]
-            public AccessibilityTypes? Accessibility { get; set; }
+            public AccessibilityTypes?                Accessibility                       { get; set; }
 
             /// <summary>
             /// Optional information where the EVSE could be accessed.
             /// </summary>
             [Optional]
-            public AccessibilityLocationTypes? AccessibilityLocationType { get; set; }
+            public AccessibilityLocationTypes?        AccessibilityLocationType           { get; set; }
 
             /// <summary>
             /// The phone number of the charging station operator's hotline.
             /// </summary>
             [Mandatory]
-            public Phone_Number? HotlinePhoneNumber { get; set; }
+            public Phone_Number?                      HotlinePhoneNumber                  { get; set; }
 
             /// <summary>
             /// Optional multi-language information about the EVSE.
             /// </summary>
             [Optional]
-            public I18NText AdditionalInfo { get; set; }
+            public I18NText                           AdditionalInfo                      { get; set; }
 
             /// <summary>
             /// Optional last meters information regarding the location of the EVSE.
             /// </summary>
             [Optional]
-            public I18NText ChargingStationLocationReference { get; set; }
+            public I18NText                           ChargingStationLocationReference    { get; set; }
 
             /// <summary>
             /// In case that the EVSE is part of a bigger facility (e.g. parking place),
             /// this optional attribute specifies the facilities entrance coordinates.
             /// </summary>
             [Optional]
-            public GeoCoordinates? GeoChargingPointEntrance { get; set; }
+            public GeoCoordinates?                    GeoChargingPointEntrance            { get; set; }
 
             /// <summary>
             /// Whether the EVSE is open 24/7.
             /// </summary>
             [Mandatory]
-            public Boolean? IsOpen24Hours { get; set; }
+            public Boolean?                           IsOpen24Hours                       { get; set; }
 
             /// <summary>
             /// Optional opening times in case that the EVSE cannot be accessed around the clock.
             /// </summary>
             [Optional]
-            public HashSet<OpeningTime> OpeningTimes { get; }
+            public HashSet<OpeningTime>               OpeningTimes                        { get; }
 
             /// <summary>
             /// The optional hub operator of the EVSE.
             /// </summary>
             [Optional]
-            public Operator_Id? HubOperatorId { get; set; }
+            public Operator_Id?                       HubOperatorId                       { get; set; }
 
             /// <summary>
             /// Optional clearing house for all charging sessions at the EVSE.
             /// </summary>
             [Optional]
-            public ClearingHouse_Id? ClearingHouseId { get; set; }
+            public ClearingHouse_Id?                  ClearingHouseId                     { get; set; }
 
             /// <summary>
             /// Whether ev roaming via Intercharge at the EVSE is possible.
             /// If set to "false" the EVSE will not be started/stopped remotely via Hubject.
             /// </summary>
             [Mandatory]
-            public Boolean? IsHubjectCompatible { get; set; }
+            public Boolean?                           IsHubjectCompatible                 { get; set; }
 
             /// <summary>
             /// Whether the CPO provides dynamic EVSE data information.
             /// </summary>
             [Mandatory]
-            public FalseTrueAuto? DynamicInfoAvailable { get; set; }
+            public FalseTrueAuto?                     DynamicInfoAvailable                { get; set; }
 
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject CustomData { get; set; }
+            public JObject                            CustomData                          { get; set; }
 
             #endregion
 
@@ -1886,99 +1886,87 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ClearingHouseId">Optional clearing house for all charging sessions at the EVSE.</param>
             /// 
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(EVSE_Id? Id = null,
+            public Builder(EVSE_Id?                           Id                                 = null,
 
-                           Address Address = null,
-                           IEnumerable<PlugTypes> PlugTypes = null,
-                           IEnumerable<ChargingFacility> ChargingFacilities = null,
-                           Boolean? RenewableEnergy = null,
-                           CalibrationLawDataAvailabilities? CalibrationLawDataAvailability = null,
-                           IEnumerable<AuthenticationModes> AuthenticationModes = null,
-                           IEnumerable<PaymentOptions> PaymentOptions = null,
-                           IEnumerable<ValueAddedServices> ValueAddedServices = null,
-                           AccessibilityTypes? Accessibility = null,
-                           Phone_Number? HotlinePhoneNumber = null,
-                           Boolean? IsOpen24Hours = null,
-                           Boolean? IsHubjectCompatible = null,
-                           FalseTrueAuto? DynamicInfoAvailable = null,
+                           Address                            Address                            = null,
+                           IEnumerable<PlugTypes>             PlugTypes                          = null,
+                           IEnumerable<ChargingFacility>      ChargingFacilities                 = null,
+                           Boolean?                           RenewableEnergy                    = null,
+                           CalibrationLawDataAvailabilities?  CalibrationLawDataAvailability     = null,
+                           IEnumerable<AuthenticationModes>   AuthenticationModes                = null,
+                           IEnumerable<PaymentOptions>        PaymentOptions                     = null,
+                           IEnumerable<ValueAddedServices>    ValueAddedServices                 = null,
+                           AccessibilityTypes?                Accessibility                      = null,
+                           Phone_Number?                      HotlinePhoneNumber                 = null,
+                           Boolean?                           IsOpen24Hours                      = null,
+                           Boolean?                           IsHubjectCompatible                = null,
+                           FalseTrueAuto?                     DynamicInfoAvailable               = null,
 
-                           DeltaTypes? DeltaType = null,
-                           DateTime? LastUpdate = null,
+                           DeltaTypes?                        DeltaType                          = null,
+                           DateTime?                          LastUpdate                         = null,
 
-                           ChargingStation_Id? ChargingStationId = null,
-                           ChargingPool_Id? ChargingPoolId = null,
-                           I18NText ChargingStationName = null,
-                           String HardwareManufacturer = null,
-                           URL? ChargingStationImageURL = null,
-                           String SubOperatorName = null,
-                           GeoCoordinates? GeoCoordinates = null,
-                           Boolean? DynamicPowerLevel = null,
-                           IEnumerable<EnergySource> EnergySources = null,
-                           EnvironmentalImpact? EnvironmentalImpact = null,
-                           UInt32? MaxCapacity = null,
-                           AccessibilityLocationTypes? AccessibilityLocationType = null,
-                           I18NText AdditionalInfo = null,
-                           I18NText ChargingStationLocationReference = null,
-                           GeoCoordinates? GeoChargingPointEntrance = null,
-                           IEnumerable<OpeningTime> OpeningTimes = null,
-                           Operator_Id? HubOperatorId = null,
-                           ClearingHouse_Id? ClearingHouseId = null,
+                           ChargingStation_Id?                ChargingStationId                  = null,
+                           ChargingPool_Id?                   ChargingPoolId                     = null,
+                           I18NText                           ChargingStationName                = null,
+                           String                             HardwareManufacturer               = null,
+                           URL?                               ChargingStationImageURL            = null,
+                           String                             SubOperatorName                    = null,
+                           GeoCoordinates?                    GeoCoordinates                     = null,
+                           Boolean?                           DynamicPowerLevel                  = null,
+                           IEnumerable<EnergySource>          EnergySources                      = null,
+                           EnvironmentalImpact?               EnvironmentalImpact                = null,
+                           UInt32?                            MaxCapacity                        = null,
+                           AccessibilityLocationTypes?        AccessibilityLocationType          = null,
+                           I18NText                           AdditionalInfo                     = null,
+                           I18NText                           ChargingStationLocationReference   = null,
+                           GeoCoordinates?                    GeoChargingPointEntrance           = null,
+                           IEnumerable<OpeningTime>           OpeningTimes                       = null,
+                           Operator_Id?                       HubOperatorId                      = null,
+                           ClearingHouse_Id?                  ClearingHouseId                    = null,
 
-                           JObject CustomData = null)
+                           JObject                            CustomData                         = null)
 
             {
 
-                //if (PlugTypes.IsNullOrEmpty())
-                //    throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
+                this.Id                                = Id;
 
-                //if (ChargingFacilities.IsNullOrEmpty())
-                //    throw new ArgumentNullException(nameof(ChargingFacilities),   "The given enumeration of charging facilities must not be null or empty!");
+                this.Address                           = Address;
+                this.PlugTypes                         = PlugTypes.          SafeAny() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
+                this.ChargingFacilities                = ChargingFacilities. SafeAny() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : new HashSet<ChargingFacility>();
+                this.RenewableEnergy                   = RenewableEnergy;
+                this.CalibrationLawDataAvailability    = CalibrationLawDataAvailability;
+                this.AuthenticationModes               = AuthenticationModes.SafeAny() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : new HashSet<AuthenticationModes>();
+                this.PaymentOptions                    = PaymentOptions.     SafeAny() ? new HashSet<PaymentOptions>     (PaymentOptions.     Distinct()) : new HashSet<PaymentOptions>();
+                this.ValueAddedServices                = ValueAddedServices. SafeAny() ? new HashSet<ValueAddedServices> (ValueAddedServices. Distinct()) : new HashSet<ValueAddedServices>();
+                this.Accessibility                     = Accessibility;
+                this.HotlinePhoneNumber                = HotlinePhoneNumber;
+                this.IsOpen24Hours                     = IsOpen24Hours;
+                this.IsHubjectCompatible               = IsHubjectCompatible;
+                this.DynamicInfoAvailable              = DynamicInfoAvailable;
 
-                //if (AuthenticationModes.IsNullOrEmpty())
-                //    throw new ArgumentNullException(nameof(AuthenticationModes),  "The given enumeration of authentication modes must not be null or empty!");
+                this.DeltaType                         = DeltaType;
+                this.LastUpdate                        = LastUpdate;
 
-                //if (ValueAddedServices.IsNullOrEmpty())
-                //    throw new ArgumentNullException(nameof(ValueAddedServices),   "The given enumeration of value added services must not be null or empty!");
+                this.ChargingStationId                 = ChargingStationId;
+                this.ChargingPoolId                    = ChargingPoolId;
+                this.ChargingStationName               = ChargingStationName;
+                this.HardwareManufacturer              = HardwareManufacturer;
+                this.ChargingStationImageURL           = ChargingStationImageURL;
+                this.SubOperatorName                   = SubOperatorName;
+                this.GeoCoordinates                    = GeoCoordinates;
+                this.DynamicPowerLevel                 = DynamicPowerLevel;
+                this.EnergySources                     = EnergySources.      SafeAny() ? new HashSet<EnergySource>       (EnergySources.      Distinct()) : new HashSet<EnergySource>();
+                this.EnvironmentalImpact               = EnvironmentalImpact;
+                this.MaxCapacity                       = MaxCapacity;
+                this.AccessibilityLocationType         = AccessibilityLocationType;
+                this.AdditionalInfo                    = AdditionalInfo;
+                this.ChargingStationLocationReference  = ChargingStationLocationReference;
+                this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
+                this.OpeningTimes                      = OpeningTimes.       SafeAny() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : new HashSet<OpeningTime>();
+                this.HubOperatorId                     = HubOperatorId;
+                this.ClearingHouseId                   = ClearingHouseId;
 
-                this.Id = Id;
-
-                this.Address = Address;
-                this.PlugTypes = PlugTypes.SafeAny() ? new HashSet<PlugTypes>(PlugTypes.Distinct()) : new HashSet<PlugTypes>();
-                this.ChargingFacilities = ChargingFacilities.SafeAny() ? new HashSet<ChargingFacility>(ChargingFacilities.Distinct()) : new HashSet<ChargingFacility>();
-                this.RenewableEnergy = RenewableEnergy;
-                this.CalibrationLawDataAvailability = CalibrationLawDataAvailability;
-                this.AuthenticationModes = AuthenticationModes.SafeAny() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : new HashSet<AuthenticationModes>();
-                this.PaymentOptions = PaymentOptions.SafeAny() ? new HashSet<PaymentOptions>(PaymentOptions.Distinct()) : new HashSet<PaymentOptions>();
-                this.ValueAddedServices = ValueAddedServices.SafeAny() ? new HashSet<ValueAddedServices>(ValueAddedServices.Distinct()) : new HashSet<ValueAddedServices>();
-                this.Accessibility = Accessibility;
-                this.HotlinePhoneNumber = HotlinePhoneNumber;
-                this.IsOpen24Hours = IsOpen24Hours;
-                this.IsHubjectCompatible = IsHubjectCompatible;
-                this.DynamicInfoAvailable = DynamicInfoAvailable;
-
-                this.DeltaType = DeltaType;
-                this.LastUpdate = LastUpdate;
-
-                this.ChargingStationId = ChargingStationId;
-                this.ChargingPoolId = ChargingPoolId;
-                this.ChargingStationName = ChargingStationName;
-                this.HardwareManufacturer = HardwareManufacturer;
-                this.ChargingStationImageURL = ChargingStationImageURL;
-                this.SubOperatorName = SubOperatorName;
-                this.GeoCoordinates = GeoCoordinates;
-                this.DynamicPowerLevel = DynamicPowerLevel;
-                this.EnergySources = EnergySources.SafeAny() ? new HashSet<EnergySource>(EnergySources.Distinct()) : new HashSet<EnergySource>();
-                this.EnvironmentalImpact = EnvironmentalImpact;
-                this.MaxCapacity = MaxCapacity;
-                this.AccessibilityLocationType = AccessibilityLocationType;
-                this.AdditionalInfo = AdditionalInfo;
-                this.ChargingStationLocationReference = ChargingStationLocationReference;
-                this.GeoChargingPointEntrance = GeoChargingPointEntrance;
-                this.OpeningTimes = OpeningTimes.SafeAny() ? new HashSet<OpeningTime>(OpeningTimes.Distinct()) : new HashSet<OpeningTime>();
-                this.HubOperatorId = HubOperatorId;
-                this.ClearingHouseId = ClearingHouseId;
-
-                this.CustomData = CustomData;
+                this.CustomData                        = CustomData;
 
             }
 

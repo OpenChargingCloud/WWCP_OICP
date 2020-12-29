@@ -18,8 +18,9 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
+
 using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -64,26 +65,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
-        #region AResponse(Request,                           CustomData = null)
-
-        /// <summary>
-        /// Create a new generic response.
-        /// </summary>
-        /// <param name="Request">The request leading to this result.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        protected AResponse(TRequest  Request,
-                            JObject   CustomData  = null)
-
-            : this(Request,
-                   DateTime.UtcNow,
-                   CustomData)
-
-        { }
-
-        #endregion
-
-        #region AResponse(Request, ResponseTimestamp = null, CustomData = null)
-
         /// <summary>
         /// Create a new generic response.
         /// </summary>
@@ -103,8 +84,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #endregion
-
 
         #region IEquatable<AResponse> Members
 
@@ -116,6 +95,65 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+
+        #region (class) Builder
+
+        /// <summary>
+        /// An abstract generic response builder.
+        /// </summary>
+        public abstract class Builder
+        {
+
+            #region Properties
+
+            /// <summary>
+            /// The request leading to this response.
+            /// </summary>
+            public TRequest   Request              { get; set; }
+
+            /// <summary>
+            /// The timestamp of the response message creation.
+            /// </summary>
+            public DateTime?  ResponseTimestamp    { get; set; }
+
+            /// <summary>
+            /// Optional custom data, e.g. in combination with custom parsers and serializers.
+            /// </summary>
+            [Optional]
+            public JObject    CustomData           { get; set; }
+
+            #endregion
+
+            #region Constructor(s)
+
+            /// <summary>
+            /// Create a new generic response.
+            /// </summary>
+            /// <param name="Request">The request leading to this result.</param>
+            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="CustomData">Optional customer-specific data of the response.</param>
+            protected Builder(TRequest   Request             = null,
+                              DateTime?  ResponseTimestamp   = null,
+                              JObject    CustomData          = null)
+            {
+
+                this.Request            = Request;
+                this.ResponseTimestamp  = ResponseTimestamp;
+                this.CustomData         = CustomData;
+
+            }
+
+            #endregion
+
+
+            /// <summary>
+            /// Return an immutable response.
+            /// </summary>
+            public abstract TResponse  ToImmutable();
+
+        }
+
+        #endregion
 
     }
 

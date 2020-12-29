@@ -24,7 +24,6 @@ using System;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-
     /// <summary>
     /// Extentions methods for charging modes.
     /// </summary>

@@ -18,15 +18,10 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Xml.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Hermod.JSON;
 
 #endregion
 
@@ -99,6 +94,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 JObject                CustomData            = null)
 
             : base(Request,
+                   DateTime.UtcNow,
                    CustomData)
 
         {
@@ -136,7 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             : this(Request,
                    true,
                    new StatusCode(StatusCodes.Success,
-                                  StatusCodeDescription,
+                                  StatusCodeDescription ?? "Success",
                                   StatusCodeAdditionalInfo),
                    SessionId,
                    CPOPartnerSessionId,
@@ -147,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Acknowledgement(StatusCode, ...)
+        #region Acknowledgement(Request, StatusCode, ...)
 
         /// <summary>
         /// Create a new 'negative' acknowledgement.
@@ -189,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Success(Request, SessionId = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'positive' acknowledgement.
+        /// Create a new 'positive' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
@@ -210,7 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  true,
                                                  new StatusCode(
                                                      StatusCodes.Success,
-                                                     StatusCodeDescription,
+                                                     StatusCodeDescription ?? "Success",
                                                      StatusCodeAdditionalInfo
                                                  ),
                                                  SessionId,
@@ -223,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) DataError                  (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'DataError' acknowledgement.
+        /// Create a new 'DataError' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -256,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) SystemError                (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'SystemError' acknowledgement.
+        /// Create a new 'SystemError' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -289,7 +285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) ServiceNotAvailable        (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'ServiceNotAvailable' acknowledgement.
+        /// Create a new 'ServiceNotAvailable' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -322,7 +318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) SessionIsInvalid           (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'SessionIsInvalid' acknowledgement.
+        /// Create a new 'SessionIsInvalid' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -355,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) CommunicationToEVSEFailed  (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'CommunicationToEVSEFailed' acknowledgement.
+        /// Create a new 'CommunicationToEVSEFailed' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -388,7 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) EVSEAlreadyReserved        (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEAlreadyReserved' acknowledgement.
+        /// Create a new 'EVSEAlreadyReserved' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -421,7 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) EVSEAlreadyInUse_WrongToken(Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEAlreadyInUse_WrongToken' acknowledgement.
+        /// Create a new 'EVSEAlreadyInUse_WrongToken' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -454,7 +450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) UnknownEVSEID              (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'UnknownEVSEID' acknowledgement.
+        /// Create a new 'UnknownEVSEID' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -487,7 +483,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) EVSEOutOfService           (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEOutOfService' acknowledgement.
+        /// Create a new 'EVSEOutOfService' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -520,7 +516,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NoValidContract            (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'NoValidContract' acknowledgement.
+        /// Create a new 'NoValidContract' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -553,7 +549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NoEVConnectedToEVSE        (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'NoEVConnectedToEVSE' acknowledgement.
+        /// Create a new 'NoEVConnectedToEVSE' acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -586,185 +582,261 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // <soapenv:Envelope xmlns:soapenv     = "http://schemas.xmlsoap.org/soap/envelope/"
-        //                   xmlns:CommonTypes = "http://www.hubject.com/b2b/services/commontypes/v2.0">
-        //
-        //    <soapenv:Header/>
-        //
-        //    <soapenv:Body>
-        //       <CommonTypes:eRoamingAcknowledgement>
-        //
-        //          <CommonTypes:Result>?</CommonTypes:Result>
-        //
-        //          <CommonTypes:StatusCode>
-        //
-        //             <CommonTypes:Code>?</CommonTypes:Code>
-        //
-        //             <!--Optional:-->
-        //             <CommonTypes:Description>?</CommonTypes:Description>
-        //
-        //             <!--Optional:-->
-        //             <CommonTypes:AdditionalInfo>?</CommonTypes:AdditionalInfo>
-        //
-        //          </CommonTypes:StatusCode>
-        //
-        //          <!--Optional:-->
-        //          <CommonTypes:SessionID>?</CommonTypes:SessionID>
-        //
-        //          <!--Optional:-->
-        //          <CommonTypes:CPOPartnerSessionID>?</Authorization:CPOPartnerSessionID>
-        //
-        //          <!--Optional:-->
-        //          <CommonTypes:EMPPartnerSessionID>?</Authorization:EMPPartnerSessionID>
-        //
-        //       </CommonTypes:eRoamingAcknowledgement>
-        //    </soapenv:Body>
-        // </soapenv:Envelope>
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#7-eroamingacknowledgment
+
+        // {
+        //   "CPOPartnerSessionID":  "string",
+        //   "EMPPartnerSessionID":  "string",
+        //   "Result":                false,
+        //   "SessionID":            "string",
+        //   "StatusCode": {
+        //     "AdditionalInfo":     "string",
+        //     "Code":               "000",
+        //     "Description":        "string"
+        //   }
+        // }
 
         #endregion
 
-        //#region (static)    Parse(Request, AcknowledgementXML, CustomAcknowledgementParser = null, OnException = null)
+        #region (static) Parse   (JSON, CustomAcknowledgementParser = null)
 
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP acknowledgement.
-        ///// </summary>
-        ///// <param name="Request">The request leading to this response.</param>
-        ///// <param name="AcknowledgementXML">The XML to parse.</param>
-        ///// <param name="CustomAcknowledgementParser">A delegate to parse custom Acknowledgement XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">A delegate whenever exceptions occur.</param>
-        //public static Acknowledgement<TRequest> Parse(TRequest                                            Request,
-        //                                              XElement                                            AcknowledgementXML,
-        //                                              CustomXMLParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
-        //                                              CustomXMLParserDelegate<StatusCode>                 CustomStatusCodeParser        = null,
-        //                                              OnExceptionDelegate                                 OnException                   = null)
-        //{
+        /// <summary>
+        /// Parse the given JSON representation of an acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
+                                                      JObject                                                 JSON,
+                                                      CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
+        {
 
-        //    if (TryParse(Request,
-        //                 AcknowledgementXML,
-        //                 out Acknowledgement<TRequest> _Acknowledgement,
-        //                 CustomAcknowledgementParser,
-        //                 CustomStatusCodeParser,
-        //                 OnException))
+            if (TryParse(Request,
+                         JSON,
+                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out String                    ErrorResponse,
+                         CustomAcknowledgementParser))
+            {
+                return pushEVSEDataRequest;
+            }
 
-        //        return _Acknowledgement;
+            throw new ArgumentException("The given JSON representation of an acknowledgement is invalid: " + ErrorResponse, nameof(JSON));
 
-        //    return null;
+        }
 
-        //}
+        #endregion
 
-        //#endregion
+        #region (static) Parse   (Text, CustomAcknowledgementParser = null)
 
-        //#region (static) TryParse(Request, AcknowledgementXML, out Acknowledgement, CustomAcknowledgementParser = null, OnException = null)
+        /// <summary>
+        /// Parse the given text representation of an acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
+                                                      String                                                  Text,
+                                                      CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
+        {
 
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP acknowledgement.
-        ///// </summary>
-        ///// <param name="Request">The request leading to this response.</param>
-        ///// <param name="AcknowledgementXML">The XML to parse.</param>
-        ///// <param name="Acknowledgement">The parsed acknowledgement</param>
-        ///// <param name="CustomAcknowledgementParser">A delegate to parse custom Acknowledgement XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">A delegate whenever exceptions occur.</param>
-        //public static Boolean TryParse(TRequest                                            Request,
-        //                               XElement                                            AcknowledgementXML,
-        //                               out Acknowledgement<TRequest>                       Acknowledgement,
-        //                               CustomXMLParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null,
-        //                               CustomXMLParserDelegate<StatusCode>                 CustomStatusCodeParser        = null,
-        //                               OnExceptionDelegate                                 OnException                   = null)
-        //{
+            if (TryParse(Request,
+                         Text,
+                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out String                    ErrorResponse,
+                         CustomAcknowledgementParser))
+            {
+                return pushEVSEDataRequest;
+            }
 
-        //    try
-        //    {
+            throw new ArgumentException("The given text representation of an acknowledgement is invalid: " + ErrorResponse, nameof(Text));
 
-        //        if (AcknowledgementXML.Name != OICPNS.CommonTypes + "eRoamingAcknowledgement")
-        //        {
-        //            Acknowledgement = null;
-        //            return false;
-        //        }
+        }
 
-        //        Acknowledgement = new Acknowledgement<TRequest>(
+        #endregion
 
-        //                              Request,
+        #region (static) TryParse(JSON, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
 
-        //                              AcknowledgementXML.ElementValueOrFail(OICPNS.CommonTypes + "Result") == "true",
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
-        //                              AcknowledgementXML.MapElementOrFail  (OICPNS.CommonTypes + "StatusCode",
-        //                                                                    (xml, e) => StatusCode.Parse(xml,
-        //                                                                                                 CustomStatusCodeParser,
-        //                                                                                                 e),
-        //                                                                    OnException),
+        /// <summary>
+        /// Try to parse the given JSON representation of an acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(TRequest                       Request,
+                                       JObject                        JSON,
+                                       out Acknowledgement<TRequest>  Acknowledgement,
+                                       out String                     ErrorResponse)
 
-        //                              AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "SessionID",
-        //                                                                    Session_Id.Parse),
-
-        //                              AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "CPOPartnerSessionID",
-        //                                                                    CPOPartnerSession_Id.Parse),
-
-        //                              AcknowledgementXML.MapValueOrNullable(OICPNS.CommonTypes + "EMPPartnerSessionID",
-        //                                                                    EMPPartnerSession_Id.Parse)
-
-        //                          );
+            => TryParse(Request,
+                        JSON,
+                        out Acknowledgement,
+                        out ErrorResponse,
+                        null);
 
 
-        //        if (CustomAcknowledgementParser != null)
-        //            Acknowledgement = CustomAcknowledgementParser(AcknowledgementXML, Acknowledgement);
+        /// <summary>
+        /// Try to parse the given JSON representation of an acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        public static Boolean TryParse(TRequest                                                Request,
+                                       JObject                                                 JSON,
+                                       out Acknowledgement<TRequest>                           Acknowledgement,
+                                       out String                                              ErrorResponse,
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser)
+        {
 
-        //        return true;
+            try
+            {
 
-        //    }
-        //    catch (Exception e)
-        //    {
+                Acknowledgement = default;
 
-        //        OnException?.Invoke(DateTime.UtcNow, AcknowledgementXML, e);
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
 
-        //        Acknowledgement = null;
-        //        return false;
+                #region Parse Result                  [mandatory]
 
-        //    }
+                if (!JSON.ParseMandatoryEnum("Result",
+                                             "result",
+                                             out Boolean Result,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //}
+                #endregion
 
-        //#endregion
+                #region Parse StatusCode              [mandatory]
 
-        //#region ToXML (CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
+                if (!JSON.ParseMandatoryJSON2("StatusCode",
+                                              "StatusCode",
+                                              OICPv2_3.StatusCode.TryParse,
+                                              out StatusCode StatusCode,
+                                              out ErrorResponse))
+                {
+                    return false;
+                }
 
-        ///// <summary>
-        ///// Return a XML-representation of this object.
-        ///// </summary>
-        ///// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
-        ///// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
-        //public XElement ToXML(CustomXMLSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
-        //                      CustomXMLSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
-        //{
+                #endregion
 
-        //    var XML = new XElement(OICPNS.CommonTypes + "eRoamingAcknowledgement",
+                #region Parse SessionId               [optional]
 
-        //                  new XElement(OICPNS.CommonTypes + "Result", Result),
+                if (JSON.ParseOptional("SessionID",
+                                       "session identification",
+                                       Session_Id.TryParse,
+                                       out Session_Id? SessionId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //                  StatusCode.ToXML(CustomStatusCodeSerializer: CustomStatusCodeSerializer),
+                #endregion
 
-        //                  SessionId != null
-        //                      ? new XElement(OICPNS.CommonTypes + "SessionID",            SessionId.          ToString())
-        //                      : null,
+                #region Parse CPOPartnerSessionId     [optional]
 
-        //                  CPOPartnerSessionId != null
-        //                      ? new XElement(OICPNS.CommonTypes + "CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
-        //                      : null,
+                if (JSON.ParseOptional("CPOPartnerSessionID",
+                                       "CPO partner session identification",
+                                       CPOPartnerSession_Id.TryParse,
+                                       out CPOPartnerSession_Id? CPOPartnerSessionId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //                  EMPPartnerSessionId != null
-        //                      ? new XElement(OICPNS.CommonTypes + "EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
-        //                      : null
+                #endregion
 
-        //              );
+                #region Parse EMPPartnerSessionId     [optional]
 
-        //    return CustomAcknowledgementSerializer != null
-        //               ? CustomAcknowledgementSerializer(this, XML)
-        //               : XML;
+                if (JSON.ParseOptional("EMPPartnerSessionID",
+                                       "EMP partner session identification",
+                                       EMPPartnerSession_Id.TryParse,
+                                       out EMPPartnerSession_Id? EMPPartnerSessionId,
+                                       out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //}
+                #endregion
 
-        //#endregion
+                #region Parse Custom Data             [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
+
+                Acknowledgement = new Acknowledgement<TRequest>(Request,
+                                                                Result,
+                                                                StatusCode,
+                                                                SessionId,
+                                                                CPOPartnerSessionId,
+                                                                EMPPartnerSessionId,
+                                                                CustomData);
+
+                if (CustomAcknowledgementParser != null)
+                    Acknowledgement = CustomAcknowledgementParser(JSON,
+                                                                  Acknowledgement);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                Acknowledgement  = default;
+                ErrorResponse    = "The given JSON representation of an acknowledgement is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an acknowledgement.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        public static Boolean TryParse(TRequest                                                Request,
+                                       String                                                  Text,
+                                       out Acknowledgement<TRequest>                           Acknowledgement,
+                                       out String                                              ErrorResponse,
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser)
+        {
+
+            try
+            {
+
+                return TryParse(Request,
+                                JObject.Parse(Text),
+                                out Acknowledgement,
+                                out ErrorResponse,
+                                CustomAcknowledgementParser);
+
+            }
+            catch (Exception e)
+            {
+                Acknowledgement  = default;
+                ErrorResponse    = "The given text representation of an acknowledgement is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
 
         #region ToJSON(CustomAcknowledgementSerializer = null, CustomStatusCodeSerializer = null)
 
@@ -779,20 +851,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("result",                 Result),
+                           new JProperty("Result",                 Result),
 
                            new JProperty("StatusCode",             StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
                            SessionId           != null
-                               ? new JProperty("sessionId",            SessionId.          ToString())
+                               ? new JProperty("SessionID",            SessionId.          ToString())
                                : null,
 
                            CPOPartnerSessionId != null
-                               ? new JProperty("CPOPartnerSessionId",  CPOPartnerSessionId.ToString())
+                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                : null,
 
                            EMPPartnerSessionId != null
-                               ? new JProperty("EMPPartnerSessionId",  EMPPartnerSessionId.ToString())
+                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
                                : null
 
                        );
@@ -816,7 +888,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Acknowledgement1">An acknowledgement.</param>
         /// <param name="Acknowledgement2">Another acknowledgement.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (Acknowledgement<TRequest> Acknowledgement1, Acknowledgement<TRequest> Acknowledgement2)
+        public static Boolean operator == (Acknowledgement<TRequest> Acknowledgement1,
+                                           Acknowledgement<TRequest> Acknowledgement2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -824,7 +897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) Acknowledgement1 == null) || ((Object) Acknowledgement2 == null))
+            if (Acknowledgement1 is null || Acknowledgement2 is null)
                 return false;
 
             return Acknowledgement1.Equals(Acknowledgement2);
@@ -841,7 +914,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Acknowledgement1">An acknowledgement.</param>
         /// <param name="Acknowledgement2">Another acknowledgement.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (Acknowledgement<TRequest> Acknowledgement1, Acknowledgement<TRequest> Acknowledgement2)
+        public static Boolean operator != (Acknowledgement<TRequest> Acknowledgement1,
+                                           Acknowledgement<TRequest> Acknowledgement2)
+
             => !(Acknowledgement1 == Acknowledgement2);
 
         #endregion
@@ -858,17 +933,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is Acknowledgement<TRequest> Acknowledgement))
-                return false;
-
-            return Equals(Acknowledgement);
-
-        }
+            => Object is Acknowledgement<TRequest> acknowledgement &&
+                   Equals(acknowledgement);
 
         #endregion
 
@@ -880,24 +947,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Acknowledgement">An acknowledgement to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(Acknowledgement<TRequest> Acknowledgement)
-        {
 
-            if (Acknowledgement is null)
-                return false;
+            => !(Acknowledgement is null) &&
 
-            return Result.    Equals(Acknowledgement.Result)     &&
-                   StatusCode.Equals(Acknowledgement.StatusCode) &&
+                 Result.    Equals(Acknowledgement.Result)     &&
+                 StatusCode.Equals(Acknowledgement.StatusCode) &&
 
-                   ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
+              ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
+                (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
+              ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
+                (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
 
-                   ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
-
-        }
+              ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
+                (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
 
         #endregion
 
@@ -906,28 +969,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region GetHashCode()
 
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
         {
             unchecked
             {
 
-                return Result.    GetHashCode() * 11 ^
-                       StatusCode.GetHashCode() *  7 ^
+                return Result.              GetHashCode()       * 11 ^
+                       StatusCode.          GetHashCode()       *  7 ^
 
-                       (SessionId.          HasValue
-                            ? SessionId.          GetHashCode() * 5
-                            : 0) ^
-
-                       (CPOPartnerSessionId.HasValue
-                            ? CPOPartnerSessionId.GetHashCode() * 3
-                            : 0) ^
-
-                       (EMPPartnerSessionId.HasValue
-                            ? EMPPartnerSessionId.GetHashCode()
-                            : 0);
+                      (SessionId?.          GetHashCode() ?? 0) *  5 ^
+                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                      (EMPPartnerSessionId?.GetHashCode() ?? 0);
 
             }
         }
@@ -941,230 +996,156 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("Result: " + Result + "; " + StatusCode.Code, " / ", StatusCode.Description, " / ", StatusCode.AdditionalInfo);
+            => String.Concat(Result, " => ",
+                             StatusCode.Code.ToString(),
+                             StatusCode.Description.   IsNotNullOrEmpty() ? ", "               + StatusCode.Description               : "",
+                             StatusCode.AdditionalInfo.IsNotNullOrEmpty() ? ", info: "         + StatusCode.AdditionalInfo            : "",
+                             SessionId.          HasValue                 ? ", sessionId: "    + SessionId.          Value.ToString() : "",
+                             CPOPartnerSessionId.HasValue                 ? ", CPOSessionId: " + CPOPartnerSessionId.Value.ToString() : "",
+                             EMPPartnerSessionId.HasValue                 ? ", EMPSessionId: " + EMPPartnerSessionId.Value.ToString() : "");
 
         #endregion
 
 
+        #region ToBuilder()
 
-        //#region ToBuilder
+        /// <summary>
+        /// Return an acknowledgement builder.
+        /// </summary>
+        public Builder ToBuilder()
 
-        ///// <summary>
-        ///// Return an acknowledgement builder.
-        ///// </summary>
-        //public Builder ToBuilder
-        //    => new Builder(this);
+            => new Builder(Request,
+                           Result,
+                           StatusCode,
+                           ResponseTimestamp,
+                           SessionId,
+                           CPOPartnerSessionId,
+                           EMPPartnerSessionId,
+                           CustomData);
 
-        //#endregion
+        #endregion
 
-        //#region (class) Builder
+        #region (class) Builder
 
-        ///// <summary>
-        ///// An acknowledgement builder.
-        ///// </summary>
-        //public new class Builder : AResponseBuilder<TRequest,
-        //                                            Acknowledgement<TRequest>>
-        //{
+        /// <summary>
+        /// An acknowledgement builder.
+        /// </summary>
+        public new class Builder : AResponse<TRequest,
+                                             Acknowledgement<TRequest>>.Builder
+        {
 
-        //    #region Properties
+            #region Properties
 
-        //    /// <summary>
-        //    /// The result of the operation.
-        //    /// </summary>
-        //    public Boolean                     Result                 { get; set; }
+            /// <summary>
+            /// The result of the operation.
+            /// </summary>
+            public Boolean?                    Result                 { get; set; }
 
-        //    /// <summary>
-        //    /// The status code of the operation.
-        //    /// </summary>
-        //    public StatusCode                  StatusCode             { get; set; }
+            /// <summary>
+            /// The status code of the operation.
+            /// </summary>
+            public StatusCode.Builder          StatusCode             { get; }
 
-        //    /// <summary>
-        //    /// An optional charging session identification for
-        //    /// RemoteReservationStart and RemoteStart requests.
-        //    /// </summary>
-        //    public Session_Id?                 SessionId              { get; set; }
+            /// <summary>
+            /// An optional charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public Session_Id?                 SessionId              { get; set; }
 
-        //    /// <summary>
-        //    /// An optional EMP partner charging session identification for
-        //    /// RemoteReservationStart and RemoteStart requests.
-        //    /// </summary>
-        //    public CPOPartnerSession_Id?       CPOPartnerSessionId    { get; set; }
+            /// <summary>
+            /// An optional EMP partner charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public CPOPartnerSession_Id?       CPOPartnerSessionId    { get; set; }
 
-        //    /// <summary>
-        //    /// An optional CPO partner charging session identification for
-        //    /// RemoteReservationStart and RemoteStart requests.
-        //    /// </summary>
-        //    public EMPPartnerSession_Id?       EMPPartnerSessionId    { get; set; }
+            /// <summary>
+            /// An optional CPO partner charging session identification for
+            /// RemoteReservationStart and RemoteStart requests.
+            /// </summary>
+            public EMPPartnerSession_Id?       EMPPartnerSessionId    { get; set; }
 
-        //    #endregion
+            #endregion
 
-        //    public Builder(Acknowledgement<TRequest>            Acknowledgement,
-        //                   IReadOnlyDictionary<String, Object>  CustomData  = null)
+            #region Constructor(s)
 
-        //        : base(Acknowledgement?.Request,
-        //               Acknowledgement.HasCustomData
-        //                   ? CustomData != null && CustomData.Any()
-        //                         ? Acknowledgement.CustomData.Concat(CustomData)
-        //                         : Acknowledgement.CustomData
-        //                   : CustomData)
+            /// <summary>
+            /// Create a new acknowledgement builder.
+            /// </summary>
+            /// <param name="Request">The request leading to this response.</param>
+            /// <param name="Result">The result of the operation.</param>
+            /// <param name="StatusCode">The status code of the operation.</param>
+            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="SessionId">An optional charging session identification.</param>
+            /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
+            /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+            /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+            public Builder(TRequest               Request               = null,
+                           Boolean?               Result                = null,
+                           StatusCode?            StatusCode            = null,
+                           DateTime?              ResponseTimestamp     = null,
+                           Session_Id?            SessionId             = null,
+                           CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                           JObject                CustomData            = null)
 
-        //    {
+                : base(Request,
+                       ResponseTimestamp,
+                       CustomData)
 
-        //        if (Acknowledgement != null)
-        //        {
+            {
 
-        //            this.Result               = Acknowledgement.Result;
-        //            this.StatusCode           = Acknowledgement.StatusCode;
-        //            this.SessionId            = Acknowledgement.SessionId;
-        //            this.CPOPartnerSessionId  = Acknowledgement.CPOPartnerSessionId;
-        //            this.EMPPartnerSessionId  = Acknowledgement.EMPPartnerSessionId;
+                this.Result               = Result;
+                this.StatusCode           = StatusCode != null ? StatusCode.ToBuilder() : new StatusCode.Builder();
+                this.SessionId            = SessionId;
+                this.CPOPartnerSessionId  = CPOPartnerSessionId;
+                this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
-        //        }
+            }
 
-        //    }
+            #endregion
+
+            #region ToImmutable()
+
+            /// <summary>
+            /// Return an immutable version of the acknowledgement.
+            /// </summary>
+            /// <param name="Builder">An acknowledgement builder.</param>
+            public static implicit operator Acknowledgement<TRequest>(Builder Builder)
+
+                => Builder?.ToImmutable();
 
 
-        //    #region Operator overloading
+            /// <summary>
+            /// Return an immutable version of the acknowledgement.
+            /// </summary>
+            public override Acknowledgement<TRequest> ToImmutable()
+            {
 
-        //    #region Operator == (Acknowledgement1, Acknowledgement2)
+                #region Check mandatory parameters
 
-        //    /// <summary>
-        //    /// Compares two acknowledgements for equality.
-        //    /// </summary>
-        //    /// <param name="Acknowledgement1">An acknowledgement.</param>
-        //    /// <param name="Acknowledgement2">Another acknowledgement.</param>
-        //    /// <returns>True if both match; False otherwise.</returns>
-        //    public static Boolean operator == (Builder Acknowledgement1, Builder Acknowledgement2)
-        //    {
+                if (Request == null)
+                    throw new ArgumentException("The given request must not be null!", nameof(Result));
 
-        //        // If both are null, or both are same instance, return true.
-        //        if (ReferenceEquals(Acknowledgement1, Acknowledgement2))
-        //            return true;
+                if (!Result.HasValue)
+                    throw new ArgumentException("The given result must not be null!",  nameof(Result));
 
-        //        // If one is null, but not both, return false.
-        //        if (((Object) Acknowledgement1 == null) || ((Object) Acknowledgement2 == null))
-        //            return false;
+                #endregion
 
-        //        return Acknowledgement1.Equals(Acknowledgement2);
+                return new Acknowledgement<TRequest>(Request,
+                                                     Result.Value,
+                                                     StatusCode.ToImmutable(),
+                                                     SessionId,
+                                                     CPOPartnerSessionId,
+                                                     EMPPartnerSessionId,
+                                                     CustomData);
 
-        //    }
+            }
 
-        //    #endregion
+            #endregion
 
-        //    #region Operator != (Acknowledgement1, Acknowledgement2)
+        }
 
-        //    /// <summary>
-        //    /// Compares two acknowledgements for inequality.
-        //    /// </summary>
-        //    /// <param name="Acknowledgement1">An acknowledgement.</param>
-        //    /// <param name="Acknowledgement2">Another acknowledgement.</param>
-        //    /// <returns>False if both match; True otherwise.</returns>
-        //    public static Boolean operator != (Builder Acknowledgement1, Builder Acknowledgement2)
-        //        => !(Acknowledgement1 == Acknowledgement2);
-
-        //    #endregion
-
-        //    #endregion
-
-        //    #region IEquatable<Acknowledgement> Members
-
-        //    #region Equals(Object)
-
-        //    /// <summary>
-        //    /// Compares two instances of this object.
-        //    /// </summary>
-        //    /// <param name="Object">An object to compare with.</param>
-        //    /// <returns>true|false</returns>
-        //    public override Boolean Equals(Object Object)
-        //    {
-
-        //        if (Object == null)
-        //            return false;
-
-        //        if (!(Object is Acknowledgement<TRequest> Acknowledgement))
-        //            return false;
-
-        //        return Equals(Acknowledgement);
-
-        //    }
-
-        //    #endregion
-
-        //    #region Equals(Acknowledgement)
-
-        //    /// <summary>
-        //    /// Compares two acknowledgements for equality.
-        //    /// </summary>
-        //    /// <param name="Acknowledgement">An acknowledgement to compare with.</param>
-        //    /// <returns>True if both match; False otherwise.</returns>
-        //    public override Boolean Equals(Acknowledgement<TRequest> Acknowledgement)
-        //    {
-
-        //        if (Acknowledgement is null)
-        //            return false;
-
-        //        return Result.    Equals(Acknowledgement.Result)     &&
-        //               StatusCode.Equals(Acknowledgement.StatusCode) &&
-
-        //               ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
-        //                 (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
-
-        //               ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
-        //                 (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
-
-        //               ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
-        //                 (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
-
-        //    }
-
-        //    #endregion
-
-        //    #endregion
-
-        //    #region GetHashCode()
-
-        //    /// <summary>
-        //    /// Return the HashCode of this object.
-        //    /// </summary>
-        //    /// <returns>The HashCode of this object.</returns>
-        //    public override Int32 GetHashCode()
-        //    {
-        //        unchecked
-        //        {
-
-        //            return Result.    GetHashCode() * 11 ^
-        //                   StatusCode.GetHashCode() *  7 ^
-
-        //                   (SessionId.          HasValue
-        //                        ? SessionId.          GetHashCode() * 5
-        //                        : 0) ^
-
-        //                   (CPOPartnerSessionId.HasValue
-        //                        ? CPOPartnerSessionId.GetHashCode() * 3
-        //                        : 0) ^
-
-        //                   (EMPPartnerSessionId.HasValue
-        //                        ? EMPPartnerSessionId.GetHashCode()
-        //                        : 0);
-
-        //        }
-        //    }
-
-        //    #endregion
-
-        //    public override Acknowledgement<TRequest> ToImmutable
-
-        //        => new Acknowledgement<TRequest>(Request,
-        //                                         Result,
-        //                                         StatusCode,
-        //                                         SessionId,
-        //                                         CPOPartnerSessionId,
-        //                                         EMPPartnerSessionId,
-        //                                         CustomData);
-
-        //}
-
-        //#endregion
+        #endregion
 
     }
 
