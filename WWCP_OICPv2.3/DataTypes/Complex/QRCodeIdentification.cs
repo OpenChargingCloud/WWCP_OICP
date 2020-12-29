@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a QR code identification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="QRCodeIdentification">The parsed connector.</param>
+        /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                   JSON,
                                        out QRCodeIdentification  QRCodeIdentification,
@@ -214,7 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a QR code identification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="QRCodeIdentification">The parsed connector.</param>
+        /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
@@ -304,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a QR code identification.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="QRCodeIdentification">The parsed connector.</param>
+        /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
         public static Boolean TryParse(String                                             Text,

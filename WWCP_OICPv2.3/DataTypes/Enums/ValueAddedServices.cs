@@ -37,18 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a value added service.</param>
         public static ValueAddedServices Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Reservation"                 => ValueAddedServices.Reservation,
-                   "DynamicPricing"              => ValueAddedServices.DynamicPricing,
-                   "ParkingSensors"              => ValueAddedServices.ParkingSensors,
-                   "MaximumPowerCharging"        => ValueAddedServices.MaximumPowerCharging,
-                   "PredictiveChargePointUsage"  => ValueAddedServices.PredictiveChargePointUsage,
-                   "ChargingPlans"               => ValueAddedServices.ChargingPlans,
-                   "RoofProvided"                => ValueAddedServices.RoofProvided,
-                   "None"                        => ValueAddedServices.None,
-                    _                            => throw new ArgumentException("Undefined value added service '" + Text + "'!")
-               };
+            if (TryParse(Text, out ValueAddedServices valueAddedService))
+                return valueAddedService;
+
+            throw new ArgumentException("Undefined value added service '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a value added service.
+        /// </summary>
+        /// <param name="Text">A text-representation of a value added service.</param>
+        public static ValueAddedServices? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out ValueAddedServices valueAddedService))
+                return valueAddedService;
+
+            return default;
+
+        }
 
         #endregion
 

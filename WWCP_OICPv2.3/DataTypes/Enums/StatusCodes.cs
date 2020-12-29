@@ -15,8 +15,93 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace cloud.charging.open.protocols.OICPv2_3
 {
+
+    /// <summary>
+    /// Extentions methods for status codes.
+    /// </summary>
+    public static class StatusCodesExtentions
+    {
+
+        #region Parse   (Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a status code.
+        /// </summary>
+        /// <param name="Text">A text-representation of a status code.</param>
+        public static StatusCodes Parse(String Text)
+        {
+
+            if (TryParse(Text, out StatusCodes statusCode))
+                return statusCode;
+
+            throw new ArgumentException("Undefined status code '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a status code.
+        /// </summary>
+        /// <param name="Text">A text-representation of a status code.</param>
+        public static StatusCodes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out StatusCodes statusCode))
+                return statusCode;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out StatusCode)
+
+        /// <summary>
+        /// Parses the given text-representation of a status code.
+        /// </summary>
+        /// <param name="Text">A text-representation of a status code.</param>
+        /// <param name="StatusCode">The parsed status code.</param>
+        public static Boolean TryParse(String Text, out StatusCodes StatusCode)
+        {
+
+            if (Int32.TryParse(Text, out Int32 Integer))
+            {
+                StatusCode = (StatusCodes) Integer;
+                return true;
+            }
+
+            StatusCode = default;
+            return false;
+
+        }
+
+        #endregion
+
+        #region AsString(this StatusCode)
+
+        /// <summary>
+        /// Return a text-representation of the given status code.
+        /// </summary>
+        /// <param name="StatusCode">A status code.</param>
+        public static String AsString(this StatusCodes StatusCode)
+
+            => ((Int32) StatusCode).ToString("X3");
+
+        #endregion
+
+    }
 
     /// <summary>
     /// Error and status codes.

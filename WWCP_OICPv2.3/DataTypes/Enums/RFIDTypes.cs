@@ -30,22 +30,80 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class RFIDTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a RFID type.
         /// </summary>
         /// <param name="Text">A text-representation of a RFID type.</param>
         public static RFIDTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "mifareCls"     => RFIDTypes.MifareClassic,
-                   "mifareDes"     => RFIDTypes.MifareDESFire,
-                   "calypso"       => RFIDTypes.Calypso,
-                   "nfc"           => RFIDTypes.NFC,
-                   "mifareFamily"  => RFIDTypes.MifareFamily,
-                   _               => RFIDTypes.Unspecified,
-               };
+            if (TryParse(Text, out RFIDTypes rfidType))
+                return rfidType;
+
+            throw new ArgumentException("Undefined RFID type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a RFID type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a RFID type.</param>
+        public static RFIDTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out RFIDTypes rfidType))
+                return rfidType;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out RFIDType)
+
+        /// <summary>
+        /// Parses the given text-representation of a RFID type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a RFID type.</param>
+        /// <param name="RFIDType">The parsed RFID type.</param>
+        public static Boolean TryParse(String Text, out RFIDTypes RFIDType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "mifareCls":
+                    RFIDType = RFIDTypes.MifareClassic;
+                    return true;
+
+                case "mifareDes":
+                    RFIDType = RFIDTypes.MifareDESFire;
+                    return true;
+
+                case "calypso":
+                    RFIDType = RFIDTypes.Calypso;
+                    return true;
+
+                case "nfc":
+                    RFIDType = RFIDTypes.NFC;
+                    return true;
+
+                case "mifareFamily":
+                    RFIDType = RFIDTypes.MifareFamily;
+                    return true;
+
+                default:
+                    RFIDType = RFIDTypes.MifareFamily;
+                    return false;
+
+            };
+        }
 
         #endregion
 
@@ -63,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    RFIDTypes.Calypso        => "calypso",
                    RFIDTypes.NFC            => "nfc",
                    RFIDTypes.MifareFamily   => "mifareFamily",
-                   _                        => "Unspecified",
+                   _                        => "unknown",
                };
 
         #endregion
@@ -75,11 +133,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum RFIDTypes
     {
-
-        /// <summary>
-        /// Unspecified.
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// MiFare classic.

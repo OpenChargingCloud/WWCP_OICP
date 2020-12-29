@@ -37,13 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
         public static CalibrationLawDataAvailabilities Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Local"          => CalibrationLawDataAvailabilities.Local,
-                   "External"       => CalibrationLawDataAvailabilities.External,
-                   "Not Available"  => CalibrationLawDataAvailabilities.NotAvailable,
-                   _                => throw new ArgumentException("Undefined calibration law data availability '" + Text + "'!")
-            };
+            if (TryParse(Text, out CalibrationLawDataAvailabilities calibrationLawDataAvailability))
+                return calibrationLawDataAvailability;
+
+            throw new ArgumentException("Undefined calibration law data availability '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a calibration law data availability.
+        /// </summary>
+        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
+        public static CalibrationLawDataAvailabilities? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out CalibrationLawDataAvailabilities calibrationLawDataAvailability))
+                return calibrationLawDataAvailability;
+
+            return default;
+
+        }
 
         #endregion
 

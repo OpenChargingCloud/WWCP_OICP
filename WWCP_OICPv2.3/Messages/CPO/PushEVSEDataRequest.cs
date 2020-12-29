@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PushEVSEDataRequest(OperatorEVSEData    OperatorEVSEData,
-                                   ActionTypes         Action              = ActionTypes.fullLoad,
+                                   ActionTypes         Action              = ActionTypes.FullLoad,
 
                                    DateTime?           Timestamp           = null,
                                    CancellationToken?  CancellationToken   = null,

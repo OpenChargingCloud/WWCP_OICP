@@ -38,15 +38,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a charging mode.</param>
         public static ChargingModes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Mode_1"   => ChargingModes.Mode_1,
-                   "Mode_2"   => ChargingModes.Mode_2,
-                   "Mode_3"   => ChargingModes.Mode_3,
-                   "Mode_4"   => ChargingModes.Mode_4,
-                   "CHAdeMO"  => ChargingModes.CHAdeMO,
-                   _          => throw new ArgumentException("Undefined charging mode '" + Text + "'!")
-               };
+            if (TryParse(Text, out ChargingModes chargingMode))
+                return chargingMode;
+
+            throw new ArgumentException("Undefined charging mode '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a charging mode.
+        /// </summary>
+        /// <param name="Text">A text-representation of a charging mode.</param>
+        public static ChargingModes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out ChargingModes chargingMode))
+                return chargingMode;
+
+            return default;
+
+        }
 
         #endregion
 

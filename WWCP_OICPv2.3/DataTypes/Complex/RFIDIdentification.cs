@@ -179,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a RFID identification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RFIDIdentification">The parsed connector.</param>
+        /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                 JSON,
                                        out RFIDIdentification  RFIDIdentification,
@@ -195,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a RFID identification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RFIDIdentification">The parsed connector.</param>
+        /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
         public static Boolean TryParse(JObject                                          JSON,
@@ -312,7 +312,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a RFID identification.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RFIDIdentification">The parsed connector.</param>
+        /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
         public static Boolean TryParse(String                                           Text,

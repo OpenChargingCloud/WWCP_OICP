@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this energy source.
+        /// Clone this object.
         /// </summary>
         public EnergySource Clone
 

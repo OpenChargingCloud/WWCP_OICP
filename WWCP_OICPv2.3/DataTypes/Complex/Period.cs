@@ -141,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a time period.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="Period">The parsed connector.</param>
+        /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject     JSON,
                                        out Period  Period,
@@ -157,7 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a time period.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="Period">The parsed connector.</param>
+        /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
         public static Boolean TryParse(JObject                              JSON,
@@ -231,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a time period.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="Period">The parsed connector.</param>
+        /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
         public static Boolean TryParse(String                               Text,

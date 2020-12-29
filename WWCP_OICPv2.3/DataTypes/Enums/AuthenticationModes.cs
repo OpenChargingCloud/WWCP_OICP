@@ -37,16 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an authentication mode.</param>
         public static AuthenticationModes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "NFC RFID Classic"            => AuthenticationModes.NFC_RFID_Classic,
-                   "NFC RFID DESFire"            => AuthenticationModes.NFC_RFID_DESFire,
-                   "PnC"                         => AuthenticationModes.PnC,
-                   "REMOTE"                      => AuthenticationModes.REMOTE,
-                   "Direct Payment"              => AuthenticationModes.DirectPayment,
-                   "No Authentication Required"  => AuthenticationModes.NoAuthenticationRequired,
-                   _                             => throw new ArgumentException("Undefined authentication mode '" + Text + "'!")
-               };
+            if (TryParse(Text, out AuthenticationModes authenticationMode))
+                return authenticationMode;
+
+            throw new ArgumentException("Undefined authentication mode '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of an authentication mode.
+        /// </summary>
+        /// <param name="Text">A text-representation of an authentication mode.</param>
+        public static AuthenticationModes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out AuthenticationModes authenticationMode))
+                return authenticationMode;
+
+            return default;
+
+        }
 
         #endregion
 

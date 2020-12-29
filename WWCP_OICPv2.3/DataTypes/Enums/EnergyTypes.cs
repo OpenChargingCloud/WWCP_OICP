@@ -30,26 +30,96 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class EnergyTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of an energy type.
         /// </summary>
         /// <param name="Text">A text-representation of an energy type.</param>
         public static EnergyTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Solar"              => EnergyTypes.Solar,
-                   "Wind"               => EnergyTypes.Wind,
-                   "Hydro Power"        => EnergyTypes.HydroPower,
-                   "Geothermal Energy"  => EnergyTypes.GeothermalEnergy,
-                   "Biomass"            => EnergyTypes.Biomass,
-                   "Coal"               => EnergyTypes.Coal,
-                   "Nuclear Energy"     => EnergyTypes.NuclearEnergy,
-                   "Petroleum"          => EnergyTypes.Petroleum,
-                   "Natural Gas"        => EnergyTypes.NaturalGas,
-                   _                    => EnergyTypes.Unspecified,
-               };
+            if (TryParse(Text, out EnergyTypes energyType))
+                return energyType;
+
+            throw new ArgumentException("Undefined energy type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of an energy type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an energy type.</param>
+        public static EnergyTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out EnergyTypes energyType))
+                return energyType;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out EnergyType)
+
+        /// <summary>
+        /// Parses the given text-representation of an energy type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an energy type.</param>
+        /// <param name="EnergyType">The parsed energy type.</param>
+        public static Boolean TryParse(String Text, out EnergyTypes EnergyType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Solar":
+                    EnergyType = EnergyTypes.Solar;
+                    return true;
+
+                case "Wind":
+                    EnergyType = EnergyTypes.Wind;
+                    return true;
+
+                case "Hydro Power":
+                    EnergyType = EnergyTypes.HydroPower;
+                    return true;
+
+                case "Geothermal Energy":
+                    EnergyType = EnergyTypes.GeothermalEnergy;
+                    return true;
+
+                case "Biomass":
+                    EnergyType = EnergyTypes.Biomass;
+                    return true;
+
+                case "Coal":
+                    EnergyType = EnergyTypes.Coal;
+                    return true;
+
+                case "Nuclear Energy":
+                    EnergyType = EnergyTypes.NuclearEnergy;
+                    return true;
+
+                case "Petroleum":
+                    EnergyType = EnergyTypes.Petroleum;
+                    return true;
+
+                case "Natural Gas":
+                    EnergyType = EnergyTypes.NaturalGas;
+                    return true;
+
+                default:
+                    EnergyType = EnergyTypes.Solar;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -71,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EnergyTypes.NuclearEnergy     => "Nuclear Energy",
                    EnergyTypes.Petroleum         => "Petroleum",
                    EnergyTypes.NaturalGas        => "Natural Gas",
-                   _                             => "Unspecified",
+                   _                             => "unknown",
                };
 
         #endregion
@@ -84,11 +154,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum EnergyTypes
     {
-
-        /// <summary>
-        /// Unknown energy type.
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// Energy coming from Solar radiation.

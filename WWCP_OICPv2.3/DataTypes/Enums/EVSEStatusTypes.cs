@@ -30,22 +30,84 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class EVSEStatusTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an EVSE status.
+        /// Parses the given text-representation of an EVSE status type.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of an EVSE status.</param>
+        /// <param name="Text">A text-representation of an EVSE status type.</param>
         public static EVSEStatusTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Available"     => EVSEStatusTypes.Available,
-                   "Reserved"      => EVSEStatusTypes.Reserved,
-                   "Occupied"      => EVSEStatusTypes.Occupied,
-                   "OutOfService"  => EVSEStatusTypes.OutOfService,
-                   "EvseNotFound"  => EVSEStatusTypes.EvseNotFound,
-                   _               => EVSEStatusTypes.Unknown,
-               };
+            if (TryParse(Text, out EVSEStatusTypes evseStatusType))
+                return evseStatusType;
+
+            throw new ArgumentException("Undefined EVSE status type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of an EVSE status type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an EVSE status type.</param>
+        public static EVSEStatusTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out EVSEStatusTypes evseStatusType))
+                return evseStatusType;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out EVSEStatusType)
+
+        /// <summary>
+        /// Parses the given text-representation of an EVSE status type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an EVSE status type.</param>
+        /// <param name="EVSEStatusType">The parsed EVSE status type.</param>
+        public static Boolean TryParse(String Text, out EVSEStatusTypes EVSEStatusType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Available":
+                    EVSEStatusType = EVSEStatusTypes.Available;
+                    return true;
+
+                case "Reserved":
+                    EVSEStatusType = EVSEStatusTypes.Reserved;
+                    return true;
+
+                case "Occupied":
+                    EVSEStatusType = EVSEStatusTypes.Occupied;
+                    return true;
+
+                case "OutOfService":
+                    EVSEStatusType = EVSEStatusTypes.OutOfService;
+                    return true;
+
+                case "Unknown":
+                    EVSEStatusType = EVSEStatusTypes.Unknown;
+                    return true;
+
+                case "EvseNotFound":
+                    EVSEStatusType = EVSEStatusTypes.EVSENotFound;
+                    return true;
+
+                default:
+                    EVSEStatusType = EVSEStatusTypes.Unknown;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -62,7 +124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EVSEStatusTypes.Reserved      => "Reserved",
                    EVSEStatusTypes.Occupied      => "Occupied",
                    EVSEStatusTypes.OutOfService  => "OutOfService",
-                   EVSEStatusTypes.EvseNotFound  => "EvseNotFound",
+                   EVSEStatusTypes.EVSENotFound  => "EvseNotFound",
                    _                             => "Unknown",
                };
 
@@ -105,7 +167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The requested EvseID and EVSE status does not exist within the Hubject database.
         /// (PullAuthorizationStartById)
         /// </summary>
-        EvseNotFound
+        EVSENotFound
 
     }
 

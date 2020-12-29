@@ -37,15 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an accessibility type.</param>
         public static AccessibilityTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Unspecified"                 => AccessibilityTypes.Unspecified,
-                   "Free publicly accessible"    => AccessibilityTypes.FreePubliclyAccessible,
-                   "Restricted access"           => AccessibilityTypes.RestrictedAccess,
-                   "Paying publicly accessible"  => AccessibilityTypes.PayingPubliclyAccessible,
-                   "Test Station"                => AccessibilityTypes.TestStation,
-                   _                             => throw new ArgumentException("Undefined accessibility type '" + Text + "'!")
-            };
+            if (TryParse(Text, out AccessibilityTypes accessibilityType))
+                return accessibilityType;
+
+            throw new ArgumentException("Undefined accessibility type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(AccessibilityType)
+
+        /// <summary>
+        /// Parses the given text-representation of an accessibility type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an accessibility type.</param>
+        public static AccessibilityTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out AccessibilityTypes accessibilityType))
+                return accessibilityType;
+
+            return default;
+
+        }
 
         #endregion
 

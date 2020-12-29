@@ -167,7 +167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an opening time.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OpeningTimes">The parsed connector.</param>
+        /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject          JSON,
                                        out OpeningTime  OpeningTimes,
@@ -183,7 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an opening time.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OpeningTimes">The parsed connector.</param>
+        /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(JObject                                   JSON,
@@ -271,7 +271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an opening time.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="OpeningTimes">The parsed connector.</param>
+        /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(String                                    Text,
@@ -334,7 +334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this energy source.
+        /// Clone this object.
         /// </summary>
         public OpeningTime Clone
 

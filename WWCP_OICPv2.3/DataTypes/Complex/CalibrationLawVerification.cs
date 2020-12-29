@@ -184,7 +184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a calibration law verification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CalibrationLawVerification">The parsed connector.</param>
+        /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                         JSON,
                                        out CalibrationLawVerification  CalibrationLawVerification,
@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a calibration law verification.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CalibrationLawVerification">The parsed connector.</param>
+        /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
@@ -267,7 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a calibration law verification.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="CalibrationLawVerification">The parsed connector.</param>
+        /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
         public static Boolean TryParse(String                                                   Text,

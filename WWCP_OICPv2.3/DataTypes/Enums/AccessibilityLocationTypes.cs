@@ -37,14 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an accessibility location type.</param>
         public static AccessibilityLocationTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "OnStreet"                  => AccessibilityLocationTypes.OnStreet,
-                   "ParkingLot"                => AccessibilityLocationTypes.ParkingLot,
-                   "ParkingGarage"             => AccessibilityLocationTypes.ParkingGarage,
-                   "UndergroundParkingGarage"  => AccessibilityLocationTypes.UndergroundParkingGarage,
-                   _                           => throw new ArgumentException("Undefined accessibility location type '" + Text + "'!")
-            };
+            if (TryParse(Text, out AccessibilityLocationTypes accessibilityLocationType))
+                return accessibilityLocationType;
+
+            throw new ArgumentException("Undefined accessibility location type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(AccessibilityLocationType)
+
+        /// <summary>
+        /// Parses the given text-representation of an accessibility location type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an accessibility location type.</param>
+        public static AccessibilityLocationTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out AccessibilityLocationTypes accessibilityLocationType))
+                return accessibilityLocationType;
+
+            return default;
+
+        }
 
         #endregion
 

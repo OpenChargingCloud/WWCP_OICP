@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Function that was used to generate the hash value.
         /// </summary>
         [Mandatory]
-        public HashFunction  Function    { get; }
+        public HashFunctions  Function    { get; }
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Value">Hash value created by partner.</param>
         /// <param name="Function">Function that was used to generate the hash value.</param>
         public HashedPIN(Hash_Value    Value,
-                         HashFunction  Function)
+                         HashFunctions  Function)
         {
 
             this.Value     = Value;
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryEnum("Function",
                                              "hash function",
-                                             out HashFunction Function,
+                                             out HashFunctions Function,
                                              out ErrorResponse))
                 {
                     return false;

@@ -24,7 +24,6 @@ using System;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-
     /// <summary>
     /// Extentions methods for delta types.
     /// </summary>
@@ -38,13 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a delta type.</param>
         public static DeltaTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "insert"  => DeltaTypes.insert,
-                   "update"  => DeltaTypes.update,
-                   "delete"  => DeltaTypes.delete,
-                   _         => throw new ArgumentException("Undefined delta type '" + Text + "'!")
-               };
+            if (TryParse(Text, out DeltaTypes deltaType))
+                return deltaType;
+
+            throw new ArgumentException("Undefined delta type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a delta type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a delta type.</param>
+        public static DeltaTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out DeltaTypes deltaType))
+                return deltaType;
+
+            return default;
+
+        }
 
         #endregion
 

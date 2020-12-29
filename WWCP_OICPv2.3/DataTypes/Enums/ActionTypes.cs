@@ -30,21 +30,76 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class ActionTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of an action type.
         /// </summary>
         /// <param name="Text">A text-representation of an action type.</param>
         public static ActionTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "fullLoad"  => ActionTypes.fullLoad,
-                   "update"    => ActionTypes.update,
-                   "insert"    => ActionTypes.insert,
-                   "delete"    => ActionTypes.delete,
-                   _           => ActionTypes.unknown,
-               };
+            if (TryParse(Text, out ActionTypes actionType))
+                return actionType;
+
+            throw new ArgumentException("Undefined action type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of an action type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an action type.</param>
+        public static ActionTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out ActionTypes actionType))
+                return actionType;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out ActionType)
+
+        /// <summary>
+        /// Parses the given text-representation of an action type.
+        /// </summary>
+        /// <param name="Text">A text-representation of an action type.</param>
+        /// <param name="ActionType">The parsed action type</param>
+        public static Boolean TryParse(String Text, out ActionTypes ActionType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "fullLoad":
+                    ActionType = ActionTypes.FullLoad;
+                    return true;
+
+                case "update":
+                    ActionType = ActionTypes.Update;
+                    return true;
+
+                case "insert":
+                    ActionType = ActionTypes.Insert;
+                    return true;
+
+                case "delete":
+                    ActionType = ActionTypes.Delete;
+                    return true;
+
+                default:
+                    ActionType = ActionTypes.FullLoad;
+                    return false;
+
+            }
+        }
 
         #endregion
 
@@ -57,10 +112,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static String AsString(this ActionTypes ActionType)
 
             => ActionType switch {
-                   ActionTypes.fullLoad  => "fullLoad",
-                   ActionTypes.update    => "update",
-                   ActionTypes.insert    => "insert",
-                   ActionTypes.delete    => "delete",
+                   ActionTypes.FullLoad  => "fullLoad",
+                   ActionTypes.Update    => "update",
+                   ActionTypes.Insert    => "insert",
+                   ActionTypes.Delete    => "delete",
                    _                     => "unknown",
                };
 
@@ -76,31 +131,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// Unknown action.
-        /// </summary>
-        unknown,
-
-        /// <summary>
         /// Replace all server-side data with the new data.
         /// </summary>
-        fullLoad,
+        FullLoad,
 
         /// <summary>
         /// Update the server-side data with the given data.
         /// Will act like an 'upsert' for dynamic EVSE states!
         /// </summary>
-        update,
+        Update,
 
         /// <summary>
         /// Insert the given data into the server-side data.
         /// Will fail if it already exists!
         /// </summary>
-        insert,
+        Insert,
 
         /// <summary>
         /// Delete the given data from the server-side data set.
         /// </summary>
-        delete
+        Delete
 
     }
 

@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an environmental impact.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EnvironmentalImpact">The parsed connector.</param>
+        /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                  JSON,
                                        out EnvironmentalImpact  EnvironmentalImpact,
@@ -154,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an environmental impact.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EnvironmentalImpact">The parsed connector.</param>
+        /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an environmental impact.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="EnvironmentalImpact">The parsed connector.</param>
+        /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
         public static Boolean TryParse(String                                            Text,

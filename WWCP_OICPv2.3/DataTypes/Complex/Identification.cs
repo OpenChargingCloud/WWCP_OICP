@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional custom data.</param>
         public static Identification FromQRCodeIdentification(EVCO_Id       EVCOId,
                                                               Hash_Value    HashValue,
-                                                              HashFunction  HashFunction,
+                                                              HashFunctions  HashFunction,
                                                               JObject       CustomData   = null)
 
             => new Identification(QRCodeIdentification:  new QRCodeIdentification(
@@ -598,7 +598,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this energy source.
+        /// Clone this object.
         /// </summary>
         public Identification Clone
 

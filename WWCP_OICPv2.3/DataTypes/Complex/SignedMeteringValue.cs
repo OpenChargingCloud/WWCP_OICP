@@ -155,7 +155,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a signed metering value.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="SignedMeteringValue">The parsed connector.</param>
+        /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                  JSON,
                                        out SignedMeteringValue  SignedMeteringValue,
@@ -171,7 +171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a signed metering value.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="SignedMeteringValue">The parsed connector.</param>
+        /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
@@ -251,7 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a signed metering value.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="SignedMeteringValue">The parsed connector.</param>
+        /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
         public static Boolean TryParse(String                                            Text,

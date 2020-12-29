@@ -24,27 +24,82 @@ using System;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-
     /// <summary>
     /// Extentions methods for power types.
     /// </summary>
     public static class PowerTypesExtentions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a power type.
         /// </summary>
         /// <param name="Text">A text-representation of a power type.</param>
         public static PowerTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "AC_1_PHASE"  => PowerTypes.AC_1_PHASE,
-                   "AC_3_PHASE"  => PowerTypes.AC_3_PHASE,
-                   "DC"          => PowerTypes.DC,
-                   _             => PowerTypes.Unspecified,
-               };
+            if (TryParse(Text, out PowerTypes powerType))
+                return powerType;
+
+            throw new ArgumentException("Undefined power type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a power type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a power type.</param>
+        public static PowerTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out PowerTypes powerType))
+                return powerType;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out RFIDType)
+
+        /// <summary>
+        /// Parses the given text-representation of a power type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a power type.</param>
+        /// <param name="RFIDType">The parsed power type.</param>
+        public static Boolean TryParse(String Text, out PowerTypes RFIDType)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "AC_1_PHASE":
+                    RFIDType = PowerTypes.AC_1_PHASE;
+                    return true;
+
+                case "AC_3_PHASE":
+                    RFIDType = PowerTypes.AC_3_PHASE;
+                    return true;
+
+                case "DC":
+                    RFIDType = PowerTypes.DC;
+                    return true;
+
+                case "Unspecified":
+                    RFIDType = PowerTypes.Unspecified;
+                    return true;
+
+                default:
+                    RFIDType = PowerTypes.Unspecified;
+                    return false;
+
+            };
+        }
 
         #endregion
 
@@ -57,10 +112,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static String AsString(this PowerTypes PowerType)
 
             => PowerType switch {
-                   PowerTypes.AC_1_PHASE  => "AC_1_PHASE",
-                   PowerTypes.AC_3_PHASE  => "AC_3_PHASE",
-                   PowerTypes.DC          => "DC",
-                   _                      => "Unspecified",
+                   PowerTypes.AC_1_PHASE   => "AC_1_PHASE",
+                   PowerTypes.AC_3_PHASE   => "AC_3_PHASE",
+                   PowerTypes.DC           => "DC",
+                   PowerTypes.Unspecified  => "Unspecified",
+                   _                       => "unknown",
                };
 
         #endregion
@@ -75,11 +131,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// Unspecified power type.
-        /// </summary>
-        Unspecified,
-
-        /// <summary>
         /// AC_1_PHASE
         /// </summary>
         AC_1_PHASE,
@@ -92,7 +143,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// DC
         /// </summary>
-        DC
+        DC,
+
+        /// <summary>
+        /// Unspecified power type.
+        /// </summary>
+        Unspecified
 
     }
 

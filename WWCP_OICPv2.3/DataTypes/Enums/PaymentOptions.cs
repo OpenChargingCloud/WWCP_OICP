@@ -37,13 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a payment option.</param>
         public static PaymentOptions Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "No Payment"  => PaymentOptions.NoPayment,
-                   "Direct"      => PaymentOptions.Direct,
-                   "Contract"    => PaymentOptions.Contract,
-                   _             => throw new ArgumentException("Undefined paymet option '" + Text + "'!")
-            };
+            if (TryParse(Text, out PaymentOptions paymentOption))
+                return paymentOption;
+
+            throw new ArgumentException("Undefined paymet option '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a paymet option.
+        /// </summary>
+        /// <param name="Text">A text-representation of a payment option.</param>
+        public static PaymentOptions? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out PaymentOptions paymentOption))
+                return paymentOption;
+
+            return default;
+
+        }
 
         #endregion
 

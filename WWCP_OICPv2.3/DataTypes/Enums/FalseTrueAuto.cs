@@ -37,13 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
         public static FalseTrueAuto Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "false"  => FalseTrueAuto.False,
-                   "true"   => FalseTrueAuto.True,
-                   "auto"   => FalseTrueAuto.Auto,
-                   _        => throw new ArgumentException("Undefined FalseTrueAuto '" + Text + "'!")
-               };
+            if (TryParse(Text, out FalseTrueAuto falseTrueAuto))
+                return falseTrueAuto;
+
+            throw new ArgumentException("Undefined FalseTrueAuto '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(AccessibilityType)
+
+        /// <summary>
+        /// Parses the given text-representation of a FalseTrueAuto type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
+        public static FalseTrueAuto? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out FalseTrueAuto falseTrueAuto))
+                return falseTrueAuto;
+
+            return default;
+
+        }
 
         #endregion
 

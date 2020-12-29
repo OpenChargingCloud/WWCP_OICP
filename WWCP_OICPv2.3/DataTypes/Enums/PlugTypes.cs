@@ -37,29 +37,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a plug type.</param>
         public static PlugTypes Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Small Paddle Inductive"             => PlugTypes.SmallPaddleInductive,
-                   "Large Paddle Inductive"             => PlugTypes.LargePaddleInductive,
-                   "AVCON Connector"                    => PlugTypes.AVCONConnector,
-                   "Tesla Connector"                    => PlugTypes.TeslaConnector,
-                   "NEMA 5-20"                          => PlugTypes.NEMA5_20,
-                   "Type E French Standard"             => PlugTypes.TypeEFrenchStandard,
-                   "Type F Schuko"                      => PlugTypes.TypeFSchuko,
-                   "Type G British Standard"            => PlugTypes.TypeGBritishStandard,
-                   "Type J Swiss Standard"              => PlugTypes.TypeJSwissStandard,
-                   "Type 1 Connector (Cable Attached)"  => PlugTypes.Type1Connector_CableAttached,
-                   "Type 2 Outlet"                      => PlugTypes.Type2Outlet,
-                   "Type 2 Connector (Cable Attached)"  => PlugTypes.Type2Connector_CableAttached,
-                   "Type 3 Outlet"                      => PlugTypes.Type3Outlet,
-                   "IEC 60309 Single Phase"             => PlugTypes.IEC60309SinglePhase,
-                   "IEC 60309 Three Phase"              => PlugTypes.IEC60309ThreePhase,
-                   "CCS Combo 2 Plug (Cable Attached)"  => PlugTypes.CCSCombo2Plug_CableAttached,
-                   "CCS Combo 1 Plug (Cable Attached)"  => PlugTypes.CCSCombo1Plug_CableAttached,
-                   "CHAdeMO"                            => PlugTypes.CHAdeMO,
-                   "Unspecified"                        => PlugTypes.Unspecified,
-                   _                                    => throw new ArgumentException("Undefined plug type '" + Text + "'!")
-               };
+            if (TryParse(Text, out PlugTypes plugType))
+                return plugType;
+
+            throw new ArgumentException("Undefined plug type '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a plug type.
+        /// </summary>
+        /// <param name="Text">A text-representation of a plug type.</param>
+        public static PlugTypes? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out PlugTypes plugType))
+                return plugType;
+
+            return default;
+
+        }
 
         #endregion
 

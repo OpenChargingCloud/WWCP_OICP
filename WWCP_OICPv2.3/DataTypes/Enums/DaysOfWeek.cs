@@ -25,7 +25,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for EVSE status types.
+    /// Extentions methods for day(s) of week.
     /// </summary>
     public static class DaysOfWeekExtentions
     {
@@ -33,24 +33,97 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an EVSE status.
+        /// Parses the given text-representation of a day(s) of week.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of an EVSE status.</param>
+        /// <param name="Text">Parses the given text-representation of a day(s) of week.</param>
         public static DaysOfWeek Parse(String Text)
+        {
 
-            => Text?.Trim() switch {
-                   "Everyday"   => DaysOfWeek.Everyday,
-                   "Workdays"   => DaysOfWeek.Workdays,
-                   "Weekend"    => DaysOfWeek.Weekend,
-                   "Monday"     => DaysOfWeek.Monday,
-                   "Tuesday"    => DaysOfWeek.Tuesday,
-                   "Wednesday"  => DaysOfWeek.Wednesday,
-                   "Thursday"   => DaysOfWeek.Thursday,
-                   "Friday"     => DaysOfWeek.Friday,
-                   "Saturday"   => DaysOfWeek.Saturday,
-                   "Sunday"     => DaysOfWeek.Sunday,
-                   _            => DaysOfWeek.Unknown,
-               };
+            if (TryParse(Text, out DaysOfWeek daysOfWeek))
+                return daysOfWeek;
+
+            throw new ArgumentException("Undefined day(s) of week '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a day(s) of week..
+        /// </summary>
+        /// <param name="Text">A text-representation of a day(s) of week..</param>
+        public static DaysOfWeek? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out DaysOfWeek daysOfWeek))
+                return daysOfWeek;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out DayOfWeek)
+
+        /// <summary>
+        /// Parses the given text-representation of a day(s) of week..
+        /// </summary>
+        /// <param name="Text">A text-representation of a day(s) of week..</param>
+        /// <param name="DayOfWeek">The parsed day(s) of week..</param>
+        public static Boolean TryParse(String Text, out DaysOfWeek DayOfWeek)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Everyday":
+                    DayOfWeek = DaysOfWeek.Everyday;
+                    return true;
+
+                case "Workdays":
+                    DayOfWeek = DaysOfWeek.Workdays;
+                    return true;
+
+                case "Weekend":
+                    DayOfWeek = DaysOfWeek.Weekend;
+                    return true;
+
+                case "Monday":
+                    DayOfWeek = DaysOfWeek.Monday;
+                    return true;
+
+                case "Tuesday":
+                    DayOfWeek = DaysOfWeek.Tuesday;
+                    return true;
+
+                case "Wednesday":
+                    DayOfWeek = DaysOfWeek.Wednesday;
+                    return true;
+
+                case "Thursday":
+                    DayOfWeek = DaysOfWeek.Thursday;
+                    return true;
+
+                case "Friday":
+                    DayOfWeek = DaysOfWeek.Friday;
+                    return true;
+
+                case "Saturday":
+                    DayOfWeek = DaysOfWeek.Saturday;
+                    return true;
+
+                case "Sunday":
+                    DayOfWeek = DaysOfWeek.Sunday;
+                    return true;
+
+                default:
+                    DayOfWeek = DaysOfWeek.Everyday;
+                    return false;
+
+            }
+        }
 
         #endregion
 

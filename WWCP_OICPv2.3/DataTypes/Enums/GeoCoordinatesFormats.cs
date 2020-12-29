@@ -15,8 +15,108 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using System;
+
+#endregion
+
 namespace cloud.charging.open.protocols.OICPv2_3
 {
+
+    /// <summary>
+    /// Extentions methods for geo coordinates formats.
+    /// </summary>
+    public static class GeoCoordinatesFormatsExtentions
+    {
+
+        #region Parse   (Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a geo coordinates format.
+        /// </summary>
+        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        public static GeoCoordinatesFormats Parse(String Text)
+        {
+
+            if (TryParse(Text, out GeoCoordinatesFormats geoCoordinatesFormat))
+                return geoCoordinatesFormat;
+
+            throw new ArgumentException("Undefined geo coordinates format '" + Text + "'!");
+
+        }
+
+        #endregion
+
+        #region TryParse(Text)
+
+        /// <summary>
+        /// Parses the given text-representation of a geo coordinates format.
+        /// </summary>
+        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        public static GeoCoordinatesFormats? TryParse(String Text)
+        {
+
+            if (TryParse(Text, out GeoCoordinatesFormats geoCoordinatesFormat))
+                return geoCoordinatesFormat;
+
+            return default;
+
+        }
+
+        #endregion
+
+        #region TryParse(Text, out GeoCoordinatesFormat)
+
+        /// <summary>
+        /// Parses the given text-representation of a geo coordinates format.
+        /// </summary>
+        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        /// <param name="GeoCoordinatesFormat">The parsed geo coordinates format.</param>
+        public static Boolean TryParse(String Text, out GeoCoordinatesFormats GeoCoordinatesFormat)
+        {
+            switch (Text?.Trim())
+            {
+
+                case "Google":
+                    GeoCoordinatesFormat = GeoCoordinatesFormats.Google;
+                    return true;
+
+                case "DecimalDegree":
+                    GeoCoordinatesFormat = GeoCoordinatesFormats.DecimalDegree;
+                    return true;
+
+                case "DegreeMinuteSeconds":
+                    GeoCoordinatesFormat = GeoCoordinatesFormats.DegreeMinuteSeconds;
+                    return true;
+
+                default:
+                    GeoCoordinatesFormat = GeoCoordinatesFormats.DecimalDegree;
+                    return false;
+
+            };
+        }
+
+        #endregion
+
+        #region AsString(GeoCoordinatesFormat)
+
+        /// <summary>
+        /// Return a text-representation of the given geo coordinates format.
+        /// </summary>
+        /// <param name="GeoCoordinatesFormat">A geo coordinates format.</param>
+        public static String AsString(this GeoCoordinatesFormats GeoCoordinatesFormat)
+
+            => GeoCoordinatesFormat switch {
+                   GeoCoordinatesFormats.Google               => "Google",
+                   GeoCoordinatesFormats.DecimalDegree        => "DecimalDegree",
+                   GeoCoordinatesFormats.DegreeMinuteSeconds  => "DegreeMinuteSeconds",
+                   _                                          => "unknown",
+               };
+
+        #endregion
+
+    }
 
     /// <summary>
     /// The format of geographical coordinates.
