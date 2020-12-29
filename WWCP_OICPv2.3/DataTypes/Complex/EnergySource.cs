@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an energy source.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EnergySource">The parsed connector.</param>
+        /// <param name="EnergySource">The parsed energy source.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject           JSON,
                                        out EnergySource  EnergySource,
@@ -159,7 +159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an energy source.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="EnergySource">The parsed connector.</param>
+        /// <param name="EnergySource">The parsed energy source.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
@@ -232,7 +232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an energy source.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="EnergySource">The parsed connector.</param>
+        /// <param name="EnergySource">The parsed energy source.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
         public static Boolean TryParse(String                                     Text,

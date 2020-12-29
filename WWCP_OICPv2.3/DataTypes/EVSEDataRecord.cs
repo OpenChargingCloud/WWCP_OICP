@@ -1533,14 +1533,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord">An EVSE data record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSEDataRecord EVSEDataRecord)
-        {
 
-            if (EVSEDataRecord is null)
-                return false;
+            => !(EVSEDataRecord is null) &&
 
-            return Id.Equals(EVSEDataRecord.Id);
-
-        }
+                 Id.Equals(EVSEDataRecord.Id);
 
         #endregion
 

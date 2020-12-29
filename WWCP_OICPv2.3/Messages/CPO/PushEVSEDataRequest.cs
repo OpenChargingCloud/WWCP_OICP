@@ -19,12 +19,12 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Threading;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -40,9 +40,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The operator EVSE data records.
+        /// The operator EVSE data record.
         /// </summary>
-        public OperatorEVSEData             OperatorEVSEData   { get; }
+        [Mandatory]
+        public OperatorEVSEData             OperatorEVSEData    { get; }
+
+        /// <summary>
+        /// The server-side data management operation.
+        /// </summary>
+        [Mandatory]
+        public ActionTypes                  Action              { get; }
 
         /// <summary>
         /// The enumeration of EVSE data records.
@@ -62,11 +69,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public String                       OperatorName
             => OperatorEVSEData.OperatorName;
 
-        /// <summary>
-        /// The server-side data management operation.
-        /// </summary>
-        public ActionTypes                  Action            { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -74,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new push EVSE data request.
         /// </summary>
-        /// <param name="OperatorEVSEData">An operator EVSE data.</param>
+        /// <param name="OperatorEVSEData">The operator EVSE data record.</param>
         /// <param name="Action">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -106,6 +108,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#31-eroamingpushevsedata_v23
+
         // {
         //   "ActionType":      "fullLoad",
         //   "OperatorEvseData": {
@@ -121,257 +125,233 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse(PushEVSEDataXML,  ..., OnException = null, ...)
+        #region (static) Parse   (JSON, CustomPushEVSEDataRequestParser = null)
 
         /// <summary>
-        /// Parse the given XML representation of an OICP push EVSE data request.
+        /// Parse the given JSON representation of a push EVSE data request.
         /// </summary>
-        /// <param name="PushEVSEDataXML">The XML to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static PushEVSEDataRequest Parse(XElement                                   PushEVSEDataXML,
-                                                CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                                CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                                OnExceptionDelegate                        OnException                   = null,
-
-                                                DateTime?                                  Timestamp                     = null,
-                                                CancellationToken?                         CancellationToken             = null,
-                                                EventTracking_Id                           EventTrackingId               = null,
-                                                TimeSpan?                                  RequestTimeout                = null)
-
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        public static PushEVSEDataRequest Parse(JObject                                           JSON,
+                                                CustomJObjectParserDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestParser   = null)
         {
 
-            if (TryParse(PushEVSEDataXML,
-                         out PushEVSEDataRequest _PushEVSEData,
-                         CustomOperatorEVSEDataParser,
-                         CustomEVSEDataRecordParser,
-                         OnException,
+            if (TryParse(JSON,
+                         out PushEVSEDataRequest pushEVSEDataRequest,
+                         out String              ErrorResponse,
+                         CustomPushEVSEDataRequestParser))
+            {
+                return pushEVSEDataRequest;
+            }
 
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout))
-
-                return _PushEVSEData;
-
-            return null;
+            throw new ArgumentException("The given JSON representation of a push EVSE data request is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse(PushEVSEDataText, ..., OnException = null, ...)
+        #region (static) Parse   (Text, CustomPushEVSEDataRequestParser = null)
 
         /// <summary>
-        /// Parse the given text-representation of an OICP push EVSE data request.
+        /// Parse the given text representation of a push EVSE data request.
         /// </summary>
-        /// <param name="PushEVSEDataText">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static PushEVSEDataRequest Parse(String                                     PushEVSEDataText,
-                                                CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                                CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                                OnExceptionDelegate                        OnException                   = null,
-
-                                                DateTime?                                  Timestamp                     = null,
-                                                CancellationToken?                         CancellationToken             = null,
-                                                EventTracking_Id                           EventTrackingId               = null,
-                                                TimeSpan?                                  RequestTimeout                = null)
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        public static PushEVSEDataRequest Parse(String                                            Text,
+                                                CustomJObjectParserDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestParser   = null)
         {
 
-            if (TryParse(PushEVSEDataText,
-                         out PushEVSEDataRequest _PushEVSEData,
-                         CustomOperatorEVSEDataParser,
-                         CustomEVSEDataRecordParser,
-                         OnException,
+            if (TryParse(Text,
+                         out PushEVSEDataRequest pushEVSEDataRequest,
+                         out String              ErrorResponse,
+                         CustomPushEVSEDataRequestParser))
+            {
+                return pushEVSEDataRequest;
+            }
 
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout))
-
-                return _PushEVSEData;
-
-            return null;
+            throw new ArgumentException("The given text representation of a push EVSE data request is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(PushEVSEDataXML,  out PushEVSEData, ..., OnException = null, ...)
+        #region (static) TryParse(JSON, out PushEVSEDataRequest, out ErrorResponse, CustomPushEVSEDataRequestParser = null)
+
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given XML representation of an OICP push EVSE data request.
+        /// Try to parse the given JSON representation of a push EVSE data request.
         /// </summary>
-        /// <param name="PushEVSEDataXML">The XML to parse.</param>
-        /// <param name="PushEVSEData">The parsed push EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(XElement                                   PushEVSEDataXML,
-                                       out PushEVSEDataRequest                    PushEVSEData,
-                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                        OnException                   = null,
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PushEVSEDataRequest">The parsed push EVSE data request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject                  JSON,
+                                       out PushEVSEDataRequest  PushEVSEDataRequest,
+                                       out String               ErrorResponse)
 
-                                       DateTime?                                  Timestamp                     = null,
-                                       CancellationToken?                         CancellationToken             = null,
-                                       EventTracking_Id                           EventTrackingId               = null,
-                                       TimeSpan?                                  RequestTimeout                = null)
+            => TryParse(JSON,
+                        out PushEVSEDataRequest,
+                        out ErrorResponse,
+                        null);
+
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a push EVSE data request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PushEVSEDataRequest">The parsed push EVSE data request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        public static Boolean TryParse(JObject                                           JSON,
+                                       out PushEVSEDataRequest                           PushEVSEDataRequest,
+                                       out String                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestParser)
         {
 
             try
             {
 
-                if (PushEVSEDataXML.Name != OICPNS.EVSEData + "eRoamingPushEvseData")
+                PushEVSEDataRequest = default;
+
+                if (JSON?.HasValues != true)
                 {
-                    PushEVSEData = null;
+                    ErrorResponse = "The given JSON object must not be null or empty!";
                     return false;
                 }
 
-                PushEVSEData = new PushEVSEDataRequest(
+                #region Parse ActionType          [mandatory]
 
-                                   OperatorEVSEData.Parse(PushEVSEDataXML.ElementOrFail(OICPNS.EVSEData + "OperatorEvseData"),
-                                                          CustomOperatorEVSEDataParser,
-                                                          CustomEVSEDataRecordParser),
+                if (!JSON.ParseMandatoryEnum("ActionType",
+                                             "action type",
+                                             out ActionTypes ActionType,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
 
-                                   PushEVSEDataXML.MapValueOrFail(OICPNS.EVSEData + "ActionType",
-                                                                  ActionTypesExtentions.Parse),
+                #endregion
 
-                                   Timestamp,
-                                   CancellationToken,
-                                   EventTrackingId,
-                                   RequestTimeout
+                #region Parse OperatorEVSEData    [mandatory]
 
-                               );
+                if (!JSON.ParseMandatory("OperatorEvseData",
+                                         "operator EVSE data",
+                                         OICPv2_3.OperatorEVSEData.TryParse,
+                                         out OperatorEVSEData OperatorEVSEData,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+
+                PushEVSEDataRequest = new PushEVSEDataRequest(OperatorEVSEData,
+                                                              ActionType);
+
+                if (CustomPushEVSEDataRequestParser != null)
+                    PushEVSEDataRequest = CustomPushEVSEDataRequestParser(JSON,
+                                                                          PushEVSEDataRequest);
 
                 return true;
 
             }
             catch (Exception e)
             {
-
-                OnException?.Invoke(DateTime.UtcNow, PushEVSEDataXML, e);
-
-                PushEVSEData = null;
+                PushEVSEDataRequest  = default;
+                ErrorResponse        = "The given JSON representation of a push EVSE data request is invalid: " + e.Message;
                 return false;
-
             }
 
         }
 
         #endregion
 
-        #region (static) TryParse(PushEVSEDataText, out PushEVSEData, ..., OnException = null, ...)
+        #region (static) TryParse(Text, out PushEVSEDataRequest, out ErrorResponse, CustomPushEVSEDataRequestParser = null)
 
         /// <summary>
-        /// Try to parse the given text-representation of an OICP push EVSE data request.
+        /// Try to parse the given text representation of a push EVSE data request.
         /// </summary>
-        /// <param name="PushEVSEDataText">The text to parse.</param>
-        /// <param name="PushEVSEData">The parsed push EVSE data request.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        /// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Boolean TryParse(String                                     PushEVSEDataText,
-                                       out PushEVSEDataRequest                    PushEVSEData,
-                                       CustomXMLParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser  = null,
-                                       CustomXMLParserDelegate<EVSEDataRecord>    CustomEVSEDataRecordParser    = null,
-                                       OnExceptionDelegate                        OnException                   = null,
-
-                                       DateTime?                                  Timestamp                     = null,
-                                       CancellationToken?                         CancellationToken             = null,
-                                       EventTracking_Id                           EventTrackingId               = null,
-                                       TimeSpan?                                  RequestTimeout                = null)
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="PushEVSEDataRequest">The parsed push EVSE data request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        public static Boolean TryParse(String                                            Text,
+                                       out PushEVSEDataRequest                           PushEVSEDataRequest,
+                                       out String                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestParser)
         {
 
             try
             {
 
-                if (TryParse(XDocument.Parse(PushEVSEDataText).Root,
-                             out PushEVSEData,
-                             CustomOperatorEVSEDataParser,
-                             CustomEVSEDataRecordParser,
-                             OnException,
-
-                             Timestamp,
-                             CancellationToken,
-                             EventTrackingId,
-                             RequestTimeout))
-
-                    return true;
+                return TryParse(JObject.Parse(Text),
+                                out PushEVSEDataRequest,
+                                out ErrorResponse,
+                                CustomPushEVSEDataRequestParser);
 
             }
             catch (Exception e)
             {
-                OnException?.Invoke(DateTime.UtcNow, PushEVSEDataText, e);
+                PushEVSEDataRequest  = default;
+                ErrorResponse        = "The given text representation of a push EVSE data request is invalid: " + e.Message;
+                return false;
             }
-
-            PushEVSEData = null;
-            return false;
 
         }
 
         #endregion
 
-        #region ToXML(CustomPushEVSEDataRequestSerializer = null, OperatorEVSEDataXName = null, CustomOperatorEVSEDataSerializer = null, EVSEDataRecordXName = null, IncludeEVSEDataRecordMetadata = true, CustomEVSEDataRecordSerializer = null)
+        #region ToJSON(CustomPushEVSEDataRequestSerializer = null, CustomOperatorEVSEDataSerializer = null, ...)
 
         /// <summary>
-        /// Return a XML representation of this object.
+        /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomPushEVSEDataRequestSerializer">A delegate to customize the serialization of PushEVSEData requests.</param>
-        /// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
-        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData XML elements.</param>
-        /// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
-        /// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
-        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        public XElement ToXML(CustomXMLSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
-                              XName                                             OperatorEVSEDataXName                 = null,
-                              CustomXMLSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
-                              XName                                             EVSEDataRecordXName                   = null,
-                              Boolean                                           IncludeEVSEDataRecordMetadata         = true,
-                              CustomXMLSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null)
-
+        /// <param name="CustomPushEVSEDataRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom operator EVSE data JSON objects.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
+        /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
+        /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
+        /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PushEVSEDataRequest>  CustomPushEVSEDataRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
+                              CustomJObjectSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null,
+                              CustomJObjectSerializerDelegate<Address>              CustomAddressSerializer               = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null,
+                              CustomJObjectSerializerDelegate<EnergySource>         CustomEnergySourceSerializer          = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>          CustomOpeningTimesSerializer          = null)
         {
 
-            var XML = new XElement(OICPNS.EVSEData + "eRoamingPushEvseData",
-
-                                       new XElement(OICPNS.EVSEData + "ActionType", Action.AsString()),
-
-                                       OperatorEVSEData.ToXML(OperatorEVSEDataXName,
-                                                              CustomOperatorEVSEDataSerializer,
-                                                              EVSEDataRecordXName,
-                                                              IncludeEVSEDataRecordMetadata,
-                                                              CustomEVSEDataRecordSerializer)
-
-                                  );
+            var JSON = JSONObject.Create(
+                           new JProperty("ActionType",        Action.AsString()),
+                           new JProperty("OperatorEvseData",  OperatorEVSEData.ToJSON(CustomOperatorEVSEDataSerializer,
+                                                                                      CustomEVSEDataRecordSerializer,
+                                                                                      CustomAddressSerializer,
+                                                                                      CustomGeoCoordinatesSerializer,
+                                                                                      CustomEnergySourceSerializer,
+                                                                                      CustomEnvironmentalImpactSerializer,
+                                                                                      CustomOpeningTimesSerializer))
+                       );
 
             return CustomPushEVSEDataRequestSerializer != null
-                       ? CustomPushEVSEDataRequestSerializer(this, XML)
-                       : XML;
+                       ? CustomPushEVSEDataRequestSerializer(this, JSON)
+                       : JSON;
 
         }
+
+        #endregion
+
+        #region Clone
+
+        /// <summary>
+        /// Clone this request.
+        /// </summary>
+        public PushEVSEDataRequest Clone
+
+            => new PushEVSEDataRequest(OperatorEVSEData.Clone,
+                                       Action);
 
         #endregion
 
@@ -445,15 +425,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PushEVSEDataRequest">An push EVSE data request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(PushEVSEDataRequest PushEVSEDataRequest)
-        {
 
-            if ((Object) PushEVSEDataRequest == null)
-                return false;
+            => !(PushEVSEDataRequest is null) &&
 
-            return OperatorEVSEData.Equals(PushEVSEDataRequest.OperatorEVSEData) &&
-                   Action.          Equals(PushEVSEDataRequest.Action);
-
-        }
+                 OperatorEVSEData.Equals(PushEVSEDataRequest.OperatorEVSEData) &&
+                 Action.          Equals(PushEVSEDataRequest.Action);
 
         #endregion
 
@@ -487,7 +463,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => String.Concat(Action, " of ",
                              EVSEDataRecords.Count(), " EVSE data record(s)",
-                             " (", OperatorId, OperatorName != null ? " / " + OperatorName : "", ")");
+                             " by ", OperatorName, " (", OperatorId, ")");
 
         #endregion
 

@@ -62,6 +62,7 @@
     <Compile Include="DataTypes\Complex\I18NText.cs" />
     <Compile Include="DataTypes\Complex\Identification.cs" />
     <Compile Include="DataTypes\Complex\HashedPIN.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEStatus.cs" />
     <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />
     <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
     <Compile Include="DataTypes\Complex\RFIDIdentification.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="DataTypes\Simple\URL.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="Messages\ARequest.cs" />
+    <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Version.cs" />

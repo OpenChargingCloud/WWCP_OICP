@@ -962,8 +962,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         /// <summary>
         /// An acknowledgement builder.
         /// </summary>
-        public class Builder : AResponseBuilder<TRequest,
-                                                Acknowledgement<TRequest>>
+        public new class Builder : AResponseBuilder<TRequest,
+                                                    Acknowledgement<TRequest>>
         {
 
             #region Properties

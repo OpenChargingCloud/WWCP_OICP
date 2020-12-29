@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A charge detail record.
     /// </summary>
-    public class ChargeDetailRecord : IEquatable <ChargeDetailRecord>,
+    public class ChargeDetailRecord : IEquatable<ChargeDetailRecord>,
                                       IComparable<ChargeDetailRecord>,
                                       IComparable
     {
