@@ -28,13 +28,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 {
 
     /// <summary>
-    /// The OICP CPO client.
+    /// The CPO client.
     /// </summary>
-    public partial class CPOClient : IHTTPClient
+    public partial class CPOClient
     {
 
         /// <summary>
-        /// The OICP CPO client (HTTP client) logger.
+        /// The CPO client (HTTP client) logger.
         /// </summary>
         public new class Logger //: HTTPClient.Logger
         {
