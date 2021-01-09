@@ -337,6 +337,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                         }
 
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        {
+
+                        // HTTP/1.1 400 
+                        // Server: nginx/1.18.0
+                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                        // Content-Type: application/json;charset=utf-8
+                        // Transfer-Encoding: chunked
+                        // Connection: keep-alive
+                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                        // 
+                        // {
+                        //     "message": "Error parsing/validating JSON.",
+                        //     "validationErrors": [
+                        //         {
+                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                        //             "errorMessage": "may not be null"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                        //             "errorMessage": "may not be empty"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                        //             "errorMessage": "may not be empty"
+                        //         }
+                        //     ]
+                        // }
+
+                        }
+
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 

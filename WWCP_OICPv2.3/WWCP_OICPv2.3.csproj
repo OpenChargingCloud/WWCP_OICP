@@ -100,6 +100,7 @@
     <Compile Include="DataTypes\Simple\CPOPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\EVCO_Id.cs" />
+    <Compile Include="DataTypes\Simple\LanguageCode.cs" />
     <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
     <Compile Include="DataTypes\Simple\Hash_Value.cs" />
     <Compile Include="DataTypes\Simple\Phone_Number.cs" />

@@ -112,8 +112,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The geo coordinate of the EVSE.
         /// </summary>
-        [Optional]
-        public GeoCoordinates?                      GeoCoordinates                         { get; }
+        [Mandatory]
+        public GeoCoordinates                       GeoCoordinates                         { get; }
 
         /// <summary>
         /// The types of charging plugs attached to the EVSE.
@@ -264,8 +264,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new Electric Vehicle Supply Equipment (EVSE) data record.
         /// </summary>
         /// <param name="Id">A unique EVSE identification.</param>
-        /// 
+        /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
         /// <param name="Address">The address of the EVSE.</param>
+        /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
         /// <param name="PlugTypes">The types of charging plugs attached to the EVSE.</param>
         /// <param name="ChargingFacilities">An enumeration of supported charging facilities at the EVSE.</param>
         /// <param name="RenewableEnergy">If the EVSE provides only renewable energy then the value MUST be” true”, if it use grey energy then value MUST be “false”.</param>
@@ -284,11 +285,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// 
         /// <param name="ChargingStationId">The identification of the charging station hosting the EVSE.</param>
         /// <param name="ChargingPoolId">The identification of the charging pool hosting the EVSE.</param>
-        /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
         /// <param name="HardwareManufacturer">Optional name of the EVSE manufacturer.</param>
         /// <param name="ChargingStationImageURL">Optional URL to an image of the EVSE.</param>
         /// <param name="SubOperatorName">Optional name of the sub operator owning the EVSE.</param>
-        /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
         /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
         /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
         /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
@@ -303,8 +302,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// 
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEDataRecord(EVSE_Id                           Id,
-
+                              I18NText                          ChargingStationName,
                               Address                           Address,
+                              GeoCoordinates                    GeoCoordinates,
                               IEnumerable<PlugTypes>            PlugTypes,
                               IEnumerable<ChargingFacility>     ChargingFacilities,
                               Boolean                           RenewableEnergy,
@@ -323,11 +323,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                               ChargingStation_Id?               ChargingStationId                  = null,
                               ChargingPool_Id?                  ChargingPoolId                     = null,
-                              I18NText                          ChargingStationName                = null,
                               String                            HardwareManufacturer               = null,
                               URL?                              ChargingStationImageURL            = null,
                               String                            SubOperatorName                    = null,
-                              GeoCoordinates?                   GeoCoordinates                     = null,
                               Boolean?                          DynamicPowerLevel                  = null,
                               IEnumerable<EnergySource>         EnergySources                      = null,
                               EnvironmentalImpact?              EnvironmentalImpact                = null,
@@ -346,6 +344,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
+            if (ChargingStationName.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(ChargingStationName),  "The given charging station name must not be null or empty!");
+
+            if (Address is null)
+                throw new ArgumentNullException(nameof(Address),              "The given address must not be null!");
+
+            if (PlugTypes.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
+
             if (PlugTypes.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
 
@@ -361,8 +368,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #endregion
 
             this.Id                                = Id;
-
-            this.Address                           = Address                ?? throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
+            this.ChargingStationName               = ChargingStationName;
+            this.Address                           = Address;
+            this.GeoCoordinates                    = GeoCoordinates;
             this.PlugTypes                         = PlugTypes?.          Distinct();
             this.ChargingFacilities                = ChargingFacilities?. Distinct();
             this.RenewableEnergy                   = RenewableEnergy;
@@ -381,11 +389,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.ChargingStationId                 = ChargingStationId;
             this.ChargingPoolId                    = ChargingPoolId;
-            this.ChargingStationName               = ChargingStationName;
             this.HardwareManufacturer              = HardwareManufacturer;
             this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
-            this.GeoCoordinates                    = GeoCoordinates;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
             this.EnergySources                     = EnergySources?.      Distinct();
             this.EnvironmentalImpact               = EnvironmentalImpact;
@@ -642,6 +648,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse ChargingStationName               [mandatory]
+
+                if (JSON.ParseMandatory("ChargingStationName",
+                                        "multi-language charging station name",
+                                        I18NText.TryParse,
+                                        out I18NText ChargingStationName,
+                                        out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
                 #region Parse Address                           [mandatory]
 
                 if (!JSON.ParseMandatoryJSON2("Address",
@@ -651,6 +671,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out ErrorResponse))
                 {
                     return false;
+                }
+
+                #endregion
+
+                #region Parse GeoCoordinates                    [mandatory]
+
+                if (JSON.ParseMandatory("GeoCoordinates",
+                                        "geo coordinates",
+                                        OICPv2_3.GeoCoordinates.TryParse,
+                                        out GeoCoordinates GeoCoordinates,
+                                        out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -865,20 +899,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ChargingStationName               [optional]
-
-                if (JSON.ParseOptionalJSON("ChargingStationName",
-                                           "multi-language charging station name",
-                                           I18NText.TryParse,
-                                           out I18NText ChargingStationName,
-                                           out ErrorResponse))
-                {
-                    if (ErrorResponse != null)
-                        return false;
-                }
-
-                #endregion
-
                 #region HardwareManufacturer                    [optional]
 
                 var HardwareManufacturer = JSON["HardwareManufacturer"]?.Value<String>();
@@ -902,20 +922,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #region SubOperatorName                         [optional]
 
                 var SubOperatorName = JSON["SubOperatorName"]?.Value<String>();
-
-                #endregion
-
-                #region Parse GeoCoordinates                    [optional]
-
-                if (JSON.ParseOptionalStruct("GeoCoordinates",
-                                             "geo coordinates",
-                                             OICPv2_3.GeoCoordinates.TryParse,
-                                             out GeoCoordinates? GeoCoordinates,
-                                             out ErrorResponse))
-                {
-                    if (ErrorResponse != null)
-                        return false;
-                }
 
                 #endregion
 
@@ -1080,7 +1086,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 EVSEDataRecord = new EVSEDataRecord(EVSEId,
+                                                    ChargingStationName,
                                                     Address,
+                                                    GeoCoordinates,
                                                     PlugTypes,
                                                     ChargingFacilities,
                                                     RenewableEnergy,
@@ -1099,11 +1107,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                     ChargingStationId,
                                                     ChargingPoolId,
-                                                    ChargingStationName,
                                                     HardwareManufacturer,
                                                     ChargingStationImageURL,
                                                     SubOperatorName,
-                                                    GeoCoordinates,
                                                     DynamicPowerLevel,
                                                     EnergySources,
                                                     EnvironmentalImpact,
@@ -1179,12 +1185,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
+        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null,
                               CustomJObjectSerializerDelegate<Address>              CustomAddressSerializer               = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>     CustomChargingFacilitySerializer      = null,
                               CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null,
                               CustomJObjectSerializerDelegate<EnergySource>         CustomEnergySourceSerializer          = null,
                               CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null,
@@ -1194,17 +1202,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var JSON = JSONObject.Create(
 
                            new JProperty("EvseID",                                  Id.                                ToString()),
-
+                           new JProperty("ChargingStationNames",                    ChargingStationName.               ToJSON()),
                            new JProperty("Address",                                 Address.                           ToJSON(CustomAddressSerializer)),
-                           new JProperty("PlugTypes",                               new JArray(PlugTypes.          SafeSelect(plugType           => plugType.          AsString()))),
-                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. SafeSelect(chargingFacility   => chargingFacility.  ToString()))),
+                           new JProperty("GeoCoordinates",                          GeoCoordinates.                    ToJSON(CustomGeoCoordinatesSerializer)),
+                           new JProperty("Plugs",                                   new JArray(PlugTypes.          SafeSelect(plugType           => plugType.          AsString()))),
+                           new JProperty("ChargingFacilities",                      new JArray(ChargingFacilities. SafeSelect(chargingFacility   => chargingFacility.  ToJSON(CustomChargingFacilitySerializer)))),
                            new JProperty("RenewableEnergy",                         RenewableEnergy),
                            new JProperty("CalibrationLawDataAvailability",          CalibrationLawDataAvailability.    AsString()),
                            new JProperty("AuthenticationModes",                     new JArray(AuthenticationModes.SafeSelect(authenticationMode => authenticationMode.AsString()))),
                            new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     SafeSelect(paymentOption      => paymentOption.     AsString()))),
                            new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
-                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.                ToString()),
+                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.                ToString().Replace(" ", "")),
                            new JProperty("IsOpen24Hours",                           IsOpen24Hours),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
                            new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
@@ -1227,10 +1236,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("ChargingPoolID",                    ChargingPoolId.              Value)
                                : null,
 
-                           ChargingStationName.             IsNeitherNullNorEmpty()
-                               ? new JProperty("ChargingStationNames",              ChargingStationName.               ToJSON())
-                               : null,
-
                            HardwareManufacturer.            IsNeitherNullNorEmpty()
                                ? new JProperty("HardwareManufacturer",              HardwareManufacturer)
                                : null,
@@ -1241,10 +1246,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            SubOperatorName.                 IsNeitherNullNorEmpty()
                                ? new JProperty("SubOperatorName",                   SubOperatorName)
-                               : null,
-
-                           GeoCoordinates.                  HasValue
-                               ? new JProperty("GeoCoordinates",                    GeoCoordinates.              Value.ToJSON(CustomGeoCoordinatesSerializer))
                                : null,
 
                            DynamicPowerLevel.               HasValue
@@ -1313,8 +1314,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSEDataRecord Clone
 
             => new EVSEDataRecord(Id.                               Clone,
-
+                                  ChargingStationName.              Clone,
                                   Address.                          Clone,
+                                  GeoCoordinates.                   Clone,
                                   PlugTypes.                        ToArray(),
                                   ChargingFacilities.               ToArray(),
                                   RenewableEnergy,
@@ -1333,11 +1335,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                   ChargingStationId?.               Clone,
                                   ChargingPoolId?.                  Clone,
-                                  ChargingStationName?.             Clone,
                                   HardwareManufacturer != null ? new String(HardwareManufacturer.ToCharArray()) : null,
                                   ChargingStationImageURL?.         Clone,
                                   SubOperatorName      != null ? new String(SubOperatorName.     ToCharArray()) : null,
-                                  GeoCoordinates?.                  Clone,
                                   DynamicPowerLevel,
                                   EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray(),
                                   EnvironmentalImpact?.             Clone,
@@ -1573,8 +1573,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
             => new Builder(NewEVSEId ?? Id,
-
+                           ChargingStationName,
                            Address,
+                           GeoCoordinates,
                            PlugTypes,
                            ChargingFacilities,
                            RenewableEnergy,
@@ -1593,11 +1594,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            ChargingStationId,
                            ChargingPoolId,
-                           ChargingStationName,
                            HardwareManufacturer,
                            ChargingStationImageURL,
                            SubOperatorName,
-                           GeoCoordinates,
                            DynamicPowerLevel,
                            EnergySources,
                            EnvironmentalImpact,
@@ -1696,7 +1695,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// The geo coordinate of the EVSE.
             /// </summary>
-            [Optional]
+            [Mandatory]
             public GeoCoordinates?                    GeoCoordinates                      { get; set; }
 
             /// <summary>
@@ -1848,8 +1847,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new EVSE data record builder.
             /// </summary>
             /// <param name="Id">A unique EVSE identification.</param>
-            /// 
+            /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
             /// <param name="Address">The address of the EVSE.</param>
+            /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
             /// <param name="PlugTypes">The types of charging plugs attached to the EVSE.</param>
             /// <param name="ChargingFacilities">An enumeration of supported charging facilities at the EVSE.</param>
             /// <param name="RenewableEnergy">If the EVSE provides only renewable energy then the value MUST be” true”, if it use grey energy then value MUST be “false”.</param>
@@ -1868,11 +1868,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// 
             /// <param name="ChargingStationId">The identification of the charging station hosting the EVSE.</param>
             /// <param name="ChargingPoolId">The identification of the charging pool hosting the EVSE.</param>
-            /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
             /// <param name="HardwareManufacturer">Optional name of the EVSE manufacturer.</param>
             /// <param name="ChargingStationImageURL">Optional URL to an image of the EVSE.</param>
             /// <param name="SubOperatorName">Optional name of the sub operator owning the EVSE.</param>
-            /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
             /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
             /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
             /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
@@ -1887,8 +1885,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// 
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(EVSE_Id?                           Id                                 = null,
-
+                           I18NText                           ChargingStationName                = null,
                            Address                            Address                            = null,
+                           GeoCoordinates?                    GeoCoordinates                     = null,
                            IEnumerable<PlugTypes>             PlugTypes                          = null,
                            IEnumerable<ChargingFacility>      ChargingFacilities                 = null,
                            Boolean?                           RenewableEnergy                    = null,
@@ -1907,11 +1906,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            ChargingStation_Id?                ChargingStationId                  = null,
                            ChargingPool_Id?                   ChargingPoolId                     = null,
-                           I18NText                           ChargingStationName                = null,
                            String                             HardwareManufacturer               = null,
                            URL?                               ChargingStationImageURL            = null,
                            String                             SubOperatorName                    = null,
-                           GeoCoordinates?                    GeoCoordinates                     = null,
                            Boolean?                           DynamicPowerLevel                  = null,
                            IEnumerable<EnergySource>          EnergySources                      = null,
                            EnvironmentalImpact?               EnvironmentalImpact                = null,
@@ -1929,7 +1926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 this.Id                                = Id;
-
+                this.ChargingStationName               = ChargingStationName;
                 this.Address                           = Address;
                 this.PlugTypes                         = PlugTypes.          SafeAny() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
                 this.ChargingFacilities                = ChargingFacilities. SafeAny() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : new HashSet<ChargingFacility>();
@@ -1949,7 +1946,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.ChargingStationId                 = ChargingStationId;
                 this.ChargingPoolId                    = ChargingPoolId;
-                this.ChargingStationName               = ChargingStationName;
                 this.HardwareManufacturer              = HardwareManufacturer;
                 this.ChargingStationImageURL           = ChargingStationImageURL;
                 this.SubOperatorName                   = SubOperatorName;
@@ -1994,6 +1990,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!Id.                            HasValue)
                     throw new ArgumentException("The given EVSE identification must not be null!",               nameof(Id));
 
+                if (!GeoCoordinates.                HasValue)
+                    throw new ArgumentException("The given geo coordinates must not be null!",                   nameof(GeoCoordinates));
+
                 if (!RenewableEnergy.               HasValue)
                     throw new ArgumentException("The given renewable energy must not be null!",                  nameof(RenewableEnergy));
 
@@ -2018,8 +2017,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
                 return new EVSEDataRecord(Id.                            Value,
-
+                                          ChargingStationName,
                                           Address,
+                                          GeoCoordinates.                Value,
                                           PlugTypes,
                                           ChargingFacilities,
                                           RenewableEnergy.               Value,
@@ -2038,11 +2038,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                           ChargingStationId,
                                           ChargingPoolId,
-                                          ChargingStationName,
                                           HardwareManufacturer,
                                           ChargingStationImageURL,
                                           SubOperatorName,
-                                          GeoCoordinates,
                                           DynamicPowerLevel,
                                           EnergySources,
                                           EnvironmentalImpact,
