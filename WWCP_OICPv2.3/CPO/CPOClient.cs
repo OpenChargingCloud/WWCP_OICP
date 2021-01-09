@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,6 +69,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                         TimeSpan                                Runtime);
 
     #endregion
+
+    #region OnPushEVSEStatusRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status record will be send upstream.
+    /// </summary>
+    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                LogTimestamp,
+                                                          DateTime                                RequestTimestamp,
+                                                          CPOClient                               Sender,
+                                                          //String                                  SenderId,
+                                                          EventTracking_Id                        EventTrackingId,
+                                                          ActionTypes                             Action,
+                                                          UInt64                                  NumberOfEVSEStatusRecords,
+                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
+                                                          TimeSpan                                RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status record had been send upstream.
+    /// </summary>
+    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                LogTimestamp,
+                                                          DateTime                                RequestTimestamp,
+                                                          CPOClient                               Sender,
+                                                          //String                                  SenderId,
+                                                          EventTracking_Id                        EventTrackingId,
+                                                          ActionTypes                             Action,
+                                                          UInt64                                  NumberOfEVSEStatusRecords,
+                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
+                                                          TimeSpan                                RequestTimeout,
+                                                          Acknowledgement<PushEVSEStatusRequest>  Result,
+                                                          TimeSpan                                Runtime);
+
+    #endregion
+
 
 
     /// <summary>
@@ -153,6 +186,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// An event fired whenever EVSE data records had been sent upstream.
         /// </summary>
         public event OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
+
+        #endregion
+
+        #region OnPushEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a request pushing EVSE status records will be send.
+        /// </summary>
+        public event OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
+
+        /// <summary>
+        /// An event fired whenever a SOAP request pushing EVSE status records will be send.
+        /// </summary>
+        public event ClientRequestLogHandler           OnPushEVSEStatusHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler          OnPushEVSEStatusHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever EVSE status records had been sent upstream.
+        /// </summary>
+        public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
 
         #endregion
 
@@ -432,6 +489,245 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         }
 
         #endregion
+
+        #region PushEVSEStatus  (Request)
+
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="Request">A PushEVSEStatus request.</param>
+        public async Task<Acknowledgement<PushEVSEStatusRequest>>
+
+            PushEVSEStatus(PushEVSEStatusRequest Request)
+
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given PushEVSEStatus request must not be null!");
+
+            //Request = _CustomPushEVSEStatusRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped PushEVSEStatus request must not be null!");
+
+
+            Byte                                   TransmissionRetry  = 0;
+            Acknowledgement<PushEVSEStatusRequest> result             = null;
+
+            #endregion
+
+            #region Send OnPushEVSEStatusRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            try
+            {
+
+                if (OnPushEVSEStatusRequest != null)
+                    await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
+                                       Cast<OnPushEVSEStatusRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     //ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEStatusRecords.ULongCount(),
+                                                     Request.EVSEStatusRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
+            }
+
+            #endregion
+
+
+            // Apply EVSE filter!
+
+            #region No EVSE status to push?
+
+            if (!Request.EVSEStatusRecords.Any())
+            {
+
+                result = Acknowledgement<PushEVSEStatusRequest>.Success(Request,
+                                                                      StatusCodeDescription: "No EVSE status to push");
+
+            }
+
+            #endregion
+
+            else
+            {
+
+                try
+                {
+
+                    do
+                    {
+
+                        #region Upstream HTTP request...
+
+                        var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
+
+                                                      ? new HTTPClient (RemoteURL.Hostname,
+                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                        DNSClient:   DNSClient)
+
+                                                      : new HTTPSClient(RemoteURL.Hostname,
+                                                                        (sender, certificate, chain, policyErrors) => {
+                                                                            return true;
+                                                                        },
+                                                                        (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                            return ClientCert;
+                                                                        },
+                                                                        ClientCert:  ClientCert,
+                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                        DNSClient:   DNSClient)).
+
+                                                  Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                         RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                         requestbuilder => {
+                                                                                             requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                             requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                             requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                         }),
+
+                                                          RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
+                                                          ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
+                                                          CancellationToken:    Request.CancellationToken,
+                                                          EventTrackingId:      Request.EventTrackingId,
+                                                          RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+
+                                                  ConfigureAwait(false);
+
+                        #endregion
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        {
+
+                            if (HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                var JSON = JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String());
+
+                                if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
+                                                                                    JSON,
+                                                                                    out Acknowledgement<PushEVSEStatusRequest> Acknowledgement,
+                                                                                    out String ErrorResponse))
+                                {
+
+
+                                }
+
+                            }
+
+                            TransmissionRetry = Byte.MaxValue - 1;
+                            break;
+
+                        }
+
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        {
+
+                        // HTTP/1.1 400 
+                        // Server: nginx/1.18.0
+                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                        // Content-Type: application/json;charset=utf-8
+                        // Transfer-Encoding: chunked
+                        // Connection: keep-alive
+                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                        // 
+                        // {
+                        //     "message": "Error parsing/validating JSON.",
+                        //     "validationErrors": [
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                        //             "errorMessage": "may not be null"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                        //             "errorMessage": "may not be empty"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
+                        //             "errorMessage": "may not be empty"
+                        //         }
+                        //     ]
+                        // }
+
+                        }
+
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        { }
+
+                    }
+                    while (TransmissionRetry++ < MaxNumberOfRetries);
+
+                }
+                catch (Exception e)
+                {
+                    
+                }
+
+                //if (result == null)
+                //    result = HTTPResponse<Acknowledgement<PushEVSEStatusRequest>>.ClientError(
+                //                 new Acknowledgement<PushEVSEStatusRequest>(
+                //                     Request,
+                //                     StatusCodes.SystemError,
+                //                     "HTTP request failed!"
+                //                 )
+                //             );
+
+            }
+
+
+            #region Send OnPushEVSEStatusResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            try
+            {
+
+                if (OnPushEVSEStatusResponse != null)
+                    await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
+                                       Cast<OnPushEVSEStatusResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     Request.Timestamp.Value,
+                                                     this,
+                                                     //ClientId,
+                                                     Request.EventTrackingId,
+                                                     Request.Action,
+                                                     Request.EVSEStatusRecords.ULongCount(),
+                                                     Request.EVSEStatusRecords,
+                                                     Request.RequestTimeout ?? RequestTimeout,
+                                                     result,
+                                                     Endtime - StartTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
 
 
         #region Dispose()
