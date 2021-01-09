@@ -27,15 +27,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The unique identification of a charging pool.
+    /// The unique identification of a process.
     /// </summary>
-    public readonly struct ChargingPool_Id : IId<ChargingPool_Id>
+    public readonly struct Process_Id : IId<Process_Id>
     {
 
         #region Data
-
-        //ToDo: Implement proper charging pool id format!
-        // ([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?P[A-Za-z0-9\*]{1,30})
 
         /// <summary>
         /// The internal identification.
@@ -53,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the charging pool identificator.
+        /// The length of the process identificator.
         /// </summary>
         public UInt64 Length
             => (UInt64) InternalId?.Length;
@@ -63,10 +60,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new charging pool identification.
-        /// based on the given string.
+        /// Create a new process identification based on the given string.
         /// </summary>
-        private ChargingPool_Id(String Text)
+        private Process_Id(String Text)
         {
             InternalId = Text;
         }
@@ -77,10 +73,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parse the given string as a charging pool identification.
+        /// Parse the given string as a process identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
-        public static ChargingPool_Id Parse(String Text)
+        /// <param name="Text">A text-representation of a process identification.</param>
+        public static Process_Id Parse(String Text)
         {
 
             #region Initial checks
@@ -89,14 +85,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 Text = Text.Trim();
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging pool identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text-representation of a process identification must not be null or empty!");
 
             #endregion
 
-            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
-                return chargingPoolId;
+            if (TryParse(Text, out Process_Id processId))
+                return processId;
 
-            throw new ArgumentException("Invalid text-representation of a charging pool identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a process identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -105,14 +101,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given string as a charging pool identification.
+        /// Try to parse the given string as a process identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
-        public static ChargingPool_Id? TryParse(String Text)
+        /// <param name="Text">A text-representation of a process identification.</param>
+        public static Process_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
-                return chargingPoolId;
+            if (TryParse(Text, out Process_Id processId))
+                return processId;
 
             return default;
 
@@ -120,14 +116,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ChargingPoolId)
+        #region TryParse(Text, out ProcessId)
 
         /// <summary>
-        /// Try to parse the given string as a charging pool identification.
+        /// Try to parse the given string as a process identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
-        /// <param name="ChargingPoolId">The parsed charging pool identification.</param>
-        public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
+        /// <param name="Text">A text-representation of a process identification.</param>
+        /// <param name="ProcessId">The parsed process identification.</param>
+        public static Boolean TryParse(String Text, out Process_Id ProcessId)
         {
 
             #region Initial checks
@@ -137,7 +133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (Text.IsNullOrEmpty())
             {
-                ChargingPoolId = default;
+                ProcessId = default;
                 return false;
             }
 
@@ -145,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             try
             {
-                ChargingPoolId = new ChargingPool_Id(Text);
+                ProcessId = new Process_Id(Text);
                 return true;
             }
 
@@ -156,7 +152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            ChargingPoolId = default;
+            ProcessId = default;
             return false;
 
         }
@@ -166,11 +162,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone
 
         /// <summary>
-        /// Clone this charging pool identification.
+        /// Clone this process identification.
         /// </summary>
-        public ChargingPool_Id Clone
+        public Process_Id Clone
 
-            => new ChargingPool_Id(
+            => new Process_Id(
                    new String(InternalId.ToCharArray())
                );
 
@@ -179,99 +175,99 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (ChargingPoolId1, ChargingPoolId2)
+        #region Operator == (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ChargingPool_Id ChargingPoolId1,
-                                           ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator == (Process_Id ProcessIdId1,
+                                           Process_Id ProcessIdId2)
 
-            => ChargingPoolId1.Equals(ChargingPoolId2);
+            => ProcessIdId1.Equals(ProcessIdId2);
 
         #endregion
 
-        #region Operator != (ChargingPoolId1, ChargingPoolId2)
+        #region Operator != (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ChargingPool_Id ChargingPoolId1,
-                                           ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator != (Process_Id ProcessIdId1,
+                                           Process_Id ProcessIdId2)
 
-            => !ChargingPoolId1.Equals(ChargingPoolId2);
+            => !ProcessIdId1.Equals(ProcessIdId2);
 
         #endregion
 
-        #region Operator <  (ChargingPoolId1, ChargingPoolId2)
+        #region Operator <  (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargingPool_Id ChargingPoolId1,
-                                          ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator < (Process_Id ProcessIdId1,
+                                          Process_Id ProcessIdId2)
 
-            => ChargingPoolId1.CompareTo(ChargingPoolId2) < 0;
+            => ProcessIdId1.CompareTo(ProcessIdId2) < 0;
 
         #endregion
 
-        #region Operator <= (ChargingPoolId1, ChargingPoolId2)
+        #region Operator <= (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargingPool_Id ChargingPoolId1,
-                                           ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator <= (Process_Id ProcessIdId1,
+                                           Process_Id ProcessIdId2)
 
-            => ChargingPoolId1.CompareTo(ChargingPoolId2) <= 0;
+            => ProcessIdId1.CompareTo(ProcessIdId2) <= 0;
 
         #endregion
 
-        #region Operator >  (ChargingPoolId1, ChargingPoolId2)
+        #region Operator >  (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargingPool_Id ChargingPoolId1,
-                                          ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator > (Process_Id ProcessIdId1,
+                                          Process_Id ProcessIdId2)
 
-            => ChargingPoolId1.CompareTo(ChargingPoolId2) > 0;
+            => ProcessIdId1.CompareTo(ProcessIdId2) > 0;
 
         #endregion
 
-        #region Operator >= (ChargingPoolId1, ChargingPoolId2)
+        #region Operator >= (ProcessIdId1, ProcessIdId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId1">A charging pool identification.</param>
-        /// <param name="ChargingPoolId2">Another charging pool identification.</param>
+        /// <param name="ProcessIdId1">A process identification.</param>
+        /// <param name="ProcessIdId2">Another process identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargingPool_Id ChargingPoolId1,
-                                           ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator >= (Process_Id ProcessIdId1,
+                                           Process_Id ProcessIdId2)
 
-            => ChargingPoolId1.CompareTo(ChargingPoolId2) >= 0;
-
-        #endregion
+            => ProcessIdId1.CompareTo(ProcessIdId2) >= 0;
 
         #endregion
 
-        #region IComparable<ChargingPoolId> Members
+        #endregion
+
+        #region IComparable<ProcessId> Members
 
         #region CompareTo(Object)
 
@@ -281,30 +277,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
 
-            => Object is ChargingPool_Id chargingPoolId
-                   ? CompareTo(chargingPoolId)
-                   : throw new ArgumentException("The given object is not a charging pool identification!",
+            => Object is Process_Id processId
+                   ? CompareTo(processId)
+                   : throw new ArgumentException("The given object is not a process identification!",
                                                  nameof(Object));
 
         #endregion
 
-        #region CompareTo(ChargingPoolId)
+        #region CompareTo(ProcessId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ChargingPoolId">An object to compare with.</param>
-        public Int32 CompareTo(ChargingPool_Id ChargingPoolId)
+        /// <param name="ProcessId">An object to compare with.</param>
+        public Int32 CompareTo(Process_Id ProcessId)
 
             => String.Compare(InternalId,
-                              ChargingPoolId.InternalId,
+                              ProcessId.InternalId,
                               StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<ChargingPoolId> Members
+        #region IEquatable<ProcessId> Members
 
         #region Equals(Object)
 
@@ -315,22 +311,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is ChargingPool_Id chargingPoolId &&
-                   Equals(chargingPoolId);
+            => Object is Process_Id processId &&
+                   Equals(processId);
 
         #endregion
 
-        #region Equals(ChargingPoolId)
+        #region Equals(ProcessId)
 
         /// <summary>
-        /// Compares two ChargingPoolIds for equality.
+        /// Compares two ProcessIds for equality.
         /// </summary>
-        /// <param name="ChargingPoolId">A charging pool identification to compare with.</param>
+        /// <param name="ProcessId">A process identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargingPool_Id ChargingPoolId)
+        public Boolean Equals(Process_Id ProcessId)
 
             => String.Equals(InternalId,
-                             ChargingPoolId.InternalId,
+                             ProcessId.InternalId,
                              StringComparison.OrdinalIgnoreCase);
 
         #endregion

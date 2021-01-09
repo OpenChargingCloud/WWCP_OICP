@@ -47,19 +47,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The request leading to this response.
         /// </summary>
         [Mandatory]
-        public TRequest  Request              { get; }
+        public TRequest     Request              { get; }
 
         /// <summary>
         /// The timestamp of the response message creation.
         /// </summary>
         [Mandatory]
-        public DateTime  ResponseTimestamp    { get; }
+        public DateTime     ResponseTimestamp    { get; }
+
+        /// <summary>
+        /// The optional Hubject process identification of the request.
+        /// </summary>
+        [Optional]
+        public Process_Id?  ProcessId            { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject   CustomData           { get; }
+        public JObject      CustomData           { get; }
 
         #endregion
 
@@ -70,14 +76,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this result.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        protected AResponse(TRequest   Request,
-                            DateTime?  ResponseTimestamp   = null,
-                            JObject    CustomData          = null)
+        protected AResponse(TRequest     Request,
+                            DateTime?    ResponseTimestamp   = null,
+                            Process_Id?  ProcessId           = null,
+                            JObject      CustomData          = null)
         {
 
             this.Request            = Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!");
             this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.UtcNow;
+            this.ProcessId          = ProcessId;
             this.CustomData         = CustomData;
 
         }
@@ -109,18 +118,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// The request leading to this response.
             /// </summary>
-            public TRequest   Request              { get; set; }
+            [Mandatory]
+            public TRequest     Request              { get; set; }
 
             /// <summary>
             /// The timestamp of the response message creation.
             /// </summary>
-            public DateTime?  ResponseTimestamp    { get; set; }
+            [Mandatory]
+            public DateTime?    ResponseTimestamp    { get; set; }
+
+            /// <summary>
+            /// The optional Hubject process identification of the request.
+            /// </summary>
+            [Optional]
+            public Process_Id?  ProcessId            { get; set; }
 
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject    CustomData           { get; set; }
+            public JObject      CustomData           { get; set; }
 
             #endregion
 
@@ -130,15 +147,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new generic response.
             /// </summary>
             /// <param name="Request">The request leading to this result.</param>
+            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest   Request             = null,
-                              DateTime?  ResponseTimestamp   = null,
-                              JObject    CustomData          = null)
+            protected Builder(TRequest     Request             = null,
+                              DateTime?    ResponseTimestamp   = null,
+                              Process_Id?  ProcessId           = null,
+                              JObject      CustomData          = null)
             {
 
                 this.Request            = Request;
                 this.ResponseTimestamp  = ResponseTimestamp;
+                this.ProcessId          = ProcessId;
                 this.CustomData         = CustomData;
 
             }

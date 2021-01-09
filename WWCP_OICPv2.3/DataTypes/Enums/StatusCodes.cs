@@ -97,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">A status code.</param>
         public static String AsString(this StatusCodes StatusCode)
 
-            => ((Int32) StatusCode).ToString("X3");
+            => ((Int32) StatusCode).ToString("D3");
 
         #endregion
 

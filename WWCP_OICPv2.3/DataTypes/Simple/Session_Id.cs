@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Session_Id sessionId))
                 return sessionId;
 
-            return new Session_Id?();
+            return default;
 
         }
 
@@ -222,7 +222,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator == (Session_Id SessionId1,
+                                           Session_Id SessionId2)
+
             => SessionId1.Equals(SessionId2);
 
         #endregion
@@ -235,7 +237,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator != (Session_Id SessionId1,
+                                           Session_Id SessionId2)
+
             => !SessionId1.Equals(SessionId2);
 
         #endregion
@@ -248,7 +252,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator < (Session_Id SessionId1,
+                                          Session_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) < 0;
 
         #endregion
@@ -261,7 +267,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator <= (Session_Id SessionId1,
+                                           Session_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) <= 0;
 
         #endregion
@@ -274,7 +282,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator > (Session_Id SessionId1,
+                                          Session_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) > 0;
 
         #endregion
@@ -287,7 +297,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Session_Id SessionId1, Session_Id SessionId2)
+        public static Boolean operator >= (Session_Id SessionId1,
+                                           Session_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) >= 0;
 
         #endregion
@@ -367,6 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
+
             => InternalId.GetHashCode();
 
         #endregion
@@ -377,6 +390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
+
             => InternalId;
 
         #endregion

@@ -411,14 +411,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("StatusCode: ", (Int32) Code,
+            => String.Concat("StatusCode: ", ((Int32) Code).ToString("D3"),
 
                              Description.IsNotNullOrEmpty()
-                                 ? ", description: " + Description
+                                 ? ", "             + Description
                                  : "",
 
                              AdditionalInfo.IsNotNullOrEmpty()
-                                 ? ", additional Info: " + AdditionalInfo
+                                 ? ", additional: " + AdditionalInfo
                                  : "");
 
         #endregion

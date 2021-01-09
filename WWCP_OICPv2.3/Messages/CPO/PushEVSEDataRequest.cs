@@ -32,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The push EVSE data request.
+    /// The PushEVSEData request.
     /// </summary>
     public class PushEVSEDataRequest : ARequest<PushEVSEDataRequest>
     {
@@ -74,7 +74,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new push EVSE data request.
+        /// Create a new PushEVSEData request.
         /// </summary>
         /// <param name="OperatorEVSEData">The operator EVSE data record.</param>
         /// <param name="Action">The server-side data management operation.</param>

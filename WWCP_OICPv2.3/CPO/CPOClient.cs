@@ -370,20 +370,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                         #endregion
 
+
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.HTTPBody.Length > 0)
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
                             {
 
-                                var JSON = JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String());
-
-                                if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
-                                                                                  JSON,
-                                                                                  out Acknowledgement<PushEVSEDataRequest> Acknowledgement,
-                                                                                  out String ErrorResponse))
+                                try
                                 {
 
+                                    // HTTP/1.1 200 
+                                    // Server: nginx/1.18.0
+                                    // Date: Sat, 09 Jan 2021 06:53:50 GMT
+                                    // Content-Type: application/json;charset=utf-8
+                                    // Transfer-Encoding: chunked
+                                    // Connection: keep-alive
+                                    // Process-ID: d8d4583c-ff9b-44dd-bc92-b341f15f644e
+                                    // 
+                                    // {"Result":false,"StatusCode":{"Code":"018","Description":"Duplicate EVSE IDs","AdditionalInfo":null},"SessionID":null,"CPOPartnerSessionID":null,"EMPPartnerSessionID":null}
+
+                                    if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
+                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                      out Acknowledgement<PushEVSEDataRequest>  Acknowledgement,
+                                                                                      out String                                ErrorResponse,
+                                                                                      null,
+                                                                                      HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                    {
+
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
 
                                 }
 
@@ -397,35 +418,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                        // HTTP/1.1 400 
-                        // Server: nginx/1.18.0
-                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
-                        // Content-Type: application/json;charset=utf-8
-                        // Transfer-Encoding: chunked
-                        // Connection: keep-alive
-                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
-                        // 
-                        // {
-                        //     "message": "Error parsing/validating JSON.",
-                        //     "validationErrors": [
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
-                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
-                        //             "errorMessage": "may not be null"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
-                        //             "errorMessage": "may not be empty"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
-                        //             "errorMessage": "may not be empty"
-                        //         }
-                        //     ]
-                        // }
+                            // FaultBody!
+
+                            // HTTP/1.1 400 
+                            // Server: nginx/1.18.0
+                            // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type: application/json;charset=utf-8
+                            // Transfer-Encoding: chunked
+                            // Connection: keep-alive
+                            // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage": "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage": "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage": "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
+                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                      out Acknowledgement<PushEVSEDataRequest>  Acknowledgement,
+                                                                                      out String                                ErrorResponse,
+                                                                                      null,
+                                                                                      HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                    {
+
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        {
+                            // Hubject firewall problem!
+                            // Only HTML response!
+                            break;
+                        }
+
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        {
+
+                            // OicpERoamingFault:
+                            // {
+                            //   "StatusCode": {
+                            //     "AdditionalInfo": "string",
+                            //     "Code":           "000",
+                            //     "Description":    "string"
+                            //   },
+                            //   "message": "string"
+                            // }
+
+                            // Operator identification is not linked to the TLS client certificate!
+                            // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+
+                            break;
 
                         }
 
@@ -608,20 +687,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                         #endregion
 
+
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.HTTPBody.Length > 0)
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
                             {
 
-                                var JSON = JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String());
-
-                                if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
-                                                                                    JSON,
-                                                                                    out Acknowledgement<PushEVSEStatusRequest> Acknowledgement,
-                                                                                    out String ErrorResponse))
+                                try
                                 {
 
+                                    if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                        out Acknowledgement<PushEVSEStatusRequest>  Acknowledgement,
+                                                                                        out String                                  ErrorResponse,
+                                                                                        null,
+                                                                                        HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                    {
+
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
 
                                 }
 

@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ChargingStation_Id chargingStationId))
                 return chargingStationId;
 
-            return new ChargingStation_Id?();
+            return default;
 
         }
 
@@ -184,7 +184,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator == (ChargingStation_Id ChargingStationId1,
+                                           ChargingStation_Id ChargingStationId2)
+
             => ChargingStationId1.Equals(ChargingStationId2);
 
         #endregion
@@ -197,7 +199,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator != (ChargingStation_Id ChargingStationId1,
+                                           ChargingStation_Id ChargingStationId2)
+
             => !ChargingStationId1.Equals(ChargingStationId2);
 
         #endregion
@@ -210,7 +214,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator < (ChargingStation_Id ChargingStationId1,
+                                          ChargingStation_Id ChargingStationId2)
+
             => ChargingStationId1.CompareTo(ChargingStationId2) < 0;
 
         #endregion
@@ -223,7 +229,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator <= (ChargingStation_Id ChargingStationId1,
+                                           ChargingStation_Id ChargingStationId2)
+
             => ChargingStationId1.CompareTo(ChargingStationId2) <= 0;
 
         #endregion
@@ -236,7 +244,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator > (ChargingStation_Id ChargingStationId1,
+                                          ChargingStation_Id ChargingStationId2)
+
             => ChargingStationId1.CompareTo(ChargingStationId2) > 0;
 
         #endregion
@@ -249,7 +259,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStationId1">A charging station identification.</param>
         /// <param name="ChargingStationId2">Another charging station identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargingStation_Id ChargingStationId1, ChargingStation_Id ChargingStationId2)
+        public static Boolean operator >= (ChargingStation_Id ChargingStationId1,
+                                           ChargingStation_Id ChargingStationId2)
+
             => ChargingStationId1.CompareTo(ChargingStationId2) >= 0;
 
         #endregion
@@ -300,8 +312,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is ChargingStation_Id ChargingStationId &&
-                   Equals(ChargingStationId);
+            => Object is ChargingStation_Id chargingStationId &&
+                   Equals(chargingStationId);
 
         #endregion
 
@@ -329,6 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
+
             => InternalId.GetHashCode();
 
         #endregion
@@ -339,6 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
+
             => InternalId;
 
         #endregion

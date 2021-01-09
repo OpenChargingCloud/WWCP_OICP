@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
@@ -82,6 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public Acknowledgement(TRequest               Request,
                                StatusCode             StatusCode,
@@ -89,10 +91,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                Session_Id?            SessionId             = null,
                                CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                               Process_Id?            ProcessId             = null,
                                JObject                CustomData            = null)
 
             : base(Request,
                    DateTime.UtcNow,
+                   ProcessId,
                    CustomData)
 
         {
@@ -532,6 +536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // 
         // {"Result":true,"StatusCode":{"Code":"000","Description":null,"AdditionalInfo":null},"SessionID":null,"CPOPartnerSessionID":null,"EMPPartnerSessionID":null}
         // {"StatusCode":{"Code":"001","Description":"OICP service not found for URI: /api/oicp/evsepush/v23/operators/DE*BDO/status-records","AdditionalInfo":null}}
+        // {"Result":false,"StatusCode":{"Code":"018","Description":"Duplicate EVSE IDs","AdditionalInfo":null},"SessionID":null,"CPOPartnerSessionID":null,"EMPPartnerSessionID":null}
 
         #endregion
 
@@ -611,6 +616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         JSON,
                         out Acknowledgement,
                         out ErrorResponse,
+                        null,
                         null);
 
 
@@ -622,11 +628,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         public static Boolean TryParse(TRequest                                                Request,
                                        JObject                                                 JSON,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser)
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser,
+                                       Process_Id?                                             ProcessId   = null)
         {
 
             try
@@ -718,6 +726,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 SessionId,
                                                                 CPOPartnerSessionId,
                                                                 EMPPartnerSessionId,
+                                                                ProcessId,
                                                                 CustomData);
 
                 if (CustomAcknowledgementParser != null)
@@ -938,12 +947,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(StatusCode.Code.ToString(), " => ",
-                             Result.             HasValue                 ? ", result: "       + Result.             Value.ToString() : "",
-                             StatusCode.Description.   IsNotNullOrEmpty() ? ", "               + StatusCode.Description               : "",
-                             StatusCode.AdditionalInfo.IsNotNullOrEmpty() ? ", info: "         + StatusCode.AdditionalInfo            : "",
-                             SessionId.          HasValue                 ? ", sessionId: "    + SessionId.          Value.ToString() : "",
-                             CPOPartnerSessionId.HasValue                 ? ", CPOSessionId: " + CPOPartnerSessionId.Value.ToString() : "",
-                             EMPPartnerSessionId.HasValue                 ? ", EMPSessionId: " + EMPPartnerSessionId.Value.ToString() : "");
+                             new String[] {
+                                 Result.             HasValue                 ? "result: "       + Result.             Value.ToString() : null,
+                                 StatusCode.Description.   IsNotNullOrEmpty() ? "description: "  + StatusCode.Description               : null,
+                                 StatusCode.AdditionalInfo.IsNotNullOrEmpty() ? "info: "         + StatusCode.AdditionalInfo            : null,
+                                 SessionId.          HasValue                 ? "sessionId: "    + SessionId.          Value.ToString() : null,
+                                 CPOPartnerSessionId.HasValue                 ? "CPOSessionId: " + CPOPartnerSessionId.Value.ToString() : null,
+                                 EMPPartnerSessionId.HasValue                 ? "EMPSessionId: " + EMPPartnerSessionId.Value.ToString() : null,
+                                 ProcessId.          HasValue                 ? "processId: "    + ProcessId.          Value.ToString() : null
+                             }.AggregateWith(", "));
 
         #endregion
 
@@ -962,6 +974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            SessionId,
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
+                           ProcessId,
                            CustomData);
 
         #endregion
@@ -1019,6 +1032,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="SessionId">An optional charging session identification.</param>
             /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
             /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(TRequest               Request               = null,
                            StatusCode?            StatusCode            = null,
@@ -1027,10 +1041,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Session_Id?            SessionId             = null,
                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                           Process_Id?            ProcessId             = null,
                            JObject                CustomData            = null)
 
                 : base(Request,
                        ResponseTimestamp,
+                       ProcessId,
                        CustomData)
 
             {
@@ -1067,6 +1083,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId,
+                                                 ProcessId,
                                                  CustomData);
 
             #endregion
