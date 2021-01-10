@@ -555,11 +555,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          JSON,
-                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
                          CustomAcknowledgementParser))
             {
-                return pushEVSEDataRequest;
+                return acknowledgement;
             }
 
             throw new ArgumentException("The given JSON representation of an acknowledgement is invalid: " + ErrorResponse, nameof(JSON));
@@ -583,11 +583,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          Text,
-                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
                          CustomAcknowledgementParser))
             {
-                return pushEVSEDataRequest;
+                return acknowledgement;
             }
 
             throw new ArgumentException("The given text representation of an acknowledgement is invalid: " + ErrorResponse, nameof(Text));
@@ -790,7 +790,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
-        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
+        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement responses.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
                               CustomJObjectSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)

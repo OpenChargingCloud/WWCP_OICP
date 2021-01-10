@@ -552,250 +552,233 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         #region PullEVSEStatus  (Request)
 
-        ///// <summary>
-        ///// Upload the given EVSE status records.
-        ///// </summary>
-        ///// <param name="Request">A PullEVSEStatus request.</param>
-        //public async Task<Acknowledgement<PullEVSEStatusRequest>>
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatus request.</param>
+        public async Task<PullEVSEStatusResponse>
 
-        //    PullEVSEStatus(PullEVSEStatusRequest Request)
+            PullEVSEStatus(PullEVSEStatusRequest Request)
 
-        //{
+        {
 
-        //    #region Initial checks
+            #region Initial checks
 
-        //    if (Request == null)
-        //        throw new ArgumentNullException(nameof(Request),  "The given PullEVSEStatus request must not be null!");
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given PullEVSEStatus request must not be null!");
 
-        //    //Request = _CustomPullEVSEStatusRequestMapper(Request);
+            //Request = _CustomPullEVSEStatusRequestMapper(Request);
 
-        //    if (Request == null)
-        //        throw new ArgumentNullException(nameof(Request),  "The mapped PullEVSEStatus request must not be null!");
-
-
-        //    Byte                                   TransmissionRetry  = 0;
-        //    Acknowledgement<PullEVSEStatusRequest> result             = null;
-
-        //    #endregion
-
-        //    #region Send OnPullEVSEStatusRequest event
-
-        //    var StartTime = DateTime.UtcNow;
-
-        //    try
-        //    {
-
-        //        if (OnPullEVSEStatusRequest != null)
-        //            await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
-        //                               Cast<OnPullEVSEStatusRequestDelegate>().
-        //                               Select(e => e(StartTime,
-        //                                             Request.Timestamp.Value,
-        //                                             this,
-        //                                             //ClientId,
-        //                                             Request.EventTrackingId,
-        //                                             Request.Action,
-        //                                             Request.EVSEStatusRecords.ULongCount(),
-        //                                             Request.EVSEStatusRecords,
-        //                                             Request.RequestTimeout ?? RequestTimeout))).
-        //                               ConfigureAwait(false);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
-        //    }
-
-        //    #endregion
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatus request must not be null!");
 
 
-        //    // Apply EVSE filter!
+            Byte                   TransmissionRetry   = 0;
+            PullEVSEStatusResponse result              = null;
 
-        //    #region No EVSE status to push?
+            #endregion
 
-        //    if (!Request.EVSEStatusRecords.Any())
-        //    {
+            #region Send OnPullEVSEStatusRequest event
 
-        //        result = Acknowledgement<PullEVSEStatusRequest>.Success(Request,
-        //                                                              StatusCodeDescription: "No EVSE status to push");
+            var StartTime = DateTime.UtcNow;
 
-        //    }
+            //try
+            //{
 
-        //    #endregion
+            //    if (OnPullEVSEStatusRequest != null)
+            //        await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
+            //                           Cast<OnPullEVSEStatusRequestDelegate>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout))).
+            //                           ConfigureAwait(false);
 
-        //    else
-        //    {
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
+            //}
 
-        //        try
-        //        {
-
-        //            do
-        //            {
-
-        //                #region Upstream HTTP request...
-
-        //                var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-        //                                              ? new HTTPClient (RemoteURL.Hostname,
-        //                                                                RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-        //                                                                DNSClient:   DNSClient)
-
-        //                                              : new HTTPSClient(RemoteURL.Hostname,
-        //                                                                (sender, certificate, chain, policyErrors) => {
-        //                                                                    return true;
-        //                                                                },
-        //                                                                (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-        //                                                                    return ClientCert;
-        //                                                                },
-        //                                                                ClientCert:  ClientCert,
-        //                                                                RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-        //                                                                DNSClient:   DNSClient)).
-
-        //                                          Execute(client => client.CreateRequest(HTTPMethod.POST,
-        //                                                                                 RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
-        //                                                                                 requestbuilder => {
-        //                                                                                     requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-        //                                                                                     requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-        //                                                                                     requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-        //                                                                                 }),
-
-        //                                                  RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
-        //                                                  ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
-        //                                                  CancellationToken:    Request.CancellationToken,
-        //                                                  EventTrackingId:      Request.EventTrackingId,
-        //                                                  RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
-
-        //                                          ConfigureAwait(false);
-
-        //                #endregion
+            #endregion
 
 
-        //                if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
-        //                {
+            try
+            {
 
-        //                    if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
-        //                        HTTPResponse.HTTPBody.Length > 0)
-        //                    {
+                do
+                {
 
-        //                        try
-        //                        {
+                    #region Upstream HTTP request...
 
-        //                            if (Acknowledgement<PullEVSEStatusRequest>.TryParse(Request,
-        //                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-        //                                                                                out Acknowledgement<PullEVSEStatusRequest>  Acknowledgement,
-        //                                                                                out String                                  ErrorResponse,
-        //                                                                                null,
-        //                                                                                HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
-        //                            {
+                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
 
+                                                    ? new HTTPClient(RemoteURL.Hostname,
+                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTP,
+                                                                    DNSClient: DNSClient)
 
-        //                            }
+                                                    : new HTTPSClient(RemoteURL.Hostname,
+                                                                    (sender, certificate, chain, policyErrors) =>
+                                                                    {
+                                                                        return true;
+                                                                    },
+                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) =>
+                                                                    {
+                                                                        return ClientCert;
+                                                                    },
+                                                                    ClientCert: ClientCert,
+                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTPS,
+                                                                    DNSClient: DNSClient)).
 
-        //                        }
-        //                        catch (Exception e)
-        //                        {
+                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
 
-        //                        }
+                                                        RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
+                                                        ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
+                                                        CancellationToken:    Request.CancellationToken,
+                                                        EventTrackingId:      Request.EventTrackingId,
+                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
 
-        //                    }
+                                                ConfigureAwait(false);
 
-        //                    TransmissionRetry = Byte.MaxValue - 1;
-        //                    break;
-
-        //                }
-
-        //                else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
-        //                {
-
-        //                // HTTP/1.1 400 
-        //                // Server: nginx/1.18.0
-        //                // Date: Fri, 08 Jan 2021 14:19:25 GMT
-        //                // Content-Type: application/json;charset=utf-8
-        //                // Transfer-Encoding: chunked
-        //                // Connection: keep-alive
-        //                // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
-        //                // 
-        //                // {
-        //                //     "message": "Error parsing/validating JSON.",
-        //                //     "validationErrors": [
-        //                //         {
-        //                //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
-        //                //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-        //                //         },
-        //                //         {
-        //                //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
-        //                //             "errorMessage": "may not be null"
-        //                //         },
-        //                //         {
-        //                //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
-        //                //             "errorMessage": "may not be empty"
-        //                //         },
-        //                //         {
-        //                //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
-        //                //             "errorMessage": "may not be empty"
-        //                //         }
-        //                //     ]
-        //                // }
-
-        //                }
-
-        //                else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
-        //                { }
-
-        //            }
-        //            while (TransmissionRetry++ < MaxNumberOfRetries);
-
-        //        }
-        //        catch (Exception e)
-        //        {
-                    
-        //        }
-
-        //        //if (result == null)
-        //        //    result = HTTPResponse<Acknowledgement<PullEVSEStatusRequest>>.ClientError(
-        //        //                 new Acknowledgement<PullEVSEStatusRequest>(
-        //        //                     Request,
-        //        //                     StatusCodes.SystemError,
-        //        //                     "HTTP request failed!"
-        //        //                 )
-        //        //             );
-
-        //    }
+                    #endregion
 
 
-        //    #region Send OnPullEVSEStatusResponse event
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
 
-        //    var Endtime = DateTime.UtcNow;
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
 
-        //    try
-        //    {
+                            try
+                            {
 
-        //        if (OnPullEVSEStatusResponse != null)
-        //            await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
-        //                               Cast<OnPullEVSEStatusResponseDelegate>().
-        //                               Select(e => e(Endtime,
-        //                                             Request.Timestamp.Value,
-        //                                             this,
-        //                                             //ClientId,
-        //                                             Request.EventTrackingId,
-        //                                             Request.Action,
-        //                                             Request.EVSEStatusRecords.ULongCount(),
-        //                                             Request.EVSEStatusRecords,
-        //                                             Request.RequestTimeout ?? RequestTimeout,
-        //                                             result,
-        //                                             Endtime - StartTime))).
-        //                               ConfigureAwait(false);
+                                if (PullEVSEStatusResponse.TryParse(Request,
+                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                    out PullEVSEStatusResponse  pullEVSEStatusResponse,
+                                                                    out String                  ErrorResponse,
+                                                                    null,
+                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                {
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
-        //    }
 
-        //    #endregion
+                                }
 
-        //    return result;
+                            }
+                            catch (Exception e)
+                            {
 
-        //}
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        // HTTP/1.1 400 
+                        // Server: nginx/1.18.0
+                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                        // Content-Type: application/json;charset=utf-8
+                        // Transfer-Encoding: chunked
+                        // Connection: keep-alive
+                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                        // 
+                        // {
+                        //     "message": "Error parsing/validating JSON.",
+                        //     "validationErrors": [
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                        //             "errorMessage": "may not be null"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                        //             "errorMessage": "may not be empty"
+                        //         },
+                        //         {
+                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
+                        //             "errorMessage": "may not be empty"
+                        //         }
+                        //     ]
+                        // }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            //if (result == null)
+            //    result = HTTPResponse<Acknowledgement<PullEVSEStatusRequest>>.ClientError(
+            //                 new Acknowledgement<PullEVSEStatusRequest>(
+            //                     Request,
+            //                     StatusCodes.SystemError,
+            //                     "HTTP request failed!"
+            //                 )
+            //             );
+
+
+            #region Send OnPullEVSEStatusResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnPullEVSEStatusResponse != null)
+            //        await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
+            //                           Cast<OnPullEVSEStatusResponseDelegate>().
+            //                           Select(e => e(Endtime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout,
+            //                                         result,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
 
         #endregion
 

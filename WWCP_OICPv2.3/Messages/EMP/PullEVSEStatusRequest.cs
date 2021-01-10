@@ -18,10 +18,10 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Threading;
 
-using org.GraphDefined.Vanaheimr.Aegir;
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -47,7 +47,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional geo coordinate of the search center.
         /// </summary>
         [Optional]
-        public GeoCoordinate?    SearchCenter        { get; }
+        public GeoCoordinates?   SearchCenter        { get; }
 
         /// <summary>
         /// The optional search distance relative to the search center.
@@ -61,6 +61,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public EVSEStatusTypes?  EVSEStatusFilter    { get; }
 
+        /// <summary>
+        /// Optional custom data, e.g. in combination with custom parsers and serializers.
+        /// </summary>
+        [Optional]
+        public JObject           CustomData          { get; }
+
         #endregion
 
         #region Constructor(s)
@@ -73,14 +79,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
         /// 
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public PullEVSEStatusRequest(Provider_Id         ProviderId,
-                                     GeoCoordinate?      SearchCenter        = null,
+                                     GeoCoordinates?     SearchCenter        = null,
                                      Single?             DistanceKM          = null,
                                      EVSEStatusTypes?    EVSEStatusFilter    = null,
+
+                                     JObject             CustomData          = null,
 
                                      DateTime?           Timestamp           = null,
                                      CancellationToken?  CancellationToken   = null,
@@ -98,6 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SearchCenter      = SearchCenter;
             this.DistanceKM        = DistanceKM;
             this.EVSEStatusFilter  = EVSEStatusFilter;
+            this.CustomData        = CustomData;
 
         }
 
@@ -107,325 +118,292 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Documentation
 
         // {
-        //   "ProviderID": "string",
+        //   "ProviderID":        "string",
         //   "SearchCenter": {
         //     "GeoCoordinates": {
         //       "Google": {
         //         "Coordinates": "string"
         //       },
         //       "DecimalDegree": {
-        //         "Latitude": "string",
-        //         "Longitude": "string"
+        //         "Latitude":    "string",
+        //         "Longitude":   "string"
         //       },
         //       "DegreeMinuteSeconds": {
-        //         "Latitude": "string",
-        //         "Longitude": "string"
+        //         "Latitude":    "string",
+        //         "Longitude":   "string"
         //       }
         //     },
-        //     "Radius": 0
+        //     "Radius":          0
         //   },
-        //   "EvseStatus": "Available"
+        //   "EvseStatus":        "Available"
         // }
 
         #endregion
 
-        //#region (static) Parse(PullEVSEStatusXML,  ..., OnException = null, ...)
-
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP pull EVSE status request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusXML">The XML to parse.</param>
-        ///// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
-        //public static PullEVSEStatusRequest Parse(XElement                                        PullEVSEStatusXML,
-        //                                          CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
-        //                                          OnExceptionDelegate                             OnException                         = null,
-
-        //                                          DateTime?                                       Timestamp                           = null,
-        //                                          CancellationToken?                              CancellationToken                   = null,
-        //                                          EventTracking_Id                                EventTrackingId                     = null,
-        //                                          TimeSpan?                                       RequestTimeout                      = null)
-
-        //{
-
-        //    if (TryParse(PullEVSEStatusXML,
-        //                 out PullEVSEStatusRequest _PullEVSEStatus,
-        //                 CustomPullEVSEStatusRequestParser,
-        //                 OnException,
-
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
-
-        //        return _PullEVSEStatus;
-
-        //    return null;
-
-        //}
-
-        //#endregion
-
-        //#region (static) Parse(PullEVSEStatusText, ..., OnException = null, ...)
-
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP pull EVSE status request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusText">The text to parse.</param>
-        ///// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
-        //public static PullEVSEStatusRequest Parse(String                                          PullEVSEStatusText,
-        //                                          CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
-        //                                          OnExceptionDelegate                             OnException                         = null,
+        #region (static) Parse   (JSON, CustomPullEVSEStatusRequestParser = null)
+
+        /// <summary>
+        /// Parse the given JSON representation of a PullEVSEStatus request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus JSON objects.</param>
+        public static PullEVSEStatusRequest Parse(JObject                                             JSON,
+                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out PullEVSEStatusRequest  pullEVSEStatusResponse,
+                         out String                 ErrorResponse,
+                         CustomPullEVSEStatusRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
+
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatus request is invalid: " + ErrorResponse, nameof(JSON));
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (Text, CustomPullEVSEStatusRequestParser = null)
+
+        /// <summary>
+        /// Parse the given text representation of a PullEVSEStatus request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
+        public static PullEVSEStatusRequest Parse(String                                              Text,
+                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out PullEVSEStatusRequest  pullEVSEStatusResponse,
+                         out String                 ErrorResponse,
+                         CustomPullEVSEStatusRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
+
+            throw new ArgumentException("The given text representation of a PullEVSEStatus request is invalid: " + ErrorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, out PullEVSEStatusRequest, out ErrorResponse, CustomPullEVSEStatusRequestParser = null)
+
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEStatus request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEStatusRequest">The parsed PullEVSEStatus request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject                    JSON,
+                                       out PullEVSEStatusRequest  PullEVSEStatusRequest,
+                                       out String                 ErrorResponse)
+
+            => TryParse(JSON,
+                        out PullEVSEStatusRequest,
+                        out ErrorResponse,
+                        null);
+
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEStatus request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEStatusRequest">The parsed PullEVSEStatus request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
+        public static Boolean TryParse(JObject                                             JSON,
+                                       out PullEVSEStatusRequest                           PullEVSEStatusRequest,
+                                       out String                                          ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser)
+        {
+
+            try
+            {
+
+                PullEVSEStatusRequest = default;
+
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
+
+                #region Parse ProviderId            [mandatory]
+
+                if (!JSON.ParseMandatory("ProviderID",
+                                         "provider identification",
+                                         Provider_Id.TryParse,
+                                         out Provider_Id ProviderId,
+                                         out             ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse SearchCenter          [optional]
 
-        //                                          DateTime?                                       Timestamp                           = null,
-        //                                          CancellationToken?                              CancellationToken                   = null,
-        //                                          EventTracking_Id                                EventTrackingId                     = null,
-        //                                          TimeSpan?                                       RequestTimeout                      = null)
+                GeoCoordinates SearchCenter  = default;
+                Single?        DistanceKM    = default;
+
+                if (JSON.ParseOptional("SearchCenter",
+                                       "SearchCenter",
+                                       out JObject searchCenter,
+                                       out ErrorResponse))
+                {
+
+                    if (searchCenter.ParseOptionalJSON("GeoCoordinates",
+                                                       "search center geo coordinates",
+                                                       GeoCoordinates.TryParse,
+                                                       out SearchCenter,
+                                                       out ErrorResponse))
+                    {
+                        if (ErrorResponse != null)
+                            return false;
+                    }
 
-        //{
+                #endregion
+
+                #region Parse DistanceKM            [optional]
+
+                    if (searchCenter.ParseOptional("Radius",
+                                                   "search center radius",
+                                                   out DistanceKM,
+                                                   out ErrorResponse))
+                    {
+                        if (ErrorResponse != null)
+                            return false;
+                    }
 
-        //    if (TryParse(PullEVSEStatusText,
-        //                 out PullEVSEStatusRequest _PullEVSEStatus,
-        //                 CustomPullEVSEStatusRequestParser,
-        //                 OnException,
+                }
+
+                #endregion
+
+                #region Parse EVSEStatusFilter      [optional]
+
+                if (JSON.ParseOptional("EvseStatus",
+                                       "EVSE status filter",
+                                       EVSEStatusTypesExtentions.TryParse,
+                                       out EVSEStatusTypes EVSEStatusFilter,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse Custom Data           [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
 
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
 
-        //        return _PullEVSEStatus;
+                PullEVSEStatusRequest = new PullEVSEStatusRequest(ProviderId,
+                                                                  SearchCenter,
+                                                                  DistanceKM,
+                                                                  EVSEStatusFilter,
+                                                                  CustomData);
 
-        //    return null;
+                if (CustomPullEVSEStatusRequestParser != null)
+                    PullEVSEStatusRequest = CustomPullEVSEStatusRequestParser(JSON,
+                                                                          PullEVSEStatusRequest);
 
-        //}
+                return true;
 
-        //#endregion
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusRequest  = default;
+                ErrorResponse          = "The given JSON representation of a PullEVSEStatus request is invalid: " + e.Message;
+                return false;
+            }
 
-        //#region (static) TryParse(PullEVSEStatusXML,  out PullEVSEStatus, ..., OnException = null, ...)
+        }
 
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP pull EVSE status request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusXML">The XML to parse.</param>
-        ///// <param name="PullEVSEStatus">The parsed pull EVSE status request.</param>
-        ///// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
-        //public static Boolean TryParse(XElement                                        PullEVSEStatusXML,
-        //                               out PullEVSEStatusRequest                       PullEVSEStatus,
-        //                               CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
-        //                               OnExceptionDelegate                             OnException                         = null,
+        #endregion
 
-        //                               DateTime?                                       Timestamp                           = null,
-        //                               CancellationToken?                              CancellationToken                   = null,
-        //                               EventTracking_Id                                EventTrackingId                     = null,
-        //                               TimeSpan?                                       RequestTimeout                      = null)
+        #region (static) TryParse(Text, out PullEVSEStatusRequest, out ErrorResponse, CustomPullEVSEStatusRequestParser = null)
 
-        //{
+        /// <summary>
+        /// Try to parse the given text representation of a PullEVSEStatus request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="PullEVSEStatusRequest">The parsed PullEVSEStatus request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
+        public static Boolean TryParse(String                                              Text,
+                                       out PullEVSEStatusRequest                           PullEVSEStatusRequest,
+                                       out String                                          ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser)
+        {
 
-        //    try
-        //    {
+            try
+            {
 
-        //        if (PullEVSEStatusXML.Name != OICPNS.EVSEStatus + "eRoamingPullEvseStatus")
-        //        {
-        //            PullEVSEStatus = null;
-        //            return false;
-        //        }
+                return TryParse(JObject.Parse(Text),
+                                out PullEVSEStatusRequest,
+                                out ErrorResponse,
+                                CustomPullEVSEStatusRequestParser);
 
-        //        #region Parse the optional search center
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusRequest  = default;
+                ErrorResponse          = "The given text representation of a PullEVSEStatus request is invalid: " + e.Message;
+                return false;
+            }
 
-        //        GeoCoordinate? GeoCoordinates  = null;
-        //        Single         Radius          = 0f;
+        }
 
-        //        var SearchCenterXML = PullEVSEStatusXML.Element(OICPNS.EVSEData + "SearchCenter");
-        //        if (SearchCenterXML != null)
-        //        {
+        #endregion
 
-        //            #region Parse Google format
+        #region ToJSON(CustomPullEVSEStatusRequestSerializer = null, CustomGeoCoordinatesSerializer = null,...)
 
-        //            var GoogleXML = SearchCenterXML.Element(OICPNS.EVSEData + "Google");
-        //            if (GoogleXML != null)
-        //            {
+        /// <summary>
+        /// Return a JSON-representation of this object.
+        /// </summary>
+        /// <param name="CustomPullEVSEStatusRequestSerializer">A delegate to customize the serialization of PullEVSEStatusRequest responses.</param>
+        /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>         CustomGeoCoordinatesSerializer          = null)
+        {
 
-        //                var GeoArray    = GoogleXML.ElementValueOrFail(OICPNS.CommonTypes + "Coordinates").
-        //                                            Split(new String[] { " " }, StringSplitOptions.None);
+            var JSON = JSONObject.Create(
 
-        //                GeoCoordinates  = new GeoCoordinate(Latitude. Parse(GeoArray[0]),
-        //                                                    Longitude.Parse(GeoArray[1]));
+                           new JProperty("ProviderID",                    ProviderId.            ToString()),
 
-        //            }
+                           SearchCenter.HasValue && DistanceKM.HasValue
+                               ? new JProperty("SearchCenter",            new JObject(
+                                                                              new JProperty("GeoCoordinates",  SearchCenter.Value.ToJSON(CustomGeoCoordinatesSerializer)),
+                                                                              new JProperty("Radius",          DistanceKM.Value)
+                                                                          ))
+                               : null,
 
-        //            #endregion
+                           EVSEStatusFilter.HasValue
+                               ? new JProperty("EvseStatus",              EVSEStatusFilter.Value.AsString())
+                               : null,
 
-        //            #region Parse DecimalDegree format
+                           CustomData != null
+                               ? new JProperty("CustomData",              CustomData)
+                               : null
 
-        //            var DecimalDegreeXML = SearchCenterXML.Element(OICPNS.EVSEData + "DecimalDegree");
-        //            if (DecimalDegreeXML != null)
-        //            {
+                       );
 
-        //                GeoCoordinates  = new GeoCoordinate(DecimalDegreeXML.MapValueOrFail(OICPNS.CommonTypes + "Latitude",
-        //                                                                                    Latitude.Parse),
-        //                                                    DecimalDegreeXML.MapValueOrFail(OICPNS.CommonTypes + "Longitude",
-        //                                                                                    Longitude.Parse));
+            return CustomPullEVSEStatusRequestSerializer != null
+                       ? CustomPullEVSEStatusRequestSerializer(this, JSON)
+                       : JSON;
 
+        }
 
-        //            }
-
-        //            #endregion
-
-        //            Radius  = SearchCenterXML.MapValueOrFail(OICPNS.CommonTypes + "Radius",
-        //                                                     Single.Parse);
-
-        //        }
-
-        //        #endregion
-
-        //        PullEVSEStatus = new PullEVSEStatusRequest(PullEVSEStatusXML.MapValueOrFail(OICPNS.EVSEStatus + "ProviderID",
-        //                                                                                    Provider_Id.Parse),
-        //                                                   GeoCoordinates,
-        //                                                   Radius,
-
-        //                                                   PullEVSEStatusXML.MapValueOrFail(OICPNS.EVSEStatus + "EvseStatus",
-        //                                                                                    s => (EVSEStatusTypes)Enum.Parse(typeof(EVSEStatusTypes), s)),
-
-        //                                                   Timestamp,
-        //                                                   CancellationToken,
-        //                                                   EventTrackingId,
-        //                                                   RequestTimeout);
-
-
-        //        if (CustomPullEVSEStatusRequestParser != null)
-        //            PullEVSEStatus = CustomPullEVSEStatusRequestParser(PullEVSEStatusXML,
-        //                                                               PullEVSEStatus);
-
-        //        return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusXML, e);
-
-        //        PullEVSEStatus = null;
-        //        return false;
-
-        //    }
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(PullEVSEStatusText, out PullEVSEStatus, ..., OnException = null, ...)
-
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP pull EVSE status request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusText">The text to parse.</param>
-        ///// <param name="PullEVSEStatus">The parsed pull EVSE status request.</param>
-        ///// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
-        //public static Boolean TryParse(String                                          PullEVSEStatusText,
-        //                               out PullEVSEStatusRequest                       PullEVSEStatus,
-        //                               CustomXMLParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null,
-        //                               OnExceptionDelegate                             OnException                         = null,
-
-        //                               DateTime?                                       Timestamp                           = null,
-        //                               CancellationToken?                              CancellationToken                   = null,
-        //                               EventTracking_Id                                EventTrackingId                     = null,
-        //                               TimeSpan?                                       RequestTimeout                      = null)
-
-        //{
-
-        //    try
-        //    {
-
-        //        if (TryParse(XDocument.Parse(PullEVSEStatusText).Root,
-        //                     out PullEVSEStatus,
-        //                     CustomPullEVSEStatusRequestParser,
-        //                     OnException,
-
-        //                     Timestamp,
-        //                     CancellationToken,
-        //                     EventTrackingId,
-        //                     RequestTimeout))
-
-        //            return true;
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusText, e);
-        //    }
-
-        //    PullEVSEStatus = null;
-        //    return false;
-
-        //}
-
-        //#endregion
-
-        //#region ToXML(CustomPullEVSEStatusRequestSerializer = null)
-
-        ///// <summary>
-        ///// Return a XML representation of this object.
-        ///// </summary>
-        ///// <param name="CustomPullEVSEStatusRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatus XML elements.</param>
-        //public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestSerializer = null)
-        //{
-
-        //    var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatus",
-
-        //                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
-
-        //                           SearchCenter.HasValue && DistanceKM > 0
-        //                               ? new XElement(OICPNS.EVSEStatus + "SearchCenter",
-
-        //                                     new XElement(OICPNS.CommonTypes + "GeoCoordinates",
-        //                                         new XElement(OICPNS.CommonTypes + "DecimalDegree",
-        //                                            new XElement(OICPNS.CommonTypes + "Longitude", SearchCenter.Value.Longitude.ToString("{0:0.######}").Replace(",", ".")),
-        //                                            new XElement(OICPNS.CommonTypes + "Latitude",  SearchCenter.Value.Latitude. ToString("{0:0.######}").Replace(",", "."))
-        //                                         )
-        //                                     ),
-
-        //                                     new XElement(OICPNS.CommonTypes + "Radius", String.Format("{0:0.}", DistanceKM).Replace(",", "."))
-
-        //                                 )
-        //                               : null,
-
-        //                           EVSEStatusFilter.HasValue
-        //                               ? new XElement(OICPNS.EVSEStatus + "EvseStatus",  EVSEStatusFilter.Value)
-        //                               : null
-
-        //                          );
-
-        //    return CustomPullEVSEStatusRequestSerializer != null
-        //               ? CustomPullEVSEStatusRequestSerializer(this, XML)
-        //               : XML;
-
-        //}
-
-        //#endregion
+        #endregion
 
 
         #region Operator overloading

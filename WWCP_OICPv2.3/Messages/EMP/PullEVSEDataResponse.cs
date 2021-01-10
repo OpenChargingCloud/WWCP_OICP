@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //       {
         //         "EvseDataRecord": [
         //           {
-        //             "EvseID": "string",
+        //             "EvseID":    "string",
         //             [...]
         //           },
         //           [...]
@@ -103,309 +103,283 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //     ]
         //   },
         //   "StatusCode": {
-        //     "AdditionalInfo":  "string",
-        //     "Code":            "000",
-        //     "Description":     "string"
+        //     "AdditionalInfo":    "string",
+        //     "Code":              "000",
+        //     "Description":       "string"
         //   }
         // }
 
         #endregion
 
-        //#region (static) Parse   (Request, PullEVSEDataResponseXML,  ..., OnException = null, ...)
+        #region (static) Parse   (JSON, CustomPullEVSEDataResponseParser = null)
 
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP EVSE statuses request.
-        ///// </summary>
-        ///// <param name="Request">An PullPullEVSEDataResponse request.</param>
-        ///// <param name="PullEVSEDataResponseXML">The XML to parse.</param>
-        ///// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData responses.</param>
-        ///// <param name="CustomEVSEDataParser">A delegate to parse custom EVSEData XML elements.</param>
-        ///// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static PullEVSEDataResponse
+        /// <summary>
+        /// Parse the given JSON representation of a PullEVSEData response.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData JSON objects.</param>
+        public static PullEVSEDataResponse Parse(PullEVSEDataRequest                                Request,
+                                                 JObject                                            JSON,
+                                                 CustomJObjectParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null)
+        {
 
-        //    Parse(PullEVSEDataRequest                            Request,
-        //          XElement                                       PullEVSEDataResponseXML,
-        //          CustomXMLParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null,
-        //          CustomXMLParserDelegate<EVSEData>              CustomEVSEDataParser               = null,
-        //          CustomXMLParserDelegate<OperatorEVSEData>      CustomOperatorEVSEDataParser       = null,
-        //          CustomXMLParserDelegate<EVSEDataRecord>        CustomEVSEDataRecordParser         = null,
-        //          CustomXMLParserDelegate<Address>               CustomAddressParser                = null,
-        //          CustomXMLParserDelegate<ChargingFacility>      CustomChargingFacilityParser       = null,
-        //          CustomXMLParserDelegate<StatusCode>            CustomStatusCodeParser             = null,
-        //          OnExceptionDelegate                            OnException                        = null)
+            if (TryParse(Request,
+                         JSON,
+                         out PullEVSEDataResponse  pullEVSEDataResponse,
+                         out String                ErrorResponse,
+                         CustomPullEVSEDataResponseParser))
+            {
+                return pullEVSEDataResponse;
+            }
 
-        //{
+            throw new ArgumentException("The given JSON representation of a PullEVSEData response is invalid: " + ErrorResponse, nameof(JSON));
 
-        //    if (TryParse(Request,
-        //                 PullEVSEDataResponseXML,
-        //                 out PullEVSEDataResponse _PullEVSEDataResponse,
-        //                 CustomPullEVSEDataResponseParser,
-        //                 CustomEVSEDataParser,
-        //                 CustomOperatorEVSEDataParser,
-        //                 CustomEVSEDataRecordParser,
-        //                 CustomAddressParser,
-        //                 CustomChargingFacilityParser,
-        //                 CustomStatusCodeParser,
-        //                 OnException))
+        }
 
-        //        return _PullEVSEDataResponse;
+        #endregion
 
-        //    return null;
+        #region (static) Parse   (Text, CustomPullEVSEDataResponseParser = null)
 
-        //}
+        /// <summary>
+        /// Parse the given text representation of a PullEVSEData response.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData response JSON objects.</param>
+        public static PullEVSEDataResponse Parse(PullEVSEDataRequest                                Request,
+                                                 String                                             Text,
+                                                 CustomJObjectParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null)
+        {
 
-        //#endregion
+            if (TryParse(Request,
+                         Text,
+                         out PullEVSEDataResponse  pullEVSEDataResponse,
+                         out String                ErrorResponse,
+                         CustomPullEVSEDataResponseParser))
+            {
+                return pullEVSEDataResponse;
+            }
 
-        //#region (static) Parse   (Request, PullEVSEDataResponseText, ..., OnException = null, ...)
+            throw new ArgumentException("The given text representation of a PullEVSEData response is invalid: " + ErrorResponse, nameof(Text));
 
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP EVSE statuses request.
-        ///// </summary>
-        ///// <param name="Request">An PullPullEVSEDataResponse request.</param>
-        ///// <param name="PullEVSEDataResponseText">The text to parse.</param>
-        ///// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData responses.</param>
-        ///// <param name="CustomEVSEDataParser">A delegate to parse custom EVSEData XML elements.</param>
-        ///// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static PullEVSEDataResponse
+        }
 
-        //    Parse(PullEVSEDataRequest                            Request,
-        //          String                                         PullEVSEDataResponseText,
-        //          CustomXMLParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null,
-        //          CustomXMLParserDelegate<EVSEData>              CustomEVSEDataParser               = null,
-        //          CustomXMLParserDelegate<OperatorEVSEData>      CustomOperatorEVSEDataParser       = null,
-        //          CustomXMLParserDelegate<EVSEDataRecord>        CustomEVSEDataRecordParser         = null,
-        //          CustomXMLParserDelegate<Address>               CustomAddressParser                = null,
-        //          CustomXMLParserDelegate<ChargingFacility>      CustomChargingFacilityParser       = null,
-        //          CustomXMLParserDelegate<StatusCode>            CustomStatusCodeParser             = null,
-        //          OnExceptionDelegate                            OnException                        = null)
+        #endregion
 
-        //{
+        #region (static) TryParse(JSON, out PullEVSEDataResponse, out ErrorResponse, CustomPullEVSEDataResponseParser = null)
 
-        //    if (TryParse(Request,
-        //                 PullEVSEDataResponseText,
-        //                 out PullEVSEDataResponse _PullEVSEDataResponse,
-        //                 CustomPullEVSEDataResponseParser,
-        //                 CustomEVSEDataParser,
-        //                 CustomOperatorEVSEDataParser,
-        //                 CustomEVSEDataRecordParser,
-        //                 CustomAddressParser,
-        //                 CustomChargingFacilityParser,
-        //                 CustomStatusCodeParser,
-        //                 OnException))
+        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
-        //        return _PullEVSEDataResponse;
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEData response.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEDataResponse">The parsed PullEVSEData response.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(PullEVSEDataRequest       Request,
+                                       JObject                   JSON,
+                                       out PullEVSEDataResponse  PullEVSEDataResponse,
+                                       out String                ErrorResponse)
 
-        //    return null;
-
-        //}
-
-        //#endregion
-
-        //#region (static) TryParse(Request, PullEVSEDataResponseXML,  out PullEVSEDataResponse, ..., OnException = null, ...)
-
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP EVSE statuses request.
-        ///// </summary>
-        ///// <param name="Request">An PullPullEVSEDataResponse request.</param>
-        ///// <param name="PullEVSEDataResponseXML">The XML to parse.</param>
-        ///// <param name="PullEVSEDataResponse">The parsed PullEVSEDataResponse request.</param>
-        ///// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData responses.</param>
-        ///// <param name="CustomEVSEDataParser">A delegate to parse custom EVSEData XML elements.</param>
-        ///// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(PullEVSEDataRequest                            Request,
-        //                               XElement                                       PullEVSEDataResponseXML,
-        //                               out PullEVSEDataResponse                       PullEVSEDataResponse,
-        //                               CustomXMLParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null,
-        //                               CustomXMLParserDelegate<EVSEData>              CustomEVSEDataParser               = null,
-        //                               CustomXMLParserDelegate<OperatorEVSEData>      CustomOperatorEVSEDataParser       = null,
-        //                               CustomXMLParserDelegate<EVSEDataRecord>        CustomEVSEDataRecordParser         = null,
-        //                               CustomXMLParserDelegate<Address>               CustomAddressParser                = null,
-        //                               CustomXMLParserDelegate<ChargingFacility>      CustomChargingFacilityParser       = null,
-        //                               CustomXMLParserDelegate<StatusCode>            CustomStatusCodeParser             = null,
-        //                               OnExceptionDelegate                            OnException                        = null)
-        //{
-
-        //    try
-        //    {
-
-        //        if (PullEVSEDataResponseXML.Name != OICPNS.EVSEData + "eRoamingEvseData")
-        //        {
-        //            PullEVSEDataResponse = null;
-        //            return false;
-        //        }
-
-        //        PullEVSEDataResponse =  new PullEVSEDataResponse(
-
-        //                                    Request,
-
-        //                                    PullEVSEDataResponseXML.MapElementOrFail    (OICPNS.EVSEData + "EvseData",
-        //                                                                                 (xml, e) => OICPv2_2.EVSEData.Parse  (xml,
-        //                                                                                                                       CustomEVSEDataParser,
-        //                                                                                                                       CustomOperatorEVSEDataParser,
-        //                                                                                                                       CustomEVSEDataRecordParser,
-        //                                                                                                                       CustomAddressParser,
-        //                                                                                                                       CustomChargingFacilityParser,
-        //                                                                                                                       e),
-        //                                                                                 OnException),
-
-        //                                    PullEVSEDataResponseXML.MapElementOrNullable(OICPNS.CommonTypes + "StatusCode",
-        //                                                                                 (xml, e) => OICPv2_2.StatusCode.Parse(xml,
-        //                                                                                                                       CustomStatusCodeParser,
-        //                                                                                                                       e),
-        //                                                                                 OnException)
-
-        //                                );
+            => TryParse(Request,
+                        JSON,
+                        out PullEVSEDataResponse,
+                        out ErrorResponse,
+                        null,
+                        null);
 
 
-        //        if (CustomPullEVSEDataResponseParser != null)
-        //            PullEVSEDataResponse = CustomPullEVSEDataResponseParser(PullEVSEDataResponseXML,
-        //                                                                    PullEVSEDataResponse);
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEData response.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEDataResponse">The parsed PullEVSEData response.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData response JSON objects.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        public static Boolean TryParse(PullEVSEDataRequest                                Request,
+                                       JObject                                            JSON,
+                                       out PullEVSEDataResponse                           PullEVSEDataResponse,
+                                       out String                                         ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser,
+                                       Process_Id?                                        ProcessId   = null)
+        {
 
-        //        return true;
+            try
+            {
 
-        //    }
-        //    catch (Exception e)
-        //    {
+                PullEVSEDataResponse = default;
 
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEDataResponseXML, e);
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
 
-        //        PullEVSEDataResponse = null;
-        //        return false;
+                #region Parse OperatorEVSEStatus    [mandatory]
 
-        //    }
+                if (!JSON.ParseMandatory("EvseData",
+                                         "EVSE data",
+                                         out JObject evseData,
+                                         out         ErrorResponse))
+                {
+                    return false;
+                }
 
-        //}
+                if (!evseData.ParseMandatoryJSON("OperatorEvseData",
+                                                 "operator EVSE data",
+                                                 OICPv2_3.OperatorEVSEData.TryParse,
+                                                 out IEnumerable<OperatorEVSEData> OperatorEVSEData,
+                                                 out ErrorResponse))
+                {
+                    return false;
+                }
 
-        //#endregion
+                #endregion
 
-        //#region (static) TryParse(Request, PullEVSEDataResponseText, out PullEVSEDataResponse, ..., OnException = null, ...)
+                #region Parse StatusCode            [optional]
 
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP EVSE statuses request.
-        ///// </summary>
-        ///// <param name="Request">An PullPullEVSEDataResponse request.</param>
-        ///// <param name="PullEVSEDataResponseText">The text to parse.</param>
-        ///// <param name="PullEVSEDataResponse">The parsed EVSE statuses request.</param>
-        ///// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData responses.</param>
-        ///// <param name="CustomEVSEDataParser">A delegate to parse custom EVSEData XML elements.</param>
-        ///// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom OperatorEVSEData XML elements.</param>
-        ///// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressParser">A delegate to parse custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilityParser">A delegate to parse custom ChargingFacility XML elements.</param>
-        ///// <param name="CustomStatusCodeParser">A delegate to parse custom StatusCode XML elements.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        //public static Boolean TryParse(PullEVSEDataRequest                            Request,
-        //                               String                                         PullEVSEDataResponseText,
-        //                               out PullEVSEDataResponse                       PullEVSEDataResponse,
-        //                               CustomXMLParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser   = null,
-        //                               CustomXMLParserDelegate<EVSEData>              CustomEVSEDataParser               = null,
-        //                               CustomXMLParserDelegate<OperatorEVSEData>      CustomOperatorEVSEDataParser       = null,
-        //                               CustomXMLParserDelegate<EVSEDataRecord>        CustomEVSEDataRecordParser         = null,
-        //                               CustomXMLParserDelegate<Address>               CustomAddressParser                = null,
-        //                               CustomXMLParserDelegate<ChargingFacility>      CustomChargingFacilityParser       = null,
-        //                               CustomXMLParserDelegate<StatusCode>            CustomStatusCodeParser             = null,
-        //                               OnExceptionDelegate                            OnException                        = null)
-        //{
+                if (JSON.ParseOptionalJSON("StatusCode",
+                                           "StatusCode",
+                                           OICPv2_3.StatusCode.TryParse,
+                                           out StatusCode StatusCode,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
 
-        //    try
-        //    {
+                #endregion
 
-        //        if (TryParse(Request,
-        //                     XDocument.Parse(PullEVSEDataResponseText).Root,
-        //                     out PullEVSEDataResponse,
-        //                     CustomPullEVSEDataResponseParser,
-        //                     CustomEVSEDataParser,
-        //                     CustomOperatorEVSEDataParser,
-        //                     CustomEVSEDataRecordParser,
-        //                     CustomAddressParser,
-        //                     CustomChargingFacilityParser,
-        //                     CustomStatusCodeParser,
-        //                     OnException))
+                #region Parse Custom Data           [optional]
 
-        //            return true;
+                var CustomData = JSON["CustomData"] as JObject;
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEDataResponseText, e);
-        //    }
-
-        //    PullEVSEDataResponse = null;
-        //    return false;
-
-        //}
-
-        //#endregion
-
-        //#region ToXML(CustomPullEVSEDataResponseSerializer = null, CustomChargeDetailRecordSerializer = null, CustomIdentificationSerializer = null)
-
-        ///// <summary>
-        ///// Return a XML representation of this object.
-        ///// </summary>
-        ///// <param name="CustomPullEVSEDataResponseSerializer">A delegate to customize the serialization of PullEVSEData responses.</param>
-        ///// <param name="CustomEVSEDataSerializer">A delegate to serialize custom EVSEData XML elements.</param>
-        ///// <param name="OperatorEVSEDataXName">The OperatorEVSEData XML name to use.</param>
-        ///// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom OperatorEVSEData XML elements.</param>
-        ///// <param name="EVSEDataRecordXName">The EVSEDataRecord XML name to use.</param>
-        ///// <param name="IncludeEVSEDataRecordMetadata">Include EVSEDataRecord deltaType and lastUpdate meta data.</param>
-        ///// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSEDataRecord XML elements.</param>
-        ///// <param name="CustomAddressSerializer">A delegate to serialize custom Address XML elements.</param>
-        ///// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom ChargingFacility XML elements.</param>
-        ///// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
-        //public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseSerializer   = null,
-        //                      CustomXMLSerializerDelegate<EVSEData>              CustomEVSEDataSerializer               = null,
-        //                      XName                                              OperatorEVSEDataXName                  = null,
-        //                      CustomXMLSerializerDelegate<OperatorEVSEData>      CustomOperatorEVSEDataSerializer       = null,
-        //                      XName                                              EVSEDataRecordXName                    = null,
-        //                      Boolean                                            IncludeEVSEDataRecordMetadata          = true,
-        //                      CustomXMLSerializerDelegate<EVSEDataRecord>        CustomEVSEDataRecordSerializer         = null,
-        //                      CustomXMLSerializerDelegate<Address>               CustomAddressSerializer                = null,
-        //                      CustomXMLSerializerDelegate<ChargingFacility>      CustomChargingFacilitySerializer       = null,
-        //                      CustomXMLSerializerDelegate<StatusCode>            CustomStatusCodeSerializer             = null)
-
-        //{
-
-        //    var XML = new XElement(OICPNS.EVSEData + "eRoamingEVSEData",
-
-        //                  EVSEData.ToXML(CustomEVSEDataSerializer,
-        //                                 OperatorEVSEDataXName,
-        //                                 CustomOperatorEVSEDataSerializer,
-        //                                 EVSEDataRecordXName,
-        //                                 IncludeEVSEDataRecordMetadata,
-        //                                 CustomEVSEDataRecordSerializer,
-        //                                 CustomAddressSerializer,
-        //                                 CustomChargingFacilitySerializer),
-
-        //                  StatusCode.HasValue
-        //                      ? StatusCode.Value.ToXML(OICPNS.EVSEData + "StatusCode",
-        //                                               CustomStatusCodeSerializer)
-        //                      : null
-
-        //              );
+                #endregion
 
 
-        //    return CustomPullEVSEDataResponseSerializer != null
-        //               ? CustomPullEVSEDataResponseSerializer(this, XML)
-        //               : XML;
+                PullEVSEDataResponse = new PullEVSEDataResponse(Request,
+                                                                OperatorEVSEData,
+                                                                StatusCode,
+                                                                ProcessId,
+                                                                CustomData);
 
-        //}
+                if (CustomPullEVSEDataResponseParser != null)
+                    PullEVSEDataResponse = CustomPullEVSEDataResponseParser(JSON,
+                                                                            PullEVSEDataResponse);
 
-        //#endregion
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                PullEVSEDataResponse  = default;
+                ErrorResponse         = "The given JSON representation of a PullEVSEData response is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, out PullEVSEDataResponse, out ErrorResponse, CustomPullEVSEDataResponseParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a PullEVSEData response.
+        /// </summary>
+        /// <param name="Request">The request leading to this response.</param>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="PullEVSEDataResponse">The parsed PullEVSEData response.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData response JSON objects.</param>
+        public static Boolean TryParse(PullEVSEDataRequest                                Request,
+                                       String                                             Text,
+                                       out PullEVSEDataResponse                           PullEVSEDataResponse,
+                                       out String                                         ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseParser)
+        {
+
+            try
+            {
+
+                return TryParse(Request,
+                                JObject.Parse(Text),
+                                out PullEVSEDataResponse,
+                                out ErrorResponse,
+                                CustomPullEVSEDataResponseParser);
+
+            }
+            catch (Exception e)
+            {
+                PullEVSEDataResponse  = default;
+                ErrorResponse         = "The given text representation of a PullEVSEData response is invalid: " + e.Message;
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region ToJSON(CustomPullEVSEDataResponseSerializer = null, CustomOperatorEVSEDataSerializer = null,...)
+
+        /// <summary>
+        /// Return a JSON-representation of this object.
+        /// </summary>
+        /// <param name="CustomPullEVSEDataResponseSerializer">A delegate to customize the serialization of PullEVSEDataResponse responses.</param>
+        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom operator EVSE data JSON objects.</param>
+        /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
+        /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
+        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
+        /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
+        /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseSerializer   = null,
+                              CustomJObjectSerializerDelegate<OperatorEVSEData>      CustomOperatorEVSEDataSerializer       = null,
+                              CustomJObjectSerializerDelegate<EVSEDataRecord>        CustomEVSEDataRecordSerializer         = null,
+                              CustomJObjectSerializerDelegate<Address>               CustomAddressSerializer                = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>      CustomChargingFacilitySerializer       = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>        CustomGeoCoordinatesSerializer         = null,
+                              CustomJObjectSerializerDelegate<EnergySource>          CustomEnergySourceSerializer           = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>   CustomEnvironmentalImpactSerializer    = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>           CustomOpeningTimesSerializer           = null,
+                              CustomJObjectSerializerDelegate<StatusCode>            CustomStatusCodeSerializer             = null)
+        {
+
+            var JSON = JSONObject.Create(
+
+                           new JProperty("EvseData",
+                               new JProperty("OperatorEvseData",  new JArray(OperatorEVSEData.Select(operatorEVSEData => operatorEVSEData.ToJSON(CustomOperatorEVSEDataSerializer,
+                                                                                                                                                 CustomEVSEDataRecordSerializer,
+                                                                                                                                                 CustomAddressSerializer,
+                                                                                                                                                 CustomChargingFacilitySerializer,
+                                                                                                                                                 CustomGeoCoordinatesSerializer,
+                                                                                                                                                 CustomEnergySourceSerializer,
+                                                                                                                                                 CustomEnvironmentalImpactSerializer,
+                                                                                                                                                 CustomOpeningTimesSerializer))))
+                           ),
+
+                           StatusCode != null
+                               ? new JProperty("StatusCode",  StatusCode.ToJSON(CustomStatusCodeSerializer))
+                               : null,
+
+                           CustomData != null
+                               ? new JProperty("CustomData",  CustomData)
+                               : null
+
+                       );
+
+            return CustomPullEVSEDataResponseSerializer != null
+                       ? CustomPullEVSEDataResponseSerializer(this, JSON)
+                       : JSON;
+
+        }
+
+        #endregion
 
 
         #region Operator overloading
@@ -483,8 +457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                (!OperatorEVSEData.Any() && !PullEVSEDataResponse.OperatorEVSEData.Any()) ||
                 (OperatorEVSEData.Any() && PullEVSEDataResponse.OperatorEVSEData.Any() && OperatorEVSEData.Count().Equals(PullEVSEDataResponse.OperatorEVSEData.Count())) &&
 
-                (StatusCode != null && PullEVSEDataResponse.StatusCode != null) ||
-                (StatusCode == null && PullEVSEDataResponse.StatusCode == null && StatusCode.Equals(PullEVSEDataResponse.StatusCode));
+               ((StatusCode == null && PullEVSEDataResponse.StatusCode == null) ||
+                (StatusCode != null && PullEVSEDataResponse.StatusCode != null && StatusCode.Equals(PullEVSEDataResponse.StatusCode)));
 
         #endregion
 
@@ -567,7 +541,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Create a new PullEVSEData response builder.
             /// </summary>
-            /// <param name="Request">A PullEVSEStatus request.</param>
+            /// <param name="Request">A PullEVSEData request.</param>
             /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
             /// <param name="StatusCode">An optional status code for this request.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>

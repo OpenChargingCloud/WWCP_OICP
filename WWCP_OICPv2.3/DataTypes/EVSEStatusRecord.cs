@@ -282,7 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSE status record JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEStatusRecord> CustomEVSEStatusRecordSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
