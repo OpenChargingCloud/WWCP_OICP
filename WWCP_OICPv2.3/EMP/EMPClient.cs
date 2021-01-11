@@ -550,7 +550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         #endregion
 
-        #region PullEVSEStatus  (Request)
+        #region PullEVSEStatus(Request)
 
         /// <summary>
         /// Upload the given EVSE status records.

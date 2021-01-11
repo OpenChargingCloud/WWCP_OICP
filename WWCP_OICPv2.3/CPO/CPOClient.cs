@@ -820,6 +820,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
 
 
+        #region AuthorizeStart        (Request)
+
+        /// <summary>
+        /// Create an OICP authorize start request.
+        /// </summary>
+        /// <param name="Request">A AuthorizeStart request.</param>
+        public async Task<HTTPResponse<AuthorizationStartResponse>>
+
+            AuthorizeStart(AuthorizeStartRequest Request)
+
+        {
+
+
+            return null;
+
+
+        }
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         #region Dispose()
 
         /// <summary>

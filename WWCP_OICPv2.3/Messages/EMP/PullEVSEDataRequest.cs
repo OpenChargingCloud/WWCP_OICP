@@ -101,13 +101,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public GeoCoordinatesFormats                          GeoCoordinatesResponseFormat            { get; }
 
-
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject                                        CustomData                             { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -161,7 +154,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             : base(Timestamp,
                    CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CustomData)
 
         {
 
@@ -170,20 +164,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Page                                  = Page ?? 0;
             this.Size                                  = Size ?? 1500;
 
-            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct();
-            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct();
-            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct();
-            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct();
-            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct();
+            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct() ?? new Operator_Id[0];
+            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct() ?? new Country[0];
+            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct() ?? new AccessibilityTypes[0];
+            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct() ?? new AuthenticationModes[0];
+            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct() ?? new CalibrationLawDataAvailabilities[0];
             this.RenewableEnergyFilter                 = RenewableEnergyFilter;
             this.IsHubjectCompatibleFilter             = IsHubjectCompatibleFilter;
             this.IsOpen24HoursFilter                   = IsOpen24HoursFilter;
 
             this.SearchCenter                          = SearchCenter;
             this.DistanceKM                            = DistanceKM;
-            this.GeoCoordinatesResponseFormat          = GeoCoordinatesResponseFormat ?? GeoCoordinatesFormats.DecimalDegree;
-
-            this.CustomData                            = CustomData;
+            this.GeoCoordinatesResponseFormat          = GeoCoordinatesResponseFormat                     ?? GeoCoordinatesFormats.DecimalDegree;
 
         }
 
@@ -718,7 +710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region IEquatable<PullEVSEData> Members
+        #region IEquatable<PullEVSEDataRequest> Members
 
         #region Equals(Object)
 
@@ -728,17 +720,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
-        {
 
-            if (Object == null)
-                return false;
-
-            if (!(Object is PullEVSEDataRequest PullEVSEData))
-                return false;
-
-            return Equals(PullEVSEData);
-
-        }
+            => Object is PullEVSEDataRequest pullEVSEDataRequest &&
+                   Equals(pullEVSEDataRequest);
 
         #endregion
 

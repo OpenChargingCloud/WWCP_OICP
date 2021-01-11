@@ -353,9 +353,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (PlugTypes.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
 
-            if (PlugTypes.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(PlugTypes),            "The given enumeration of plug types must not be null or empty!");
-
             if (ChargingFacilities.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(ChargingFacilities),   "The given enumeration of charging facilities must not be null or empty!");
 
@@ -371,13 +368,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ChargingStationName               = ChargingStationName;
             this.Address                           = Address;
             this.GeoCoordinates                    = GeoCoordinates;
-            this.PlugTypes                         = PlugTypes?.          Distinct();
-            this.ChargingFacilities                = ChargingFacilities?. Distinct();
+            this.PlugTypes                         = PlugTypes.          Distinct(); // mandatory!
+            this.ChargingFacilities                = ChargingFacilities. Distinct(); // mandatory!
             this.RenewableEnergy                   = RenewableEnergy;
             this.CalibrationLawDataAvailability    = CalibrationLawDataAvailability;
-            this.AuthenticationModes               = AuthenticationModes?.Distinct();
-            this.PaymentOptions                    = PaymentOptions?.     Distinct();
-            this.ValueAddedServices                = ValueAddedServices?. Distinct();
+            this.AuthenticationModes               = AuthenticationModes.Distinct(); // mandatory!
+            this.PaymentOptions                    = PaymentOptions.     Distinct(); // mandatory!
+            this.ValueAddedServices                = ValueAddedServices. Distinct(); // mandatory!
             this.Accessibility                     = Accessibility;
             this.HotlinePhoneNumber                = HotlinePhoneNumber;
             this.IsOpen24Hours                     = IsOpen24Hours;
@@ -393,7 +390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
-            this.EnergySources                     = EnergySources?.      Distinct();
+            this.EnergySources                     = EnergySources?.      Distinct() ?? new EnergySource[0];
             this.EnvironmentalImpact               = EnvironmentalImpact;
             this.MaxCapacity                       = MaxCapacity;
             this.AccessibilityLocationType         = AccessibilityLocationType;
@@ -1973,7 +1970,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Return an immutable version of the EVSE data record.
             /// </summary>
-            /// <param name="Builder">A EVSE data record builder.</param>
+            /// <param name="Builder">An EVSE data record builder.</param>
             public static implicit operator EVSEDataRecord(Builder Builder)
 
                 => Builder?.ToImmutable();

@@ -86,6 +86,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#412-eroamingevsedata-message
+
         // {
         //   "EvseData": {
         //     "OperatorEvseData": [
@@ -566,30 +568,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
+            #region ToImmutable()
 
-            #region Equals(PullEVSEDataResponse)
+            /// <summary>
+            /// Return an immutable version of the PullEVSEData response.
+            /// </summary>
+            /// <param name="Builder">A PullEVSEData builder.</param>
+            public static implicit operator PullEVSEDataResponse(Builder Builder)
 
-            ///// <summary>
-            ///// Compares two PullEVSEData responses for equality.
-            ///// </summary>
-            ///// <param name="PullEVSEDataResponse">A PullEVSEData response to compare with.</param>
-            ///// <returns>True if both match; False otherwise.</returns>
-            //public Boolean Equals(PullEVSEDataResponse PullEVSEDataResponse)
-            //{
+                => Builder?.ToImmutable();
 
-            //    if ((Object) PullEVSEDataResponse == null)
-            //        return false;
 
-            //    return  (EVSEData   != null && PullEVSEDataResponse.EVSEData   != null) ||
-            //            (EVSEData   == null && PullEVSEDataResponse.EVSEData   == null && EVSEData.  Equals(PullEVSEDataResponse.EVSEData)) &&
-
-            //            (StatusCode != null && PullEVSEDataResponse.StatusCode != null) ||
-            //            (StatusCode == null && PullEVSEDataResponse.StatusCode == null && StatusCode.Equals(PullEVSEDataResponse.StatusCode));
-
-            //}
-
-            #endregion
-
+            /// <summary>
+            /// Return an immutable version of the PullEVSEData response.
+            /// </summary>
             public override PullEVSEDataResponse ToImmutable()
 
                 => new PullEVSEDataResponse(Request,
@@ -597,6 +589,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                             StatusCode,
                                             ProcessId,
                                             CustomData);
+
+            #endregion
 
         }
 

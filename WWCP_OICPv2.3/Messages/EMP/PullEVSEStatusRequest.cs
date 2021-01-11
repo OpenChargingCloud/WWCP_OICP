@@ -61,12 +61,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public EVSEStatusTypes?  EVSEStatusFilter    { get; }
 
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject           CustomData          { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -100,7 +94,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             : base(Timestamp,
                    CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CustomData)
 
         {
 
@@ -108,7 +103,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SearchCenter      = SearchCenter;
             this.DistanceKM        = DistanceKM;
             this.EVSEStatusFilter  = EVSEStatusFilter;
-            this.CustomData        = CustomData;
 
         }
 
@@ -116,6 +110,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         #region Documentation
+
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#eRoamingPullEvseStatus
 
         // {
         //   "ProviderID":        "string",
