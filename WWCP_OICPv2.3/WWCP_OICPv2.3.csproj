@@ -64,6 +64,8 @@
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdResponse.cs" />

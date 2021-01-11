@@ -50,10 +50,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSE_Id                EVSEId                 { get; }
 
         /// <summary>
-        /// An optional charging session identification.
+        /// The charging session identification.
         /// </summary>
-        [Optional]
-        public Session_Id?            SessionId              { get; }
+        [Mandatory]
+        public Session_Id             SessionId              { get; }
 
         /// <summary>
         /// An optional CPO partner session identification.
@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
-        /// <param name="SessionId">An optional charging session identification.</param>
+        /// <param name="SessionId">A charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
@@ -87,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public AuthorizeRemoteStopRequest(Provider_Id            ProviderId,
                                           EVSE_Id                EVSEId,
-                                          Session_Id?            SessionId             = null,
+                                          Session_Id             SessionId,
                                           CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                           JObject                CustomData            = null,
@@ -250,16 +250,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse SessionId                 [optional]
+                #region Parse SessionId                 [mandatory]
 
-                if (JSON.ParseOptional("SessionID",
-                                       "session identification",
-                                       Session_Id.TryParse,
-                                       out Session_Id? SessionId,
-                                       out ErrorResponse))
+                if (!JSON.ParseMandatory("SessionID",
+                                         "session identification",
+                                         Session_Id.TryParse,
+                                         out Session_Id SessionId,
+                                         out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
-                        return false;
+                    return false;
                 }
 
                 #endregion
@@ -374,10 +373,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            new JProperty("ProviderID",                  ProviderId.               ToString()),
                            new JProperty("EvseID",                      EVSEId.                   ToString()),
-
-                           SessionId.HasValue
-                               ? new JProperty("SessionID",             SessionId.          Value.ToString())
-                               : null,
+                           new JProperty("SessionID",                   SessionId.                ToString()),
 
                            CPOPartnerSessionId.HasValue
                                ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
@@ -478,9 +474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             return ProviderId.    Equals(AuthorizeRemoteStopRequest.ProviderId)     &&
                    EVSEId.        Equals(AuthorizeRemoteStopRequest.EVSEId)         &&
-
-                   ((!SessionId.          HasValue && !AuthorizeRemoteStopRequest.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  AuthorizeRemoteStopRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStopRequest.SessionId.          Value))) &&
+                   SessionId.     Equals(AuthorizeRemoteStopRequest.SessionId)      &&
 
                    ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStopRequest.CPOPartnerSessionId.HasValue) ||
                      (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStopRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStopRequest.CPOPartnerSessionId.Value))) &&
@@ -505,20 +499,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return ProviderId.    GetHashCode() * 11 ^
-                       EVSEId.        GetHashCode() *  7 ^
+                return ProviderId.          GetHashCode()       * 11 ^
+                       EVSEId.              GetHashCode()       *  7 ^
+                       SessionId.           GetHashCode()       *  5 ^
 
-                       (SessionId.          HasValue
-                            ? SessionId.          GetHashCode() * 5
-                            : 0) ^
-
-                       (CPOPartnerSessionId.HasValue
-                            ? CPOPartnerSessionId.GetHashCode() * 3
-                            : 0) ^
-
-                       (EMPPartnerSessionId.HasValue
-                            ? EMPPartnerSessionId.GetHashCode()
-                            : 0);
+                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                      (EMPPartnerSessionId?.GetHashCode() ?? 0);
 
             }
         }

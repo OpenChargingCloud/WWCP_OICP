@@ -599,28 +599,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return OperatorId.    GetHashCode() * 13 ^
-                       Identification.GetHashCode() * 11 ^
+                return OperatorId.          GetHashCode()       * 17 ^
+                       Identification.      GetHashCode()       * 13 ^
 
-                       (EVSEId           != null
-                            ? EVSEId.             GetHashCode() * 9
-                            : 0) ^
-
-                       (PartnerProductId != null
-                            ? PartnerProductId.   GetHashCode() * 7
-                            : 0) ^
-
-                       (SessionId        != null
-                            ? SessionId.          GetHashCode() * 5
-                            : 0) ^
-
-                       (CPOPartnerSessionId != null
-                            ? CPOPartnerSessionId.GetHashCode() * 3
-                            : 0) ^
-
-                       (EMPPartnerSessionId != null
-                            ? EMPPartnerSessionId.GetHashCode()
-                            : 0);
+                      (EVSEId?.             GetHashCode() ?? 0) * 11 ^
+                      (SessionId?.          GetHashCode() ?? 0) *  7 ^
+                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
+                      (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                      (PartnerProductId?.   GetHashCode() ?? 0);
 
             }
         }

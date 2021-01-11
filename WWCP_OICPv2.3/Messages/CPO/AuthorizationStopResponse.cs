@@ -997,24 +997,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return AuthorizationStatus.GetHashCode() * 13 ^
-                       StatusCode.         GetHashCode() * 11 ^
+                return AuthorizationStatus. GetHashCode()       * 13 ^
+                       StatusCode.          GetHashCode()       * 11 ^
 
-                       (SessionId != null
-                            ? SessionId.          GetHashCode() * 7
-                            : 0) ^
-
-                       (CPOPartnerSessionId != null
-                            ? CPOPartnerSessionId.GetHashCode() * 5
-                            : 0) ^
-
-                       (EMPPartnerSessionId != null
-                            ? EMPPartnerSessionId.GetHashCode() * 3
-                            : 0) ^
-
-                       (ProviderId != null
-                            ? ProviderId.         GetHashCode()
-                            : 0);
+                      (SessionId?.          GetHashCode() ?? 0) *  7 ^
+                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
+                      (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                      (ProviderId?.         GetHashCode() ?? 0);
 
             }
         }
