@@ -30,9 +30,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The authorize start request.
+    /// The authorize stop request.
     /// </summary>
-    public class AuthorizeStartRequest : ARequest<AuthorizeStartRequest>
+    public class AuthorizeStopRequest : ARequest<AuthorizeStopRequest>
     {
 
         #region Properties
@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create an OICP AuthorizeStart XML/SOAP request.
+        /// Create an OICP AuthorizeStop XML/SOAP request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
@@ -99,7 +99,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public AuthorizeStartRequest(Operator_Id            OperatorId,
+        public AuthorizeStopRequest(Operator_Id            OperatorId,
                                      Identification         Identification,
                                      EVSE_Id?               EVSEId                = null,
                                      PartnerProduct_Id?     PartnerProductId      = null,
@@ -136,7 +136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizeStart
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizeStop
 
         // {
         //   "OperatorID":              "string",
@@ -180,93 +180,93 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomAuthorizeStartRequestParser = null)
+        #region (static) Parse   (JSON, CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of an AuthorizeStart request.
+        /// Parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom PullEVSEData JSON objects.</param>
-        public static AuthorizeStartRequest Parse(JObject                                             JSON,
-                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom PullEVSEData JSON objects.</param>
+        public static AuthorizeStopRequest Parse(JObject                                             JSON,
+                                                  CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         out AuthorizeStartRequest  auhorizeStartRequest,
+                         out AuthorizeStopRequest  auhorizeStopRequest,
                          out String                 ErrorResponse,
-                         CustomAuthorizeStartRequestParser))
+                         CustomAuthorizeStopRequestParser))
             {
-                return auhorizeStartRequest;
+                return auhorizeStopRequest;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeStart request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAuthorizeStartRequestParser = null)
+        #region (static) Parse   (Text, CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
-        /// Parse the given text representation of an AuthorizeStart request.
+        /// Parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
-        public static AuthorizeStartRequest Parse(String                                              Text,
-                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
+        public static AuthorizeStopRequest Parse(String                                              Text,
+                                                  CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         out AuthorizeStartRequest  auhorizeStartRequest,
+                         out AuthorizeStopRequest  auhorizeStopRequest,
                          out String                 ErrorResponse,
-                         CustomAuthorizeStartRequestParser))
+                         CustomAuthorizeStopRequestParser))
             {
-                return auhorizeStartRequest;
+                return auhorizeStopRequest;
             }
 
-            throw new ArgumentException("The given text representation of an AuthorizeStart request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an AuthorizeStop request is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizeStartRequest, out ErrorResponse, CustomAuthorizeStartRequestParser = null)
+        #region (static) TryParse(JSON, out AuthorizeStopRequest, out ErrorResponse, CustomAuthorizeStopRequestParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given JSON representation of an AuthorizeStart request.
+        /// Try to parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
+        /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                    JSON,
-                                       out AuthorizeStartRequest  AuthorizeStartRequest,
+                                       out AuthorizeStopRequest  AuthorizeStopRequest,
                                        out String                 ErrorResponse)
 
             => TryParse(JSON,
-                        out AuthorizeStartRequest,
+                        out AuthorizeStopRequest,
                         out ErrorResponse,
                         null);
 
 
         /// <summary>
-        /// Try to parse the given JSON representation of an AuthorizeStart request.
+        /// Try to parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
+        /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
-                                       out AuthorizeStartRequest                           AuthorizeStartRequest,
+                                       out AuthorizeStopRequest                           AuthorizeStopRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser)
         {
 
             try
             {
 
-                AuthorizeStartRequest = default;
+                AuthorizeStopRequest = default;
 
                 if (JSON?.HasValues != true)
                 {
@@ -377,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizeStartRequest = new AuthorizeStartRequest(OperatorId,
+                AuthorizeStopRequest = new AuthorizeStopRequest(OperatorId,
                                                                   Identification,
                                                                   EVSEId,
                                                                   PartnerProductId,
@@ -386,17 +386,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EMPPartnerSessionId,
                                                                   CustomData);
 
-                if (CustomAuthorizeStartRequestParser != null)
-                    AuthorizeStartRequest = CustomAuthorizeStartRequestParser(JSON,
-                                                                              AuthorizeStartRequest);
+                if (CustomAuthorizeStopRequestParser != null)
+                    AuthorizeStopRequest = CustomAuthorizeStopRequestParser(JSON,
+                                                                              AuthorizeStopRequest);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                AuthorizeStartRequest  = default;
-                ErrorResponse          = "The given JSON representation of an AuthorizeStart request is invalid: " + e.Message;
+                AuthorizeStopRequest  = default;
+                ErrorResponse          = "The given JSON representation of an AuthorizeStop request is invalid: " + e.Message;
                 return false;
             }
 
@@ -404,34 +404,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizeStartRequest, out ErrorResponse, CustomAuthorizeStartRequestParser = null)
+        #region (static) TryParse(Text, out AuthorizeStopRequest, out ErrorResponse, CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
-        /// Try to parse the given text representation of an AuthorizeStart request.
+        /// Try to parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
+        /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
+        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(String                                              Text,
-                                       out AuthorizeStartRequest                           AuthorizeStartRequest,
+                                       out AuthorizeStopRequest                           AuthorizeStopRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
-                                out AuthorizeStartRequest,
+                                out AuthorizeStopRequest,
                                 out ErrorResponse,
-                                CustomAuthorizeStartRequestParser);
+                                CustomAuthorizeStopRequestParser);
 
             }
             catch (Exception e)
             {
-                AuthorizeStartRequest  = default;
-                ErrorResponse          = "The given text representation of an AuthorizeStart request is invalid: " + e.Message;
+                AuthorizeStopRequest  = default;
+                ErrorResponse          = "The given text representation of an AuthorizeStop request is invalid: " + e.Message;
                 return false;
             }
 
@@ -439,14 +439,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomAuthorizeStartRequestSerializer = null, CustomOperatorEVSEDataSerializer = null,...)
+        #region ToJSON(CustomAuthorizeStopRequestSerializer = null, CustomOperatorEVSEDataSerializer = null,...)
 
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
-        /// <param name="CustomAuthorizeStartRequestSerializer">A delegate to customize the serialization of AuthorizeStartRequest responses.</param>
+        /// <param name="CustomAuthorizeStopRequestSerializer">A delegate to customize the serialization of AuthorizeStopRequest responses.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestSerializer   = null,
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestSerializer   = null,
                               CustomJObjectSerializerDelegate<Identification>         CustomIdentificationSerializer          = null)
         {
 
@@ -481,8 +481,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomAuthorizeStartRequestSerializer != null
-                       ? CustomAuthorizeStartRequestSerializer(this, JSON)
+            return CustomAuthorizeStopRequestSerializer != null
+                       ? CustomAuthorizeStopRequestSerializer(this, JSON)
                        : JSON;
 
         }
@@ -492,50 +492,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (AuthorizeStart1, AuthorizeStart2)
+        #region Operator == (AuthorizeStop1, AuthorizeStop2)
 
         /// <summary>
-        /// Compares two authorize start requests for equality.
+        /// Compares two authorize stop requests for equality.
         /// </summary>
-        /// <param name="AuthorizeStart1">An authorize start request.</param>
-        /// <param name="AuthorizeStart2">Another authorize start request.</param>
+        /// <param name="AuthorizeStop1">An authorize stop request.</param>
+        /// <param name="AuthorizeStop2">Another authorize stop request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (AuthorizeStartRequest AuthorizeStart1,
-                                           AuthorizeStartRequest AuthorizeStart2)
+        public static Boolean operator == (AuthorizeStopRequest AuthorizeStop1,
+                                           AuthorizeStopRequest AuthorizeStop2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(AuthorizeStart1, AuthorizeStart2))
+            if (ReferenceEquals(AuthorizeStop1, AuthorizeStop2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (AuthorizeStart1 is null || AuthorizeStart2 is null)
+            if (AuthorizeStop1 is null || AuthorizeStop2 is null)
                 return false;
 
-            return AuthorizeStart1.Equals(AuthorizeStart2);
+            return AuthorizeStop1.Equals(AuthorizeStop2);
 
         }
 
         #endregion
 
-        #region Operator != (AuthorizeStart1, AuthorizeStart2)
+        #region Operator != (AuthorizeStop1, AuthorizeStop2)
 
         /// <summary>
-        /// Compares two authorize start requests for inequality.
+        /// Compares two authorize stop requests for inequality.
         /// </summary>
-        /// <param name="AuthorizeStart1">An authorize start request.</param>
-        /// <param name="AuthorizeStart2">Another authorize start request.</param>
+        /// <param name="AuthorizeStop1">An authorize stop request.</param>
+        /// <param name="AuthorizeStop2">Another authorize stop request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (AuthorizeStartRequest AuthorizeStart1,
-                                           AuthorizeStartRequest AuthorizeStart2)
+        public static Boolean operator != (AuthorizeStopRequest AuthorizeStop1,
+                                           AuthorizeStopRequest AuthorizeStop2)
 
-            => !(AuthorizeStart1 == AuthorizeStart2);
-
-        #endregion
+            => !(AuthorizeStop1 == AuthorizeStop2);
 
         #endregion
 
-        #region IEquatable<AuthorizeStartRequest> Members
+        #endregion
+
+        #region IEquatable<AuthorizeStopRequest> Members
 
         #region Equals(Object)
 
@@ -546,41 +546,41 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is AuthorizeStartRequest authorizeStartRequest &&
-                   Equals(authorizeStartRequest);
+            => Object is AuthorizeStopRequest authorizeStopRequest &&
+                   Equals(authorizeStopRequest);
 
         #endregion
 
-        #region Equals(AuthorizeStart)
+        #region Equals(AuthorizeStop)
 
         /// <summary>
-        /// Compares two authorize start requests for equality.
+        /// Compares two authorize stop requests for equality.
         /// </summary>
-        /// <param name="AuthorizeStart">An authorize start request to compare with.</param>
+        /// <param name="AuthorizeStop">An authorize stop request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizeStartRequest AuthorizeStart)
+        public override Boolean Equals(AuthorizeStopRequest AuthorizeStop)
         {
 
-            if (AuthorizeStart is null)
+            if (AuthorizeStop is null)
                 return false;
 
-            return OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
-                   Identification.Equals(AuthorizeStart.Identification) &&
+            return OperatorId.    Equals(AuthorizeStop.OperatorId)     &&
+                   Identification.Equals(AuthorizeStop.Identification) &&
 
-                   ((!EVSEId.             HasValue && !AuthorizeStart.EVSEId.             HasValue) ||
-                     (EVSEId.             HasValue &&  AuthorizeStart.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStart.EVSEId.             Value))) &&
+                   ((!EVSEId.             HasValue && !AuthorizeStop.EVSEId.             HasValue) ||
+                     (EVSEId.             HasValue &&  AuthorizeStop.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStop.EVSEId.             Value))) &&
 
-                   ((!PartnerProductId.   HasValue && !AuthorizeStart.PartnerProductId.   HasValue) ||
-                     (PartnerProductId.   HasValue &&  AuthorizeStart.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeStart.PartnerProductId.   Value))) &&
+                   ((!PartnerProductId.   HasValue && !AuthorizeStop.PartnerProductId.   HasValue) ||
+                     (PartnerProductId.   HasValue &&  AuthorizeStop.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeStop.PartnerProductId.   Value))) &&
 
-                   ((!SessionId.          HasValue && !AuthorizeStart.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  AuthorizeStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeStart.SessionId.          Value))) &&
+                   ((!SessionId.          HasValue && !AuthorizeStop.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizeStop.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeStop.SessionId.          Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !AuthorizeStart.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  AuthorizeStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStart.CPOPartnerSessionId.Value))) &&
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizeStop.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizeStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStop.CPOPartnerSessionId.Value))) &&
 
-                   ((!EMPPartnerSessionId.HasValue && !AuthorizeStart.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  AuthorizeStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStart.EMPPartnerSessionId.Value)));
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizeStop.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizeStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStop.EMPPartnerSessionId.Value)));
 
         }
 

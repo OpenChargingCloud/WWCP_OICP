@@ -60,8 +60,12 @@
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdResponse.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusResponse.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByIdResponse.cs" />

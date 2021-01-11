@@ -31,10 +31,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The AuthorizationStart response.
+    /// The AuthorizationStop response.
     /// </summary>
-    public class AuthorizationStartResponse : AResponse<AuthorizeStartRequest,
-                                                        AuthorizationStartResponse>
+    public class AuthorizationStopResponse : AResponse<AuthorizeStopRequest,
+                                                        AuthorizationStopResponse>
     {
 
         #region Properties
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new AuthorizationStart response.
+        /// Create a new AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
@@ -98,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        private AuthorizationStartResponse(AuthorizeStartRequest        Request,
+        private AuthorizationStopResponse(AuthorizeStopRequest        Request,
                                            AuthorizationStatusTypes     AuthorizationStatus,
                                            StatusCode                   StatusCode,
                                            Session_Id?                  SessionId                          = null,
@@ -132,7 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Authorized               (Request, SessionId = null, PartnerSessionId = null, ProviderId = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'Authorized' AuthorizationStart result.
+        /// Create a new OICP 'Authorized' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">The charging session identification.</param>
@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
-        public static AuthorizationStartResponse Authorized(AuthorizeStartRequest        Request,
+        public static AuthorizationStopResponse Authorized(AuthorizeStopRequest        Request,
                                                             Session_Id?                  SessionId                         = null,
                                                             CPOPartnerSession_Id?        CPOPartnerSessionId               = null,
                                                             EMPPartnerSession_Id?        EMPPartnerSessionId               = null,
@@ -152,7 +152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                             IEnumerable<Identification>  AuthorizationStopIdentifications  = null)
 
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.Authorized,
                                               new StatusCode(
                                                   StatusCodes.Success,
@@ -170,7 +170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NotAuthorized            (Request, StatusCode, StatusCodeDescription = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'NotAuthorized' AuthorizationStart result.
+        /// Create a new OICP 'NotAuthorized' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
@@ -180,7 +180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse NotAuthorized(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse NotAuthorized(AuthorizeStopRequest  Request,
                                                                StatusCodes            StatusCode,
                                                                String                 StatusCodeDescription      = null,
                                                                String                 StatusCodeAdditionalInfo   = null,
@@ -189,7 +189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCode,
@@ -206,7 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) SessionIsInvalid         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'SessionIsInvalid' AuthorizationStart result.
+        /// Create a new OICP 'SessionIsInvalid' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse SessionIsInvalid(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse SessionIsInvalid(AuthorizeStopRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
@@ -223,7 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                   Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.SessionIsInvalid,
@@ -240,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) CommunicationToEVSEFailed(Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'CommunicationToEVSEFailed' AuthorizationStart result.
+        /// Create a new OICP 'CommunicationToEVSEFailed' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse CommunicationToEVSEFailed(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse CommunicationToEVSEFailed(AuthorizeStopRequest  Request,
                                                                            String                 StatusCodeDescription      = null,
                                                                            String                 StatusCodeAdditionalInfo   = null,
                                                                            Session_Id?            SessionId                  = null,
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                            Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.CommunicationToEVSEFailed,
@@ -274,7 +274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NoEVConnectedToEVSE      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'NoEVConnectedToEVSE' AuthorizationStart result.
+        /// Create a new OICP 'NoEVConnectedToEVSE' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -283,7 +283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse NoEVConnectedToEVSE(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse NoEVConnectedToEVSE(AuthorizeStopRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                      Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.NoEVConnectedToEVSE,
@@ -308,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) EVSEAlreadyReserved      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEAlreadyReserved' AuthorizationStart result.
+        /// Create a new OICP 'EVSEAlreadyReserved' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -317,7 +317,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse EVSEAlreadyReserved(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse EVSEAlreadyReserved(AuthorizeStopRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
@@ -325,7 +325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                      Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.EVSEAlreadyReserved,
@@ -342,7 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) UnknownEVSEID            (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'UnknownEVSEID' AuthorizationStart result.
+        /// Create a new OICP 'UnknownEVSEID' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -351,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse UnknownEVSEID(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse UnknownEVSEID(AuthorizeStopRequest  Request,
                                                                String                 StatusCodeDescription      = null,
                                                                String                 StatusCodeAdditionalInfo   = null,
                                                                Session_Id?            SessionId                  = null,
@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.UnknownEVSEID,
@@ -376,7 +376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) EVSEOutOfService         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEOutOfService' AuthorizationStart result.
+        /// Create a new OICP 'EVSEOutOfService' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse EVSEOutOfService(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse EVSEOutOfService(AuthorizeStopRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
@@ -393,7 +393,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                   Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.EVSEOutOfService,
@@ -410,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) ServiceNotAvailable      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'ServiceNotAvailable' AuthorizationStart result.
+        /// Create a new OICP 'ServiceNotAvailable' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -419,7 +419,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse ServiceNotAvailable(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse ServiceNotAvailable(AuthorizeStopRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
@@ -427,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                                      Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.ServiceNotAvailable,
@@ -444,7 +444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) DataError                (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'DataError' AuthorizationStart result.
+        /// Create a new OICP 'DataError' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -453,7 +453,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse DataError(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse DataError(AuthorizeStopRequest  Request,
                                                            String                 StatusCodeDescription      = null,
                                                            String                 StatusCodeAdditionalInfo   = null,
                                                            Session_Id?            SessionId                  = null,
@@ -461,7 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                            Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.DataError,
@@ -478,7 +478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) SystemError              (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
 
         /// <summary>
-        /// Create a new OICP 'SystemError' AuthorizationStart result.
+        /// Create a new OICP 'SystemError' AuthorizationStop result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -487,7 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        public static AuthorizationStartResponse SystemError(AuthorizeStartRequest  Request,
+        public static AuthorizationStopResponse SystemError(AuthorizeStopRequest  Request,
                                                              String                 StatusCodeDescription      = null,
                                                              String                 StatusCodeAdditionalInfo   = null,
                                                              Session_Id?            SessionId                  = null,
@@ -495,7 +495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                                                              Provider_Id?           ProviderId                 = null)
 
-            => new AuthorizationStartResponse(Request,
+            => new AuthorizationStopResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.SystemError,
@@ -512,7 +512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizationStart
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizationStop
 
         // {
         //   "AuthorizationStatus":     "Authorized",
@@ -562,107 +562,107 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomAuthorizationStartResponseParser = null)
+        #region (static) Parse   (JSON, CustomAuthorizationStopResponseParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of a AuthorizationStart response.
+        /// Parse the given JSON representation of a AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart JSON objects.</param>
-        public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
+        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop JSON objects.</param>
+        public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                    Request,
                                                        JObject                                                  JSON,
-                                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
+                                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
         {
 
             if (TryParse(Request,
                          JSON,
-                         out AuthorizationStartResponse  authorizationStartResponse,
+                         out AuthorizationStopResponse  authorizationStopResponse,
                          out String                      ErrorResponse,
-                         CustomAuthorizationStartResponseParser))
+                         CustomAuthorizationStopResponseParser))
             {
-                return authorizationStartResponse;
+                return authorizationStopResponse;
             }
 
-            throw new ArgumentException("The given JSON representation of a AuthorizationStart response is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a AuthorizationStop response is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAuthorizationStartResponseParser = null)
+        #region (static) Parse   (Text, CustomAuthorizationStopResponseParser = null)
 
         /// <summary>
-        /// Parse the given text representation of a AuthorizationStart response.
+        /// Parse the given text representation of a AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
-        public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
+        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
+        public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                    Request,
                                                        String                                                   Text,
-                                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
+                                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
         {
 
             if (TryParse(Request,
                          Text,
-                         out AuthorizationStartResponse  authorizationStartResponse,
+                         out AuthorizationStopResponse  authorizationStopResponse,
                          out String                      ErrorResponse,
-                         CustomAuthorizationStartResponseParser))
+                         CustomAuthorizationStopResponseParser))
             {
-                return authorizationStartResponse;
+                return authorizationStopResponse;
             }
 
-            throw new ArgumentException("The given text representation of a AuthorizationStart response is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a AuthorizationStop response is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizationStartResponse, out ErrorResponse, CustomAuthorizationStartResponseParser = null)
+        #region (static) TryParse(JSON, out AuthorizationStopResponse, out ErrorResponse, CustomAuthorizationStopResponseParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given JSON representation of a AuthorizationStart response.
+        /// Try to parse the given JSON representation of a AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
+        /// <param name="AuthorizationStopResponse">The parsed AuthorizationStop response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(AuthorizeStartRequest           Request,
+        public static Boolean TryParse(AuthorizeStopRequest           Request,
                                        JObject                         JSON,
-                                       out AuthorizationStartResponse  AuthorizationStartResponse,
+                                       out AuthorizationStopResponse  AuthorizationStopResponse,
                                        out String                      ErrorResponse)
 
             => TryParse(Request,
                         JSON,
-                        out AuthorizationStartResponse,
+                        out AuthorizationStopResponse,
                         out ErrorResponse,
                         null,
                         null);
 
 
         /// <summary>
-        /// Try to parse the given JSON representation of a AuthorizationStart response.
+        /// Try to parse the given JSON representation of a AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
+        /// <param name="AuthorizationStopResponse">The parsed AuthorizationStop response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
+        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        public static Boolean TryParse(AuthorizeStartRequest                                    Request,
+        public static Boolean TryParse(AuthorizeStopRequest                                    Request,
                                        JObject                                                  JSON,
-                                       out AuthorizationStartResponse                           AuthorizationStartResponse,
+                                       out AuthorizationStopResponse                           AuthorizationStopResponse,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser,
+                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser,
                                        Process_Id?                                              ProcessId   = null)
         {
 
             try
             {
 
-                AuthorizationStartResponse = default;
+                AuthorizationStopResponse = default;
 
                 if (JSON?.HasValues != true)
                 {
@@ -768,7 +768,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizationStartResponse = new AuthorizationStartResponse(Request,
+                AuthorizationStopResponse = new AuthorizationStopResponse(Request,
                                                                             AuthorizationStatus,
                                                                             StatusCode,
                                                                             SessionId,
@@ -779,17 +779,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                             ProcessId,
                                                                             CustomData);
 
-                if (CustomAuthorizationStartResponseParser != null)
-                    AuthorizationStartResponse = CustomAuthorizationStartResponseParser(JSON,
-                                                                                        AuthorizationStartResponse);
+                if (CustomAuthorizationStopResponseParser != null)
+                    AuthorizationStopResponse = CustomAuthorizationStopResponseParser(JSON,
+                                                                                        AuthorizationStopResponse);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                AuthorizationStartResponse  = default;
-                ErrorResponse               = "The given JSON representation of a AuthorizationStart response is invalid: " + e.Message;
+                AuthorizationStopResponse  = default;
+                ErrorResponse               = "The given JSON representation of a AuthorizationStop response is invalid: " + e.Message;
                 return false;
             }
 
@@ -797,21 +797,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizationStartResponse, out ErrorResponse, CustomAuthorizationStartResponseParser = null)
+        #region (static) TryParse(Text, out AuthorizationStopResponse, out ErrorResponse, CustomAuthorizationStopResponseParser = null)
 
         /// <summary>
-        /// Try to parse the given text representation of a AuthorizationStart response.
+        /// Try to parse the given text representation of a AuthorizationStop response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
+        /// <param name="AuthorizationStopResponse">The parsed AuthorizationStop response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
-        public static Boolean TryParse(AuthorizeStartRequest                                    Request,
+        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
+        public static Boolean TryParse(AuthorizeStopRequest                                    Request,
                                        String                                                   Text,
-                                       out AuthorizationStartResponse                           AuthorizationStartResponse,
+                                       out AuthorizationStopResponse                           AuthorizationStopResponse,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser)
+                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser)
         {
 
             try
@@ -819,15 +819,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(Request,
                                 JObject.Parse(Text),
-                                out AuthorizationStartResponse,
+                                out AuthorizationStopResponse,
                                 out ErrorResponse,
-                                CustomAuthorizationStartResponseParser);
+                                CustomAuthorizationStopResponseParser);
 
             }
             catch (Exception e)
             {
-                AuthorizationStartResponse  = default;
-                ErrorResponse               = "The given text representation of a AuthorizationStart response is invalid: " + e.Message;
+                AuthorizationStopResponse  = default;
+                ErrorResponse               = "The given text representation of a AuthorizationStop response is invalid: " + e.Message;
                 return false;
             }
 
@@ -835,15 +835,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomAuthorizationStartSerializer = null, CustomStatusCodeSerializer = null, ...)
+        #region ToJSON(CustomAuthorizationStopSerializer = null, CustomStatusCodeSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomAuthorizationStartSerializer">A delegate to customize the serialization of AuthorizationStart respones.</param>
+        /// <param name="CustomAuthorizationStopSerializer">A delegate to customize the serialization of AuthorizationStop respones.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizationStartResponse>  CustomAuthorizationStartSerializer   = null,
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizationStopResponse>  CustomAuthorizationStopSerializer   = null,
                               CustomJObjectSerializerDelegate<StatusCode>                  CustomStatusCodeSerializer           = null,
                               CustomJObjectSerializerDelegate<Identification>              CustomIdentificationSerializer       = null)
 
@@ -881,8 +881,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomAuthorizationStartSerializer != null
-                       ? CustomAuthorizationStartSerializer(this, JSON)
+            return CustomAuthorizationStopSerializer != null
+                       ? CustomAuthorizationStopSerializer(this, JSON)
                        : JSON;
 
         }
@@ -892,50 +892,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (AuthorizationStart1, AuthorizationStart2)
+        #region Operator == (AuthorizationStop1, AuthorizationStop2)
 
         /// <summary>
-        /// Compares two AuthorizationStart requests for equality.
+        /// Compares two AuthorizationStop requests for equality.
         /// </summary>
-        /// <param name="AuthorizationStart1">An authorize start request.</param>
-        /// <param name="AuthorizationStart2">Another authorize start request.</param>
+        /// <param name="AuthorizationStop1">An authorize stop request.</param>
+        /// <param name="AuthorizationStop2">Another authorize stop request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (AuthorizationStartResponse AuthorizationStart1,
-                                           AuthorizationStartResponse AuthorizationStart2)
+        public static Boolean operator == (AuthorizationStopResponse AuthorizationStop1,
+                                           AuthorizationStopResponse AuthorizationStop2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(AuthorizationStart1, AuthorizationStart2))
+            if (ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (AuthorizationStart1 is null || AuthorizationStart2 is null)
+            if (AuthorizationStop1 is null || AuthorizationStop2 is null)
                 return false;
 
-            return AuthorizationStart1.Equals(AuthorizationStart2);
+            return AuthorizationStop1.Equals(AuthorizationStop2);
 
         }
 
         #endregion
 
-        #region Operator != (AuthorizationStart1, AuthorizationStart2)
+        #region Operator != (AuthorizationStop1, AuthorizationStop2)
 
         /// <summary>
-        /// Compares two AuthorizationStart requests for inequality.
+        /// Compares two AuthorizationStop requests for inequality.
         /// </summary>
-        /// <param name="AuthorizationStart1">An authorize start request.</param>
-        /// <param name="AuthorizationStart2">Another authorize start request.</param>
+        /// <param name="AuthorizationStop1">An authorize stop request.</param>
+        /// <param name="AuthorizationStop2">Another authorize stop request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (AuthorizationStartResponse AuthorizationStart1,
-                                           AuthorizationStartResponse AuthorizationStart2)
+        public static Boolean operator != (AuthorizationStopResponse AuthorizationStop1,
+                                           AuthorizationStopResponse AuthorizationStop2)
 
-            => !(AuthorizationStart1 == AuthorizationStart2);
-
-        #endregion
+            => !(AuthorizationStop1 == AuthorizationStop2);
 
         #endregion
 
-        #region IEquatable<AuthorizationStart> Members
+        #endregion
+
+        #region IEquatable<AuthorizationStop> Members
 
         #region Equals(Object)
 
@@ -946,39 +946,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is AuthorizationStartResponse authorizationStartResponse &&
-                   Equals(authorizationStartResponse);
+            => Object is AuthorizationStopResponse authorizationStopResponse &&
+                   Equals(authorizationStopResponse);
 
         #endregion
 
-        #region Equals(AuthorizationStart)
+        #region Equals(AuthorizationStop)
 
         /// <summary>
-        /// Compares two authorize start requests for equality.
+        /// Compares two authorize stop requests for equality.
         /// </summary>
-        /// <param name="AuthorizationStart">An authorize start request to compare with.</param>
+        /// <param name="AuthorizationStop">An authorize stop request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizationStartResponse AuthorizationStart)
+        public override Boolean Equals(AuthorizationStopResponse AuthorizationStop)
         {
 
-            if (AuthorizationStart is null)
+            if (AuthorizationStop is null)
                 return false;
 
-            return AuthorizationStatus.Equals(AuthorizationStart.AuthorizationStatus) &&
-                   StatusCode.         Equals(AuthorizationStart.StatusCode)          &&
+            return AuthorizationStatus.Equals(AuthorizationStop.AuthorizationStatus) &&
+                   StatusCode.         Equals(AuthorizationStop.StatusCode)          &&
                    //AuthorizationStopIdentifications
 
-                   ((!SessionId.          HasValue && !AuthorizationStart.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  AuthorizationStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStart.SessionId.          Value))) &&
+                   ((!SessionId.          HasValue && !AuthorizationStop.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizationStop.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStop.SessionId.          Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !AuthorizationStart.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  AuthorizationStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStart.CPOPartnerSessionId.Value))) &&
+                   ((!CPOPartnerSessionId.HasValue && !AuthorizationStop.CPOPartnerSessionId.HasValue) ||
+                     (CPOPartnerSessionId.HasValue &&  AuthorizationStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStop.CPOPartnerSessionId.Value))) &&
 
-                   ((!EMPPartnerSessionId.HasValue && !AuthorizationStart.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  AuthorizationStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStart.EMPPartnerSessionId.Value))) &&
+                   ((!EMPPartnerSessionId.HasValue && !AuthorizationStop.EMPPartnerSessionId.HasValue) ||
+                     (EMPPartnerSessionId.HasValue &&  AuthorizationStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStop.EMPPartnerSessionId.Value))) &&
 
-                   ((!ProviderId.         HasValue && !AuthorizationStart.ProviderId.         HasValue) ||
-                     (ProviderId.         HasValue &&  AuthorizationStart.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStart.ProviderId.         Value)));
+                   ((!ProviderId.         HasValue && !AuthorizationStop.ProviderId.         HasValue) ||
+                     (ProviderId.         HasValue &&  AuthorizationStop.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStop.ProviderId.         Value)));
 
         }
 
@@ -1059,10 +1059,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (class) Builder
 
         /// <summary>
-        /// The AuthorizationStart response builder.
+        /// The AuthorizationStop response builder.
         /// </summary>
-        public new class Builder : AResponse<AuthorizeStartRequest,
-                                             AuthorizationStartResponse>.Builder
+        public new class Builder : AResponse<AuthorizeStopRequest,
+                                             AuthorizationStopResponse>.Builder
         {
 
             #region Properties
@@ -1114,7 +1114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #region Constructor(s)
 
             /// <summary>
-            /// Create a new AuthorizationStart response builder.
+            /// Create a new AuthorizationStop response builder.
             /// </summary>
             /// <param name="Request">The request leading to this response.</param>
             /// <param name="AuthorizationStatus">The authorization status.</param>
@@ -1126,7 +1126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(AuthorizeStartRequest        Request                            = null,
+            public Builder(AuthorizeStopRequest        Request                            = null,
                            AuthorizationStatusTypes?    AuthorizationStatus                = null,
                            StatusCode                   StatusCode                         = null,
                            Session_Id?                  SessionId                          = null,
@@ -1161,18 +1161,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #region ToImmutable()
 
             /// <summary>
-            /// Return an immutable version of the AuthorizationStart response.
+            /// Return an immutable version of the AuthorizationStop response.
             /// </summary>
             /// <param name="Builder">A EVSE data record builder.</param>
-            public static implicit operator AuthorizationStartResponse(Builder Builder)
+            public static implicit operator AuthorizationStopResponse(Builder Builder)
 
                 => Builder?.ToImmutable();
 
 
             /// <summary>
-            /// Return an immutable version of the AuthorizationStart response.
+            /// Return an immutable version of the AuthorizationStop response.
             /// </summary>
-            public override AuthorizationStartResponse ToImmutable()
+            public override AuthorizationStopResponse ToImmutable()
             {
 
                 #region Check mandatory parameters
@@ -1182,7 +1182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                return new AuthorizationStartResponse(Request,
+                return new AuthorizationStopResponse(Request,
                                                       AuthorizationStatus.Value,
                                                       StatusCode,
                                                       SessionId,
