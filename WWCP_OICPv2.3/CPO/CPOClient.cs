@@ -103,6 +103,112 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
     #endregion
 
 
+    #region OnAuthorizeStartRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever an 'authorize start' request will be send.
+    /// </summary>
+    public delegate Task OnAuthorizeStartRequestHandler (DateTime                     LogTimestamp,
+                                                         DateTime                     RequestTimestamp,
+                                                         CPOClient                   Sender,
+                                                         String                       SenderId,
+                                                         EventTracking_Id             EventTrackingId,
+                                                         Operator_Id                  OperatorId,
+                                                         Identification               Identification,
+                                                         EVSE_Id?                     EVSEId,
+                                                         Session_Id?                  SessionId,
+                                                         PartnerProduct_Id?           PartnerProductId,
+                                                         CPOPartnerSession_Id?        CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?        EMPPartnerSessionId,
+                                                         TimeSpan                     RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response to an 'authorize start' request had been received.
+    /// </summary>
+    public delegate Task OnAuthorizeStartResponseHandler(DateTime                     LogTimestamp,
+                                                         DateTime                     RequestTimestamp,
+                                                         CPOClient                   Sender,
+                                                         String                       SenderId,
+                                                         EventTracking_Id             EventTrackingId,
+                                                         Operator_Id                  OperatorId,
+                                                         Identification               Identification,
+                                                         EVSE_Id?                     EVSEId,
+                                                         Session_Id?                  SessionId,
+                                                         PartnerProduct_Id?           PartnerProductId,
+                                                         CPOPartnerSession_Id?        CPOPartnerSessionId,
+                                                         EMPPartnerSession_Id?        EMPPartnerSessionId,
+                                                         TimeSpan                     RequestTimeout,
+                                                         AuthorizationStartResponse   Result,
+                                                         TimeSpan                     Runtime);
+
+    #endregion
+
+    #region OnAuthorizeStopRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever an 'authorize stop' request will be send.
+    /// </summary>
+    public delegate Task OnAuthorizeStopRequestHandler (DateTime                      LogTimestamp,
+                                                        DateTime                      RequestTimestamp,
+                                                        CPOClient                    Sender,
+                                                        String                        SenderId,
+                                                        EventTracking_Id              EventTrackingId,
+                                                        Operator_Id                   OperatorId,
+                                                        Session_Id                    SessionId,
+                                                        Identification                Identification,
+                                                        EVSE_Id?                      EVSEId,
+                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
+                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
+                                                        TimeSpan                      RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response to an 'authorize stop' request had been received.
+    /// </summary>
+    public delegate Task OnAuthorizeStopResponseHandler(DateTime                      LogTimestamp,
+                                                        DateTime                      RequestTimestamp,
+                                                        CPOClient                    Sender,
+                                                        String                        SenderId,
+                                                        EventTracking_Id              EventTrackingId,
+                                                        Operator_Id                   OperatorId,
+                                                        Session_Id                    SessionId,
+                                                        Identification                Identification,
+                                                        EVSE_Id?                      EVSEId,
+                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
+                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
+                                                        TimeSpan                      RequestTimeout,
+                                                        AuthorizationStopResponse     Result,
+                                                        TimeSpan                      Runtime);
+
+    #endregion
+
+    #region OnSendChargeDetailRecord
+
+    /// <summary>
+    /// A delegate called whenever a 'charge detail record' will be send.
+    /// </summary>
+    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                                         LogTimestamp,
+                                                                 DateTime                                         RequestTimestamp,
+                                                                 CPOClient                                        Sender,
+                                                                 String                                           SenderId,
+                                                                 EventTracking_Id                                 EventTrackingId,
+                                                                 ChargeDetailRecord                               ChargeDetailRecord,
+                                                                 TimeSpan                                         RequestTimeout);
+
+    /// <summary>
+    /// A delegate called whenever a response for a sent 'charge detail record' had been received.
+    /// </summary>
+    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                                         Timestamp,
+                                                                 DateTime                                         RequestTimestamp,
+                                                                 CPOClient                                        Sender,
+                                                                 String                                           SenderId,
+                                                                 EventTracking_Id                                 EventTrackingId,
+                                                                 ChargeDetailRecord                               ChargeDetailRecord,
+                                                                 TimeSpan                                         RequestTimeout,
+                                                                 Acknowledgement<SendChargeDetailRecordRequest>   Result,
+                                                                 TimeSpan                                         Runtime);
+
+    #endregion
+
 
     /// <summary>
     /// The CPO client.
@@ -173,12 +279,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         public event OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP request pushing EVSE data records will be send.
+        /// An event fired whenever a HTTP request pushing EVSE data records will be send.
         /// </summary>
         public event ClientRequestLogHandler         OnPushEVSEDataHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a push EVSE data records SOAP request had been received.
+        /// An event fired whenever a response to a push EVSE data records HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler        OnPushEVSEDataHTTPResponse;
 
@@ -197,12 +303,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         public event OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
 
         /// <summary>
-        /// An event fired whenever a SOAP request pushing EVSE status records will be send.
+        /// An event fired whenever a HTTP request pushing EVSE status records will be send.
         /// </summary>
         public event ClientRequestLogHandler           OnPushEVSEStatusHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a push EVSE status records SOAP request had been received.
+        /// An event fired whenever a response to a push EVSE status records HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler          OnPushEVSEStatusHTTPResponse;
 
@@ -210,6 +316,79 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// An event fired whenever EVSE status records had been sent upstream.
         /// </summary>
         public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
+
+        #endregion
+
+
+        #region OnAuthorizeStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an authorize start request will be send.
+        /// </summary>
+        public event OnAuthorizeStartRequestHandler     OnAuthorizeStartRequest;
+
+        /// <summary>
+        /// An event fired whenever an authorize start HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnAuthorizeStartHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to an authorize start HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnAuthorizeStartHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever an authorize start request was sent.
+        /// </summary>
+        public event OnAuthorizeStartResponseHandler    OnAuthorizeStartResponse;
+
+        #endregion
+
+        #region OnAuthorizeStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an 'authorize stop' request will be send.
+        /// </summary>
+        public event OnAuthorizeStopRequestHandler   OnAuthorizeStopRequest;
+
+        /// <summary>
+        /// An event fired whenever an 'authorize stop' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler         OnAuthorizeStopHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'authorize stop' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler        OnAuthorizeStopHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a 'authorize stop' request had been received.
+        /// </summary>
+        public event OnAuthorizeStopResponseHandler  OnAuthorizeStopResponse;
+
+        #endregion
+
+        #region OnSendChargeDetailRecordRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a 'charge detail record' will be send.
+        /// </summary>
+        public event OnSendChargeDetailRecordRequestHandler   OnSendChargeDetailRecordRequest;
+
+        /// <summary>
+        /// An event fired whenever a 'charge detail record' will be send via HTTP.
+        /// </summary>
+        public event ClientRequestLogHandler                  OnSendChargeDetailRecordHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a HTTP response to a sent 'charge detail record' had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                 OnSendChargeDetailRecordHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a sent 'charge detail record' had been received.
+        /// </summary>
+        public event OnSendChargeDetailRecordResponseHandler  OnSendChargeDetailRecordResponse;
 
         #endregion
 
@@ -819,7 +998,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         #endregion
 
 
-
         #region AuthorizeStart        (Request)
 
         /// <summary>
@@ -832,17 +1010,669 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         {
 
+            #region Initial checks
 
-            return null;
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given AuthorizeStart request must not be null!");
 
+            //Request = _CustomAuthorizeStartRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStart request must not be null!");
+
+
+            Byte                                     TransmissionRetry  = 0;
+            HTTPResponse<AuthorizationStartResponse> result             = null;
+
+            #endregion
+
+            #region Send OnAuthorizeStartRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnAuthorizeStartRequest != null)
+            //        await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+            //                           Cast<OnAuthorizeStartRequestHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.OperatorId,
+            //                                         Request.Identification,
+            //                                         Request.EVSEId,
+            //                                         Request.SessionId,
+            //                                         Request.PartnerProductId,
+            //                                         Request.CPOPartnerSessionId,
+            //                                         Request.EMPPartnerSessionId,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
+
+                                                  ? new HTTPClient (RemoteURL.Hostname,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                    DNSClient:   DNSClient)
+
+                                                  : new HTTPSClient(RemoteURL.Hostname,
+                                                                    (sender, certificate, chain, policyErrors) => {
+                                                                        return true;
+                                                                    },
+                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                        return ClientCert;
+                                                                    },
+                                                                    ClientCert:  ClientCert,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                    DNSClient:   DNSClient)).
+
+                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                        RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
+                                                        ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
+                                                        CancellationToken:    Request.CancellationToken,
+                                                        EventTrackingId:      Request.EventTrackingId,
+                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+
+                                                ConfigureAwait(false);
+
+                    #endregion
+
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (Acknowledgement<AuthorizeStartRequest>.TryParse(Request,
+                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                    out Acknowledgement<AuthorizeStartRequest>  Acknowledgement,
+                                                                                    out String                                  ErrorResponse,
+                                                                                    null,
+                                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                {
+
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                    // HTTP/1.1 400 
+                    // Server: nginx/1.18.0
+                    // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                    // Content-Type: application/json;charset=utf-8
+                    // Transfer-Encoding: chunked
+                    // Connection: keep-alive
+                    // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                    // 
+                    // {
+                    //     "message": "Error parsing/validating JSON.",
+                    //     "validationErrors": [
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                    //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                    //             "errorMessage": "may not be null"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                    //             "errorMessage": "may not be empty"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
+                    //             "errorMessage": "may not be empty"
+                    //         }
+                    //     ]
+                    // }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+                    
+            }
+
+
+
+            #region Send OnAuthorizeStartResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnAuthorizeStartResponse != null)
+            //        await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+            //                           Cast<OnAuthorizeStartResponseHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.OperatorId,
+            //                                         Request.Identification,
+            //                                         Request.EVSEId,
+            //                                         Request.SessionId,
+            //                                         Request.PartnerProductId,
+            //                                         Request.CPOPartnerSessionId,
+            //                                         Request.EMPPartnerSessionId,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value,
+            //                                         result.Content,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
+            //}
+
+            #endregion
+
+            return result;
 
         }
 
         #endregion
 
+        #region AuthorizeStop         (Request)
+
+        /// <summary>
+        /// Create an OICP authorize stop request.
+        /// </summary>
+        /// <param name="Request">A AuthorizeStart request.</param>
+        public async Task<HTTPResponse<AuthorizationStopResponse>>
+
+            AuthorizeStop(AuthorizeStopRequest  Request)
+
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given AuthorizeStop request must not be null!");
+
+            //Request = _CustomAuthorizeStopRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStop request must not be null!");
+
+
+            Byte                                     TransmissionRetry  = 0;
+            HTTPResponse<AuthorizationStopResponse>  result             = null;
+
+            #endregion
+
+            #region Send OnAuthorizeStopRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnAuthorizeStopRequest != null)
+            //        await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+            //                           Cast<OnAuthorizeStopRequestHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.OperatorId,
+            //                                         Request.SessionId,
+            //                                         Request.Identification,
+            //                                         Request.EVSEId,
+            //                                         Request.CPOPartnerSessionId,
+            //                                         Request.EMPPartnerSessionId,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
+
+                                                  ? new HTTPClient (RemoteURL.Hostname,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                    DNSClient:   DNSClient)
+
+                                                  : new HTTPSClient(RemoteURL.Hostname,
+                                                                    (sender, certificate, chain, policyErrors) => {
+                                                                        return true;
+                                                                    },
+                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                        return ClientCert;
+                                                                    },
+                                                                    ClientCert:  ClientCert,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                    DNSClient:   DNSClient)).
+
+                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                        RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
+                                                        ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
+                                                        CancellationToken:    Request.CancellationToken,
+                                                        EventTrackingId:      Request.EventTrackingId,
+                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+
+                                                ConfigureAwait(false);
+
+                    #endregion
+
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (Acknowledgement<AuthorizeStopRequest>.TryParse(Request,
+                                                                                   JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                   out Acknowledgement<AuthorizeStopRequest>  Acknowledgement,
+                                                                                   out String                                 ErrorResponse,
+                                                                                   null,
+                                                                                   HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                {
+
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                    // HTTP/1.1 400 
+                    // Server: nginx/1.18.0
+                    // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                    // Content-Type: application/json;charset=utf-8
+                    // Transfer-Encoding: chunked
+                    // Connection: keep-alive
+                    // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                    // 
+                    // {
+                    //     "message": "Error parsing/validating JSON.",
+                    //     "validationErrors": [
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                    //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                    //             "errorMessage": "may not be null"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                    //             "errorMessage": "may not be empty"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
+                    //             "errorMessage": "may not be empty"
+                    //         }
+                    //     ]
+                    // }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+                    
+            }
 
 
 
+            #region Send OnAuthorizeStopResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnAuthorizeStopResponse != null)
+            //        await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+            //                           Cast<OnAuthorizeStopResponseHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.OperatorId,
+            //                                         Request.SessionId,
+            //                                         Request.Identification,
+            //                                         Request.EVSEId,
+            //                                         Request.CPOPartnerSessionId,
+            //                                         Request.EMPPartnerSessionId,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value,
+            //                                         result.Content,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region SendChargeDetailRecord(Request)
+
+        /// <summary>
+        /// Send a charge detail record to an OICP server.
+        /// </summary>
+        /// <param name="Request">A SendChargeDetailRecord request.</param>
+        public async Task<HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>>>
+
+            SendChargeDetailRecord(SendChargeDetailRecordRequest  Request)
+
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The given SendChargeDetailRecord request must not be null!");
+
+            //Request = _CustomSendChargeDetailRecordRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request), "The mapped SendChargeDetailRecord request must not be null!");
+
+
+            Byte                                                         TransmissionRetry  = 0;
+            HTTPResponse<Acknowledgement<SendChargeDetailRecordRequest>> result             = null;
+
+            #endregion
+
+            #region Send OnSendChargeDetailRecord event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnSendChargeDetailRecordRequest != null)
+            //        await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
+            //                           Cast<OnSendChargeDetailRecordRequestHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.ChargeDetailRecord,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
+
+                                                  ? new HTTPClient (RemoteURL.Hostname,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                    DNSClient:   DNSClient)
+
+                                                  : new HTTPSClient(RemoteURL.Hostname,
+                                                                    (sender, certificate, chain, policyErrors) => {
+                                                                        return true;
+                                                                    },
+                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                        return ClientCert;
+                                                                    },
+                                                                    ClientCert:  ClientCert,
+                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                    DNSClient:   DNSClient)).
+
+                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                        RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
+                                                        ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
+                                                        CancellationToken:    Request.CancellationToken,
+                                                        EventTrackingId:      Request.EventTrackingId,
+                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+
+                                                ConfigureAwait(false);
+
+                    #endregion
+
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (Acknowledgement<SendChargeDetailRecordRequest>.TryParse(Request,
+                                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                            out Acknowledgement<SendChargeDetailRecordRequest>  Acknowledgement,
+                                                                                            out String                                          ErrorResponse,
+                                                                                            null,
+                                                                                            HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                {
+
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                    // HTTP/1.1 400 
+                    // Server: nginx/1.18.0
+                    // Date: Fri, 08 Jan 2021 14:19:25 GMT
+                    // Content-Type: application/json;charset=utf-8
+                    // Transfer-Encoding: chunked
+                    // Connection: keep-alive
+                    // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                    // 
+                    // {
+                    //     "message": "Error parsing/validating JSON.",
+                    //     "validationErrors": [
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                    //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                    //             "errorMessage": "may not be null"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                    //             "errorMessage": "may not be empty"
+                    //         },
+                    //         {
+                    //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
+                    //             "errorMessage": "may not be empty"
+                    //         }
+                    //     ]
+                    // }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+                    
+            }
+
+
+
+            #region Send OnChargeDetailRecordSent event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnSendChargeDetailRecordResponse != null)
+            //        await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
+            //                           Cast<OnSendChargeDetailRecordResponseHandler>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp.Value,
+            //                                         this,
+            //                                         ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.ChargeDetailRecord,
+            //                                         Request.RequestTimeout ?? RequestTimeout.Value,
+            //                                         result.Content,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
 
 
 
