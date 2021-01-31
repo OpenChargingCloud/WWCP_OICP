@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParseJSON(JSONObject, ..., out Address, out ErrorResponse, CustomAddressParser = null)
+        #region (static) TryParseJSON(JSON, ..., out Address, out ErrorResponse, CustomAddressParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 

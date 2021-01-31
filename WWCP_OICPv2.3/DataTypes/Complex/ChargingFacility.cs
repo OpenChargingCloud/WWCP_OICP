@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParseJSON(JSONObject, ..., out ChargingFacility, out ErrorResponse, CustomChargingFacilityParser = null)
+        #region (static) TryParseJSON(JSON, ..., out ChargingFacility, out ErrorResponse, CustomChargingFacilityParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
@@ -313,8 +313,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
             catch (Exception e)
             {
-                ChargingFacility        = default;
-                ErrorResponse  = "The given JSON representation of a charging facility is invalid: " + e.Message;
+                ChargingFacility  = default;
+                ErrorResponse     = "The given JSON representation of a charging facility is invalid: " + e.Message;
                 return false;
             }
 
