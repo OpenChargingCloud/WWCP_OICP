@@ -296,6 +296,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.WebAPI
             HTTPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             HTTPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
+            Directory.CreateDirectory("HTTPSSEs");
+
             var LogfilePrefix                       = "HTTPSSEs" + Path.DirectorySeparatorChar;
 
             this.DebugLog                           = HTTPServer.AddJSONEventSource(EventIdentification:      DebugLogId,
