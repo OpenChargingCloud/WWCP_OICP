@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
 
@@ -124,7 +123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out EMPPartnerSession_Id sessionId))
                 return sessionId;
 
-            return new EMPPartnerSession_Id?();
+            return default;
 
         }
 
@@ -208,7 +207,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator == (EMPPartnerSession_Id SessionId1,
+                                           EMPPartnerSession_Id SessionId2)
+
             => SessionId1.Equals(SessionId2);
 
         #endregion
@@ -221,7 +222,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator != (EMPPartnerSession_Id SessionId1,
+                                           EMPPartnerSession_Id SessionId2)
+
             => !SessionId1.Equals(SessionId2);
 
         #endregion
@@ -234,7 +237,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator < (EMPPartnerSession_Id SessionId1,
+                                          EMPPartnerSession_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) < 0;
 
         #endregion
@@ -247,7 +252,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator <= (EMPPartnerSession_Id SessionId1,
+                                           EMPPartnerSession_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) <= 0;
 
         #endregion
@@ -260,7 +267,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator > (EMPPartnerSession_Id SessionId1,
+                                          EMPPartnerSession_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) > 0;
 
         #endregion
@@ -273,7 +282,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EMPPartnerSession_Id SessionId1, EMPPartnerSession_Id SessionId2)
+        public static Boolean operator >= (EMPPartnerSession_Id SessionId1,
+                                           EMPPartnerSession_Id SessionId2)
+
             => SessionId1.CompareTo(SessionId2) >= 0;
 
         #endregion
@@ -290,8 +301,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
 
-            => Object is EMPPartnerSession_Id SessionId
-                   ? CompareTo(SessionId)
+            => Object is EMPPartnerSession_Id sessionId
+                   ? CompareTo(sessionId)
                    : throw new ArgumentException("The given object is not a charging session identification!");
 
         #endregion
@@ -323,8 +334,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is EMPPartnerSession_Id EMPPartnerSessionId
-                   ? Equals(EMPPartnerSessionId)
+            => Object is EMPPartnerSession_Id sessionId
+                   ? Equals(sessionId)
                    : false;
 
         #endregion
@@ -353,6 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
+
             => InternalId.GetHashCode();
 
         #endregion
@@ -363,6 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
+
             => InternalId;
 
         #endregion

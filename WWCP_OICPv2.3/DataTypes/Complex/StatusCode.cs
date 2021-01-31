@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -411,14 +411,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("StatusCode: ", (Int32) Code,
+            => String.Concat("StatusCode: ", ((Int32) Code).ToString("D3"),
 
                              Description.IsNotNullOrEmpty()
-                                 ? ", description: " + Description
+                                 ? ", "             + Description
                                  : "",
 
                              AdditionalInfo.IsNotNullOrEmpty()
-                                 ? ", additional Info: " + AdditionalInfo
+                                 ? ", additional: " + AdditionalInfo
                                  : "");
 
         #endregion

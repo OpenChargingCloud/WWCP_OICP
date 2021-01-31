@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,8 @@
 
 using System;
 using System.Threading;
+
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -74,6 +76,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public TimeSpan?                RequestTimeout             { get; }
 
+        /// <summary>
+        /// Optional custom data, e.g. in combination with custom parsers and serializers.
+        /// </summary>
+        [Optional]
+        public JObject                  CustomData                 { get; }
+
         #endregion
 
         #region Constructor(s)
@@ -85,10 +93,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public ARequest(DateTime?           Timestamp           = null,
                         CancellationToken?  CancellationToken   = null,
                         EventTracking_Id    EventTrackingId     = null,
-                        TimeSpan?           RequestTimeout      = null)
+                        TimeSpan?           RequestTimeout      = null,
+                        JObject             CustomData          = null)
         {
 
             this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
@@ -96,6 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.CancellationToken        = CancellationToken ?? CancellationTokenSource.Token;
             this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;
             this.RequestTimeout           = RequestTimeout    ?? DefaultRequestTimeout;
+            this.CustomData               = CustomData;
 
         }
 

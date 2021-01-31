@@ -59,6 +59,19 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
+    <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdResponse.cs" />
     <Compile Include="DataTypes\Complex\I18NText.cs" />
     <Compile Include="DataTypes\Complex\Identification.cs" />
     <Compile Include="DataTypes\Complex\HashedPIN.cs" />
@@ -97,9 +110,11 @@
     <Compile Include="DataTypes\Enums\RFIDTypes.cs" />
     <Compile Include="DataTypes\Enums\StatusCodes.cs" />
     <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\Simple\Process_Id.cs" />
     <Compile Include="DataTypes\Simple\CPOPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
     <Compile Include="DataTypes\Simple\EVCO_Id.cs" />
+    <Compile Include="DataTypes\Simple\LanguageCode.cs" />
     <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
     <Compile Include="DataTypes\Simple\Hash_Value.cs" />
     <Compile Include="DataTypes\Simple\Phone_Number.cs" />
@@ -115,11 +130,18 @@
     <Compile Include="DataTypes\Simple\UID.cs" />
     <Compile Include="DataTypes\Simple\URL.cs" />
     <Compile Include="Delegates.cs" />
+    <Compile Include="EMP\EMPClient.cs" />
+    <Compile Include="EMP\EMPClientLogger.cs" />
     <Compile Include="Messages\ARequest.cs" />
     <Compile Include="Messages\AResponse.cs" />
     <Compile Include="Messages\Common\Acknowledgement.cs" />
     <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
     <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Messages\IResponse.cs" />
     <Compile Include="Version.cs" />
@@ -143,5 +165,6 @@
       <Name>Styx</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

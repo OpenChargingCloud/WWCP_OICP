@@ -9,7 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>cloud.charging.open.protocols.OCPIv2_2.tests</RootNamespace>
     <AssemblyName>cloud.charging.open.protocols.OCPIv2_2.tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -67,17 +68,17 @@
       <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
       <Name>Styx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2\WWCP_OCPIv2.2.csproj">
-      <Project>{820584ca-46a2-4eb7-8b26-ef43025d042a}</Project>
-      <Name>WWCP_OCPIv2.2</Name>
+    <ProjectReference Include="..\WWCP_OICPv2.2\WWCP_OICPv2.2.csproj">
+      <Project>{fa3124a9-ef8d-481c-ae3a-f5afe9bc61a1}</Project>
+      <Name>WWCP_OICPv2.2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2_Adapter\WWCP_OCPIv2.2_Adapter.csproj">
-      <Project>{688b9ebc-81a4-4aa3-a663-2bd357de1100}</Project>
-      <Name>WWCP_OCPIv2.2_Adapter</Name>
+    <ProjectReference Include="..\WWCP_OICPv2.2_Adapter\WWCP_OICPv2.2_Adapter.csproj">
+      <Project>{bd73e427-4d14-495b-8e8c-5b394e53841e}</Project>
+      <Name>WWCP_OICPv2.2_Adapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WWCP_OCPI\WWCP_OCPIv2.2_WebAPI\WWCP_OCPIv2.2_WebAPI.csproj">
-      <Project>{439be8cf-a416-4fa1-bbef-8ea4a4794d87}</Project>
-      <Name>WWCP_OCPIv2.2_WebAPI</Name>
+    <ProjectReference Include="..\WWCP_OICPv2.2_WebAPI\WWCP_OICPv2.2_WebAPI.csproj">
+      <Project>{0f2e8974-a9e2-4a2b-b566-29c9da16c928}</Project>
+      <Name>WWCP_OICPv2.2_WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,14 +42,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The result of the operation.
-        /// </summary>
-        public Boolean                Result                 { get; }
-
-        /// <summary>
         /// The status code of the operation.
         /// </summary>
         public StatusCode             StatusCode             { get; }
+
+        /// <summary>
+        /// Whether the respective operation was performed or not performed successfully.
+        /// </summary>
+        public Boolean?               Result                 { get; }
 
         /// <summary>
         /// An optional charging session identification for
@@ -73,111 +73,40 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
-        #region (private) Acknowledgement(Request, Result, StatusCode, ...)
-
         /// <summary>
         /// Create a new acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Result">The result of the operation.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="Result">Whether the respective operation was performed or not performed successfully.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        private Acknowledgement(TRequest               Request,
-                                Boolean                Result,
-                                StatusCode             StatusCode,
-                                Session_Id?            SessionId             = null,
-                                CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
-                                EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                JObject                CustomData            = null)
+        public Acknowledgement(TRequest               Request,
+                               StatusCode             StatusCode,
+                               Boolean?               Result                = null,
+                               Session_Id?            SessionId             = null,
+                               CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                               EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                               Process_Id?            ProcessId             = null,
+                               JObject                CustomData            = null)
 
             : base(Request,
                    DateTime.UtcNow,
+                   ProcessId,
                    CustomData)
 
         {
 
-            this.Result               = Result;
             this.StatusCode           = StatusCode;
+            this.Result               = Result;
             this.SessionId            = SessionId;
             this.CPOPartnerSessionId  = CPOPartnerSessionId;
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
         }
-
-        #endregion
-
-        #region Acknowledgement(Request, SessionId = null, ...)
-
-        /// <summary>
-        /// Create a new 'positive' acknowledgement.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
-        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
-        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
-        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        public Acknowledgement(TRequest               Request,
-                               Session_Id?            SessionId                  = null,
-                               CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                               EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                               String                 StatusCodeDescription      = null,
-                               String                 StatusCodeAdditionalInfo   = null,
-                               JObject                CustomData                 = null)
-
-            : this(Request,
-                   true,
-                   new StatusCode(StatusCodes.Success,
-                                  StatusCodeDescription ?? "Success",
-                                  StatusCodeAdditionalInfo),
-                   SessionId,
-                   CPOPartnerSessionId,
-                   EMPPartnerSessionId,
-                   CustomData)
-
-        { }
-
-        #endregion
-
-        #region Acknowledgement(Request, StatusCode, ...)
-
-        /// <summary>
-        /// Create a new 'negative' acknowledgement.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="StatusCode">The status code of the operation.</param>
-        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
-        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        /// <param name="SessionId">An optional charging session identification.</param>
-        /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
-        /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        public Acknowledgement(TRequest               Request,
-                               StatusCodes            StatusCode,
-                               String                 StatusCodeDescription      = null,
-                               String                 StatusCodeAdditionalInfo   = null,
-                               Session_Id?            SessionId                  = null,
-                               CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                               EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                               JObject                CustomData                 = null)
-
-            : this(Request,
-                   false,
-                   new StatusCode(StatusCode,
-                                  StatusCodeDescription,
-                                  StatusCodeAdditionalInfo),
-                   SessionId,
-                   CPOPartnerSessionId,
-                   EMPPartnerSessionId,
-                   CustomData)
-
-        { }
-
-        #endregion
 
         #endregion
 
@@ -203,12 +132,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     String                 StatusCodeAdditionalInfo   = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 true,
                                                  new StatusCode(
                                                      StatusCodes.Success,
                                                      StatusCodeDescription ?? "Success",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 true,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -237,12 +166,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.DataError,
                                                      StatusCodeDescription ?? "Data Error!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -270,12 +199,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      StatusCodeDescription ?? "System Error!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -303,12 +232,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.ServiceNotAvailable,
                                                      StatusCodeDescription ?? "Service not available!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -336,12 +265,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.SessionIsInvalid,
                                                      StatusCodeDescription ?? "Session is invalid!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -369,12 +298,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.CommunicationToEVSEFailed,
                                                      StatusCodeDescription ?? "Communication to EVSE failed!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -402,12 +331,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.EVSEAlreadyReserved,
                                                      StatusCodeDescription ?? "EVSE already reserved!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -435,12 +364,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.EVSEAlreadyInUse_WrongToken,
                                                      StatusCodeDescription ?? "EVSE is already in use!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -468,12 +397,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.UnknownEVSEID,
                                                      StatusCodeDescription ?? "Unknown EVSE identification!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -501,12 +430,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.EVSEOutOfService,
                                                      StatusCodeDescription ?? "EVSE out of service!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -534,12 +463,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.NoValidContract,
                                                      StatusCodeDescription ?? "No valid contract!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -567,12 +496,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
 
                 => new Acknowledgement<TRequest>(Request,
-                                                 false,
                                                  new StatusCode(
                                                      StatusCodes.NoEVConnectedToEVSE,
                                                      StatusCodeDescription ?? "No electric vehicle connected to EVSE!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
                                                  EMPPartnerSessionId);
@@ -596,6 +525,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //   }
         // }
 
+        // HTTP/1.1 200 
+        // Server: nginx/1.18.0
+        // Date: Sat, 09 Jan 2021 04:31:25 GMT
+        // Content-Type: application/json;charset=utf-8
+        // Transfer-Encoding: chunked
+        // Connection: keep-alive
+        // Process-ID: dc83fb59-4dad-430e-9f1f-84f5c9a042c6
+        // 
+        // {"Result":true,"StatusCode":{"Code":"000","Description":null,"AdditionalInfo":null},"SessionID":null,"CPOPartnerSessionID":null,"EMPPartnerSessionID":null}
+        // {"StatusCode":{"Code":"001","Description":"OICP service not found for URI: /api/oicp/evsepush/v23/operators/DE*BDO/status-records","AdditionalInfo":null}}
+        // {"Result":false,"StatusCode":{"Code":"018","Description":"Duplicate EVSE IDs","AdditionalInfo":null},"SessionID":null,"CPOPartnerSessionID":null,"EMPPartnerSessionID":null}
+
         #endregion
 
         #region (static) Parse   (JSON, CustomAcknowledgementParser = null)
@@ -613,11 +554,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          JSON,
-                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
                          CustomAcknowledgementParser))
             {
-                return pushEVSEDataRequest;
+                return acknowledgement;
             }
 
             throw new ArgumentException("The given JSON representation of an acknowledgement is invalid: " + ErrorResponse, nameof(JSON));
@@ -641,11 +582,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          Text,
-                         out Acknowledgement<TRequest> pushEVSEDataRequest,
+                         out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
                          CustomAcknowledgementParser))
             {
-                return pushEVSEDataRequest;
+                return acknowledgement;
             }
 
             throw new ArgumentException("The given text representation of an acknowledgement is invalid: " + ErrorResponse, nameof(Text));
@@ -674,6 +615,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         JSON,
                         out Acknowledgement,
                         out ErrorResponse,
+                        null,
                         null);
 
 
@@ -685,11 +627,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         public static Boolean TryParse(TRequest                                                Request,
                                        JObject                                                 JSON,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser)
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser,
+                                       Process_Id?                                             ProcessId   = null)
         {
 
             try
@@ -703,18 +647,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse Result                  [mandatory]
-
-                if (!JSON.ParseMandatoryEnum("Result",
-                                             "result",
-                                             out Boolean Result,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
                 #region Parse StatusCode              [mandatory]
 
                 if (!JSON.ParseMandatoryJSON2("StatusCode",
@@ -724,6 +656,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out ErrorResponse))
                 {
                     return false;
+                }
+
+                #endregion
+
+                #region Parse Result                  [optional]
+
+                if (JSON.ParseOptional("Result",
+                                       "result",
+                                       out Boolean? Result,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -775,11 +720,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 Acknowledgement = new Acknowledgement<TRequest>(Request,
-                                                                Result,
                                                                 StatusCode,
+                                                                Result,
                                                                 SessionId,
                                                                 CPOPartnerSessionId,
                                                                 EMPPartnerSessionId,
+                                                                ProcessId,
                                                                 CustomData);
 
                 if (CustomAcknowledgementParser != null)
@@ -843,7 +789,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
-        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement respones.</param>
+        /// <param name="CustomAcknowledgementSerializer">A delegate to customize the serialization of Acknowledgement responses.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementSerializer   = null,
                               CustomJObjectSerializerDelegate<StatusCode>                 CustomStatusCodeSerializer        = null)
@@ -851,20 +797,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("Result",                 Result),
+                           new JProperty("StatusCode", StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
-                           new JProperty("StatusCode",             StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
-
-                           SessionId           != null
-                               ? new JProperty("SessionID",            SessionId.          ToString())
+                           Result.             HasValue
+                               ? new JProperty("Result",                Result.             Value)
                                : null,
 
-                           CPOPartnerSessionId != null
-                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
+                           SessionId.          HasValue
+                               ? new JProperty("SessionID",             SessionId.          Value.ToString())
                                : null,
 
-                           EMPPartnerSessionId != null
-                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
+                           CPOPartnerSessionId.HasValue
+                               ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
+                               : null,
+
+                           EMPPartnerSessionId.HasValue
+                               ? new JProperty("EMPPartnerSessionID",   EMPPartnerSessionId.Value.ToString())
                                : null
 
                        );
@@ -950,8 +898,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => !(Acknowledgement is null) &&
 
-                 Result.    Equals(Acknowledgement.Result)     &&
                  StatusCode.Equals(Acknowledgement.StatusCode) &&
+
+              ((!Result.             HasValue && !Acknowledgement.Result.             HasValue) ||
+                (Result.             HasValue &&  Acknowledgement.Result.             HasValue && Result.             Value.Equals(Acknowledgement.Result.             Value))) &&
 
               ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
                 (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
@@ -977,9 +927,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Result.              GetHashCode()       * 11 ^
-                       StatusCode.          GetHashCode()       *  7 ^
-
+                return StatusCode.          GetHashCode()       * 11 ^
+                      (Result?.             GetHashCode() ?? 0) *  7 ^
                       (SessionId?.          GetHashCode() ?? 0) *  5 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0);
@@ -996,13 +945,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Result, " => ",
-                             StatusCode.Code.ToString(),
-                             StatusCode.Description.   IsNotNullOrEmpty() ? ", "               + StatusCode.Description               : "",
-                             StatusCode.AdditionalInfo.IsNotNullOrEmpty() ? ", info: "         + StatusCode.AdditionalInfo            : "",
-                             SessionId.          HasValue                 ? ", sessionId: "    + SessionId.          Value.ToString() : "",
-                             CPOPartnerSessionId.HasValue                 ? ", CPOSessionId: " + CPOPartnerSessionId.Value.ToString() : "",
-                             EMPPartnerSessionId.HasValue                 ? ", EMPSessionId: " + EMPPartnerSessionId.Value.ToString() : "");
+            => String.Concat(StatusCode.Code.ToString(), " => ",
+                             new String[] {
+                                 Result.             HasValue                 ? "result: "       + Result.             Value.ToString() : null,
+                                 StatusCode.Description.   IsNotNullOrEmpty() ? "description: "  + StatusCode.Description               : null,
+                                 StatusCode.AdditionalInfo.IsNotNullOrEmpty() ? "info: "         + StatusCode.AdditionalInfo            : null,
+                                 SessionId.          HasValue                 ? "sessionId: "    + SessionId.          Value.ToString() : null,
+                                 CPOPartnerSessionId.HasValue                 ? "CPOSessionId: " + CPOPartnerSessionId.Value.ToString() : null,
+                                 EMPPartnerSessionId.HasValue                 ? "EMPSessionId: " + EMPPartnerSessionId.Value.ToString() : null,
+                                 ProcessId.          HasValue                 ? "processId: "    + ProcessId.          Value.ToString() : null
+                             }.AggregateWith(", "));
 
         #endregion
 
@@ -1015,12 +967,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder()
 
             => new Builder(Request,
-                           Result,
                            StatusCode,
+                           Result,
                            ResponseTimestamp,
                            SessionId,
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
+                           ProcessId,
                            CustomData);
 
         #endregion
@@ -1037,14 +990,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #region Properties
 
             /// <summary>
-            /// The result of the operation.
-            /// </summary>
-            public Boolean?                    Result                 { get; set; }
-
-            /// <summary>
             /// The status code of the operation.
             /// </summary>
             public StatusCode.Builder          StatusCode             { get; }
+
+            /// <summary>
+            /// The result of the operation.
+            /// </summary>
+            public Boolean?                    Result                 { get; set; }
 
             /// <summary>
             /// An optional charging session identification for
@@ -1072,30 +1025,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new acknowledgement builder.
             /// </summary>
             /// <param name="Request">The request leading to this response.</param>
-            /// <param name="Result">The result of the operation.</param>
             /// <param name="StatusCode">The status code of the operation.</param>
+            /// <param name="Result">The result of the operation.</param>
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="SessionId">An optional charging session identification.</param>
             /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
             /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(TRequest               Request               = null,
-                           Boolean?               Result                = null,
                            StatusCode?            StatusCode            = null,
+                           Boolean?               Result                = null,
                            DateTime?              ResponseTimestamp     = null,
                            Session_Id?            SessionId             = null,
                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                           Process_Id?            ProcessId             = null,
                            JObject                CustomData            = null)
 
                 : base(Request,
                        ResponseTimestamp,
+                       ProcessId,
                        CustomData)
 
             {
 
-                this.Result               = Result;
                 this.StatusCode           = StatusCode != null ? StatusCode.ToBuilder() : new StatusCode.Builder();
+                this.Result               = Result;
                 this.SessionId            = SessionId;
                 this.CPOPartnerSessionId  = CPOPartnerSessionId;
                 this.EMPPartnerSessionId  = EMPPartnerSessionId;
@@ -1119,27 +1075,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Return an immutable version of the acknowledgement.
             /// </summary>
             public override Acknowledgement<TRequest> ToImmutable()
-            {
 
-                #region Check mandatory parameters
-
-                if (Request == null)
-                    throw new ArgumentException("The given request must not be null!", nameof(Result));
-
-                if (!Result.HasValue)
-                    throw new ArgumentException("The given result must not be null!",  nameof(Result));
-
-                #endregion
-
-                return new Acknowledgement<TRequest>(Request,
-                                                     Result.Value,
-                                                     StatusCode.ToImmutable(),
-                                                     SessionId,
-                                                     CPOPartnerSessionId,
-                                                     EMPPartnerSessionId,
-                                                     CustomData);
-
-            }
+                => new Acknowledgement<TRequest>(Request ?? throw new ArgumentException("The given request must not be null!", nameof(Result)),
+                                                 StatusCode.ToImmutable(),
+                                                 Result,
+                                                 SessionId,
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId,
+                                                 ProcessId,
+                                                 CustomData);
 
             #endregion
 

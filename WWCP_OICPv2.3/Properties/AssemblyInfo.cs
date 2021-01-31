@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GraphDefined GmbH")]
 [assembly: AssemblyProduct("WWCP OICP v2.3")]
-[assembly: AssemblyCopyright("Copyright © 2014-2020 GraphDefined GmbH")]
+[assembly: AssemblyCopyright("Copyright © 2014-2021 GraphDefined GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

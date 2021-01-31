@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParseJSON(JSONObject, ..., out Address, out ErrorResponse, CustomAddressParser = null)
+        #region (static) TryParseJSON(JSON, ..., out Address, out ErrorResponse, CustomAddressParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 

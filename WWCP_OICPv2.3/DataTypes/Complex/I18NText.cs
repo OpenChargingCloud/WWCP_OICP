@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +53,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public static String FirstText(this I18NText Text)
             => Text != null && Text.Any()
-                   ? Text.First().Text
+                   ? Text.First().Value
                    : null;
 
 
@@ -70,9 +70,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (I18NText == null)
                 return null;
 
-            return new I18NText(I18NText.Select(text => new KeyValuePair<Languages, String>(
-                                                            text.Language,
-                                                            text.Text.Substring(0, Math.Min(text.Text.Length, Length))
+            return new I18NText(I18NText.Select(text => new KeyValuePair<LanguageCode, String>(
+                                                            text.Key,
+                                                            text.Value.Substring(0, Math.Min(text.Value.Length, Length))
                                                         )));
 
         }
@@ -91,9 +91,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (I18NText == null)
                 return null;
 
-            return new I18NText(I18NText.Select(text => new KeyValuePair<Languages, String>(
-                                                            text.Language,
-                                                            text.Text.Trim()
+            return new I18NText(I18NText.Select(text => new KeyValuePair<LanguageCode, String>(
+                                                            text.Key,
+                                                            text.Value?.Trim()
                                                         )));
 
         }
@@ -101,18 +101,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToI18NText(this Text, Language = Languages.en)
+        #region ToI18NText(this Text, Language = LanguageCode.en)
 
         /// <summary>
         /// Convert the given String into a multi-language text.
         /// </summary>
         /// <param name="Text">A string.</param>
         /// <param name="Language">A language.</param>
-        public static I18NText ToI18NText(this String  Text,
-                                          Languages    Language = Languages.en)
+        public static I18NText ToI18NText(this String    Text,
+                                          LanguageCode?  Language = null)
 
             => Text.IsNotNullOrEmpty()
-                   ? I18NText.Create(Language, Text)
+                   ? I18NText.Create(Language ?? LanguageCode.en, Text)
                    : null;
 
         #endregion
@@ -123,12 +123,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// An internationalized (I18N) multi-language text.
     /// </summary>
     public class I18NText : IEquatable<I18NText>,
-                            IEnumerable<I18NPair>
+                            IEnumerable<KeyValuePair<LanguageCode, String>>
     {
 
         #region Data
 
-        private readonly Dictionary<Languages, String> I18NTexts;
+        private readonly Dictionary<LanguageCode, String> I18NTexts;
 
         #endregion
 
@@ -141,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public I18NText()
         {
-            this.I18NTexts = new Dictionary<Languages, String>();
+            this.I18NTexts = new Dictionary<LanguageCode, String>();
         }
 
         #endregion
@@ -154,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Language">The internationalized (I18N) language.</param>
         /// <param name="Text">The internationalized (I18N) text.</param>
-        public I18NText(Languages Language, String Text)
+        public I18NText(LanguageCode Language, String Text)
             : this()
         {
             I18NTexts.Add(Language, Text);
@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new internationalized (I18N) multi-language string
         /// based on the given language and string pairs.
         /// </summary>
-        public I18NText(IEnumerable<KeyValuePair<Languages, String>> Texts)
+        public I18NText(IEnumerable<KeyValuePair<LanguageCode, String>> Texts)
             : this()
         {
 
@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Language">The internationalized (I18N) language.</param>
         /// <param name="Text">The internationalized (I18N) text.</param>
-        public static I18NText Create(Languages  Language,
+        public static I18NText Create(LanguageCode  Language,
                                       String     Text)
 
             => new I18NText(Language, Text);
@@ -251,7 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Checks if the given language representation exists.
         /// </summary>
         /// <param name="Language">The internationalized (I18N) language.</param>
-        public Boolean has(Languages Language)
+        public Boolean has(LanguageCode Language)
 
             => I18NTexts.ContainsKey(Language);
 
@@ -264,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Language">The internationalized (I18N) language.</param>
         /// <returns>The internationalized (I18N) text or String.Empty</returns>
-        public String this[Languages Language]
+        public String this[LanguageCode Language]
         {
 
             get
@@ -378,7 +378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (JSON?.HasValues == true)
             {
 
-                var i18NText = new Dictionary<Languages, String>();
+                var i18NText = new Dictionary<LanguageCode, String>();
 
                 foreach (var JSONProperty in JSON)
                 {
@@ -386,10 +386,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     try
                     {
 
-                        if (LanguagesExtentions.TryParse(JSONProperty.Key, out Languages language))
+                        if (LanguageCode.TryParse(JSONProperty.Key, out LanguageCode language))
                         {
                             i18NText.Add(language,
-                                         JSONProperty.Value?.Value<String>());
+                                         JSONProperty.Value?.Value<String>()?.Trim());
                         }
 
                         I18NText = new I18NText(i18NText);
@@ -419,13 +419,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of the given internationalized string.
         /// </summary>
-        public JObject ToJSON()
+        public JArray ToJSON()
 
             => I18NTexts.SafeAny()
-                   ? new JObject(I18NTexts.SafeSelect(i18n => new JObject(
-                                                                  new JProperty("lang",  i18n.Key.ToString()),
-                                                                  new JProperty("value", i18n.Value)
-                                                              )))
+                   ? new JArray(I18NTexts.SafeSelect(i18n => new JObject(
+                                                                 new JProperty("lang",  i18n.Key.ToString()),
+                                                                 new JProperty("value", i18n.Value)
+                                                             )))
                    : null;
 
         #endregion
@@ -437,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public I18NText Clone
 
-            => new I18NText(I18NTexts.SafeSelect(i18n => new KeyValuePair<Languages, String>(
+            => new I18NText(I18NTexts.SafeSelect(i18n => new KeyValuePair<LanguageCode, String>(
                                                              i18n.Key,
                                                              new String(i18n.Value.ToCharArray())
                                                          )
@@ -446,8 +446,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        public Boolean Is(Languages  Language,
-                          String     Value)
+        public Boolean Is(LanguageCode  Language,
+                          String        Value)
         {
 
             if (!I18NTexts.ContainsKey(Language))
@@ -457,8 +457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         }
 
-        public Boolean IsNot(Languages  Language,
-                             String     Value)
+        public Boolean IsNot(LanguageCode  Language,
+                             String        Value)
         {
 
             if (!I18NTexts.ContainsKey(Language))
@@ -481,14 +481,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Enumerate all internationalized (I18N) texts.
         /// </summary>
-        public IEnumerator<I18NPair> GetEnumerator()
-            => I18NTexts.Select(kvp => new I18NPair(kvp.Key, kvp.Value)).GetEnumerator();
+        public IEnumerator<KeyValuePair<LanguageCode, String>> GetEnumerator()
+            => I18NTexts.Select(kvp => new KeyValuePair<LanguageCode, String>(kvp.Key, kvp.Value)).GetEnumerator();
 
         /// <summary>
         /// Enumerate all internationalized (I18N) texts.
         /// </summary>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => I18NTexts.Select(kvp => new I18NPair(kvp.Key, kvp.Value)).GetEnumerator();
+            => I18NTexts.Select(kvp => new KeyValuePair<LanguageCode, String>(kvp.Key, kvp.Value)).GetEnumerator();
 
         #endregion
 

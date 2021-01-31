@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The push EVSE data request.
+    /// The PushEVSEData request.
     /// </summary>
     public class PushEVSEDataRequest : ARequest<PushEVSEDataRequest>
     {
@@ -74,7 +74,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new push EVSE data request.
+        /// Create a new PushEVSEData request.
         /// </summary>
         /// <param name="OperatorEVSEData">The operator EVSE data record.</param>
         /// <param name="Action">The server-side data management operation.</param>
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#31-eroamingpushevsedata_v23
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingPushEvseData
 
         // {
         //   "ActionType":      "fullLoad",
@@ -310,6 +310,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom operator EVSE data JSON objects.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
+        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
@@ -318,6 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
                               CustomJObjectSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null,
                               CustomJObjectSerializerDelegate<Address>              CustomAddressSerializer               = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>     CustomChargingFacilitySerializer      = null,
                               CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null,
                               CustomJObjectSerializerDelegate<EnergySource>         CustomEnergySourceSerializer          = null,
                               CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null,
@@ -329,6 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("OperatorEvseData",  OperatorEVSEData.ToJSON(CustomOperatorEVSEDataSerializer,
                                                                                       CustomEVSEDataRecordSerializer,
                                                                                       CustomAddressSerializer,
+                                                                                      CustomChargingFacilitySerializer,
                                                                                       CustomGeoCoordinatesSerializer,
                                                                                       CustomEnergySourceSerializer,
                                                                                       CustomEnvironmentalImpactSerializer,

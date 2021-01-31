@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,8 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new clearing house identification.
-        /// based on the given string.
+        /// Create a new clearing house identification based on the given string.
         /// </summary>
         private ClearingHouse_Id(String Text)
         {
@@ -93,7 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
                 return clearingHouseId;
 
-            throw new ArgumentException("Invalid text-representation of an user identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a clearing house identification: '" + Text + "'!", nameof(Text));
 
         }
 
@@ -111,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
                 return clearingHouseId;
 
-            return new ClearingHouse_Id?();
+            return default;
 
         }
 
@@ -184,7 +183,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator == (ClearingHouse_Id ClearingHouseIdId1,
+                                           ClearingHouse_Id ClearingHouseIdId2)
+
             => ClearingHouseIdId1.Equals(ClearingHouseIdId2);
 
         #endregion
@@ -197,7 +198,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator != (ClearingHouse_Id ClearingHouseIdId1,
+                                           ClearingHouse_Id ClearingHouseIdId2)
+
             => !ClearingHouseIdId1.Equals(ClearingHouseIdId2);
 
         #endregion
@@ -210,7 +213,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator < (ClearingHouse_Id ClearingHouseIdId1,
+                                          ClearingHouse_Id ClearingHouseIdId2)
+
             => ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) < 0;
 
         #endregion
@@ -223,7 +228,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator <= (ClearingHouse_Id ClearingHouseIdId1,
+                                           ClearingHouse_Id ClearingHouseIdId2)
+
             => ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) <= 0;
 
         #endregion
@@ -236,7 +243,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator > (ClearingHouse_Id ClearingHouseIdId1,
+                                          ClearingHouse_Id ClearingHouseIdId2)
+
             => ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) > 0;
 
         #endregion
@@ -249,7 +258,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ClearingHouse_Id ClearingHouseIdId1, ClearingHouse_Id ClearingHouseIdId2)
+        public static Boolean operator >= (ClearingHouse_Id ClearingHouseIdId1,
+                                           ClearingHouse_Id ClearingHouseIdId2)
+
             => ClearingHouseIdId1.CompareTo(ClearingHouseIdId2) >= 0;
 
         #endregion
@@ -300,8 +311,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is ClearingHouse_Id ClearingHouseId &&
-                   Equals(ClearingHouseId);
+            => Object is ClearingHouse_Id clearingHouseId &&
+                   Equals(clearingHouseId);
 
         #endregion
 
@@ -329,6 +340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
+
             => InternalId.GetHashCode();
 
         #endregion
@@ -339,6 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
+
             => InternalId;
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">A status code.</param>
         public static String AsString(this StatusCodes StatusCode)
 
-            => ((Int32) StatusCode).ToString("X3");
+            => ((Int32) StatusCode).ToString("D3");
 
         #endregion
 

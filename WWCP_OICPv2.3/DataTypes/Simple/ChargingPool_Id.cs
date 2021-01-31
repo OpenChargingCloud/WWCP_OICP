@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -114,7 +114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ChargingPool_Id chargingPoolId))
                 return chargingPoolId;
 
-            return new ChargingPool_Id?();
+            return default;
 
         }
 
@@ -187,7 +187,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator == (ChargingPool_Id ChargingPoolId1,
+                                           ChargingPool_Id ChargingPoolId2)
+
             => ChargingPoolId1.Equals(ChargingPoolId2);
 
         #endregion
@@ -200,7 +202,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator != (ChargingPool_Id ChargingPoolId1,
+                                           ChargingPool_Id ChargingPoolId2)
+
             => !ChargingPoolId1.Equals(ChargingPoolId2);
 
         #endregion
@@ -213,7 +217,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator < (ChargingPool_Id ChargingPoolId1,
+                                          ChargingPool_Id ChargingPoolId2)
+
             => ChargingPoolId1.CompareTo(ChargingPoolId2) < 0;
 
         #endregion
@@ -226,7 +232,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator <= (ChargingPool_Id ChargingPoolId1,
+                                           ChargingPool_Id ChargingPoolId2)
+
             => ChargingPoolId1.CompareTo(ChargingPoolId2) <= 0;
 
         #endregion
@@ -239,7 +247,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator > (ChargingPool_Id ChargingPoolId1,
+                                          ChargingPool_Id ChargingPoolId2)
+
             => ChargingPoolId1.CompareTo(ChargingPoolId2) > 0;
 
         #endregion
@@ -252,7 +262,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingPoolId1">A charging pool identification.</param>
         /// <param name="ChargingPoolId2">Another charging pool identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ChargingPool_Id ChargingPoolId1, ChargingPool_Id ChargingPoolId2)
+        public static Boolean operator >= (ChargingPool_Id ChargingPoolId1,
+                                           ChargingPool_Id ChargingPoolId2)
+
             => ChargingPoolId1.CompareTo(ChargingPoolId2) >= 0;
 
         #endregion
@@ -332,6 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
+
             => InternalId.GetHashCode();
 
         #endregion
@@ -342,6 +355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text-representation of this object.
         /// </summary>
         public override String ToString()
+
             => InternalId;
 
         #endregion

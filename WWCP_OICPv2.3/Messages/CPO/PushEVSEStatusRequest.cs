@@ -1,5 +1,5 @@
 ﻿/*EVSEStatus
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The push EVSE status request.
+    /// The PushEVSEStatus request.
     /// </summary>
     public class PushEVSEStatusRequest : ARequest<PushEVSEStatusRequest>
     {
@@ -74,7 +74,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new push EVSE status request.
+        /// Create a new PushEVSEStatus request.
         /// </summary>
         /// <param name="OperatorEVSEStatus">The operator EVSE status record.</param>
         /// <param name="Action">The server-side status management operation.</param>
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#31-eroamingpushevsestatus_v23
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingPushEvseStatus
 
         // {
         //   "ActionType":      "fullLoad",
