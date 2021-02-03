@@ -522,7 +522,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                     return false;
                 }
 
-                var EVSEId = EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseId", "Missing 'EvseId'-XML tag!"));
+                var EVSEId = EVSE_Id.Parse(EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "EvseID", "Missing 'EvseId'-XML tag!"));
 
                 #region XML Attribute: LastUpdate
 
@@ -557,11 +557,13 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 #region AdditionalInfo
 
-                var _AdditionalInfo = new I18NString();
+                var _AdditionalInfo  = new I18NString();
+                var infoTexts        = EVSEDataRecordXML.
+                                           Element(OICPNS.EVSEData + "AdditionalInfo")?.
+                                           Elements(OICPNS.EVSEData + "InfoText")?.
+                                           ToArray() ?? new XElement[0];
 
-                foreach (var infoTextXML in EVSEDataRecordXML.
-                                                Element (OICPNS.EVSEData + "AdditionalInfo").
-                                                Elements(OICPNS.EVSEData + "InfoText"))
+                foreach (var infoTextXML in infoTexts)
                 {
 
                     var lang = infoTextXML.Attribute("lang").Value?.Trim().ToLower();
@@ -603,16 +605,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                                                          Trim()),
 
 
-                    EVSEDataRecordXML.                   ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum").
+                    EVSEDataRecordXML.                   ElementValueOrDefault(OICPNS.EVSEData + "HotlinePhoneNum")?.
                                                          Trim(),
 
                     EVSEDataRecordXML.MapValueOrFail    (OICPNS.EVSEData + "IsOpen24Hours",
                                                          s => s == "true"),
 
-                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible").
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "IsHubjectCompatible")?.
                                       Trim() == "true",
 
-                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable").
+                    EVSEDataRecordXML.ElementValueOrFail(OICPNS.EVSEData + "DynamicInfoAvailable")?.
                                       Trim() != "false",
 
 

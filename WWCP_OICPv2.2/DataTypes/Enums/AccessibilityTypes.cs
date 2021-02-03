@@ -42,6 +42,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 "Free publicly accessible"    => AccessibilityTypes.Free_publicly_accessible,
                 "Restricted access"           => AccessibilityTypes.Restricted_access,
                 "Paying publicly accessible"  => AccessibilityTypes.Paying_publicly_accessible,
+                "Test Station"                => AccessibilityTypes.Test_Station,
                 _                             => AccessibilityTypes.Unspecified,
             };
 
@@ -59,6 +60,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 AccessibilityTypes.Free_publicly_accessible    => "Free publicly accessible",
                 AccessibilityTypes.Restricted_access           => "Restricted access",
                 AccessibilityTypes.Paying_publicly_accessible  => "Paying publicly accessible",
+                AccessibilityTypes.Test_Station                => "Test Station",
                 _ => "Unspecified",
             };
 
