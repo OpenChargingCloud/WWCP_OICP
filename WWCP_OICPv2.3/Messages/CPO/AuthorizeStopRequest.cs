@@ -626,7 +626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  ? " at " + EVSEId
                                  : "",
 
-                             " (", OperatorId, ") ",
+                             " (", OperatorId, ")",
 
                              PartnerProductId.HasValue
                                  ? " using " + PartnerProductId

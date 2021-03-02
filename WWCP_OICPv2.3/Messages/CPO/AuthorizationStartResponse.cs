@@ -685,11 +685,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse StatusCode                            [mandatory]
 
-                if (!JSON.ParseMandatory("StatusCode",
-                                         "status code",
-                                         OICPv2_3.StatusCode.TryParse,
-                                         out StatusCode StatusCode,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("StatusCode",
+                                              "status code",
+                                              OICPv2_3.StatusCode.TryParse,
+                                              out StatusCode StatusCode,
+                                              out ErrorResponse))
                 {
                     return false;
                 }
@@ -717,7 +717,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -730,7 +731,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -743,7 +745,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? ProviderId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -756,7 +759,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Identification> AuthorizationStopIdentifications,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion

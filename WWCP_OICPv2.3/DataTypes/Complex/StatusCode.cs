@@ -411,7 +411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("StatusCode: ", ((Int32) Code).ToString("D3"),
+            => String.Concat(Code.ToString(), " (", ((Int32) Code).ToString("D3"), ")",
 
                              Description.IsNotNullOrEmpty()
                                  ? ", "             + Description

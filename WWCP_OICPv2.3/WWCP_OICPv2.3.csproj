@@ -59,7 +59,10 @@
     <Compile Include="DataTypes\Complex\Address.cs" />
     <Compile Include="DataTypes\Complex\EnergySource.cs" />
     <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
+    <Compile Include="DataTypes\Complex\ValidationErrorList.cs" />
+    <Compile Include="DataTypes\Complex\ValidationError.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
+    <Compile Include="DataTypes\OICPResult.cs" />
     <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />

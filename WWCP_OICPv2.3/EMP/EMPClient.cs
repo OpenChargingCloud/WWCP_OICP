@@ -240,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
             this.HTTPLogger                  = new Logger(this);
 
-            this.RemoteURL                   = URL.Parse("https://service-qa.hubject.com");
+            this.RemoteURL                   = URL.Parse("https://service.hubject-qa.com");
             this.RemoteCertificateValidator  = (sender, certificate, chain, policyErrors) => true;
             this.ClientCert                  = ClientCert;
 
@@ -556,7 +556,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PullEVSEStatus request.</param>
-        public async Task<PullEVSEStatusResponse>
+        public async Task<OICPResult<PullEVSEStatusResponse>>
 
             PullEVSEStatus(PullEVSEStatusRequest Request)
 
@@ -573,8 +573,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                 throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatus request must not be null!");
 
 
-            Byte                   TransmissionRetry   = 0;
-            PullEVSEStatusResponse result              = null;
+            Byte                                TransmissionRetry   = 0;
+            OICPResult<PullEVSEStatusResponse>  result              = null;
 
             #endregion
 
@@ -654,6 +654,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     #endregion
 
 
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
@@ -669,15 +671,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                     out PullEVSEStatusResponse  pullEVSEStatusResponse,
                                                                     out String                  ErrorResponse,
                                                                     null,
-                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                                                    processId))
                                 {
 
+                                    result = OICPResult<PullEVSEStatusResponse>.Success(Request,
+                                                                                        pullEVSEStatusResponse,
+                                                                                        processId);
 
                                 }
 
                             }
                             catch (Exception e)
                             {
+
+                                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                                             Request,
+                                             new PullEVSEStatusResponse(
+                                                 Request,
+                                                 new OperatorEVSEStatus[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
 
                             }
 
@@ -720,6 +739,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                         //         }
                         //     ]
                         // }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // OicpERoamingFault:
+                        // {
+                        //   "StatusCode": {
+                        //     "AdditionalInfo": "string",
+                        //     "Code":           "000",
+                        //     "Description":    "string"
+                        //   },
+                        //   "message": "string"
+                        // }
+
+                        // Operator identification is not linked to the TLS client certificate!
+                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+
+                        break;
 
                     }
 

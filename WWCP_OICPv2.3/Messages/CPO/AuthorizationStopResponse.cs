@@ -571,14 +571,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop JSON objects.</param>
         public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                    Request,
-                                                       JObject                                                  JSON,
-                                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
+                                                      JObject                                                 JSON,
+                                                      CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
         {
 
             if (TryParse(Request,
                          JSON,
                          out AuthorizationStopResponse  authorizationStopResponse,
-                         out String                      ErrorResponse,
+                         out String                     ErrorResponse,
                          CustomAuthorizationStopResponseParser))
             {
                 return authorizationStopResponse;
@@ -599,14 +599,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                    Request,
-                                                       String                                                   Text,
-                                                       CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
+                                                      String                                                  Text,
+                                                      CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser   = null)
         {
 
             if (TryParse(Request,
                          Text,
                          out AuthorizationStopResponse  authorizationStopResponse,
-                         out String                      ErrorResponse,
+                         out String                     ErrorResponse,
                          CustomAuthorizationStopResponseParser))
             {
                 return authorizationStopResponse;
@@ -630,9 +630,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="AuthorizationStopResponse">The parsed AuthorizationStop response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(AuthorizeStopRequest           Request,
-                                       JObject                         JSON,
+                                       JObject                        JSON,
                                        out AuthorizationStopResponse  AuthorizationStopResponse,
-                                       out String                      ErrorResponse)
+                                       out String                     ErrorResponse)
 
             => TryParse(Request,
                         JSON,
@@ -652,11 +652,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         public static Boolean TryParse(AuthorizeStopRequest                                    Request,
-                                       JObject                                                  JSON,
+                                       JObject                                                 JSON,
                                        out AuthorizationStopResponse                           AuthorizationStopResponse,
-                                       out String                                               ErrorResponse,
+                                       out String                                              ErrorResponse,
                                        CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser,
-                                       Process_Id?                                              ProcessId   = null)
+                                       Process_Id?                                             ProcessId   = null)
         {
 
             try
@@ -685,11 +685,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse StatusCode                            [mandatory]
 
-                if (!JSON.ParseMandatory("StatusCode",
-                                         "status code",
-                                         OICPv2_3.StatusCode.TryParse,
-                                         out StatusCode StatusCode,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("StatusCode",
+                                              "status code",
+                                              OICPv2_3.StatusCode.TryParse,
+                                              out StatusCode StatusCode,
+                                              out ErrorResponse))
                 {
                     return false;
                 }
@@ -704,7 +704,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Session_Id? SessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -717,7 +718,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -730,7 +732,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -743,7 +746,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? ProviderId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -756,7 +760,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Identification> AuthorizationStopIdentifications,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -768,20 +773,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizationStopResponse = new AuthorizationStopResponse(Request,
-                                                                            AuthorizationStatus,
-                                                                            StatusCode,
-                                                                            SessionId,
-                                                                            CPOPartnerSessionId,
-                                                                            EMPPartnerSessionId,
-                                                                            ProviderId,
-                                                                            AuthorizationStopIdentifications,
-                                                                            ProcessId,
-                                                                            CustomData);
+                AuthorizationStopResponse  = new AuthorizationStopResponse(Request,
+                                                                           AuthorizationStatus,
+                                                                           StatusCode,
+                                                                           SessionId,
+                                                                           CPOPartnerSessionId,
+                                                                           EMPPartnerSessionId,
+                                                                           ProviderId,
+                                                                           AuthorizationStopIdentifications,
+                                                                           ProcessId,
+                                                                           CustomData);
 
                 if (CustomAuthorizationStopResponseParser != null)
                     AuthorizationStopResponse = CustomAuthorizationStopResponseParser(JSON,
-                                                                                        AuthorizationStopResponse);
+                                                                                      AuthorizationStopResponse);
 
                 return true;
 
@@ -789,7 +794,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 AuthorizationStopResponse  = default;
-                ErrorResponse               = "The given JSON representation of a AuthorizationStop response is invalid: " + e.Message;
+                ErrorResponse              = "The given JSON representation of a AuthorizationStop response is invalid: " + e.Message;
                 return false;
             }
 
@@ -808,9 +813,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStopRequest                                    Request,
-                                       String                                                   Text,
+                                       String                                                  Text,
                                        out AuthorizationStopResponse                           AuthorizationStopResponse,
-                                       out String                                               ErrorResponse,
+                                       out String                                              ErrorResponse,
                                        CustomJObjectParserDelegate<AuthorizationStopResponse>  CustomAuthorizationStopResponseParser)
         {
 
@@ -827,7 +832,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 AuthorizationStopResponse  = default;
-                ErrorResponse               = "The given text representation of a AuthorizationStop response is invalid: " + e.Message;
+                ErrorResponse              = "The given text representation of a AuthorizationStop response is invalid: " + e.Message;
                 return false;
             }
 
