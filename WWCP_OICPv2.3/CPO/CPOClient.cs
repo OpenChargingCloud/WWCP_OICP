@@ -752,6 +752,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                         }
 
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        {
+
+                            // HTTP/1.1 404
+                            // Server: nginx/1.18.0 (Ubuntu)
+                            // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                            // Content-Type: application/json;charset=UTF-8
+                            // Content-Length: 85
+                            // Connection: keep-alive
+                            // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "300",
+                            //         "Description":     "Partner not found",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode  statusCode,
+                                                            out String      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
+                                                                                                         new Acknowledgement<PushEVSEDataRequest>(
+                                                                                                             Request,
+                                                                                                             statusCode,
+                                                                                                             ProcessId: processId
+                                                                                                         ),
+                                                                                                         processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEDataRequest>(
+                                                     Request,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
@@ -1104,6 +1170,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                             // }
 
                             // Operator/provider identification is not linked to the TLS client certificate!
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode  statusCode,
+                                                            out String      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
+                                                                                                           new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                                               Request,
+                                                                                                               statusCode,
+                                                                                                               ProcessId: processId
+                                                                                                           ),
+                                                                                                           processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEStatusRequest>(
+                                                     Request,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        {
+
+                            // HTTP/1.1 404
+                            // Server: nginx/1.18.0 (Ubuntu)
+                            // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                            // Content-Type: application/json;charset=UTF-8
+                            // Content-Length: 85
+                            // Connection: keep-alive
+                            // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "300",
+                            //         "Description":     "Partner not found",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
