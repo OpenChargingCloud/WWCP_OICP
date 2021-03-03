@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMSP client.
+        /// Create a new EMP client.
         /// </summary>
         /// <param name="RemoteURL">The remote URL of the endpoint to connect to.</param>
         /// <param name="Description">An optional description of this client.</param>
@@ -258,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
-        public async Task<PullEVSEDataResponse>
+        public async Task<OICPResult<PullEVSEDataResponse>>
 
             PullEVSEData(PullEVSEDataRequest Request)
 
@@ -275,8 +275,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                 throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEData request must not be null!");
 
 
-            Byte                 TransmissionRetry  = 0;
-            PullEVSEDataResponse result             = null;
+            Byte                              TransmissionRetry   = 0;
+            OICPResult<PullEVSEDataResponse>  result              = null;
 
             #endregion
 
@@ -354,7 +354,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     #endregion
 
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -364,30 +366,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                             try
                             {
 
-                                // HTTP/1.1 200 
-                                // Server: nginx/1.18.0
-                                // Date: Sat, 09 Jan 2021 06:53:50 GMT
-                                // Content-Type: application/json;charset=utf-8
-                                // Transfer-Encoding: chunked
-                                // Connection: keep-alive
-                                // Process-ID: d8d4583c-ff9b-44dd-bc92-b341f15f644e
-                                // 
-                                // {"Result":false,"StatusCode":{"Code":"018","Description":"Duplicate EVSE IDs","AdditionalInfo":null},"SessionID":null,"EMPPartnerSessionID":null,"EMPPartnerSessionID":null}
-
                                 if (PullEVSEDataResponse.TryParse(Request,
                                                                   JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                  out PullEVSEDataResponse  Acknowledgement,
+                                                                  out PullEVSEDataResponse  pullEVSEDataResponse,
                                                                   out String                ErrorResponse,
                                                                   null,
-                                                                  HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                                                  processId))
                                 {
 
+                                    result = OICPResult<PullEVSEDataResponse>.Success(Request,
+                                                                                      pullEVSEDataResponse,
+                                                                                      processId);
 
                                 }
 
                             }
                             catch (Exception e)
                             {
+
+                                result = OICPResult<PullEVSEDataResponse>.Failed(
+                                             Request,
+                                             new PullEVSEDataResponse(
+                                                 Request,
+                                                 new OperatorEVSEData[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
 
                             }
 
@@ -401,60 +410,48 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        // FaultBody!
-
-                        // HTTP/1.1 400 
-                        // Server: nginx/1.18.0
-                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
-                        // Content-Type: application/json;charset=utf-8
-                        // Transfer-Encoding: chunked
-                        // Connection: keep-alive
-                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
-                        // 
-                        // {
-                        //     "extendedInfo":  null,
-                        //     "message":      "Error parsing/validating JSON.",
-                        //     "validationErrors": [
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
-                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
-                        //             "errorMessage": "may not be null"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
-                        //             "errorMessage": "may not be empty"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
-                        //             "errorMessage": "may not be empty"
-                        //         }
-                        //     ]
-                        // }
-
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody.Length > 0)
                         {
 
-                            try
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
                             {
 
-                                if (Acknowledgement<PullEVSEDataRequest>.TryParse(Request,
-                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                    out Acknowledgement<PullEVSEDataRequest>  Acknowledgement,
-                                                                                    out String                                ErrorResponse,
-                                                                                    null,
-                                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
-                                {
-
-
-                                }
-
-                            }
-                            catch (Exception e)
-                            {
+                                result = OICPResult<PullEVSEDataResponse>.BadRequest(Request,
+                                                                                     ValidationErrors,
+                                                                                     processId);
 
                             }
 
@@ -474,18 +471,68 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEDataResponse>.Failed(Request,
+                                                                                     new PullEVSEDataResponse(
+                                                                                         Request,
+                                                                                         new OperatorEVSEData[0],
+                                                                                         statusCode,
+                                                                                         processId
+                                                                                     ),
+                                                                                     processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEDataResponse>.Failed(
+                                             Request,
+                                             new PullEVSEDataResponse(
+                                                 Request,
+                                                 new OperatorEVSEData[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 
@@ -500,17 +547,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
             }
             catch (Exception e)
             {
-                    
+
+                result = OICPResult<PullEVSEDataResponse>.Failed(
+                             Request,
+                             new PullEVSEDataResponse(
+                                 Request,
+                                 new OperatorEVSEData[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
             }
 
-            //if (result == null)
-            //    result = HTTPResponse<Acknowledgement<PullEVSEDataRequest>>.ClientError(
-            //                 new Acknowledgement<PullEVSEDataRequest>(
-            //                     Request,
-            //                     StatusCodes.SystemError,
-            //                     "HTTP request failed!"
-            //                 )
-            //             );
+            if (result == null)
+                result = OICPResult<PullEVSEDataResponse>.Failed(
+                             Request,
+                             new PullEVSEDataResponse(
+                                 Request,
+                                 new OperatorEVSEData[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             )
+                         );
 
 
             #region Send OnPullEVSEDataResponse event
@@ -710,35 +774,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        // HTTP/1.1 400 
-                        // Server: nginx/1.18.0
-                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
-                        // Content-Type: application/json;charset=utf-8
-                        // Transfer-Encoding: chunked
-                        // Connection: keep-alive
-                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
-                        // 
-                        // {
-                        //     "message": "Error parsing/validating JSON.",
-                        //     "validationErrors": [
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
-                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
-                        //             "errorMessage": "may not be null"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
-                        //             "errorMessage": "may not be empty"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
-                        //             "errorMessage": "may not be empty"
-                        //         }
-                        //     ]
-                        // }
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<PullEVSEStatusResponse>.BadRequest(Request,
+                                                                                       ValidationErrors,
+                                                                                       processId);
+
+                            }
+
+                        }
+
+                        break;
 
                     }
 
@@ -831,16 +914,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
             catch (Exception e)
             {
 
+                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusResponse(
+                                 Request,
+                                 new OperatorEVSEStatus[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
             }
 
-            //if (result == null)
-            //    result = HTTPResponse<Acknowledgement<PullEVSEStatusRequest>>.ClientError(
-            //                 new Acknowledgement<PullEVSEStatusRequest>(
-            //                     Request,
-            //                     StatusCodes.SystemError,
-            //                     "HTTP request failed!"
-            //                 )
-            //             );
+            if (result == null)
+                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusResponse(
+                                 Request,
+                                 new OperatorEVSEStatus[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             )
+                         );
 
 
             #region Send OnPullEVSEStatusResponse event

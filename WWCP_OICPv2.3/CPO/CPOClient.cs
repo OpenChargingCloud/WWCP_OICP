@@ -769,7 +769,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
-                                         e.StackTrace),
+                                         e.StackTrace
+                                     ),
                                      false
                                  )
                              );
@@ -783,7 +784,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                      Request,
                                      new StatusCode(
                                          StatusCodes.SystemError,
-                                         "HTTP request failed!"),
+                                         "HTTP request failed!"
+                                     ),
                                      false
                                  )
                              );
@@ -1167,7 +1169,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
-                                         e.StackTrace),
+                                         e.StackTrace
+                                     ),
                                      false
                                  )
                              );
@@ -1182,7 +1185,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          "HTTP request failed!",
-                                         null),
+                                         null
+                                     ),
                                      false
                                  )
                              );
@@ -2276,7 +2280,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
-                                     e.StackTrace),
+                                     e.StackTrace
+                                 ),
                                  false
                              )
                          );
@@ -2291,7 +2296,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!",
-                                     null),
+                                     null
+                                 ),
                                  false
                              )
                          );
