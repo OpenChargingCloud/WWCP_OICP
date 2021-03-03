@@ -142,14 +142,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse Authorized(AuthorizeStartRequest        Request,
-                                                            Session_Id?                  SessionId                         = null,
-                                                            CPOPartnerSession_Id?        CPOPartnerSessionId               = null,
-                                                            EMPPartnerSession_Id?        EMPPartnerSessionId               = null,
-                                                            Provider_Id?                 ProviderId                        = null,
-                                                            String                       StatusCodeDescription             = null,
-                                                            String                       StatusCodeAdditionalInfo          = null,
-                                                            IEnumerable<Identification>  AuthorizationStopIdentifications  = null)
+                                                            Session_Id?                  SessionId                          = null,
+                                                            CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
+                                                            EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
+                                                            Provider_Id?                 ProviderId                         = null,
+                                                            String                       StatusCodeDescription              = null,
+                                                            String                       StatusCodeAdditionalInfo           = null,
+                                                            IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
+                                                            Process_Id?                  ProcessId                          = null,
+                                                            JObject                      CustomData                         = null)
 
 
             => new AuthorizationStartResponse(Request,
@@ -163,7 +167,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
                                               ProviderId,
-                                              AuthorizationStopIdentifications);
+                                              AuthorizationStopIdentifications,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -174,32 +180,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
-        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
-        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NotAuthorized(AuthorizeStartRequest  Request,
-                                                               StatusCodes            StatusCode,
-                                                               String                 StatusCodeDescription      = null,
-                                                               String                 StatusCodeAdditionalInfo   = null,
-                                                               Session_Id?            SessionId                  = null,
-                                                               CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                               EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                               Provider_Id?           ProviderId                 = null)
+                                                               StatusCode             StatusCode,
+                                                               Session_Id?            SessionId             = null,
+                                                               CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                               EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                                               Provider_Id?           ProviderId            = null,
+                                                               Process_Id?            ProcessId             = null,
+                                                               JObject                CustomData            = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
-                                              new StatusCode(
-                                                  StatusCode,
-                                                  StatusCodeDescription,
-                                                  StatusCodeAdditionalInfo
-                                              ),
+                                              StatusCode,
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -215,13 +220,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SessionIsInvalid(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
                                                                   CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                  Provider_Id?           ProviderId                 = null)
+                                                                  Provider_Id?           ProviderId                 = null,
+                                                                  Process_Id?            ProcessId                  = null,
+                                                                  JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -233,7 +242,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -249,13 +261,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse CommunicationToEVSEFailed(AuthorizeStartRequest  Request,
                                                                            String                 StatusCodeDescription      = null,
                                                                            String                 StatusCodeAdditionalInfo   = null,
                                                                            Session_Id?            SessionId                  = null,
                                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                           Provider_Id?           ProviderId                 = null)
+                                                                           Provider_Id?           ProviderId                 = null,
+                                                                           Process_Id?            ProcessId                  = null,
+                                                                           JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -267,7 +283,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -283,13 +302,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NoEVConnectedToEVSE(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -301,7 +324,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -317,13 +343,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEAlreadyReserved(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -335,7 +365,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -351,13 +384,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse UnknownEVSEID(AuthorizeStartRequest  Request,
                                                                String                 StatusCodeDescription      = null,
                                                                String                 StatusCodeAdditionalInfo   = null,
                                                                Session_Id?            SessionId                  = null,
                                                                CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                               Provider_Id?           ProviderId                 = null)
+                                                               Provider_Id?           ProviderId                 = null,
+                                                               Process_Id?            ProcessId                  = null,
+                                                               JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -369,7 +406,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -385,13 +425,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEOutOfService(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
                                                                   CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                  Provider_Id?           ProviderId                 = null)
+                                                                  Provider_Id?           ProviderId                 = null,
+                                                                  Process_Id?            ProcessId                  = null,
+                                                                  JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -403,7 +447,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -419,13 +466,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse ServiceNotAvailable(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -437,7 +488,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -453,13 +507,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse DataError(AuthorizeStartRequest  Request,
                                                            String                 StatusCodeDescription      = null,
                                                            String                 StatusCodeAdditionalInfo   = null,
                                                            Session_Id?            SessionId                  = null,
                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                           Provider_Id?           ProviderId                 = null)
+                                                           Provider_Id?           ProviderId                 = null,
+                                                           Process_Id?            ProcessId                  = null,
+                                                           JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -471,7 +529,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -487,13 +548,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SystemError(AuthorizeStartRequest  Request,
                                                              String                 StatusCodeDescription      = null,
                                                              String                 StatusCodeAdditionalInfo   = null,
                                                              Session_Id?            SessionId                  = null,
                                                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                             Provider_Id?           ProviderId                 = null)
+                                                             Provider_Id?           ProviderId                 = null,
+                                                             Process_Id?            ProcessId                  = null,
+                                                             JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
                                               AuthorizationStatusTypes.NotAuthorized,
@@ -505,7 +570,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 

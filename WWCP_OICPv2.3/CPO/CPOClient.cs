@@ -19,10 +19,10 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
 
@@ -30,7 +30,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
@@ -431,7 +430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         //    => base.ToJSON(nameof(CPOClient));
 
 
-        #region PushEVSEData  (Request)
+        #region PushEVSEData          (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -608,7 +607,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
-                                                     false
+                                                     false,
+                                                     ProcessId: processId
                                                  )
                                              );
 
@@ -687,18 +687,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
-                            // OicpERoamingFault:
+                            // HTTP/1.1 401
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  87
+                            // Connection:      keep-alive
+                            // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                            // 
                             // {
-                            //   "StatusCode": {
-                            //     "AdditionalInfo": "string",
-                            //     "Code":           "000",
-                            //     "Description":    "string"
-                            //   },
-                            //   "message": "string"
+                            //     "StatusCode": {
+                            //         "Code":            "017",
+                            //         "Description":     "Unauthorized Access",
+                            //         "AdditionalInfo":   null
+                            //     }
                             // }
 
-                            // Operator identification is not linked to the TLS client certificate!
-                            // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                            // Operator/provider identification is not linked to the TLS client certificate!
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode  statusCode,
+                                                            out String      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
+                                                                                                         new Acknowledgement<PushEVSEDataRequest>(
+                                                                                                             Request,
+                                                                                                             statusCode,
+                                                                                                             ProcessId: processId
+                                                                                                         ),
+                                                                                                         processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEDataRequest>(
+                                                     Request,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
 
                             break;
 
@@ -780,7 +828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         #endregion
 
-        #region PushEVSEStatus  (Request)
+        #region PushEVSEStatus        (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -960,7 +1008,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
-                                                     false
+                                                     false,
+                                                     ProcessId: processId
                                                  )
                                              );
 
@@ -1036,18 +1085,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
-                            // OicpERoamingFault:
+                            // HTTP/1.1 401
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  87
+                            // Connection:      keep-alive
+                            // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                            // 
                             // {
-                            //   "StatusCode": {
-                            //     "AdditionalInfo": "string",
-                            //     "Code":           "000",
-                            //     "Description":    "string"
-                            //   },
-                            //   "message": "string"
+                            //     "StatusCode": {
+                            //         "Code":            "017",
+                            //         "Description":     "Unauthorized Access",
+                            //         "AdditionalInfo":   null
+                            //     }
                             // }
 
-                            // Operator identification is not linked to the TLS client certificate!
-                            // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                            // Operator/provider identification is not linked to the TLS client certificate!
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode  statusCode,
+                                                            out String      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
+                                                                                                           new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                                               Request,
+                                                                                                               statusCode,
+                                                                                                               ProcessId: processId
+                                                                                                           ),
+                                                                                                           processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEStatusRequest>(
+                                                     Request,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
 
                             break;
 
@@ -1294,9 +1391,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              AuthorizationStartResponse.NotAuthorized(
                                                  Request,
-                                                 StatusCodes.SystemError,
-                                                 e.Message,
-                                                 e.StackTrace
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 )
                                              ),
                                              processId
                                          );
@@ -1373,18 +1472,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<AuthorizationStartResponse>.Failed(Request,
+                                                                                           AuthorizationStartResponse.NotAuthorized(
+                                                                                               Request,
+                                                                                               statusCode,
+                                                                                               ProcessId: processId
+                                                                                           ),
+                                                                                           processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<AuthorizationStartResponse>.Failed(
+                                             Request,
+                                             AuthorizationStartResponse.NotAuthorized(
+                                                 Request,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 
@@ -1404,9 +1551,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              AuthorizationStartResponse.NotAuthorized(
                                  Request,
-                                 StatusCodes.SystemError,
-                                 e.Message,
-                                 e.StackTrace
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
                              )
                          );
 
@@ -1417,8 +1566,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              AuthorizationStartResponse.NotAuthorized(
                                  Request,
-                                 StatusCodes.SystemError,
-                                 "HTTP request failed!"
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
                              )
                          );
 
@@ -1603,9 +1754,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              AuthorizationStopResponse.NotAuthorized(
                                                  Request,
-                                                 StatusCodes.SystemError,
-                                                 e.Message,
-                                                 e.StackTrace
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 ProcessId: processId
                                              ),
                                              processId
                                          );
@@ -1682,18 +1836,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode statusCode,
+                                                        out String ErrorResponse))
+                                {
+
+                                    result = OICPResult<AuthorizationStopResponse>.Failed(Request,
+                                                                                          AuthorizationStopResponse.NotAuthorized(
+                                                                                              Request,
+                                                                                              statusCode,
+                                                                                              ProcessId: processId
+                                                                                          ),
+                                                                                          processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<AuthorizationStopResponse>.Failed(
+                                             Request,
+                                             AuthorizationStopResponse.NotAuthorized(
+                                                 Request,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 
@@ -1713,9 +1915,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              AuthorizationStopResponse.NotAuthorized(
                                  Request,
-                                 StatusCodes.SystemError,
-                                 e.Message,
-                                 e.StackTrace
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
                              )
                          );
 
@@ -1726,8 +1930,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              AuthorizationStopResponse.NotAuthorized(
                                  Request,
-                                 StatusCodes.SystemError,
-                                 "HTTP request failed!"
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
                              )
                          );
 
@@ -1874,7 +2080,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1910,7 +2116,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
-                                                 false
+                                                 false,
+                                                 ProcessId: processId
                                              ),
                                              processId
                                          );
@@ -1987,18 +2194,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode statusCode,
+                                                        out String ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(Request,
+                                                                                                               new Acknowledgement<SendChargeDetailRecordRequest>(
+                                                                                                                   Request,
+                                                                                                                   statusCode,
+                                                                                                                   ProcessId: processId
+                                                                                                               ),
+                                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<SendChargeDetailRecordRequest>(
+                                                 Request,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 false,
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 
@@ -2077,15 +2332,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         }
 
         #endregion
-
-
-
-
-
-
-
-
-
 
 
         #region Dispose()

@@ -656,7 +656,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -754,18 +754,68 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEStatusResponse>.Failed(Request,
+                                                                                       new PullEVSEStatusResponse(
+                                                                                           Request,
+                                                                                           new OperatorEVSEStatus[0],
+                                                                                           statusCode,
+                                                                                           processId
+                                                                                       ),
+                                                                                       processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                                             Request,
+                                             new PullEVSEStatusResponse(
+                                                 Request,
+                                                 new OperatorEVSEStatus[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 

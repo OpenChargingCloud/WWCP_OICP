@@ -341,7 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (StatusCode StatusCode1,
                                            StatusCode StatusCode2)
 
-            => !(StatusCode1.Equals(StatusCode2));
+            => !StatusCode1.Equals(StatusCode2);
 
         #endregion
 
@@ -372,7 +372,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(StatusCode StatusCode)
 
-            => Code.          Equals(StatusCode.Code)        &&
+            => !(StatusCode is null)                  &&
+               Code.          Equals(StatusCode.Code) &&
 
              ((Description    == null && StatusCode.Description    == null) ||
               (Description    != null && StatusCode.Description    != null && Description.   Equals(StatusCode.Description))) &&
