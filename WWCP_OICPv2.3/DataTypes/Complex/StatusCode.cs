@@ -279,7 +279,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("Code",  Code),
+                           new JProperty("Code",                  ((Int32) Code).ToString("D3")),
 
                            Description.   IsNotNullOrEmpty()
                                ? new JProperty("Description",     Description)

@@ -1504,6 +1504,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                 //     "AuthorizationStopIdentifications":   null
                                 // }
 
+                                // {
+                                //     "SessionID":            "8dd819d6-82e8-492c-afc9-8e5cdac35e5a",
+                                //     "CPOPartnerSessionID":  "7e2d0869-2ed3-4d7b-9b0b-73bc37bd0e02",
+                                //     "EMPPartnerSessionID":  "842bd7b3-bd3f-41ef-bfef-0c2b2cf81cba",
+                                //     "ProviderID":           "DE-XXX",
+                                //     "AuthorizationStatus":  "Authorized",
+                                //     "StatusCode": {
+                                //         "Code":                  "000",
+                                //         "Description":           "Nice to meet you!",
+                                //         "AdditionalInfo":        "Happy charging!"
+                                //     },
+                                //     "AuthorizationStopIdentifications": [{
+                                //         "RFIDMifareFamilyIdentification": {
+                                //             "UID": "99887766"
+                                //         }
+                                //     }, {
+                                //         "RFIDMifareFamilyIdentification": {
+                                //             "UID": "77665544"
+                                //         }
+                                //     }]
+                                // }
+
+                                // 210 (No valid contract)                         => No valid contact with any EMP!
+                                // 102 (RFID Authentication failed – invalid UID)  => No positive authorization from any EMP!
 
                                 if (AuthorizationStartResponse.TryParse(Request,
                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),

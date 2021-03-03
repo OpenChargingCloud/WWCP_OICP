@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPO\CPOServerAPI.cs" />
     <Compile Include="CPO\CPOClient.cs" />
     <Compile Include="CPO\CPOClientLogger.cs" />
     <Compile Include="DataTypes\ChargeDetailRecord.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="DataTypes\Complex\ValidationError.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\OICPResult.cs" />
+    <Compile Include="EMP\EMPServerAPI.cs" />
     <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
