@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Globalization;
 
 #endregion
 
@@ -578,7 +579,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
                                                                    "meter values",
-                                                                   Decimal.TryParse,
+                                                                   //(String input, out Decimal number) => { if (Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number)) { number = 2; return true; }; number = 0; return false; },
+                                                                   (String input, out Decimal number) => Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
                                                                    out MeterValuesInBetween,
                                                                    out ErrorResponse))
                     {

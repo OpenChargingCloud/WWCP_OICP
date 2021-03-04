@@ -564,7 +564,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var JSON = JSONObject.Create(
 
                            RFIDId.HasValue
-                               ? new JProperty("RFIDMifareFamilyIdentification",  RFIDId.                     Value.ToString())
+                               ? new JProperty("RFIDMifareFamilyIdentification",  new JObject(new JProperty("UID",    RFIDId.                     Value.ToString())))
                                : null,
 
                            RFIDIdentification != null
@@ -576,11 +576,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            PlugAndChargeIdentification.HasValue
-                               ? new JProperty("PlugAndChargeIdentification",     PlugAndChargeIdentification.Value.ToString())
+                               ? new JProperty("PlugAndChargeIdentification",     new JObject(new JProperty("EvcoID", PlugAndChargeIdentification.Value.ToString())))
                                : null,
 
                            RemoteIdentification.HasValue
-                               ? new JProperty("RemoteIdentification",            RemoteIdentification.       Value.ToString())
+                               ? new JProperty("RemoteIdentification",            new JObject(new JProperty("EvcoID", RemoteIdentification.       Value.ToString())))
                                : null);
 
             var JSON2 = CustomIdentificationSerializer != null
