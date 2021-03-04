@@ -307,11 +307,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           CalibrationLawCertificateId.IsNullOrEmpty()
+                           CalibrationLawCertificateId.IsNotNullOrEmpty()
                                ? new JProperty("CalibrationLawCertificateID",                  CalibrationLawCertificateId)
                                : null,
 
-                           PublicKey.IsNullOrEmpty()
+                           PublicKey.IsNotNullOrEmpty()
                                ? new JProperty("PublicKey",                                    PublicKey)
                                : null,
 
@@ -319,11 +319,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeteringSignatureUrl",                         MeteringSignatureURL.Value.ToString())
                                : null,
 
-                           MeteringSignatureEncodingFormat.IsNullOrEmpty()
+                           MeteringSignatureEncodingFormat.IsNotNullOrEmpty()
                                ? new JProperty("MeteringSignatureEncodingFormat",              MeteringSignatureEncodingFormat)
                                : null,
 
-                           SignedMeteringValuesVerificationInstruction.IsNullOrEmpty()
+                           SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty()
                                ? new JProperty("SignedMeteringValuesVerificationInstruction",  SignedMeteringValuesVerificationInstruction)
                                : null,
 
