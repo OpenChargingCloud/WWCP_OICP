@@ -579,7 +579,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
                                                                    "meter values",
-                                                                   //(String input, out Decimal number) => { if (Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number)) { number = 2; return true; }; number = 0; return false; },
                                                                    (String input, out Decimal number) => Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
                                                                    out MeterValuesInBetween,
                                                                    out ErrorResponse))
