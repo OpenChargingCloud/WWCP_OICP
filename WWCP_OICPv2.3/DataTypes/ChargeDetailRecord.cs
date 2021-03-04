@@ -503,7 +503,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PartnerProduct_Id? PartnerProductId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -516,7 +517,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -529,7 +531,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -541,7 +544,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueStart,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -553,7 +557,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueEnd,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -566,7 +571,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Decimal> MeterValuesInBetween,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -579,7 +585,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<SignedMeteringValue> SignedMeteringValues,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -592,7 +599,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out CalibrationLawVerification CalibrationLawVerification,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -605,7 +613,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Operator_Id? HubOperatorId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -618,7 +627,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? HubProviderId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion

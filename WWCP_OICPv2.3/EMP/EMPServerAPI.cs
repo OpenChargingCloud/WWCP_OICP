@@ -178,6 +178,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
             #endregion
 
+            
+
 
             #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/start
 
@@ -244,6 +246,56 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                           }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
+
+            #region POST  ~/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record
+
+            // ------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record
+            // ------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPDelegate: Request => {
+
+                                             if (SendChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                        out SendChargeDetailRecordRequest sendChargeDetailRecordRequest,
+                                                                                        out String ErrorResponse,
+                                                                                        null))
+                                             {
+
+                                                 var response = new Acknowledgement<SendChargeDetailRecordRequest>(sendChargeDetailRecordRequest,
+                                                                                                                   new StatusCode(
+                                                                                                                       StatusCodes.Success,
+                                                                                                                       "Fine!",
+                                                                                                                       "Thank you!"
+                                                                                                                   ),
+                                                                                                                   true);
+
+                                                 return Task.FromResult(
+                                                     new HTTPResponse.Builder(Request) {
+                                                         HTTPStatusCode  = HTTPStatusCode.OK,
+                                                         ContentType     = HTTPContentType.JSON_UTF8,
+                                                         Content         = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                         Connection      = "close"
+                                                     }.AsImmutable);
+
+                                             }
+
+                                             return Task.FromResult(
+                                                 new HTTPResponse.Builder(Request) {
+
+                                                     HTTPStatusCode  = HTTPStatusCode.OK,
+                                                     ContentType     = HTTPContentType.TEXT_UTF8,
+                                                     Content         = "Hello world!".ToUTF8Bytes(),
+                                                     Connection      = "close"
+
+                                                 }.AsImmutable);
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
 
         }
 
