@@ -36,7 +36,7 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.HTTP
+namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
@@ -62,9 +62,178 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// </summary>
         //public Logger                               HTTPLogger                    { get; }
 
+
+        public TimeSpan                                                    DefaultRequestTimeout                        { get; set; }
+
+        public CustomJObjectParserDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestParser            { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestParser             { get; set; }
+
+        public CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser    { get; set; }
+
         #endregion
 
         #region Events
+
+        #region (protected internal) OnAuthorizeStartHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeStart HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new HTTPRequestLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeStart HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeStartHTTPRequest(DateTime      Timestamp,
+                                                             HTTPAPI       API,
+                                                             HTTPRequest   Request)
+
+            => OnAuthorizeStartHTTPRequest?.WhenAll(Timestamp,
+                                                    API ?? this,
+                                                    Request);
+
+        #endregion
+
+        public event OnAuthorizeStartRequestDelegate   OnAuthorizeStartRequest;
+        public event OnAuthorizeStartDelegate          OnAuthorizeStart;
+        public event OnAuthorizeStartResponseDelegate  OnAuthorizeStartResponse;
+
+        #region (protected internal) OnAuthorizationStartHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizationStart HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new HTTPResponseLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizationStart HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizationStartHTTPResponse(DateTime      Timestamp,
+                                                                  HTTPAPI       API,
+                                                                  HTTPRequest   Request,
+                                                                  HTTPResponse  Response)
+
+            => OnAuthorizationStartHTTPResponse?.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request,
+                                                         Response);
+
+        #endregion
+
+
+        #region (protected internal) OnAuthorizeStopHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeStop HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new HTTPRequestLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeStop HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeStopHTTPRequest(DateTime      Timestamp,
+                                                            HTTPAPI       API,
+                                                            HTTPRequest   Request)
+
+            => OnAuthorizeStopHTTPRequest?.WhenAll(Timestamp,
+                                                    API ?? this,
+                                                    Request);
+
+        #endregion
+
+        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
+        public event OnAuthorizeStopDelegate          OnAuthorizeStop;
+        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
+
+        #region (protected internal) OnAuthorizationStopHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizationStop HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new HTTPResponseLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizationStop HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizationStopHTTPResponse(DateTime      Timestamp,
+                                                                 HTTPAPI       API,
+                                                                 HTTPRequest   Request,
+                                                                 HTTPResponse  Response)
+
+            => OnAuthorizationStopHTTPResponse?.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request,
+                                                         Response);
+
+        #endregion
+
+
+        #region (protected internal) OnChargeDetailRecordHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new HTTPRequestLogEvent();
+
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logChargeDetailRecordHTTPRequest(DateTime      Timestamp,
+                                                                 HTTPAPI       API,
+                                                                 HTTPRequest   Request)
+
+            => OnChargeDetailRecordHTTPRequest?.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request);
+
+        #endregion
+
+        public event OnChargeDetailRecordRequestDelegate   OnChargeDetailRecordRequest;
+        public event OnChargeDetailRecordDelegate          OnChargeDetailRecord;
+        public event OnChargeDetailRecordResponseDelegate  OnChargeDetailRecordResponse;
+
+        #region (protected internal) OnChargeDetailRecordHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new HTTPResponseLogEvent();
+
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logChargeDetailRecordHTTPResponse(DateTime      Timestamp,
+                                                                  HTTPAPI       API,
+                                                                  HTTPRequest   Request,
+                                                                  HTTPResponse  Response)
+
+            => OnChargeDetailRecordHTTPResponse?.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request,
+                                                         Response);
+
+        #endregion
 
         #endregion
 
@@ -97,6 +266,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                    false)
 
         {
+
+            this.DefaultRequestTimeout = TimeSpan.FromSeconds(10);
 
             RegisterURLTemplates();
 
@@ -178,8 +349,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
             #endregion
 
-            
-
 
             #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/start
 
@@ -190,62 +359,199 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                          HTTPMethod.POST,
                                          URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
                                          HTTPContentType.JSON_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPRequestLogger:   logAuthorizeStartHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
+                                         HTTPDelegate:        async Request => {
 
                                              if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                out AuthorizeStartRequest authorizeStartRequest,
-                                                                                out String ErrorResponse,
-                                                                                null))
+                                                                                Request.Timeout ?? DefaultRequestTimeout,
+                                                                                out AuthorizeStartRequest  authorizeStartRequest,
+                                                                                out String                 errorResponse,
+                                                                                Request.Timestamp,
+                                                                                Request.EventTrackingId,
+                                                                                CustomAuthorizeStartRequestParser))
                                              {
 
-                                                 var response = authorizeStartRequest.Identification.RFIDId?.ToString() == "11223344"
+                                                 var OnAuthorizeStartLocal = OnAuthorizeStart;
+                                                 if (OnAuthorizeStartLocal != null)
+                                                 {
 
-                                                                    ? AuthorizationStartResponse.Authorized   (authorizeStartRequest,
-                                                                                                               authorizeStartRequest.SessionId,
-                                                                                                               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                               EMPPartnerSession_Id.NewRandom,
-                                                                                                               Provider_Id.Parse("DE-XXX"),
-                                                                                                               "Nice to meet you!",
-                                                                                                               "Happy charging!",
-                                                                                                               new Identification[] {
-                                                                                                                   Identification.FromRFID(UID.Parse("99887766")),
-                                                                                                                   Identification.FromRFID(UID.Parse("77665544"))
-                                                                                                               })
+                                                     try
+                                                     {
 
-                                                                    : AuthorizationStartResponse.NotAuthorized(authorizeStartRequest,
-                                                                                                               new StatusCode(
-                                                                                                                   StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                                                                                   "We don't like this UID!",
-                                                                                                                   "We don't like this UID!"
-                                                                                                               ),
-                                                                                                               authorizeStartRequest.SessionId,
-                                                                                                               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                               EMPPartnerSession_Id.NewRandom,
-                                                                                                               Provider_Id.Parse("DE-XXX"));
+                                                         var response = await OnAuthorizeStartLocal.Invoke(DateTime.UtcNow,
+                                                                                                           this,
+                                                                                                           authorizeStartRequest);
 
-                                                 return Task.FromResult(
-                                                     new HTTPResponse.Builder(Request) {
-                                                         HTTPStatusCode  = HTTPStatusCode.OK,
-                                                         ContentType     = HTTPContentType.JSON_UTF8,
-                                                         Content         = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
-                                                         Connection      = "close"
-                                                     }.AsImmutable);
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = AuthorizationStartResponse.DataError(
+                                                                                                                                Request:                   authorizeStartRequest,
+                                                                                                                                StatusCodeDescription:     e.Message,
+                                                                                                                                StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                                SessionId:                 authorizeStartRequest.SessionId,
+                                                                                                                                CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                                                            ).
+                                                                                                                            ToJSON().
+                                                                                                                            ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                            ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+
+                                                 }
 
                                              }
 
-                                             return Task.FromResult(
-                                                 new HTTPResponse.Builder(Request) {
-
-                                                     HTTPStatusCode  = HTTPStatusCode.OK,
-                                                     ContentType     = HTTPContentType.TEXT_UTF8,
-                                                     Content         = "Hello world!".ToUTF8Bytes(),
-                                                     Connection      = "close"
-
-                                                 }.AsImmutable);
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = DateTime.UtcNow,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = AuthorizationStartResponse.DataError(
+                                                                                                                    Request:                   authorizeStartRequest,
+                                                                                                                    StatusCodeDescription:     "We could not handle the given AuthorizeStart request!",
+                                                                                                                    StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                                    SessionId:                 authorizeStartRequest.SessionId,
+                                                                                                                    CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                                                ).
+                                                                                                                ToJSON().
+                                                                                                                ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
+
+            #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
+
+            // --------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
+            // --------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeStopHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                               Request.Timeout ?? DefaultRequestTimeout,
+                                                                               out AuthorizeStopRequest  authorizeStopRequest,
+                                                                               out String                errorResponse,
+                                                                               Request.Timestamp,
+                                                                               Request.EventTrackingId,
+                                                                               CustomAuthorizeStopRequestParser))
+                                             {
+
+                                                 var OnAuthorizeStopLocal = OnAuthorizeStop;
+                                                 if (OnAuthorizeStopLocal != null)
+                                                 {
+
+                                                     try
+                                                     {
+
+                                                         var response = await OnAuthorizeStopLocal.Invoke(DateTime.UtcNow,
+                                                                                                          this,
+                                                                                                          authorizeStopRequest);
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = AuthorizationStopResponse.DataError(
+                                                                                                                               Request:                   authorizeStopRequest,
+                                                                                                                               StatusCodeDescription:     e.Message,
+                                                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                               SessionId:                 authorizeStopRequest.SessionId,
+                                                                                                                               CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                                                           ).
+                                                                                                                           ToJSON().
+                                                                                                                           ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                           ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+
+                                                 }
+
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = DateTime.UtcNow,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = AuthorizationStopResponse.DataError(
+                                                                                                                   Request:                   authorizeStopRequest,
+                                                                                                                   StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
+                                                                                                                   StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                                   SessionId:                 authorizeStopRequest.SessionId,
+                                                                                                                   CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                                               ).
+                                                                                                               ToJSON().
+                                                                                                               ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                               ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
 
             #region POST  ~/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record
 
@@ -256,41 +562,89 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                          HTTPMethod.POST,
                                          URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
                                          HTTPContentType.JSON_UTF8,
-                                         HTTPDelegate: Request => {
+                                         HTTPRequestLogger:   logChargeDetailRecordHTTPRequest,
+                                         HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
+                                         HTTPDelegate:        async Request => {
 
                                              if (SendChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                        out SendChargeDetailRecordRequest sendChargeDetailRecordRequest,
-                                                                                        out String ErrorResponse,
-                                                                                        null))
+                                                                                        Request.Timeout ?? DefaultRequestTimeout,
+                                                                                        out SendChargeDetailRecordRequest  sendChargeDetailRecordRequest,
+                                                                                        out String                         errorResponse,
+                                                                                        Request.Timestamp,
+                                                                                        Request.EventTrackingId,
+                                                                                        CustomSendChargeDetailRecordRequestParser))
                                              {
 
-                                                 var response = new Acknowledgement<SendChargeDetailRecordRequest>(sendChargeDetailRecordRequest,
-                                                                                                                   new StatusCode(
-                                                                                                                       StatusCodes.Success,
-                                                                                                                       "Fine!",
-                                                                                                                       "Thank you!"
-                                                                                                                   ),
-                                                                                                                   true);
+                                                 var OnAuthorizeStopLocal = OnAuthorizeStop;
+                                                 if (OnAuthorizeStopLocal != null)
+                                                 {
 
-                                                 return Task.FromResult(
-                                                     new HTTPResponse.Builder(Request) {
-                                                         HTTPStatusCode  = HTTPStatusCode.OK,
-                                                         ContentType     = HTTPContentType.JSON_UTF8,
-                                                         Content         = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
-                                                         Connection      = "close"
-                                                     }.AsImmutable);
+                                                     try
+                                                     {
+
+                                                         var response = await OnChargeDetailRecord.Invoke(DateTime.UtcNow,
+                                                                                                          this,
+                                                                                                          sendChargeDetailRecordRequest);
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = Acknowledgement<SendChargeDetailRecordRequest>.DataError(
+                                                                                                                                                    Request:                   sendChargeDetailRecordRequest,
+                                                                                                                                                    StatusCodeDescription:     e.Message,
+                                                                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace
+                                                                                                                                                ).
+                                                                                                                                                ToJSON().
+                                                                                                                                                ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                                ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+
+                                                 }
 
                                              }
 
-                                             return Task.FromResult(
-                                                 new HTTPResponse.Builder(Request) {
-
-                                                     HTTPStatusCode  = HTTPStatusCode.OK,
-                                                     ContentType     = HTTPContentType.TEXT_UTF8,
-                                                     Content         = "Hello world!".ToUTF8Bytes(),
-                                                     Connection      = "close"
-
-                                                 }.AsImmutable);
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = DateTime.UtcNow,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = Acknowledgement<SendChargeDetailRecordRequest>.DataError(
+                                                                                                                                        Request:                   sendChargeDetailRecordRequest,
+                                                                                                                                        StatusCodeDescription:     "We could not handle the given ChargeDetailRecord request!",
+                                                                                                                                        StatusCodeAdditionalInfo:  errorResponse
+                                                                                                                                    ).
+                                                                                                                                    ToJSON().
+                                                                                                                                    ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                    ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
 

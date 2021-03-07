@@ -164,14 +164,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord JSON objects.</param>
         public static SendChargeDetailRecordRequest Parse(JObject                                                     JSON,
+                                                          TimeSpan                                                    RequestTimeout,
+                                                          DateTime?                                                   Timestamp                                   = null,
+                                                          EventTracking_Id                                            EventTrackingId                             = null,
                                                           CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(JSON,
+                         RequestTimeout,
                          out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                         ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomSendChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest;
@@ -189,14 +198,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord request JSON objects.</param>
         public static SendChargeDetailRecordRequest Parse(String                                                      Text,
+                                                          TimeSpan                                                    RequestTimeout,
+                                                          DateTime?                                                   Timestamp                                   = null,
+                                                          EventTracking_Id                                            EventTrackingId                             = null,
                                                           CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(Text,
+                         RequestTimeout,
                          out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                         ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomSendChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest;
@@ -210,35 +228,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out SendChargeDetailRecordRequest, out ErrorResponse, CustomSendChargeDetailRecordRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                            JSON,
-                                       out SendChargeDetailRecordRequest  SendChargeDetailRecordRequest,
-                                       out String                         ErrorResponse)
-
-            => TryParse(JSON,
-                        out SendChargeDetailRecordRequest,
-                        out ErrorResponse,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a SendChargeDetailRecord request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecord request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(JObject                                                     JSON,
+                                       TimeSpan                                                    RequestTimeout,
                                        out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
                                        out String                                                  ErrorResponse,
-                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser)
+                                       DateTime?                                                   Timestamp                                   = null,
+                                       EventTracking_Id                                            EventTrackingId                             = null,
+                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
         {
 
             try
@@ -271,7 +277,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 SendChargeDetailRecordRequest = new SendChargeDetailRecordRequest(CDR,
-                                                                                  CustomData);
+                                                                                  CustomData,
+                                                                                  Timestamp,
+                                                                                  null,
+                                                                                  EventTrackingId,
+                                                                                  RequestTimeout);
 
                 if (CustomSendChargeDetailRecordRequestParser != null)
                     SendChargeDetailRecordRequest = CustomSendChargeDetailRecordRequestParser(JSON,
@@ -297,21 +307,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(String                                                      Text,
+                                       TimeSpan                                                    RequestTimeout,
                                        out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
                                        out String                                                  ErrorResponse,
-                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser)
+                                       DateTime?                                                   Timestamp                                   = null,
+                                       EventTracking_Id                                            EventTrackingId                             = null,
+                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
+                                RequestTimeout,
                                 out SendChargeDetailRecordRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomSendChargeDetailRecordRequestParser);
 
             }

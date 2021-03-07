@@ -47,25 +47,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The request leading to this response.
         /// </summary>
         [Mandatory]
-        public TRequest     Request              { get; }
+        public TRequest          Request              { get; }
 
         /// <summary>
         /// The timestamp of the response message creation.
         /// </summary>
         [Mandatory]
-        public DateTime     ResponseTimestamp    { get; }
+        public DateTime          ResponseTimestamp    { get; }
+
+        /// <summary>
+        /// An optional event tracking identification for correlating this response with other events.
+        /// </summary>
+        public EventTracking_Id  EventTrackingId      { get; }
+
+        /// <summary>
+        /// The runtime of the request/response.
+        /// </summary>
+        public TimeSpan          Runtime              { get; }
 
         /// <summary>
         /// The optional Hubject process identification of the request.
         /// </summary>
         [Optional]
-        public Process_Id?  ProcessId            { get; }
+        public Process_Id?       ProcessId            { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject      CustomData           { get; }
+        public JObject           CustomData           { get; }
 
         #endregion
 
@@ -76,16 +86,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this result.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        protected AResponse(TRequest     Request,
-                            DateTime?    ResponseTimestamp   = null,
-                            Process_Id?  ProcessId           = null,
-                            JObject      CustomData          = null)
+        protected AResponse(TRequest          Request,
+                            DateTime          ResponseTimestamp,
+                            EventTracking_Id  EventTrackingId,
+                            TimeSpan          Runtime,
+                            Process_Id?       ProcessId    = null,
+                            JObject           CustomData   = null)
         {
 
-            this.Request            = Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!");
-            this.ResponseTimestamp  = ResponseTimestamp ?? DateTime.UtcNow;
+            this.Request            = Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!");
+            this.ResponseTimestamp  = ResponseTimestamp;
+            this.EventTrackingId    = EventTrackingId;
+            this.Runtime            = Runtime;
             this.ProcessId          = ProcessId;
             this.CustomData         = CustomData;
 
@@ -119,25 +135,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The request leading to this response.
             /// </summary>
             [Mandatory]
-            public TRequest     Request              { get; set; }
+            public TRequest          Request              { get; set; }
 
             /// <summary>
             /// The timestamp of the response message creation.
             /// </summary>
             [Mandatory]
-            public DateTime?    ResponseTimestamp    { get; set; }
+            public DateTime?         ResponseTimestamp    { get; set; }
+
+            /// <summary>
+            /// An optional event tracking identification for correlating this response with other events.
+            /// </summary>
+            public EventTracking_Id  EventTrackingId      { get; set; }
+
+            /// <summary>
+            /// The runtime of the request/response.
+            /// </summary>
+            public TimeSpan?         Runtime              { get; set; }
 
             /// <summary>
             /// The optional Hubject process identification of the request.
             /// </summary>
             [Optional]
-            public Process_Id?  ProcessId            { get; set; }
+            public Process_Id?       ProcessId            { get; set; }
 
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject      CustomData           { get; set; }
+            public JObject           CustomData           { get; set; }
 
             #endregion
 
@@ -149,15 +175,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="Request">The request leading to this result.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+            /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest     Request             = null,
-                              DateTime?    ResponseTimestamp   = null,
-                              Process_Id?  ProcessId           = null,
-                              JObject      CustomData          = null)
+            protected Builder(TRequest          Request             = null,
+                              DateTime?         ResponseTimestamp   = null,
+                              EventTracking_Id  EventTrackingId     = null,
+                              TimeSpan?         Runtime             = null,
+                              Process_Id?       ProcessId           = null,
+                              JObject           CustomData          = null)
             {
 
                 this.Request            = Request;
                 this.ResponseTimestamp  = ResponseTimestamp;
+                this.EventTrackingId    = EventTrackingId;
+                this.Runtime            = Runtime;
                 this.ProcessId          = ProcessId;
                 this.CustomData         = CustomData;
 

@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// An abstract generic OICP request.
+    /// An abstract generic request.
     /// </summary>
     /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
     public abstract class ARequest<TRequest> : IRequest,
@@ -54,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        public DateTime?                Timestamp                  { get; }
+        public DateTime                 Timestamp                  { get; }
 
         /// <summary>
         /// An optional token source to cancel this request.
@@ -87,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new generic OICP request message.
+        /// Create a new generic request message.
         /// </summary>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>

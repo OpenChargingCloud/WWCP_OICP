@@ -186,14 +186,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom PullEVSEData JSON objects.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart JSON objects.</param>
         public static AuthorizeStartRequest Parse(JObject                                             JSON,
+                                                  TimeSpan                                            RequestTimeout,
+                                                  DateTime?                                           Timestamp                           = null,
+                                                  EventTracking_Id                                    EventTrackingId                     = null,
                                                   CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
+                         RequestTimeout,
                          out AuthorizeStartRequest  auhorizeStartRequest,
                          out String                 ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
                 return auhorizeStartRequest;
@@ -211,14 +220,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static AuthorizeStartRequest Parse(String                                              Text,
+                                                  TimeSpan                                            RequestTimeout,
+                                                  DateTime?                                           Timestamp                           = null,
+                                                  EventTracking_Id                                    EventTrackingId                     = null,
                                                   CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(Text,
+                         RequestTimeout,
                          out AuthorizeStartRequest  auhorizeStartRequest,
                          out String                 ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
                 return auhorizeStartRequest;
@@ -232,35 +250,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out AuthorizeStartRequest, out ErrorResponse, CustomAuthorizeStartRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                    JSON,
-                                       out AuthorizeStartRequest  AuthorizeStartRequest,
-                                       out String                 ErrorResponse)
-
-            => TryParse(JSON,
-                        out AuthorizeStartRequest,
-                        out ErrorResponse,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of an AuthorizeStart request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
+                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStartRequest                           AuthorizeStartRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       DateTime?                                           Timestamp                           = null,
+                                       EventTracking_Id                                    EventTrackingId                     = null,
+                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             try
@@ -384,7 +390,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   SessionId,
                                                                   CPOPartnerSessionId,
                                                                   EMPPartnerSessionId,
-                                                                  CustomData);
+                                                                  CustomData,
+                                                                  Timestamp,
+                                                                  null,
+                                                                  EventTrackingId,
+                                                                  RequestTimeout);
 
                 if (CustomAuthorizeStartRequestParser != null)
                     AuthorizeStartRequest = CustomAuthorizeStartRequestParser(JSON,
@@ -410,21 +420,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static Boolean TryParse(String                                              Text,
+                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStartRequest                           AuthorizeStartRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       DateTime?                                           Timestamp                           = null,
+                                       EventTracking_Id                                    EventTrackingId                     = null,
+                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
+                                RequestTimeout,
                                 out AuthorizeStartRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomAuthorizeStartRequestParser);
 
             }

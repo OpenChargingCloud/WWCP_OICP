@@ -177,24 +177,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out PushEVSEDataRequest, out ErrorResponse, CustomPushEVSEDataRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a push EVSE data request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="PushEVSEDataRequest">The parsed push EVSE data request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out PushEVSEDataRequest  PushEVSEDataRequest,
-                                       out String               ErrorResponse)
-
-            => TryParse(JSON,
-                        out PushEVSEDataRequest,
-                        out ErrorResponse,
-                        null);
-
-
         /// <summary>
         /// Try to parse the given JSON representation of a push EVSE data request.
         /// </summary>

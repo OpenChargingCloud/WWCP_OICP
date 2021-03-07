@@ -21,7 +21,6 @@ using System;
 using System.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
@@ -33,181 +32,8 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.HTTP
+namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
-
-
-    #region OnPushEVSEDataRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record will be send upstream.
-    /// </summary>
-    public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                            LogTimestamp,
-                                                        DateTime                                            RequestTimestamp,
-                                                        CPOClient                                           Sender,
-                                                        //String                                              SenderId,
-                                                        EventTracking_Id                                    EventTrackingId,
-                                                        ActionTypes                                         Action,
-                                                        UInt64                                              NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>                         EVSEDataRecords,
-                                                        TimeSpan                                            RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record had been send upstream.
-    /// </summary>
-    public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                            LogTimestamp,
-                                                        DateTime                                            RequestTimestamp,
-                                                        CPOClient                                           Sender,
-                                                        //String                                              SenderId,
-                                                        EventTracking_Id                                    EventTrackingId,
-                                                        ActionTypes                                         Action,
-                                                        UInt64                                              NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>                         EVSEDataRecords,
-                                                        TimeSpan                                            RequestTimeout,
-                                                        OICPResult<Acknowledgement<PushEVSEDataRequest>>    Result,
-                                                        TimeSpan                                            Runtime);
-
-    #endregion
-
-    #region OnPushEVSEStatusRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record will be send upstream.
-    /// </summary>
-    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                              LogTimestamp,
-                                                          DateTime                                              RequestTimestamp,
-                                                          CPOClient                                             Sender,
-                                                          //String                                                SenderId,
-                                                          EventTracking_Id                                      EventTrackingId,
-                                                          ActionTypes                                           Action,
-                                                          UInt64                                                NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>                         EVSEStatusRecords,
-                                                          TimeSpan                                              RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record had been send upstream.
-    /// </summary>
-    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                              LogTimestamp,
-                                                          DateTime                                              RequestTimestamp,
-                                                          CPOClient                                             Sender,
-                                                          //String                                                SenderId,
-                                                          EventTracking_Id                                      EventTrackingId,
-                                                          ActionTypes                                           Action,
-                                                          UInt64                                                NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>                         EVSEStatusRecords,
-                                                          TimeSpan                                              RequestTimeout,
-                                                          OICPResult<Acknowledgement<PushEVSEStatusRequest>>    Result,
-                                                          TimeSpan                                              Runtime);
-
-    #endregion
-
-
-    #region OnAuthorizeStartRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever an 'authorize start' request will be send.
-    /// </summary>
-    public delegate Task OnAuthorizeStartRequestHandler (DateTime                                  LogTimestamp,
-                                                         DateTime                                  RequestTimestamp,
-                                                         CPOClient                                 Sender,
-                                                         //String                                    SenderId,
-                                                         EventTracking_Id                          EventTrackingId,
-                                                         Operator_Id                               OperatorId,
-                                                         Identification                            Identification,
-                                                         EVSE_Id?                                  EVSEId,
-                                                         Session_Id?                               SessionId,
-                                                         PartnerProduct_Id?                        PartnerProductId,
-                                                         CPOPartnerSession_Id?                     CPOPartnerSessionId,
-                                                         EMPPartnerSession_Id?                     EMPPartnerSessionId,
-                                                         TimeSpan                                  RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever a response to an 'authorize start' request had been received.
-    /// </summary>
-    public delegate Task OnAuthorizeStartResponseHandler(DateTime                                  LogTimestamp,
-                                                         DateTime                                  RequestTimestamp,
-                                                         CPOClient                                 Sender,
-                                                         //String                                    SenderId,
-                                                         EventTracking_Id                          EventTrackingId,
-                                                         Operator_Id                               OperatorId,
-                                                         Identification                            Identification,
-                                                         EVSE_Id?                                  EVSEId,
-                                                         Session_Id?                               SessionId,
-                                                         PartnerProduct_Id?                        PartnerProductId,
-                                                         CPOPartnerSession_Id?                     CPOPartnerSessionId,
-                                                         EMPPartnerSession_Id?                     EMPPartnerSessionId,
-                                                         TimeSpan                                  RequestTimeout,
-                                                         OICPResult<AuthorizationStartResponse>    Result,
-                                                         TimeSpan                                  Runtime);
-
-    #endregion
-
-    #region OnAuthorizeStopRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever an 'authorize stop' request will be send.
-    /// </summary>
-    public delegate Task OnAuthorizeStopRequestHandler (DateTime                      LogTimestamp,
-                                                        DateTime                      RequestTimestamp,
-                                                        CPOClient                    Sender,
-                                                        String                        SenderId,
-                                                        EventTracking_Id              EventTrackingId,
-                                                        Operator_Id                   OperatorId,
-                                                        Session_Id                    SessionId,
-                                                        Identification                Identification,
-                                                        EVSE_Id?                      EVSEId,
-                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
-                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
-                                                        TimeSpan                      RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever a response to an 'authorize stop' request had been received.
-    /// </summary>
-    public delegate Task OnAuthorizeStopResponseHandler(DateTime                      LogTimestamp,
-                                                        DateTime                      RequestTimestamp,
-                                                        CPOClient                    Sender,
-                                                        String                        SenderId,
-                                                        EventTracking_Id              EventTrackingId,
-                                                        Operator_Id                   OperatorId,
-                                                        Session_Id                    SessionId,
-                                                        Identification                Identification,
-                                                        EVSE_Id?                      EVSEId,
-                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
-                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
-                                                        TimeSpan                      RequestTimeout,
-                                                        AuthorizationStopResponse     Result,
-                                                        TimeSpan                      Runtime);
-
-    #endregion
-
-    #region OnSendChargeDetailRecord
-
-    /// <summary>
-    /// A delegate called whenever a 'charge detail record' will be send.
-    /// </summary>
-    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                                         LogTimestamp,
-                                                                 DateTime                                         RequestTimestamp,
-                                                                 CPOClient                                        Sender,
-                                                                 String                                           SenderId,
-                                                                 EventTracking_Id                                 EventTrackingId,
-                                                                 ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan                                         RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever a response for a sent 'charge detail record' had been received.
-    /// </summary>
-    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                                         Timestamp,
-                                                                 DateTime                                         RequestTimestamp,
-                                                                 CPOClient                                        Sender,
-                                                                 String                                           SenderId,
-                                                                 EventTracking_Id                                 EventTrackingId,
-                                                                 ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan                                         RequestTimeout,
-                                                                 Acknowledgement<SendChargeDetailRecordRequest>   Result,
-                                                                 TimeSpan                                         Runtime);
-
-    #endregion
-
 
     /// <summary>
     /// The CPO client.
@@ -265,6 +91,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// The CPO client (HTTP client) logger.
         /// </summary>
         public Logger                               HTTPLogger                    { get; }
+
+
+
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>            CustomPushEVSEDataAcknowledgementParser              { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>          CustomPushEVSEStatusAcknowledgementParser            { get; set; }
+
+
+        public CustomJObjectParserDelegate<AuthorizationStartResponse>                      CustomAuthorizationStartResponseParser               { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStopResponse>                       CustomAuthorizationStopResponseParser                { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>  CustomSendChargeDetailRecordAcknowledgementParser    { get; set; }
 
         #endregion
 
@@ -466,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
                                        Cast<OnPushEVSEDataRequestDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -585,8 +422,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                                       JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
                                                                                       out Acknowledgement<PushEVSEDataRequest>  acknowledgement,
                                                                                       out String                                ErrorResponse,
-                                                                                      null,
-                                                                                      processId))
+                                                                                      HTTPResponse.Timestamp,
+                                                                                      HTTPResponse.EventTrackingId,
+                                                                                      HTTPResponse.Runtime,
+                                                                                      processId,
+                                                                                      CustomPushEVSEDataAcknowledgementParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(Request,
@@ -603,6 +443,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -720,6 +563,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
                                                                                                          new Acknowledgement<PushEVSEDataRequest>(
                                                                                                              Request,
+                                                                                                             HTTPResponse.Timestamp,
+                                                                                                             HTTPResponse.EventTrackingId,
+                                                                                                             HTTPResponse.Runtime,
                                                                                                              statusCode,
                                                                                                              ProcessId: processId
                                                                                                          ),
@@ -735,6 +581,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -786,6 +635,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
                                                                                                          new Acknowledgement<PushEVSEDataRequest>(
                                                                                                              Request,
+                                                                                                             HTTPResponse.Timestamp,
+                                                                                                             HTTPResponse.EventTrackingId,
+                                                                                                             HTTPResponse.Runtime,
                                                                                                              statusCode,
                                                                                                              ProcessId: processId
                                                                                                          ),
@@ -801,6 +653,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -832,6 +687,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  Request,
                                  new Acknowledgement<PushEVSEDataRequest>(
                                      Request,
+                                     DateTime.UtcNow,
+                                     Request.EventTrackingId,
+                                     DateTime.UtcNow - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -848,6 +706,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  Request,
                                  new Acknowledgement<PushEVSEDataRequest>(
                                      Request,
+                                     DateTime.UtcNow,
+                                     Request.EventTrackingId,
+                                     DateTime.UtcNow - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          "HTTP request failed!"
@@ -870,7 +731,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
                                        Cast<OnPushEVSEDataResponseDelegate>().
                                        Select(e => e(Endtime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -935,7 +796,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
                                        Cast<OnPushEVSEStatusRequestDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -1054,8 +915,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
                                                                                         out Acknowledgement<PushEVSEStatusRequest>  acknowledgement,
                                                                                         out String                                  ErrorResponse,
-                                                                                        null,
-                                                                                        processId))
+                                                                                        HTTPResponse.Timestamp,
+                                                                                        HTTPResponse.EventTrackingId,
+                                                                                        HTTPResponse.Runtime,
+                                                                                        processId,
+                                                                                        CustomPushEVSEStatusAcknowledgementParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(Request,
@@ -1072,6 +936,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -1186,6 +1053,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
                                                                                                            new Acknowledgement<PushEVSEStatusRequest>(
                                                                                                                Request,
+                                                                                                               HTTPResponse.Timestamp,
+                                                                                                               HTTPResponse.EventTrackingId,
+                                                                                                               HTTPResponse.Runtime,
                                                                                                                statusCode,
                                                                                                                ProcessId: processId
                                                                                                            ),
@@ -1201,6 +1071,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -1252,6 +1125,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
                                                                                                            new Acknowledgement<PushEVSEStatusRequest>(
                                                                                                                Request,
+                                                                                                               HTTPResponse.Timestamp,
+                                                                                                               HTTPResponse.EventTrackingId,
+                                                                                                               HTTPResponse.Runtime, 
                                                                                                                statusCode,
                                                                                                                ProcessId: processId
                                                                                                            ),
@@ -1267,6 +1143,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      Request,
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
@@ -1298,6 +1177,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  Request,
                                  new Acknowledgement<PushEVSEStatusRequest>(
                                      Request,
+                                     DateTime.UtcNow,
+                                     Request.EventTrackingId,
+                                     DateTime.UtcNow - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -1314,6 +1196,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                  Request,
                                  new Acknowledgement<PushEVSEStatusRequest>(
                                      Request,
+                                     DateTime.UtcNow,
+                                     Request.EventTrackingId,
+                                     DateTime.UtcNow - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          "HTTP request failed!",
@@ -1337,7 +1222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPushEVSEStatusResponseDelegate>().
                                        Select(e => e(Endtime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -1403,7 +1288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeStartRequestHandler>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -1533,8 +1418,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
                                                                         out AuthorizationStartResponse  authorizationStartResponse,
                                                                         out String                      ErrorResponse,
-                                                                        null,
-                                                                        processId))
+                                                                        HTTPResponse.Timestamp,
+                                                                        HTTPResponse.EventTrackingId,
+                                                                        HTTPResponse.Runtime,
+                                                                        processId,
+                                                                        CustomAuthorizationStartResponseParser))
                                 {
 
                                     result = OICPResult<AuthorizationStartResponse>.Success(Request,
@@ -1745,7 +1633,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartResponseHandler>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp.Value,
+                                                     Request.Timestamp,
                                                      this,
                                                      //ClientId,
                                                      Request.EventTrackingId,
@@ -1896,8 +1784,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
                                                                        out AuthorizationStopResponse  authorizationStopResponse,
                                                                        out String                     ErrorResponse,
-                                                                       null,
-                                                                       processId))
+                                                                       HTTPResponse.Timestamp,
+                                                                       HTTPResponse.EventTrackingId,
+                                                                       HTTPResponse.Runtime,
+                                                                       processId,
+                                                                       CustomAuthorizationStopResponseParser))
                                 {
 
                                     result = OICPResult<AuthorizationStopResponse>.Success(Request,
@@ -2254,8 +2145,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
                                                                                             out Acknowledgement<SendChargeDetailRecordRequest>  acknowledgement,
                                                                                             out String                                          ErrorResponse,
-                                                                                            null,
-                                                                                            processId))
+                                                                                            HTTPResponse.Timestamp,
+                                                                                            HTTPResponse.EventTrackingId,
+                                                                                            HTTPResponse.Runtime,
+                                                                                            processId,
+                                                                                            CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Success(Request,
@@ -2272,6 +2166,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new Acknowledgement<SendChargeDetailRecordRequest>(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -2387,6 +2284,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                     result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(Request,
                                                                                                                new Acknowledgement<SendChargeDetailRecordRequest>(
                                                                                                                    Request,
+                                                                                                                   HTTPResponse.Timestamp,
+                                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                                   HTTPResponse.Runtime,
                                                                                                                    statusCode,
                                                                                                                    ProcessId: processId
                                                                                                                ),
@@ -2402,6 +2302,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new Acknowledgement<SendChargeDetailRecordRequest>(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -2433,6 +2336,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new Acknowledgement<SendChargeDetailRecordRequest>(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -2449,6 +2355,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new Acknowledgement<SendChargeDetailRecordRequest>(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!",

@@ -36,7 +36,7 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.HTTP
+namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>

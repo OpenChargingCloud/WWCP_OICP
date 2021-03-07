@@ -34,75 +34,8 @@ using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.HTTP
+namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
-
-
-    #region OnPullEVSEDataRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record will be send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEDataRequestDelegate (DateTime                                LogTimestamp,
-                                                        DateTime                                RequestTimestamp,
-                                                        EMPClient                               Sender,
-                                                        //String                                  SenderId,
-                                                        EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             Action,
-                                                        UInt64                                  NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan                                RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record had been send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEDataResponseDelegate(DateTime                                LogTimestamp,
-                                                        DateTime                                RequestTimestamp,
-                                                        EMPClient                               Sender,
-                                                        //String                                  SenderId,
-                                                        EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             Action,
-                                                        UInt64                                  NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan                                RequestTimeout,
-                                                        Acknowledgement<PullEVSEDataRequest>    Result,
-                                                        TimeSpan                                Runtime);
-
-    #endregion
-
-    #region OnPullEVSEStatusRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record will be send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEStatusRequestDelegate (DateTime                                LogTimestamp,
-                                                          DateTime                                RequestTimestamp,
-                                                          EMPClient                               Sender,
-                                                          //String                                  SenderId,
-                                                          EventTracking_Id                        EventTrackingId,
-                                                          ActionTypes                             Action,
-                                                          UInt64                                  NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
-                                                          TimeSpan                                RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record had been send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEStatusResponseDelegate(DateTime                                LogTimestamp,
-                                                          DateTime                                RequestTimestamp,
-                                                          EMPClient                               Sender,
-                                                          //String                                  SenderId,
-                                                          EventTracking_Id                        EventTrackingId,
-                                                          ActionTypes                             Action,
-                                                          UInt64                                  NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
-                                                          TimeSpan                                RequestTimeout,
-                                                          Acknowledgement<PullEVSEStatusRequest>  Result,
-                                                          TimeSpan                                Runtime);
-
-    #endregion
-
-
 
     /// <summary>
     /// The EMP client.
@@ -368,6 +301,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                                 if (PullEVSEDataResponse.TryParse(Request,
                                                                   JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                  HTTPResponse.Timestamp,
+                                                                  HTTPResponse.EventTrackingId,
+                                                                  HTTPResponse.Runtime,
                                                                   out PullEVSEDataResponse  pullEVSEDataResponse,
                                                                   out String                ErrorResponse,
                                                                   null,
@@ -388,6 +324,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new PullEVSEDataResponse(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new OperatorEVSEData[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -504,6 +443,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                     result = OICPResult<PullEVSEDataResponse>.Failed(Request,
                                                                                      new PullEVSEDataResponse(
                                                                                          Request,
+                                                                                         HTTPResponse.Timestamp,
+                                                                                         HTTPResponse.EventTrackingId,
+                                                                                         HTTPResponse.Runtime,
                                                                                          new OperatorEVSEData[0],
                                                                                          statusCode,
                                                                                          processId
@@ -520,6 +462,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new PullEVSEDataResponse(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new OperatorEVSEData[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -552,6 +497,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new PullEVSEDataResponse(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new OperatorEVSEData[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -568,6 +516,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new PullEVSEDataResponse(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new OperatorEVSEData[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -732,6 +683,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                                 if (PullEVSEStatusResponse.TryParse(Request,
                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                    HTTPResponse.Timestamp,
+                                                                    HTTPResponse.EventTrackingId,
+                                                                    HTTPResponse.Runtime,
                                                                     out PullEVSEStatusResponse  pullEVSEStatusResponse,
                                                                     out String                  ErrorResponse,
                                                                     null,
@@ -752,6 +706,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new PullEVSEStatusResponse(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new OperatorEVSEStatus[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -870,6 +827,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                     result = OICPResult<PullEVSEStatusResponse>.Failed(Request,
                                                                                        new PullEVSEStatusResponse(
                                                                                            Request,
+                                                                                           HTTPResponse.Timestamp,
+                                                                                           HTTPResponse.EventTrackingId,
+                                                                                           HTTPResponse.Runtime,
                                                                                            new OperatorEVSEStatus[0],
                                                                                            statusCode,
                                                                                            processId
@@ -886,6 +846,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                                              Request,
                                              new PullEVSEStatusResponse(
                                                  Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
                                                  new OperatorEVSEStatus[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -918,6 +881,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new PullEVSEStatusResponse(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new OperatorEVSEStatus[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -934,6 +900,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                              Request,
                              new PullEVSEStatusResponse(
                                  Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
                                  new OperatorEVSEStatus[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
