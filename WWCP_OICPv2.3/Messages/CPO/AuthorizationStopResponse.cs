@@ -43,43 +43,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The authorization status, e.g. "Authorized".
         /// </summary>
         [Mandatory]
-        public AuthorizationStatusTypes     AuthorizationStatus                 { get; }
+        public AuthorizationStatusTypes  AuthorizationStatus    { get; }
 
         /// <summary>
         /// The authorization status code.
         /// </summary>
         [Mandatory]
-        public StatusCode                   StatusCode                          { get; }
+        public StatusCode                StatusCode             { get; }
 
         /// <summary>
         /// The e-mobility provider identification.
         /// </summary>
         [Optional]
-        public Provider_Id?                 ProviderId                          { get; }
+        public Provider_Id?              ProviderId             { get; }
 
         /// <summary>
         /// The charging session identification.
         /// </summary>
         [Optional]
-        public Session_Id?                  SessionId                           { get; }
+        public Session_Id?               SessionId              { get; }
 
         /// <summary>
         /// An optional partner charging session identification.
         /// </summary>
         [Optional]
-        public CPOPartnerSession_Id?        CPOPartnerSessionId                 { get; }
+        public CPOPartnerSession_Id?     CPOPartnerSessionId    { get; }
 
         /// <summary>
         /// An optional partner charging session identification.
         /// </summary>
         [Optional]
-        public EMPPartnerSession_Id?        EMPPartnerSessionId                 { get; }
-
-        /// <summary>
-        /// An enumeration of authorization identifications.
-        /// </summary>
-        [Optional]
-        public IEnumerable<Identification>  AuthorizationStopIdentifications    { get; }
+        public EMPPartnerSession_Id?     EMPPartnerSessionId    { get; }
 
         #endregion
 
@@ -98,7 +92,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStopResponse(AuthorizeStopRequest         Request,
@@ -111,7 +104,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
                                           EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
                                           Provider_Id?                 ProviderId                         = null,
-                                          IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
                                           Process_Id?                  ProcessId                          = null,
                                           JObject                      CustomData                         = null)
 
@@ -124,13 +116,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.AuthorizationStatus               = AuthorizationStatus;
-            this.StatusCode                        = StatusCode;
-            this.SessionId                         = SessionId;
-            this.CPOPartnerSessionId               = CPOPartnerSessionId;
-            this.EMPPartnerSessionId               = EMPPartnerSessionId;
-            this.ProviderId                        = ProviderId;
-            this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications?.Distinct() ?? new Identification[0];
+            this.AuthorizationStatus  = AuthorizationStatus;
+            this.StatusCode           = StatusCode;
+            this.SessionId            = SessionId;
+            this.CPOPartnerSessionId  = CPOPartnerSessionId;
+            this.EMPPartnerSessionId  = EMPPartnerSessionId;
+            this.ProviderId           = ProviderId;
 
         }
 
@@ -152,22 +143,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
-        /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse Authorized(AuthorizeStopRequest         Request,
-                                                           DateTime?                    ResponseTimestamp                  = null,
-                                                           EventTracking_Id             EventTrackingId                    = null,
-                                                           TimeSpan?                    Runtime                            = null,
-                                                           Session_Id?                  SessionId                          = null,
-                                                           CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
-                                                           EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
-                                                           Provider_Id?                 ProviderId                         = null,
-                                                           String                       StatusCodeDescription              = null,
-                                                           String                       StatusCodeAdditionalInfo           = null,
-                                                           IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
-                                                           Process_Id?                  ProcessId                          = null,
-                                                           JObject                      CustomData                         = null)
+        public static AuthorizationStopResponse Authorized(AuthorizeStopRequest   Request,
+                                                           DateTime?              ResponseTimestamp                  = null,
+                                                           EventTracking_Id       EventTrackingId                    = null,
+                                                           TimeSpan?              Runtime                            = null,
+                                                           Session_Id?            SessionId                          = null,
+                                                           CPOPartnerSession_Id?  CPOPartnerSessionId                = null,
+                                                           EMPPartnerSession_Id?  EMPPartnerSessionId                = null,
+                                                           Provider_Id?           ProviderId                         = null,
+                                                           String                 StatusCodeDescription              = null,
+                                                           String                 StatusCodeAdditionalInfo           = null,
+                                                           Process_Id?            ProcessId                          = null,
+                                                           JObject                CustomData                         = null)
 
 
             => new AuthorizationStopResponse(Request,
@@ -184,7 +173,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             AuthorizationStopIdentifications,
                                              ProcessId,
                                              CustomData);
 
@@ -228,7 +216,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -278,7 +265,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -328,7 +314,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -378,7 +363,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -428,7 +412,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -478,7 +461,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -528,7 +510,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -578,7 +559,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -628,7 +608,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -678,7 +657,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              CPOPartnerSessionId,
                                              EMPPartnerSessionId,
                                              ProviderId,
-                                             null,
                                              ProcessId,
                                              CustomData);
 
@@ -935,20 +913,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse AuthorizationStopIdentifications      [optional]
-
-                if (JSON.ParseOptionalJSON("AuthorizationStopIdentifications",
-                                           "authorization stop identifications",
-                                           Identification.TryParse,
-                                           out IEnumerable<Identification> AuthorizationStopIdentifications,
-                                           out ErrorResponse))
-                {
-                    if (ErrorResponse != null)
-                        return false;
-                }
-
-                #endregion
-
                 #region Parse Custom Data                           [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
@@ -966,7 +930,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                            CPOPartnerSessionId,
                                                                            EMPPartnerSessionId,
                                                                            ProviderId,
-                                                                           AuthorizationStopIdentifications,
                                                                            ProcessId,
                                                                            CustomData);
 
@@ -1054,32 +1017,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("AuthorizationStatus",                     AuthorizationStatus.ToString()),
+                           new JProperty("AuthorizationStatus",        AuthorizationStatus.ToString()),
 
-                           new JProperty("StatusCode",                              StatusCode.         ToJSON(CustomStatusCodeSerializer)),
+                           new JProperty("StatusCode",                 StatusCode.         ToJSON(CustomStatusCodeSerializer)),
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",                        ProviderId.         ToString())
+                               ? new JProperty("ProviderID",           ProviderId.         ToString())
                                : null,
 
                            SessionId.HasValue
-                               ? new JProperty("SessionID",                         SessionId.          ToString())
+                               ? new JProperty("SessionID",            SessionId.          ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
-                               ? new JProperty("CPOPartnerSessionID",               CPOPartnerSessionId.ToString())
+                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.ToString())
                                : null,
 
                            EMPPartnerSessionId.HasValue
-                               ? new JProperty("EMPPartnerSessionID",               EMPPartnerSessionId.ToString())
-                               : null,
-
-                           AuthorizationStopIdentifications.SafeAny()
-                               ? new JProperty("AuthorizationStopIdentifications",  new JArray(AuthorizationStopIdentifications.Select(identification => identification.ToJSON(CustomIdentificationSerializer))))
+                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.ToString())
                                : null,
 
                            CustomData != null
-                               ? new JProperty("CustomData",                        CustomData)
+                               ? new JProperty("CustomData",           CustomData)
                                : null
 
                        );
@@ -1245,7 +1204,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
                            ProviderId,
-                           AuthorizationStopIdentifications,
                            ProcessId,
                            CustomData);
 
@@ -1266,43 +1224,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The authorization status, e.g. "Authorized".
             /// </summary>
             [Mandatory]
-            public AuthorizationStatusTypes?  AuthorizationStatus                 { get; set; }
+            public AuthorizationStatusTypes?  AuthorizationStatus    { get; set; }
 
             /// <summary>
             /// The authorization status code.
             /// </summary>
             [Mandatory]
-            public StatusCode                 StatusCode                          { get; set; }
+            public StatusCode                 StatusCode             { get; set; }
 
             /// <summary>
             /// The e-mobility provider identification.
             /// </summary>
             [Optional]
-            public Provider_Id?               ProviderId                          { get; set; }
+            public Provider_Id?               ProviderId             { get; set; }
 
             /// <summary>
             /// The charging session identification.
             /// </summary>
             [Optional]
-            public Session_Id?                SessionId                           { get; set; }
+            public Session_Id?                SessionId              { get; set; }
 
             /// <summary>
             /// An optional partner charging session identification.
             /// </summary>
             [Optional]
-            public CPOPartnerSession_Id?      CPOPartnerSessionId                 { get; set; }
+            public CPOPartnerSession_Id?      CPOPartnerSessionId    { get; set; }
 
             /// <summary>
             /// An optional partner charging session identification.
             /// </summary>
             [Optional]
-            public EMPPartnerSession_Id?      EMPPartnerSessionId                 { get; set; }
-
-            /// <summary>
-            /// An enumeration of authorization identifications.
-            /// </summary>
-            [Optional]
-            public HashSet<Identification>    AuthorizationStopIdentifications    { get; }
+            public EMPPartnerSession_Id?      EMPPartnerSessionId    { get; set; }
 
             #endregion
 
@@ -1321,22 +1273,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
             /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
             /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-            /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(AuthorizeStopRequest         Request                            = null,
-                           DateTime?                    ResponseTimestamp                  = null,
-                           EventTracking_Id             EventTrackingId                    = null,
-                           TimeSpan?                    Runtime                            = null,
-                           AuthorizationStatusTypes?    AuthorizationStatus                = null,
-                           StatusCode                   StatusCode                         = null,
-                           Session_Id?                  SessionId                          = null,
-                           CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
-                           EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
-                           Provider_Id?                 ProviderId                         = null,
-                           IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
-                           Process_Id?                  ProcessId                          = null,
-                           JObject                      CustomData                         = null)
+            public Builder(AuthorizeStopRequest       Request               = null,
+                           DateTime?                  ResponseTimestamp     = null,
+                           EventTracking_Id           EventTrackingId       = null,
+                           TimeSpan?                  Runtime               = null,
+                           AuthorizationStatusTypes?  AuthorizationStatus   = null,
+                           StatusCode                 StatusCode            = null,
+                           Session_Id?                SessionId             = null,
+                           CPOPartnerSession_Id?      CPOPartnerSessionId   = null,
+                           EMPPartnerSession_Id?      EMPPartnerSessionId   = null,
+                           Provider_Id?               ProviderId            = null,
+                           Process_Id?                ProcessId             = null,
+                           JObject                    CustomData            = null)
 
                 : base(Request,
                        ResponseTimestamp,
@@ -1347,15 +1297,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.AuthorizationStatus               = AuthorizationStatus;
-                this.StatusCode                        = StatusCode;
-                this.SessionId                         = SessionId;
-                this.CPOPartnerSessionId               = CPOPartnerSessionId;
-                this.EMPPartnerSessionId               = EMPPartnerSessionId;
-                this.ProviderId                        = ProviderId;
-                this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications != null
-                                                             ? new HashSet<Identification>(AuthorizationStopIdentifications)
-                                                             : new HashSet<Identification>();
+                this.AuthorizationStatus  = AuthorizationStatus;
+                this.StatusCode           = StatusCode;
+                this.SessionId            = SessionId;
+                this.CPOPartnerSessionId  = CPOPartnerSessionId;
+                this.EMPPartnerSessionId  = EMPPartnerSessionId;
+                this.ProviderId           = ProviderId;
 
             }
 
@@ -1395,7 +1342,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      CPOPartnerSessionId,
                                                      EMPPartnerSessionId,
                                                      ProviderId,
-                                                     AuthorizationStopIdentifications,
                                                      ProcessId,
                                                      CustomData);
 
