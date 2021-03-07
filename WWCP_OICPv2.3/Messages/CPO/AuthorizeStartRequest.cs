@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The authorize start request.
+    /// The AuthorizeStart request.
     /// </summary>
     public class AuthorizeStartRequest : ARequest<AuthorizeStartRequest>
     {
@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create an OICP AuthorizeStart XML/SOAP request.
+        /// Create a new AuthorizeStart request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
