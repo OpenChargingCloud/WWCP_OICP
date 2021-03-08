@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPO\ICPOClient.cs" />
     <Compile Include="CPO\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOServerAPI.cs" />
     <Compile Include="CPO\CPOClient.cs" />

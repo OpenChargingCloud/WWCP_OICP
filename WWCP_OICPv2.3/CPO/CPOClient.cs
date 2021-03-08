@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO client.
     /// </summary>
-    public partial class CPOClient
+    public partial class CPOClient : ICPOClient
     {
 
         public class CPOCounters
@@ -763,10 +763,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PushEVSEStatus request.</param>
-        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
-
-            PushEVSEStatus(PushEVSEStatusRequest Request)
-
+        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>> PushEVSEStatus(PushEVSEStatusRequest Request)
         {
 
             #region Initial checks
@@ -1252,13 +1249,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region AuthorizeStart        (Request)
 
         /// <summary>
-        /// Create an OICP authorize start request.
+        /// Create a new AuthorizeStart request.
         /// </summary>
-        /// <param name="Request">A AuthorizeStart request.</param>
-        public async Task<OICPResult<AuthorizationStartResponse>>
-
-            AuthorizeStart(AuthorizeStartRequest Request)
-
+        /// <param name="Request">An AuthorizeStart request.</param>
+        public async Task<OICPResult<AuthorizationStartResponse>> AuthorizeStart(AuthorizeStartRequest Request)
         {
 
             #region Initial checks
@@ -1666,13 +1660,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region AuthorizeStop         (Request)
 
         /// <summary>
-        /// Create an OICP authorize stop request.
+        /// Create a new AuthorizeStop request.
         /// </summary>
-        /// <param name="Request">A AuthorizeStart request.</param>
-        public async Task<OICPResult<AuthorizationStopResponse>>
-
-            AuthorizeStop(AuthorizeStopRequest  Request)
-
+        /// <param name="Request">An AuthorizeStop request.</param>
+        public async Task<OICPResult<AuthorizationStopResponse>> AuthorizeStop(AuthorizeStopRequest Request)
         {
 
             #region Initial checks
@@ -2100,13 +2091,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region SendChargeDetailRecord(Request)
 
         /// <summary>
-        /// Send a charge detail record to an OICP server.
+        /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        public async Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>
-
-            SendChargeDetailRecord(SendChargeDetailRecordRequest  Request)
-
+        public async Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>> SendChargeDetailRecord(SendChargeDetailRecordRequest Request)
         {
 
             #region Initial checks
