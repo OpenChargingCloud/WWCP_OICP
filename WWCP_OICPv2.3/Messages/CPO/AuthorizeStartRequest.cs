@@ -98,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         public AuthorizeStartRequest(Operator_Id            OperatorId,
                                      Identification         Identification,
                                      EVSE_Id?               EVSEId                = null,
@@ -139,7 +139,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizeStart
 
         // {
+        //   "SessionID":               "string",
+        //   "CPOPartnerSessionID":     "string",
+        //   "EMPPartnerSessionID":     "string",
         //   "OperatorID":              "string",
+        //   "EvseID":                  "string",
+        //   "PartnerProductID":        "string",
         //   "Identification": {
         //     "RFIDMifareFamilyIdentification": {
         //       "UID":                 "string"
@@ -170,12 +175,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //       "RFID":                "mifareCls",
         //       "UID":                 "string"
         //     }
-        //   },
-        //   "EvseID":                  "string",
-        //   "PartnerProductID":        "string",
-        //   "SessionID":               "string",
-        //   "CPOPartnerSessionID":     "string",
-        //   "EMPPartnerSessionID":     "string"
+        //   }
+        // }
+
+        // {
+        //     "SessionID":            "77641229-f359-40eb-b1d3-b143d6e008c5",
+        //     "CPOPartnerSessionID":  "1d2c2b4e-a8f9-4ef6-9cfc-c768a814cc98",
+        //     "EMPPartnerSessionID":   null,
+        //     "OperatorID":           "DE*BDO",
+        //     "EvseID":               "DE*BDO*E*TEST*1",
+        //     "PartnerProductID":     "ATOMSTROM",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":          "00000000"
+        //         }
+        //     }
         // }
 
         #endregion
@@ -186,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart JSON objects.</param>
@@ -220,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
@@ -254,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -420,7 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>

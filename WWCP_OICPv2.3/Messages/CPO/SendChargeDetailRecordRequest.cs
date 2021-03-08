@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         public SendChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
                                              JObject             CustomData          = null,
 
@@ -164,7 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord JSON objects.</param>
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecord request JSON objects.</param>
@@ -232,7 +232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -307,7 +307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a SendChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>

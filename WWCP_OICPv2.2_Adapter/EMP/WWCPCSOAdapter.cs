@@ -451,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var localAuthentication  = Request.Identification.ToWWCP().ToLocal;
                 var chargingLocation     = ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
                 var productId            = Request.PartnerProductId.HasValue
-                                               ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
+                                               ? ChargingProduct.FromId(Request.PartnerProductId.Value.ToWWCP())
                                                : null;
                 var sessionId            = Request.SessionId.     ToWWCP();
 

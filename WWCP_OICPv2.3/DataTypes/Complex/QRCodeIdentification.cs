@@ -68,9 +68,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVCOId">The e-mobility contract identification.</param>
         /// <param name="HashedPIN">An optional QR code identification.</param>
         /// <param name="PIN">An optional PIN.</param>
-        public QRCodeIdentification(EVCO_Id     EVCOId,
-                                    HashedPIN?  HashedPIN,
-                                    PIN?        PIN)
+        private QRCodeIdentification(EVCO_Id     EVCOId,
+                                     HashedPIN?  HashedPIN,
+                                     PIN?        PIN)
         {
 
             this.EVCOId     = EVCOId;

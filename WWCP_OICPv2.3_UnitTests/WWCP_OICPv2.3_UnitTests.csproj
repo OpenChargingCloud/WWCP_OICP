@@ -10,6 +10,7 @@
     <RootNamespace>WWCP_OICPv2._3_UnitTests</RootNamespace>
     <AssemblyName>WWCP_OICPv2.3_UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>

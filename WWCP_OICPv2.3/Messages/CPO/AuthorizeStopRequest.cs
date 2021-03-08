@@ -91,7 +91,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         public AuthorizeStopRequest(Operator_Id            OperatorId,
                                     Session_Id             SessionId,
                                     Identification         Identification,
@@ -177,7 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
@@ -211,7 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -395,7 +395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>

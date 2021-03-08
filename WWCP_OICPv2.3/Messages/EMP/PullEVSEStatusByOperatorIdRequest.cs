@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEStatusByOperatorIdRequest(Provider_Id               ProviderId,
                                                  IEnumerable<Operator_Id>  OperatorIds,
 
@@ -112,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         ///// <param name="Timestamp">The optional timestamp of the request.</param>
         ///// <param name="CancellationToken">An optional token to cancel this request.</param>
         ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
+        ///// <param name="RequestTimeout">The timeout for this request.</param>
         //public static PullEVSEStatusByOperatorIdRequest Parse(XElement                                                    PullEVSEStatusByOperatorIdXML,
         //                                                      CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
         //                                                      OnExceptionDelegate                                         OnException                                     = null,
@@ -155,7 +155,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         ///// <param name="Timestamp">The optional timestamp of the request.</param>
         ///// <param name="CancellationToken">An optional token to cancel this request.</param>
         ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
+        ///// <param name="RequestTimeout">The timeout for this request.</param>
         //public static PullEVSEStatusByOperatorIdRequest Parse(String                                                      PullEVSEStatusByOperatorIdText,
         //                                                      CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
         //                                                      OnExceptionDelegate                                         OnException                                     = null,
@@ -199,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         ///// <param name="Timestamp">The optional timestamp of the request.</param>
         ///// <param name="CancellationToken">An optional token to cancel this request.</param>
         ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
+        ///// <param name="RequestTimeout">The timeout for this request.</param>
         //public static Boolean TryParse(XElement                                                    PullEVSEStatusByOperatorIdXML,
         //                               out PullEVSEStatusByOperatorIdRequest                       PullEVSEStatusByOperatorId,
         //                               CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
@@ -267,7 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         ///// <param name="Timestamp">The optional timestamp of the request.</param>
         ///// <param name="CancellationToken">An optional token to cancel this request.</param>
         ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">An optional timeout for this request.</param>
+        ///// <param name="RequestTimeout">The timeout for this request.</param>
         //public static Boolean TryParse(String                                                      PullEVSEStatusByOperatorIdText,
         //                               out PullEVSEStatusByOperatorIdRequest                       PullEVSEStatusByOperatorId,
         //                               CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
