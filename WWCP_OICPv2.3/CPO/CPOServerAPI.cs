@@ -18,8 +18,10 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -181,6 +183,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new CPO HTTP server API.
+        /// </summary>
+        /// <param name="ServerCertificateSelector"></param>
+        /// <param name="ClientCertificateSelector"></param>
+        /// <param name="ClientCertificateValidator"></param>
+        /// <param name="AllowedTLSProtocols"></param>
+        /// <param name="HTTPHostname"></param>
+        /// <param name="HTTPServerPort"></param>
+        /// <param name="HTTPServerName"></param>
+        /// <param name="ExternalDNSName"></param>
+        /// <param name="URLPathPrefix"></param>
+        /// <param name="ServiceName"></param>
+        /// <param name="DNSClient"></param>
+        /// <param name="Autostart"></param>
         public CPOServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,

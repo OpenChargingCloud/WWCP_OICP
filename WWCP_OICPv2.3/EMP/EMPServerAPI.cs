@@ -22,16 +22,13 @@ using System.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.IO;
-using System.Security.Authentication;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
@@ -239,6 +236,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new EMP HTTP server API.
+        /// </summary>
+        /// <param name="ServerCertificateSelector"></param>
+        /// <param name="ClientCertificateSelector"></param>
+        /// <param name="ClientCertificateValidator"></param>
+        /// <param name="AllowedTLSProtocols"></param>
+        /// <param name="HTTPHostname"></param>
+        /// <param name="HTTPServerPort"></param>
+        /// <param name="HTTPServerName"></param>
+        /// <param name="ExternalDNSName"></param>
+        /// <param name="URLPathPrefix"></param>
+        /// <param name="ServiceName"></param>
+        /// <param name="DNSClient"></param>
+        /// <param name="Autostart"></param>
         public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,
