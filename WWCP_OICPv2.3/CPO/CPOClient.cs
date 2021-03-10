@@ -68,8 +68,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Data
 
-        private String DefaultURL = "/api/oicp/evsepush/v23/operators/{operatorID}/data-records";
-
         #endregion
 
         #region Properties
@@ -80,7 +78,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public X509Certificate                      ClientCert                    { get; }
 
-        public TimeSpan                             RequestTimeout                { get; }
+        public TimeSpan                             DefaultRequestTimeout         { get; }
 
         public DNSClient                            DNSClient                     { get; }
 
@@ -310,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEDataRecords.ULongCount(),
                                                      Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -379,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
                                                           CancellationToken:    Request.CancellationToken,
                                                           EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                          RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
                                                   ConfigureAwait(false);
 
@@ -738,7 +736,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEDataRecords.ULongCount(),
                                                      Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout,
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -800,7 +798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEStatusRecords.ULongCount(),
                                                      Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -869,7 +867,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
                                                           CancellationToken:    Request.CancellationToken,
                                                           EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                          RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
                                                   ConfigureAwait(false);
 
@@ -1226,7 +1224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEStatusRecords.ULongCount(),
                                                      Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout,
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -1293,7 +1291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.PartnerProductId,
                                                      Request.CPOPartnerSessionId,
                                                      Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -1330,21 +1328,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
                                                                     DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
-                                                        ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
+                                                      ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
@@ -1638,7 +1636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.PartnerProductId,
                                                      Request.CPOPartnerSessionId,
                                                      Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout,
+                                                     Request.RequestTimeout ?? DefaultRequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -1740,21 +1738,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
                                                                     DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
-                                                        ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
+                                                      ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
@@ -2166,21 +2164,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
                                                                     DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
-                                                        ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
+                                                      ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 

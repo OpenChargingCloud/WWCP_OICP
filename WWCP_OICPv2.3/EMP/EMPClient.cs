@@ -70,8 +70,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Data
 
-        private String DefaultURL = "/api/oicp/evsepush/v23/operators/{operatorID}/data-records";
-
         #endregion
 
         #region Properties
@@ -82,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public X509Certificate                      ClientCert                    { get; }
 
-        public TimeSpan                             RequestTimeout                { get; }
+        public TimeSpan                             DefaultRequestTimeout         { get; }
 
         public DNSClient                            DNSClient                     { get; }
 
@@ -268,21 +266,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
                                                                       DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                       RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
-                                                                                       requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                       }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
-                                                        ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
@@ -650,21 +648,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     RemotePort: RemoteURL.Port ?? IPPort.HTTPS,
                                                                     DNSClient: DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
-                                                        ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
