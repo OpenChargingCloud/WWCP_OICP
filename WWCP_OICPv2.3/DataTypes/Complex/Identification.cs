@@ -475,11 +475,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (ErrorResponse != null)
                         return false;
 
-                    if (!RFIDMifareFamilyIdentification.ParseMandatory("EvcoID",
-                                                                       "remote identification -> EVCOId",
-                                                                       EVCO_Id.TryParse,
-                                                                       out EVCO_Id evcoId,
-                                                                       out ErrorResponse))
+                    if (!RemoteIdentification.ParseMandatory("EvcoID",
+                                                             "remote identification -> EVCOId",
+                                                             EVCO_Id.TryParse,
+                                                             out EVCO_Id evcoId,
+                                                             out ErrorResponse))
                     {
                         return false;
                     }

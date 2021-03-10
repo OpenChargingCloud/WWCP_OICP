@@ -278,6 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 SendChargeDetailRecordRequest = new SendChargeDetailRecordRequest(CDR,
                                                                                   CustomData,
+
                                                                                   Timestamp,
                                                                                   null,
                                                                                   EventTrackingId,

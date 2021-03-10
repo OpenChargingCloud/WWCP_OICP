@@ -575,8 +575,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         CustomSendChargeDetailRecordRequestParser))
                                              {
 
-                                                 var OnAuthorizeStopLocal = OnAuthorizeStop;
-                                                 if (OnAuthorizeStopLocal != null)
+                                                 var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+                                                 if (OnChargeDetailRecordLocal != null)
                                                  {
 
                                                      try

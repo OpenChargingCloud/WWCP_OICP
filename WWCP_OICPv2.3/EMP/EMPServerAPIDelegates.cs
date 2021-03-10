@@ -28,7 +28,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     #region OnAuthorizeStart    (Request|Response)Delegate
 
     /// <summary>
-    /// A delegate called whenever a authorize start request was received.
+    /// A delegate called whenever an AuthorizeStart request was received.
     /// </summary>
     public delegate Task
 
@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
     /// <summary>
-    /// Initiate an AuthorizeStart for the given AuthToken at the given EVSE.
+    /// Initiate an start authorization for the given AuthToken at the given EVSE.
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
     /// <summary>
-    /// A delegate called whenever a authorize start response was sent.
+    /// A delegate called whenever a response for an AuthorizeStart request was sent.
     /// </summary>
     public delegate Task
 
@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     #region OnAuthorizeStop     (Request|Response)Delegate
 
     /// <summary>
-    /// A delegate called whenever a authorize stop request was received.
+    /// A delegate called whenever an AuthorizeStop request was received.
     /// </summary>
     public delegate Task
 
@@ -75,7 +75,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
     /// <summary>
-    /// Initiate a remote stop of the given charging session at the given EVSE.
+    /// Initiate an stop authorization for the given AuthToken at the given EVSE.
     /// </summary>
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
@@ -88,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
     /// <summary>
-    /// A delegate called whenever a authorize stop response was sent.
+    /// A delegate called whenever a response for an AuthorizeStop request was sent.
     /// </summary>
     public delegate Task
 

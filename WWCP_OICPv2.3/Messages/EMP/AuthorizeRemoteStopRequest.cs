@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create an AuthorizeRemoteStop request.
+        /// Create a new AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
@@ -136,14 +136,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop JSON objects.</param>
         public static AuthorizeRemoteStopRequest Parse(JObject                                                  JSON,
+                                                       TimeSpan                                                 RequestTimeout,
+                                                       DateTime?                                                Timestamp                                = null,
+                                                       EventTracking_Id                                         EventTrackingId                          = null,
                                                        CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null)
         {
 
             if (TryParse(JSON,
+                         RequestTimeout,
                          out AuthorizeRemoteStopRequest  authorizeRemoteStopRequest,
                          out String                      ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeRemoteStopRequestParser))
             {
                 return authorizeRemoteStopRequest;
@@ -161,14 +170,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static AuthorizeRemoteStopRequest Parse(String                                                   Text,
+                                                       TimeSpan                                                 RequestTimeout,
+                                                       DateTime?                                                Timestamp                                = null,
+                                                       EventTracking_Id                                         EventTrackingId                          = null,
                                                        CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null)
         {
 
             if (TryParse(Text,
+                         RequestTimeout,
                          out AuthorizeRemoteStopRequest  authorizeRemoteStopRequest,
                          out String                      ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeRemoteStopRequestParser))
             {
                 return authorizeRemoteStopRequest;
@@ -182,35 +200,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out AuthorizeRemoteStopRequest, out ErrorResponse, CustomAuthorizeRemoteStopRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                         JSON,
-                                       out AuthorizeRemoteStopRequest  AuthorizeRemoteStopRequest,
-                                       out String                      ErrorResponse)
-
-            => TryParse(JSON,
-                        out AuthorizeRemoteStopRequest,
-                        out ErrorResponse,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a AuthorizeRemoteStop request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
+                                       TimeSpan                                                 RequestTimeout,
                                        out AuthorizeRemoteStopRequest                           AuthorizeRemoteStopRequest,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser)
+                                       DateTime?                                                Timestamp                                = null,
+                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null)
         {
 
             try
@@ -303,7 +309,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                             SessionId,
                                                                             CPOPartnerSessionId,
                                                                             EMPPartnerSessionId,
-                                                                            CustomData);
+                                                                            CustomData,
+
+                                                                            Timestamp,
+                                                                            null,
+                                                                            EventTrackingId,
+                                                                            RequestTimeout);
 
                 if (CustomAuthorizeRemoteStopRequestParser != null)
                     AuthorizeRemoteStopRequest = CustomAuthorizeRemoteStopRequestParser(JSON,
@@ -329,21 +340,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static Boolean TryParse(String                                                   Text,
+                                       TimeSpan                                                 RequestTimeout,
                                        out AuthorizeRemoteStopRequest                           AuthorizeRemoteStopRequest,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser)
+                                       DateTime?                                                Timestamp                                = null,
+                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
+                                RequestTimeout,
                                 out AuthorizeRemoteStopRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomAuthorizeRemoteStopRequestParser);
 
             }
