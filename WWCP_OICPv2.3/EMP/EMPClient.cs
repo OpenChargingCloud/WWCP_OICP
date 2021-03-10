@@ -70,22 +70,59 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Data
 
+        /// <summary>
+        /// The default timeout for HTTP requests.
+        /// </summary>
+        public TimeSpan                             DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
+
+        /// <summary>
+        /// The default maximum number of transmission retries for HTTP request.
+        /// </summary>
+        public Byte                                 DefaultMaxNumberOfRetries   = 3;
+
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// The remote URL of the OICP HTTP endpoint to connect to.
+        /// </summary>
         public URL                                  RemoteURL                     { get; }
 
+        /// <summary>
+        /// An optional HTTP virtual hostname.
+        /// </summary>
+        public HTTPHostname?                        VirtualHostname               { get; }
+
+        /// <summary>
+        /// An optional description of this client.
+        /// </summary>
+        public String                               Description                   { get; set; }
+
+        /// <summary>
+        /// The remote SSL/TLS certificate validator.
+        /// </summary>
         public RemoteCertificateValidationCallback  RemoteCertificateValidator    { get; }
 
+        /// <summary>
+        /// The SSL/TLS client certificate to use of HTTP authentication.
+        /// </summary>
         public X509Certificate                      ClientCert                    { get; }
 
-        public TimeSpan                             DefaultRequestTimeout         { get; }
+        /// <summary>
+        /// The timeout for HTTP requests.
+        /// </summary>
+        public TimeSpan?                            RequestTimeout                { get; set; }
 
-        public DNSClient                            DNSClient                     { get; }
-
+        /// <summary>
+        /// The maximum number of transmission retries for HTTP request.
+        /// </summary>
         public Byte                                 MaxNumberOfRetries            { get; }
 
+        /// <summary>
+        /// The DNS client to use.
+        /// </summary>
+        public DNSClient                            DNSClient                     { get; }
 
         /// <summary>
         /// The EMP client (HTTP client) logger.
@@ -151,16 +188,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Create a new EMP client.
         /// </summary>
-        /// <param name="RemoteURL">The remote URL of the endpoint to connect to.</param>
-        /// <param name="Description">An optional description of this client.</param>
+        /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
-        /// <param name="RemoteCertificateValidator">An optional remote SSL/TLS certificate validator.</param>
+        /// <param name="Description">An optional description of this client.</param>
+        /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
+        /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
-        /// <param name="MaxNumberOfRetries">The maximum number of transmission retries.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
+        /// <param name="DNSClient">The DNS client to use.</param>
         public EMPClient(URL?                                 RemoteURL                    = null,
-                         String                               Description                  = null,
                          HTTPHostname?                        VirtualHostname              = null,
+                         String                               Description                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          X509Certificate                      ClientCert                   = null,
                          TimeSpan?                            RequestTimeout               = null,
@@ -169,11 +207,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.HTTPLogger                  = new Logger(this);
+            this.RemoteURL                   = RemoteURL                  ?? URL.Parse("https://service.hubject-qa.com");
+            this.VirtualHostname             = VirtualHostname;
+            this.Description                 = Description;
+            this.RemoteCertificateValidator  = RemoteCertificateValidator ?? ((sender, certificate, chain, policyErrors) => true);
+            this.ClientCert                  = ClientCert                 ?? throw new ArgumentNullException(nameof(ClientCert), "The given SSL/TLS client certificate must not be null!");
+            this.RequestTimeout              = RequestTimeout             ?? DefaultRequestTimeout;
+            this.MaxNumberOfRetries          = MaxNumberOfRetries         ?? DefaultMaxNumberOfRetries;
+            this.DNSClient                   = DNSClient;
 
-            this.RemoteURL                   = URL.Parse("https://service.hubject-qa.com");
-            this.RemoteCertificateValidator  = (sender, certificate, chain, policyErrors) => true;
-            this.ClientCert                  = ClientCert;
+            this.HTTPLogger                  = new Logger(this);
 
         }
 
@@ -278,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                       ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
 
                                               ConfigureAwait(false);
 
@@ -660,7 +703,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                       ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? DefaultRequestTimeout).
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
 
                                               ConfigureAwait(false);
 
