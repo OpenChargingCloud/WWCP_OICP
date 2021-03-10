@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public HTTPHostname?                        VirtualHostname               { get; }
 
         /// <summary>
-        /// An optional description of this client.
+        /// An optional description of this CPO client.
         /// </summary>
         public String                               Description                   { get; set; }
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
-        /// <param name="Description">An optional description of this client.</param>
+        /// <param name="Description">An optional description of this CPO client.</param>
         /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
         /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
@@ -398,9 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                         DNSClient:   DNSClient)
 
                                                       : new HTTPSClient(RemoteURL.Hostname,
-                                                                        (sender, certificate, chain, policyErrors) => {
-                                                                            return true;
-                                                                        },
+                                                                        RemoteCertificateValidator,
                                                                         (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                             return ClientCert;
                                                                         },
@@ -888,9 +886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                         DNSClient:   DNSClient)
 
                                                       : new HTTPSClient(RemoteURL.Hostname,
-                                                                        (sender, certificate, chain, policyErrors) => {
-                                                                            return true;
-                                                                        },
+                                                                        RemoteCertificateValidator,
                                                                         (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                             return ClientCert;
                                                                         },
@@ -1361,9 +1357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     DNSClient:   DNSClient)
 
                                                   : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) => {
-                                                                        return true;
-                                                                    },
+                                                                    RemoteCertificateValidator,
                                                                     (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                         return ClientCert;
                                                                     },
@@ -1771,9 +1765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     DNSClient:   DNSClient)
 
                                                   : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) => {
-                                                                        return true;
-                                                                    },
+                                                                    RemoteCertificateValidator,
                                                                     (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                         return ClientCert;
                                                                     },
@@ -2197,9 +2189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     DNSClient:   DNSClient)
 
                                                   : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) => {
-                                                                        return true;
-                                                                    },
+                                                                    RemoteCertificateValidator,
                                                                     (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                         return ClientCert;
                                                                     },

@@ -19,10 +19,9 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
 
@@ -30,7 +29,6 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
@@ -95,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public HTTPHostname?                        VirtualHostname               { get; }
 
         /// <summary>
-        /// An optional description of this client.
+        /// An optional description of this EMP client.
         /// </summary>
         public String                               Description                   { get; set; }
 
@@ -190,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
-        /// <param name="Description">An optional description of this client.</param>
+        /// <param name="Description">An optional description of this EMP client.</param>
         /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
         /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
@@ -299,9 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       DNSClient:   DNSClient)
 
                                                     : new HTTPSClient(RemoteURL.Hostname,
-                                                                      (sender, certificate, chain, policyErrors) => {
-                                                                          return true;
-                                                                      },
+                                                                      RemoteCertificateValidator,
                                                                       (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
                                                                           return ClientCert;
                                                                       },
@@ -674,22 +670,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
 
-                                                    ? new HTTPClient(RemoteURL.Hostname,
-                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient: DNSClient)
+                                                    ? new HTTPClient (RemoteURL.Hostname,
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                      DNSClient:   DNSClient)
 
                                                     : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) =>
-                                                                    {
-                                                                        return true;
-                                                                    },
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) =>
-                                                                    {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert: ClientCert,
-                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient: DNSClient)).
+                                                                      RemoteCertificateValidator,
+                                                                      (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                          return ClientCert;
+                                                                      },
+                                                                      ClientCert:  ClientCert,
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                      DNSClient:   DNSClient)).
 
                                               Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                      RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
