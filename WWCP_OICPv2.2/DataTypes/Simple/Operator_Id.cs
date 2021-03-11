@@ -247,7 +247,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
             if (Text.IsNullOrEmpty())
             {
-                OperatorId = default(Operator_Id);
+                OperatorId = default;
                 return false;
             }
 
@@ -260,17 +260,15 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 
                 if (MatchCollection.Count != 1)
                 {
-                    OperatorId = default(Operator_Id);
+                    OperatorId = default;
                     return false;
                 }
 
-                Country _CountryCode;
-
                 // DE...
-                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out _CountryCode))
+                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
                 {
 
-                    OperatorId = new Operator_Id(_CountryCode,
+                    OperatorId = new Operator_Id(countryCode,
                                                  MatchCollection[0].Groups[3].Value,
                                                  MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
 
@@ -279,10 +277,10 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                 }
 
                 // +49*...
-                if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out _CountryCode))
+                if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
                 {
 
-                    OperatorId = new Operator_Id(_CountryCode,
+                    OperatorId = new Operator_Id(countryCode,
                                                  MatchCollection[0].Groups[5].Value,
                                                  OperatorIdFormats.DIN);
 
@@ -299,7 +297,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            OperatorId = default(Operator_Id);
+            OperatorId = default;
             return false;
 
         }

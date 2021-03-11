@@ -77,6 +77,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new acknowledgement.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
         /// <param name="Result">Whether the respective operation was performed or not performed successfully.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
@@ -85,6 +88,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public Acknowledgement(TRequest               Request,
+                               DateTime               ResponseTimestamp,
+                               EventTracking_Id       EventTrackingId,
+                               TimeSpan               Runtime,
                                StatusCode             StatusCode,
                                Boolean?               Result                = null,
                                Session_Id?            SessionId             = null,
@@ -94,7 +100,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                JObject                CustomData            = null)
 
             : base(Request,
-                   DateTime.UtcNow,
+                   ResponseTimestamp,
+                   EventTrackingId,
+                   Runtime,
                    ProcessId,
                    CustomData)
 
@@ -111,7 +119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) Success(Request, SessionId = null, ...)
+        #region (static) Success                    (Request, SessionId = null, ...)
 
         /// <summary>
         /// Create a new 'positive' acknowledgement.
@@ -122,6 +130,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             Success(TRequest               Request,
@@ -129,9 +140,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                     EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                     String                 StatusCodeDescription      = null,
-                    String                 StatusCodeAdditionalInfo   = null)
+                    String                 StatusCodeAdditionalInfo   = null,
+                    DateTime?              ResponseTimestamp          = null,
+                    EventTracking_Id       EventTrackingId            = null,
+                    TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.Success,
                                                      StatusCodeDescription ?? "Success",
@@ -144,7 +161,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-
         #region (static) DataError                  (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
@@ -156,6 +172,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             DataError(TRequest               Request,
@@ -163,9 +182,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       String                 StatusCodeAdditionalInfo   = null,
                       Session_Id?            SessionId                  = null,
                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                      DateTime?              ResponseTimestamp          = null,
+                      EventTracking_Id       EventTrackingId            = null,
+                      TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.DataError,
                                                      StatusCodeDescription ?? "Data Error!",
@@ -189,6 +214,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             SystemError(TRequest               Request,
@@ -196,9 +224,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         String                 StatusCodeAdditionalInfo   = null,
                         Session_Id?            SessionId                  = null,
                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                        DateTime?              ResponseTimestamp          = null,
+                        EventTracking_Id       EventTrackingId            = null,
+                        TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      StatusCodeDescription ?? "System Error!",
@@ -222,6 +256,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             ServiceNotAvailable(TRequest               Request,
@@ -229,9 +266,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 String                 StatusCodeAdditionalInfo   = null,
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                DateTime?              ResponseTimestamp          = null,
+                                EventTracking_Id       EventTrackingId            = null,
+                                TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.ServiceNotAvailable,
                                                      StatusCodeDescription ?? "Service not available!",
@@ -255,6 +298,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             SessionIsInvalid(TRequest               Request,
@@ -262,9 +308,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              String                 StatusCodeAdditionalInfo   = null,
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                             DateTime?              ResponseTimestamp          = null,
+                             EventTracking_Id       EventTrackingId            = null,
+                             TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.SessionIsInvalid,
                                                      StatusCodeDescription ?? "Session is invalid!",
@@ -288,6 +340,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             CommunicationToEVSEFailed(TRequest               Request,
@@ -295,9 +350,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       String                 StatusCodeAdditionalInfo   = null,
                                       Session_Id?            SessionId                  = null,
                                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                      DateTime?              ResponseTimestamp          = null,
+                                      EventTracking_Id       EventTrackingId            = null,
+                                      TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.CommunicationToEVSEFailed,
                                                      StatusCodeDescription ?? "Communication to EVSE failed!",
@@ -321,6 +382,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             EVSEAlreadyReserved(TRequest               Request,
@@ -328,9 +392,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 String                 StatusCodeAdditionalInfo   = null,
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                DateTime?              ResponseTimestamp          = null,
+                                EventTracking_Id       EventTrackingId            = null,
+                                TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.EVSEAlreadyReserved,
                                                      StatusCodeDescription ?? "EVSE already reserved!",
@@ -354,6 +424,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             EVSEAlreadyInUse_WrongToken(TRequest               Request,
@@ -361,9 +434,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         String                 StatusCodeAdditionalInfo   = null,
                                         Session_Id?            SessionId                  = null,
                                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                                        EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                        DateTime?              ResponseTimestamp          = null,
+                                        EventTracking_Id       EventTrackingId            = null,
+                                        TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.EVSEAlreadyInUse_WrongToken,
                                                      StatusCodeDescription ?? "EVSE is already in use!",
@@ -387,6 +466,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             UnknownEVSEID(TRequest               Request,
@@ -394,9 +476,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           String                 StatusCodeAdditionalInfo   = null,
                           Session_Id?            SessionId                  = null,
                           CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                          EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                          EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                          DateTime?              ResponseTimestamp          = null,
+                          EventTracking_Id       EventTrackingId            = null,
+                          TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.UnknownEVSEID,
                                                      StatusCodeDescription ?? "Unknown EVSE identification!",
@@ -420,6 +508,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             EVSEOutOfService(TRequest               Request,
@@ -427,9 +518,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              String                 StatusCodeAdditionalInfo   = null,
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                             DateTime?              ResponseTimestamp          = null,
+                             EventTracking_Id       EventTrackingId            = null,
+                             TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.EVSEOutOfService,
                                                      StatusCodeDescription ?? "EVSE out of service!",
@@ -453,6 +550,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             NoValidContract(TRequest               Request,
@@ -460,9 +560,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             String                 StatusCodeAdditionalInfo   = null,
                             Session_Id?            SessionId                  = null,
                             CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                            DateTime?              ResponseTimestamp          = null,
+                            EventTracking_Id       EventTrackingId            = null,
+                            TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.NoValidContract,
                                                      StatusCodeDescription ?? "No valid contract!",
@@ -486,6 +592,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
             NoEVConnectedToEVSE(TRequest               Request,
@@ -493,9 +602,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 String                 StatusCodeAdditionalInfo   = null,
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null)
+                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                DateTime?              ResponseTimestamp          = null,
+                                EventTracking_Id       EventTrackingId            = null,
+                                TimeSpan?              Runtime                    = null)
 
                 => new Acknowledgement<TRequest>(Request,
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  new StatusCode(
                                                      StatusCodes.NoEVConnectedToEVSE,
                                                      StatusCodeDescription ?? "No electric vehicle connected to EVSE!",
@@ -546,9 +661,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
                                                       JObject                                                 JSON,
+                                                      DateTime?                                               ResponseTimestamp             = null,
+                                                      EventTracking_Id                                        EventTrackingId               = null,
+                                                      TimeSpan?                                               Runtime                       = null,
+                                                      Process_Id?                                             ProcessId                     = null,
                                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
         {
 
@@ -556,6 +679,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          JSON,
                          out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
+                         ProcessId,
                          CustomAcknowledgementParser))
             {
                 return acknowledgement;
@@ -574,9 +701,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
                                                       String                                                  Text,
+                                                      DateTime?                                               ResponseTimestamp             = null,
+                                                      EventTracking_Id                                        EventTrackingId               = null,
+                                                      TimeSpan?                                               Runtime                       = null,
+                                                      Process_Id?                                             ProcessId                     = null,
                                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
         {
 
@@ -584,6 +719,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Text,
                          out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
+                         ProcessId,
                          CustomAcknowledgementParser))
             {
                 return acknowledgement;
@@ -597,8 +736,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of an acknowledgement.
         /// </summary>
@@ -606,34 +743,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(TRequest                       Request,
-                                       JObject                        JSON,
-                                       out Acknowledgement<TRequest>  Acknowledgement,
-                                       out String                     ErrorResponse)
-
-            => TryParse(Request,
-                        JSON,
-                        out Acknowledgement,
-                        out ErrorResponse,
-                        null,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of an acknowledgement.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Boolean TryParse(TRequest                                                Request,
                                        JObject                                                 JSON,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser,
-                                       Process_Id?                                             ProcessId   = null)
+                                       DateTime?                                               ResponseTimestamp             = null,
+                                       EventTracking_Id                                        EventTrackingId               = null,
+                                       TimeSpan?                                               Runtime                       = null,
+                                       Process_Id?                                             ProcessId                     = null,
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
         {
 
             try
@@ -681,7 +804,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Session_Id? SessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -694,7 +818,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -707,7 +832,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -720,6 +846,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 Acknowledgement = new Acknowledgement<TRequest>(Request,
+                                                                ResponseTimestamp ?? DateTime.UtcNow,
+                                                                EventTrackingId   ?? Request.EventTrackingId,
+                                                                Runtime           ?? DateTime.UtcNow - Request.Timestamp,
                                                                 StatusCode,
                                                                 Result,
                                                                 SessionId,
@@ -755,12 +884,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Boolean TryParse(TRequest                                                Request,
                                        String                                                  Text,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser)
+                                       DateTime?                                               ResponseTimestamp             = null,
+                                       EventTracking_Id                                        EventTrackingId               = null,
+                                       TimeSpan?                                               Runtime                       = null,
+                                       Process_Id?                                             ProcessId                     = null,
+                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>  CustomAcknowledgementParser   = null)
         {
 
             try
@@ -770,6 +907,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 JObject.Parse(Text),
                                 out Acknowledgement,
                                 out ErrorResponse,
+                                ResponseTimestamp,
+                                EventTrackingId,
+                                Runtime,
+                                ProcessId,
                                 CustomAcknowledgementParser);
 
             }
@@ -967,9 +1108,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder()
 
             => new Builder(Request,
+                           ResponseTimestamp,
+                           EventTrackingId,
+                           Runtime,
                            StatusCode,
                            Result,
-                           ResponseTimestamp,
                            SessionId,
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
@@ -1025,18 +1168,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new acknowledgement builder.
             /// </summary>
             /// <param name="Request">The request leading to this response.</param>
+            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+            /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="StatusCode">The status code of the operation.</param>
             /// <param name="Result">The result of the operation.</param>
-            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="SessionId">An optional charging session identification.</param>
             /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
             /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(TRequest               Request               = null,
+                           DateTime?              ResponseTimestamp     = null,
+                           EventTracking_Id       EventTrackingId       = null,
+                           TimeSpan?              Runtime               = null,
                            StatusCode?            StatusCode            = null,
                            Boolean?               Result                = null,
-                           DateTime?              ResponseTimestamp     = null,
                            Session_Id?            SessionId             = null,
                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
@@ -1045,6 +1192,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 : base(Request,
                        ResponseTimestamp,
+                       EventTrackingId,
+                       Runtime,
                        ProcessId,
                        CustomData)
 
@@ -1076,8 +1225,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override Acknowledgement<TRequest> ToImmutable()
 
-                => new Acknowledgement<TRequest>(Request ?? throw new ArgumentException("The given request must not be null!", nameof(Result)),
-                                                 StatusCode.ToImmutable(),
+                => new Acknowledgement<TRequest>(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                                                 ResponseTimestamp ?? DateTime.UtcNow,
+                                                 EventTrackingId   ?? EventTracking_Id.New,
+                                                 Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
+                                                 StatusCode?.ToImmutable(),
                                                  Result,
                                                  SessionId,
                                                  CPOPartnerSessionId,

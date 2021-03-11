@@ -30,7 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The authorize start request.
+    /// The AuthorizeStart request.
     /// </summary>
     public class AuthorizeStartRequest : ARequest<AuthorizeStartRequest>
     {
@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create an OICP AuthorizeStart XML/SOAP request.
+        /// Create a new AuthorizeStart request.
         /// </summary>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
@@ -98,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         public AuthorizeStartRequest(Operator_Id            OperatorId,
                                      Identification         Identification,
                                      EVSE_Id?               EVSEId                = null,
@@ -139,7 +139,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingAuthorizeStart
 
         // {
+        //   "SessionID":               "string",
+        //   "CPOPartnerSessionID":     "string",
+        //   "EMPPartnerSessionID":     "string",
         //   "OperatorID":              "string",
+        //   "EvseID":                  "string",
+        //   "PartnerProductID":        "string",
         //   "Identification": {
         //     "RFIDMifareFamilyIdentification": {
         //       "UID":                 "string"
@@ -170,12 +175,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //       "RFID":                "mifareCls",
         //       "UID":                 "string"
         //     }
-        //   },
-        //   "EvseID":                  "string",
-        //   "PartnerProductID":        "string",
-        //   "SessionID":               "string",
-        //   "CPOPartnerSessionID":     "string",
-        //   "EMPPartnerSessionID":     "string"
+        //   }
+        // }
+
+        // {
+        //     "SessionID":            "77641229-f359-40eb-b1d3-b143d6e008c5",
+        //     "CPOPartnerSessionID":  "1d2c2b4e-a8f9-4ef6-9cfc-c768a814cc98",
+        //     "EMPPartnerSessionID":   null,
+        //     "OperatorID":           "DE*BDO",
+        //     "EvseID":               "DE*BDO*E*TEST*1",
+        //     "PartnerProductID":     "ATOMSTROM",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":          "00000000"
+        //         }
+        //     }
         // }
 
         #endregion
@@ -186,14 +200,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom PullEVSEData JSON objects.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart JSON objects.</param>
         public static AuthorizeStartRequest Parse(JObject                                             JSON,
+                                                  TimeSpan                                            RequestTimeout,
+                                                  DateTime?                                           Timestamp                           = null,
+                                                  EventTracking_Id                                    EventTrackingId                     = null,
                                                   CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
+                         RequestTimeout,
                          out AuthorizeStartRequest  auhorizeStartRequest,
                          out String                 ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
                 return auhorizeStartRequest;
@@ -211,14 +234,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static AuthorizeStartRequest Parse(String                                              Text,
+                                                  TimeSpan                                            RequestTimeout,
+                                                  DateTime?                                           Timestamp                           = null,
+                                                  EventTracking_Id                                    EventTrackingId                     = null,
                                                   CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(Text,
+                         RequestTimeout,
                          out AuthorizeStartRequest  auhorizeStartRequest,
                          out String                 ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
                 return auhorizeStartRequest;
@@ -232,35 +264,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out AuthorizeStartRequest, out ErrorResponse, CustomAuthorizeStartRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                    JSON,
-                                       out AuthorizeStartRequest  AuthorizeStartRequest,
-                                       out String                 ErrorResponse)
-
-            => TryParse(JSON,
-                        out AuthorizeStartRequest,
-                        out ErrorResponse,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of an AuthorizeStart request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
+                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStartRequest                           AuthorizeStartRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       DateTime?                                           Timestamp                           = null,
+                                       EventTracking_Id                                    EventTrackingId                     = null,
+                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             try
@@ -384,7 +404,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   SessionId,
                                                                   CPOPartnerSessionId,
                                                                   EMPPartnerSessionId,
-                                                                  CustomData);
+                                                                  CustomData,
+                                                                  Timestamp,
+                                                                  null,
+                                                                  EventTrackingId,
+                                                                  RequestTimeout);
 
                 if (CustomAuthorizeStartRequestParser != null)
                     AuthorizeStartRequest = CustomAuthorizeStartRequestParser(JSON,
@@ -410,21 +434,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an AuthorizeStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
         public static Boolean TryParse(String                                              Text,
+                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStartRequest                           AuthorizeStartRequest,
                                        out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser)
+                                       DateTime?                                           Timestamp                           = null,
+                                       EventTracking_Id                                    EventTrackingId                     = null,
+                                       CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
+                                RequestTimeout,
                                 out AuthorizeStartRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomAuthorizeStartRequestParser);
 
             }
@@ -626,7 +659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  ? " at " + EVSEId
                                  : "",
 
-                             " (", OperatorId, ") ",
+                             " (", OperatorId, ")",
 
                              PartnerProductId.HasValue
                                  ? " using " + PartnerProductId

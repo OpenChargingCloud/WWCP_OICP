@@ -59,18 +59,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new PullEVSEStatusById response.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public PullEVSEStatusByIdResponse(PullEVSEStatusByIdRequest      Request,
+                                          DateTime                       ResponseTimestamp,
+                                          EventTracking_Id               EventTrackingId,
+                                          TimeSpan                       Runtime,
                                           IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
                                           StatusCode                     StatusCode   = null,
                                           Process_Id?                    ProcessId    = null,
                                           JObject                        CustomData   = null)
 
             : base(Request,
-                   DateTime.UtcNow,
+                   ResponseTimestamp,
+                   EventTrackingId,
+                   Runtime,
                    ProcessId,
                    CustomData)
 
@@ -111,14 +119,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="CustomPullEVSEStatusByIdResponseParser">A delegate to parse custom PullEVSEStatusById JSON objects.</param>
         public static PullEVSEStatusByIdResponse Parse(PullEVSEStatusByIdRequest                                Request,
                                                        JObject                                                  JSON,
+                                                       DateTime                                                 ResponseTimestamp,
+                                                       EventTracking_Id                                         EventTrackingId,
+                                                       TimeSpan                                                 Runtime,
                                                        CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>  CustomPullEVSEStatusByIdResponseParser   = null)
         {
 
             if (TryParse(Request,
                          JSON,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
                          out PullEVSEStatusByIdResponse  pullEVSEStatusByIdResponse,
                          out String                      ErrorResponse,
                          CustomPullEVSEStatusByIdResponseParser))
@@ -139,14 +156,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="CustomPullEVSEStatusByIdResponseParser">A delegate to parse custom PullEVSEStatusById response JSON objects.</param>
         public static PullEVSEStatusByIdResponse Parse(PullEVSEStatusByIdRequest                                Request,
                                                        String                                                   Text,
+                                                       DateTime                                                 ResponseTimestamp,
+                                                       EventTracking_Id                                         EventTrackingId,
+                                                       TimeSpan                                                 Runtime,
                                                        CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>  CustomPullEVSEStatusByIdResponseParser   = null)
         {
 
             if (TryParse(Request,
                          Text,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
                          out PullEVSEStatusByIdResponse  pullEVSEStatusByIdResponse,
                          out String                      ErrorResponse,
                          CustomPullEVSEStatusByIdResponseParser))
@@ -162,39 +188,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out PullEVSEStatusByIdResponse, out ErrorResponse, CustomPullEVSEStatusByIdResponseParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of a PullEVSEStatusById response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="PullEVSEStatusByIdResponse">The parsed PullEVSEStatusById response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(PullEVSEStatusByIdRequest       Request,
-                                       JObject                         JSON,
-                                       out PullEVSEStatusByIdResponse  PullEVSEStatusByIdResponse,
-                                       out String                      ErrorResponse)
-
-            => TryParse(Request,
-                        JSON,
-                        out PullEVSEStatusByIdResponse,
-                        out ErrorResponse,
-                        null,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a PullEVSEStatusById response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="PullEVSEStatusByIdResponse">The parsed PullEVSEStatusById response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusByIdResponseParser">A delegate to parse custom PullEVSEStatusById response JSON objects.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         public static Boolean TryParse(PullEVSEStatusByIdRequest                                Request,
                                        JObject                                                  JSON,
+                                       DateTime                                                 ResponseTimestamp,
+                                       EventTracking_Id                                         EventTrackingId,
+                                       TimeSpan                                                 Runtime,
                                        out PullEVSEStatusByIdResponse                           PullEVSEStatusByIdResponse,
                                        out String                                               ErrorResponse,
                                        CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>  CustomPullEVSEStatusByIdResponseParser,
@@ -255,6 +265,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullEVSEStatusByIdResponse = new PullEVSEStatusByIdResponse(Request,
+                                                                            ResponseTimestamp,
+                                                                            EventTrackingId,
+                                                                            Runtime,
                                                                             EVSEStatusRecords,
                                                                             StatusCode,
                                                                             ProcessId,
@@ -285,11 +298,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="PullEVSEStatusByIdResponse">The parsed PullEVSEStatusById response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusByIdResponseParser">A delegate to parse custom PullEVSEStatusById response JSON objects.</param>
         public static Boolean TryParse(PullEVSEStatusByIdRequest                                Request,
                                        String                                                   Text,
+                                       DateTime                                                 ResponseTimestamp,
+                                       EventTracking_Id                                         EventTrackingId,
+                                       TimeSpan                                                 Runtime,
                                        out PullEVSEStatusByIdResponse                           PullEVSEStatusByIdResponse,
                                        out String                                               ErrorResponse,
                                        CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>  CustomPullEVSEStatusByIdResponseParser)
@@ -300,6 +319,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(Request,
                                 JObject.Parse(Text),
+                                ResponseTimestamp,
+                                EventTrackingId,
+                                Runtime,
                                 out PullEVSEStatusByIdResponse,
                                 out ErrorResponse,
                                 CustomPullEVSEStatusByIdResponseParser);
@@ -474,6 +496,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder
 
             => new Builder(Request,
+                           ResponseTimestamp,
+                           EventTrackingId,
+                           Runtime,
                            EVSEStatusRecords,
                            StatusCode,
                            ProcessId,
@@ -510,18 +535,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new PullEVSEStatusById response builder.
             /// </summary>
             /// <param name="Request">A PullEVSEStatusById request.</param>
+            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+            /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
             /// <param name="StatusCode">An optional status code of this response.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(PullEVSEStatusByIdRequest      Request = null,
+            public Builder(PullEVSEStatusByIdRequest      Request             = null,
+                           DateTime?                      ResponseTimestamp   = null,
+                           EventTracking_Id               EventTrackingId     = null,
+                           TimeSpan?                      Runtime             = null,
                            IEnumerable<EVSEStatusRecord>  EVSEStatusRecords   = null,
                            StatusCode                     StatusCode          = null,
                            Process_Id?                    ProcessId           = null,
                            JObject                        CustomData          = null)
 
                 : base(Request,
-                       DateTime.UtcNow,
+                       ResponseTimestamp,
+                       EventTrackingId,
+                       Runtime,
                        ProcessId,
                        CustomData)
 
@@ -560,7 +593,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             public override PullEVSEStatusByIdResponse ToImmutable()
 
-                => new PullEVSEStatusByIdResponse(Request,
+                => new PullEVSEStatusByIdResponse(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                                                  ResponseTimestamp ?? DateTime.UtcNow,
+                                                  EventTrackingId   ?? EventTracking_Id.New,
+                                                  Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                   EVSEStatusRecords,
                                                   StatusCode,
                                                   ProcessId,

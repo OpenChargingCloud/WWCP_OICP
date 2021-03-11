@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Globalization;
 
 #endregion
 
@@ -503,7 +504,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PartnerProduct_Id? PartnerProductId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -516,7 +518,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -529,7 +532,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -541,7 +545,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueStart,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -553,20 +558,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueEnd,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
 
                 #region Parse MeterValuesInBetween              [optional]
 
-                if (JSON.ParseOptionalJSON("MeterValueInBetween",
-                                           "meter values in between",
-                                           Decimal.TryParse,
-                                           out IEnumerable<Decimal> MeterValuesInBetween,
-                                           out ErrorResponse))
+                IEnumerable<Decimal> MeterValuesInBetween = null;
+
+                if (JSON.ParseOptional("MeterValueInBetween",
+                                       "meter values in between",
+                                       out JObject MeterValuesInBetweenJSON,
+                                       out ErrorResponse))
                 {
-                    return false;
+
+                    if (ErrorResponse != null)
+                        return false;
+
+                    if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
+                                                                   "meter values",
+                                                                   (String input, out Decimal number) => Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
+                                                                   out MeterValuesInBetween,
+                                                                   out ErrorResponse))
+                    {
+                        if (ErrorResponse != null)
+                            return false;
+                    }
+
                 }
 
                 #endregion
@@ -579,7 +599,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<SignedMeteringValue> SignedMeteringValues,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -592,7 +613,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out CalibrationLawVerification CalibrationLawVerification,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -605,7 +627,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Operator_Id? HubOperatorId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -618,7 +641,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? HubProviderId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion

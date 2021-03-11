@@ -390,7 +390,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
 
                               TimeSpan?                    PullDataServiceEvery              = null,
-                              Boolean                      DisablePullData                   = false,
+                              Boolean                      DisablePullPOIData                = false,
                               TimeSpan?                    PullDataServiceRequestTimeout     = null,
 
                               TimeSpan?                    PullStatusServiceEvery            = null,
@@ -398,6 +398,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               TimeSpan?                    PullStatusServiceRequestTimeout   = null,
 
                               eMobilityProvider            DefaultProvider                   = null,
+                              Provider_Id?                 DefaultProviderId                 = null,
                               GeoCoordinate?               DefaultSearchCenter               = null,
                               UInt64?                      DefaultDistanceKM                 = null)
 
@@ -418,7 +419,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             this.PullDataServiceRequestTimeout    = PullDataServiceRequestTimeout ?? DefaultPullDataServiceRequestTimeout;
             //this.PullDataServiceLock              = new Object();
             this.PullDataServiceTimer             = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
-            this.DisablePullPOIData                  = DisablePullData;
+            this.DisablePullPOIData               = DisablePullPOIData;
 
 
             this._PullStatusServiceEvery          = (UInt32) (PullStatusServiceEvery.HasValue
@@ -426,12 +427,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                   : DefaultPullStatusServiceEvery. TotalMilliseconds);
             this.PullStatusServiceRequestTimeout  = PullStatusServiceRequestTimeout ?? DefaultPullStatusServiceRequestTimeout;
             //this.PullStatusServiceLock            = new Object();
-            this.PullStatusServiceTimer           = new Timer(PullStatusService, null, 150000, _PullStatusServiceEvery);
+            this.PullStatusServiceTimer           = new Timer(PullStatusService, null, 10000, _PullStatusServiceEvery);
             this.DisablePullStatus                = DisablePullStatus;
 
             this.DefaultProviderId                = DefaultProvider != null
                                                         ? new Provider_Id?(DefaultProvider.Id.ToOICP())
-                                                        : null;
+                                                        : DefaultProviderId;
             this.DefaultSearchCenter              = DefaultSearchCenter;
             this.DefaultDistanceKM                = DefaultDistanceKM;
 
@@ -450,7 +451,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var localAuthentication  = Request.Identification.ToWWCP().ToLocal;
                 var chargingLocation     = ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
                 var productId            = Request.PartnerProductId.HasValue
-                                               ? new ChargingProduct(Request.PartnerProductId.Value.ToWWCP())
+                                               ? ChargingProduct.FromId(Request.PartnerProductId.Value.ToWWCP())
                                                : null;
                 var sessionId            = Request.SessionId.     ToWWCP();
 
@@ -909,6 +910,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               TimeSpan?                    PullStatusServiceRequestTimeout   = null,
 
                               eMobilityProvider            DefaultProvider                   = null,
+                              Provider_Id?                 DefaultProviderId                 = null,
                               GeoCoordinate?               DefaultSearchCenter               = null,
                               UInt64?                      DefaultDistanceKM                 = null)
 
@@ -934,6 +936,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                    PullStatusServiceRequestTimeout,
 
                    DefaultProvider,
+                   DefaultProviderId,
                    DefaultSearchCenter,
                    DefaultDistanceKM)
 
@@ -993,8 +996,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               String                               ReservationURL                     = EMPClient.DefaultReservationURL,
                               String                               AuthorizationURL                   = EMPClient.DefaultAuthorizationURL,
 
-                              Provider_Id?                         DefaultProviderId                  = null,
-
                               String                               HTTPUserAgent                      = EMPClient.DefaultHTTPUserAgent,
                               TimeSpan?                            RequestTimeout                     = null,
                               Byte?                                MaxNumberOfRetries                 = EMPClient.DefaultMaxNumberOfRetries,
@@ -1029,6 +1030,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                               TimeSpan?                            PullStatusServiceRequestTimeout    = null,
 
                               eMobilityProvider                    DefaultProvider                    = null,
+                              Provider_Id?                         DefaultProviderId                  = null,
                               GeoCoordinate?                       DefaultSearchCenter                = null,
                               UInt64?                              DefaultDistanceKM                  = null,
 
@@ -1087,6 +1089,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                    PullStatusServiceRequestTimeout,
 
                    DefaultProvider,
+                   DefaultProviderId,
                    DefaultSearchCenter,
                    DefaultDistanceKM)
 

@@ -19,10 +19,9 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
 
@@ -30,79 +29,11 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.HTTP
+namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
-
-
-    #region OnPullEVSEDataRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record will be send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEDataRequestDelegate (DateTime                                LogTimestamp,
-                                                        DateTime                                RequestTimestamp,
-                                                        EMPClient                               Sender,
-                                                        //String                                  SenderId,
-                                                        EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             Action,
-                                                        UInt64                                  NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan                                RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE data record had been send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEDataResponseDelegate(DateTime                                LogTimestamp,
-                                                        DateTime                                RequestTimestamp,
-                                                        EMPClient                               Sender,
-                                                        //String                                  SenderId,
-                                                        EventTracking_Id                        EventTrackingId,
-                                                        ActionTypes                             Action,
-                                                        UInt64                                  NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>             EVSEDataRecords,
-                                                        TimeSpan                                RequestTimeout,
-                                                        Acknowledgement<PullEVSEDataRequest>    Result,
-                                                        TimeSpan                                Runtime);
-
-    #endregion
-
-    #region OnPullEVSEStatusRequest/-Response
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record will be send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEStatusRequestDelegate (DateTime                                LogTimestamp,
-                                                          DateTime                                RequestTimestamp,
-                                                          EMPClient                               Sender,
-                                                          //String                                  SenderId,
-                                                          EventTracking_Id                        EventTrackingId,
-                                                          ActionTypes                             Action,
-                                                          UInt64                                  NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
-                                                          TimeSpan                                RequestTimeout);
-
-    /// <summary>
-    /// A delegate called whenever new EVSE status record had been send upstream.
-    /// </summary>
-    public delegate Task OnPullEVSEStatusResponseDelegate(DateTime                                LogTimestamp,
-                                                          DateTime                                RequestTimestamp,
-                                                          EMPClient                               Sender,
-                                                          //String                                  SenderId,
-                                                          EventTracking_Id                        EventTrackingId,
-                                                          ActionTypes                             Action,
-                                                          UInt64                                  NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>           EVSEStatusRecords,
-                                                          TimeSpan                                RequestTimeout,
-                                                          Acknowledgement<PullEVSEStatusRequest>  Result,
-                                                          TimeSpan                                Runtime);
-
-    #endregion
-
-
 
     /// <summary>
     /// The EMP client.
@@ -137,24 +68,59 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         #region Data
 
-        private String DefaultURL = "/api/oicp/evsepush/v23/operators/{operatorID}/data-records";
+        /// <summary>
+        /// The default timeout for HTTP requests.
+        /// </summary>
+        public TimeSpan                             DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
+
+        /// <summary>
+        /// The default maximum number of transmission retries for HTTP request.
+        /// </summary>
+        public Byte                                 DefaultMaxNumberOfRetries   = 3;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// The remote URL of the OICP HTTP endpoint to connect to.
+        /// </summary>
         public URL                                  RemoteURL                     { get; }
 
+        /// <summary>
+        /// An optional HTTP virtual hostname.
+        /// </summary>
+        public HTTPHostname?                        VirtualHostname               { get; }
+
+        /// <summary>
+        /// An optional description of this EMP client.
+        /// </summary>
+        public String                               Description                   { get; set; }
+
+        /// <summary>
+        /// The remote SSL/TLS certificate validator.
+        /// </summary>
         public RemoteCertificateValidationCallback  RemoteCertificateValidator    { get; }
 
+        /// <summary>
+        /// The SSL/TLS client certificate to use of HTTP authentication.
+        /// </summary>
         public X509Certificate                      ClientCert                    { get; }
 
-        public TimeSpan                             RequestTimeout                { get; }
+        /// <summary>
+        /// The timeout for HTTP requests.
+        /// </summary>
+        public TimeSpan?                            RequestTimeout                { get; set; }
 
-        public DNSClient                            DNSClient                     { get; }
-
+        /// <summary>
+        /// The maximum number of transmission retries for HTTP request.
+        /// </summary>
         public Byte                                 MaxNumberOfRetries            { get; }
 
+        /// <summary>
+        /// The DNS client to use.
+        /// </summary>
+        public DNSClient                            DNSClient                     { get; }
 
         /// <summary>
         /// The EMP client (HTTP client) logger.
@@ -218,18 +184,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMSP client.
+        /// Create a new EMP client.
         /// </summary>
-        /// <param name="RemoteURL">The remote URL of the endpoint to connect to.</param>
-        /// <param name="Description">An optional description of this client.</param>
+        /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
-        /// <param name="RemoteCertificateValidator">An optional remote SSL/TLS certificate validator.</param>
+        /// <param name="Description">An optional description of this EMP client.</param>
+        /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
+        /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
-        /// <param name="MaxNumberOfRetries">The maximum number of transmission retries.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
+        /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
+        /// <param name="DNSClient">The DNS client to use.</param>
         public EMPClient(URL?                                 RemoteURL                    = null,
-                         String                               Description                  = null,
                          HTTPHostname?                        VirtualHostname              = null,
+                         String                               Description                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          X509Certificate                      ClientCert                   = null,
                          TimeSpan?                            RequestTimeout               = null,
@@ -238,11 +205,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
         {
 
-            this.HTTPLogger                  = new Logger(this);
+            this.RemoteURL                   = RemoteURL                  ?? URL.Parse("https://service.hubject-qa.com");
+            this.VirtualHostname             = VirtualHostname;
+            this.Description                 = Description;
+            this.RemoteCertificateValidator  = RemoteCertificateValidator ?? ((sender, certificate, chain, policyErrors) => true);
+            this.ClientCert                  = ClientCert                 ?? throw new ArgumentNullException(nameof(ClientCert), "The given SSL/TLS client certificate must not be null!");
+            this.RequestTimeout              = RequestTimeout             ?? DefaultRequestTimeout;
+            this.MaxNumberOfRetries          = MaxNumberOfRetries         ?? DefaultMaxNumberOfRetries;
+            this.DNSClient                   = DNSClient;
 
-            this.RemoteURL                   = URL.Parse("https://service-qa.hubject.com");
-            this.RemoteCertificateValidator  = (sender, certificate, chain, policyErrors) => true;
-            this.ClientCert                  = ClientCert;
+            this.HTTPLogger                  = new Logger(this);
 
         }
 
@@ -258,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
-        public async Task<PullEVSEDataResponse>
+        public async Task<OICPResult<PullEVSEDataResponse>>
 
             PullEVSEData(PullEVSEDataRequest Request)
 
@@ -275,8 +247,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                 throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEData request must not be null!");
 
 
-            Byte                 TransmissionRetry  = 0;
-            PullEVSEDataResponse result             = null;
+            Byte                              TransmissionRetry   = 0;
+            OICPResult<PullEVSEDataResponse>  result              = null;
 
             #endregion
 
@@ -321,40 +293,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
 
                                                     ? new HTTPClient (RemoteURL.Hostname,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient:   DNSClient)
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                      DNSClient:   DNSClient)
 
                                                     : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) => {
-                                                                        return true;
-                                                                    },
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert:  ClientCert,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient:   DNSClient)).
+                                                                      RemoteCertificateValidator,
+                                                                      (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                          return ClientCert;
+                                                                      },
+                                                                      ClientCert:  ClientCert,
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                      DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
-                                                        ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -364,30 +336,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                             try
                             {
 
-                                // HTTP/1.1 200 
-                                // Server: nginx/1.18.0
-                                // Date: Sat, 09 Jan 2021 06:53:50 GMT
-                                // Content-Type: application/json;charset=utf-8
-                                // Transfer-Encoding: chunked
-                                // Connection: keep-alive
-                                // Process-ID: d8d4583c-ff9b-44dd-bc92-b341f15f644e
-                                // 
-                                // {"Result":false,"StatusCode":{"Code":"018","Description":"Duplicate EVSE IDs","AdditionalInfo":null},"SessionID":null,"EMPPartnerSessionID":null,"EMPPartnerSessionID":null}
-
                                 if (PullEVSEDataResponse.TryParse(Request,
                                                                   JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                  out PullEVSEDataResponse  Acknowledgement,
+                                                                  HTTPResponse.Timestamp,
+                                                                  HTTPResponse.EventTrackingId,
+                                                                  HTTPResponse.Runtime,
+                                                                  out PullEVSEDataResponse  pullEVSEDataResponse,
                                                                   out String                ErrorResponse,
                                                                   null,
-                                                                  HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                                                  processId))
                                 {
 
+                                    result = OICPResult<PullEVSEDataResponse>.Success(Request,
+                                                                                      pullEVSEDataResponse,
+                                                                                      processId);
 
                                 }
 
                             }
                             catch (Exception e)
                             {
+
+                                result = OICPResult<PullEVSEDataResponse>.Failed(
+                                             Request,
+                                             new PullEVSEDataResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new OperatorEVSEData[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
 
                             }
 
@@ -401,60 +386,48 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        // FaultBody!
-
-                        // HTTP/1.1 400 
-                        // Server: nginx/1.18.0
-                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
-                        // Content-Type: application/json;charset=utf-8
-                        // Transfer-Encoding: chunked
-                        // Connection: keep-alive
-                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
-                        // 
-                        // {
-                        //     "extendedInfo":  null,
-                        //     "message":      "Error parsing/validating JSON.",
-                        //     "validationErrors": [
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
-                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
-                        //             "errorMessage": "may not be null"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
-                        //             "errorMessage": "may not be empty"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
-                        //             "errorMessage": "may not be empty"
-                        //         }
-                        //     ]
-                        // }
-
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody.Length > 0)
                         {
 
-                            try
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
                             {
 
-                                if (Acknowledgement<PullEVSEDataRequest>.TryParse(Request,
-                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                    out Acknowledgement<PullEVSEDataRequest>  Acknowledgement,
-                                                                                    out String                                ErrorResponse,
-                                                                                    null,
-                                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
-                                {
-
-
-                                }
-
-                            }
-                            catch (Exception e)
-                            {
+                                result = OICPResult<PullEVSEDataResponse>.BadRequest(Request,
+                                                                                     ValidationErrors,
+                                                                                     processId);
 
                             }
 
@@ -474,18 +447,74 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // OicpERoamingFault:
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
                         // {
-                        //   "StatusCode": {
-                        //     "AdditionalInfo": "string",
-                        //     "Code":           "000",
-                        //     "Description":    "string"
-                        //   },
-                        //   "message": "string"
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
 
-                        // Operator identification is not linked to the TLS client certificate!
-                        // Response: { "StatusCode": { "Code": "017", Description: "Unauthorized Access", "AdditionalInfo": null }}
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEDataResponse>.Failed(Request,
+                                                                                     new PullEVSEDataResponse(
+                                                                                         Request,
+                                                                                         HTTPResponse.Timestamp,
+                                                                                         HTTPResponse.EventTrackingId,
+                                                                                         HTTPResponse.Runtime,
+                                                                                         new OperatorEVSEData[0],
+                                                                                         statusCode,
+                                                                                         processId
+                                                                                     ),
+                                                                                     processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEDataResponse>.Failed(
+                                             Request,
+                                             new PullEVSEDataResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new OperatorEVSEData[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
 
                         break;
 
@@ -500,17 +529,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
             }
             catch (Exception e)
             {
-                    
+
+                result = OICPResult<PullEVSEDataResponse>.Failed(
+                             Request,
+                             new PullEVSEDataResponse(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new OperatorEVSEData[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
             }
 
-            //if (result == null)
-            //    result = HTTPResponse<Acknowledgement<PullEVSEDataRequest>>.ClientError(
-            //                 new Acknowledgement<PullEVSEDataRequest>(
-            //                     Request,
-            //                     StatusCodes.SystemError,
-            //                     "HTTP request failed!"
-            //                 )
-            //             );
+            if (result == null)
+                result = OICPResult<PullEVSEDataResponse>.Failed(
+                             Request,
+                             new PullEVSEDataResponse(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new OperatorEVSEData[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             )
+                         );
 
 
             #region Send OnPullEVSEDataResponse event
@@ -556,7 +608,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PullEVSEStatus request.</param>
-        public async Task<PullEVSEStatusResponse>
+        public async Task<OICPResult<PullEVSEStatusResponse>>
 
             PullEVSEStatus(PullEVSEStatusRequest Request)
 
@@ -573,8 +625,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                 throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatus request must not be null!");
 
 
-            Byte                   TransmissionRetry   = 0;
-            PullEVSEStatusResponse result              = null;
+            Byte                                TransmissionRetry   = 0;
+            OICPResult<PullEVSEStatusResponse>  result              = null;
 
             #endregion
 
@@ -618,43 +670,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                     var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
 
-                                                    ? new HTTPClient(RemoteURL.Hostname,
-                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient: DNSClient)
+                                                    ? new HTTPClient (RemoteURL.Hostname,
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
+                                                                      DNSClient:   DNSClient)
 
                                                     : new HTTPSClient(RemoteURL.Hostname,
-                                                                    (sender, certificate, chain, policyErrors) =>
-                                                                    {
-                                                                        return true;
-                                                                    },
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) =>
-                                                                    {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert: ClientCert,
-                                                                    RemotePort: RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient: DNSClient)).
+                                                                      RemoteCertificateValidator,
+                                                                      (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
+                                                                          return ClientCert;
+                                                                      },
+                                                                      ClientCert:  ClientCert,
+                                                                      RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
+                                                                      DNSClient:   DNSClient)).
 
-                                                Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                     }),
 
-                                                        RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
-                                                        ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? this.RequestTimeout).
+                                                      RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
 
-                                                ConfigureAwait(false);
+                                              ConfigureAwait(false);
 
                     #endregion
 
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -666,18 +716,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
 
                                 if (PullEVSEStatusResponse.TryParse(Request,
                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                    HTTPResponse.Timestamp,
+                                                                    HTTPResponse.EventTrackingId,
+                                                                    HTTPResponse.Runtime,
                                                                     out PullEVSEStatusResponse  pullEVSEStatusResponse,
                                                                     out String                  ErrorResponse,
                                                                     null,
-                                                                    HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse)))
+                                                                    processId))
                                 {
 
+                                    result = OICPResult<PullEVSEStatusResponse>.Success(Request,
+                                                                                        pullEVSEStatusResponse,
+                                                                                        processId);
 
                                 }
 
                             }
                             catch (Exception e)
                             {
+
+                                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                                             Request,
+                                             new PullEVSEStatusResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new OperatorEVSEStatus[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
 
                             }
 
@@ -691,35 +764,139 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        // HTTP/1.1 400 
-                        // Server: nginx/1.18.0
-                        // Date: Fri, 08 Jan 2021 14:19:25 GMT
-                        // Content-Type: application/json;charset=utf-8
-                        // Transfer-Encoding: chunked
-                        // Connection: keep-alive
-                        // Process-ID: b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<PullEVSEStatusResponse>.BadRequest(Request,
+                                                                                       ValidationErrors,
+                                                                                       processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
                         // 
                         // {
-                        //     "message": "Error parsing/validating JSON.",
-                        //     "validationErrors": [
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
-                        //             "errorMessage": "must match \"^\\+[0-9]{5,15}$\""
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
-                        //             "errorMessage": "may not be null"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
-                        //             "errorMessage": "may not be empty"
-                        //         },
-                        //         {
-                        //             "fieldReference": "operatorEvseStatus.evseStatusRecord[0].plugs",
-                        //             "errorMessage": "may not be empty"
-                        //         }
-                        //     ]
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
                         // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEStatusResponse>.Failed(Request,
+                                                                                       new PullEVSEStatusResponse(
+                                                                                           Request,
+                                                                                           HTTPResponse.Timestamp,
+                                                                                           HTTPResponse.EventTrackingId,
+                                                                                           HTTPResponse.Runtime,
+                                                                                           new OperatorEVSEStatus[0],
+                                                                                           statusCode,
+                                                                                           processId
+                                                                                       ),
+                                                                                       processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                                             Request,
+                                             new PullEVSEStatusResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new OperatorEVSEStatus[0],
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
 
                     }
 
@@ -733,16 +910,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.HTTP
             catch (Exception e)
             {
 
+                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusResponse(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new OperatorEVSEStatus[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
             }
 
-            //if (result == null)
-            //    result = HTTPResponse<Acknowledgement<PullEVSEStatusRequest>>.ClientError(
-            //                 new Acknowledgement<PullEVSEStatusRequest>(
-            //                     Request,
-            //                     StatusCodes.SystemError,
-            //                     "HTTP request failed!"
-            //                 )
-            //             );
+            if (result == null)
+                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusResponse(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new OperatorEVSEStatus[0],
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     "HTTP request failed!"
+                                 )
+                             )
+                         );
 
 
             #region Send OnPullEVSEStatusResponse event

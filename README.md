@@ -9,7 +9,7 @@ charge point operators (CPOs) and e-mobility providers (EMPs).
 
 ### Requirements & Configuration
 
-1. You need .NET 4.7.2+
+1. You need .NET 4.8+
 2. The mutual authentication (TLS client certificates) with Hubject must be set up.
 3. Your server must be registered within the Hubject firewalls.
 

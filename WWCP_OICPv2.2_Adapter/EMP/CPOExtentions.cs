@@ -174,7 +174,6 @@ namespace org.GraphDefined.WWCP
                                                                      AuthenticationDataURL,
                                                                      ReservationURL,
                                                                      AuthorizationURL,
-                                                                     DefaultProviderId,
 
                                                                      HTTPUserAgent,
                                                                      RequestTimeout,
@@ -210,6 +209,7 @@ namespace org.GraphDefined.WWCP
                                                                      PullStatusServiceRequestTimeout,
 
                                                                      DefaultProvider,
+                                                                     DefaultProviderId,
                                                                      DefaultSearchCenter,
                                                                      DefaultDistanceKM,
 
@@ -380,6 +380,7 @@ namespace org.GraphDefined.WWCP
                                                                      PullStatusServiceRequestTimeout,
 
                                                                      DefaultProvider,
+                                                                     DefaultProviderId,
                                                                      DefaultSearchCenter,
                                                                      DefaultDistanceKM);
 

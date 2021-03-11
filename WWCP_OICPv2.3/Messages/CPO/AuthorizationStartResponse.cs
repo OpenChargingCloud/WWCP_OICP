@@ -89,6 +89,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new AuthorizationStart response.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
         /// <param name="StatusCode">A status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
@@ -99,6 +102,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStartResponse(AuthorizeStartRequest        Request,
+                                           DateTime                     ResponseTimestamp,
+                                           EventTracking_Id             EventTrackingId,
+                                           TimeSpan                     Runtime,
                                            AuthorizationStatusTypes     AuthorizationStatus,
                                            StatusCode                   StatusCode,
                                            Session_Id?                  SessionId                          = null,
@@ -110,7 +116,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            JObject                      CustomData                         = null)
 
             : base(Request,
-                   DateTime.UtcNow,
+                   ResponseTimestamp,
+                   EventTrackingId,
+                   Runtime,
                    ProcessId,
                    CustomData)
 
@@ -129,10 +137,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) Authorized               (Request, SessionId = null, PartnerSessionId = null, ProviderId = null, ...)
+        #region (static) Authorized               (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'Authorized' AuthorizationStart result.
+        /// Create a new 'Authorized' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="SessionId">The charging session identification.</param>
@@ -142,17 +150,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse Authorized(AuthorizeStartRequest        Request,
-                                                            Session_Id?                  SessionId                         = null,
-                                                            CPOPartnerSession_Id?        CPOPartnerSessionId               = null,
-                                                            EMPPartnerSession_Id?        EMPPartnerSessionId               = null,
-                                                            Provider_Id?                 ProviderId                        = null,
-                                                            String                       StatusCodeDescription             = null,
-                                                            String                       StatusCodeAdditionalInfo          = null,
-                                                            IEnumerable<Identification>  AuthorizationStopIdentifications  = null)
+                                                            Session_Id?                  SessionId                          = null,
+                                                            CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
+                                                            EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
+                                                            Provider_Id?                 ProviderId                         = null,
+                                                            String                       StatusCodeDescription              = null,
+                                                            String                       StatusCodeAdditionalInfo           = null,
+                                                            IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
+                                                            DateTime?                    ResponseTimestamp                  = null,
+                                                            EventTracking_Id             EventTrackingId                    = null,
+                                                            TimeSpan?                    Runtime                            = null,
+                                                            Process_Id?                  ProcessId                          = null,
+                                                            JObject                      CustomData                         = null)
 
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.Authorized,
                                               new StatusCode(
                                                   StatusCodes.Success,
@@ -163,50 +184,60 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
                                               ProviderId,
-                                              AuthorizationStopIdentifications);
+                                              AuthorizationStopIdentifications,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) NotAuthorized            (Request, StatusCode, StatusCodeDescription = null, ...)
+        #region (static) NotAuthorized            (Request, StatusCode, ...)
 
         /// <summary>
-        /// Create a new OICP 'NotAuthorized' AuthorizationStart result.
+        /// Create a new 'NotAuthorized' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
-        /// <param name="StatusCodeDescription">An optional description of the status code.</param>
-        /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NotAuthorized(AuthorizeStartRequest  Request,
-                                                               StatusCodes            StatusCode,
-                                                               String                 StatusCodeDescription      = null,
-                                                               String                 StatusCodeAdditionalInfo   = null,
-                                                               Session_Id?            SessionId                  = null,
-                                                               CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                               EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                               Provider_Id?           ProviderId                 = null)
+                                                               StatusCode             StatusCode,
+                                                               Session_Id?            SessionId             = null,
+                                                               CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                               EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                                               Provider_Id?           ProviderId            = null,
+                                                               DateTime?              ResponseTimestamp     = null,
+                                                               EventTracking_Id       EventTrackingId       = null,
+                                                               TimeSpan?              Runtime               = null,
+                                                               Process_Id?            ProcessId             = null,
+                                                               JObject                CustomData            = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
-                                              new StatusCode(
-                                                  StatusCode,
-                                                  StatusCodeDescription,
-                                                  StatusCodeAdditionalInfo
-                                              ),
+                                              StatusCode,
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) SessionIsInvalid         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) SessionIsInvalid         (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'SessionIsInvalid' AuthorizationStart result.
+        /// Create a new 'SessionIsInvalid' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -215,15 +246,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SessionIsInvalid(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
                                                                   CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                  Provider_Id?           ProviderId                 = null)
+                                                                  Provider_Id?           ProviderId                 = null,
+                                                                  DateTime?              ResponseTimestamp          = null,
+                                                                  EventTracking_Id       EventTrackingId            = null,
+                                                                  TimeSpan?              Runtime                    = null,
+                                                                  Process_Id?            ProcessId                  = null,
+                                                                  JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.SessionIsInvalid,
@@ -233,14 +277,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) CommunicationToEVSEFailed(Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) CommunicationToEVSEFailed(Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'CommunicationToEVSEFailed' AuthorizationStart result.
+        /// Create a new 'CommunicationToEVSEFailed' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -249,15 +296,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse CommunicationToEVSEFailed(AuthorizeStartRequest  Request,
                                                                            String                 StatusCodeDescription      = null,
                                                                            String                 StatusCodeAdditionalInfo   = null,
                                                                            Session_Id?            SessionId                  = null,
                                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                           Provider_Id?           ProviderId                 = null)
+                                                                           Provider_Id?           ProviderId                 = null,
+                                                                           DateTime?              ResponseTimestamp          = null,
+                                                                           EventTracking_Id       EventTrackingId            = null,
+                                                                           TimeSpan?              Runtime                    = null,
+                                                                           Process_Id?            ProcessId                  = null,
+                                                                           JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.CommunicationToEVSEFailed,
@@ -267,14 +327,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) NoEVConnectedToEVSE      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) NoEVConnectedToEVSE      (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'NoEVConnectedToEVSE' AuthorizationStart result.
+        /// Create a new 'NoEVConnectedToEVSE' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -283,15 +346,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NoEVConnectedToEVSE(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     DateTime?              ResponseTimestamp          = null,
+                                                                     EventTracking_Id       EventTrackingId            = null,
+                                                                     TimeSpan?              Runtime                    = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.NoEVConnectedToEVSE,
@@ -301,14 +377,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) EVSEAlreadyReserved      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) EVSEAlreadyReserved      (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEAlreadyReserved' AuthorizationStart result.
+        /// Create a new 'EVSEAlreadyReserved' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -317,15 +396,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEAlreadyReserved(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     DateTime?              ResponseTimestamp          = null,
+                                                                     EventTracking_Id       EventTrackingId            = null,
+                                                                     TimeSpan?              Runtime                    = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.EVSEAlreadyReserved,
@@ -335,14 +427,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) UnknownEVSEID            (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) UnknownEVSEID            (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'UnknownEVSEID' AuthorizationStart result.
+        /// Create a new 'UnknownEVSEID' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -351,15 +446,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse UnknownEVSEID(AuthorizeStartRequest  Request,
                                                                String                 StatusCodeDescription      = null,
                                                                String                 StatusCodeAdditionalInfo   = null,
                                                                Session_Id?            SessionId                  = null,
                                                                CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                               Provider_Id?           ProviderId                 = null)
+                                                               Provider_Id?           ProviderId                 = null,
+                                                               DateTime?              ResponseTimestamp          = null,
+                                                               EventTracking_Id       EventTrackingId            = null,
+                                                               TimeSpan?              Runtime                    = null,
+                                                               Process_Id?            ProcessId                  = null,
+                                                               JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.UnknownEVSEID,
@@ -369,14 +477,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) EVSEOutOfService         (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) EVSEOutOfService         (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'EVSEOutOfService' AuthorizationStart result.
+        /// Create a new 'EVSEOutOfService' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -385,15 +496,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEOutOfService(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
                                                                   Session_Id?            SessionId                  = null,
                                                                   CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                   EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                  Provider_Id?           ProviderId                 = null)
+                                                                  Provider_Id?           ProviderId                 = null,
+                                                                  DateTime?              ResponseTimestamp          = null,
+                                                                  EventTracking_Id       EventTrackingId            = null,
+                                                                  TimeSpan?              Runtime                    = null,
+                                                                  Process_Id?            ProcessId                  = null,
+                                                                  JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.EVSEOutOfService,
@@ -403,14 +527,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) ServiceNotAvailable      (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) ServiceNotAvailable      (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'ServiceNotAvailable' AuthorizationStart result.
+        /// Create a new 'ServiceNotAvailable' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -419,15 +546,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse ServiceNotAvailable(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
                                                                      Session_Id?            SessionId                  = null,
                                                                      CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                                      EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                     Provider_Id?           ProviderId                 = null)
+                                                                     Provider_Id?           ProviderId                 = null,
+                                                                     DateTime?              ResponseTimestamp          = null,
+                                                                     EventTracking_Id       EventTrackingId            = null,
+                                                                     TimeSpan?              Runtime                    = null,
+                                                                     Process_Id?            ProcessId                  = null,
+                                                                     JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.ServiceNotAvailable,
@@ -437,14 +577,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) DataError                (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) DataError                (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'DataError' AuthorizationStart result.
+        /// Create a new 'DataError' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -453,15 +596,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse DataError(AuthorizeStartRequest  Request,
                                                            String                 StatusCodeDescription      = null,
                                                            String                 StatusCodeAdditionalInfo   = null,
                                                            Session_Id?            SessionId                  = null,
                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                           Provider_Id?           ProviderId                 = null)
+                                                           Provider_Id?           ProviderId                 = null,
+                                                           DateTime?              ResponseTimestamp          = null,
+                                                           EventTracking_Id       EventTrackingId            = null,
+                                                           TimeSpan?              Runtime                    = null,
+                                                           Process_Id?            ProcessId                  = null,
+                                                           JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.DataError,
@@ -471,14 +627,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
-        #region (static) SystemError              (Request, StatusCodeDescription = null, StatusCodeAdditionalInfo = null, ...)
+        #region (static) SystemError              (Request, ...)
 
         /// <summary>
-        /// Create a new OICP 'SystemError' AuthorizationStart result.
+        /// Create a new 'SystemError' AuthorizationStart result.
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
@@ -487,15 +646,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SystemError(AuthorizeStartRequest  Request,
                                                              String                 StatusCodeDescription      = null,
                                                              String                 StatusCodeAdditionalInfo   = null,
                                                              Session_Id?            SessionId                  = null,
                                                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                             Provider_Id?           ProviderId                 = null)
+                                                             Provider_Id?           ProviderId                 = null,
+                                                             DateTime?              ResponseTimestamp          = null,
+                                                             EventTracking_Id       EventTrackingId            = null,
+                                                             TimeSpan?              Runtime                    = null,
+                                                             Process_Id?            ProcessId                  = null,
+                                                             JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
+                                              ResponseTimestamp ?? DateTime.UtcNow,
+                                              EventTrackingId   ?? EventTracking_Id.New,
+                                              Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                               AuthorizationStatusTypes.NotAuthorized,
                                               new StatusCode(
                                                   StatusCodes.SystemError,
@@ -505,7 +677,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               SessionId,
                                               CPOPartnerSessionId,
                                               EMPPartnerSessionId,
-                                              ProviderId);
+                                              ProviderId,
+                                              null,
+                                              ProcessId,
+                                              CustomData);
 
         #endregion
 
@@ -569,9 +744,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart JSON objects.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
                                                        JObject                                                  JSON,
+                                                       DateTime?                                                ResponseTimestamp                        = null,
+                                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                                       TimeSpan?                                                Runtime                                  = null,
+                                                       Process_Id?                                              ProcessId                                = null,
                                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -579,6 +762,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          JSON,
                          out AuthorizationStartResponse  authorizationStartResponse,
                          out String                      ErrorResponse,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
+                         ProcessId,
                          CustomAuthorizationStartResponseParser))
             {
                 return authorizationStartResponse;
@@ -597,9 +784,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
                                                        String                                                   Text,
+                                                       DateTime?                                                ResponseTimestamp                        = null,
+                                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                                       TimeSpan?                                                Runtime                                  = null,
+                                                       Process_Id?                                              ProcessId                                = null,
                                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -607,6 +802,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Text,
                          out AuthorizationStartResponse  authorizationStartResponse,
                          out String                      ErrorResponse,
+                         ResponseTimestamp,
+                         EventTrackingId,
+                         Runtime,
+                         ProcessId,
                          CustomAuthorizationStartResponseParser))
             {
                 return authorizationStartResponse;
@@ -620,8 +819,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out AuthorizationStartResponse, out ErrorResponse, CustomAuthorizationStartResponseParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of a AuthorizationStart response.
         /// </summary>
@@ -629,34 +826,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(AuthorizeStartRequest           Request,
-                                       JObject                         JSON,
-                                       out AuthorizationStartResponse  AuthorizationStartResponse,
-                                       out String                      ErrorResponse)
-
-            => TryParse(Request,
-                        JSON,
-                        out AuthorizationStartResponse,
-                        out ErrorResponse,
-                        null,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a AuthorizationStart response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStartRequest                                    Request,
                                        JObject                                                  JSON,
                                        out AuthorizationStartResponse                           AuthorizationStartResponse,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser,
-                                       Process_Id?                                              ProcessId   = null)
+                                       DateTime?                                                ResponseTimestamp                        = null,
+                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                       TimeSpan?                                                Runtime                                  = null,
+                                       Process_Id?                                              ProcessId                                = null,
+                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
             try
@@ -685,11 +868,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse StatusCode                            [mandatory]
 
-                if (!JSON.ParseMandatory("StatusCode",
-                                         "status code",
-                                         OICPv2_3.StatusCode.TryParse,
-                                         out StatusCode StatusCode,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("StatusCode",
+                                              "status code",
+                                              OICPv2_3.StatusCode.TryParse,
+                                              out StatusCode StatusCode,
+                                              out ErrorResponse))
                 {
                     return false;
                 }
@@ -704,7 +887,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Session_Id? SessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -717,7 +901,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -730,7 +915,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -743,7 +929,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? ProviderId,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -756,7 +943,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Identification> AuthorizationStopIdentifications,
                                            out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -769,6 +957,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 AuthorizationStartResponse = new AuthorizationStartResponse(Request,
+                                                                            ResponseTimestamp ?? DateTime.UtcNow,
+                                                                            EventTrackingId   ?? Request.EventTrackingId,
+                                                                            Runtime           ?? DateTime.UtcNow - Request.Timestamp,
                                                                             AuthorizationStatus,
                                                                             StatusCode,
                                                                             SessionId,
@@ -806,12 +997,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStartRequest                                    Request,
                                        String                                                   Text,
                                        out AuthorizationStartResponse                           AuthorizationStartResponse,
                                        out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser)
+                                       DateTime?                                                ResponseTimestamp                        = null,
+                                       EventTracking_Id                                         EventTrackingId                          = null,
+                                       TimeSpan?                                                Runtime                                  = null,
+                                       Process_Id?                                              ProcessId                                = null,
+                                       CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
             try
@@ -821,6 +1020,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 JObject.Parse(Text),
                                 out AuthorizationStartResponse,
                                 out ErrorResponse,
+                                ResponseTimestamp,
+                                EventTrackingId,
+                                Runtime,
+                                ProcessId,
                                 CustomAuthorizationStartResponseParser);
 
             }
@@ -1033,6 +1236,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder
 
             => new Builder(Request,
+                           ResponseTimestamp,
+                           EventTrackingId,
+                           Runtime,
                            AuthorizationStatus,
                            StatusCode,
                            SessionId,
@@ -1106,6 +1312,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new AuthorizationStart response builder.
             /// </summary>
             /// <param name="Request">The request leading to this response.</param>
+            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+            /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+            /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="AuthorizationStatus">The authorization status.</param>
             /// <param name="StatusCode">A status code.</param>
             /// <param name="SessionId">An optional charging session identification.</param>
@@ -1116,6 +1325,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(AuthorizeStartRequest        Request                            = null,
+                           DateTime?                    ResponseTimestamp                  = null,
+                           EventTracking_Id             EventTrackingId                    = null,
+                           TimeSpan?                    Runtime                            = null,
                            AuthorizationStatusTypes?    AuthorizationStatus                = null,
                            StatusCode                   StatusCode                         = null,
                            Session_Id?                  SessionId                          = null,
@@ -1127,7 +1339,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            JObject                      CustomData                         = null)
 
                 : base(Request,
-                       DateTime.UtcNow,
+                       ResponseTimestamp,
+                       EventTrackingId,
+                       Runtime,
                        ProcessId,
                        CustomData)
 
@@ -1171,7 +1385,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                return new AuthorizationStartResponse(Request,
+                return new AuthorizationStartResponse(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                                                      ResponseTimestamp ?? DateTime.UtcNow,
+                                                      EventTrackingId   ?? EventTracking_Id.New,
+                                                      Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                       AuthorizationStatus.Value,
                                                       StatusCode,
                                                       SessionId,
