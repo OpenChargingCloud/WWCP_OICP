@@ -288,7 +288,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             this.ChargingFacilities        = ChargingFacilities               ?? new ChargingFacility[0];
             this.MaxCapacity               = MaxCapacity;
             this.PaymentOptions            = PaymentOptions                   ?? new PaymentOptions[0];
-            this.AdditionalInfo            = AdditionalInfo.SubstringMax(200) ?? new I18NString();
+            this.AdditionalInfo            = AdditionalInfo.SubstringMax(150) ?? new I18NString();
             this.GeoChargingPointEntrance  = GeoChargingPointEntrance;
             this.OpeningTimes              = OpeningTimes;
             this.HubOperatorId             = HubOperatorId;
