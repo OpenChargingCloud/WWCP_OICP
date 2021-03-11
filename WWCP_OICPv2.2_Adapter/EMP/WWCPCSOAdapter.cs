@@ -2827,42 +2827,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                                                     #region Set LocationLanguage
 
-                                                    switch (EVSEInfo.PoolAddress.Country.Alpha2Code.ToLower())
-                                                    {
-
-                                                        case "de": LocationLanguage = Languages.de; break;
-                                                        case "fr": LocationLanguage = Languages.fra; break;
-                                                  //      case "dk": LocationLanguage = Languages.dk; break;
-                                                        case "no": LocationLanguage = Languages.no; break;
-                                                        case "fi": LocationLanguage = Languages.fin; break;
-                                                        case "se": LocationLanguage = Languages.swe; break;
-
-                                                        case "sk": LocationLanguage = Languages.sk; break;
-                                                        case "it": LocationLanguage = Languages.ita; break;
-                                                        case "us": LocationLanguage = Languages.en; break;
-                                                        case "nl": LocationLanguage = Languages.nld; break;
-                                                        case "at": LocationLanguage = Languages.de; break;
-                                                        case "ru": LocationLanguage = Languages.ru; break;
-                                                        case "il": LocationLanguage = Languages.heb; break;
-
-                                                        case "be":
-                                                        case "ch":
-                                                        case "al":
-                                                        default:   LocationLanguage = Languages.unknown; break;
-
-                                                    }
-
-                                                    if (EVSEInfo.PoolAddress.Country == Country.Germany)
-                                                        LocalChargingStationLanguage = Languages.de;
-
-                                                    //else if (EVSEInfo.PoolAddress.Country == Country.Denmark)
-                                                    //    LocalChargingStationLanguage = Languages.dk;
-
-                                                    else if (EVSEInfo.PoolAddress.Country == Country.France)
-                                                        LocalChargingStationLanguage = Languages.fra;
-
-                                                    else
-                                                        LocalChargingStationLanguage = Languages.unknown;
+                                                    LocationLanguage = EVSEInfo.PoolAddress.Country.ToLanguages();
 
                                                     #endregion
 
