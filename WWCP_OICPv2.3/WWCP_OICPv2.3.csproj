@@ -69,6 +69,7 @@
     <Compile Include="DataTypes\OICPResult.cs" />
     <Compile Include="EMP\EMPClientDelegates.cs" />
     <Compile Include="EMP\EMPServerAPI.cs" />
+    <Compile Include="EMP\EMPServerAPILogger.cs" />
     <Compile Include="EMP\EMPServerAPIDelegates.cs" />
     <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />

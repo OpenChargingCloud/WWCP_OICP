@@ -996,6 +996,12 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                    : new ChargingSession_Id?();
 
 
+        public static ChargingSession_Id? ToWWCP(this CPOPartnerSession_Id? SessionId)
+            => SessionId.HasValue
+                   ? ChargingSession_Id.Parse(SessionId.ToString())
+                   : new ChargingSession_Id?();
+
+
         public static PartnerProduct_Id? ToOICP(this ChargingProduct_Id ProductId)
             => PartnerProduct_Id.Parse(ProductId.ToString());
 

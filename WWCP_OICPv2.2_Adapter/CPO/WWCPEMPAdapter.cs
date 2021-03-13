@@ -5080,6 +5080,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="ChargingLocation">The charging location.</param>
         /// <param name="ChargingProduct">An optional charging product.</param>
         /// <param name="SessionId">An optional session identification.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification of the CPO.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -5089,15 +5090,16 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         public async Task<AuthStartResult>
 
             AuthorizeStart(LocalAuthentication          LocalAuthentication,
-                           ChargingLocation             ChargingLocation    = null,
-                           ChargingProduct              ChargingProduct     = null,   // [maxlength: 100]
-                           ChargingSession_Id?          SessionId           = null,
-                           ChargingStationOperator_Id?  OperatorId          = null,
+                           ChargingLocation             ChargingLocation      = null,
+                           ChargingProduct              ChargingProduct       = null,   // [maxlength: 100]
+                           ChargingSession_Id?          SessionId             = null,
+                           ChargingSession_Id?          CPOPartnerSessionId   = null,
+                           ChargingStationOperator_Id?  OperatorId            = null,
 
-                           DateTime?                    Timestamp           = null,
-                           CancellationToken?           CancellationToken   = null,
-                           EventTracking_Id             EventTrackingId     = null,
-                           TimeSpan?                    RequestTimeout      = null)
+                           DateTime?                    Timestamp             = null,
+                           CancellationToken?           CancellationToken     = null,
+                           EventTracking_Id             EventTrackingId       = null,
+                           TimeSpan?                    RequestTimeout        = null)
 
         {
 
@@ -5141,6 +5143,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                 ChargingLocation,
                                                 ChargingProduct,
                                                 SessionId,
+                                                CPOPartnerSessionId,
                                                 new ISendAuthorizeStartStop[0],
                                                 RequestTimeout);
 
@@ -5252,6 +5255,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                  ChargingLocation,
                                                  ChargingProduct,
                                                  SessionId,
+                                                 CPOPartnerSessionId,
                                                  new ISendAuthorizeStartStop[0],
                                                  RequestTimeout,
                                                  result,
@@ -5279,6 +5283,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
         /// <param name="AuthToken">A (RFID) user identification.</param>
         /// <param name="ChargingLocation">The charging location.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification of the CPO.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -5289,13 +5294,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
 
             AuthorizeStop(ChargingSession_Id           SessionId,
                           LocalAuthentication          LocalAuthentication,
-                          ChargingLocation             ChargingLocation    = null,
-                          ChargingStationOperator_Id?  OperatorId          = null,
+                          ChargingLocation             ChargingLocation      = null,
+                          ChargingSession_Id?          CPOPartnerSessionId   = null,
+                          ChargingStationOperator_Id?  OperatorId            = null,
 
-                          DateTime?                    Timestamp           = null,
-                          CancellationToken?           CancellationToken   = null,
-                          EventTracking_Id             EventTrackingId     = null,
-                          TimeSpan?                    RequestTimeout      = null)
+                          DateTime?                    Timestamp             = null,
+                          CancellationToken?           CancellationToken     = null,
+                          EventTracking_Id             EventTrackingId       = null,
+                          TimeSpan?                    RequestTimeout        = null)
         {
 
             #region Initial checks
@@ -5336,6 +5342,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                OperatorId,
                                                ChargingLocation,
                                                SessionId,
+                                               CPOPartnerSessionId,
                                                LocalAuthentication,
                                                RequestTimeout);
 
@@ -5445,6 +5452,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                                                 OperatorId,
                                                 ChargingLocation,
                                                 SessionId,
+                                                CPOPartnerSessionId,
                                                 LocalAuthentication,
                                                 RequestTimeout,
                                                 result,
