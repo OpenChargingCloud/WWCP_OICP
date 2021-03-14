@@ -149,7 +149,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             set
             {
-                CPOClient.HTTPLogger = value;
+                if (value is CPOClient.Logger)
+                    CPOClient.HTTPLogger = value as CPOClient.Logger;
             }
 
         }
