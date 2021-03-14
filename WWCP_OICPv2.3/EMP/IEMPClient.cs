@@ -18,30 +18,36 @@
 #region Usings
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-using org.GraphDefined.WWCP;
+using Newtonsoft.Json.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_2
+namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
-    public class EVSEToOICPException : OICPException
+    /// <summary>
+    /// Extention methods for the EMP client interface.
+    /// </summary>
+    public static class IEMPClientExtentions
     {
 
-        public EVSE  EVSE   { get; }
 
-        public EVSEToOICPException(EVSE       EVSE,
-                                   Exception  InnerException)
+    }
 
-            : base("Could not convert EVSE to an EVSERecord!",
-                   InnerException)
 
-        {
+    /// <summary>
+    /// The common interface for all EMP clients.
+    /// </summary>
+    public interface IEMPClient : IHTTPClient
+    {
 
-            this.EVSE = EVSE;
 
-        }
 
     }
 

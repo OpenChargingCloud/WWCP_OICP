@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -502,9 +502,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static AccessibilityTypes ToOICP(this WWCP.AccessibilityTypes AccessibilityType)
 
             => AccessibilityType switch {
-                WWCP.AccessibilityTypes.Free_publicly_accessible    => AccessibilityTypes.Free_publicly_accessible,
-                WWCP.AccessibilityTypes.Restricted_access           => AccessibilityTypes.Restricted_access,
-                WWCP.AccessibilityTypes.Paying_publicly_accessible  => AccessibilityTypes.Paying_publicly_accessible,
+                WWCP.AccessibilityTypes.FreePubliclyAccessible    => AccessibilityTypes.Free_publicly_accessible,
+                WWCP.AccessibilityTypes.RestrictedAccess           => AccessibilityTypes.Restricted_access,
+                WWCP.AccessibilityTypes.PayingPubliclyAccessible  => AccessibilityTypes.Paying_publicly_accessible,
                 _ => AccessibilityTypes.Unspecified,
             };
 
@@ -517,9 +517,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
             => AccessibilityType.HasValue
 
                 ? AccessibilityType.Value switch {
-                      WWCP.AccessibilityTypes.Free_publicly_accessible    => AccessibilityTypes.Free_publicly_accessible,
-                      WWCP.AccessibilityTypes.Restricted_access           => AccessibilityTypes.Restricted_access,
-                      WWCP.AccessibilityTypes.Paying_publicly_accessible  => AccessibilityTypes.Paying_publicly_accessible,
+                      WWCP.AccessibilityTypes.FreePubliclyAccessible    => AccessibilityTypes.Free_publicly_accessible,
+                      WWCP.AccessibilityTypes.RestrictedAccess           => AccessibilityTypes.Restricted_access,
+                      WWCP.AccessibilityTypes.PayingPubliclyAccessible  => AccessibilityTypes.Paying_publicly_accessible,
                       _                                                   => AccessibilityTypes.Unspecified,
                   }
 
@@ -536,9 +536,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static WWCP.AccessibilityTypes ToWWCP(this AccessibilityTypes AccessibilityType)
 
             => AccessibilityType switch {
-                AccessibilityTypes.Free_publicly_accessible    => WWCP.AccessibilityTypes.Free_publicly_accessible,
-                AccessibilityTypes.Restricted_access           => WWCP.AccessibilityTypes.Restricted_access,
-                AccessibilityTypes.Paying_publicly_accessible  => WWCP.AccessibilityTypes.Paying_publicly_accessible,
+                AccessibilityTypes.Free_publicly_accessible    => WWCP.AccessibilityTypes.FreePubliclyAccessible,
+                AccessibilityTypes.Restricted_access           => WWCP.AccessibilityTypes.RestrictedAccess,
+                AccessibilityTypes.Paying_publicly_accessible  => WWCP.AccessibilityTypes.PayingPubliclyAccessible,
                 _                                              => WWCP.AccessibilityTypes.Unspecified,
             };
 
@@ -593,6 +593,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2
                            WWCPAddress.HouseNumber,
                            WWCPAddress.FloorLevel);
 
+        #endregion
+
+        #region ToWWCP(this OICPAddress)
 
         /// <summary>
         /// Maps an OICP address type to a WWCP address type.
@@ -699,8 +702,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2
         public static WWCP.AuthenticationModes AsWWCPAuthenticationMode(this AuthenticationModes AuthMode)
 
             => AuthMode switch {
-                AuthenticationModes.NFC_RFID_Classic  => WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareClassic),
-                AuthenticationModes.NFC_RFID_DESFire  => WWCP.AuthenticationModes.RFID(RFIDAuthenticationModes.MifareDESFire),
+                AuthenticationModes.NFC_RFID_Classic  => WWCP.AuthenticationModes.RFID(RFIDCardTypes.MifareClassic),
+                AuthenticationModes.NFC_RFID_DESFire  => WWCP.AuthenticationModes.RFID(RFIDCardTypes.MifareDESFire),
                 AuthenticationModes.PnC               => WWCP.AuthenticationModes.ISO15118_PLC,
                 AuthenticationModes.REMOTE            => WWCP.AuthenticationModes.REMOTE,
                 AuthenticationModes.DirectPayment     => WWCP.AuthenticationModes.DirectPayment,

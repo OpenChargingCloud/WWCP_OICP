@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PlugTypes plugType))
                 return plugType;
 
-            throw new ArgumentException("Undefined plug type '" + Text + "'!");
+            throw new ArgumentException("Invalid plug type '" + Text + "'!");
 
         }
 
@@ -150,12 +150,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     PlugType = PlugTypes.CHAdeMO;
                     return true;
 
-                case "Unspecified":
-                    PlugType = PlugTypes.Unspecified;
-                    return true;
-
                 default:
-                    PlugType = PlugTypes.Unspecified;
+                    PlugType = PlugTypes.TypeFSchuko;
                     return false;
 
             };
@@ -190,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    PlugTypes.CCSCombo2Plug_CableAttached   => "CCS Combo 2 Plug (Cable Attached)",
                    PlugTypes.CCSCombo1Plug_CableAttached   => "CCS Combo 1 Plug (Cable Attached)",
                    PlugTypes.CHAdeMO                       => "CHAdeMO",
-                   _                                       => "Unspecified",
+                   _                                       => throw new ArgumentException("Invalid plug type!")
                };
 
         #endregion
@@ -203,11 +199,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     public enum PlugTypes
     {
-
-        /// <summary>
-        /// Unknown plug type
-        /// </summary>
-        Unspecified,
 
         /// <summary>
         /// Small paddle inductive

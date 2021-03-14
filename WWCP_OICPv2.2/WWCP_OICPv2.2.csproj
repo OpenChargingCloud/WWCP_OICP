@@ -125,7 +125,7 @@
     <Compile Include="EMP\EMPServer\EMPServerDelegates.cs" />
     <Compile Include="EMP\EMPServer\EMPServerLogger.cs" />
     <Compile Include="IO\OICPClientHelper.cs" />
-    <Compile Include="IO\Exceptions\OICPExceptions.cs" />
+    <Compile Include="IO\OICPExceptions.cs" />
     <Compile Include="IO\OICPNS.cs" />
     <Compile Include="IO\SOAP.cs" />
     <Compile Include="IO\XML_IO.cs" />

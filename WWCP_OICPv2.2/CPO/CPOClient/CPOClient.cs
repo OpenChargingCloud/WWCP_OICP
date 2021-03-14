@@ -635,7 +635,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
                          String                               AuthenticationDataURL        = DefaultAuthenticationDataURL,
                          String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
-                         Byte?                                MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          DNSClient                            DNSClient                    = null,
                          String                               LoggingContext               = CPOClientLogger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null)
@@ -824,7 +824,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + EVSEDataURL,
+                                                        URLPathPrefix + EVSEDataURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1082,7 +1082,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + EVSEStatusURL,
+                                                        URLPathPrefix + EVSEStatusURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1328,7 +1328,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + AuthorizationURL,
+                                                        URLPathPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1557,7 +1557,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + AuthorizationURL,
+                                                        URLPathPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -1774,7 +1774,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + AuthorizationURL,
+                                                        URLPathPrefix + AuthorizationURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,
@@ -2014,7 +2014,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
             {
 
                 using (var _OICPClient = new SOAPClient(Hostname,
-                                                        URLPrefix + AuthenticationDataURL,
+                                                        URLPathPrefix + AuthenticationDataURL,
                                                         VirtualHostname,
                                                         RemotePort,
                                                         RemoteCertificateValidator,

@@ -36,9 +36,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The CPO client.
+    /// The OICP CPO client.
     /// </summary>
-    public partial class CPOClient : ICPOClient
+    public partial class CPOClient : AHTTPClient,
+                                     ICPOClient
     {
 
         public class CPOCounters
@@ -69,65 +70,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region Data
 
         /// <summary>
+        /// The default HTTP user agent.
+        /// </summary>
+        public new const    String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.Number + " CPO Client";
+
+        /// <summary>
         /// The default timeout for HTTP requests.
         /// </summary>
-        public TimeSpan                             DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
+        public new readonly TimeSpan  DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
 
         /// <summary>
         /// The default maximum number of transmission retries for HTTP request.
         /// </summary>
-        public Byte                                 DefaultMaxNumberOfRetries   = 3;
+        public new const    UInt16    DefaultMaxNumberOfRetries   = 3;
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The remote URL of the OICP HTTP endpoint to connect to.
+        /// The attached HTTP client logger.
         /// </summary>
-        public URL                                  RemoteURL                     { get; }
-
-        /// <summary>
-        /// An optional HTTP virtual hostname.
-        /// </summary>
-        public HTTPHostname?                        VirtualHostname               { get; }
-
-        /// <summary>
-        /// An optional description of this CPO client.
-        /// </summary>
-        public String                               Description                   { get; set; }
-
-        /// <summary>
-        /// The remote SSL/TLS certificate validator.
-        /// </summary>
-        public RemoteCertificateValidationCallback  RemoteCertificateValidator    { get; }
-
-        /// <summary>
-        /// The SSL/TLS client certificate to use of HTTP authentication.
-        /// </summary>
-        public X509Certificate                      ClientCert                    { get; }
-
-        /// <summary>
-        /// The timeout for HTTP requests.
-        /// </summary>
-        public TimeSpan?                            RequestTimeout                { get; set; }
-
-        /// <summary>
-        /// The maximum number of transmission retries for HTTP request.
-        /// </summary>
-        public Byte                                 MaxNumberOfRetries            { get; }
-
-        /// <summary>
-        /// The DNS client to use.
-        /// </summary>
-        public DNSClient                            DNSClient                     { get; }
-
-        /// <summary>
-        /// The CPO client (HTTP client) logger.
-        /// </summary>
-        public Logger                               HTTPLogger                    { get; }
-
-
+        public new Logger  HTTPLogger
+            => base.HTTPLogger as Logger;
 
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>            CustomPushEVSEDataAcknowledgementParser              { get; set; }
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>          CustomPushEVSEStatusAcknowledgementParser            { get; set; }
@@ -268,37 +233,56 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMSP client.
+        /// Create a new CPO client.
         /// </summary>
         /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
         /// <param name="Description">An optional description of this CPO client.</param>
         /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
         /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
+        /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
+        /// <param name="TransmissionRetryDelay">The delay between transmission retries.</param>
         /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
+        /// <param name="DisableLogging">Disable all logging.</param>
+        /// <param name="LoggingContext">An optional context for logging.</param>
+        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">The DNS client to use.</param>
         public CPOClient(URL?                                 RemoteURL                    = null,
                          HTTPHostname?                        VirtualHostname              = null,
                          String                               Description                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          X509Certificate                      ClientCert                   = null,
+                         String                               HTTPUserAgent                = null,
                          TimeSpan?                            RequestTimeout               = null,
-                         Byte?                                MaxNumberOfRetries           = null,
+                         TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
+                         UInt16?                              MaxNumberOfRetries           = null,
+                         Boolean                              DisableLogging               = false,
+                         String                               LoggingContext               = null,
+                         LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
+
+            : base(RemoteURL           ?? URL.Parse("https://service.hubject-qa.com"),
+                   VirtualHostname,
+                   Description,
+                   RemoteCertificateValidator,
+                   null,
+                   ClientCert,
+                   HTTPUserAgent       ?? DefaultHTTPUserAgent,
+                   RequestTimeout,
+                   TransmissionRetryDelay,
+                   MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
+                   false,
+                   null,
+                   DNSClient)
 
         {
 
-            this.RemoteURL                   = RemoteURL                  ?? URL.Parse("https://service.hubject-qa.com");
-            this.VirtualHostname             = VirtualHostname;
-            this.Description                 = Description;
-            this.RemoteCertificateValidator  = RemoteCertificateValidator ?? ((sender, certificate, chain, policyErrors) => true);
-            this.ClientCert                  = ClientCert                 ?? throw new ArgumentNullException(nameof(ClientCert), "The given SSL/TLS client certificate must not be null!");
-            this.RequestTimeout              = RequestTimeout             ?? DefaultRequestTimeout;
-            this.MaxNumberOfRetries          = MaxNumberOfRetries         ?? DefaultMaxNumberOfRetries;
-            this.DNSClient                   = DNSClient;
-
-            this.HTTPLogger                  = new Logger(this);
+            base.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingContext,
+                                                LogfileCreator)
+                                   : null;
 
         }
 
@@ -351,7 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEDataRecords.ULongCount(),
                                                      Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout))).
+                                                     Request.RequestTimeout ?? RequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -391,20 +375,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-                                                      ? new HTTPClient (RemoteURL.Hostname,
-                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                        DNSClient:   DNSClient)
-
-                                                      : new HTTPSClient(RemoteURL.Hostname,
-                                                                        RemoteCertificateValidator,
-                                                                        (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                            return ClientCert;
-                                                                        },
-                                                                        ClientCert:  ClientCert,
-                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                        DNSClient:   DNSClient)).
+                        var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                                 VirtualHostname,
+                                                                 Description,
+                                                                 RemoteCertificateValidator,
+                                                                 null,
+                                                                 ClientCert,
+                                                                 HTTPUserAgent,
+                                                                 RequestTimeout,
+                                                                 TransmissionRetryDelay,
+                                                                 MaxNumberOfRetries,
+                                                                 false,
+                                                                 null,
+                                                                 DNSClient).
 
                                                   Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                          RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
@@ -418,7 +401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
                                                           CancellationToken:    Request.CancellationToken,
                                                           EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
+                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
                                                   ConfigureAwait(false);
 
@@ -777,7 +760,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEDataRecords.ULongCount(),
                                                      Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout,
+                                                     Request.RequestTimeout ?? RequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -839,7 +822,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEStatusRecords.ULongCount(),
                                                      Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout))).
+                                                     Request.RequestTimeout ?? RequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -879,20 +862,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-                                                      ? new HTTPClient (RemoteURL.Hostname,
-                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                        DNSClient:   DNSClient)
-
-                                                      : new HTTPSClient(RemoteURL.Hostname,
-                                                                        RemoteCertificateValidator,
-                                                                        (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                            return ClientCert;
-                                                                        },
-                                                                        ClientCert:  ClientCert,
-                                                                        RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                        DNSClient:   DNSClient)).
+                        var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                                 VirtualHostname,
+                                                                 Description,
+                                                                 RemoteCertificateValidator,
+                                                                 null,
+                                                                 ClientCert,
+                                                                 HTTPUserAgent,
+                                                                 RequestTimeout,
+                                                                 TransmissionRetryDelay,
+                                                                 MaxNumberOfRetries,
+                                                                 false,
+                                                                 null,
+                                                                 DNSClient).
 
                                                   Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                          RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
@@ -906,7 +888,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
                                                           CancellationToken:    Request.CancellationToken,
                                                           EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
+                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
                                                   ConfigureAwait(false);
 
@@ -1263,7 +1245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.Action,
                                                      Request.EVSEStatusRecords.ULongCount(),
                                                      Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout,
+                                                     Request.RequestTimeout ?? RequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -1330,7 +1312,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.PartnerProductId,
                                                      Request.CPOPartnerSessionId,
                                                      Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout))).
+                                                     Request.RequestTimeout ?? RequestTimeout))).
                                        ConfigureAwait(false);
 
             }
@@ -1350,20 +1332,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-                                                  ? new HTTPClient (RemoteURL.Hostname,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient:   DNSClient)
-
-                                                  : new HTTPSClient(RemoteURL.Hostname,
-                                                                    RemoteCertificateValidator,
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert:  ClientCert,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient:   DNSClient)).
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
 
                                               Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                      RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
@@ -1377,7 +1358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                       ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
                                               ConfigureAwait(false);
 
@@ -1673,7 +1654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      Request.PartnerProductId,
                                                      Request.CPOPartnerSessionId,
                                                      Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout,
+                                                     Request.RequestTimeout ?? RequestTimeout,
                                                      result,
                                                      Endtime - StartTime))).
                                        ConfigureAwait(false);
@@ -1758,20 +1739,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-                                                  ? new HTTPClient (RemoteURL.Hostname,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient:   DNSClient)
-
-                                                  : new HTTPSClient(RemoteURL.Hostname,
-                                                                    RemoteCertificateValidator,
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert:  ClientCert,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient:   DNSClient)).
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
 
                                               Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                      RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
@@ -1785,7 +1765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                       ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
                                               ConfigureAwait(false);
 
@@ -2182,20 +2162,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await (RemoteURL.Protocol == HTTPProtocols.http
-
-                                                  ? new HTTPClient (RemoteURL.Hostname,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTP,
-                                                                    DNSClient:   DNSClient)
-
-                                                  : new HTTPSClient(RemoteURL.Hostname,
-                                                                    RemoteCertificateValidator,
-                                                                    (sender, targetHost, localCertificates, remoteCertificate, acceptableIssuers) => {
-                                                                        return ClientCert;
-                                                                    },
-                                                                    ClientCert:  ClientCert,
-                                                                    RemotePort:  RemoteURL.Port ?? IPPort.HTTPS,
-                                                                    DNSClient:   DNSClient)).
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
 
                                               Execute(client => client.CreateRequest(HTTPMethod.POST,
                                                                                      RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
@@ -2209,7 +2188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                       ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout ?? DefaultRequestTimeout).
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
                                               ConfigureAwait(false);
 

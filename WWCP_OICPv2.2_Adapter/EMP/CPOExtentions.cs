@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,8 +39,6 @@ namespace org.GraphDefined.WWCP
     /// </summary>
     public static class CPOExtentions
     {
-
-        #region CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork, Id, Name, RemoteHostname, ...)
 
         /// <summary>
         /// Create and register a new electric vehicle roaming provider
@@ -85,40 +83,7 @@ namespace org.GraphDefined.WWCP
             CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork                       RoamingNetwork,
                                               CSORoamingProvider_Id                     Id,
                                               I18NString                                Name,
-
-                                              HTTPHostname                              RemoteHostname,
-                                              IPPort?                                   RemoteTCPPort                      = null,
-                                              RemoteCertificateValidationCallback       RemoteCertificateValidator         = null,
-                                              LocalCertificateSelectionCallback         ClientCertificateSelector          = null,
-                                              HTTPHostname?                             RemoteHTTPVirtualHost              = null,
-                                              HTTPPath?                                  URLPrefix                          = null,
-                                              String                                    EVSEDataURL                        = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURL,
-                                              String                                    EVSEStatusURL                      = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURL,
-                                              String                                    AuthenticationDataURL              = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURL,
-                                              String                                    ReservationURL                     = OICPv2_2.EMP.EMPClient.DefaultReservationURL,
-                                              String                                    AuthorizationURL                   = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURL,
-                                              OICPv2_2.Provider_Id?                     DefaultProviderId                  = null,
-
-                                              String                                    HTTPUserAgent                      = OICPv2_2.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                 RequestTimeout                     = null,
-                                              Byte?                                     MaxNumberOfRetries                 = OICPv2_2.EMP.EMPClient.DefaultMaxNumberOfRetries,
-
-                                              String                                    ServerName                         = OICPv2_2.EMP.EMPSOAPServer.DefaultHTTPServerName,
-                                              IPPort?                                   ServerTCPPort                      = null,
-                                              String                                    ServiceName                        = null,
-                                              ServerCertificateSelectorDelegate         ServerCertificateSelector          = null,
-                                              RemoteCertificateValidationCallback       RemoteClientCertificateValidator   = null,
-                                              LocalCertificateSelectionCallback         RemoteClientCertificateSelector    = null,
-                                              SslProtocols                              AllowedTLSProtocols                = SslProtocols.Tls12,
-                                              HTTPPath?                                 ServerURLPrefix                    = null,
-                                              String                                    ServerAuthorizationURL             = OICPv2_2.EMP.EMPSOAPServer.DefaultAuthorizationURL,
-                                              HTTPContentType                           ServerContentType                  = null,
-                                              Boolean                                   ServerRegisterHTTPRootService      = true,
-                                              Boolean                                   ServerAutoStart                    = false,
-
-                                              String                                    ClientLoggingContext               = OICPv2_2.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                    ServerLoggingContext               = OICPv2_2.EMP.EMPServerLogger.DefaultContext,
-                                              LogfileCreatorDelegate                    LogfileCreator                     = null,
+                                              OICPv2_2.EMP.EMPRoaming                   EMPRoaming,
 
                                               OICPv2_2.EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                = null,
 
@@ -136,8 +101,6 @@ namespace org.GraphDefined.WWCP
                                               GeoCoordinate?                            DefaultSearchCenter                = null,
                                               UInt64?                                   DefaultDistanceKM                  = null,
 
-                                              DNSClient                                 DNSClient                          = null,
-
                                               Action<OICPv2_2.EMP.WWCPCSOAdapter>       OICPConfigurator                   = null,
                                               Action<ICSORoamingProvider>               Configurator                       = null)
 
@@ -154,47 +117,15 @@ namespace org.GraphDefined.WWCP
             if (Name.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
 
-            if (RemoteHostname == null)
-                throw new ArgumentNullException(nameof(RemoteHostname),  "The given remote hostname must not be null!");
+            if (EMPRoaming == null)
+                throw new ArgumentNullException(nameof(EMPRoaming),      "The given EMP Roaming must not be null!");
 
             #endregion
 
             var NewRoamingProvider = new OICPv2_2.EMP.WWCPCSOAdapter(Id,
                                                                      Name,
                                                                      RoamingNetwork,
-
-                                                                     RemoteHostname,
-                                                                     RemoteTCPPort,
-                                                                     RemoteCertificateValidator,
-                                                                     ClientCertificateSelector,
-                                                                     RemoteHTTPVirtualHost,
-                                                                     URLPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURLPrefix,
-                                                                     EVSEDataURL,
-                                                                     EVSEStatusURL,
-                                                                     AuthenticationDataURL,
-                                                                     ReservationURL,
-                                                                     AuthorizationURL,
-
-                                                                     HTTPUserAgent,
-                                                                     RequestTimeout,
-                                                                     MaxNumberOfRetries,
-
-                                                                     ServerName,
-                                                                     ServerTCPPort,
-                                                                     ServiceName,
-                                                                     ServerCertificateSelector,
-                                                                     RemoteClientCertificateValidator,
-                                                                     RemoteClientCertificateSelector,
-                                                                     AllowedTLSProtocols,
-                                                                     ServerURLPrefix ?? OICPv2_2.EMP.EMPSOAPServer.DefaultURLPathPrefix,
-                                                                     ServerAuthorizationURL,
-                                                                     ServerContentType,
-                                                                     ServerRegisterHTTPRootService,
-                                                                     ServerAutoStart,
-
-                                                                     ClientLoggingContext,
-                                                                     ServerLoggingContext,
-                                                                     LogfileCreator,
+                                                                     EMPRoaming,
 
                                                                      EVSEDataRecord2EVSE,
 
@@ -209,178 +140,7 @@ namespace org.GraphDefined.WWCP
                                                                      PullStatusServiceRequestTimeout,
 
                                                                      DefaultProvider,
-                                                                     DefaultProviderId,
-                                                                     DefaultSearchCenter,
-                                                                     DefaultDistanceKM,
-
-                                                                     DNSClient);
-
-
-            OICPConfigurator?.Invoke(NewRoamingProvider);
-
-            return RoamingNetwork.
-                       CreateNewRoamingProvider(NewRoamingProvider,
-                                                Configurator) as OICPv2_2.EMP.WWCPCSOAdapter;
-
-        }
-
-        #endregion
-
-        #region CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork, Id, Name, SOAPServer, RemoteHostname, ...)
-
-        /// <summary>
-        /// Create and register a new electric vehicle roaming provider
-        /// using the OICP protocol and having the given unique electric
-        /// vehicle roaming provider identification.
-        /// </summary>
-        /// 
-        /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// <param name="Id">The unique identification of the roaming provider.</param>
-        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
-        /// <param name="SOAPServer">An optional identification string for the HTTP server.</param>
-        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
-        /// 
-        /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
-        /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
-        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
-        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
-        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
-        /// 
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
-        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// 
-        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        /// 
-        /// <param name="DNSClient">An optional DNS client to use.</param>
-        /// 
-        /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
-        /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        public static OICPv2_2.EMP.WWCPCSOAdapter
-
-            CreateOICPv2_2_CPORoamingProvider(this RoamingNetwork                       RoamingNetwork,
-                                              CSORoamingProvider_Id                     Id,
-                                              I18NString                                Name,
-                                              SOAPServer                                SOAPServer,
-
-                                              HTTPHostname                              RemoteHostname,
-                                              IPPort?                                   RemoteTCPPort                     = null,
-                                              RemoteCertificateValidationCallback       RemoteCertificateValidator        = null,
-                                              LocalCertificateSelectionCallback         ClientCertificateSelector         = null,
-                                              HTTPHostname?                             RemoteHTTPVirtualHost             = null,
-                                              HTTPPath?                                  URLPrefix                         = null,
-                                              String                                    EVSEDataURL                       = OICPv2_2.EMP.EMPClient.DefaultEVSEDataURL,
-                                              String                                    EVSEStatusURL                     = OICPv2_2.EMP.EMPClient.DefaultEVSEStatusURL,
-                                              String                                    AuthenticationDataURL             = OICPv2_2.EMP.EMPClient.DefaultAuthenticationDataURL,
-                                              String                                    ReservationURL                    = OICPv2_2.EMP.EMPClient.DefaultReservationURL,
-                                              String                                    AuthorizationURL                  = OICPv2_2.EMP.EMPClient.DefaultAuthorizationURL,
-                                              OICPv2_2.Provider_Id?                     DefaultProviderId                 = null,
-
-                                              String                                    HTTPUserAgent                     = OICPv2_2.EMP.EMPClient.DefaultHTTPUserAgent,
-                                              TimeSpan?                                 RequestTimeout                    = null,
-                                              Byte?                                     MaxNumberOfRetries                = OICPv2_2.EMP.EMPClient.DefaultMaxNumberOfRetries,
-
-                                              String                                    ServiceId                         = null,
-                                              HTTPPath?                                  ServerURLPrefix                   = null,
-                                              String                                    ServerAuthorizationURL            = OICPv2_2.EMP.EMPSOAPServer.DefaultAuthorizationURL,
-
-                                              String                                    ClientLoggingContext              = OICPv2_2.EMP.EMPClient.EMPClientLogger.DefaultContext,
-                                              String                                    ServerLoggingContext              = OICPv2_2.EMP.EMPServerLogger.DefaultContext,
-                                              LogfileCreatorDelegate                    LogfileCreator                    = null,
-
-                                              OICPv2_2.EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
-
-                                              OICPv2_2.EVSEOperatorFilterDelegate       EVSEOperatorFilter                = null,
-
-                                              TimeSpan?                                 PullDataServiceEvery              = null,
-                                              Boolean                                   DisablePullData                   = false,
-                                              TimeSpan?                                 PullDataServiceRequestTimeout     = null,
-
-                                              TimeSpan?                                 PullStatusServiceEvery            = null,
-                                              Boolean                                   DisablePullStatus                 = false,
-                                              TimeSpan?                                 PullStatusServiceRequestTimeout   = null,
-
-                                              eMobilityProvider                         DefaultProvider                   = null,
-                                              GeoCoordinate?                            DefaultSearchCenter               = null,
-                                              UInt64?                                   DefaultDistanceKM                 = null,
-
-                                              DNSClient                                 DNSClient                         = null,
-
-                                              Action<OICPv2_2.EMP.WWCPCSOAdapter>       OICPConfigurator                  = null,
-                                              Action<ICSORoamingProvider>               Configurator                      = null)
-
-        {
-
-            #region Initial checks
-
-            if (SOAPServer == null)
-                throw new ArgumentNullException(nameof(SOAPServer),      "The given SOAP/HTTP server must not be null!");
-
-
-            if (RoamingNetwork == null)
-                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
-
-            if (Id == null)
-                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null!");
-
-            if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
-
-            if (RemoteHostname == null)
-                throw new ArgumentNullException(nameof(RemoteHostname),  "The given remote hostname must not be null!");
-
-            #endregion
-
-            var NewRoamingProvider = new OICPv2_2.EMP.WWCPCSOAdapter(Id,
-                                                                     Name,
-                                                                     RoamingNetwork,
-
-                                                                     new OICPv2_2.EMP.EMPClient(Id.ToString(),
-                                                                                                RemoteHostname,
-                                                                                                RemoteTCPPort,
-                                                                                                RemoteCertificateValidator,
-                                                                                                ClientCertificateSelector,
-                                                                                                RemoteHTTPVirtualHost,
-                                                                                                URLPrefix ?? OICPv2_2.EMP.EMPClient.DefaultURLPrefix,
-                                                                                                EVSEDataURL,
-                                                                                                EVSEStatusURL,
-                                                                                                AuthenticationDataURL,
-                                                                                                ReservationURL,
-                                                                                                AuthorizationURL,
-                                                                                                DefaultProviderId,
-
-                                                                                                HTTPUserAgent,
-                                                                                                RequestTimeout,
-                                                                                                MaxNumberOfRetries,
-                                                                                                DNSClient,
-                                                                                                ClientLoggingContext,
-                                                                                                LogfileCreator),
-
-                                                                     new OICPv2_2.EMP.EMPSOAPServer(SOAPServer,
-                                                                                                ServiceId,
-                                                                                                ServerURLPrefix ?? OICPv2_2.EMP.EMPSOAPServer.DefaultURLPathPrefix,
-                                                                                                ServerAuthorizationURL),
-
-                                                                     ServerLoggingContext,
-                                                                     LogfileCreator,
-
-                                                                     EVSEDataRecord2EVSE,
-
-                                                                     EVSEOperatorFilter,
-
-                                                                     PullDataServiceEvery,
-                                                                     DisablePullData,
-                                                                     PullDataServiceRequestTimeout,
-
-                                                                     PullStatusServiceEvery,
-                                                                     DisablePullStatus,
-                                                                     PullStatusServiceRequestTimeout,
-
-                                                                     DefaultProvider,
-                                                                     DefaultProviderId,
+                                                                     null,
                                                                      DefaultSearchCenter,
                                                                      DefaultDistanceKM);
 
@@ -392,8 +152,6 @@ namespace org.GraphDefined.WWCP
                                                 Configurator) as OICPv2_2.EMP.WWCPCSOAdapter;
 
         }
-
-        #endregion
 
     }
 

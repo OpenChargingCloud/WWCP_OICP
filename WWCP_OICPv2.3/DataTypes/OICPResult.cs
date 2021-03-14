@@ -28,6 +28,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
+    public static class Extdgdg
+    {
+
+        public static Boolean IsSuccess<T>(this OICPResult<T> OICPResult)
+            => (!(OICPResult is null)) && OICPResult._IsSuccess;
+
+    }
+
     public class OICPResult<T>
     {
 
@@ -37,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public T                    Result              { get; }
 
-        public Boolean              IsSuccess           { get; }
+        public Boolean              _IsSuccess          { get; }
 
         public ValidationErrorList  ValidationErrors    { get; }
 
@@ -55,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             this.Request           = Request;
-            this.IsSuccess         = IsSuccess;
+            this._IsSuccess        = IsSuccess;
             this.Result            = Result;
             this.ValidationErrors  = ValidationErrors;
             this.ProcessId         = ProcessId;

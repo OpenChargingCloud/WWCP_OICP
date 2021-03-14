@@ -507,7 +507,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + MobileAuthorizationURL,
+                                                    URLPathPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -703,7 +703,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + MobileAuthorizationURL,
+                                                    URLPathPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -912,7 +912,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.Mobile
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + MobileAuthorizationURL,
+                                                    URLPathPrefix + MobileAuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,

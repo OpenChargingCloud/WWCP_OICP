@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public readonly UInt32?                     Amperage         { get; }
 
         /// <summary>
-        /// The power of the charging facility (kW).
+        /// The power of the charging facility [kW].
         /// </summary>
         [Mandatory]
         public readonly UInt32                      Power            { get; }
@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new charging facility.
         /// </summary>
         /// <param name="PowerType">The power type  of the charging facility, e.g. AC or DC.</param>
-        /// <param name="Power">The power of the charging facility (kW).</param>
+        /// <param name="Power">The power of the charging facility [kW].</param>
         /// 
         /// <param name="Voltage">Optional voltage of the charging facility.</param>
         /// <param name="Amperage">Optional amperage of the charging facility.</param>

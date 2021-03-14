@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2021 GraphDefined GmbH
+ * Copyright (c) 2014-2020 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ using org.GraphDefined.WWCP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_2
+namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     public class EVSEToOICPException : OICPException

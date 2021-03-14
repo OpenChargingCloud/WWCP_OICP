@@ -28,6 +28,19 @@ using org.GraphDefined.Vanaheimr.Illias;
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
+    /// <summary>
+    /// A delegate for filtering EVSE data records.
+    /// </summary>
+    /// <param name="EVSEDataRecord">An EVSE data record.</param>
+    public delegate Boolean IncludeEVSEDataRecordsDelegate  (EVSEDataRecord    EVSEDataRecord);
+
+    /// <summary>
+    /// A delegate for filtering EVSE status records.
+    /// </summary>
+    /// <param name="EVSEStatusRecord">An EVSE status record.</param>
+    public delegate Boolean IncludeEVSEStatusRecordsDelegate(EVSEStatusRecord  EVSEStatusRecord);
+
+
     #region OnPushEVSEDataRequest/-Response
 
     /// <summary>

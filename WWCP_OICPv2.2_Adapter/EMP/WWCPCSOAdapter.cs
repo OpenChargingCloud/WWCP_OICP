@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -369,8 +369,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
         #region Constructor(s)
 
-        #region WWCPCSOAdapter(Id, Name, RoamingNetwork, EMPRoaming, EVSEDataRecord2EVSE = null)
-
         /// <summary>
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
         /// </summary>
@@ -383,8 +381,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
         public WWCPCSOAdapter(CSORoamingProvider_Id        Id,
                               I18NString                   Name,
                               RoamingNetwork               RoamingNetwork,
-
                               EMPRoaming                   EMPRoaming,
+
                               EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
 
                               EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
@@ -878,237 +876,6 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
             #endregion
 
         }
-
-        #endregion
-
-        #region WWCPCSOAdapter(Id, Name, RoamingNetwork, EMPClient, EMPServer, Context = EMPRoaming.DefaultLoggingContext, LogfileCreator = null)
-
-        /// <summary>
-        /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
-        /// </summary>
-        /// <param name="Id">The unique identification of the roaming provider.</param>
-        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
-        /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// 
-        /// <param name="EMPClient">An OICP EMP client.</param>
-        /// <param name="EMPServer">An OICP EMP sever.</param>
-        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// 
-        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public WWCPCSOAdapter(CSORoamingProvider_Id        Id,
-                              I18NString                   Name,
-                              RoamingNetwork               RoamingNetwork,
-
-                              EMPClient                    EMPClient,
-                              EMPSOAPServer                    EMPServer,
-                              String                       ServerLoggingContext              = EMPServerLogger.DefaultContext,
-                              LogfileCreatorDelegate       LogfileCreator                    = null,
-
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
-
-                              EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
-
-                              TimeSpan?                    PullDataServiceEvery              = null,
-                              Boolean                      DisablePullData                   = false,
-                              TimeSpan?                    PullDataServiceRequestTimeout     = null,
-
-                              TimeSpan?                    PullStatusServiceEvery            = null,
-                              Boolean                      DisablePullStatus                 = false,
-                              TimeSpan?                    PullStatusServiceRequestTimeout   = null,
-
-                              eMobilityProvider            DefaultProvider                   = null,
-                              Provider_Id?                 DefaultProviderId                 = null,
-                              GeoCoordinate?               DefaultSearchCenter               = null,
-                              UInt64?                      DefaultDistanceKM                 = null)
-
-            : this(Id,
-                   Name,
-                   RoamingNetwork,
-
-                   new EMPRoaming(EMPClient,
-                                  EMPServer,
-                                  ServerLoggingContext,
-                                  LogfileCreator),
-
-                   EVSEDataRecord2EVSE,
-
-                   EVSEOperatorFilter,
-
-                   PullDataServiceEvery,
-                   DisablePullData,
-                   PullDataServiceRequestTimeout,
-
-                   PullStatusServiceEvery,
-                   DisablePullStatus,
-                   PullStatusServiceRequestTimeout,
-
-                   DefaultProvider,
-                   DefaultProviderId,
-                   DefaultSearchCenter,
-                   DefaultDistanceKM)
-
-        { }
-
-        #endregion
-
-        #region WWCPCSOAdapter(Id, Name, RoamingNetwork, RemoteHostName, ...)
-
-        /// <summary>
-        /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
-        /// </summary>
-        /// <param name="Id">The unique identification of the roaming provider.</param>
-        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
-        /// <param name="RoamingNetwork">A WWCP roaming network.</param>
-        /// 
-        /// <param name="RemoteHostname">The hostname of the remote OICP service.</param>
-        /// <param name="RemoteTCPPort">An optional TCP port of the remote OICP service.</param>
-        /// <param name="RemoteCertificateValidator">A delegate to verify the remote TLS certificate.</param>
-        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
-        /// <param name="RemoteHTTPVirtualHost">An optional HTTP virtual hostname of the remote OICP service.</param>
-        /// <param name="HTTPUserAgent">An optional HTTP user agent identification string for this HTTP client.</param>
-        /// <param name="RequestTimeout">An optional timeout for upstream queries.</param>
-        /// <param name="MaxNumberOfRetries">The default number of maximum transmission retries.</param>
-        /// 
-        /// <param name="ServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
-        /// <param name="RemoteClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
-        /// <param name="RemoteClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
-        /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
-        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
-        /// <param name="ServerContentType">An optional HTTP content type to use.</param>
-        /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
-        /// <param name="ServerAutoStart">Whether to start the server immediately or not.</param>
-        /// 
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
-        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// 
-        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        /// 
-        /// <param name="DNSClient">An optional DNS client to use.</param>
-        public WWCPCSOAdapter(CSORoamingProvider_Id                Id,
-                              I18NString                           Name,
-                              RoamingNetwork                       RoamingNetwork,
-
-                              HTTPHostname                         RemoteHostname,
-                              IPPort?                              RemoteTCPPort                      = null,
-                              RemoteCertificateValidationCallback  RemoteCertificateValidator         = null,
-                              LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
-                              HTTPHostname?                        RemoteHTTPVirtualHost              = null,
-                              HTTPPath?                            URLPrefix                          = null,
-                              String                               EVSEDataURL                        = EMPClient.DefaultEVSEDataURL,
-                              String                               EVSEStatusURL                      = EMPClient.DefaultEVSEStatusURL,
-                              String                               AuthenticationDataURL              = EMPClient.DefaultAuthenticationDataURL,
-                              String                               ReservationURL                     = EMPClient.DefaultReservationURL,
-                              String                               AuthorizationURL                   = EMPClient.DefaultAuthorizationURL,
-
-                              String                               HTTPUserAgent                      = EMPClient.DefaultHTTPUserAgent,
-                              TimeSpan?                            RequestTimeout                     = null,
-                              Byte?                                MaxNumberOfRetries                 = EMPClient.DefaultMaxNumberOfRetries,
-
-                              String                               ServerName                         = EMPSOAPServer.DefaultHTTPServerName,
-                              IPPort?                              ServerTCPPort                      = null,
-                              String                               ServiceName                        = null,
-                              ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
-                              RemoteCertificateValidationCallback  RemoteClientCertificateValidator   = null,
-                              LocalCertificateSelectionCallback    RemoteClientCertificateSelector    = null,
-                              SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12,
-                              HTTPPath?                            ServerURLPrefix                    = null,
-                              String                               ServerAuthorizationURL             = EMPSOAPServer.DefaultAuthorizationURL,
-                              HTTPContentType                      ServerContentType                  = null,
-                              Boolean                              ServerRegisterHTTPRootService      = true,
-                              Boolean                              ServerAutoStart                    = false,
-
-                              String                               ClientLoggingContext               = EMPClient.EMPClientLogger.DefaultContext,
-                              String                               ServerLoggingContext               = EMPServerLogger.DefaultContext,
-                              LogfileCreatorDelegate               LogfileCreator                     = null,
-
-                              EVSEDataRecord2EVSEDelegate          EVSEDataRecord2EVSE                = null,
-
-                              EVSEOperatorFilterDelegate           EVSEOperatorFilter                 = null,
-
-                              TimeSpan?                            PullDataServiceEvery               = null,
-                              Boolean                              DisablePullData                    = false,
-                              TimeSpan?                            PullDataServiceRequestTimeout      = null,
-
-                              TimeSpan?                            PullStatusServiceEvery             = null,
-                              Boolean                              DisablePullStatus                  = false,
-                              TimeSpan?                            PullStatusServiceRequestTimeout    = null,
-
-                              eMobilityProvider                    DefaultProvider                    = null,
-                              Provider_Id?                         DefaultProviderId                  = null,
-                              GeoCoordinate?                       DefaultSearchCenter                = null,
-                              UInt64?                              DefaultDistanceKM                  = null,
-
-                              DNSClient                            DNSClient                          = null)
-
-            : this(Id,
-                   Name,
-                   RoamingNetwork,
-
-                   new EMPRoaming(Id.ToString(),
-                                  RemoteHostname,
-                                  RemoteTCPPort,
-                                  RemoteCertificateValidator,
-                                  ClientCertificateSelector,
-                                  RemoteHTTPVirtualHost,
-                                  URLPrefix ?? EMPClient.DefaultURLPrefix,
-                                  EVSEDataURL,
-                                  EVSEStatusURL,
-                                  AuthenticationDataURL,
-                                  ReservationURL,
-                                  AuthorizationURL,
-                                  DefaultProviderId,
-
-                                  HTTPUserAgent,
-                                  RequestTimeout,
-                                  MaxNumberOfRetries,
-
-                                  ServerName,
-                                  ServerTCPPort,
-                                  ServiceName,
-                                  ServerCertificateSelector,
-                                  RemoteClientCertificateValidator,
-                                  RemoteClientCertificateSelector,
-                                  AllowedTLSProtocols,
-                                  ServerURLPrefix ?? EMPSOAPServer.DefaultURLPathPrefix,
-                                  ServerAuthorizationURL,
-                                  ServerContentType,
-                                  ServerRegisterHTTPRootService,
-                                  false,
-
-                                  ClientLoggingContext,
-                                  ServerLoggingContext,
-                                  LogfileCreator,
-
-                                  DNSClient),
-
-                   EVSEDataRecord2EVSE,
-                   EVSEOperatorFilter,
-
-                   PullDataServiceEvery,
-                   DisablePullData,
-                   PullDataServiceRequestTimeout,
-
-                   PullStatusServiceEvery,
-                   DisablePullStatus,
-                   PullStatusServiceRequestTimeout,
-
-                   DefaultProvider,
-                   DefaultProviderId,
-                   DefaultSearchCenter,
-                   DefaultDistanceKM)
-
-        {
-
-            if (ServerAutoStart)
-                EMPServer.Start();
-
-        }
-
-        #endregion
 
         #endregion
 

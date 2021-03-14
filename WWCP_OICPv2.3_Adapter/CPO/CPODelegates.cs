@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2021 GraphDefined GmbH
+ * Copyright (c) 2014-2020 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,43 +21,44 @@ using System;
 using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using WWCP = org.GraphDefined.WWCP;
 
 #endregion
 
-namespace org.GraphDefined.WWCP.OICPv2_2.CPO
+namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-    /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
-    /// </summary>
-    /// <param name="EVSE">A WWCP EVSE.</param>
-    /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (EVSE                     EVSE,
-                                                                                          EVSEDataRecord           EVSEDataRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
+    ///// </summary>
+    ///// <param name="EVSE">A WWCP EVSE.</param>
+    ///// <param name="EVSEDataRecord">An EVSE data record.</param>
+    //public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (WWCP.EVSE                EVSE,
+    //                                                                                      EVSEDataRecord           EVSEDataRecord);
 
-    /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
-    /// </summary>
-    /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
-    /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
-    public delegate EVSEStatusRecord    EVSEStatusUpdate2EVSEStatusRecordDelegate        (EVSEStatusUpdate         EVSEStatusUpdate,
-                                                                                          EVSEStatusRecord         EVSEStatusRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
+    ///// </summary>
+    ///// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
+    ///// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
+    //public delegate EVSEStatusRecord    EVSEStatusUpdate2EVSEStatusRecordDelegate        (WWCP.EVSEStatusUpdate    EVSEStatusUpdate,
+    //                                                                                      EVSEStatusRecord         EVSEStatusRecord);
 
-    /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
-    /// </summary>
-    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
-    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
-    public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
-                                                                                          ChargeDetailRecord       OCIPChargeDetailRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
+    ///// </summary>
+    ///// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
+    ///// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
+    //public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
+    //                                                                                      ChargeDetailRecord       OCIPChargeDetailRecord);
 
-    /// <summary>
-    /// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
-    /// </summary>
-    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
-    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
-    public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       OICPChargeDetailRecord,
-                                                                                               WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
+    ///// <summary>
+    ///// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
+    ///// </summary>
+    ///// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
+    ///// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
+    //public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       OICPChargeDetailRecord,
+    //                                                                                           WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
 
 
     #region OnPushEVSEDataWWCPRequest/-Response
@@ -68,9 +69,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate void OnPushEVSEDataWWCPRequestDelegate   (DateTime                         LogTimestamp,
                                                               DateTime                         RequestTimestamp,
                                                               Object                           Sender,
-                                                              EMPRoamingProvider_Id            SenderId,
+                                                              WWCP.EMPRoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
@@ -84,14 +85,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate void OnPushEVSEDataWWCPResponseDelegate  (DateTime                         LogTimestamp,
                                                               DateTime                         RequestTimestamp,
                                                               Object                           Sender,
-                                                              EMPRoamingProvider_Id            SenderId,
+                                                              WWCP.EMPRoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
-                                                              PushEVSEDataResult               Result,
+                                                              WWCP.PushEVSEDataResult          Result,
                                                               TimeSpan                         Runtime);
 
     #endregion
@@ -104,9 +105,9 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTime                         LogTimestamp,
                                                               DateTime                         RequestTimestamp,
                                                               Object                           Sender,
-                                                              EMPRoamingProvider_Id            SenderId,
+                                                              WWCP.EMPRoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
@@ -120,14 +121,14 @@ namespace org.GraphDefined.WWCP.OICPv2_2.CPO
     public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTime                         LogTimestamp,
                                                               DateTime                         RequestTimestamp,
                                                               Object                           Sender,
-                                                              EMPRoamingProvider_Id            SenderId,
+                                                              WWCP.EMPRoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,
-                                                              RoamingNetwork_Id                RoamingNetworkId,
+                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
                                                               UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
-                                                              PushEVSEStatusResult             Result,
+                                                              WWCP.PushEVSEStatusResult        Result,
                                                               TimeSpan                         Runtime);
 
     #endregion

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -1261,7 +1262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MaxCapacity",                       MaxCapacity.                 Value)
                                : null,
 
-                           AccessibilityLocationType.           HasValue
+                           AccessibilityLocationType.       HasValue
                                ? new JProperty("AccessibilityLocation",             AccessibilityLocationType.   Value.AsString())
                                : null,
 

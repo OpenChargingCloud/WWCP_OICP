@@ -36,7 +36,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP client (HTTP client) logger.
         /// </summary>
-        public new class Logger //: HTTPClient.Logger
+        public class Logger : HTTPClientLogger
         {
 
             #region Data
@@ -128,25 +128,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                           LogfileCreatorDelegate      LogfileCreator              = null)
 
-                //: base(EMPClient,
-                //       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : base(EMPClient,
+                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
-                //       LogHTTPRequest_toConsole,
-                //       LogHTTPResponse_toConsole,
-                //       LogHTTPRequest_toDisc,
-                //       LogHTTPResponse_toDisc,
+                       LogHTTPRequest_toConsole,
+                       LogHTTPResponse_toConsole,
+                       LogHTTPRequest_toDisc,
+                       LogHTTPResponse_toDisc,
 
-                //       LogHTTPRequest_toNetwork,
-                //       LogHTTPResponse_toNetwork,
-                //       LogHTTPRequest_toHTTPSSE,
-                //       LogHTTPResponse_toHTTPSSE,
+                       LogHTTPRequest_toNetwork,
+                       LogHTTPResponse_toNetwork,
+                       LogHTTPRequest_toHTTPSSE,
+                       LogHTTPResponse_toHTTPSSE,
 
-                //       LogHTTPError_toConsole,
-                //       LogHTTPError_toDisc,
-                //       LogHTTPError_toNetwork,
-                //       LogHTTPError_toHTTPSSE,
+                       LogHTTPError_toConsole,
+                       LogHTTPError_toDisc,
+                       LogHTTPError_toNetwork,
+                       LogHTTPError_toHTTPSSE,
 
-                //       LogfileCreator)
+                       LogfileCreator)
 
             {
 

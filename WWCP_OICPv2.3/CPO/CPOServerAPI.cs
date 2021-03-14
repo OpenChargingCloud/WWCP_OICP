@@ -37,14 +37,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The CPO HTTP server API.
+    /// The OICP CPO HTTP server API.
     /// </summary>
-    public class CPOServerAPI : HTTPAPI
+    public partial class CPOServerAPI : HTTPAPI
     {
 
         #region Data
 
-        public TimeSpan                                                             DefaultRequestTimeout                                   { get; set; }
+        /// <summary>
+        /// The default HTTP server name.
+        /// </summary>
+        public new const String  DefaultHTTPServerName   = "GraphDefined OICP " + Version.Number + " CPO HTTP API";
+
+        /// <summary>
+        /// The default HTTP service name.
+        /// </summary>
+        public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.Number + " CPO HTTP API";
+
+        #endregion
+
+        #region Properties
 
         public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser      { get; set; }
 
@@ -53,20 +65,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                 { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                  { get; set; }
-
-        #endregion
-
-        #region Properties
-
-        public X509Certificate  ServerCert    { get; }
-
-        public DNSClient        DNSClient     { get; }
-
-
-        /// <summary>
-        /// The CPO client (HTTP client) logger.
-        /// </summary>
-        //public Logger                               HTTPLogger                    { get; }
 
         #endregion
 
@@ -186,18 +184,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// Create a new CPO HTTP server API.
         /// </summary>
-        /// <param name="ServerCertificateSelector"></param>
-        /// <param name="ClientCertificateSelector"></param>
-        /// <param name="ClientCertificateValidator"></param>
-        /// <param name="AllowedTLSProtocols"></param>
-        /// <param name="HTTPHostname"></param>
-        /// <param name="HTTPServerPort"></param>
-        /// <param name="HTTPServerName"></param>
-        /// <param name="ExternalDNSName"></param>
-        /// <param name="URLPathPrefix"></param>
-        /// <param name="ServiceName"></param>
-        /// <param name="DNSClient"></param>
-        /// <param name="Autostart"></param>
         public CPOServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,
@@ -208,6 +194,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             String                               ExternalDNSName       = null,
                             HTTPPath?                            URLPathPrefix         = null,
                             String                               ServiceName           = DefaultHTTPServiceName,
+                            Boolean                              DisableLogging        = false,
+                            String                               LoggingContext        = null,
+                            LogfileCreatorDelegate               LogfileCreator        = null,
                             DNSClient                            DNSClient             = null,
                             Boolean                              Autostart             = false)
 
@@ -227,6 +216,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         {
 
             RegisterURLTemplates();
+
+            this.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingContext,
+                                                LogfileCreator)
+                                   : null;
 
             if (Autostart)
                 HTTPServer.Start();

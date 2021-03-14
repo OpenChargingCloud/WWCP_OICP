@@ -1137,7 +1137,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + EVSEDataURL,
+                                                    URLPathPrefix + EVSEDataURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1358,7 +1358,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + EVSEStatusURL,
+                                                    URLPathPrefix + EVSEStatusURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1550,7 +1550,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + EVSEStatusURL,
+                                                    URLPathPrefix + EVSEStatusURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1732,7 +1732,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + EVSEStatusURL,
+                                                    URLPathPrefix + EVSEStatusURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -1916,7 +1916,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + AuthenticationDataURL,
+                                                    URLPathPrefix + AuthenticationDataURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2130,7 +2130,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + ReservationURL,
+                                                    URLPathPrefix + ReservationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2349,7 +2349,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + ReservationURL,
+                                                    URLPathPrefix + ReservationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2566,7 +2566,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + AuthorizationURL,
+                                                    URLPathPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2780,7 +2780,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + AuthorizationURL,
+                                                    URLPathPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,
@@ -2994,7 +2994,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
 
             using (var _OICPClient = new SOAPClient(Hostname,
-                                                    URLPrefix + AuthorizationURL,
+                                                    URLPathPrefix + AuthorizationURL,
                                                     VirtualHostname,
                                                     RemotePort,
                                                     RemoteCertificateValidator,

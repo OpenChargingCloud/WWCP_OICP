@@ -37,30 +37,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The EMP HTTP server API.
+    /// The OICP EMP HTTP server API.
     /// </summary>
     public class EMPServerAPI : HTTPAPI
     {
 
         #region Data
 
+        /// <summary>
+        /// The default HTTP server name.
+        /// </summary>
+        public new const String  DefaultHTTPServerName   = "GraphDefined OICP " + Version.Number + " EMP HTTP API";
+
+        /// <summary>
+        /// The default HTTP service name.
+        /// </summary>
+        public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.Number + " EMP HTTP API";
 
         #endregion
 
         #region Properties
-
-        public X509Certificate  ServerCert    { get; }
-
-        public DNSClient        DNSClient     { get; }
-
-
-        /// <summary>
-        /// The EMP client (HTTP client) logger.
-        /// </summary>
-        //public Logger                               HTTPLogger                    { get; }
-
-
-        public TimeSpan                                                    DefaultRequestTimeout                        { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizeStartRequest>          CustomAuthorizeStartRequestParser            { get; set; }
         public CustomJObjectParserDelegate<AuthorizeStopRequest>           CustomAuthorizeStopRequestParser             { get; set; }
@@ -278,8 +274,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    false)
 
         {
-
-            this.DefaultRequestTimeout = TimeSpan.FromSeconds(10);
 
             RegisterURLTemplates();
 

@@ -49,6 +49,7 @@
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\EMPExtentions.cs" />
     <Compile Include="CPO\WWCPEMPAdapter.cs" />
+    <Compile Include="OICPExceptions.cs" />
     <Compile Include="OICPMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

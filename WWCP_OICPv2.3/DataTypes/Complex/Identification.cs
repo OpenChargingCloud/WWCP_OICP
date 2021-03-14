@@ -199,10 +199,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue">Hash value created by partner.</param>
         /// <param name="HashFunction">Function that was used to generate the hash value.</param>
         /// <param name="CustomData">Optional custom data.</param>
-        public static Identification FromQRCodeIdentification(EVCO_Id       EVCOId,
-                                                              Hash_Value    HashValue,
+        public static Identification FromQRCodeIdentification(EVCO_Id        EVCOId,
+                                                              Hash_Value     HashValue,
                                                               HashFunctions  HashFunction,
-                                                              JObject       CustomData   = null)
+                                                              JObject        CustomData   = null)
 
             => new Identification(QRCodeIdentification:  new QRCodeIdentification(
                                                              EVCOId,

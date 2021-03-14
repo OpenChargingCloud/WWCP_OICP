@@ -19,7 +19,6 @@
 
 using System;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -30,66 +29,65 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO client.
     /// </summary>
-    public partial class CPOClient
+    public partial class CPOServerAPI
     {
 
         /// <summary>
-        /// The CPO client (HTTP client) logger.
+        /// A CPO Server API logger.
         /// </summary>
-        public class Logger : HTTPClientLogger
+        public class Logger : HTTPServerLogger
         {
 
             #region Data
 
             /// <summary>
-            /// The default context for this logger.
+            /// The default context of this logger.
             /// </summary>
-            public const String DefaultContext = "OICPCPOClient";
+            public const String DefaultContext = "CPOServerAPI";
 
             #endregion
 
             #region Properties
 
             /// <summary>
-            /// The attached CPO client.
+            /// The linked CPO Server API.
             /// </summary>
-            public CPOClient  CPOClient    { get; }
+            public CPOServerAPI  CPOServerAPI    { get; }
 
             #endregion
 
             #region Constructor(s)
 
-            #region Logger(CPOClient, Context = DefaultContext, LogfileCreator = null)
+            #region CPOServerAPILogger(CPOServerAPI, Context = DefaultContext, LogFileCreator = null)
 
             /// <summary>
-            /// Create a new CPO client logger using the default logging delegates.
+            /// Create a new CPO Server API logger using the default logging delegates.
             /// </summary>
-            /// <param name="CPOClient">A CPO client.</param>
+            /// <param name="CPOServerAPI">An CPO Server API.</param>
             /// <param name="Context">A context of this API.</param>
-            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOClient               CPOClient,
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public Logger(CPOServerAPI            CPOServerAPI,
                           String                  Context         = DefaultContext,
-                          LogfileCreatorDelegate  LogfileCreator  = null)
+                          LogfileCreatorDelegate  LogFileCreator  = null)
 
-                : this(CPOClient,
-                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : this(CPOServerAPI,
+                       Context,
                        null,
                        null,
                        null,
                        null,
-
-                       LogfileCreator: LogfileCreator)
+                       LogFileCreator: LogFileCreator)
 
             { }
 
             #endregion
 
-            #region Logger(CPOClient, Context, ... Logging delegates ...)
+            #region CPOServerAPILogger(CPOServerAPI, Context, ... Logging delegates ...)
 
             /// <summary>
-            /// Create a new CPO client logger using the given logging delegates.
+            /// Create a new CPO Server API logger using the given logging delegates.
             /// </summary>
-            /// <param name="CPOClient">A CPO client.</param>
+            /// <param name="CPOServerAPI">An CPO Server API.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
             /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -99,16 +97,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// 
             /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
             /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP client sent events source.</param>
-            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP client sent events source.</param>
+            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
+            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
             /// 
             /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
             /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
             /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
+            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
             /// 
-            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOClient                   CPOClient,
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public Logger(CPOServerAPI                CPOServerAPI,
                           String                      Context,
 
                           HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
@@ -126,10 +124,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           HTTPResponseLoggerDelegate  LogHTTPError_toNetwork      = null,
                           HTTPResponseLoggerDelegate  LogHTTPError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate      LogfileCreator              = null)
+                          LogfileCreatorDelegate      LogFileCreator              = null)
 
-                : base(CPOClient,
-                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                : base(CPOServerAPI.HTTPServer,
+                       Context,
 
                        LogHTTPRequest_toConsole,
                        LogHTTPResponse_toConsole,
@@ -146,28 +144,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        LogHTTPError_toNetwork,
                        LogHTTPError_toHTTPSSE,
 
-                       LogfileCreator)
+                       LogFileCreator)
 
             {
 
-                this.CPOClient = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
+                this.CPOServerAPI = CPOServerAPI ?? throw new ArgumentNullException(nameof(CPOServerAPI), "The given CPO Server API must not be null!");
 
-                #region Register log events
+                #region AuthorizeRemoteStart/-Stop
 
-                //RegisterEvent("SendHeartbeatRequest",
-                //              handler => CPOClient.OnSendHeartbeatSOAPRequest  += handler,
-                //              handler => CPOClient.OnSendHeartbeatSOAPRequest  -= handler,
-                //              "SendHeartbeat", "Heartbeat", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent2("AuthorizeRemoteStartRequest",
+                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest -= handler,
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("SendHeartbeatResponse",
-                //              handler => CPOClient.OnSendHeartbeatSOAPResponse += handler,
-                //              handler => CPOClient.OnSendHeartbeatSOAPResponse -= handler,
-                //              "SendHeartbeat", "Heartbeat", "Response", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent2("AuthorizeRemoteStartResponse",
+                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse -= handler,
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "Authorization", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
+
+                RegisterEvent2("AuthorizeRemoteStopRequest",
+                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest -= handler,
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("AuthorizeRemoteStopResponse",
+                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse -= handler,
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "Authorization", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
@@ -179,6 +191,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         }
 
-     }
+    }
 
 }

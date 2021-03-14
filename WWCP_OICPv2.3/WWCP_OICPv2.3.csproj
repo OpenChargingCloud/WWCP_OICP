@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPO\CPORoaming.cs" />
+    <Compile Include="CPO\CPOServerAPILogger.cs" />
     <Compile Include="CPO\ICPOClient.cs" />
     <Compile Include="CPO\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOServerAPI.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="EMP\EMPServerAPI.cs" />
     <Compile Include="EMP\EMPServerAPILogger.cs" />
     <Compile Include="EMP\EMPServerAPIDelegates.cs" />
+    <Compile Include="EMP\IEMPClient.cs" />
     <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
@@ -139,7 +142,6 @@
     <Compile Include="DataTypes\Simple\Operator_Id.cs" />
     <Compile Include="DataTypes\Simple\PIN.cs" />
     <Compile Include="DataTypes\Simple\UID.cs" />
-    <Compile Include="DataTypes\Simple\URL.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="EMP\EMPClient.cs" />
     <Compile Include="EMP\EMPClientLogger.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
     <Compile Include="Messages\IRequest.cs" />
     <Compile Include="Messages\IResponse.cs" />
+    <Compile Include="OICPExceptions.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

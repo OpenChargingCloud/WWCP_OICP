@@ -18,12 +18,15 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -36,7 +39,315 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     public static class ICPOClientExtentions
     {
 
-        #region AuthorizeStart(...)
+        #region PushEVSEData(OperatorEVSEData, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="OperatorEVSEData">An operator EVSE data.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(this ICPOClient                 ICPOClient,
+                         OperatorEVSEData                OperatorEVSEData,
+                         ActionTypes                     Action              = ActionTypes.FullLoad,
+
+                         DateTime?                       Timestamp           = null,
+                         CancellationToken?              CancellationToken   = null,
+                         EventTracking_Id                EventTrackingId     = null,
+                         TimeSpan?                       RequestTimeout      = null)
+
+
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(OperatorEVSEData,
+                                                                   Action,
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEData(EVSEDataRecords, OperatorId, OperatorName = null, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(this ICPOClient                 ICPOClient,
+                         IEnumerable<EVSEDataRecord>     EVSEDataRecords,
+                         Operator_Id                     OperatorId,
+                         String                          OperatorName,
+                         ActionTypes                     Action                   = ActionTypes.FullLoad,
+                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
+
+                         DateTime?                       Timestamp                = null,
+                         CancellationToken?              CancellationToken        = null,
+                         EventTracking_Id                EventTrackingId          = null,
+                         TimeSpan?                       RequestTimeout           = null)
+
+
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(IncludeEVSEDataRecords != null
+                                                                                            ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
+                                                                                            : EVSEDataRecords,
+                                                                                        OperatorId,
+                                                                                        OperatorName),
+                                                                   Action,
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEData(EVSEDataRecord,  OperatorId, OperatorName = null, Action = insert, ...)
+
+        /// <summary>
+        /// Create a new task pushing a single EVSE data record onto the OICP server.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="EVSEDataRecord">An EVSE data record.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE data records.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(this ICPOClient     ICPOClient,
+                         EVSEDataRecord      EVSEDataRecord,
+                         Operator_Id         OperatorId,
+                         String              OperatorName,
+                         ActionTypes         Action              = ActionTypes.Insert,
+
+                         DateTime?           Timestamp           = null,
+                         CancellationToken?  CancellationToken   = null,
+                         EventTracking_Id    EventTrackingId     = null,
+                         TimeSpan?           RequestTimeout      = null)
+
+
+                => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
+                                                                                        OperatorId,
+                                                                                        OperatorName),
+                                                                   Action,
+
+                                                                   Timestamp,
+                                                                   CancellationToken,
+                                                                   EventTrackingId,
+                                                                   RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEData(OperatorId, Action, params EVSEDataRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(this ICPOClient          ICPOClient,
+                         Operator_Id              OperatorId,
+                         String                   OperatorName,
+                         ActionTypes              Action,
+                         params EVSEDataRecord[]  EVSEDataRecords)
+
+
+            => ICPOClient.PushEVSEData(new PushEVSEDataRequest(new OperatorEVSEData(EVSEDataRecords,
+                                                                                    OperatorId,
+                                                                                    OperatorName),
+                                                               Action:          Action,
+
+                                                               RequestTimeout:  ICPOClient.RequestTimeout));
+
+        #endregion
+
+
+        #region PushEVSEStatus(OperatorEVSEStatus, Action = update, ...)
+
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="OperatorEVSEStatus">An operator EVSE status.</param>
+        /// <param name="Action">The server-side status management operation.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(this ICPOClient                   ICPOClient,
+                           OperatorEVSEStatus                OperatorEVSEStatus,
+                           ActionTypes                       Action              = ActionTypes.Update,
+
+                           DateTime?                         Timestamp           = null,
+                           CancellationToken?                CancellationToken   = null,
+                           EventTracking_Id                  EventTrackingId     = null,
+                           TimeSpan?                         RequestTimeout      = null)
+
+
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(OperatorEVSEStatus,
+                                                                       Action,
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEStatusRecords, OperatorId, OperatorName = null, Action = update, ...)
+
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="Action">The server-side status management operation.</param>
+        /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(this ICPOClient                   ICPOClient,
+                           IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
+                           Operator_Id                       OperatorId,
+                           String                            OperatorName,
+                           ActionTypes                       Action                     = ActionTypes.Update,
+                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords   = null,
+
+                           DateTime?                         Timestamp                  = null,
+                           CancellationToken?                CancellationToken          = null,
+                           EventTracking_Id                  EventTrackingId            = null,
+                           TimeSpan?                         RequestTimeout             = null)
+
+
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(IncludeEVSEStatusRecords != null
+                                                                                                  ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
+                                                                                                  : EVSEStatusRecords,
+                                                                                              OperatorId,
+                                                                                              OperatorName),
+                                                                       Action,
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEStatus(EVSEStatusRecord,  OperatorId, OperatorName = null, Action = insert, ...)
+
+        /// <summary>
+        /// Create a new task pushing a single EVSE status record onto the OICP server.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="EVSEStatusRecord">An EVSE status record.</param>
+        /// <param name="Action">The server-side status management operation.</param>
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE status records.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(this ICPOClient     ICPOClient,
+                           EVSEStatusRecord    EVSEStatusRecord,
+                           Operator_Id         OperatorId,
+                           String              OperatorName,
+                           ActionTypes         Action              = ActionTypes.Update,
+
+                           DateTime?           Timestamp           = null,
+                           CancellationToken?  CancellationToken   = null,
+                           EventTracking_Id    EventTrackingId     = null,
+                           TimeSpan?           RequestTimeout      = null)
+
+
+                => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(new EVSEStatusRecord[] { EVSEStatusRecord },
+                                                                                              OperatorId,
+                                                                                              OperatorName),
+                                                                       Action,
+
+                                                                       Timestamp,
+                                                                       CancellationToken,
+                                                                       EventTrackingId,
+                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
+
+        #region PushEVSEStatus(OperatorId, Action, params EVSEStatusRecords)
+
+        /// <summary>
+        /// Create a new task pushing EVSE status records onto the OICP server.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
+        /// <param name="Action">The server-side status management operation.</param>
+        /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(this ICPOClient            ICPOClient,
+                           Operator_Id                OperatorId,
+                           String                     OperatorName,
+                           ActionTypes                Action,
+                           params EVSEStatusRecord[]  EVSEStatusRecords)
+
+
+            => ICPOClient.PushEVSEStatus(new PushEVSEStatusRequest(new OperatorEVSEStatus(EVSEStatusRecords,
+                                                                                          OperatorId,
+                                                                                          OperatorName),
+                                                                   Action:          Action,
+
+                                                                   RequestTimeout:  ICPOClient.RequestTimeout));
+
+        #endregion
+
+
+        #region AuthorizeStart        (this ICPOClient, ...)
 
         /// <summary>
         /// Create a new AuthorizeStart request.
@@ -86,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop (...)
+        #region AuthorizeStop         (this ICPOClient, ...)
 
         /// <summary>
         /// Create a new AuthorizeStop request.
@@ -137,6 +448,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region SendChargeDetailRecord(this ICPOClient, ChargeDetailRecord, ...)
+
+        /// <summary>
+        /// Send a charge detail record to an OICP server.
+        /// </summary>
+        /// <param name="ICPOClient">A CPO client.</param>
+        /// 
+        /// <param name="ChargeDetailRecord">A charge detail record.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>
+
+            SendChargeDetailRecord(this ICPOClient     ICPOClient,
+                                   ChargeDetailRecord  ChargeDetailRecord,
+                                   JObject             CustomData         = null,
+
+                                   DateTime?           Timestamp          = null,
+                                   CancellationToken?  CancellationToken  = null,
+                                   EventTracking_Id    EventTrackingId    = null,
+                                   TimeSpan?           RequestTimeout     = null)
+
+
+                => ICPOClient.SendChargeDetailRecord(new SendChargeDetailRecordRequest(ChargeDetailRecord,
+                                                                                       CustomData,
+
+                                                                                       Timestamp,
+                                                                                       CancellationToken,
+                                                                                       EventTrackingId,
+                                                                                       RequestTimeout ?? ICPOClient.RequestTimeout));
+
+        #endregion
 
     }
 
@@ -144,7 +489,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The common interface for all CPO clients.
     /// </summary>
-    public interface ICPOClient
+    public interface ICPOClient : IHTTPClient
     {
 
         /// <summary>
