@@ -453,7 +453,8 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var productId            = Request.PartnerProductId.HasValue
                                                ? ChargingProduct.FromId(Request.PartnerProductId.Value.ToWWCP())
                                                : null;
-                var sessionId            = Request.SessionId.     ToWWCP();
+                var sessionId            = Request.SessionId.          ToWWCP();
+                var CPOPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
 
                 #endregion
 
@@ -477,6 +478,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     chargingLocation,
                                                     productId,
                                                     sessionId,
+                                                    CPOPartnerSessionId,
                                                     new ISendAuthorizeStartStop[0],
                                                     Request.RequestTimeout);
 
@@ -493,6 +495,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                                    chargingLocation,
                                                                    productId,
                                                                    sessionId,
+                                                                   CPOPartnerSessionId,
                                                                    operatorId,
 
                                                                    Timestamp,
@@ -521,6 +524,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                      chargingLocation,
                                                      productId,
                                                      sessionId,
+                                                     CPOPartnerSessionId,
                                                      new ISendAuthorizeStartStop[0],
                                                      Request.RequestTimeout,
                                                      response,
@@ -602,10 +606,11 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
 
                 #region Map parameter values
 
-                var sessionId            = Request.SessionId.     ToWWCP();
-                var localAuthentication  = Request.Identification.ToWWCP().ToLocal;
+                var sessionId            = Request.SessionId.          ToWWCP();
+                var localAuthentication  = Request.Identification.     ToWWCP().ToLocal;
                 var chargingLocation     = ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
-                var operatorId           = Request.OperatorId.    ToWWCP();
+                var CPOPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
+                var operatorId           = Request.OperatorId.         ToWWCP();
 
                 #endregion
 
@@ -627,6 +632,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     operatorId,
                                                     chargingLocation,
                                                     sessionId,
+                                                    CPOPartnerSessionId,
                                                     localAuthentication,
                                                     Request.RequestTimeout);
 
@@ -642,6 +648,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                 var response = await RoamingNetwork.AuthorizeStop(sessionId,
                                                                   localAuthentication,
                                                                   chargingLocation,
+                                                                  CPOPartnerSessionId,
                                                                   operatorId,
 
                                                                   Request.Timestamp,
@@ -668,6 +675,7 @@ namespace org.GraphDefined.WWCP.OICPv2_2.EMP
                                                     operatorId,
                                                     chargingLocation,
                                                     sessionId,
+                                                    CPOPartnerSessionId,
                                                     localAuthentication,
                                                     Request.RequestTimeout,
                                                     response,
