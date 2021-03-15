@@ -161,34 +161,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 var _ChargingStationId  = WWCP.ChargingStation_Id.Create(_EVSEId.Value);
 
-                var CustomData = new Dictionary<String, Object>();
-                CustomData.Add("OICP.EVSEDataRecord", EVSEDataRecord);
+                var internalData = new Dictionary<String, Object>();
+                internalData.Add("OICP.EVSEDataRecord", EVSEDataRecord);
 
 
                 _EVSE = new WWCP.EVSE(_EVSEId.Value,
-                                 new WWCP.ChargingStation(_ChargingStationId,
-                                                          station => {
-                                                              station.DataSource   = DataSource;
-                                                              //station.Address      = EVSEDataRecord.Address.ToWWCP();
-                                                              station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
-                                                                                         org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
-                                                                                         org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
-                                                                                     );
-                                                          },
-                                                          null,
-                                                          InitialChargingStationAdminStatus,
-                                                          InitialChargingStationStatus,
-                                                          MaxChargingStationAdminStatusListSize,
-                                                          MaxChargingStationStatusListSize),
-                                 evse => {
-                                     evse.DataSource  = DataSource;
-                                 },
-                                 null,
-                                 InitialEVSEAdminStatus,
-                                 InitialEVSEStatus,
-                                 MaxEVSEAdminStatusListSize,
-                                 MaxEVSEStatusListSize,
-                                 CustomData);
+                                      new WWCP.ChargingStation(_ChargingStationId,
+                                                               station => {
+                                                                   station.DataSource   = DataSource;
+                                                                   //station.Address      = EVSEDataRecord.Address.ToWWCP();
+                                                                   station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
+                                                                                              org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
+                                                                                              org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
+                                                                                          );
+                                                               },
+                                                               null,
+                                                               InitialChargingStationAdminStatus,
+                                                               InitialChargingStationStatus,
+                                                               MaxChargingStationAdminStatusListSize,
+                                                               MaxChargingStationStatusListSize),
+                                      evse => {
+                                          evse.DataSource  = DataSource;
+                                      },
+                                      null,
+                                      InitialEVSEAdminStatus,
+                                      InitialEVSEStatus,
+                                      MaxEVSEAdminStatusListSize,
+                                      MaxEVSEStatusListSize,
+                                      EVSEDataRecord.CustomData,
+                                      internalData);
 
 
                 //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
@@ -250,13 +251,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Copy custom data and add WWCP EVSE as "WWCP.EVSE"...
 
-                var CustomData = new JObject();
-                EVSE.CustomData.ForEach(kvp => CustomData.Add(kvp.Key, JToken.FromObject(kvp.Value)));
+                var internalData = new Dictionary<String, Object>();
+                EVSE.InternalData.ForEach(kvp => internalData.Add(kvp.Key, kvp.Value));
 
-                if (!CustomData.ContainsKey("WWCP.EVSE"))
-                    CustomData.Add("WWCP.EVSE", JToken.FromObject(EVSE));
+                if (!internalData.ContainsKey("WWCP.EVSE"))
+                    internalData.Add("WWCP.EVSE", EVSE);
                 else
-                    CustomData["WWCP.EVSE"] = JToken.FromObject(EVSE);
+                    internalData["WWCP.EVSE"] = EVSE;
 
                 #endregion
 
@@ -302,7 +303,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         HubOperatorId:                     HubOperatorId,
                                                         ClearingHouseId:                   ClearingHouseId,
 
-                                                        CustomData:                        CustomData);
+                                                        CustomData:                        EVSE.CustomData,
+                                                        InternalData:                      internalData);
 
                 return EVSE2EVSEDataRecord != null
                            ? EVSE2EVSEDataRecord(EVSE, evseDataRecord)
@@ -1209,8 +1211,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
                           Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          CPOPartnerSessionId:   ChargeDetailRecord.GetCustomDataAs<CPOPartnerSession_Id?>("OICP.CPOPartnerSessionId"),
-                          EMPPartnerSessionId:   ChargeDetailRecord.GetCustomDataAs<EMPPartnerSession_Id?>("OICP.EMPPartnerSessionId"),
+                          CPOPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>("OICP.CPOPartnerSessionId"),
+                          EMPPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>("OICP.EMPPartnerSessionId"),
                           ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
                           ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : ChargeDetailRecord.SessionTime.EndTime.Value,
                           MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : new Decimal?(),
@@ -1218,8 +1220,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Decimal> v) => v.Value) : null,
                           ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy ?? 0,
                           //MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
-                          HubOperatorId:         ChargeDetailRecord.GetCustomDataAs<Operator_Id?>("OICP.HubOperatorId"),
-                          HubProviderId:         ChargeDetailRecord.GetCustomDataAs<Provider_Id?>("OICP.HubProviderId"),
+                          HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>("OICP.HubOperatorId"),
+                          HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>("OICP.HubProviderId"),
                           CustomData:            new JObject() {
                                                      new JProperty(WWCP_CDR, ChargeDetailRecord)
                                                  }

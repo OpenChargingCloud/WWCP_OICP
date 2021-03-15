@@ -733,8 +733,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                               String                                             EllipticCurve                                   = "P-256",
                               ECPrivateKeyParameters                             PrivateKey                                      = null,
-                              PublicKeyCertificates                              PublicKeyCertificates                           = null,
-                              DNSClient                                          DNSClient                                       = null)
+                              PublicKeyCertificates                              PublicKeyCertificates                           = null)
 
             : base(Id,
                    Name,
@@ -761,9 +760,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                    EllipticCurve,
                    PrivateKey,
-                   PublicKeyCertificates,
-
-                   DNSClient ?? CPORoaming?.DNSClient)
+                   PublicKeyCertificates)
 
         {
 

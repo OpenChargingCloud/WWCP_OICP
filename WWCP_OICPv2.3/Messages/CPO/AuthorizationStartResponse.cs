@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStartResponse(AuthorizeStartRequest        Request,
                                            DateTime                     ResponseTimestamp,
                                            EventTracking_Id             EventTrackingId,
@@ -154,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse Authorized(AuthorizeStartRequest        Request,
                                                             Session_Id?                  SessionId                          = null,
                                                             CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
@@ -205,7 +205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NotAuthorized(AuthorizeStartRequest  Request,
                                                                StatusCode             StatusCode,
                                                                Session_Id?            SessionId             = null,
@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SessionIsInvalid(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
@@ -300,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse CommunicationToEVSEFailed(AuthorizeStartRequest  Request,
                                                                            String                 StatusCodeDescription      = null,
                                                                            String                 StatusCodeAdditionalInfo   = null,
@@ -350,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NoEVConnectedToEVSE(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
@@ -400,7 +400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEAlreadyReserved(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
@@ -450,7 +450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse UnknownEVSEID(AuthorizeStartRequest  Request,
                                                                String                 StatusCodeDescription      = null,
                                                                String                 StatusCodeAdditionalInfo   = null,
@@ -500,7 +500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEOutOfService(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
                                                                   String                 StatusCodeAdditionalInfo   = null,
@@ -550,7 +550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse ServiceNotAvailable(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
                                                                      String                 StatusCodeAdditionalInfo   = null,
@@ -600,7 +600,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse DataError(AuthorizeStartRequest  Request,
                                                            String                 StatusCodeDescription      = null,
                                                            String                 StatusCodeAdditionalInfo   = null,
@@ -650,7 +650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SystemError(AuthorizeStartRequest  Request,
                                                              String                 StatusCodeDescription      = null,
                                                              String                 StatusCodeAdditionalInfo   = null,
@@ -1323,7 +1323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProviderId">An optional e-mobility provider identification.</param>
             /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-            /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(AuthorizeStartRequest        Request                            = null,
                            DateTime?                    ResponseTimestamp                  = null,
                            EventTracking_Id             EventTrackingId                    = null,

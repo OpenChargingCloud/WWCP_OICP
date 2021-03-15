@@ -90,7 +90,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Amperage">Optional amperage of the charging facility.</param>
         /// <param name="ChargingModes">Optional enumeration of supported charging modes.</param>
         /// 
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public ChargingFacility(PowerTypes                  PowerType,
                                 UInt32                      Power,
 

@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public ARequest(DateTime?           Timestamp           = null,
                         CancellationToken?  CancellationToken   = null,
                         EventTracking_Id    EventTrackingId     = null,

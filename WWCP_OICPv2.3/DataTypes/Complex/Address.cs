@@ -121,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ParkingFacility">Whether a parking facility exists.</param>
         /// <param name="ParkingSpot">The optional parking spot.</param>
         /// <param name="TimeZone">The optional time zone.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public Address(Country     Country,
                        String      City,
                        String      Street,

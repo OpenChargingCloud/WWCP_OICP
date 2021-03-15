@@ -82,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
         /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
         /// 
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         private Identification(UID?                   RFIDId                        = null,
                                RFIDIdentification?    RFIDIdentification            = null,
                                QRCodeIdentification?  QRCodeIdentification          = null,
@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new Mifare identification.
         /// </summary>
         /// <param name="MifareUID">A Mifare user identification.</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromUID(UID      MifareUID,
                                              JObject  CustomData  = null)
 
@@ -126,7 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new identification.
         /// </summary>
         /// <param name="UID">An user identification.</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromRFID(UID      UID,
                                               JObject  CustomData  = null)
 
@@ -141,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new identification.
         /// </summary>
         /// <param name="QRCodeIdentification">A QR-code identification (EVCO Id).</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(QRCodeIdentification  QRCodeIdentification,
                                                               JObject               CustomData   = null)
 
@@ -157,7 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId">An electric vehicle contract identification (EVCO Id).</param>
         /// <param name="PIN">A PIN.</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(EVCO_Id  EVCOId,
                                                               PIN      PIN,
                                                               JObject  CustomData   = null)
@@ -177,7 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId">A QR code identification.</param>
         /// <param name="HashedPIN">A hashed PIN.</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(EVCO_Id    EVCOId,
                                                               HashedPIN  HashedPIN,
                                                               JObject    CustomData   = null)
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVCOId">A QR code identification.</param>
         /// <param name="HashValue">Hash value created by partner.</param>
         /// <param name="HashFunction">Function that was used to generate the hash value.</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(EVCO_Id        EVCOId,
                                                               Hash_Value     HashValue,
                                                               HashFunctions  HashFunction,
@@ -221,7 +221,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new identification.
         /// </summary>
         /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromPlugAndChargeIdentification(EVCO_Id  PlugAndChargeIdentification,
                                                                      JObject  CustomData   = null)
 
@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new identification.
         /// </summary>
         /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
-        /// <param name="CustomData">Optional custom data.</param>
+        /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromRemoteIdentification(EVCO_Id  RemoteIdentification,
                                                               JObject  CustomData   = null)
 

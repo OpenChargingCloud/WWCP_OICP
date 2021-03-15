@@ -18,18 +18,13 @@
 #region Usings
 
 using System;
-using System.Xml.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
-using System.Security.Authentication;
 
 #endregion
 
@@ -149,8 +144,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             set
             {
-                if (value is CPOClient.Logger)
-                    CPOClient.HTTPLogger = value as CPOClient.Logger;
+                if (value is CPOClient.Logger logger)
+                    CPOClient.HTTPLogger = logger;
             }
 
         }
@@ -168,12 +163,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// The CPO HTTP server.
         /// </summary>
         public CPOServerAPI  CPOServer    { get; }
-
-        /// <summary>
-        /// The DNS client defines which DNS servers to use.
-        /// </summary>
-        public DNSClient DNSClient
-            => CPOServer?.DNSClient;
 
         #endregion
 
@@ -838,8 +827,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Constructor(s)
 
-        #region CPORoaming(CPOClient, CPOServer, ServerLoggingContext = CPOServerLogger.DefaultContext, LogfileCreator = null)
-
         /// <summary>
         /// Create a new roaming client for CPOs.
         /// </summary>
@@ -858,109 +845,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             CPOServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
         }
-
-        #endregion
-
-        #region CPORoaming(ClientId, RemoteHostname, RemoteTCPPort = null, RemoteHTTPVirtualHost = null, ... )
-
-        /// <summary>
-        /// Create a new OICP roaming client for CPOs.
-        /// </summary>
-        /// <param name="RemoteURL">The remote URL of the OICP HTTP endpoint to connect to.</param>
-        /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
-        /// <param name="Description">An optional description of this CPO client.</param>
-        /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
-        /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
-        /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
-        /// <param name="RequestTimeout">An optional request timeout.</param>
-        /// <param name="TransmissionRetryDelay">The delay between transmission retries.</param>
-        /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
-        /// <param name="DisableLogging">Disable all HTTP client logging.</param>
-        /// <param name="ClientLoggingContext">An optional context for logging client methods.</param>
-        /// <param name="ClientLogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// 
-        /// <param name="ServerName">An optional identification string for the HTTP server.</param>
-        /// <param name="ServiceName">An optional identification for this HTTP service.</param>
-        /// <param name="ServerTCPPort">An optional TCP port for the HTTP server.</param>
-        /// <param name="ServerURLPrefix">An optional prefix for the HTTP URLs.</param>
-        /// <param name="ServerContentType">An optional HTTP content type to use.</param>
-        /// <param name="ServerRegisterHTTPRootService">Register HTTP root services for sending a notice to clients connecting via HTML or plain text.</param>
-        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="ServerLogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-        /// <param name="ServerAutostart">Whether to start the server immediately or not.</param>
-        /// 
-        /// <param name="DNSClient">An optional DNS client to use.</param>
-        public CPORoaming(URL?                                 RemoteURL                       = null,
-                          HTTPHostname?                        VirtualHostname                 = null,
-                          String                               Description                     = null,
-                          RemoteCertificateValidationCallback  RemoteCertificateValidator      = null,
-                          X509Certificate                      ClientCert                      = null,
-                          String                               HTTPUserAgent                   = CPOClient.DefaultHTTPUserAgent,
-                          TimeSpan?                            RequestTimeout                  = null,
-                          TransmissionRetryDelayDelegate       TransmissionRetryDelay          = null,
-                          UInt16?                              MaxNumberOfRetries              = CPOClient.DefaultMaxNumberOfRetries,
-                          Boolean                              DisableLogging                  = false,
-                          String                               ClientLoggingContext            = CPOClient.Logger.DefaultContext,
-                          LogfileCreatorDelegate               ClientLogfileCreator            = null,
-
-                          ServerCertificateSelectorDelegate    ServerCertificateSelector       = null,
-                          LocalCertificateSelectionCallback    ClientCertificateSelector       = null,
-                          RemoteCertificateValidationCallback  ClientCertificateValidator      = null,
-                          SslProtocols                         AllowedTLSProtocols             = SslProtocols.Tls12,
-                          HTTPHostname?                        HTTPHostname                    = null,
-                          IPPort?                              HTTPServerPort                  = null,
-                          String                               HTTPServerName                  = CPOServerAPI.DefaultHTTPServerName,
-                          String                               ExternalDNSName                 = null,
-                          HTTPPath?                            URLPathPrefix                   = null,
-                          String                               ServiceName                     = CPOServerAPI.DefaultHTTPServiceName,
-                          Boolean                              ServerDisableLogging            = false,
-                          String                               ServerLoggingContext            = null,
-                          LogfileCreatorDelegate               ServerLogfileCreator            = null,
-                          Boolean                              ServerAutostart                 = false,
-
-                          DNSClient                            DNSClient                       = null)
-
-            : this(new CPOClient   (RemoteURL,
-                                    VirtualHostname,
-                                    Description,
-                                    RemoteCertificateValidator,
-                                    ClientCert,
-                                    HTTPUserAgent,
-                                    RequestTimeout,
-                                    TransmissionRetryDelay,
-                                    MaxNumberOfRetries,
-                                    DisableLogging,
-                                    ClientLoggingContext,
-                                    ClientLogfileCreator,
-                                    DNSClient),
-
-                   new CPOServerAPI(ServerCertificateSelector,
-                                    ClientCertificateSelector,
-                                    ClientCertificateValidator,
-                                    AllowedTLSProtocols,
-                                    HTTPHostname,
-                                    HTTPServerPort,
-                                    HTTPServerName,
-                                    ExternalDNSName,
-                                    URLPathPrefix,
-                                    ServiceName,
-                                    ServerDisableLogging,
-                                    ServerLoggingContext,
-                                    ServerLogfileCreator,
-                                    //ServerURLPrefix ?? CPOHTTPServer.DefaultURLPathPrefix,
-                                    //ServerContentType,
-                                    //ServerRegisterHTTPRootService,
-                                    DNSClient,
-                                    false))
-
-        {
-
-            if (ServerAutostart)
-                Start();
-
-        }
-
-        #endregion
 
         #endregion
 

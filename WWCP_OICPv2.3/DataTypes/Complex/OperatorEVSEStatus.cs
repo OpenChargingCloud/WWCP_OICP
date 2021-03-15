@@ -73,7 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId">The unqiue identification of the EVSE operator maintaining the given EVSE status records.</param>
         /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE status records.</param>
         /// 
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public OperatorEVSEStatus(IEnumerable<EVSEStatusRecord>  EVSEStatusRecords,
                                   Operator_Id                    OperatorId,
                                   String                         OperatorName,

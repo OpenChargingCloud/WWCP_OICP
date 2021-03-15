@@ -70,6 +70,7 @@
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\OICPResult.cs" />
     <Compile Include="EMP\EMPClientDelegates.cs" />
+    <Compile Include="EMP\EMPRoaming.cs" />
     <Compile Include="EMP\EMPServerAPI.cs" />
     <Compile Include="EMP\EMPServerAPILogger.cs" />
     <Compile Include="EMP\EMPServerAPIDelegates.cs" />

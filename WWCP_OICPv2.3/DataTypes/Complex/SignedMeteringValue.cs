@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Value">Signed metering value for a transparency software.</param>
         /// <param name="MeteringStatus">The status of the given signed metering value.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public SignedMeteringValue(String                Value,
                                    MeteringStatusTypes?  MeteringStatus   = null,
                                    JObject               CustomData       = null)

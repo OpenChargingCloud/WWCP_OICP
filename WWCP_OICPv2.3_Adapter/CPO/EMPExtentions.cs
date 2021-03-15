@@ -102,9 +102,7 @@ namespace org.GraphDefined.WWCP
 
                                               String                                                          EllipticCurve                                   = "P-256",
                                               ECPrivateKeyParameters                                          PrivateKey                                      = null,
-                                              PublicKeyCertificates                                           PublicKeyCertificates                           = null,
-
-                                              DNSClient                                                       DNSClient                                       = null)
+                                              PublicKeyCertificates                                           PublicKeyCertificates                           = null)
 
         {
 
@@ -154,9 +152,7 @@ namespace org.GraphDefined.WWCP
 
                                                                      EllipticCurve,
                                                                      PrivateKey,
-                                                                     PublicKeyCertificates,
-
-                                                                     DNSClient);
+                                                                     PublicKeyCertificates);
 
             OICPConfigurator?.Invoke(NewRoamingProvider);
 

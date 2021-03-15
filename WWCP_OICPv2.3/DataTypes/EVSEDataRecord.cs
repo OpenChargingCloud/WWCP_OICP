@@ -35,7 +35,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// An Electric Vehicle Supply Equipment (EVSE) data record.
     /// This is meant to be one electrical circuit which can charge an electric vehicle.
     /// </summary>
-    public class EVSEDataRecord : IEquatable<EVSEDataRecord>,
+    public class EVSEDataRecord : AInternalData,
+                                  IEquatable<EVSEDataRecord>,
                                   IComparable<EVSEDataRecord>,
                                   IComparable
     {
@@ -301,7 +302,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HubOperatorId">The optional hub operator of the EVSE.</param>
         /// <param name="ClearingHouseId">Optional clearing house for all charging sessions at the EVSE.</param>
         /// 
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEDataRecord(EVSE_Id                           Id,
                               I18NText                          ChargingStationName,
                               Address                           Address,
@@ -339,7 +341,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               Operator_Id?                      HubOperatorId                      = null,
                               ClearingHouse_Id?                 ClearingHouseId                    = null,
 
-                              JObject                           CustomData                         = null)
+                              JObject                           CustomData                         = null,
+                              Dictionary<String, Object>        InternalData                       = null)
+
+            : base(InternalData)
 
         {
 
@@ -1607,7 +1612,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            HubOperatorId,
                            ClearingHouseId,
 
-                           CustomData);
+                           CustomData,
+                           internalData);
 
         #endregion
 
@@ -1617,7 +1623,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// An Electric Vehicle Supply Equipment (EVSE) data record builder.
         /// This is meant to be one electrical circuit which can charge a electric vehicle.
         /// </summary>
-        public class Builder
+        public new class Builder : AInternalData.Builder
         {
 
             #region Properties
@@ -1881,7 +1887,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HubOperatorId">The optional hub operator of the EVSE.</param>
             /// <param name="ClearingHouseId">Optional clearing house for all charging sessions at the EVSE.</param>
             /// 
-            /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(EVSE_Id?                           Id                                 = null,
                            I18NText                           ChargingStationName                = null,
                            Address                            Address                            = null,
@@ -1919,7 +1926,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Operator_Id?                       HubOperatorId                      = null,
                            ClearingHouse_Id?                  ClearingHouseId                    = null,
 
-                           JObject                            CustomData                         = null)
+                           JObject                            CustomData                         = null,
+                           Dictionary<String, Object>         InternalData                       = null)
+
+                : base(InternalData)
 
             {
 
@@ -2051,7 +2061,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           HubOperatorId,
                                           ClearingHouseId,
 
-                                          CustomData);
+                                          CustomData,
+                                          internalData);
 
             }
 

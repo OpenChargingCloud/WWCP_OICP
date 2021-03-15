@@ -91,7 +91,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="MeteringSignatureURL">In this field CPO can also provide an url to a external data set. This data set can give calibration law information which can be simply added to the end customer invoice of the EMP.</param>
         /// <param name="MeteringSignatureEncodingFormat">Encoding format of the metering signature data as well as the version.</param>
         /// <param name="SignedMeteringValuesVerificationInstruction">Additional information (e.g. instruction on how to use the transparency software).</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public CalibrationLawVerification(String  CalibrationLawCertificateId                   = null,
                                           String  PublicKey                                     = null,
                                           URL?    MeteringSignatureURL                          = null,

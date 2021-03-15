@@ -358,7 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification (for identifying a charging tariff).</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>

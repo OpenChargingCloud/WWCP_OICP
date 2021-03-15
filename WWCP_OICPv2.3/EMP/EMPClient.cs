@@ -91,8 +91,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new Logger  HTTPLogger
-            => base.HTTPLogger as Logger;
+        public new Logger HTTPLogger
+        {
+            get
+            {
+                return base.HTTPLogger as Logger;
+            }
+            set
+            {
+                base.HTTPLogger = value;
+            }
+        }
 
         #endregion
 

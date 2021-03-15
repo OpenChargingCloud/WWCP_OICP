@@ -248,6 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="VirtualHostname">An optional HTTP virtual hostname.</param>
         /// <param name="Description">An optional description of this CPO client.</param>
         /// <param name="RemoteCertificateValidator">The remote SSL/TLS certificate validator.</param>
+        /// <param name="ClientCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="ClientCert">The SSL/TLS client certificate to use of HTTP authentication.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
@@ -261,13 +262,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          HTTPHostname?                        VirtualHostname              = null,
                          String                               Description                  = null,
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          X509Certificate                      ClientCert                   = null,
-                         String                               HTTPUserAgent                = null,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
-                         UInt16?                              MaxNumberOfRetries           = null,
+                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                              DisableLogging               = false,
-                         String                               LoggingContext               = null,
+                         String                               LoggingContext               = Logger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
 
@@ -275,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    VirtualHostname,
                    Description,
                    RemoteCertificateValidator,
-                   null,
+                   ClientCertificateSelector,
                    ClientCert,
                    HTTPUserAgent       ?? DefaultHTTPUserAgent,
                    RequestTimeout,

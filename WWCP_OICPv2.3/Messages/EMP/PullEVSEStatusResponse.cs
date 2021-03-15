@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus">An enumeration of EVSE status records grouped by their operators.</param>
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public PullEVSEStatusResponse(PullEVSEStatusRequest            Request,
                                       DateTime                         ResponseTimestamp,
                                       EventTracking_Id                 EventTrackingId,
@@ -548,7 +548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="OperatorEVSEStatus">An enumeration of EVSE status records grouped by their operators.</param>
             /// <param name="StatusCode">An optional status code for this request.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-            /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullEVSEStatusRequest            Request              = null,
                            DateTime?                        ResponseTimestamp    = null,
                            EventTracking_Id                 EventTrackingId      = null,

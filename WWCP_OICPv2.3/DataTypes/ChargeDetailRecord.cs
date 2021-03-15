@@ -19,12 +19,12 @@
 
 using System;
 using System.Linq;
+using System.Globalization;
 using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Globalization;
 
 #endregion
 
@@ -34,7 +34,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A charge detail record.
     /// </summary>
-    public class ChargeDetailRecord : IEquatable<ChargeDetailRecord>,
+    public class ChargeDetailRecord : AInternalData,
+                                      IEquatable<ChargeDetailRecord>,
                                       IComparable<ChargeDetailRecord>,
                                       IComparable
     {
@@ -185,6 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HubProviderId">An optional provider identification of the hub provider.</param>
         /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public ChargeDetailRecord(Session_Id                        SessionId,
                                   EVSE_Id                           EVSEId,
                                   Identification                    Identification,
@@ -205,7 +207,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   Operator_Id?                      HubOperatorId                    = null,
                                   Provider_Id?                      HubProviderId                    = null,
 
-                                  JObject                           CustomData                       = null)
+                                  JObject                           CustomData                       = null,
+                                  Dictionary<String, Object>        InternalData                     = null)
+
+                : base(InternalData)
 
         {
 
@@ -1209,7 +1214,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            HubOperatorId,
                            HubProviderId,
 
-                           CustomData);
+                           CustomData,
+                           internalData);
 
         #endregion
 
@@ -1218,7 +1224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// A charge detail record builder.
         /// </summary>
-        public class Builder
+        public new class Builder : AInternalData.Builder
         {
 
             #region Properties
@@ -1367,6 +1373,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HubProviderId">An optional provider identification of the hub provider.</param>
             /// 
             /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
+            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(Session_Id?                       SessionId                        = null,
                            EVSE_Id?                          EVSEId                           = null,
                            Identification                    Identification                   = null,
@@ -1387,7 +1394,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Operator_Id?                      HubOperatorId                    = null,
                            Provider_Id?                      HubProviderId                    = null,
 
-                           JObject                           CustomData                       = null)
+                           JObject                           CustomData                       = null,
+                           Dictionary<String, Object>        InternalData                     = null)
+
+                : base(InternalData)
 
             {
 
@@ -1482,7 +1492,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               HubOperatorId,
                                               HubProviderId,
 
-                                              CustomData);
+                                              CustomData,
+                                              internalData);
 
             }
 

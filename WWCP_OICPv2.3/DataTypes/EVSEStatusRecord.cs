@@ -66,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Id">The ID that identifies the charging spot.</param>
         /// <param name="Status">The status of the charging spot.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEStatusRecord(EVSE_Id          Id,
                                 EVSEStatusTypes  Status,
                                 JObject          CustomData  = null)

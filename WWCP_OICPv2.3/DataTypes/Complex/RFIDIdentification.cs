@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDType">The type of the used RFID card.</param>
         /// <param name="PrintedNumber">A number printed on a customer’s card for manual authorization (e.q. via a call center).</param>
         /// <param name="ExpiryDate">Until when this card is valid. Should not be set if card does not have an expiration yet.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public RFIDIdentification(UID         UID,
                                   RFIDTypes   RFIDType,
                                   EVCO_Id?    EVCOId          = null,

@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Periods">The periods of the opening time.</param>
         /// <param name="On">The day of the weeks of the opening time.</param>
         /// <param name="UnstructuredText">Optional unstructured information about the opening time.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public OpeningTime(IEnumerable<Period>  Periods,
                            DaysOfWeek           On,
                            String               UnstructuredText,

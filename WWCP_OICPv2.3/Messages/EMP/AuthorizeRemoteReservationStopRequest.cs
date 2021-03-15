@@ -79,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
-        /// <param name="CustomData">Optional custom data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
