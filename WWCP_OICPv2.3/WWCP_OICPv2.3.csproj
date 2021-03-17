@@ -69,6 +69,7 @@
     <Compile Include="DataTypes\Complex\ValidationError.cs" />
     <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
     <Compile Include="DataTypes\Enums\ChargingNotificationTypes.cs" />
+    <Compile Include="DataTypes\Enums\ErrorClassTypes.cs" />
     <Compile Include="DataTypes\OICPResult.cs" />
     <Compile Include="EMP\EMPClientDelegates.cs" />
     <Compile Include="EMP\EMPRoaming.cs" />
@@ -80,6 +81,9 @@
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingNotificationsErrorRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingNotificationsEndRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingNotificationsProgressRequest.cs" />
     <Compile Include="Messages\CPO\ChargingNotificationsStartRequest.cs" />
     <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />

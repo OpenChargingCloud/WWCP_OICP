@@ -215,85 +215,85 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
     #region OnChargingNotificationsProgress
 
-    ///// <summary>
-    ///// A delegate called whenever a ChargingNotificationsProgress will be send.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsProgressRequestHandler (DateTime                                                LogTimestamp,
-    //                                                                    DateTime                                                RequestTimestamp,
-    //                                                                    CPOClient                                               Sender,
-    //                                                                    String                                                  SenderId,
-    //                                                                    EventTracking_Id                                        EventTrackingId,
-    //                                                                    ChargeDetailRecord                                      ChargeDetailRecord,
-    //                                                                    TimeSpan                                                RequestTimeout);
+    /// <summary>
+    /// A delegate called whenever a ChargingNotificationsProgress will be send.
+    /// </summary>
+    public delegate Task OnChargingNotificationsProgressRequestHandler (DateTime                                                LogTimestamp,
+                                                                        DateTime                                                RequestTimestamp,
+                                                                        CPOClient                                               Sender,
+                                                                        String                                                  SenderId,
+                                                                        EventTracking_Id                                        EventTrackingId,
+                                                                        ChargeDetailRecord                                      ChargeDetailRecord,
+                                                                        TimeSpan                                                RequestTimeout);
 
-    ///// <summary>
-    ///// A delegate called whenever a response for a ChargingNotificationsProgress had been received.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsProgressResponseHandler(DateTime                                                Timestamp,
-    //                                                                    DateTime                                                RequestTimestamp,
-    //                                                                    CPOClient                                               Sender,
-    //                                                                    String                                                  SenderId,
-    //                                                                    EventTracking_Id                                        EventTrackingId,
-    //                                                                    ChargeDetailRecord                                      ChargeDetailRecord,
-    //                                                                    TimeSpan                                                RequestTimeout,
-    //                                                                    Acknowledgement<ChargingNotificationsProgressRequest>   Result,
-    //                                                                    TimeSpan                                                Runtime);
+    /// <summary>
+    /// A delegate called whenever a response for a ChargingNotificationsProgress had been received.
+    /// </summary>
+    public delegate Task OnChargingNotificationsProgressResponseHandler(DateTime                                                Timestamp,
+                                                                        DateTime                                                RequestTimestamp,
+                                                                        CPOClient                                               Sender,
+                                                                        String                                                  SenderId,
+                                                                        EventTracking_Id                                        EventTrackingId,
+                                                                        ChargeDetailRecord                                      ChargeDetailRecord,
+                                                                        TimeSpan                                                RequestTimeout,
+                                                                        Acknowledgement<ChargingNotificationsProgressRequest>   Result,
+                                                                        TimeSpan                                                Runtime);
 
     #endregion
 
     #region OnChargingNotificationsEnd
 
-    ///// <summary>
-    ///// A delegate called whenever a ChargingNotificationsEnd will be send.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsEndRequestHandler (DateTime                                           LogTimestamp,
-    //                                                               DateTime                                           RequestTimestamp,
-    //                                                               CPOClient                                          Sender,
-    //                                                               String                                             SenderId,
-    //                                                               EventTracking_Id                                   EventTrackingId,
-    //                                                               ChargeDetailRecord                                 ChargeDetailRecord,
-    //                                                               TimeSpan                                           RequestTimeout);
+    /// <summary>
+    /// A delegate called whenever a ChargingNotificationsEnd will be send.
+    /// </summary>
+    public delegate Task OnChargingNotificationsEndRequestHandler (DateTime                                           LogTimestamp,
+                                                                   DateTime                                           RequestTimestamp,
+                                                                   CPOClient                                          Sender,
+                                                                   String                                             SenderId,
+                                                                   EventTracking_Id                                   EventTrackingId,
+                                                                   ChargeDetailRecord                                 ChargeDetailRecord,
+                                                                   TimeSpan                                           RequestTimeout);
 
-    ///// <summary>
-    ///// A delegate called whenever a response for a ChargingNotificationsEnd had been received.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsEndResponseHandler(DateTime                                           Timestamp,
-    //                                                               DateTime                                           RequestTimestamp,
-    //                                                               CPOClient                                          Sender,
-    //                                                               String                                             SenderId,
-    //                                                               EventTracking_Id                                   EventTrackingId,
-    //                                                               ChargeDetailRecord                                 ChargeDetailRecord,
-    //                                                               TimeSpan                                           RequestTimeout,
-    //                                                               Acknowledgement<ChargingNotificationsEndRequest>   Result,
-    //                                                               TimeSpan                                           Runtime);
+    /// <summary>
+    /// A delegate called whenever a response for a ChargingNotificationsEnd had been received.
+    /// </summary>
+    public delegate Task OnChargingNotificationsEndResponseHandler(DateTime                                           Timestamp,
+                                                                   DateTime                                           RequestTimestamp,
+                                                                   CPOClient                                          Sender,
+                                                                   String                                             SenderId,
+                                                                   EventTracking_Id                                   EventTrackingId,
+                                                                   ChargeDetailRecord                                 ChargeDetailRecord,
+                                                                   TimeSpan                                           RequestTimeout,
+                                                                   Acknowledgement<ChargingNotificationsEndRequest>   Result,
+                                                                   TimeSpan                                           Runtime);
 
     #endregion
 
     #region OnChargingNotificationsError
 
-    ///// <summary>
-    ///// A delegate called whenever a ChargingNotificationsError will be send.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsErrorRequestHandler (DateTime                                             LogTimestamp,
-    //                                                                 DateTime                                             RequestTimestamp,
-    //                                                                 CPOClient                                            Sender,
-    //                                                                 String                                               SenderId,
-    //                                                                 EventTracking_Id                                     EventTrackingId,
-    //                                                                 ChargeDetailRecord                                   ChargeDetailRecord,
-    //                                                                 TimeSpan                                             RequestTimeout);
+    /// <summary>
+    /// A delegate called whenever a ChargingNotificationsError will be send.
+    /// </summary>
+    public delegate Task OnChargingNotificationsErrorRequestHandler (DateTime                                             LogTimestamp,
+                                                                     DateTime                                             RequestTimestamp,
+                                                                     CPOClient                                            Sender,
+                                                                     String                                               SenderId,
+                                                                     EventTracking_Id                                     EventTrackingId,
+                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
+                                                                     TimeSpan                                             RequestTimeout);
 
-    ///// <summary>
-    ///// A delegate called whenever a response for a ChargingNotificationsError had been received.
-    ///// </summary>
-    //public delegate Task OnChargingNotificationsErrorResponseHandler(DateTime                                             Timestamp,
-    //                                                                 DateTime                                             RequestTimestamp,
-    //                                                                 CPOClient                                            Sender,
-    //                                                                 String                                               SenderId,
-    //                                                                 EventTracking_Id                                     EventTrackingId,
-    //                                                                 ChargeDetailRecord                                   ChargeDetailRecord,
-    //                                                                 TimeSpan                                             RequestTimeout,
-    //                                                                 Acknowledgement<ChargingNotificationsErrorRequest>   Result,
-    //                                                                 TimeSpan                                             Runtime);
+    /// <summary>
+    /// A delegate called whenever a response for a ChargingNotificationsError had been received.
+    /// </summary>
+    public delegate Task OnChargingNotificationsErrorResponseHandler(DateTime                                             Timestamp,
+                                                                     DateTime                                             RequestTimestamp,
+                                                                     CPOClient                                            Sender,
+                                                                     String                                               SenderId,
+                                                                     EventTracking_Id                                     EventTrackingId,
+                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
+                                                                     TimeSpan                                             RequestTimeout,
+                                                                     Acknowledgement<ChargingNotificationsErrorRequest>   Result,
+                                                                     TimeSpan                                             Runtime);
 
     #endregion
 

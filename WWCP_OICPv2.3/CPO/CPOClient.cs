@@ -26,7 +26,6 @@ using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
@@ -113,11 +112,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsStartRequest>>     CustomChargingNotificationsStartAcknowledgementParser         { get; set; }
 
-        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsProgressRequest>>  CustomChargingNotificationsProgressAcknowledgementParser      { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsProgressRequest>>  CustomChargingNotificationsProgressAcknowledgementParser      { get; set; }
 
-        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsEndRequest>>       CustomChargingNotificationsEndAcknowledgementParser           { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsEndRequest>>       CustomChargingNotificationsEndAcknowledgementParser           { get; set; }
 
-        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsErrorRequest>>     CustomChargingNotificationsErrorAcknowledgementParser         { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsErrorRequest>>     CustomChargingNotificationsErrorAcknowledgementParser         { get; set; }
 
 
         public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
@@ -250,73 +249,73 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region OnChargingNotificationsProgressRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsProgress will be send.
-        ///// </summary>
-        //public event OnChargingNotificationsProgressRequestHandler   OnChargingNotificationsProgressRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsProgress will be send.
+        /// </summary>
+        public event OnChargingNotificationsProgressRequestHandler   OnChargingNotificationsProgressRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsProgress had been received.
-        ///// </summary>
-        //public event OnChargingNotificationsProgressResponseHandler  OnChargingNotificationsProgressResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsProgress had been received.
+        /// </summary>
+        public event OnChargingNotificationsProgressResponseHandler  OnChargingNotificationsProgressResponse;
 
         #endregion
 
         #region OnChargingNotificationsEndRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsEnd will be send.
-        ///// </summary>
-        //public event OnChargingNotificationsEndRequestHandler   OnChargingNotificationsEndRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsEnd will be send.
+        /// </summary>
+        public event OnChargingNotificationsEndRequestHandler   OnChargingNotificationsEndRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsEnd had been received.
-        ///// </summary>
-        //public event OnChargingNotificationsEndResponseHandler  OnChargingNotificationsEndResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsEnd had been received.
+        /// </summary>
+        public event OnChargingNotificationsEndResponseHandler  OnChargingNotificationsEndResponse;
 
         #endregion
 
         #region OnChargingNotificationsErrorRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsError will be send.
-        ///// </summary>
-        //public event OnChargingNotificationsErrorRequestHandler   OnChargingNotificationsErrorRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsError will be send.
+        /// </summary>
+        public event OnChargingNotificationsErrorRequestHandler   OnChargingNotificationsErrorRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a ChargingNotificationsError HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest;
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsError HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse;
 
-        ///// <summary>
-        ///// An event fired whenever a response to a ChargingNotificationsError had been received.
-        ///// </summary>
-        //public event OnChargingNotificationsErrorResponseHandler  OnChargingNotificationsErrorResponse;
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsError had been received.
+        /// </summary>
+        public event OnChargingNotificationsErrorResponseHandler  OnChargingNotificationsErrorResponse;
 
         #endregion
 
@@ -411,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         //    => base.ToJSON(nameof(CPOClient));
 
 
-        #region PushEVSEData                  (Request)
+        #region PushEVSEData                     (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -898,7 +897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region PushEVSEStatus                (Request)
+        #region PushEVSEStatus                   (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -1384,7 +1383,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region AuthorizeStart                (Request)
+        #region AuthorizeStart                   (Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -1792,7 +1791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop                 (Request)
+        #region AuthorizeStop                    (Request)
 
         /// <summary>
         /// Authorize for stopping a charging session.
@@ -2221,7 +2220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargingNotificationsStart(Request)
+        #region SendChargingNotificationsStart   (Request)
 
         /// <summary>
         /// Send a charging start notification.
@@ -2233,12 +2232,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotifications request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsStart request must not be null!");
 
             //Request = _CustomSendChargingNotificationsStartRequestMapper(Request);
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotifications request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsStart request must not be null!");
 
 
             Byte                                                           TransmissionRetry  = 0;
@@ -2684,8 +2683,1397 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region SendChargingNotificationsProgress(Request)
 
-        #region SendChargeDetailRecord        (Request)
+        /// <summary>
+        /// Send a charging progress notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsProgress request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>> SendChargingNotificationsProgress(ChargingNotificationsProgressRequest Request)
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsProgress request must not be null!");
+
+            //Request = _CustomSendChargingNotificationsProgressRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsProgress request must not be null!");
+
+
+            Byte                                                           TransmissionRetry  = 0;
+            OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>> result             = null;
+
+            #endregion
+
+            #region  OnChargingNotificationsProgressRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsProgressRequest != null)
+            //        await Task.WhenAll(OnChargingNotificationsProgressRequest.GetInvocationList().
+            //                           Cast<OnChargingNotificationsProgressRequestDelegate>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
+
+                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                         RequestLogDelegate:   OnChargingNotificationsProgressHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingNotificationsProgressHTTPResponse,
+                                                         CancellationToken:    Request.CancellationToken,
+                                                         EventTrackingId:      Request.EventTrackingId,
+                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                 ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                // HTTP/1.1 200
+                                // Server:             nginx/1.18.0 (Ubuntu)
+                                // Date:               Tue, 02 Mar 2021 17:51:14 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         332c9d01-2ea4-4d15-9d4a-bb9f5abd097c
+                                // 
+                                // {
+                                //     "Result":               true,
+                                //     "StatusCode": {
+                                //         "Code":             "000",
+                                //         "Description":      null,
+                                //         "AdditionalInfo":   null
+                                //     },
+                                //     "SessionID":            null,
+                                //     "CPOPartnerSessionID":  null,
+                                //     "EMPPartnerSessionID":  null
+                                // }
+
+                                if (Acknowledgement<ChargingNotificationsProgressRequest>.TryParse(Request,
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                out Acknowledgement<ChargingNotificationsProgressRequest>  acknowledgement,
+                                                                                                out String                                              ErrorResponse,
+                                                                                                HTTPResponse.Timestamp,
+                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                HTTPResponse.Runtime,
+                                                                                                processId,
+                                                                                                CustomChargingNotificationsProgressAcknowledgementParser))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Success(Request,
+                                                                                                                    acknowledgement,
+                                                                                                                    processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 false,
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "message": "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":    "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                            //             "errorMessage":    "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                            //             "errorMessage":    "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].plugs",
+                            //             "errorMessage":    "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.BadRequest(Request,
+                                                                                                                   ValidationErrors,
+                                                                                                                   processId);
+
+                            }
+
+                        }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // HTTP/1.1 404
+                        // Server: nginx/1.18.0 (Ubuntu)
+                        // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                        // Content-Type: application/json;charset=UTF-8
+                        // Content-Length: 85
+                        // Connection: keep-alive
+                        // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "300",
+                        //         "Description":     "Partner not found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime, 
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        e.Message,
+                                        e.StackTrace
+                                    ),
+                                    false
+                                )
+                            );
+
+            }
+
+            if (result == null)
+                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        "HTTP request failed!",
+                                        null
+                                    ),
+                                    false
+                                )
+                            );
+
+
+            #region  OnChargingNotificationsProgressResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsProgressResponse != null)
+            //        await Task.WhenAll(OnChargingNotificationsProgressResponse.GetInvocationList().
+            //                           Cast<OnChargingNotificationsProgressResponseDelegate>().
+            //                           Select(e => e(Endtime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout,
+            //                                         result,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region SendChargingNotificationsEnd     (Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsEnd request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>> SendChargingNotificationsEnd(ChargingNotificationsEndRequest Request)
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsEnd request must not be null!");
+
+            //Request = _CustomSendChargingNotificationsEndRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsEnd request must not be null!");
+
+
+            Byte                                                           TransmissionRetry  = 0;
+            OICPResult<Acknowledgement<ChargingNotificationsEndRequest>> result             = null;
+
+            #endregion
+
+            #region  OnChargingNotificationsEndRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsEndRequest != null)
+            //        await Task.WhenAll(OnChargingNotificationsEndRequest.GetInvocationList().
+            //                           Cast<OnChargingNotificationsEndRequestDelegate>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
+
+                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                         RequestLogDelegate:   OnChargingNotificationsEndHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingNotificationsEndHTTPResponse,
+                                                         CancellationToken:    Request.CancellationToken,
+                                                         EventTrackingId:      Request.EventTrackingId,
+                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                 ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                // HTTP/1.1 200
+                                // Server:             nginx/1.18.0 (Ubuntu)
+                                // Date:               Tue, 02 Mar 2021 17:51:14 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         332c9d01-2ea4-4d15-9d4a-bb9f5abd097c
+                                // 
+                                // {
+                                //     "Result":               true,
+                                //     "StatusCode": {
+                                //         "Code":             "000",
+                                //         "Description":      null,
+                                //         "AdditionalInfo":   null
+                                //     },
+                                //     "SessionID":            null,
+                                //     "CPOPartnerSessionID":  null,
+                                //     "EMPPartnerSessionID":  null
+                                // }
+
+                                if (Acknowledgement<ChargingNotificationsEndRequest>.TryParse(Request,
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                out Acknowledgement<ChargingNotificationsEndRequest>  acknowledgement,
+                                                                                                out String                                              ErrorResponse,
+                                                                                                HTTPResponse.Timestamp,
+                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                HTTPResponse.Runtime,
+                                                                                                processId,
+                                                                                                CustomChargingNotificationsEndAcknowledgementParser))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Success(Request,
+                                                                                                                    acknowledgement,
+                                                                                                                    processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 false,
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "message": "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":    "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                            //             "errorMessage":    "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                            //             "errorMessage":    "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].plugs",
+                            //             "errorMessage":    "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.BadRequest(Request,
+                                                                                                                   ValidationErrors,
+                                                                                                                   processId);
+
+                            }
+
+                        }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // HTTP/1.1 404
+                        // Server: nginx/1.18.0 (Ubuntu)
+                        // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                        // Content-Type: application/json;charset=UTF-8
+                        // Content-Length: 85
+                        // Connection: keep-alive
+                        // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "300",
+                        //         "Description":     "Partner not found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime, 
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        e.Message,
+                                        e.StackTrace
+                                    ),
+                                    false
+                                )
+                            );
+
+            }
+
+            if (result == null)
+                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        "HTTP request failed!",
+                                        null
+                                    ),
+                                    false
+                                )
+                            );
+
+
+            #region  OnChargingNotificationsEndResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsEndResponse != null)
+            //        await Task.WhenAll(OnChargingNotificationsEndResponse.GetInvocationList().
+            //                           Cast<OnChargingNotificationsEndResponseDelegate>().
+            //                           Select(e => e(Endtime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout,
+            //                                         result,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region SendChargingNotificationsError   (Request)
+
+        /// <summary>
+        /// Send a charging error notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsError request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>> SendChargingNotificationsError(ChargingNotificationsErrorRequest Request)
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsError request must not be null!");
+
+            //Request = _CustomSendChargingNotificationsErrorRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsError request must not be null!");
+
+
+            Byte                                                           TransmissionRetry  = 0;
+            OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>> result             = null;
+
+            #endregion
+
+            #region  OnChargingNotificationsErrorRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsErrorRequest != null)
+            //        await Task.WhenAll(OnChargingNotificationsErrorRequest.GetInvocationList().
+            //                           Cast<OnChargingNotificationsErrorRequestDelegate>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
+
+                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                         RequestLogDelegate:   OnChargingNotificationsErrorHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingNotificationsErrorHTTPResponse,
+                                                         CancellationToken:    Request.CancellationToken,
+                                                         EventTrackingId:      Request.EventTrackingId,
+                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                 ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                // HTTP/1.1 200
+                                // Server:             nginx/1.18.0 (Ubuntu)
+                                // Date:               Tue, 02 Mar 2021 17:51:14 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         332c9d01-2ea4-4d15-9d4a-bb9f5abd097c
+                                // 
+                                // {
+                                //     "Result":               true,
+                                //     "StatusCode": {
+                                //         "Code":             "000",
+                                //         "Description":      null,
+                                //         "AdditionalInfo":   null
+                                //     },
+                                //     "SessionID":            null,
+                                //     "CPOPartnerSessionID":  null,
+                                //     "EMPPartnerSessionID":  null
+                                // }
+
+                                if (Acknowledgement<ChargingNotificationsErrorRequest>.TryParse(Request,
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                out Acknowledgement<ChargingNotificationsErrorRequest>  acknowledgement,
+                                                                                                out String                                              ErrorResponse,
+                                                                                                HTTPResponse.Timestamp,
+                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                HTTPResponse.Runtime,
+                                                                                                processId,
+                                                                                                CustomChargingNotificationsErrorAcknowledgementParser))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Success(Request,
+                                                                                                                    acknowledgement,
+                                                                                                                    processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 false,
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "message": "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":    "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                            //             "errorMessage":    "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                            //             "errorMessage":    "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].plugs",
+                            //             "errorMessage":    "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.BadRequest(Request,
+                                                                                                                   ValidationErrors,
+                                                                                                                   processId);
+
+                            }
+
+                        }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // HTTP/1.1 404
+                        // Server: nginx/1.18.0 (Ubuntu)
+                        // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                        // Content-Type: application/json;charset=UTF-8
+                        // Content-Length: 85
+                        // Connection: keep-alive
+                        // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "300",
+                        //         "Description":     "Partner not found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime, 
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        e.Message,
+                                        e.StackTrace
+                                    ),
+                                    false
+                                )
+                            );
+
+            }
+
+            if (result == null)
+                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        "HTTP request failed!",
+                                        null
+                                    ),
+                                    false
+                                )
+                            );
+
+
+            #region  OnChargingNotificationsErrorResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsErrorResponse != null)
+            //        await Task.WhenAll(OnChargingNotificationsErrorResponse.GetInvocationList().
+            //                           Cast<OnChargingNotificationsErrorResponseDelegate>().
+            //                           Select(e => e(Endtime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout,
+            //                                         result,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        #region SendChargeDetailRecord           (Request)
 
         /// <summary>
         /// Send a charge detail record.

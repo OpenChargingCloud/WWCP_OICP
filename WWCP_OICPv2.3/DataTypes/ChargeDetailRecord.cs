@@ -91,37 +91,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Decimal                           ConsumedEnergy                     { get; }
 
         /// <summary>
-        /// An optional pricing product name (for identifying a tariff) that must be unique.
+        /// The optional pricing product name (for identifying a tariff) that must be unique.
         /// </summary>
         [Optional]
         public PartnerProduct_Id?                PartnerProductId                   { get; }
 
         /// <summary>
-        /// An optional session identification assinged by the CPO partner.
+        /// The optional session identification assinged by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
-        /// An optional session identification assinged by the EMP partner.
+        /// The optional session identification assinged by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
 
         /// <summary>
-        /// An optional initial value of the energy meter [kWh].
+        /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
         public Decimal?                          MeterValueStart                    { get; }
 
         /// <summary>
-        /// An optional final value of the energy meter [kWh].
+        /// The optional ending value of the energy meter [kWh].
         /// </summary>
         [Optional]
         public Decimal?                          MeterValueEnd                      { get; }
 
         /// <summary>
-        /// An optional enumeration of meter values during the charging session.
+        /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
         public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
@@ -140,13 +140,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public CalibrationLawVerification        CalibrationLawVerificationInfo     { get; }
 
         /// <summary>
-        /// An optional operator identification of the hub operator.
+        /// The optional operator identification of the hub operator.
         /// </summary>
         [Optional]
         public Operator_Id?                      HubOperatorId                      { get; }
 
         /// <summary>
-        /// An optional provider identification of the hub provider.
+        /// The optional provider identification of the hub provider.
         /// </summary>
         [Optional]
         public Provider_Id?                      HubProviderId                      { get; }
@@ -176,8 +176,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
         /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
         /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
-        /// <param name="MeterValueStart">An optional initial value of the energy meter [kWh].</param>
-        /// <param name="MeterValueEnd">An optional final value of the energy meter [kWh].</param>
+        /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
+        /// <param name="MeterValueEnd">An optional ending value of the energy meter [kWh].</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session [kWh].</param>
         /// <param name="SignedMeteringValues">Optional signed metering values, with can e.g. verified via a transparency software.</param>
         /// <param name="CalibrationLawVerificationInfo">Optional additional information which could directly or indirectly help to verify the signed metering values by using a valid transparency software.</param>
@@ -793,7 +793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            SignedMeteringValues.SafeAny()
                                ? new JProperty("SignedMeteringValues",            new JArray(SignedMeteringValues.
-                                                                                                 SafeSelect(signedMeteringValue => signedMeteringValue.ToJSON(CustomSignedMeteringValueSerializer))))
+                                                                                                 Select(signedMeteringValue => signedMeteringValue.ToJSON(CustomSignedMeteringValueSerializer))))
                                : null,
 
                            CalibrationLawVerificationInfo != null

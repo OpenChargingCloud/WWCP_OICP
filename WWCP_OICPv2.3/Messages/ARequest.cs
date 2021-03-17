@@ -89,24 +89,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic request message.
         /// </summary>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public ARequest(DateTime?           Timestamp           = null,
+        public ARequest(JObject             CustomData          = null,
+                        DateTime?           Timestamp           = null,
                         CancellationToken?  CancellationToken   = null,
                         EventTracking_Id    EventTrackingId     = null,
-                        TimeSpan?           RequestTimeout      = null,
-                        JObject             CustomData          = null)
+                        TimeSpan?           RequestTimeout      = null)
         {
 
+            this.CustomData               = CustomData;
             this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
             this.CancellationTokenSource  = CancellationToken == null ? new CancellationTokenSource() : null;
             this.CancellationToken        = CancellationToken ?? CancellationTokenSource.Token;
             this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;
             this.RequestTimeout           = RequestTimeout    ?? DefaultRequestTimeout;
-            this.CustomData               = CustomData;
 
         }
 

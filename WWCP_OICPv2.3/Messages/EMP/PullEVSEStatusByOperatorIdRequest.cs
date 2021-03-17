@@ -71,7 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  EventTracking_Id          EventTrackingId     = null,
                                                  TimeSpan?                 RequestTimeout      = null)
 
-            : base(Timestamp,
+            : base(null,
+                   Timestamp,
                    CancellationToken,
                    EventTrackingId,
                    RequestTimeout)

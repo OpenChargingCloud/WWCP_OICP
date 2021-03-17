@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EVSEStatusTypes.Occupied      => "Occupied",
                    EVSEStatusTypes.OutOfService  => "OutOfService",
                    EVSEStatusTypes.EVSENotFound  => "EvseNotFound",
-                   _                             => "Unknown",
+                   _                             => "Unknown"
                };
 
         #endregion

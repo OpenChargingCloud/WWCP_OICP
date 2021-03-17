@@ -50,13 +50,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Session_Id                        SessionId                          { get; }
 
         /// <summary>
-        /// An optional session identification assinged by the CPO partner.
+        /// The optional session identification assinged by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
-        /// An optional session identification assinged by the EMP partner.
+        /// The optional session identification assinged by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
@@ -74,31 +74,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSE_Id                           EVSEId                             { get; }
 
         /// <summary>
-        /// The timestamp when the charging session started.
-        /// </summary>
-        [Optional]
-        public DateTime?                         SessionStart                       { get; }
-
-        /// <summary>
         /// The timestamp when the charging process started.
         /// </summary>
         [Mandatory]
         public DateTime                          ChargingStart                      { get; }
 
         /// <summary>
-        /// An optional initial value of the energy meter [kWh].
+        /// The timestamp when the charging session started.
+        /// </summary>
+        [Optional]
+        public DateTime?                         SessionStart                       { get; }
+
+        /// <summary>
+        /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
         public Decimal?                          MeterValueStart                    { get; }
 
         /// <summary>
-        /// An optional operator identification.
+        /// The optional operator identification.
         /// </summary>
         [Optional]
         public Operator_Id?                      OperatorId                         { get; }
 
         /// <summary>
-        /// An optional pricing product name (for identifying a tariff) that must be unique.
+        /// The optional pricing product name (for identifying a tariff) that must be unique.
         /// </summary>
         [Optional]
         public PartnerProduct_Id?                PartnerProductId                   { get; }
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new ChargingNotifications request.
+        /// Create a new ChargingNotificationsStart request.
         /// </summary>
         /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
@@ -118,9 +118,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
         /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
-        /// <param name="MeterValueStart">An optional initial value of the energy meter [kWh].</param>
+        /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
         /// <param name="OperatorId">An optional operator identification of the hub operator.</param>
         /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -137,13 +138,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  Decimal?               MeterValueStart       = null,
                                                  Operator_Id?           OperatorId            = null,
                                                  PartnerProduct_Id?     PartnerProductId      = null,
+                                                 JObject                CustomData            = null,
 
                                                  DateTime?              Timestamp             = null,
                                                  CancellationToken?     CancellationToken     = null,
                                                  EventTracking_Id       EventTrackingId       = null,
                                                  TimeSpan?              RequestTimeout        = null)
 
-            : base(Timestamp,
+            : base(CustomData,
+                   Timestamp,
                    CancellationToken,
                    EventTrackingId,
                    RequestTimeout)
@@ -170,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#eRoamingChargingNotificationsstart
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#61-eroamingchargingnotifications-start
 
         // {
         //     Swagger file is missing!
@@ -423,6 +426,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse Custom Data            [optional]
+
+                var CustomData = JSON["CustomData"] as JObject;
+
+                #endregion
+
 
                 ChargingNotificationsStartRequest = new ChargingNotificationsStartRequest(SessionId,
                                                                                           Identification,
@@ -435,6 +444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                           MeterValueStart,
                                                                                           OperatorId,
                                                                                           PartnerProductId,
+                                                                                          CustomData,
 
                                                                                           Timestamp,
                                                                                           null,
@@ -515,20 +525,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             var JSON = JSONObject.Create(
-                           new JProperty("Type",                       Type.AsString()),
-                           new JProperty("SessionID",                  SessionId.          ToString()),
-                           new JProperty("EvseID",                     EVSEId.             ToString()),
-                           new JProperty("Identification",             Identification.     ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
-                           new JProperty("ChargingStart",              ChargingStart.      ToIso8601()),
-
-
-                           SessionStart.HasValue
-                               ? new JProperty("SessionStart",         SessionStart.Value.       ToIso8601())
-                               : null,
-
-                           PartnerProductId.   HasValue
-                               ? new JProperty("PartnerProductID",     PartnerProductId.   Value.ToString())
-                               : null,
+                           new JProperty("Type",                       Type.                     AsString()),
+                           new JProperty("SessionID",                  SessionId.                ToString()),
+                           new JProperty("EvseID",                     EVSEId.                   ToString()),
+                           new JProperty("Identification",             Identification.           ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
+                           new JProperty("ChargingStart",              ChargingStart.            ToIso8601()),
 
                            CPOPartnerSessionId.HasValue
                                ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.Value.ToString())
@@ -538,17 +539,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.Value.ToString())
                                : null,
 
+                           SessionStart.       HasValue
+                               ? new JProperty("SessionStart",         SessionStart.       Value.ToIso8601())
+                               : null,
+
                            MeterValueStart.    HasValue
                                ? new JProperty("MeterValueStart",      String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
                                : null,
 
-                           OperatorId.HasValue
-                               ? new JProperty("OperatorID",           OperatorId.Value.ToString())
+                           OperatorId.         HasValue
+                               ? new JProperty("OperatorID",           OperatorId.         Value.ToString())
+                               : null,
+
+                           PartnerProductId.   HasValue
+                               ? new JProperty("PartnerProductID",     PartnerProductId.   Value.ToString())
                                : null,
 
                            CustomData != null
                                ? new JProperty("CustomData",           CustomData)
                                : null
+
                        );
 
             return CustomChargingNotificationsStartRequestSerializer != null
@@ -577,6 +587,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      MeterValueStart,
                                                      OperatorId,
                                                      PartnerProductId,
+                                                     CustomData,
 
                                                      Timestamp,
                                                      CancellationToken,
@@ -681,8 +692,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return Type.                GetHashCode()       * 31 ^
                        SessionId.           GetHashCode()       * 29 ^
-                       Identification.      GetHashCode()       * 27 ^
-                       EVSEId.              GetHashCode()       * 21 ^
+                       Identification.      GetHashCode()       * 23 ^
+                       EVSEId.              GetHashCode()       * 19 ^
                        ChargingStart.       GetHashCode()       * 17 ^
 
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) * 13 ^

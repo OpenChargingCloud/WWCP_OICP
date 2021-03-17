@@ -849,6 +849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+
         #region PushEVSEData  (Request)
 
         /// <summary>
@@ -906,10 +907,68 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+
         #region SendChargeDetailRecord(Request)
 
         /// <summary>
-        /// Send a charge detail record to an OICP server.
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsStart request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>>
+
+            SendChargingNotificationsStart(ChargingNotificationsStartRequest Request)
+
+                => CPOClient.SendChargingNotificationsStart(Request);
+
+        #endregion
+
+        #region SendChargeDetailRecord(Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsProgress request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>>
+
+            SendChargingNotificationsProgress(ChargingNotificationsProgressRequest Request)
+
+                => CPOClient.SendChargingNotificationsProgress(Request);
+
+        #endregion
+
+        #region SendChargeDetailRecord(Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsEnd request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>>
+
+            SendChargingNotificationsEnd(ChargingNotificationsEndRequest Request)
+
+                => CPOClient.SendChargingNotificationsEnd(Request);
+
+        #endregion
+
+        #region SendChargeDetailRecord(Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsError request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>>
+
+            SendChargingNotificationsError(ChargingNotificationsErrorRequest Request)
+
+                => CPOClient.SendChargingNotificationsError(Request);
+
+        #endregion
+
+
+        #region SendChargeDetailRecord(Request)
+
+        /// <summary>
+        /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
         public Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>

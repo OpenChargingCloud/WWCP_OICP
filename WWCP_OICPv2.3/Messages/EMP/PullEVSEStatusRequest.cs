@@ -72,7 +72,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
-        /// 
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -83,7 +82,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      GeoCoordinates?     SearchCenter        = null,
                                      Single?             DistanceKM          = null,
                                      EVSEStatusTypes?    EVSEStatusFilter    = null,
-
                                      JObject             CustomData          = null,
 
                                      DateTime?           Timestamp           = null,
@@ -91,11 +89,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      EventTracking_Id    EventTrackingId     = null,
                                      TimeSpan?           RequestTimeout      = null)
 
-            : base(Timestamp,
+            : base(CustomData,
+                   Timestamp,
                    CancellationToken,
                    EventTrackingId,
-                   RequestTimeout,
-                   CustomData)
+                   RequestTimeout)
 
         {
 
