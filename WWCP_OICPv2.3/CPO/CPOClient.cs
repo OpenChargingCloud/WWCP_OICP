@@ -103,14 +103,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
         }
 
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>            CustomPushEVSEDataAcknowledgementParser              { get; set; }
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>          CustomPushEVSEStatusAcknowledgementParser            { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                   CustomPushEVSEDataAcknowledgementParser                       { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                 CustomPushEVSEStatusAcknowledgementParser                     { get; set; }
 
 
-        public CustomJObjectParserDelegate<AuthorizationStartResponse>                      CustomAuthorizationStartResponseParser               { get; set; }
-        public CustomJObjectParserDelegate<AuthorizationStopResponse>                       CustomAuthorizationStopResponseParser                { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStartResponse>                             CustomAuthorizationStartResponseParser                        { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStopResponse>                              CustomAuthorizationStopResponseParser                         { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>  CustomSendChargeDetailRecordAcknowledgementParser    { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsStartRequest>>     CustomChargingNotificationsStartAcknowledgementParser         { get; set; }
+
+        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsProgressRequest>>  CustomChargingNotificationsProgressAcknowledgementParser      { get; set; }
+
+        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsEndRequest>>       CustomChargingNotificationsEndAcknowledgementParser           { get; set; }
+
+        //public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsErrorRequest>>     CustomChargingNotificationsErrorAcknowledgementParser         { get; set; }
+
+
+        public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
 
         #endregion
 
@@ -119,22 +129,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region OnPushEVSEDataRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a request pushing EVSE data records will be send.
+        /// An event fired whenever a PushEVSEData will be send.
         /// </summary>
         public event OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
 
         /// <summary>
-        /// An event fired whenever a HTTP request pushing EVSE data records will be send.
+        /// An event fired whenever a PushEVSEData HTTP request will be send.
         /// </summary>
         public event ClientRequestLogHandler         OnPushEVSEDataHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a push EVSE data records HTTP request had been received.
+        /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler        OnPushEVSEDataHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever EVSE data records had been sent upstream.
+        /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
         /// </summary>
         public event OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
 
@@ -143,22 +153,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region OnPushEVSEStatusRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a request pushing EVSE status records will be send.
+        /// An event fired whenever a PushEVSEStatus will be send.
         /// </summary>
         public event OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
 
         /// <summary>
-        /// An event fired whenever a HTTP request pushing EVSE status records will be send.
+        /// An event fired whenever a PushEVSEStatus HTTP request will be send.
         /// </summary>
         public event ClientRequestLogHandler           OnPushEVSEStatusHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a push EVSE status records HTTP request had been received.
+        /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler          OnPushEVSEStatusHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever EVSE status records had been sent upstream.
+        /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
         /// </summary>
         public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
 
@@ -168,22 +178,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region OnAuthorizeStartRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an authorize start request will be send.
+        /// An event fired whenever an AuthorizeStart request will be send.
         /// </summary>
         public event OnAuthorizeStartRequestHandler     OnAuthorizeStartRequest;
 
         /// <summary>
-        /// An event fired whenever an authorize start HTTP request will be send.
+        /// An event fired whenever an AuthorizeStart HTTP request will be send.
         /// </summary>
         public event ClientRequestLogHandler            OnAuthorizeStartHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to an authorize start HTTP request had been received.
+        /// An event fired whenever a response to an AuthorizeStart HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler           OnAuthorizeStartHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever an authorize start request was sent.
+        /// An event fired whenever a response to an AuthorizeStart request had been received.
         /// </summary>
         public event OnAuthorizeStartResponseHandler    OnAuthorizeStartResponse;
 
@@ -192,46 +202,144 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region OnAuthorizeStopRequest/-Response
 
         /// <summary>
-        /// An event fired whenever an 'authorize stop' request will be send.
+        /// An event fired whenever an AuthorizeStop request will be send.
         /// </summary>
         public event OnAuthorizeStopRequestHandler   OnAuthorizeStopRequest;
 
         /// <summary>
-        /// An event fired whenever an 'authorize stop' HTTP request will be send.
+        /// An event fired whenever an AuthorizeStop HTTP request will be send.
         /// </summary>
         public event ClientRequestLogHandler         OnAuthorizeStopHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a 'authorize stop' HTTP request had been received.
+        /// An event fired whenever a response to an AuthorizeStop HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler        OnAuthorizeStopHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a 'authorize stop' request had been received.
+        /// An event fired whenever a response to an AuthorizeStop request had been received.
         /// </summary>
         public event OnAuthorizeStopResponseHandler  OnAuthorizeStopResponse;
 
         #endregion
 
+
+        #region OnChargingNotificationsStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsStart will be send.
+        /// </summary>
+        public event OnChargingNotificationsStartRequestHandler   OnChargingNotificationsStartRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsStart HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnChargingNotificationsStartHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsStart HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnChargingNotificationsStartHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsStart had been received.
+        /// </summary>
+        public event OnChargingNotificationsStartResponseHandler  OnChargingNotificationsStartResponse;
+
+        #endregion
+
+        #region OnChargingNotificationsProgressRequest/-Response
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsProgress will be send.
+        ///// </summary>
+        //public event OnChargingNotificationsProgressRequestHandler   OnChargingNotificationsProgressRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
+        ///// </summary>
+        //public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
+        ///// </summary>
+        //public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsProgress had been received.
+        ///// </summary>
+        //public event OnChargingNotificationsProgressResponseHandler  OnChargingNotificationsProgressResponse;
+
+        #endregion
+
+        #region OnChargingNotificationsEndRequest/-Response
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsEnd will be send.
+        ///// </summary>
+        //public event OnChargingNotificationsEndRequestHandler   OnChargingNotificationsEndRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
+        ///// </summary>
+        //public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
+        ///// </summary>
+        //public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsEnd had been received.
+        ///// </summary>
+        //public event OnChargingNotificationsEndResponseHandler  OnChargingNotificationsEndResponse;
+
+        #endregion
+
+        #region OnChargingNotificationsErrorRequest/-Response
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsError will be send.
+        ///// </summary>
+        //public event OnChargingNotificationsErrorRequestHandler   OnChargingNotificationsErrorRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a ChargingNotificationsError HTTP request will be send.
+        ///// </summary>
+        //public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
+        ///// </summary>
+        //public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse;
+
+        ///// <summary>
+        ///// An event fired whenever a response to a ChargingNotificationsError had been received.
+        ///// </summary>
+        //public event OnChargingNotificationsErrorResponseHandler  OnChargingNotificationsErrorResponse;
+
+        #endregion
+
+
         #region OnSendChargeDetailRecordRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a 'charge detail record' will be send.
+        /// An event fired whenever a ChargeDetailRecord will be send.
         /// </summary>
         public event OnSendChargeDetailRecordRequestHandler   OnSendChargeDetailRecordRequest;
 
         /// <summary>
-        /// An event fired whenever a 'charge detail record' will be send via HTTP.
+        /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
         /// </summary>
         public event ClientRequestLogHandler                  OnSendChargeDetailRecordHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a HTTP response to a sent 'charge detail record' had been received.
+        /// An event fired whenever a response to a ChargeDetailRecord HTTP request had been received.
         /// </summary>
         public event ClientResponseLogHandler                 OnSendChargeDetailRecordHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a sent 'charge detail record' had been received.
+        /// An event fired whenever a response to a ChargeDetailRecord had been received.
         /// </summary>
         public event OnSendChargeDetailRecordResponseHandler  OnSendChargeDetailRecordResponse;
 
@@ -303,7 +411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         //    => base.ToJSON(nameof(CPOClient));
 
 
-        #region PushEVSEData          (Request)
+        #region PushEVSEData                  (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -790,7 +898,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region PushEVSEStatus        (Request)
+        #region PushEVSEStatus                (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -1276,10 +1384,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region AuthorizeStart        (Request)
+        #region AuthorizeStart                (Request)
 
         /// <summary>
-        /// Create a new AuthorizeStart request.
+        /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
         public async Task<OICPResult<AuthorizationStartResponse>> AuthorizeStart(AuthorizeStartRequest Request)
@@ -1684,10 +1792,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop         (Request)
+        #region AuthorizeStop                 (Request)
 
         /// <summary>
-        /// Create a new AuthorizeStop request.
+        /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
         public async Task<OICPResult<AuthorizationStopResponse>> AuthorizeStop(AuthorizeStopRequest Request)
@@ -2112,7 +2220,472 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargeDetailRecord(Request)
+
+        #region SendChargingNotificationsStart(Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Request">A ChargingNotificationsStart request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>> SendChargingNotificationsStart(ChargingNotificationsStartRequest Request)
+        {
+
+            #region Initial checks
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotifications request must not be null!");
+
+            //Request = _CustomSendChargingNotificationsStartRequestMapper(Request);
+
+            if (Request == null)
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotifications request must not be null!");
+
+
+            Byte                                                           TransmissionRetry  = 0;
+            OICPResult<Acknowledgement<ChargingNotificationsStartRequest>> result             = null;
+
+            #endregion
+
+            #region  OnChargingNotificationsStartRequest event
+
+            var StartTime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsStartRequest != null)
+            //        await Task.WhenAll(OnChargingNotificationsStartRequest.GetInvocationList().
+            //                           Cast<OnChargingNotificationsStartRequestDelegate>().
+            //                           Select(e => e(StartTime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartRequest));
+            //}
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await new HTTPSClient(RemoteURL,
+                                                             VirtualHostname,
+                                                             Description,
+                                                             RemoteCertificateValidator,
+                                                             null,
+                                                             ClientCert,
+                                                             HTTPUserAgent,
+                                                             RequestTimeout,
+                                                             TransmissionRetryDelay,
+                                                             MaxNumberOfRetries,
+                                                             false,
+                                                             null,
+                                                             DNSClient).
+
+                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
+                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                        requestbuilder => {
+                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                        }),
+
+                                                         RequestLogDelegate:   OnChargingNotificationsStartHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingNotificationsStartHTTPResponse,
+                                                         CancellationToken:    Request.CancellationToken,
+                                                         EventTrackingId:      Request.EventTrackingId,
+                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                 ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                // HTTP/1.1 200
+                                // Server:             nginx/1.18.0 (Ubuntu)
+                                // Date:               Tue, 02 Mar 2021 17:51:14 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         332c9d01-2ea4-4d15-9d4a-bb9f5abd097c
+                                // 
+                                // {
+                                //     "Result":               true,
+                                //     "StatusCode": {
+                                //         "Code":             "000",
+                                //         "Description":      null,
+                                //         "AdditionalInfo":   null
+                                //     },
+                                //     "SessionID":            null,
+                                //     "CPOPartnerSessionID":  null,
+                                //     "EMPPartnerSessionID":  null
+                                // }
+
+                                if (Acknowledgement<ChargingNotificationsStartRequest>.TryParse(Request,
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                out Acknowledgement<ChargingNotificationsStartRequest>  acknowledgement,
+                                                                                                out String                                              ErrorResponse,
+                                                                                                HTTPResponse.Timestamp,
+                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                HTTPResponse.Runtime,
+                                                                                                processId,
+                                                                                                CustomChargingNotificationsStartAcknowledgementParser))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Success(Request,
+                                                                                                                    acknowledgement,
+                                                                                                                    processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 false,
+                                                 ProcessId: processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "message": "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":    "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].geoCoordinates",
+                            //             "errorMessage":    "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].chargingStationNames",
+                            //             "errorMessage":    "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference":  "operatorEvseStatus.evseStatusRecord[0].plugs",
+                            //             "errorMessage":    "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList ValidationErrors))
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.BadRequest(Request,
+                                                                                                                   ValidationErrors,
+                                                                                                                   processId);
+
+                            }
+
+                        }
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // HTTP/1.1 404
+                        // Server: nginx/1.18.0 (Ubuntu)
+                        // Date: Wed, 03 Mar 2021 01:00:15 GMT
+                        // Content-Type: application/json;charset=UTF-8
+                        // Content-Length: 85
+                        // Connection: keep-alive
+                        // Process-ID: 7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "300",
+                        //         "Description":     "Partner not found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode  statusCode,
+                                                        out String      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime, 
+                                                                                                                       statusCode,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                                Request,
+                                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                    Request,
+                                                    HTTPResponse.Timestamp,
+                                                    HTTPResponse.EventTrackingId,
+                                                    HTTPResponse.Runtime,
+                                                    new StatusCode(
+                                                        StatusCodes.SystemError,
+                                                        e.Message,
+                                                        e.StackTrace),
+                                                    false,
+                                                    ProcessId: processId
+                                                )
+                                            );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        e.Message,
+                                        e.StackTrace
+                                    ),
+                                    false
+                                )
+                            );
+
+            }
+
+            if (result == null)
+                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                Request,
+                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                    Request,
+                                    DateTime.UtcNow,
+                                    Request.EventTrackingId,
+                                    DateTime.UtcNow - Request.Timestamp,
+                                    new StatusCode(
+                                        StatusCodes.SystemError,
+                                        "HTTP request failed!",
+                                        null
+                                    ),
+                                    false
+                                )
+                            );
+
+
+            #region  OnChargingNotificationsStartResponse event
+
+            var Endtime = DateTime.UtcNow;
+
+            //try
+            //{
+
+            //    if (OnChargingNotificationsStartResponse != null)
+            //        await Task.WhenAll(OnChargingNotificationsStartResponse.GetInvocationList().
+            //                           Cast<OnChargingNotificationsStartResponseDelegate>().
+            //                           Select(e => e(Endtime,
+            //                                         Request.Timestamp,
+            //                                         this,
+            //                                         //ClientId,
+            //                                         Request.EventTrackingId,
+            //                                         Request.Action,
+            //                                         Request.EVSEStatusRecords.ULongCount(),
+            //                                         Request.EVSEStatusRecords,
+            //                                         Request.RequestTimeout ?? RequestTimeout,
+            //                                         result,
+            //                                         Endtime - StartTime))).
+            //                           ConfigureAwait(false);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartResponse));
+            //}
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        #region SendChargeDetailRecord        (Request)
 
         /// <summary>
         /// Send a charge detail record.

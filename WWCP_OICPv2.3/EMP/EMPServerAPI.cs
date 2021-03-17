@@ -246,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="URLPathPrefix"></param>
         /// <param name="ServiceName"></param>
         /// <param name="DNSClient"></param>
-        /// <param name="Autostart"></param>
+        /// <param name="AutoStart"></param>
         public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,
@@ -258,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             HTTPPath?                            URLPathPrefix         = null,
                             String                               ServiceName           = DefaultHTTPServiceName,
                             DNSClient                            DNSClient             = null,
-                            Boolean                              Autostart             = false)
+                            Boolean                              AutoStart             = false)
 
             : base(ServerCertificateSelector,
                    ClientCertificateSelector,
@@ -277,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             RegisterURLTemplates();
 
-            if (Autostart)
+            if (AutoStart)
                 HTTPServer.Start();
 
         }

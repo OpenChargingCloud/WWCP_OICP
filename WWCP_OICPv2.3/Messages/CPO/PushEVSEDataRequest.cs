@@ -134,7 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data request JSON objects.</param>
         public static PushEVSEDataRequest Parse(JObject                                           JSON,
                                                 TimeSpan                                          RequestTimeout,
                                                 DateTime?                                         Timestamp                         = null,
@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data request JSON objects.</param>
         public static PushEVSEDataRequest Parse(String                                            Text,
                                                 TimeSpan                                          RequestTimeout,
                                                 DateTime?                                         Timestamp                         = null,
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data request JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
                                        TimeSpan                                          RequestTimeout,
                                        out PushEVSEDataRequest                           PushEVSEDataRequest,
@@ -287,7 +287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data requests JSON objects.</param>
+        /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data request JSON objects.</param>
         public static Boolean TryParse(String                                            Text,
                                        TimeSpan                                          RequestTimeout,
                                        out PushEVSEDataRequest                           PushEVSEDataRequest,

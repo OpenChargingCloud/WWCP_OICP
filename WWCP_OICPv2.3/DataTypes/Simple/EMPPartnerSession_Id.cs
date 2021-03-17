@@ -165,7 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             try
             {
-                SessionId = new EMPPartnerSession_Id(Text);
+                SessionId = new EMPPartnerSession_Id(Text.SubstringMax(250));
                 return true;
             }
 
