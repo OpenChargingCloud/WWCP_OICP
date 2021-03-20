@@ -192,6 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             IPPort?                              HTTPServerPort        = null,
                             String                               HTTPServerName        = DefaultHTTPServerName,
                             String                               ExternalDNSName       = null,
+                            HTTPPath?                            BasePath              = null,
                             HTTPPath?                            URLPathPrefix         = null,
                             String                               ServiceName           = DefaultHTTPServiceName,
                             Boolean                              DisableLogging        = false,
@@ -209,6 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    HTTPServerName,
                    ExternalDNSName,
                    URLPathPrefix,
+                   BasePath,
                    ServiceName,
                    DNSClient,
                    false)

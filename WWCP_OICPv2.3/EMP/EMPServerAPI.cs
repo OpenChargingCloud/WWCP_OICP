@@ -256,6 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             String                               HTTPServerName        = DefaultHTTPServerName,
                             String                               ExternalDNSName       = null,
                             HTTPPath?                            URLPathPrefix         = null,
+                            HTTPPath?                            BasePath              = null,
                             String                               ServiceName           = DefaultHTTPServiceName,
                             DNSClient                            DNSClient             = null,
                             Boolean                              AutoStart             = false)
@@ -269,6 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    HTTPServerName,
                    ExternalDNSName,
                    URLPathPrefix,
+                   BasePath,
                    ServiceName,
                    DNSClient,
                    false)
