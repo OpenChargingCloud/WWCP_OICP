@@ -299,13 +299,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              null,
                                                              DNSClient).
 
-                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                     }),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                   }),
 
                                                       RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
                                                       ResponseLogDelegate:  OnPullEVSEDataHTTPResponse,
@@ -676,13 +675,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              null,
                                                              DNSClient).
 
-                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                     RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                     }),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                   }),
 
                                                       RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
                                                       ResponseLogDelegate:  OnPullEVSEStatusHTTPResponse,

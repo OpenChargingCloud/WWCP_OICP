@@ -507,13 +507,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  null,
                                                                  DNSClient).
 
-                                                  Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                         RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
-                                                                                         requestbuilder => {
-                                                                                             requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                             requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                             requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                         }),
+                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
+                                                                                       requestbuilder => {
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       }),
 
                                                           RequestLogDelegate:   OnPushEVSEDataHTTPRequest,
                                                           ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
@@ -994,13 +993,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  null,
                                                                  DNSClient).
 
-                                                  Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                         RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
-                                                                                         requestbuilder => {
-                                                                                             requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                             requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                             requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                         }),
+                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
+                                                                                       requestbuilder => {
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       }),
 
                                                           RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
                                                           ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
@@ -1464,13 +1462,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                     RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                     }),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                   }),
 
                                                       RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
                                                       ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
@@ -1871,13 +1868,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                     RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                     }),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                   }),
 
                                                       RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
                                                       ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
@@ -2297,13 +2293,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                      requestbuilder => {
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                      }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsStartHTTPRequest,
                                                          ResponseLogDelegate:  OnChargingNotificationsStartHTTPResponse,
@@ -2760,13 +2755,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                      requestbuilder => {
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                      }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsProgressHTTPRequest,
                                                          ResponseLogDelegate:  OnChargingNotificationsProgressHTTPResponse,
@@ -3223,13 +3217,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                      requestbuilder => {
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                      }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsEndHTTPRequest,
                                                          ResponseLogDelegate:  OnChargingNotificationsEndHTTPResponse,
@@ -3686,13 +3679,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                                 Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                        RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                        requestbuilder => {
-                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                            requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                        }),
+                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                                                      requestbuilder => {
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                      }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsErrorHTTPRequest,
                                                          ResponseLogDelegate:  OnChargingNotificationsErrorHTTPResponse,
@@ -4148,13 +4140,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              null,
                                                              DNSClient).
 
-                                              Execute(client => client.CreateRequest(HTTPMethod.POST,
-                                                                                     RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
-                                                                                     }),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                   }),
 
                                                       RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
                                                       ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
