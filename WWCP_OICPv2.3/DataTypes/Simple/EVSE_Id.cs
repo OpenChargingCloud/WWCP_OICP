@@ -245,14 +245,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            EVSEId  = default;
+            Text    = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                EVSEId = default(EVSE_Id);
                 return false;
-            }
 
             #endregion
 
@@ -264,13 +261,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (MatchCollection.Count == 1)
                 {
 
-                    Operator_Id _EVSEOperatorId;
-
                     // New format...
-                    if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out _EVSEOperatorId))
+                    if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out Operator_Id evseOperatorId))
                     {
 
-                        EVSEId = new EVSE_Id(_EVSEOperatorId,
+                        EVSEId = new EVSE_Id(evseOperatorId,
                                              MatchCollection[0].Groups[2].Value);
 
                         return true;
@@ -278,10 +273,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     }
 
                     // Old format...
-                    if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out _EVSEOperatorId))
+                    if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out evseOperatorId))
                     {
 
-                        EVSEId = new EVSE_Id(_EVSEOperatorId,
+                        EVSEId = new EVSE_Id(evseOperatorId,
                                              MatchCollection[0].Groups[4].Value);
 
                         return true;
@@ -298,7 +293,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 #pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
 #pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
 
-            EVSEId = default(EVSE_Id);
             return false;
 
         }
