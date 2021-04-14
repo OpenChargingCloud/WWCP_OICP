@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSEToOICPException(EVSE       EVSE,
                                    Exception  InnerException)
 
-            : base("Could not convert EVSE to an EVSERecord!",
+            : base("Could not convert EVSE '" + EVSE.Id + "' to an OICP " + Version.Number + " EVSEDataRecord!",
                    InnerException)
 
         {

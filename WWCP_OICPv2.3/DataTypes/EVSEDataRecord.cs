@@ -1223,7 +1223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                            DeltaType.                       HasValue
-                               ? new JProperty("deltaType",                         DeltaType.                   Value)
+                               ? new JProperty("deltaType",                         DeltaType.                   Value.ToString())
                                : null,
 
                            LastUpdate.                      HasValue
@@ -1232,11 +1232,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                            ChargingStationId.               HasValue
-                               ? new JProperty("ChargingStationID",                 ChargingStationId.           Value)
+                               ? new JProperty("ChargingStationID",                 ChargingStationId.           Value.ToString())
                                : null,
 
                            ChargingPoolId.                  HasValue
-                               ? new JProperty("ChargingPoolID",                    ChargingPoolId.              Value)
+                               ? new JProperty("ChargingPoolID",                    ChargingPoolId.              Value.ToString())
                                : null,
 
                            HardwareManufacturer.            IsNeitherNullNorEmpty()

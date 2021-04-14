@@ -32,8 +32,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// An OICP roaming client for CPOs which combines the CPO client
-    /// and server and adds additional logging for both.
+    /// The CPO roaming object combines the CPO client and CPO server
+    /// and adds additional logging for both.
     /// </summary>
     public class CPORoaming : ICPOClient
     {
@@ -160,7 +160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
         /// <summary>
-        /// The CPO HTTP server.
+        /// The CPO server.
         /// </summary>
         public CPOServerAPI  CPOServer    { get; }
 
@@ -828,7 +828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new roaming client for CPOs.
+        /// Create a new CPO roaming.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="CPOServer">A CPO sever.</param>
@@ -839,7 +839,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.CPOClient  = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPOClient must not be null!");
             this.CPOServer  = CPOServer ?? throw new ArgumentNullException(nameof(CPOServer), "The given CPOServer must not be null!");
 
-            // Link HTTP events...
+            // Link HTTP server events...
             CPOServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
             CPOServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             CPOServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);

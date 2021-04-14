@@ -294,8 +294,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         AccessibilityLocationType:         null,
                                                         AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description) != null
                                                                                                ? new I18NText(
-                                                                                                     LanguageCode.Parse((EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
-                                                                                                     (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText())
+                                                                                                     LanguageCode.Parse(
+                                                                                                         (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
+                                                                                                         (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText().SubstringMax(150)
+                                                                                                     )
                                                                                                : null,
                                                         ChargingStationLocationReference:  null,
                                                         GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool.EntranceLocation.ToOICP(),

@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,
-                            SslProtocols                         AllowedTLSProtocols   = SslProtocols.Tls12,
+                            SslProtocols                         AllowedTLSProtocols   = SslProtocols.Tls12 | SslProtocols.Tls13,
                             HTTPHostname?                        HTTPHostname          = null,
                             IPPort?                              HTTPServerPort        = null,
                             String                               HTTPServerName        = DefaultHTTPServerName,

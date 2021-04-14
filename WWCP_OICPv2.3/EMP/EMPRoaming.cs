@@ -36,7 +36,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// An OICP roaming client for EMPs.
+    /// The EMP roaming object combines the EMP client and EMP server
+    /// and adds additional logging for both.
     /// </summary>
     public class EMPRoaming : IEMPClient
     {
@@ -1176,12 +1177,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new roaming client for EMPs.
+        /// Create a new EMP roaming.
         /// </summary>
         /// <param name="EMPClient">A EMP client.</param>
         /// <param name="EMPServer">A EMP sever.</param>
-        /// <param name="ServerLoggingContext">An optional context for logging server methods.</param>
-        /// <param name="LogfileCreator">A delegate to create a log file from the given context and logfile name.</param>
         public EMPRoaming(EMPClient     EMPClient,
                           EMPServerAPI  EMPServer)
         {

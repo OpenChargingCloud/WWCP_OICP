@@ -73,7 +73,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               EventTracking_Id                 EventTrackingId,
                                                               WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
                                                               IEnumerable<Warning>             Warnings,
                                                               TimeSpan?                        RequestTimeout);
@@ -89,7 +88,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               EventTracking_Id                 EventTrackingId,
                                                               WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
                                                               WWCP.PushEVSEDataResult          Result,
@@ -109,7 +107,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               EventTracking_Id                 EventTrackingId,
                                                               WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
                                                               IEnumerable<Warning>             Warnings,
                                                               TimeSpan?                        RequestTimeout);
@@ -125,7 +122,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               EventTracking_Id                 EventTrackingId,
                                                               WWCP.RoamingNetwork_Id           RoamingNetworkId,
                                                               ActionTypes                      ServerAction,
-                                                              UInt64                           NumberOfEVSEDataRecords,
                                                               IEnumerable<EVSEStatusRecord>    EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
                                                               WWCP.PushEVSEStatusResult        Result,

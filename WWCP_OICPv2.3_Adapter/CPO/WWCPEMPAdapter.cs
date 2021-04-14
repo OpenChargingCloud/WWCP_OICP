@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate    _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-        private        readonly  ChargingStationOperatorNameSelectorDelegate          _OperatorNameSelector;
+        private        readonly  ChargingStationOperatorNameSelectorDelegate          OperatorNameSelector;
 
         private static readonly  Regex                                                pattern                             = new Regex(@"\s=\s");
 
@@ -771,8 +771,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
-            this.DefaultOperatorName                              = DefaultOperatorNameSelector(DefaultOperator.Name);
-            this._OperatorNameSelector                            = OperatorNameSelector;
+            this.OperatorNameSelector                             = OperatorNameSelector;
+            this.DefaultOperatorName                              = (this.OperatorNameSelector != null
+                                                                         ? this.OperatorNameSelector  (DefaultOperator.Name)
+                                                                         : DefaultOperatorNameSelector(DefaultOperator.Name))?.Trim();
+
+            if (DefaultOperatorName.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(DefaultOperator), "The given default charging station operator name must not be null!");
 
             this.CustomEVSEIdMapper                               = CustomEVSEIdMapper;
 
@@ -1460,7 +1465,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                   EventTrackingId,
                                                   RoamingNetwork.Id,
                                                   ServerAction,
-                                                  EVSEDataRecords.ULongCount(),
                                                   EVSEDataRecords,
                                                   Warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
                                                   RequestTimeout);
@@ -1482,7 +1486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 var response = await CPORoaming.
                                          PushEVSEData(EVSEDataRecords,
                                                       DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
-                                                      DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                      DefaultOperatorName,
                                                       ServerAction,
                                                       null,
 
@@ -1689,7 +1693,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                    EventTrackingId,
                                                    RoamingNetwork.Id,
                                                    ServerAction,
-                                                   EVSEDataRecords.ULongCount(),
                                                    EVSEDataRecords,
                                                    RequestTimeout,
                                                    result,
@@ -1789,8 +1792,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evsestatusupdate));
                 }
 
-                return null;
-
             }
 
             PushEVSEStatusResult result = null;
@@ -1811,7 +1812,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                     EventTrackingId,
                                                     RoamingNetwork.Id,
                                                     ServerAction,
-                                                    _EVSEStatus.ULongCount(),
                                                     _EVSEStatus,
                                                     Warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
                                                     RequestTimeout);
@@ -1828,7 +1828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             var response = await CPORoaming.
                                      PushEVSEStatus(_EVSEStatus,
                                                     DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
-                                                    DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
+                                                    DefaultOperatorName,
                                                     ServerAction,
                                                     null,
 
@@ -1846,33 +1846,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 if (response.Result.Result == true)
                     result = PushEVSEStatusResult.Success(Id,
-                                                      this,
-                                                      response.Result.StatusCode.Description,
-                                                      response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                          ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
-                                                          : Warnings,
-                                                      Runtime);
+                                                          this,
+                                                          response.Result.StatusCode.Description,
+                                                          response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                              ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
+                                                              : Warnings,
+                                                          Runtime);
 
                 else
                     result = PushEVSEStatusResult.Error(Id,
-                                                    this,
-                                                    EVSEStatusUpdates,
-                                                    response.Result.StatusCode.Description,
-                                                    response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                        ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
-                                                        : Warnings,
-                                                    Runtime);
+                                                        this,
+                                                        EVSEStatusUpdates,
+                                                        response.Result.StatusCode.Description,
+                                                        response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                            ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
+                                                            : Warnings,
+                                                        Runtime);
 
             }
             else
                 result = PushEVSEStatusResult.Error(Id,
-                                                this,
-                                                EVSEStatusUpdates,
-                                                //response.HTTPStatusCode.ToString(),
-                                                //response.HTTPBody != null
-                                                //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
-                                                //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                Runtime: Runtime);
+                                                    this,
+                                                    EVSEStatusUpdates,
+                                                    //response.HTTPStatusCode.ToString(),
+                                                    //response.HTTPBody != null
+                                                    //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
+                                                    //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                                    Runtime: Runtime);
 
 
             #region Send OnPushEVSEStatusResponse event
@@ -1887,7 +1887,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      EventTrackingId,
                                                      RoamingNetwork.Id,
                                                      ServerAction,
-                                                     _EVSEStatus.ULongCount(),
                                                      _EVSEStatus,
                                                      RequestTimeout,
                                                      result,
