@@ -336,8 +336,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPResponse.Runtime,
                                                                   out PullEVSEDataResponse  pullEVSEDataResponse,
                                                                   out String                ErrorResponse,
-                                                                  null,
-                                                                  processId))
+                                                                  processId,
+                                                                  HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEDataResponse>.Success(Request,
@@ -712,8 +712,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     HTTPResponse.Runtime,
                                                                     out PullEVSEStatusResponse  pullEVSEStatusResponse,
                                                                     out String                  ErrorResponse,
-                                                                    null,
-                                                                    processId))
+                                                                    processId,
+                                                                    HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusResponse>.Success(Request,

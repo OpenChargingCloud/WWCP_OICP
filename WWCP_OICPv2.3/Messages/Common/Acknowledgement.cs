@@ -20,7 +20,7 @@
 using System;
 
 using Newtonsoft.Json.Linq;
-
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -81,6 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="StatusCode">The status code of the operation.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="Result">Whether the respective operation was performed or not performed successfully.</param>
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
@@ -92,6 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                EventTracking_Id       EventTrackingId,
                                TimeSpan               Runtime,
                                StatusCode             StatusCode,
+                               HTTPResponse           HTTPResponse          = null,
                                Boolean?               Result                = null,
                                Session_Id?            SessionId             = null,
                                CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
@@ -104,6 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EventTrackingId,
                    Runtime,
                    ProcessId,
+                   HTTPResponse,
                    CustomData)
 
         {
@@ -130,6 +133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="StatusCodeDescription">An optional description of the status code.</param>
         /// <param name="StatusCodeAdditionalInfo">An optional additional information for the status code.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -141,6 +145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                     String                 StatusCodeDescription      = null,
                     String                 StatusCodeAdditionalInfo   = null,
+                    HTTPResponse           HTTPResponse               = null,
                     DateTime?              ResponseTimestamp          = null,
                     EventTracking_Id       EventTrackingId            = null,
                     TimeSpan?              Runtime                    = null)
@@ -154,6 +159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Success",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  true,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -172,6 +178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -183,6 +190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       Session_Id?            SessionId                  = null,
                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                      HTTPResponse           HTTPResponse               = null,
                       DateTime?              ResponseTimestamp          = null,
                       EventTracking_Id       EventTrackingId            = null,
                       TimeSpan?              Runtime                    = null)
@@ -196,6 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Data Error!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -214,6 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -225,6 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         Session_Id?            SessionId                  = null,
                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                        HTTPResponse           HTTPResponse               = null,
                         DateTime?              ResponseTimestamp          = null,
                         EventTracking_Id       EventTrackingId            = null,
                         TimeSpan?              Runtime                    = null)
@@ -238,6 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "System Error!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -256,6 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -267,6 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                HTTPResponse           HTTPResponse               = null,
                                 DateTime?              ResponseTimestamp          = null,
                                 EventTracking_Id       EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null)
@@ -280,6 +294,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Service not available!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -298,6 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -309,6 +325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                             HTTPResponse           HTTPResponse               = null,
                              DateTime?              ResponseTimestamp          = null,
                              EventTracking_Id       EventTrackingId            = null,
                              TimeSpan?              Runtime                    = null)
@@ -322,6 +339,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Session is invalid!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -340,6 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -351,6 +370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       Session_Id?            SessionId                  = null,
                                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                      HTTPResponse           HTTPResponse               = null,
                                       DateTime?              ResponseTimestamp          = null,
                                       EventTracking_Id       EventTrackingId            = null,
                                       TimeSpan?              Runtime                    = null)
@@ -364,6 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Communication to EVSE failed!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -382,6 +403,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -393,6 +415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                HTTPResponse           HTTPResponse               = null,
                                 DateTime?              ResponseTimestamp          = null,
                                 EventTracking_Id       EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null)
@@ -406,6 +429,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "EVSE already reserved!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -424,6 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -435,6 +460,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         Session_Id?            SessionId                  = null,
                                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                        HTTPResponse           HTTPResponse               = null,
                                         DateTime?              ResponseTimestamp          = null,
                                         EventTracking_Id       EventTrackingId            = null,
                                         TimeSpan?              Runtime                    = null)
@@ -448,6 +474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "EVSE is already in use!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -466,6 +493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -477,6 +505,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           Session_Id?            SessionId                  = null,
                           CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                           EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                          HTTPResponse           HTTPResponse               = null,
                           DateTime?              ResponseTimestamp          = null,
                           EventTracking_Id       EventTrackingId            = null,
                           TimeSpan?              Runtime                    = null)
@@ -490,6 +519,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "Unknown EVSE identification!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -508,6 +538,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -519,6 +550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                             HTTPResponse           HTTPResponse               = null,
                              DateTime?              ResponseTimestamp          = null,
                              EventTracking_Id       EventTrackingId            = null,
                              TimeSpan?              Runtime                    = null)
@@ -532,6 +564,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "EVSE out of service!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -550,6 +583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -561,6 +595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             Session_Id?            SessionId                  = null,
                             CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                            HTTPResponse           HTTPResponse               = null,
                             DateTime?              ResponseTimestamp          = null,
                             EventTracking_Id       EventTrackingId            = null,
                             TimeSpan?              Runtime                    = null)
@@ -574,6 +609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "No valid contract!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -592,6 +628,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -603,6 +640,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
+                                HTTPResponse           HTTPResponse               = null,
                                 DateTime?              ResponseTimestamp          = null,
                                 EventTracking_Id       EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null)
@@ -616,6 +654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      StatusCodeDescription ?? "No electric vehicle connected to EVSE!",
                                                      StatusCodeAdditionalInfo
                                                  ),
+                                                 HTTPResponse,
                                                  false,
                                                  SessionId,
                                                  CPOPartnerSessionId,
@@ -661,6 +700,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -668,6 +708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
                                                       JObject                                                 JSON,
+                                                      HTTPResponse                                            HTTPResponse                  = null,
                                                       DateTime?                                               ResponseTimestamp             = null,
                                                       EventTracking_Id                                        EventTrackingId               = null,
                                                       TimeSpan?                                               Runtime                       = null,
@@ -679,6 +720,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          JSON,
                          out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
+                         HTTPResponse,
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
@@ -701,6 +743,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request leading to this response.</param>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -708,6 +751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Acknowledgement<TRequest> Parse(TRequest                                                Request,
                                                       String                                                  Text,
+                                                      HTTPResponse                                            HTTPResponse                  = null,
                                                       DateTime?                                               ResponseTimestamp             = null,
                                                       EventTracking_Id                                        EventTrackingId               = null,
                                                       TimeSpan?                                               Runtime                       = null,
@@ -719,6 +763,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Text,
                          out Acknowledgement<TRequest> acknowledgement,
                          out String                    ErrorResponse,
+                         HTTPResponse,
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
@@ -743,6 +788,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -752,6 +798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        JObject                                                 JSON,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
+                                       HTTPResponse                                            HTTPResponse                  = null,
                                        DateTime?                                               ResponseTimestamp             = null,
                                        EventTracking_Id                                        EventTrackingId               = null,
                                        TimeSpan?                                               Runtime                       = null,
@@ -850,6 +897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 EventTrackingId   ?? Request.EventTrackingId,
                                                                 Runtime           ?? DateTime.UtcNow - Request.Timestamp,
                                                                 StatusCode,
+                                                                HTTPResponse,
                                                                 Result,
                                                                 SessionId,
                                                                 CPOPartnerSessionId,
@@ -884,6 +932,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="Acknowledgement">The parsed acknowledgement.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
@@ -893,6 +942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        String                                                  Text,
                                        out Acknowledgement<TRequest>                           Acknowledgement,
                                        out String                                              ErrorResponse,
+                                       HTTPResponse                                            HTTPResponse                  = null,
                                        DateTime?                                               ResponseTimestamp             = null,
                                        EventTracking_Id                                        EventTrackingId               = null,
                                        TimeSpan?                                               Runtime                       = null,
@@ -907,6 +957,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 JObject.Parse(Text),
                                 out Acknowledgement,
                                 out ErrorResponse,
+                                HTTPResponse,
                                 ResponseTimestamp,
                                 EventTrackingId,
                                 Runtime,
@@ -1108,6 +1159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder()
 
             => new Builder(Request,
+                           HTTPResponse,
                            ResponseTimestamp,
                            EventTrackingId,
                            Runtime,
@@ -1168,6 +1220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new acknowledgement builder.
             /// </summary>
             /// <param name="Request">The request leading to this response.</param>
+            /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
             /// <param name="Runtime">The runtime of the request/response.</param>
@@ -1179,6 +1232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(TRequest               Request               = null,
+                           HTTPResponse           HTTPResponse          = null,
                            DateTime?              ResponseTimestamp     = null,
                            EventTracking_Id       EventTrackingId       = null,
                            TimeSpan?              Runtime               = null,
@@ -1195,6 +1249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        EventTrackingId,
                        Runtime,
                        ProcessId,
+                       HTTPResponse,
                        CustomData)
 
             {
@@ -1230,6 +1285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  EventTrackingId   ?? EventTracking_Id.New,
                                                  Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                                  StatusCode?.ToImmutable(),
+                                                 HTTPResponse,
                                                  Result,
                                                  SessionId,
                                                  CPOPartnerSessionId,

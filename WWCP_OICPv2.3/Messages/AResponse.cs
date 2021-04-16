@@ -20,7 +20,7 @@
 using System;
 
 using Newtonsoft.Json.Linq;
-
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -72,6 +72,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Process_Id?       ProcessId            { get; }
 
         /// <summary>
+        /// The HTTP response.
+        /// </summary>
+        [Optional]
+        public HTTPResponse      HTTPResponse         { get; }
+
+        /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
@@ -89,13 +95,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         protected AResponse(TRequest          Request,
                             DateTime          ResponseTimestamp,
                             EventTracking_Id  EventTrackingId,
                             TimeSpan          Runtime,
-                            Process_Id?       ProcessId    = null,
-                            JObject           CustomData   = null)
+                            Process_Id?       ProcessId      = null,
+                            HTTPResponse      HTTPResponse   = null,
+                            JObject           CustomData     = null)
         {
 
             this.Request            = Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!");
@@ -103,6 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EventTrackingId    = EventTrackingId;
             this.Runtime            = Runtime;
             this.ProcessId          = ProcessId;
+            this.HTTPResponse       = HTTPResponse;
             this.CustomData         = CustomData;
 
         }
@@ -160,6 +169,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public Process_Id?       ProcessId            { get; set; }
 
             /// <summary>
+            /// The HTTP response.
+            /// </summary>
+            [Optional]
+            public HTTPResponse      HTTPResponse         { get; set; }
+
+            /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
@@ -177,12 +192,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
             /// <param name="Runtime">The runtime of the request/response.</param>
+            /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
             protected Builder(TRequest          Request             = null,
                               DateTime?         ResponseTimestamp   = null,
                               EventTracking_Id  EventTrackingId     = null,
                               TimeSpan?         Runtime             = null,
                               Process_Id?       ProcessId           = null,
+                              HTTPResponse      HTTPResponse        = null,
                               JObject           CustomData          = null)
             {
 
@@ -191,6 +208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.EventTrackingId    = EventTrackingId;
                 this.Runtime            = Runtime;
                 this.ProcessId          = ProcessId;
+                this.HTTPResponse       = HTTPResponse;
                 this.CustomData         = CustomData;
 
             }

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -100,6 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStartResponse(AuthorizeStartRequest        Request,
                                            DateTime                     ResponseTimestamp,
@@ -113,6 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            Provider_Id?                 ProviderId                         = null,
                                            IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
                                            Process_Id?                  ProcessId                          = null,
+                                           HTTPResponse                 HTTPResponse                       = null,
                                            JObject                      CustomData                         = null)
 
             : base(Request,
@@ -120,6 +123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EventTrackingId,
                    Runtime,
                    ProcessId,
+                   HTTPResponse,
                    CustomData)
 
         {
@@ -154,6 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse Authorized(AuthorizeStartRequest        Request,
                                                             Session_Id?                  SessionId                          = null,
@@ -167,6 +172,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                             EventTracking_Id             EventTrackingId                    = null,
                                                             TimeSpan?                    Runtime                            = null,
                                                             Process_Id?                  ProcessId                          = null,
+                                                            HTTPResponse                 HTTPResponse                       = null,
                                                             JObject                      CustomData                         = null)
 
 
@@ -186,6 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               AuthorizationStopIdentifications,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -205,6 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NotAuthorized(AuthorizeStartRequest  Request,
                                                                StatusCode             StatusCode,
@@ -216,6 +224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                EventTracking_Id       EventTrackingId       = null,
                                                                TimeSpan?              Runtime               = null,
                                                                Process_Id?            ProcessId             = null,
+                                                               HTTPResponse           HTTPResponse          = null,
                                                                JObject                CustomData            = null)
 
             => new AuthorizationStartResponse(Request,
@@ -230,6 +239,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -250,6 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SessionIsInvalid(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
@@ -262,6 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EventTracking_Id       EventTrackingId            = null,
                                                                   TimeSpan?              Runtime                    = null,
                                                                   Process_Id?            ProcessId                  = null,
+                                                                  HTTPResponse           HTTPResponse               = null,
                                                                   JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -280,6 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -300,6 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse CommunicationToEVSEFailed(AuthorizeStartRequest  Request,
                                                                            String                 StatusCodeDescription      = null,
@@ -312,6 +326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                            EventTracking_Id       EventTrackingId            = null,
                                                                            TimeSpan?              Runtime                    = null,
                                                                            Process_Id?            ProcessId                  = null,
+                                                                           HTTPResponse           HTTPResponse               = null,
                                                                            JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -330,6 +345,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -350,6 +366,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse NoEVConnectedToEVSE(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
@@ -362,6 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EventTracking_Id       EventTrackingId            = null,
                                                                      TimeSpan?              Runtime                    = null,
                                                                      Process_Id?            ProcessId                  = null,
+                                                                     HTTPResponse           HTTPResponse               = null,
                                                                      JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -380,6 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -400,6 +419,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEAlreadyReserved(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
@@ -412,6 +432,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EventTracking_Id       EventTrackingId            = null,
                                                                      TimeSpan?              Runtime                    = null,
                                                                      Process_Id?            ProcessId                  = null,
+                                                                     HTTPResponse           HTTPResponse               = null,
                                                                      JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -430,6 +451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -450,6 +472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse UnknownEVSEID(AuthorizeStartRequest  Request,
                                                                String                 StatusCodeDescription      = null,
@@ -462,6 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                EventTracking_Id       EventTrackingId            = null,
                                                                TimeSpan?              Runtime                    = null,
                                                                Process_Id?            ProcessId                  = null,
+                                                               HTTPResponse           HTTPResponse               = null,
                                                                JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -480,6 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -500,6 +525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse EVSEOutOfService(AuthorizeStartRequest  Request,
                                                                   String                 StatusCodeDescription      = null,
@@ -512,6 +538,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EventTracking_Id       EventTrackingId            = null,
                                                                   TimeSpan?              Runtime                    = null,
                                                                   Process_Id?            ProcessId                  = null,
+                                                                  HTTPResponse           HTTPResponse               = null,
                                                                   JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -530,6 +557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -550,6 +578,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse ServiceNotAvailable(AuthorizeStartRequest  Request,
                                                                      String                 StatusCodeDescription      = null,
@@ -562,6 +591,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                      EventTracking_Id       EventTrackingId            = null,
                                                                      TimeSpan?              Runtime                    = null,
                                                                      Process_Id?            ProcessId                  = null,
+                                                                     HTTPResponse           HTTPResponse               = null,
                                                                      JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -580,6 +610,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -600,6 +631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse DataError(AuthorizeStartRequest  Request,
                                                            String                 StatusCodeDescription      = null,
@@ -612,6 +644,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                            EventTracking_Id       EventTrackingId            = null,
                                                            TimeSpan?              Runtime                    = null,
                                                            Process_Id?            ProcessId                  = null,
+                                                           HTTPResponse           HTTPResponse               = null,
                                                            JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -630,6 +663,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -650,6 +684,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public static AuthorizationStartResponse SystemError(AuthorizeStartRequest  Request,
                                                              String                 StatusCodeDescription      = null,
@@ -662,6 +697,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                              EventTracking_Id       EventTrackingId            = null,
                                                              TimeSpan?              Runtime                    = null,
                                                              Process_Id?            ProcessId                  = null,
+                                                             HTTPResponse           HTTPResponse               = null,
                                                              JObject                CustomData                 = null)
 
             => new AuthorizationStartResponse(Request,
@@ -680,6 +716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               ProviderId,
                                               null,
                                               ProcessId,
+                                              HTTPResponse,
                                               CustomData);
 
         #endregion
@@ -748,6 +785,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
                                                        JObject                                                  JSON,
@@ -755,6 +793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        EventTracking_Id                                         EventTrackingId                          = null,
                                                        TimeSpan?                                                Runtime                                  = null,
                                                        Process_Id?                                              ProcessId                                = null,
+                                                       HTTPResponse                                             HTTPResponse                             = null,
                                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -766,6 +805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          EventTrackingId,
                          Runtime,
                          ProcessId,
+                         HTTPResponse,
                          CustomAuthorizationStartResponseParser))
             {
                 return authorizationStartResponse;
@@ -788,6 +828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                    Request,
                                                        String                                                   Text,
@@ -795,6 +836,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        EventTracking_Id                                         EventTrackingId                          = null,
                                                        TimeSpan?                                                Runtime                                  = null,
                                                        Process_Id?                                              ProcessId                                = null,
+                                                       HTTPResponse                                             HTTPResponse                             = null,
                                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -806,6 +848,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          EventTrackingId,
                          Runtime,
                          ProcessId,
+                         HTTPResponse,
                          CustomAuthorizationStartResponseParser))
             {
                 return authorizationStartResponse;
@@ -830,6 +873,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStartRequest                                    Request,
                                        JObject                                                  JSON,
@@ -839,6 +883,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        EventTracking_Id                                         EventTrackingId                          = null,
                                        TimeSpan?                                                Runtime                                  = null,
                                        Process_Id?                                              ProcessId                                = null,
+                                       HTTPResponse                                             HTTPResponse                             = null,
                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -968,6 +1013,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                             ProviderId,
                                                                             AuthorizationStopIdentifications,
                                                                             ProcessId,
+                                                                            HTTPResponse,
                                                                             CustomData);
 
                 if (CustomAuthorizationStartResponseParser != null)
@@ -1001,6 +1047,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStartRequest                                    Request,
                                        String                                                   Text,
@@ -1010,6 +1057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        EventTracking_Id                                         EventTrackingId                          = null,
                                        TimeSpan?                                                Runtime                                  = null,
                                        Process_Id?                                              ProcessId                                = null,
+                                       HTTPResponse                                             HTTPResponse                             = null,
                                        CustomJObjectParserDelegate<AuthorizationStartResponse>  CustomAuthorizationStartResponseParser   = null)
         {
 
@@ -1024,6 +1072,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 EventTrackingId,
                                 Runtime,
                                 ProcessId,
+                                HTTPResponse,
                                 CustomAuthorizationStartResponseParser);
 
             }
@@ -1247,6 +1296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            ProviderId,
                            AuthorizationStopIdentifications,
                            ProcessId,
+                           HTTPResponse,
                            CustomData);
 
         #endregion
@@ -1323,6 +1373,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProviderId">An optional e-mobility provider identification.</param>
             /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+            /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(AuthorizeStartRequest        Request                            = null,
                            DateTime?                    ResponseTimestamp                  = null,
@@ -1336,6 +1387,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Provider_Id?                 ProviderId                         = null,
                            IEnumerable<Identification>  AuthorizationStopIdentifications   = null,
                            Process_Id?                  ProcessId                          = null,
+                           HTTPResponse                 HTTPResponse                       = null,
                            JObject                      CustomData                         = null)
 
                 : base(Request,
@@ -1343,6 +1395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        EventTrackingId,
                        Runtime,
                        ProcessId,
+                       HTTPResponse,
                        CustomData)
 
             {
@@ -1397,6 +1450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       ProviderId,
                                                       AuthorizationStopIdentifications,
                                                       ProcessId,
+                                                      HTTPResponse,
                                                       CustomData);
 
             }
