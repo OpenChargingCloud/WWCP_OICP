@@ -993,6 +993,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             else
             {
 
+                var statusDescription = "HTTP request failed!";
+
                 try
                 {
 
@@ -1045,7 +1047,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    // HTTP/1.1 200
+                                    // HTTP/1.1 200 OK
                                     // Server:             nginx/1.18.0 (Ubuntu)
                                     // Date:               Tue, 02 Mar 2021 17:51:14 GMT
                                     // Content-Type:       application/json;charset=utf-8
@@ -1120,7 +1122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
-                                // HTTP/1.1 400
+                                // HTTP/1.1 400 BadRequest
                                 // Server:             nginx/1.18.0
                                 // Date:               Fri, 08 Jan 2021 14:19:25 GMT
                                 // Content-Type:       application/json;charset=utf-8
@@ -1167,8 +1169,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
-                            // Hubject firewall problem!
-                            // Only HTML response!
+                            // HTTP/1.1 403 Forbidden
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Thu, 15 Apr 2021 22:47:22 GMT
+                            // Content-Type:    text/html
+                            // Content-Length:  162
+                            // Connection:      keep-alive
+                            // 
+                            // <html>
+                            // <head><title>403 Forbidden</title></head>
+                            // <body>
+                            // <center><h1>403 Forbidden</h1></center>
+                            // <hr><center>nginx/1.18.0 (Ubuntu)</center>
+                            // </body>
+                            // </html>
+
+                            statusDescription = "Hubject firewall problem!";
                             break;
 
                         }
@@ -1176,7 +1192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
-                            // HTTP/1.1 401
+                            // HTTP/1.1 401 Unauthorized
                             // Server:          nginx/1.18.0 (Ubuntu)
                             // Date:            Tue, 02 Mar 2021 23:09:35 GMT
                             // Content-Type:    application/json;charset=UTF-8
@@ -1192,7 +1208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            // Operator/provider identification is not linked to the TLS client certificate!
+                            statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
@@ -1251,7 +1267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
-                            // HTTP/1.1 404
+                            // HTTP/1.1 404 NotFound
                             // Server: nginx/1.18.0 (Ubuntu)
                             // Date: Wed, 03 Mar 2021 01:00:15 GMT
                             // Content-Type: application/json;charset=UTF-8
@@ -1360,8 +1376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      DateTime.UtcNow - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
-                                         "HTTP request failed!",
-                                         null
+                                         statusDescription ?? "HTTP request failed!"
                                      ),
                                      null,
                                      false

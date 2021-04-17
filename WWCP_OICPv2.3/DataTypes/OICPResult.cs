@@ -19,52 +19,83 @@
 
 using System;
 
-using Newtonsoft.Json.Linq;
-
-using org.GraphDefined.Vanaheimr.Illias;
-
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-    public static class Extdgdg
+    /// <summary>
+    /// Extention methods for the OICP result.
+    /// </summary>
+    public static class OICPResultExtentions
     {
 
+        /// <summary>
+        /// The given OICP result was successful.
+        /// </summary>
+        /// <typeparam name="T">The type of the result.</typeparam>
+        /// <param name="OICPResult">The OICP result.</param>
         public static Boolean IsSuccess<T>(this OICPResult<T> OICPResult)
-            => (!(OICPResult is null)) && OICPResult._IsSuccess;
+            => (!(OICPResult is null)) && OICPResult.WasSuccessful;
 
     }
 
+    /// <summary>
+    /// A generic OICP result.
+    /// </summary>
+    /// <typeparam name="T">The type of the result.</typeparam>
     public class OICPResult<T>
     {
 
         #region Properties
 
+        /// <summary>
+        /// The request.
+        /// </summary>
         public Object               Request             { get; }
 
+        /// <summary>
+        /// The result.
+        /// </summary>
         public T                    Result              { get; }
 
-        public Boolean              _IsSuccess          { get; }
+        /// <summary>
+        /// The request was successful.
+        /// </summary>
+        public Boolean              WasSuccessful       { get; }
 
+        /// <summary>
+        /// Possible request data validation errors.
+        /// </summary>
         public ValidationErrorList  ValidationErrors    { get; }
 
+        /// <summary>
+        /// The process identification of the result.
+        /// </summary>
         public Process_Id?          ProcessId           { get; }
 
         #endregion
 
         #region Constructor(s)
 
+        /// <summary>
+        /// Create a new generic OICP result.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <param name="Result">The result.</param>
+        /// <param name="WasSuccessful">The request was successful.</param>
+        /// <param name="ValidationErrors">Possible request data validation errors.</param>
+        /// <param name="ProcessId">The process identification of the result.</param>
         private OICPResult(Object               Request,
-                           Boolean              IsSuccess,
                            T                    Result,
+                           Boolean              WasSuccessful,
                            ValidationErrorList  ValidationErrors,
                            Process_Id?          ProcessId)
         {
 
             this.Request           = Request;
-            this._IsSuccess        = IsSuccess;
             this.Result            = Result;
+            this.WasSuccessful     = WasSuccessful;
             this.ValidationErrors  = ValidationErrors;
             this.ProcessId         = ProcessId;
 
@@ -73,37 +104,78 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region Success   (Request, Result, ProcessId = null)
+
+        /// <summary>
+        /// The request succeed.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <param name="Result">The result.</param>
+        /// <param name="ProcessId">The process identification of the result.</param>
         public static OICPResult<T> Success(Object       Request,
                                             T            Result,
                                             Process_Id?  ProcessId   = null)
 
             => new OICPResult<T>(Request,
-                                 true,
                                  Result,
+                                 true,
                                  null,
                                  ProcessId);
 
+        #endregion
 
+        #region Failed    (Request, Result, ProcessId = null)
+
+        /// <summary>
+        /// The request failed.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <param name="Result">The result.</param>
+        /// <param name="ProcessId">The process identification of the result.</param>
         public static OICPResult<T> Failed(Object       Request,
                                            T            Result,
                                            Process_Id?  ProcessId   = null)
 
             => new OICPResult<T>(Request,
-                                 false,
                                  Result,
+                                 false,
                                  null,
                                  ProcessId);
 
+        #endregion
+
+        #region BadRequest(Request, ValidationErrors = null, ProcessId = null)
+
+        /// <summary>
+        /// The request had some data validation errors.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <param name="ValidationErrors">Possible request data validation errors.</param>
+        /// <param name="ProcessId">The process identification of the result.</param>
         public static OICPResult<T> BadRequest(Object               Request,
                                                ValidationErrorList  ValidationErrors   = null,
                                                Process_Id?          ProcessId          = null)
 
             => new OICPResult<T>(Request,
-                                 false,
                                  default,
+                                 false,
                                  ValidationErrors,
                                  ProcessId);
 
+        #endregion
+
+
+        #region (override) ToString()
+
+        /// <summary>
+        /// Return a text-representation of this object.
+        /// </summary>
+        public override String ToString()
+
+            => String.Concat(WasSuccessful      ? "Successful" : "Failed",
+                             ProcessId.HasValue ? ", ProcessId: " + ProcessId : "");
+
+        #endregion
 
     }
 

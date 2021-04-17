@@ -46,6 +46,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               @"^(\+?[0-9]{1,3}\*[0-9]{3})\*([0-9\*]{1,32})$",
                                                               RegexOptions.IgnorePatternWhitespace);
 
+        private static readonly Random random = new Random();
+
         #endregion
 
         #region Properties
@@ -121,6 +123,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+
+        #region Random  (OperatorId, Length = 12, Mapper = null)
+
+        /// <summary>
+        /// Generate a new unique identification of an EVSE.
+        /// </summary>
+        /// <param name="OperatorId">The unique identification of a charging station operator.</param>
+        /// <param name="Length">The expected length of the EVSE identification suffix</param>
+        /// <param name="Mapper">A delegate to modify the newly generated EVSE identification.</param>
+        public static EVSE_Id Random(Operator_Id           OperatorId,
+                                     Byte                  Length  = 12,
+                                     Func<String, String>  Mapper  = null)
+
+
+            => new EVSE_Id(OperatorId,
+                           Mapper != null
+                               ? Mapper(random.RandomString(Length))
+                               :        random.RandomString(Length));
+
+        #endregion
 
         #region (static) Parse(Text)
 
@@ -207,7 +229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given string as an EVSE identification.
+        /// Try to parse the given text-representation of an EVSE identification.
         /// </summary>
         /// <param name="Text">A text-representation of an EVSE identification.</param>
         public static EVSE_Id? TryParse(String Text)
@@ -236,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text, out EVSEId)
 
         /// <summary>
-        /// Try to parse the given string as an EVSE identification.
+        /// Try to parse the given text-representation of an EVSE identification.
         /// </summary>
         /// <param name="Text">A text-representation of an EVSE identification.</param>
         /// <param name="EVSEId">The parsed EVSE identification.</param>
