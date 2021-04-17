@@ -152,22 +152,150 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.CPOClient = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPO client must not be null!");
 
-                #region Register log events
+                #region PushEVSEData/Status
 
-                //RegisterEvent("SendHeartbeatRequest",
-                //              handler => CPOClient.OnSendHeartbeatSOAPRequest  += handler,
-                //              handler => CPOClient.OnSendHeartbeatSOAPRequest  -= handler,
-                //              "SendHeartbeat", "Heartbeat", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("PushEVSEDataHTTPRequest",
+                              handler => CPOClient.OnPushEVSEDataHTTPRequest += handler,
+                              handler => CPOClient.OnPushEVSEDataHTTPRequest -= handler,
+                              "PushEVSEData", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("SendHeartbeatResponse",
-                //              handler => CPOClient.OnSendHeartbeatSOAPResponse += handler,
-                //              handler => CPOClient.OnSendHeartbeatSOAPResponse -= handler,
-                //              "SendHeartbeat", "Heartbeat", "Response", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("OnPushEVSEDataHTTPResponse",
+                              handler => CPOClient.OnPushEVSEDataHTTPResponse += handler,
+                              handler => CPOClient.OnPushEVSEDataHTTPResponse -= handler,
+                              "PushEVSEData", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
+
+                RegisterEvent("PushEVSEStatusHTTPRequest",
+                              handler => CPOClient.OnPushEVSEStatusHTTPRequest += handler,
+                              handler => CPOClient.OnPushEVSEStatusHTTPRequest -= handler,
+                              "PushEVSEStatus", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PushEVSEStatusHTTPResponse",
+                              handler => CPOClient.OnPushEVSEStatusHTTPResponse += handler,
+                              handler => CPOClient.OnPushEVSEStatusHTTPResponse -= handler,
+                              "PushEVSEStatus", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region AuthorizeStart/Stop
+
+                RegisterEvent("AuthorizeStartHTTPRequest",
+                              handler => CPOClient.OnAuthorizeStartHTTPRequest += handler,
+                              handler => CPOClient.OnAuthorizeStartHTTPRequest -= handler,
+                              "authorizeStart", "authorize", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("AuthorizeStartHTTPResponse",
+                              handler => CPOClient.OnAuthorizeStartHTTPResponse += handler,
+                              handler => CPOClient.OnAuthorizeStartHTTPResponse -= handler,
+                              "authorizeStart", "authorize", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("AuthorizeStopHTTPRequest",
+                              handler => CPOClient.OnAuthorizeStopHTTPRequest += handler,
+                              handler => CPOClient.OnAuthorizeStopHTTPRequest -= handler,
+                              "authorizeStop", "authorize", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("AuthorizeStopHTTPResponse",
+                              handler => CPOClient.OnAuthorizeStopHTTPResponse += handler,
+                              handler => CPOClient.OnAuthorizeStopHTTPResponse -= handler,
+                              "authorizeStop", "authorize", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region ChargingNotifications
+
+                RegisterEvent("ChargingNotificationsStartHTTPRequest",
+                              handler => CPOClient.OnChargingNotificationsStartHTTPRequest += handler,
+                              handler => CPOClient.OnChargingNotificationsStartHTTPRequest -= handler,
+                              "chargingNotificationsStart", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingNotificationsStartHTTPResponse",
+                              handler => CPOClient.OnChargingNotificationsStartHTTPResponse += handler,
+                              handler => CPOClient.OnChargingNotificationsStartHTTPResponse -= handler,
+                              "chargingNotificationsStart", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingNotificationsProgressHTTPRequest",
+                              handler => CPOClient.OnChargingNotificationsProgressHTTPRequest += handler,
+                              handler => CPOClient.OnChargingNotificationsProgressHTTPRequest -= handler,
+                              "chargingNotificationsProgress", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingNotificationsProgressHTTPResponse",
+                              handler => CPOClient.OnChargingNotificationsProgressHTTPResponse += handler,
+                              handler => CPOClient.OnChargingNotificationsProgressHTTPResponse -= handler,
+                              "chargingNotificationsProgress", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingNotificationsEndHTTPRequest",
+                              handler => CPOClient.OnChargingNotificationsEndHTTPRequest += handler,
+                              handler => CPOClient.OnChargingNotificationsEndHTTPRequest -= handler,
+                              "chargingNotificationsEnd", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingNotificationsEndHTTPResponse",
+                              handler => CPOClient.OnChargingNotificationsEndHTTPResponse += handler,
+                              handler => CPOClient.OnChargingNotificationsEndHTTPResponse -= handler,
+                              "chargingNotificationsEnd", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingNotificationsErrorHTTPRequest",
+                              handler => CPOClient.OnChargingNotificationsErrorHTTPRequest += handler,
+                              handler => CPOClient.OnChargingNotificationsErrorHTTPRequest -= handler,
+                              "authorizeStop", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingNotificationsErrorHTTPResponse",
+                              handler => CPOClient.OnChargingNotificationsErrorHTTPResponse += handler,
+                              handler => CPOClient.OnChargingNotificationsErrorHTTPResponse -= handler,
+                              "chargingNotificationsError", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region SendChargeDetailRecord
+
+                RegisterEvent("SendChargeDetailRecordHTTPRequest",
+                              handler => CPOClient.OnSendChargeDetailRecordHTTPRequest += handler,
+                              handler => CPOClient.OnSendChargeDetailRecordHTTPRequest -= handler,
+                              "sendChargeDetailRecord", "cdr", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("SendChargeDetailRecordHTTPResponse",
+                              handler => CPOClient.OnSendChargeDetailRecordHTTPResponse += handler,
+                              handler => CPOClient.OnSendChargeDetailRecordHTTPResponse -= handler,
+                              "sendChargeDetailRecord", "cdr", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
