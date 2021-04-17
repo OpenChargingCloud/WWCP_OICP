@@ -72,17 +72,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The default HTTP user agent.
         /// </summary>
-        public new const    String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.Number + " EMP Client";
+        public new const        String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.Number + " EMP Client";
 
         /// <summary>
         /// The default timeout for HTTP requests.
         /// </summary>
-        public new readonly TimeSpan  DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
+        public new readonly     TimeSpan  DefaultRequestTimeout       = TimeSpan.FromSeconds(10);
 
         /// <summary>
         /// The default maximum number of transmission retries for HTTP request.
         /// </summary>
-        public new const    UInt16    DefaultMaxNumberOfRetries   = 3;
+        public new const        UInt16    DefaultMaxNumberOfRetries   = 3;
+
+        /// <summary>
+        /// The default remote HTTP URL.
+        /// </summary>
+        public static readonly  URL       DefaultRemoteURL            = URL.Parse("https://service.hubject-qa.com");
 
         #endregion
 
@@ -189,7 +194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
 
-            : base(RemoteURL           ?? URL.Parse("https://service.hubject-qa.com"),
+            : base(RemoteURL           ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
                    RemoteCertificateValidator,
