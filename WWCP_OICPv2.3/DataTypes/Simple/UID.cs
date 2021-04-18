@@ -128,11 +128,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out UID UID)
         {
 
+            Text = Text?.Trim()?.ToUpper();
+
             try
             {
 
-                if (Text != null &&
-                    UID_RegEx.IsMatch(Text.ToUpper()))
+                if (Text.IsNotNullOrEmpty() && UID_RegEx.IsMatch(Text))
                 {
                     UID = new UID(Text);
                     return true;
