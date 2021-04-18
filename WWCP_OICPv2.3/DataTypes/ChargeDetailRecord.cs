@@ -808,7 +808,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("HubProviderID",                   HubProviderId.Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData?.HasValues == true
                                ? new JProperty("CustomData",                      CustomData)
                                : null
 

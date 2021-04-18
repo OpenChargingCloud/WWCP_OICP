@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeteringStatus",  MeteringStatus.Value.AsString())
                                : null,
 
-                           CustomData != null
+                           CustomData?.HasValues == true
                                ? new JProperty("CustomData",      CustomData)
                                : null
 

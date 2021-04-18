@@ -290,7 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("EvseID",      Id.    ToString()),
                            new JProperty("EvseStatus",  Status.ToString()),
 
-                           CustomData != null
+                           CustomData?.HasValues == true
                                ? new JProperty("CustomData",  CustomData)
                                : null
 

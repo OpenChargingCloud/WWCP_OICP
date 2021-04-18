@@ -126,6 +126,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
 
+
+        public Newtonsoft.Json.Formatting                                                          JSONFormat                                                    { get; set; }
+
         #endregion
 
         #region Events
@@ -401,6 +404,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
+            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+
             base.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
                                                 LoggingContext,
@@ -518,7 +523,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                        }),
 
                                                           RequestLogDelegate:   OnPushEVSEDataHTTPRequest,
@@ -1026,7 +1031,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                        }),
 
                                                           RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
@@ -1514,7 +1519,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                    }),
 
                                                       RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
@@ -1921,7 +1926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                    }),
 
                                                       RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
@@ -2347,7 +2352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsStartHTTPRequest,
@@ -2815,7 +2820,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsProgressHTTPRequest,
@@ -3283,7 +3288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsEndHTTPRequest,
@@ -3751,7 +3756,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsErrorHTTPRequest,
@@ -4218,7 +4223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                    }),
 
                                                       RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,

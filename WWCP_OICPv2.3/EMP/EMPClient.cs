@@ -26,7 +26,6 @@ using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
@@ -107,6 +106,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 base.HTTPLogger = value;
             }
         }
+
+        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
 
         #endregion
 
@@ -210,6 +211,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
+            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+
             base.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
                                                 LoggingContext,
@@ -308,7 +311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                    }),
 
                                                       RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
@@ -684,7 +687,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
                                                                                    }),
 
                                                       RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,
@@ -977,7 +980,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         #endregion
-
 
 
         #region Dispose()

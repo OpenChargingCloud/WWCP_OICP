@@ -328,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("SignedMeteringValuesVerificationInstruction",  SignedMeteringValuesVerificationInstruction)
                                : null,
 
-                           CustomData != null
+                           CustomData?.HasValues == true
                                ? new JProperty("CustomData",                                   CustomData)
                                : null
 

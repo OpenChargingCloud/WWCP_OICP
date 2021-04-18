@@ -161,7 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("OnPushEVSEDataHTTPResponse",
+                RegisterEvent("PushEVSEDataHTTPResponse",
                               handler => CPOClient.OnPushEVSEDataHTTPResponse += handler,
                               handler => CPOClient.OnPushEVSEDataHTTPResponse -= handler,
                               "PushEVSEData", "push", "responses", "all").
