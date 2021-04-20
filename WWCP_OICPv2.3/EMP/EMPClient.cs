@@ -312,6 +312,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
                                                                                    }),
 
                                                       RequestLogDelegate:   OnPullEVSEDataHTTPRequest,
@@ -688,6 +689,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
                                                                                    }),
 
                                                       RequestLogDelegate:   OnPullEVSEStatusHTTPRequest,

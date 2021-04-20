@@ -524,6 +524,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Connection   = "close";
                                                                                        }),
 
                                                           RequestLogDelegate:   OnPushEVSEDataHTTPRequest,
@@ -1032,6 +1033,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Connection   = "close";
                                                                                        }),
 
                                                           RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
@@ -1520,6 +1522,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
                                                                                    }),
 
                                                       RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
@@ -1927,6 +1930,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
                                                                                    }),
 
                                                       RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
@@ -2353,6 +2357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Connection   = "close";
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsStartHTTPRequest,
@@ -2821,6 +2826,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Connection   = "close";
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsProgressHTTPRequest,
@@ -3289,6 +3295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Connection   = "close";
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsEndHTTPRequest,
@@ -3757,6 +3764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Connection   = "close";
                                                                                       }),
 
                                                          RequestLogDelegate:   OnChargingNotificationsErrorHTTPRequest,
@@ -4224,6 +4232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
                                                                                    }),
 
                                                       RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
