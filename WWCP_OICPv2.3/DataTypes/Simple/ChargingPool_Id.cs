@@ -83,20 +83,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingPool_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging pool identification must not be null or empty!");
-
-            #endregion
-
             if (TryParse(Text, out ChargingPool_Id chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Invalid text-representation of a charging pool identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a charging pool identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -132,14 +123,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            ChargingPoolId  = default;
+            Text            = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                ChargingPoolId = default;
                 return false;
-            }
 
             #endregion
 
@@ -149,14 +137,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            ChargingPoolId = default;
             return false;
 
         }

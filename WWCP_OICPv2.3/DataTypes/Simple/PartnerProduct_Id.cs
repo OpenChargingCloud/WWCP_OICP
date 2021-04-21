@@ -82,20 +82,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PartnerProduct_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a partner product identification must not be null or empty!");
-
-            #endregion
-
             if (TryParse(Text, out PartnerProduct_Id partnerProductId))
                 return partnerProductId;
 
-            throw new ArgumentException("Invalid text-representation of a partner product identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a partner product identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -113,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PartnerProduct_Id partnerProductId))
                 return partnerProductId;
 
-            return new PartnerProduct_Id?();
+            return default;
 
         }
 
@@ -142,14 +133,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            PartnerProductId  = default;
+            Text              = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                PartnerProductId = default;
                 return false;
-            }
 
             #endregion
 
@@ -159,14 +147,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            PartnerProductId = default;
             return false;
 
         }

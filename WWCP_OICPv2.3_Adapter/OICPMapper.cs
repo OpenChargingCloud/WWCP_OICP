@@ -97,12 +97,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WWCP.ActionTypes ToWWCP(this ActionTypes ActionType)
 
             => ActionType switch {
-                ActionTypes.FullLoad  => WWCP.ActionTypes.fullLoad,
-                ActionTypes.Update    => WWCP.ActionTypes.update,
-                ActionTypes.Insert    => WWCP.ActionTypes.insert,
-                ActionTypes.Delete    => WWCP.ActionTypes.delete,
-                _                     => WWCP.ActionTypes.fullLoad,
-            };
+                   ActionTypes.FullLoad  => WWCP.ActionTypes.fullLoad,
+                   ActionTypes.Update    => WWCP.ActionTypes.update,
+                   ActionTypes.Insert    => WWCP.ActionTypes.insert,
+                   ActionTypes.Delete    => WWCP.ActionTypes.delete,
+                   _                     => WWCP.ActionTypes.fullLoad,
+               };
 
         #endregion
 
@@ -116,12 +116,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ActionTypes ToOICP(this WWCP.ActionTypes ActionType)
 
             => ActionType switch {
-                WWCP.ActionTypes.fullLoad  => ActionTypes.FullLoad,
-                WWCP.ActionTypes.update    => ActionTypes.Update,
-                WWCP.ActionTypes.insert    => ActionTypes.Insert,
-                WWCP.ActionTypes.delete    => ActionTypes.Delete,
-                _                          => ActionTypes.FullLoad,
-            };
+                   WWCP.ActionTypes.fullLoad  => ActionTypes.FullLoad,
+                   WWCP.ActionTypes.update    => ActionTypes.Update,
+                   WWCP.ActionTypes.insert    => ActionTypes.Insert,
+                   WWCP.ActionTypes.delete    => ActionTypes.Delete,
+                   _                          => ActionTypes.FullLoad,
+               };
 
         #endregion
 
@@ -328,61 +328,85 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                             text.Text)));
 
 
-        #region AsWWCPEVSEStatus(this EVSEStatusTypes)
+        #region ToWWCP(this EVSEStatusTypes)
 
         /// <summary>
         /// Convert an OICP EVSE status into a corresponding WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusTypes AsWWCPEVSEStatus(this EVSEStatusTypes EVSEStatusTypes)
+        public static WWCP.EVSEStatusTypes ToWWCP(this EVSEStatusTypes EVSEStatusType)
 
-            => EVSEStatusTypes switch {
-                EVSEStatusTypes.Available     => WWCP.EVSEStatusTypes.Available,
-                EVSEStatusTypes.Reserved      => WWCP.EVSEStatusTypes.Reserved,
-                EVSEStatusTypes.Occupied      => WWCP.EVSEStatusTypes.Charging,
-                EVSEStatusTypes.OutOfService  => WWCP.EVSEStatusTypes.OutOfService,
-                EVSEStatusTypes.EVSENotFound  => WWCP.EVSEStatusTypes.UnknownEVSE,
-                _                             => WWCP.EVSEStatusTypes.OutOfService,
-            };
+            => EVSEStatusType switch {
+                   EVSEStatusTypes.Available     => WWCP.EVSEStatusTypes.Available,
+                   EVSEStatusTypes.Reserved      => WWCP.EVSEStatusTypes.Reserved,
+                   EVSEStatusTypes.Occupied      => WWCP.EVSEStatusTypes.Charging,
+                   EVSEStatusTypes.OutOfService  => WWCP.EVSEStatusTypes.OutOfService,
+                   EVSEStatusTypes.EVSENotFound  => WWCP.EVSEStatusTypes.UnknownEVSE,
+                   _                             => WWCP.EVSEStatusTypes.OutOfService,
+               };
+
+
+        /// <summary>
+        /// Convert an OICP EVSE status into a corresponding WWCP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
+        /// <returns>The corresponding WWCP EVSE status.</returns>
+        public static WWCP.EVSEStatusTypes? ToWWCP(this EVSEStatusTypes? EVSEStatusType)
+
+            => EVSEStatusType.HasValue
+                   ? EVSEStatusType.Value.ToWWCP()
+                   : default;
 
         #endregion
 
-        #region AsOICPEVSEStatus(this EVSEStatusType)
+        #region ToOICP(this EVSEStatusType)
 
         /// <summary>
         /// Convert a WWCP EVSE status into a corresponding OICP EVSE status.
         /// </summary>
         /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
-        public static EVSEStatusTypes AsOICPEVSEStatus(this WWCP.EVSEStatusTypes EVSEStatusType)
+        public static EVSEStatusTypes ToOICP(this WWCP.EVSEStatusTypes EVSEStatusType)
 
             => EVSEStatusType switch {
-                WWCP.EVSEStatusTypes.Available     => EVSEStatusTypes.Available,
-                WWCP.EVSEStatusTypes.Reserved      => EVSEStatusTypes.Reserved,
-                WWCP.EVSEStatusTypes.Charging      => EVSEStatusTypes.Occupied,
-                WWCP.EVSEStatusTypes.OutOfService  => EVSEStatusTypes.OutOfService,
-                WWCP.EVSEStatusTypes.UnknownEVSE   => EVSEStatusTypes.EVSENotFound,
-                _                                  => EVSEStatusTypes.OutOfService,
-            };
+                   WWCP.EVSEStatusTypes.Available     => EVSEStatusTypes.Available,
+                   WWCP.EVSEStatusTypes.Reserved      => EVSEStatusTypes.Reserved,
+                   WWCP.EVSEStatusTypes.Charging      => EVSEStatusTypes.Occupied,
+                   WWCP.EVSEStatusTypes.OutOfService  => EVSEStatusTypes.OutOfService,
+                   WWCP.EVSEStatusTypes.UnknownEVSE   => EVSEStatusTypes.EVSENotFound,
+                   _                                  => EVSEStatusTypes.OutOfService,
+               };
+
+
+        /// <summary>
+        /// Convert a WWCP EVSE status into a corresponding OICP EVSE status.
+        /// </summary>
+        /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
+        /// <returns>The corresponding OICP EVSE status.</returns>
+        public static EVSEStatusTypes? ToOICP(this WWCP.EVSEStatusTypes? EVSEStatusType)
+
+            => EVSEStatusType.HasValue
+                   ? EVSEStatusType.Value.ToOICP()
+                   : default;
 
         #endregion
 
-        #region AsOICPEVSEStatus(this EVSEStatus)
+        #region ToOICP(this EVSEStatus)
 
         /// <summary>
         /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public static EVSEStatusRecord AsOICPEVSEStatus(this WWCP.EVSEStatus EVSEStatus)
+        public static EVSEStatusRecord ToOICP(this WWCP.EVSEStatus EVSEStatus)
 
         {
 
             if (EVSEStatus == null)
                 throw new ArgumentNullException(nameof(EVSEStatus), "The given EVSE status must not be null!");
 
-            return new EVSEStatusRecord(EVSEStatus.Id.ToOICP().Value,
-                                        AsOICPEVSEStatus(EVSEStatus.Status.Value));
+            return new EVSEStatusRecord(EVSEStatus.Id.          ToOICP().Value,
+                                        EVSEStatus.Status.Value.ToOICP());
 
         }
 
@@ -432,77 +456,90 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToOICP(this GeoLocation)
 
         public static GeoCoordinates ToOICP(this org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate GeoLocation)
+
             => new GeoCoordinates(GeoLocation.Latitude. Value,
                                   GeoLocation.Longitude.Value);
 
         public static GeoCoordinates? ToOICP(this org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate? GeoLocation)
+
             => GeoLocation.HasValue
-                   ? new GeoCoordinates(GeoLocation.Value.Latitude.Value,
-                                        GeoLocation.Value.Longitude.Value)
-                   : new GeoCoordinates?();
+                   ? GeoLocation.Value.ToOICP()
+                   : default;
 
         #endregion
 
         #region ToOICP(this GeoLocation)
 
         public static org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate ToWWCP(this GeoCoordinates GeoLocation)
+
             => new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(GeoLocation.Latitude),
                                                                   org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(GeoLocation.Longitude));
 
         public static org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate? ToWWCP(this GeoCoordinates? GeoLocation)
+
             => GeoLocation.HasValue
-                   ? new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(GeoLocation.Value.Latitude),
-                                                                        org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(GeoLocation.Value.Longitude))
-                   : new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate();
+                   ? GeoLocation.Value.ToWWCP()
+                   : default;
 
         #endregion
 
 
+
         #region ToOICP(this OperatorId, Format = WWCP.OperatorIdFormats.ISO_STAR)
 
-        public static Operator_Id ToOICP(this WWCP.ChargingStationOperator_Id  OperatorId,
-                                         WWCP.OperatorIdFormats                Format = WWCP.OperatorIdFormats.ISO_STAR)
+        public static Operator_Id? ToOICP(this WWCP.ChargingStationOperator_Id  OperatorId,
+                                          WWCP.OperatorIdFormats                Format = WWCP.OperatorIdFormats.ISO_STAR)
 
-            => Operator_Id.Parse(OperatorId.ToString(Format));
+            => Operator_Id.TryParse(OperatorId.ToString(Format));
+
+        public static Operator_Id? ToOICP(this WWCP.ChargingStationOperator_Id? OperatorId)
+
+            => OperatorId.HasValue
+                   ? OperatorId.Value.ToOICP()
+                   : default;
 
         #endregion
 
         #region ToWWCP(this OperatorId)
 
         public static WWCP.ChargingStationOperator_Id? ToWWCP(this Operator_Id OperatorId)
-        {
 
-            if (WWCP.ChargingStationOperator_Id.TryParse(OperatorId.ToString(), out WWCP.ChargingStationOperator_Id chargingStationOperatorId))
-                return chargingStationOperatorId;
+            => WWCP.ChargingStationOperator_Id.TryParse(OperatorId.ToString());
 
-            return null;
+        public static WWCP.ChargingStationOperator_Id? ToWWCP(this Operator_Id? OperatorId)
 
-        }
+            => OperatorId.HasValue
+                   ? OperatorId.Value.ToWWCP()
+                   : default;
 
         #endregion
 
 
         #region ToOICP(this ProviderId)
 
-        public static Provider_Id ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
-            => Provider_Id.Parse(ProviderId.ToString());
+        public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
+
+            => Provider_Id.TryParse(ProviderId.ToString());
 
         public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id? ProviderId)
+
             => ProviderId.HasValue
-                   ? Provider_Id.Parse(ProviderId.ToString())
-                   : new Provider_Id?();
+                   ? ProviderId.Value.ToOICP()
+                   : default;
 
         #endregion
 
         #region ToWWCP(this ProviderId)
 
-        public static WWCP.eMobilityProvider_Id ToWWCP(this Provider_Id ProviderId)
-            => WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString());
+        public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id ProviderId)
+
+            => WWCP.eMobilityProvider_Id.TryParse(ProviderId.ToString());
 
         public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
+
             => ProviderId.HasValue
-                   ? WWCP.eMobilityProvider_Id.Parse(ProviderId.ToString())
-                   : new WWCP.eMobilityProvider_Id?();
+                   ? ProviderId.Value.ToWWCP()
+                   : default;
 
         #endregion
 
@@ -510,89 +547,205 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToOICP(this EVSEId)
 
         public static EVSE_Id? ToOICP(this WWCP.EVSE_Id EVSEId)
-        {
 
-            if (EVSE_Id.TryParse(EVSEId.ToString(), out EVSE_Id OICPEVSEId))
-                return OICPEVSEId;
+            => EVSE_Id.TryParse(EVSEId.ToString());
 
-            return null;
 
-        }
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id? EVSEId)
+
+            => EVSEId.HasValue
+                   ? EVSEId.Value.ToOICP()
+                   : default;
 
         #endregion
 
         #region ToWWCP(this EVSEId)
 
         public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id EVSEId)
-        {
 
-            if (WWCP.EVSE_Id.TryParse(EVSEId.ToString(), out WWCP.EVSE_Id WWCPEVSEId))
-                return WWCPEVSEId;
-
-            return null;
-
-        }
+            => WWCP.EVSE_Id.TryParse(EVSEId.ToString());
 
         public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id? EVSEId)
-        {
 
-            if (!EVSEId.HasValue)
-                return null;
+            => EVSEId.HasValue
+                   ? EVSEId.Value.ToWWCP()
+                   : default;
 
-            if (WWCP.EVSE_Id.TryParse(EVSEId.ToString(), out WWCP.EVSE_Id WWCPEVSEId))
-                return WWCPEVSEId;
+        #endregion
 
-            return null;
 
-        }
+        #region ToOICP(this ChargingStationId)
+
+        public static ChargingStation_Id? ToOICP(this WWCP.ChargingStation_Id ChargingStationId)
+
+            => ChargingStation_Id.TryParse(ChargingStationId.ToString());
+
+
+        public static ChargingStation_Id? ToOICP(this WWCP.ChargingStation_Id? ChargingStationId)
+
+            => ChargingStationId.HasValue
+                   ? ChargingStationId.Value.ToOICP()
+                   : default;
+
+        #endregion
+
+        #region ToWWCP(this ChargingStationId)
+
+        public static WWCP.ChargingStation_Id? ToWWCP(this ChargingStation_Id ChargingStationId)
+
+            => WWCP.ChargingStation_Id.TryParse(ChargingStationId.ToString());
+
+        public static WWCP.ChargingStation_Id? ToWWCP(this ChargingStation_Id? ChargingStationId)
+
+            => ChargingStationId.HasValue
+                   ? ChargingStationId.Value.ToWWCP()
+                   : default;
+
+        #endregion
+
+
+        #region ToOICP(this ChargingPoolId)
+
+        public static ChargingPool_Id? ToOICP(this WWCP.ChargingPool_Id ChargingPoolId)
+
+            => ChargingPool_Id.TryParse(ChargingPoolId.ToString());
+
+
+        public static ChargingPool_Id? ToOICP(this WWCP.ChargingPool_Id? ChargingPoolId)
+
+            => ChargingPoolId.HasValue
+                   ? ChargingPoolId.Value.ToOICP()
+                   : default;
+
+        #endregion
+
+        #region ToWWCP(this ChargingPoolId)
+
+        public static WWCP.ChargingPool_Id? ToWWCP(this ChargingPool_Id ChargingPoolId)
+
+            => WWCP.ChargingPool_Id.TryParse(ChargingPoolId.ToString());
+
+        public static WWCP.ChargingPool_Id? ToWWCP(this ChargingPool_Id? ChargingPoolId)
+
+            => ChargingPoolId.HasValue
+                   ? ChargingPoolId.Value.ToWWCP()
+                   : default;
 
         #endregion
 
 
         #region ToOICP(this SessionId)
 
-        public static Session_Id ToOICP(this WWCP.ChargingSession_Id SessionId)
-            => Session_Id.Parse(SessionId.ToString());
+        public static Session_Id? ToOICP(this WWCP.ChargingSession_Id SessionId)
+
+            => Session_Id.TryParse(SessionId.ToString());
 
         public static Session_Id? ToOICP(this WWCP.ChargingSession_Id? SessionId)
+
             => SessionId.HasValue
-                   ? Session_Id.Parse(SessionId.ToString())
-                   : new Session_Id?();
+                   ? SessionId.Value.ToOICP()
+                   : default;
 
         #endregion
 
         #region ToWWCP(this SessionId)
 
-        public static WWCP.ChargingSession_Id ToWWCP(this Session_Id SessionId)
-            => WWCP.ChargingSession_Id.Parse(SessionId.ToString());
+        public static WWCP.ChargingSession_Id? ToWWCP(this Session_Id SessionId)
+
+            => WWCP.ChargingSession_Id.TryParse(SessionId.ToString());
 
         public static WWCP.ChargingSession_Id? ToWWCP(this Session_Id? SessionId)
+
             => SessionId.HasValue
-                   ? WWCP.ChargingSession_Id.Parse(SessionId.ToString())
-                   : new WWCP.ChargingSession_Id?();
+                   ? SessionId.Value.ToWWCP()
+                   : default;
+
+        #endregion
+
+
+        #region ToWWCP(this EMPPartnerSessionId)
+
+        public static WWCP.ChargingSession_Id? ToWWCP(this EMPPartnerSession_Id EMPPartnerSessionId)
+
+            => WWCP.ChargingSession_Id.TryParse(EMPPartnerSessionId.ToString());
+
+        public static WWCP.ChargingSession_Id? ToWWCP(this EMPPartnerSession_Id? EMPPartnerSessionId)
+
+            => EMPPartnerSessionId.HasValue
+                   ? EMPPartnerSessionId.Value.ToWWCP()
+                   : default;
+
+        #endregion
+
+        #region ToWWCP(this CPOPartnerSessionId)
+
+        public static WWCP.ChargingSession_Id? ToWWCP(this CPOPartnerSession_Id CPOPartnerSessionId)
+
+            => WWCP.ChargingSession_Id.TryParse(CPOPartnerSessionId.ToString());
+
+        public static WWCP.ChargingSession_Id? ToWWCP(this CPOPartnerSession_Id? CPOPartnerSessionId)
+
+            => CPOPartnerSessionId.HasValue
+                   ? CPOPartnerSessionId.Value.ToWWCP()
+                   : default;
+
+        #endregion
+
+
+        #region ToOICP(this ChargingReservationId)
+
+        public static Session_Id? ToOICP(this WWCP.ChargingReservation_Id ChargingReservationId)
+
+            => Session_Id.Parse(ChargingReservationId.Suffix);
+
+        public static Session_Id? ToOICP(this WWCP.ChargingReservation_Id? ChargingReservationId)
+
+            => ChargingReservationId.HasValue
+                   ? ChargingReservationId.Value.ToOICP()
+                   : default;
+
+        #endregion
+
+        #region ToOICP(this ChargingReservation)
+
+        public static Session_Id? ToOICP(this WWCP.ChargingReservation ChargingReservation)
+
+            => ChargingReservation?.Id.ToOICP();
 
         #endregion
 
 
         #region ToOICP(this ProductId)
 
-        public static PartnerProduct_Id ToOICP(this WWCP.ChargingProduct_Id ChargingProductId)
-            => PartnerProduct_Id.Parse(ChargingProductId.ToString());
+        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id ChargingProductId)
+
+            => PartnerProduct_Id.TryParse(ChargingProductId.ToString());
 
         public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct_Id? ChargingProductId)
-            => ChargingProductId.HasValue
-                   ? PartnerProduct_Id.Parse(ChargingProductId.ToString())
-                   : new PartnerProduct_Id?();
 
-        public static PartnerProduct_Id ToOICP(this WWCP.ChargingProduct ChargingProduct)
-            => PartnerProduct_Id.Parse(ChargingProduct.Id.ToString());
+            => ChargingProductId.HasValue
+                   ? ChargingProductId.Value.ToOICP()
+                   : default;
+
+        public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct ChargingProduct)
+
+            => ChargingProduct is null
+                   ? default
+                   : ChargingProduct.Id.ToOICP();
 
         #endregion
 
         #region ToWWCP(this ProductId)
 
-        public static WWCP.ChargingProduct_Id ToWWCP(this PartnerProduct_Id PartnerProductId)
-            => WWCP.ChargingProduct_Id.Parse(PartnerProductId.ToString());
+        public static WWCP.ChargingProduct_Id? ToWWCP(this PartnerProduct_Id PartnerProductId)
+
+            => WWCP.ChargingProduct_Id.TryParse(PartnerProductId.ToString());
+
+        public static WWCP.ChargingProduct_Id? ToWWCP(this PartnerProduct_Id? PartnerProductId)
+
+            => PartnerProductId.HasValue
+                   ? PartnerProductId.Value.ToWWCP()
+                   : default;
 
         #endregion
 
@@ -628,14 +781,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         public static UID ToOICP(this WWCP.Auth_Token AuthToken)
+
             => UID.Parse(AuthToken.ToString());
 
         public static UID? ToOICP(this WWCP.Auth_Token? AuthToken)
+
             => AuthToken.HasValue
                    ? UID.Parse(AuthToken.ToString())
-                   : new UID?();
+                   : default;
+
 
         public static WWCP.Auth_Token ToWWCP(this UID UID)
+
             => WWCP.Auth_Token.Parse(UID.ToString());
 
 
@@ -712,16 +869,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityTypes? ToOICP(this WWCP.AccessibilityTypes? AccessibilityType)
 
             => AccessibilityType.HasValue
-
-                   ? AccessibilityType.Value switch {
-                         WWCP.AccessibilityTypes.FreePubliclyAccessible    => AccessibilityTypes.FreePubliclyAccessible,
-                         WWCP.AccessibilityTypes.RestrictedAccess          => AccessibilityTypes.RestrictedAccess,
-                         WWCP.AccessibilityTypes.PayingPubliclyAccessible  => AccessibilityTypes.PayingPubliclyAccessible,
-                         WWCP.AccessibilityTypes.TestStation               => AccessibilityTypes.TestStation,
-                         _                                                 => new AccessibilityTypes?()
-                     }
-
-                   : new AccessibilityTypes?();
+                   ? AccessibilityType.Value.ToOICP()
+                   : default;
 
         #endregion
 
@@ -740,15 +889,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WWCP.AccessibilityTypes? ToWWCP(this AccessibilityTypes? AccessibilityType)
 
             => AccessibilityType.HasValue
-
-                   ? AccessibilityType.Value switch {
-                         AccessibilityTypes.FreePubliclyAccessible    => WWCP.AccessibilityTypes.FreePubliclyAccessible,
-                         AccessibilityTypes.RestrictedAccess          => WWCP.AccessibilityTypes.RestrictedAccess,
-                         AccessibilityTypes.PayingPubliclyAccessible  => WWCP.AccessibilityTypes.PayingPubliclyAccessible,
-                         AccessibilityTypes.TestStation               => WWCP.AccessibilityTypes.TestStation,
-                         _                                            => new WWCP.AccessibilityTypes?()
-                     }
-
+                   ? AccessibilityType.Value.ToWWCP()
                    : new WWCP.AccessibilityTypes?();
 
         #endregion
@@ -891,7 +1032,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ChargingModes.CHAdeMO  => WWCP.ChargingModes.CHAdeMO,
                          _                      => new WWCP.ChargingModes?()
                    }
-                   : new WWCP.ChargingModes?();
+                   : default;
 
         #endregion
 
@@ -919,7 +1060,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          WWCP.ChargingModes.CHAdeMO  => ChargingModes.CHAdeMO,
                          _                           => new ChargingModes?()
                      }
-                   : new ChargingModes?();
+                   : default;
 
         #endregion
 
@@ -1147,7 +1288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var CDR = new WWCP.ChargeDetailRecord(
                           Id:                    WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP().ToString()),
-                          SessionId:             ChargeDetailRecord.SessionId.ToWWCP(),
+                          SessionId:             ChargeDetailRecord.SessionId.ToWWCP().Value,
                           EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
                           ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue ? new WWCP.eMobilityProvider_Id?(WWCP.eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString())) : null,
 
@@ -1208,7 +1349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var CDR = new ChargeDetailRecord(
                           EVSEId:                ChargeDetailRecord.EVSEId.Value.ToOICP().Value,
-                          SessionId:             ChargeDetailRecord.SessionId.ToOICP(),
+                          SessionId:             ChargeDetailRecord.SessionId.   ToOICP().Value,
                           SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
                           SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
                           Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),

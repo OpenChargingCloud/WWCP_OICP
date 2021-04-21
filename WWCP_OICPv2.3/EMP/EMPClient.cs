@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //    => base.ToJSON(nameof(EMPClient));
 
 
-        #region PullEVSEData  (Request)
+        #region PullEVSEData              (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -604,7 +604,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatus(Request)
+        #region PullEVSEStatus            (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -980,6 +980,121 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             return result;
 
         }
+
+        #endregion
+
+        #region PullEVSEStatusById        (Request)
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        public Task<OICPResult<PullEVSEStatusByIdResponse>>
+
+            PullEVSEStatusById(PullEVSEStatusByIdRequest Request)
+
+                => null;
+
+        #endregion
+
+        #region PullEVSEStatusByOperatorId(Request)
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusByOperatorId request.</param>
+        public Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>
+
+            PullEVSEStatusByOperatorId(PullEVSEStatusByOperatorIdRequest Request)
+
+                => null;
+
+        #endregion
+
+
+        #region PushAuthenticationData    (Request)
+
+        ///// <summary>
+        ///// Create a new task pushing provider authentication data records onto the OICP server.
+        ///// </summary>
+        ///// <param name="Request">An PushAuthenticationData request.</param>
+        //public Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
+
+        //    PushAuthenticationData(PushAuthenticationDataRequest Request)
+
+        //        => EMPClient.PushAuthenticationData(Request);
+
+        #endregion
+
+
+        #region ReservationStart          (Request)
+
+        /// <summary>
+        /// Create a reservation at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest Request)
+
+                => null;
+
+        #endregion
+
+        #region ReservationStop           (Request)
+
+        /// <summary>
+        /// Delete a reservation at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+
+            AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest Request)
+
+                => null;
+
+        #endregion
+
+        #region RemoteStart               (Request)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
+
+                => null;
+
+        #endregion
+
+        #region RemoteStop                (Request)
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
+
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request)
+
+                => null;
+
+        #endregion
+
+
+        #region GetChargeDetailRecords    (Request)
+
+        ///// <summary>
+        ///// Create a new task querying charge detail records from the OICP server.
+        ///// </summary>
+        ///// <param name="Request">An GetChargeDetailRecords request.</param>
+        //public Task<OICPResult<GetChargeDetailRecordsResponse>>
+
+        //    GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
+
+        //        => null;
 
         #endregion
 

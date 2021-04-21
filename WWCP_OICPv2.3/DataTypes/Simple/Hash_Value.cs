@@ -83,20 +83,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Hash_Value Parse(String Text)
         {
 
-            #region Initial checks
+            if (TryParse(Text, out Hash_Value hashValue))
+                return hashValue;
 
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a hash value must not be null or empty!");
-
-            #endregion
-
-            if (TryParse(Text, out Hash_Value chargingPoolId))
-                return chargingPoolId;
-
-            throw new ArgumentException("Invalid text-representation of a hash value: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a hash value: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -111,52 +102,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Hash_Value? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Hash_Value chargingPoolId))
-                return chargingPoolId;
+            if (TryParse(Text, out Hash_Value hashValue))
+                return hashValue;
 
-            return new Hash_Value?();
+            return default;
 
         }
 
         #endregion
 
-        #region TryParse(Text, out PhoneNumber)
+        #region TryParse(Text, out HashValue)
 
         /// <summary>
         /// Try to parse the given string as a hash value.
         /// </summary>
         /// <param name="Text">A text-representation of a hash value.</param>
-        /// <param name="PhoneNumber">The parsed hash value.</param>
-        public static Boolean TryParse(String Text, out Hash_Value PhoneNumber)
+        /// <param name="HashValue">The parsed hash value.</param>
+        public static Boolean TryParse(String Text, out Hash_Value HashValue)
         {
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            HashValue  = default;
+            Text       = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                PhoneNumber = default;
                 return false;
-            }
 
             #endregion
 
             try
             {
-                PhoneNumber = new Hash_Value(Text);
+                HashValue = new Hash_Value(Text);
                 return true;
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            PhoneNumber = default;
             return false;
 
         }
@@ -179,87 +162,87 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (PhoneNumber1, PhoneNumber2)
+        #region Operator == (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => PhoneNumber1.Equals(PhoneNumber2);
+        public static Boolean operator == (Hash_Value HashValue1, Hash_Value HashValue2)
+            => HashValue1.Equals(HashValue2);
 
         #endregion
 
-        #region Operator != (PhoneNumber1, PhoneNumber2)
+        #region Operator != (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => !PhoneNumber1.Equals(PhoneNumber2);
+        public static Boolean operator != (Hash_Value HashValue1, Hash_Value HashValue2)
+            => !HashValue1.Equals(HashValue2);
 
         #endregion
 
-        #region Operator <  (PhoneNumber1, PhoneNumber2)
+        #region Operator <  (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => PhoneNumber1.CompareTo(PhoneNumber2) < 0;
+        public static Boolean operator < (Hash_Value HashValue1, Hash_Value HashValue2)
+            => HashValue1.CompareTo(HashValue2) < 0;
 
         #endregion
 
-        #region Operator <= (PhoneNumber1, PhoneNumber2)
+        #region Operator <= (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => PhoneNumber1.CompareTo(PhoneNumber2) <= 0;
+        public static Boolean operator <= (Hash_Value HashValue1, Hash_Value HashValue2)
+            => HashValue1.CompareTo(HashValue2) <= 0;
 
         #endregion
 
-        #region Operator >  (PhoneNumber1, PhoneNumber2)
+        #region Operator >  (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => PhoneNumber1.CompareTo(PhoneNumber2) > 0;
+        public static Boolean operator > (Hash_Value HashValue1, Hash_Value HashValue2)
+            => HashValue1.CompareTo(HashValue2) > 0;
 
         #endregion
 
-        #region Operator >= (PhoneNumber1, PhoneNumber2)
+        #region Operator >= (HashValue1, HashValue2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber1">A hash value.</param>
-        /// <param name="PhoneNumber2">Another hash value.</param>
+        /// <param name="HashValue1">A hash value.</param>
+        /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Hash_Value PhoneNumber1, Hash_Value PhoneNumber2)
-            => PhoneNumber1.CompareTo(PhoneNumber2) >= 0;
+        public static Boolean operator >= (Hash_Value HashValue1, Hash_Value HashValue2)
+            => HashValue1.CompareTo(HashValue2) >= 0;
 
         #endregion
 
         #endregion
 
-        #region IComparable<PhoneNumber> Members
+        #region IComparable<HashValue> Members
 
         #region CompareTo(Object)
 
@@ -269,30 +252,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
 
-            => Object is Hash_Value chargingPoolId
-                   ? CompareTo(chargingPoolId)
+            => Object is Hash_Value hashValue
+                   ? CompareTo(hashValue)
                    : throw new ArgumentException("The given object is not a hash value!",
                                                  nameof(Object));
 
         #endregion
 
-        #region CompareTo(PhoneNumber)
+        #region CompareTo(HashValue)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="PhoneNumber">An object to compare with.</param>
-        public Int32 CompareTo(Hash_Value PhoneNumber)
+        /// <param name="HashValue">An object to compare with.</param>
+        public Int32 CompareTo(Hash_Value HashValue)
 
             => String.Compare(InternalId,
-                              PhoneNumber.InternalId,
+                              HashValue.InternalId,
                               StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<PhoneNumber> Members
+        #region IEquatable<HashValue> Members
 
         #region Equals(Object)
 
@@ -303,22 +286,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is Hash_Value chargingPoolId &&
-                   Equals(chargingPoolId);
+            => Object is Hash_Value hashValue &&
+                   Equals(hashValue);
 
         #endregion
 
-        #region Equals(PhoneNumber)
+        #region Equals(HashValue)
 
         /// <summary>
-        /// Compares two PhoneNumbers for equality.
+        /// Compares two HashValues for equality.
         /// </summary>
-        /// <param name="PhoneNumber">A hash value to compare with.</param>
+        /// <param name="HashValue">A hash value to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(Hash_Value PhoneNumber)
+        public Boolean Equals(Hash_Value HashValue)
 
             => String.Equals(InternalId,
-                             PhoneNumber.InternalId,
+                             HashValue.InternalId,
                              StringComparison.OrdinalIgnoreCase);
 
         #endregion

@@ -49,6 +49,15 @@
     <Compile Include="CPO\CPODelegates.cs" />
     <Compile Include="CPO\EMPExtentions.cs" />
     <Compile Include="CPO\WWCPEMPAdapter.cs" />
+    <Compile Include="EMP\CPOExtentions.cs" />
+    <Compile Include="EMP\EMPDelegates.cs" />
+    <Compile Include="EMP\OICPImporter.cs" />
+    <Compile Include="EMP\WWCPCSOAdapter.cs" />
+    <Compile Include="Helper\ChargeStationInfo.cs" />
+    <Compile Include="Helper\ChargingPoolInfo.cs" />
+    <Compile Include="Helper\CPInfoList.cs" />
+    <Compile Include="Helper\EVSEIdLookup.cs" />
+    <Compile Include="Helper\EVSEInfo.cs" />
     <Compile Include="OICPExceptions.cs" />
     <Compile Include="OICPMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

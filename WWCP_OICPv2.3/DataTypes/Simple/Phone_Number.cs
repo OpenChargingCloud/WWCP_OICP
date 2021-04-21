@@ -84,20 +84,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Phone_Number Parse(String Text)
         {
 
-            #region Initial checks
+            if (TryParse(Text, out Phone_Number phoneNumber))
+                return phoneNumber;
 
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a phone number must not be null or empty!");
-
-            #endregion
-
-            if (TryParse(Text, out Phone_Number chargingPoolId))
-                return chargingPoolId;
-
-            throw new ArgumentException("Invalid text-representation of a phone number: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a phone number: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -112,10 +103,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Phone_Number? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Phone_Number chargingPoolId))
-                return chargingPoolId;
+            if (TryParse(Text, out Phone_Number phoneNumber))
+                return phoneNumber;
 
-            return new Phone_Number?();
+            return default;
 
         }
 
@@ -133,14 +124,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            PhoneNumber  = default;
+            Text         = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                PhoneNumber = default;
                 return false;
-            }
 
             #endregion
 
@@ -150,14 +138,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            PhoneNumber = default;
             return false;
 
         }
@@ -270,8 +253,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
 
-            => Object is Phone_Number chargingPoolId
-                   ? CompareTo(chargingPoolId)
+            => Object is Phone_Number phoneNumber
+                   ? CompareTo(phoneNumber)
                    : throw new ArgumentException("The given object is not a phone number!",
                                                  nameof(Object));
 
@@ -304,8 +287,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is Phone_Number chargingPoolId &&
-                   Equals(chargingPoolId);
+            => Object is Phone_Number phoneNumber &&
+                   Equals(phoneNumber);
 
         #endregion
 

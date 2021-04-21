@@ -114,10 +114,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out EVCO_Id EVCOId))
                 return EVCOId;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of an electric vehicle contract identification must not be null or empty!");
-
-            throw new ArgumentException("Invalid electric vehicle contract identification '" + Text + "'!");
+            throw new ArgumentException("Invalid text-representation of an electric vehicle contract identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -181,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out EVCO_Id EVCOId))
                 return EVCOId;
 
-            return new EVCO_Id?();
+            return default;
 
         }
 
@@ -199,14 +197,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            EVCOId  = default;
+            Text    = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                EVCOId = default;
                 return false;
-            }
 
             #endregion
 
@@ -216,10 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var matchCollection = EVCOId_RegEx.Matches(Text);
 
                 if (matchCollection.Count != 1)
-                {
-                    EVCOId = default;
                     return false;
-                }
 
 
                 // ISO: DE-GDF-C12022187-X, DEGDFC12022187X
@@ -254,12 +246,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
             catch (Exception)
-            {
-                EVCOId = default;
-                return false;
-            }
+            { }
 
-            EVCOId = default;
             return false;
 
         }

@@ -131,49 +131,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Provider_Id Parse(String Text)
         {
 
-            #region Initial checks
+            if (TryParse(Text, out Provider_Id providerId))
+                return providerId;
 
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of an e-mobility provider identification must not be null or empty!");
-
-            #endregion
-
-            var MatchCollection = ProviderId_RegEx.Matches(Text);
-
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Invalid text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
-
-            if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
-            {
-
-                ProviderIdFormats Separator;
-
-                switch (MatchCollection[0].Groups[2].Value)
-                {
-
-                    case "-" :
-                        Separator = ProviderIdFormats.ISO_HYPHEN;
-                        break;
-
-                    case "*" :
-                        Separator = ProviderIdFormats.DIN_STAR;
-                        break;
-
-                    default:
-                        Separator = ProviderIdFormats.ISO;
-                        break;
-
-                }
-
-                return new Provider_Id(_CountryCode,
-                                       MatchCollection[0].Groups[3].Value,
-                                       Separator);
-            }
-
-            throw new ArgumentException("Unknown country code in the given text-representation of an e-mobility provider identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an e-mobility provider identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -242,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Provider_Id providerId))
                 return providerId;
 
-            return new Provider_Id?();
+            return default;
 
         }
 
@@ -261,14 +223,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            ProviderId  = default;
+            Text        = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                ProviderId = default;
                 return false;
-            }
 
             #endregion
 
@@ -278,36 +237,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var MatchCollection = ProviderId_RegEx.Matches(Text);
 
                 if (MatchCollection.Count != 1)
-                {
-                    ProviderId = default;
                     return false;
-                }
 
                 if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
                 {
 
-                    var Separator = ProviderIdFormats.ISO;
-
-                    switch (MatchCollection[0].Groups[2].Value)
-                    {
-
-                        case "-":
-                            Separator = ProviderIdFormats.ISO_HYPHEN;
-                            break;
-
-                        case "*":
-                            Separator = ProviderIdFormats.DIN_STAR;
-                            break;
-
-                        default:
-                            Separator = ProviderIdFormats.ISO;
-                            break;
-
-                    }
-
                     ProviderId = new Provider_Id(_CountryCode,
                                                  MatchCollection[0].Groups[3].Value,
-                                                 Separator);
+                                                 MatchCollection[0].Groups[2].Value switch{
+                                                     "-" => ProviderIdFormats.ISO_HYPHEN,
+                                                     "*" => ProviderIdFormats.DIN_STAR,
+                                                     _   => ProviderIdFormats.ISO,
+                                                 });
 
                     return true;
 
@@ -315,14 +256,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            ProviderId = default;
             return false;
 
         }

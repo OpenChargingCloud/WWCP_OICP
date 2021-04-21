@@ -85,13 +85,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static LanguageCode Parse(String Text)
         {
 
-            if (TryParse(Text, out LanguageCode meterId))
-                return meterId;
+            if (TryParse(Text, out LanguageCode languageCode))
+                return languageCode;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a ISO-639-1 or ISO-639-2/T language code must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a ISO-639-1 or ISO-639-2/T language code is invalid!", nameof(Text));
+            throw new ArgumentException("The given text representation of a ISO-639-1 or ISO-639-2/T language code is invalid!",
+                                        nameof(Text));
 
         }
 
@@ -106,8 +104,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static LanguageCode? TryParse(String Text)
         {
 
-            if (TryParse(Text, out LanguageCode meterId))
-                return meterId;
+            if (TryParse(Text, out LanguageCode languageCode))
+                return languageCode;
 
             return default;
 
@@ -115,28 +113,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out MeterId)
+        #region (static) TryParse(Text, out LanguageCode)
 
         /// <summary>
         /// Try to parse the given text as a ISO-639-1 or ISO-639-2/T language code.
         /// </summary>
         /// <param name="Text">A text representation of a ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId">The parsed ISO-639-1 or ISO-639-2/T language code.</param>
-        public static Boolean TryParse(String Text, out LanguageCode MeterId)
+        /// <param name="LanguageCode">The parsed ISO-639-1 or ISO-639-2/T language code.</param>
+        public static Boolean TryParse(String Text, out LanguageCode LanguageCode)
         {
 
-            if (Text.IsNotNullOrEmpty())
-            {
-                try
-                {
-                    MeterId = new LanguageCode(Text.Trim());
-                    return true;
-                }
-                catch (Exception)
-                { }
-            }
+            #region Initial checks
 
-            MeterId = default;
+            LanguageCode  = default;
+            Text          = Text?.Trim();
+
+            if (Text.IsNullOrEmpty())
+                return false;
+
+            #endregion
+
+            try
+            {
+                LanguageCode = new LanguageCode(Text);
+                return true;
+            }
+            catch (Exception)
+            { }
+
             return false;
 
         }
@@ -167,99 +171,99 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (MeterId1, MeterId2)
+        #region Operator == (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (LanguageCode MeterId1,
-                                           LanguageCode MeterId2)
+        public static Boolean operator == (LanguageCode LanguageCode1,
+                                           LanguageCode LanguageCode2)
 
-            => MeterId1.Equals(MeterId2);
+            => LanguageCode1.Equals(LanguageCode2);
 
         #endregion
 
-        #region Operator != (MeterId1, MeterId2)
+        #region Operator != (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (LanguageCode MeterId1,
-                                           LanguageCode MeterId2)
+        public static Boolean operator != (LanguageCode LanguageCode1,
+                                           LanguageCode LanguageCode2)
 
-            => !(MeterId1 == MeterId2);
+            => !(LanguageCode1 == LanguageCode2);
 
         #endregion
 
-        #region Operator <  (MeterId1, MeterId2)
+        #region Operator <  (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (LanguageCode MeterId1,
-                                          LanguageCode MeterId2)
+        public static Boolean operator < (LanguageCode LanguageCode1,
+                                          LanguageCode LanguageCode2)
 
-            => MeterId1.CompareTo(MeterId2) < 0;
+            => LanguageCode1.CompareTo(LanguageCode2) < 0;
 
         #endregion
 
-        #region Operator <= (MeterId1, MeterId2)
+        #region Operator <= (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (LanguageCode MeterId1,
-                                           LanguageCode MeterId2)
+        public static Boolean operator <= (LanguageCode LanguageCode1,
+                                           LanguageCode LanguageCode2)
 
-            => !(MeterId1 > MeterId2);
+            => !(LanguageCode1 > LanguageCode2);
 
         #endregion
 
-        #region Operator >  (MeterId1, MeterId2)
+        #region Operator >  (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (LanguageCode MeterId1,
-                                          LanguageCode MeterId2)
+        public static Boolean operator > (LanguageCode LanguageCode1,
+                                          LanguageCode LanguageCode2)
 
-            => MeterId1.CompareTo(MeterId2) > 0;
+            => LanguageCode1.CompareTo(LanguageCode2) > 0;
 
         #endregion
 
-        #region Operator >= (MeterId1, MeterId2)
+        #region Operator >= (LanguageCode1, LanguageCode2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId1">A ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <param name="MeterId2">Another ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
+        /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (LanguageCode MeterId1,
-                                           LanguageCode MeterId2)
+        public static Boolean operator >= (LanguageCode LanguageCode1,
+                                           LanguageCode LanguageCode2)
 
-            => !(MeterId1 < MeterId2);
-
-        #endregion
+            => !(LanguageCode1 < LanguageCode2);
 
         #endregion
 
-        #region IComparable<MeterId> Members
+        #endregion
+
+        #region IComparable<LanguageCode> Members
 
         #region CompareTo(Object)
 
@@ -269,30 +273,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object Object)
 
-            => Object is LanguageCode meterId
-                   ? CompareTo(meterId)
+            => Object is LanguageCode languageCode
+                   ? CompareTo(languageCode)
                    : throw new ArgumentException("The given object is not a ISO-639-1 or ISO-639-2/T language code!",
                                                  nameof(Object));
 
         #endregion
 
-        #region CompareTo(MeterId)
+        #region CompareTo(LanguageCode)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="MeterId">An object to compare with.</param>
-        public Int32 CompareTo(LanguageCode MeterId)
+        /// <param name="LanguageCode">An object to compare with.</param>
+        public Int32 CompareTo(LanguageCode LanguageCode)
 
             => String.Compare(InternalId,
-                              MeterId.InternalId,
+                              LanguageCode.InternalId,
                               StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<MeterId> Members
+        #region IEquatable<LanguageCode> Members
 
         #region Equals(Object)
 
@@ -303,22 +307,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is LanguageCode meterId &&
-                   Equals(meterId);
+            => Object is LanguageCode languageCode &&
+                   Equals(languageCode);
 
         #endregion
 
-        #region Equals(MeterId)
+        #region Equals(LanguageCode)
 
         /// <summary>
         /// Compares two ISO-639-1 or ISO-639-2/T language codes for equality.
         /// </summary>
-        /// <param name="MeterId">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
+        /// <param name="LanguageCode">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(LanguageCode MeterId)
+        public Boolean Equals(LanguageCode LanguageCode)
 
             => String.Equals(InternalId,
-                             MeterId.InternalId,
+                             LanguageCode.InternalId,
                              StringComparison.OrdinalIgnoreCase);
 
         #endregion

@@ -130,36 +130,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Operator_Id Parse(String Text)
         {
 
-            #region Initial checks
+            if (TryParse(Text, out Operator_Id operatorId))
+                return operatorId;
 
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of an EVSE operator identification must not be null or empty!");
-
-            #endregion
-
-            var MatchCollection = OperatorId_RegEx.Matches(Text);
-
-            if (MatchCollection.Count != 1)
-                throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
-
-            Country _CountryCode;
-
-            // DE...
-            if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out _CountryCode))
-                return new Operator_Id(_CountryCode,
-                                       MatchCollection[0].Groups[3].Value,
-                                       MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
-
-            // +49*...
-            if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out _CountryCode))
-                return new Operator_Id(_CountryCode,
-                                       MatchCollection[0].Groups[5].Value,
-                                       OperatorIdFormats.DIN);
-
-            throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -221,7 +196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Operator_Id operatorId))
                 return operatorId;
 
-            return new Operator_Id?();
+            return default;
 
         }
 
@@ -240,14 +215,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            OperatorId  = default;
+            Text        = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                OperatorId = default(Operator_Id);
                 return false;
-            }
 
             #endregion
 
@@ -257,18 +229,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var MatchCollection = OperatorId_RegEx.Matches(Text);
 
                 if (MatchCollection.Count != 1)
-                {
-                    OperatorId = default(Operator_Id);
                     return false;
-                }
 
-                Country _CountryCode;
 
                 // DE...
-                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out _CountryCode))
+                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
                 {
 
-                    OperatorId = new Operator_Id(_CountryCode,
+                    OperatorId = new Operator_Id(countryCode,
                                                  MatchCollection[0].Groups[3].Value,
                                                  MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
 
@@ -277,10 +245,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 }
 
                 // +49*...
-                if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out _CountryCode))
+                if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
                 {
 
-                    OperatorId = new Operator_Id(_CountryCode,
+                    OperatorId = new Operator_Id(countryCode,
                                                  MatchCollection[0].Groups[5].Value,
                                                  OperatorIdFormats.DIN);
 
@@ -290,14 +258,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            OperatorId = default(Operator_Id);
             return false;
 
         }
