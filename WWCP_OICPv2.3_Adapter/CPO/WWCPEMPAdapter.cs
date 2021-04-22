@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2021 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1076,7 +1076,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var response = await RoamingNetwork.
                                              RemoteStart(EMPRoamingProvider:    this,
-                                                         ChargingLocation:      ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
+                                                         ChargingLocation:      ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP()),
                                                          ChargingProduct:       ChargingProduct,
                                                          ReservationId:         ReservationId,
                                                          SessionId:             Request.SessionId.     ToWWCP(),
@@ -1245,19 +1245,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 try
                 {
 
-                    var response = await RoamingNetwork.
-                                             RemoteStop(EMPRoamingProvider:    this,
-                                                        //Request.EVSEId.     ToWWCP().Value,
-                                                        SessionId:             Request.SessionId.ToWWCP(),
-                                                        ReservationHandling:   ReservationHandling.Close,
-                                                        ProviderId:            Request.ProviderId.ToWWCP(),
-                                                        RemoteAuthentication:  null,
+                    var sessionId  = Request.SessionId.ToWWCP();
 
-                                                        Timestamp:             Request.Timestamp,
-                                                        CancellationToken:     Request.CancellationToken,
-                                                        EventTrackingId:       Request.EventTrackingId,
-                                                        RequestTimeout:        Request.RequestTimeout).
-                                             ConfigureAwait(false);
+                    var response   = await RoamingNetwork.
+                                               RemoteStop(EMPRoamingProvider:    this,
+                                                          SessionId:             sessionId.Value,
+                                                          ReservationHandling:   ReservationHandling.Close,
+                                                          ProviderId:            Request.ProviderId.ToWWCP(),
+                                                          RemoteAuthentication:  null,
+
+                                                          Timestamp:             Request.Timestamp,
+                                                          CancellationToken:     Request.CancellationToken,
+                                                          EventTrackingId:       Request.EventTrackingId,
+                                                          RequestTimeout:        Request.RequestTimeout).
+                                               ConfigureAwait(false);
 
                     #region Response mapping
 
@@ -1401,6 +1402,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
+            if (EVSEs == null)
+                EVSEs = new EVSE[0];
+
+
             if (!Timestamp.HasValue)
                 Timestamp = DateTime.UtcNow;
 
@@ -1423,32 +1428,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             var Warnings         = new List<Warning>();
             var EVSEDataRecords  = new List<EVSEDataRecord>();
 
-            if (EVSEs.IsNeitherNullNorEmpty())
+            foreach (var evse in EVSEs)
             {
-                foreach (var evse in EVSEs)
+
+                try
                 {
 
-                    try
-                    {
+                    if (evse == null)
+                        continue;
 
-                        if (evse == null)
-                            continue;
+                    if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
+                        // WWCP EVSE will be added as internal data "WWCP.EVSE"...
+                        EVSEDataRecords.Add(evse.ToOICP(_EVSE2EVSEDataRecord));
 
-                        if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
-                            // WWCP EVSE will be added as internal data "WWCP.EVSE"...
-                            EVSEDataRecords.Add(evse.ToOICP(_EVSE2EVSEDataRecord));
-
-                        else
-                            DebugX.Log(evse.Id + " was filtered!");
-
-                    }
-                    catch (Exception e)
-                    {
-                        DebugX.Log(e.Message);
-                        Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
-                    }
+                    else
+                        DebugX.Log(evse.Id + " was filtered!");
 
                 }
+                catch (Exception e)
+                {
+                    DebugX.Log(e.Message);
+                    Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
+                }
+
             }
 
             #endregion
@@ -1482,20 +1484,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             DateTime Endtime;
             TimeSpan Runtime;
 
+
             if (EVSEDataRecords.Count > 0)
             {
 
-                var response = await CPORoaming.
-                                         PushEVSEData(EVSEDataRecords,
-                                                      DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
-                                                      DefaultOperatorName,
-                                                      ServerAction,
-                                                      null,
+                var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
 
-                                                      Timestamp,
-                                                      CancellationToken,
-                                                      EventTrackingId,
-                                                      RequestTimeout);
+                var response    = await CPORoaming.PushEVSEData(
+                                        new PushEVSEDataRequest(
+                                            new OperatorEVSEData(
+                                                EVSEDataRecords,
+                                                operatorId.Value,
+                                                DefaultOperatorName
+                                            ),
+                                            ServerAction,
+
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout)).
+                                        ConfigureAwait(false);
 
                 if (response.IsSuccess())
                 {
@@ -1570,18 +1578,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Send request
 
-                            var FullLoadResponse = await CPORoaming.
-                                                              PushEVSEData(FullLoadEVSEs,
-                                                                           DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
-                                                                           DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null,
-                                                                           ActionTypes.FullLoad,
-                                                                           null,
+                            var FullLoadResponse = await CPORoaming.PushEVSEData(
+                                                         new PushEVSEDataRequest(
+                                                             new OperatorEVSEData(
+                                                                 FullLoadEVSEs,
+                                                                 operatorId.Value,
+                                                                 DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null
+                                                             ),
+                                                             ActionTypes.FullLoad,
 
-                                                                           Timestamp,
-                                                                           CancellationToken,
-                                                                           EventTrackingId,
-                                                                           RequestTimeout).
-                                                              ConfigureAwait(false);
+                                                             Timestamp,
+                                                             CancellationToken,
+                                                             EventTrackingId,
+                                                             RequestTimeout)).
+                                                         ConfigureAwait(false);
 
                             #endregion
 
@@ -1679,7 +1689,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           EVSEs,
                                                           "No EVSEDataRecords to push!",
                                                           Warnings,
-                                                          DateTime.UtcNow - StartTime);
+                                                          Runtime);
 
             }
 
@@ -1744,7 +1754,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (EVSEStatusUpdates == null)
-                throw new ArgumentNullException(nameof(EVSEStatusUpdates), "The given enumeration of EVSE status updates must not be null!");
+                EVSEStatusUpdates = new EVSEStatusUpdate[0];
 
 
             if (!Timestamp.HasValue)
@@ -1758,6 +1768,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
+
+
+            PushEVSEStatusResult result = null;
 
             #endregion
 
@@ -1787,7 +1800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     // Only push the current status of the latest status update!
                     _EVSEStatus.Add(new EVSEStatusRecord(
                                         _EVSEId.Value,
-                                        evsestatusupdate.Value.First().NewStatus.Value.AsOICPEVSEStatus()
+                                        evsestatusupdate.Value.First().NewStatus.Value.ToOICP()
                                     ));
 
                 }
@@ -1799,11 +1812,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             }
 
-            PushEVSEStatusResult result = null;
-
             #endregion
 
             #region Send OnEVSEStatusPush event
+
+            DateTime Endtime;
+            TimeSpan Runtime;
 
             var StartTime = DateTime.UtcNow;
 
@@ -1830,54 +1844,81 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            var response = await CPORoaming.
-                                     PushEVSEStatus(_EVSEStatus,
-                                                    DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat),
-                                                    DefaultOperatorName,
-                                                    ServerAction,
-                                                    null,
-
-                                                    Timestamp,
-                                                    CancellationToken,
-                                                    EventTrackingId,
-                                                    RequestTimeout);
-
-
-            var Endtime = DateTime.UtcNow;
-            var Runtime = Endtime - StartTime;
-
-            if (response.IsSuccess())
+            if (_EVSEStatus.Count > 0)
             {
 
-                if (response.Result.Result == true)
-                    result = PushEVSEStatusResult.Success(Id,
-                                                          this,
-                                                          response.Result.StatusCode.Description,
-                                                          response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                              ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
-                                                              : Warnings,
-                                                          Runtime);
+                var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
 
+                var response    = await CPORoaming.PushEVSEStatus(
+                                        new PushEVSEStatusRequest(
+                                            new OperatorEVSEStatus(
+                                                _EVSEStatus,
+                                                operatorId.Value,
+                                                DefaultOperatorName
+                                            ),
+                                            ServerAction,
+
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout));
+
+
+                Endtime = DateTime.UtcNow;
+                Runtime = Endtime - StartTime;
+
+                if (response.IsSuccess())
+                {
+
+                    if (response.Result.Result == true)
+                        result = PushEVSEStatusResult.Success(Id,
+                                                              this,
+                                                              response.Result.StatusCode.Description,
+                                                              response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                  ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
+                                                                  : Warnings,
+                                                              Runtime);
+
+                    else
+                        result = PushEVSEStatusResult.Error(Id,
+                                                            this,
+                                                            EVSEStatusUpdates,
+                                                            response.Result.StatusCode.Description,
+                                                            response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                                ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
+                                                                : Warnings,
+                                                            Runtime);
+
+                }
                 else
                     result = PushEVSEStatusResult.Error(Id,
                                                         this,
                                                         EVSEStatusUpdates,
-                                                        response.Result.StatusCode.Description,
-                                                        response.Result.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                            ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Result.StatusCode.AdditionalInfo))
-                                                            : Warnings,
-                                                        Runtime);
+                                                        //response.HTTPStatusCode.ToString(),
+                                                        //response.HTTPBody != null
+                                                        //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
+                                                        //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                                        Runtime: Runtime);
 
             }
+
+            #region ...or no EVSEs to push...
+
             else
-                result = PushEVSEStatusResult.Error(Id,
-                                                    this,
-                                                    EVSEStatusUpdates,
-                                                    //response.HTTPStatusCode.ToString(),
-                                                    //response.HTTPBody != null
-                                                    //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
-                                                    //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                    Runtime: Runtime);
+            {
+
+                Endtime  = DateTime.UtcNow;
+                Runtime  = Endtime - StartTime;
+                result   = PushEVSEStatusResult.NoOperation(Id,
+                                                            this,
+                                                            "No EVSEStatusRecords to push!",
+                                                            EVSEStatusUpdates,
+                                                            Warnings,
+                                                            Runtime: TimeSpan.Zero);
+
+            }
+
+            #endregion
 
 
             #region Send OnPushEVSEStatusResponse event
@@ -4862,7 +4903,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan         Runtime;
             AuthStartResult  result;
 
-            if (ChargingLocation?.EVSEId == null)
+            var operatorId  = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var evseId      = ChargingLocation?.EVSEId?.ToOICP();
+
+            if (!operatorId.HasValue)
+            {
+
+                Endtime  = DateTime.UtcNow;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStartResult.AdminDown(Id,
+                                                     this,
+                                                     SessionId,
+                                                     Runtime: Runtime);
+
+            }
+
+            // An optional EVSE Id is given, but it is invalid!
+            else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
 
                 Endtime  = DateTime.UtcNow;
@@ -4889,20 +4946,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             else
             {
 
-                var response  = await CPORoaming.AuthorizeStart(new AuthorizeStartRequest(
-                                         (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat),
-                                          LocalAuthentication.              ToOICP(),
-                                          ChargingLocation.EVSEId.Value.    ToOICP(),
-                                          ChargingProduct?.Id.              ToOICP(),
-                                          SessionId.                        ToOICP(),
-                                          null,
-                                          null,
-                                          null,
+                var response  = await CPORoaming.AuthorizeStart(
+                                      new AuthorizeStartRequest(
+                                           operatorId.Value,
+                                           LocalAuthentication.    ToOICP(),
+                                           ChargingLocation.EVSEId.ToOICP(),
+                                           ChargingProduct?.       ToOICP(),
+                                           SessionId.              ToOICP(),
+                                           null,
+                                           null,
+                                           null,
 
-                                          Timestamp,
-                                          CancellationToken,
-                                          EventTrackingId,
-                                          RequestTimeout));
+                                           Timestamp,
+                                           CancellationToken,
+                                           EventTrackingId,
+                                           RequestTimeout));
 
 
                 Endtime  = DateTime.UtcNow;
@@ -5061,19 +5119,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             TimeSpan        Runtime;
             AuthStopResult  result;
 
-            if (ChargingLocation?.EVSEId == null)
-            {
+            var operatorId  = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var sessionId   = SessionId.ToOICP();
 
-                Endtime  = DateTime.UtcNow;
-                Runtime  = Endtime - StartTime;
-                result   = AuthStopResult.UnknownLocation(Id,
-                                                          this,
-                                                          SessionId,
-                                                          Runtime: Runtime);
-
-            }
-
-            else if (DisableAuthentication)
+            if (DisableAuthentication)
             {
                 Endtime  = DateTime.UtcNow;
                 Runtime  = Endtime - StartTime;
@@ -5083,18 +5132,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                     Runtime: Runtime);
             }
 
+            else if (!operatorId.HasValue)
+            {
+
+                Endtime  = DateTime.UtcNow;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStopResult.AdminDown(Id,
+                                                    this,
+                                                    SessionId,
+                                                    Runtime: Runtime);
+
+            }
+
+            else if (!sessionId.HasValue)
+            {
+
+                Endtime  = DateTime.UtcNow;
+                Runtime  = Endtime - StartTime;
+                result   = AuthStopResult.InvalidSessionId(Id,
+                                                           this,
+                                                           SessionId,
+                                                           Runtime: Runtime);
+
+            }
+
             else
             {
 
-                var response  = await CPORoaming.AuthorizeStop(new AuthorizeStopRequest(
-                                         (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat),
-                                          SessionId.                        ToOICP(),
+                var response  = await CPORoaming.AuthorizeStop(
+                                      new AuthorizeStopRequest(
+                                          operatorId.Value,
+                                          sessionId. Value,
                                           LocalAuthentication.              ToOICP(),
                                           ChargingLocation.EVSEId.Value.    ToOICP(),
                                           null,
                                           null,
                                           null,
-
+                                        
                                           Timestamp,
                                           CancellationToken,
                                           EventTrackingId,
@@ -5914,7 +5988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 }
 
-                RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP(), result);
+                RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP().Value, result);
 
             }
 

@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The OICP CPO HTTP server API.
+    /// The OICP CPO HTTP Server API.
     /// </summary>
     public partial class CPOServerAPI : HTTPAPI
     {

@@ -99,20 +99,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Session_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a charging session identification must not be null or empty!");
-
-            #endregion
-
             if (TryParse(Text, out Session_Id sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Invalid text-representation of a charging session identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a charging session identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 

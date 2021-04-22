@@ -1176,17 +1176,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Constructor(s)
 
+        #region (private) EMPRoaming(EMPServer, EMPClient)
+
         /// <summary>
         /// Create a new EMP roaming.
         /// </summary>
-        /// <param name="EMPClient">A EMP client.</param>
-        /// <param name="EMPServer">A EMP sever.</param>
-        public EMPRoaming(EMPClient     EMPClient,
-                          EMPServerAPI  EMPServer)
+        /// <param name="EMPServer">An EMP Server.</param>
+        /// <param name="EMPClient">An EMP client.</param>
+        private EMPRoaming(EMPServerAPI  EMPServer,
+                           EMPClient     EMPClient)
         {
 
-            this.EMPClient  = EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!");
-            this.EMPServer  = EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!");
+            this.EMPClient  = EMPClient;
+            this.EMPServer  = EMPServer;
 
             // Link HTTP events...
             EMPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
@@ -1198,8 +1200,57 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        #region EMPRoaming(EMPClient)
 
-        #region PullEVSEData      (Request)
+        /// <summary>
+        /// Create a new EMP roaming.
+        /// </summary>
+        /// <param name="EMPClient">An EMP client.</param>
+        public EMPRoaming(EMPClient EMPClient)
+
+            : this(null,
+                   EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!"))
+
+        { }
+
+        #endregion
+
+        #region EMPRoaming(EMPServer)
+
+        /// <summary>
+        /// Create a new EMP roaming.
+        /// </summary>
+        /// <param name="EMPServer">An EMP Server.</param>
+        public EMPRoaming(EMPServerAPI  EMPServer)
+
+            : this(EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!"),
+                   null)
+
+        { }
+
+        #endregion
+
+        #region EMPRoaming(EMPClient, EMPServer)
+
+        /// <summary>
+        /// Create a new EMP roaming.
+        /// </summary>
+        /// <param name="EMPClient">An EMP client.</param>
+        /// <param name="EMPServer">An EMP Server.</param>
+        public EMPRoaming(EMPClient     EMPClient,
+                          EMPServerAPI  EMPServer)
+
+            : this(EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!"),
+                   EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!"))
+
+        { }
+
+        #endregion
+
+        #endregion
+
+
+        #region PullEVSEData              (Request)
 
         /// <summary>
         /// Create a new task querying EVSE data from the OICP server.
@@ -1215,7 +1266,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatus    (Request)
+        #region PullEVSEStatus            (Request)
 
         /// <summary>
         /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
@@ -1229,22 +1280,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatusById(Request)
+        #region PullEVSEStatusById        (Request)
 
-        ///// <summary>
-        ///// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
-        ///// </summary>
-        ///// <param name="Request">A PullEVSEStatusById request.</param>
-        //public Task<OICPResult<EVSEStatusById>>
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        public Task<OICPResult<PullEVSEStatusByIdResponse>>
 
-        //    PullEVSEStatusById(PullEVSEStatusByIdRequest Request)
+            PullEVSEStatusById(PullEVSEStatusByIdRequest Request)
 
-        //        => EMPClient.PullEVSEStatusById(Request);
+                => EMPClient.PullEVSEStatusById(Request);
+
+        #endregion
+
+        #region PullEVSEStatusByOperatorId(Request)
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        public Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>
+
+            PullEVSEStatusByOperatorId(PullEVSEStatusByOperatorIdRequest Request)
+
+                => EMPClient.PullEVSEStatusByOperatorId(Request);
 
         #endregion
 
 
-        #region PushAuthenticationData(Request)
+        #region PushAuthenticationData    (Request)
 
         ///// <summary>
         ///// Create a new task pushing provider authentication data records onto the OICP server.
@@ -1259,65 +1324,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region ReservationStart(Request)
+        #region ReservationStart          (Request)
 
-        ///// <summary>
-        ///// Create a reservation at the given EVSE.
-        ///// </summary>
-        ///// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
-        //public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+        /// <summary>
+        /// Create a reservation at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
-        //    AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request)
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request)
 
-        //        => EMPClient.AuthorizeRemoteReservationStart(Request);
-
-        #endregion
-
-        #region ReservationStop (Request)
-
-        ///// <summary>
-        ///// Delete a reservation at the given EVSE.
-        ///// </summary>
-        ///// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
-        //public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
-
-        //    AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest Request)
-
-        //        => EMPClient.AuthorizeRemoteReservationStop(Request);
+                => EMPClient.AuthorizeRemoteReservationStart(Request);
 
         #endregion
 
+        #region ReservationStop           (Request)
 
-        #region RemoteStart(Request)
+        /// <summary>
+        /// Delete a reservation at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
-        ///// <summary>
-        ///// Start a charging session at the given EVSE.
-        ///// </summary>
-        ///// <param name="Request">An AuthorizeRemoteStart request.</param>
-        //public Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+            AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest Request)
 
-        //    AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
-
-        //        => EMPClient.AuthorizeRemoteStart(Request);
-
-        #endregion
-
-        #region RemoteStop (Request)
-
-        ///// <summary>
-        ///// Stop the given charging session at the given EVSE.
-        ///// </summary>
-        ///// <param name="Request">An AuthorizeRemoteStop request.</param>
-        //public Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
-
-        //    AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request)
-
-        //        => EMPClient.AuthorizeRemoteStop(Request);
+                => EMPClient.AuthorizeRemoteReservationStop(Request);
 
         #endregion
 
+        #region RemoteStart               (Request)
 
-        #region GetChargeDetailRecords(Request)
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
+
+                => EMPClient.AuthorizeRemoteStart(Request);
+
+        #endregion
+
+        #region RemoteStop                (Request)
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
+        public Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
+
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest Request)
+
+                => EMPClient.AuthorizeRemoteStop(Request);
+
+        #endregion
+
+
+        #region GetChargeDetailRecords    (Request)
 
         ///// <summary>
         ///// Create a new task querying charge detail records from the OICP server.

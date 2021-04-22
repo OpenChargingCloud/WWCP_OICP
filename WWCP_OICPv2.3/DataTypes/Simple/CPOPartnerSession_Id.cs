@@ -92,20 +92,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static CPOPartnerSession_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text-representation of a CPO charging session identification must not be null or empty!");
-
-            #endregion
-
             if (TryParse(Text, out CPOPartnerSession_Id sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Invalid text-representation of a CPO charging session identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a CPO charging session identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -152,14 +143,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text != null)
-                Text = Text.Trim();
+            SessionId  = default;
+            Text       = Text?.Trim();
 
             if (Text.IsNullOrEmpty())
-            {
-                SessionId = default;
                 return false;
-            }
 
             #endregion
 
@@ -169,14 +157,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return true;
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            SessionId = default;
             return false;
 
         }

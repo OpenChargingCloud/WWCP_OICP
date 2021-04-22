@@ -37,9 +37,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The OICP EMP HTTP server API.
+    /// The OICP EMP HTTP Server API.
     /// </summary>
-    public class EMPServerAPI : HTTPAPI
+    public partial class EMPServerAPI : HTTPAPI
     {
 
         #region Data

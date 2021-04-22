@@ -40,7 +40,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         private readonly String InternalId;
 
-
         /// <summary>
         /// The regular expression for parsing a PIN.
         /// </summary>
@@ -91,10 +90,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PIN uid))
                 return uid;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a PIN must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a PIN is invalid!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a PIN: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -112,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PIN uid))
                 return uid;
 
-            return new PIN?();
+            return default;
 
         }
 
@@ -128,11 +125,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PIN PIN)
         {
 
+            #region Initial checks
+
+            PIN   = default;
+            Text  = Text?.Trim();
+
+            if (Text.IsNullOrEmpty())
+                return false;
+
+            #endregion
+
             try
             {
 
-                if (Text != null &&
-                    PIN_RegEx.IsMatch(Text.ToUpper()))
+                if (PIN_RegEx.IsMatch(Text.ToUpper()))
                 {
                     PIN = new PIN(Text);
                     return true;
@@ -142,7 +148,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch
             { }
 
-            PIN = default;
             return false;
 
         }

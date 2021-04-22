@@ -56,10 +56,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Identification         Identification         { get; }
 
         /// <summary>
-        /// The charging session identification.
+        /// An optional charging session identification.
         /// </summary>
-        [Mandatory]
-        public Session_Id             SessionId              { get; }
+        [Optional]
+        public Session_Id?            SessionId              { get; }
 
         /// <summary>
         /// An optional CPO partner session identification.
@@ -89,7 +89,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="EVSEId">An EVSE identification.</param>
         /// <param name="Identification">An user or contract identification.</param>
-        /// <param name="SessionId">A charging session identification.</param>
+        /// <param name="SessionId">An optional charging session identification.</param>
         /// <param name="CPOPartnerSessionId">An optional CPO partner session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional EMP partner session identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification.</param>
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public AuthorizeRemoteStartRequest(Provider_Id            ProviderId,
                                            EVSE_Id                EVSEId,
                                            Identification         Identification,
-                                           Session_Id             SessionId,
+                                           Session_Id?            SessionId             = null,
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
@@ -319,15 +319,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse SessionId                 [mandatory]
+                #region Parse SessionId                 [optional]
 
-                if (!JSON.ParseMandatory("SessionID",
-                                         "session identification",
-                                         Session_Id.TryParse,
-                                         out Session_Id SessionId,
-                                         out ErrorResponse))
+                if (JSON.ParseOptional("SessionID",
+                                       "charging session identification",
+                                       Session_Id.TryParse,
+                                       out Session_Id? SessionId,
+                                       out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -473,7 +474,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("ProviderID",                  ProviderId.               ToString()),
                            new JProperty("EvseID",                      EVSEId.                   ToString()),
                            new JProperty("Identification",              Identification.           ToJSON(CustomIdentificationSerializer)),
-                           new JProperty("SessionID",                   SessionId.                ToString()),
+
+                           SessionId.HasValue
+                               ? new JProperty("SessionID",             SessionId.          Value.ToString())
+                               : null,
 
                            CPOPartnerSessionId.HasValue
                                ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
@@ -579,7 +583,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             return ProviderId.    Equals(AuthorizeRemoteStartRequest.ProviderId)     &&
                    EVSEId.        Equals(AuthorizeRemoteStartRequest.EVSEId)         &&
                    Identification.Equals(AuthorizeRemoteStartRequest.Identification) &&
-                   SessionId.     Equals(AuthorizeRemoteStartRequest.SessionId)      &&
+
+                   ((!SessionId.          HasValue && !AuthorizeRemoteStartRequest.SessionId.          HasValue) ||
+                     (SessionId.          HasValue &&  AuthorizeRemoteStartRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStartRequest.SessionId.          Value))) &&
 
                    ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue) ||
                      (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.CPOPartnerSessionId.Value))) &&
@@ -610,8 +616,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return ProviderId.          GetHashCode()       * 17 ^
                        EVSEId.              GetHashCode()       * 13 ^
                        Identification.      GetHashCode()       * 11 ^
-                       SessionId.           GetHashCode()       *  7 ^
 
+                      (SessionId?.          GetHashCode() ?? 0) *  7 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (PartnerProductId?.   GetHashCode() ?? 0);

@@ -27,179 +27,187 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// A EMP Server API logger.
+    /// The EMP client.
     /// </summary>
-    public class EMPServerAPILogger : HTTPServerLogger
+    public partial class EMPServerAPI
     {
 
-        #region Data
-
         /// <summary>
-        /// The default context of this logger.
+        /// A EMP Server API logger.
         /// </summary>
-        public const String DefaultContext = "EMPServerAPI";
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The linked EMP Server API.
-        /// </summary>
-        public EMPServerAPI  EMPServerAPI    { get; }
-
-        #endregion
-
-        #region Constructor(s)
-
-        #region EMPServerAPILogger(EMPServerAPI, Context = DefaultContext, LogFileCreator = null)
-
-        /// <summary>
-        /// Create a new EMP Server API logger using the default logging delegates.
-        /// </summary>
-        /// <param name="EMPServerAPI">An EMP Server API.</param>
-        /// <param name="Context">A context of this API.</param>
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPServerAPILogger(EMPServerAPI            EMPServerAPI,
-                                  String                  Context         = DefaultContext,
-                                  LogfileCreatorDelegate  LogFileCreator  = null)
-
-            : this(EMPServerAPI,
-                   Context,
-                   null,
-                   null,
-                   null,
-                   null,
-                   LogFileCreator: LogFileCreator)
-
-        { }
-
-        #endregion
-
-        #region EMPServerAPILogger(EMPServerAPI, Context, ... Logging delegates ...)
-
-        /// <summary>
-        /// Create a new EMP Server API logger using the given logging delegates.
-        /// </summary>
-        /// <param name="EMPServerAPI">An EMP Server API.</param>
-        /// <param name="Context">A context of this API.</param>
-        /// 
-        /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-        /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
-        /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-        /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
-        /// 
-        /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-        /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-        /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
-        /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
-        /// 
-        /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
-        /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
-        /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-        /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
-        /// 
-        /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
-        public EMPServerAPILogger(EMPServerAPI                EMPServerAPI,
-                                  String                      Context,
-
-                                  HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
-                                  HTTPResponseLoggerDelegate  LogHTTPResponse_toConsole,
-                                  HTTPRequestLoggerDelegate   LogHTTPRequest_toDisc,
-                                  HTTPResponseLoggerDelegate  LogHTTPResponse_toDisc,
-
-                                  HTTPRequestLoggerDelegate   LogHTTPRequest_toNetwork    = null,
-                                  HTTPResponseLoggerDelegate  LogHTTPResponse_toNetwork   = null,
-                                  HTTPRequestLoggerDelegate   LogHTTPRequest_toHTTPSSE    = null,
-                                  HTTPResponseLoggerDelegate  LogHTTPResponse_toHTTPSSE   = null,
-
-                                  HTTPResponseLoggerDelegate  LogHTTPError_toConsole      = null,
-                                  HTTPResponseLoggerDelegate  LogHTTPError_toDisc         = null,
-                                  HTTPResponseLoggerDelegate  LogHTTPError_toNetwork      = null,
-                                  HTTPResponseLoggerDelegate  LogHTTPError_toHTTPSSE      = null,
-
-                                  LogfileCreatorDelegate      LogFileCreator              = null)
-
-            : base(EMPServerAPI.HTTPServer,
-                   Context,
-
-                   LogHTTPRequest_toConsole,
-                   LogHTTPResponse_toConsole,
-                   LogHTTPRequest_toDisc,
-                   LogHTTPResponse_toDisc,
-
-                   LogHTTPRequest_toNetwork,
-                   LogHTTPResponse_toNetwork,
-                   LogHTTPRequest_toHTTPSSE,
-                   LogHTTPResponse_toHTTPSSE,
-
-                   LogHTTPError_toConsole,
-                   LogHTTPError_toDisc,
-                   LogHTTPError_toNetwork,
-                   LogHTTPError_toHTTPSSE,
-
-                   LogFileCreator)
-
+        public class Logger : HTTPServerLogger
         {
 
-            this.EMPServerAPI = EMPServerAPI ?? throw new ArgumentNullException(nameof(EMPServerAPI), "The given EMP Server API must not be null!");
+            #region Data
 
-            #region AuthorizeStart/-Stop
-
-            RegisterEvent2("AuthorizeStartRequest",
-                           handler => EMPServerAPI.OnAuthorizeStartHTTPRequest += handler,
-                           handler => EMPServerAPI.OnAuthorizeStartHTTPRequest -= handler,
-                           "AuthorizeStart", "Authorize", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-            RegisterEvent2("AuthorizationStartResponse",
-                           handler => EMPServerAPI.OnAuthorizationStartHTTPResponse += handler,
-                           handler => EMPServerAPI.OnAuthorizationStartHTTPResponse -= handler,
-                           "AuthorizeStart", "Authorize", "Authorization", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-
-            RegisterEvent2("AuthorizeStopRequest",
-                           handler => EMPServerAPI.OnAuthorizeStopHTTPRequest += handler,
-                           handler => EMPServerAPI.OnAuthorizeStopHTTPRequest -= handler,
-                           "AuthorizeStop", "Authorize", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
-
-            RegisterEvent2("AuthorizationStopResponse",
-                           handler => EMPServerAPI.OnAuthorizationStopHTTPResponse += handler,
-                           handler => EMPServerAPI.OnAuthorizationStopHTTPResponse -= handler,
-                           "AuthorizeStop", "Authorize", "Authorization", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            /// <summary>
+            /// The default context of this logger.
+            /// </summary>
+            public const String DefaultContext = "EMPServerAPI";
 
             #endregion
 
-            #region Charge Detail Record
+            #region Properties
 
-            RegisterEvent2("ChargeDetailRecordRequest",
-                           handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest += handler,
-                           handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest -= handler,
-                           "ChargeDetailRecord", "Request", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            /// <summary>
+            /// The linked EMP Server API.
+            /// </summary>
+            public EMPServerAPI  EMPServerAPI    { get; }
 
-            RegisterEvent2("ChargeDetailRecordResponse",
-                           handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse += handler,
-                           handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse -= handler,
-                           "ChargeDetailRecord", "Response", "All").
-                RegisterDefaultConsoleLogTarget(this).
-                RegisterDefaultDiscLogTarget(this);
+            #endregion
+
+            #region Constructor(s)
+
+            #region EMPServerAPILogger(EMPServerAPI, Context = DefaultContext, LogFileCreator = null)
+
+            /// <summary>
+            /// Create a new EMP Server API logger using the default logging delegates.
+            /// </summary>
+            /// <param name="EMPServerAPI">An EMP Server API.</param>
+            /// <param name="Context">A context of this API.</param>
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public Logger(EMPServerAPI            EMPServerAPI,
+                          String                  Context         = DefaultContext,
+                          LogfileCreatorDelegate  LogFileCreator  = null)
+
+                : this(EMPServerAPI,
+                       Context,
+                       null,
+                       null,
+                       null,
+                       null,
+                       LogFileCreator: LogFileCreator)
+
+            { }
+
+            #endregion
+
+            #region EMPServerAPILogger(EMPServerAPI, Context, ... Logging delegates ...)
+
+            /// <summary>
+            /// Create a new EMP Server API logger using the given logging delegates.
+            /// </summary>
+            /// <param name="EMPServerAPI">An EMP Server API.</param>
+            /// <param name="Context">A context of this API.</param>
+            /// 
+            /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
+            /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
+            /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
+            /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+            /// 
+            /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
+            /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
+            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
+            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
+            /// 
+            /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
+            /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
+            /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
+            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
+            /// 
+            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            public Logger(EMPServerAPI                EMPServerAPI,
+                          String                      Context,
+
+                          HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
+                          HTTPResponseLoggerDelegate  LogHTTPResponse_toConsole,
+                          HTTPRequestLoggerDelegate   LogHTTPRequest_toDisc,
+                          HTTPResponseLoggerDelegate  LogHTTPResponse_toDisc,
+
+                          HTTPRequestLoggerDelegate   LogHTTPRequest_toNetwork    = null,
+                          HTTPResponseLoggerDelegate  LogHTTPResponse_toNetwork   = null,
+                          HTTPRequestLoggerDelegate   LogHTTPRequest_toHTTPSSE    = null,
+                          HTTPResponseLoggerDelegate  LogHTTPResponse_toHTTPSSE   = null,
+
+                          HTTPResponseLoggerDelegate  LogHTTPError_toConsole      = null,
+                          HTTPResponseLoggerDelegate  LogHTTPError_toDisc         = null,
+                          HTTPResponseLoggerDelegate  LogHTTPError_toNetwork      = null,
+                          HTTPResponseLoggerDelegate  LogHTTPError_toHTTPSSE      = null,
+
+                          LogfileCreatorDelegate      LogFileCreator              = null)
+
+                : base(EMPServerAPI.HTTPServer,
+                       Context,
+
+                       LogHTTPRequest_toConsole,
+                       LogHTTPResponse_toConsole,
+                       LogHTTPRequest_toDisc,
+                       LogHTTPResponse_toDisc,
+
+                       LogHTTPRequest_toNetwork,
+                       LogHTTPResponse_toNetwork,
+                       LogHTTPRequest_toHTTPSSE,
+                       LogHTTPResponse_toHTTPSSE,
+
+                       LogHTTPError_toConsole,
+                       LogHTTPError_toDisc,
+                       LogHTTPError_toNetwork,
+                       LogHTTPError_toHTTPSSE,
+
+                       LogFileCreator)
+
+            {
+
+                this.EMPServerAPI = EMPServerAPI ?? throw new ArgumentNullException(nameof(EMPServerAPI), "The given EMP Server API must not be null!");
+
+                #region AuthorizeStart/-Stop
+
+                RegisterEvent2("AuthorizeStartRequest",
+                               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest += handler,
+                               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest -= handler,
+                               "AuthorizeStart", "Authorize", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("AuthorizationStartResponse",
+                               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse += handler,
+                               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse -= handler,
+                               "AuthorizeStart", "Authorize", "Authorization", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent2("AuthorizeStopRequest",
+                               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest += handler,
+                               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest -= handler,
+                               "AuthorizeStop", "Authorize", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("AuthorizationStopResponse",
+                               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse += handler,
+                               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse -= handler,
+                               "AuthorizeStop", "Authorize", "Authorization", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region Charge Detail Record
+
+                RegisterEvent2("ChargeDetailRecordRequest",
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest += handler,
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest -= handler,
+                               "ChargeDetailRecord", "Request", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("ChargeDetailRecordResponse",
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse += handler,
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse -= handler,
+                               "ChargeDetailRecord", "Response", "All").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+            }
+
+            #endregion
 
             #endregion
 
         }
-
-        #endregion
-
-        #endregion
 
     }
 

@@ -91,10 +91,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out UID uid))
                 return uid;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a RFID card (user) identification must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a RFID card (user) identification is invalid!", nameof(Text));
+            throw new ArgumentException("Invalid text-representation of a RFID card (user) identification: '" + Text + "'!",
+                                        nameof(Text));
 
         }
 
@@ -112,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out UID uid))
                 return uid;
 
-            return new UID?();
+            return default;
 
         }
 
@@ -128,12 +126,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out UID UID)
         {
 
-            Text = Text?.Trim()?.ToUpper();
+            #region Initial checks
+
+            UID   = default;
+            Text  = Text?.Trim()?.ToUpper();
+
+            if (Text.IsNullOrEmpty())
+                return false;
+
+            #endregion
 
             try
             {
 
-                if (Text.IsNotNullOrEmpty() && UID_RegEx.IsMatch(Text))
+                if (UID_RegEx.IsMatch(Text))
                 {
                     UID = new UID(Text);
                     return true;
@@ -143,7 +149,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch
             { }
 
-            UID = default;
             return false;
 
         }
