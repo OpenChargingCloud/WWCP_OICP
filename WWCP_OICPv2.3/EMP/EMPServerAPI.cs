@@ -233,33 +233,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMP HTTP server API.
+        /// Create a new EMP HTTP Server API.
         /// </summary>
-        /// <param name="ServerCertificateSelector"></param>
-        /// <param name="ClientCertificateSelector"></param>
-        /// <param name="ClientCertificateValidator"></param>
-        /// <param name="AllowedTLSProtocols"></param>
-        /// <param name="HTTPHostname"></param>
-        /// <param name="HTTPServerPort"></param>
-        /// <param name="HTTPServerName"></param>
-        /// <param name="ExternalDNSName"></param>
-        /// <param name="URLPathPrefix"></param>
-        /// <param name="ServiceName"></param>
-        /// <param name="DNSClient"></param>
-        /// <param name="AutoStart"></param>
-        public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
-                            LocalCertificateSelectionCallback    ClientCertificateSelector,
-                            RemoteCertificateValidationCallback  ClientCertificateValidator,
-                            SslProtocols                         AllowedTLSProtocols   = SslProtocols.Tls12 | SslProtocols.Tls13,
-                            HTTPHostname?                        HTTPHostname          = null,
-                            IPPort?                              HTTPServerPort        = null,
-                            String                               HTTPServerName        = DefaultHTTPServerName,
-                            String                               ExternalDNSName       = null,
-                            HTTPPath?                            URLPathPrefix         = null,
-                            HTTPPath?                            BasePath              = null,
-                            String                               ServiceName           = DefaultHTTPServiceName,
-                            DNSClient                            DNSClient             = null,
-                            Boolean                              AutoStart             = false)
+        public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                            LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                            RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                            SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            HTTPHostname?                        HTTPHostname                 = null,
+                            IPPort?                              HTTPServerPort               = null,
+                            String                               HTTPServerName               = DefaultHTTPServerName,
+                            String                               ExternalDNSName              = null,
+                            HTTPPath?                            BasePath                     = null,
+                            HTTPPath?                            URLPathPrefix                = null,
+                            String                               ServiceName                  = DefaultHTTPServiceName,
+                            Boolean                              DisableLogging               = false,
+                            String                               LoggingContext               = null,
+                            LogfileCreatorDelegate               LogfileCreator               = null,
+                            DNSClient                            DNSClient                    = null,
+                            Boolean                              AutoStart                    = false)
 
             : base(ServerCertificateSelector,
                    ClientCertificateSelector,
@@ -278,6 +269,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         {
 
             RegisterURLTemplates();
+
+            this.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingContext,
+                                                LogfileCreator)
+                                   : null;
 
             if (AutoStart)
                 HTTPServer.Start();

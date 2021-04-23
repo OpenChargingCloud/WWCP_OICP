@@ -77,6 +77,9 @@
     <Compile Include="EMP\EMPServerAPILogger.cs" />
     <Compile Include="EMP\EMPServerAPIDelegates.cs" />
     <Compile Include="EMP\IEMPClient.cs" />
+    <Compile Include="Messages\APagedRequest.cs" />
+    <Compile Include="Messages\IPagedResponse.cs" />
+    <Compile Include="Messages\APagedResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
@@ -91,6 +94,8 @@
     <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdResponse.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusResponse.cs" />
     <Compile Include="Messages\EMP\PullEVSEStatusByIdResponse.cs" />
     <Compile Include="DataTypes\Complex\I18NText.cs" />

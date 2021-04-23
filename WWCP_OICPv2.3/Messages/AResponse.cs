@@ -66,16 +66,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public TimeSpan          Runtime              { get; }
 
         /// <summary>
-        /// The optional Hubject process identification of the request.
-        /// </summary>
-        [Optional]
-        public Process_Id?       ProcessId            { get; }
-
-        /// <summary>
         /// The HTTP response.
         /// </summary>
         [Optional]
         public HTTPResponse      HTTPResponse         { get; }
+
+        /// <summary>
+        /// The optional Hubject process identification of the request.
+        /// </summary>
+        [Optional]
+        public Process_Id?       ProcessId            { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
@@ -94,15 +94,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         protected AResponse(TRequest          Request,
                             DateTime          ResponseTimestamp,
                             EventTracking_Id  EventTrackingId,
                             TimeSpan          Runtime,
-                            Process_Id?       ProcessId      = null,
                             HTTPResponse      HTTPResponse   = null,
+                            Process_Id?       ProcessId      = null,
                             JObject           CustomData     = null)
         {
 
@@ -110,8 +110,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ResponseTimestamp  = ResponseTimestamp;
             this.EventTrackingId    = EventTrackingId;
             this.Runtime            = Runtime;
-            this.ProcessId          = ProcessId;
             this.HTTPResponse       = HTTPResponse;
+            this.ProcessId          = ProcessId;
             this.CustomData         = CustomData;
 
         }
@@ -188,18 +188,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new generic response.
             /// </summary>
             /// <param name="Request">The request leading to this result.</param>
-            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
             /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
+            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
             protected Builder(TRequest          Request             = null,
                               DateTime?         ResponseTimestamp   = null,
                               EventTracking_Id  EventTrackingId     = null,
                               TimeSpan?         Runtime             = null,
-                              Process_Id?       ProcessId           = null,
                               HTTPResponse      HTTPResponse        = null,
+                              Process_Id?       ProcessId           = null,
                               JObject           CustomData          = null)
             {
 
@@ -207,8 +207,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.ResponseTimestamp  = ResponseTimestamp;
                 this.EventTrackingId    = EventTrackingId;
                 this.Runtime            = Runtime;
-                this.ProcessId          = ProcessId;
                 this.HTTPResponse       = HTTPResponse;
+                this.ProcessId          = ProcessId;
                 this.CustomData         = CustomData;
 
             }

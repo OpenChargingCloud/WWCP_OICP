@@ -965,23 +965,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  new PullEVSEDataRequest(
                                      providerId.Value,
                                      LastCall,
-                                     null, //Page,
-                                     null, //Size,
 
-                                     null, //OperatorIdFilter,
-                                     CountryCodeFilter,
-                                     null, //AccessibilityFilter                    = null,
-                                     null, //AuthenticationModeFilter               = null,
-                                     null, //CalibrationLawDataAvailabilityFilter   = null,
-                                     null, //RenewableEnergyFilter                  = null,
-                                     null, //IsHubjectCompatibleFilter              = null,
-                                     null, //IsOpen24HoursFilter                    = null,
+                                     null, // OperatorIdFilter
+                                     null, // CountryCodeFilter
+                                     null, // AccessibilityFilter
+                                     null, // AuthenticationModeFilter
+                                     null, // CalibrationLawDataAvailabilityFilter
+                                     null, // RenewableEnergyFilter
+                                     null, // IsHubjectCompatibleFilter
+                                     null, // IsOpen24HoursFilter
 
-                                     null, //SearchCenter,
-                                     null, //DistanceKM,
-                                     GeoCoordinatesFormats.DecimalDegree,
+                                     null, // SearchCenter
+                                     null, // DistanceKM
+                                     null, // GeoCoordinatesResponseFormat
 
-                                     null, //CustomData,
+                                     null, // Page
+                                     null, // Size
+                                     null, // SortOrder
+                                     null, // CustomData
 
                                      Timestamp,
                                      CancellationToken,
