@@ -22,6 +22,8 @@ using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -56,6 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications to query.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -63,13 +66,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEStatusByIdRequest(Provider_Id           ProviderId,
                                          IEnumerable<EVSE_Id>  EVSEIds,
+                                         JObject               CustomData          = null,
 
                                          DateTime?             Timestamp           = null,
                                          CancellationToken?    CancellationToken   = null,
                                          EventTracking_Id      EventTrackingId     = null,
                                          TimeSpan?             RequestTimeout      = null)
 
-            : base(null,
+            : base(CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -77,11 +81,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            if (EVSEIds.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(EVSEIds),     "The given enumeration of EVSE identifications must not be null!");
-
             this.ProviderId  = ProviderId;
-            this.EVSEIds     = EVSEIds;
+            this.EVSEIds     = EVSEIds ?? new EVSE_Id[0];
 
         }
 
@@ -89,6 +90,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         #region Documentation
+
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#512-eroamingpullevsestatusbyid-message
 
         // {
         //   "ProviderID": "string",
@@ -99,236 +102,201 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        //#region (static) Parse(PullEVSEStatusByIdXML,  ..., OnException = null, ...)
+        #region (static) Parse   (JSON, CustomPullEVSEStatusByIdRequestParser = null)
 
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
-        ///// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static PullEVSEStatusByIdRequest Parse(XElement                                            PullEVSEStatusByIdXML,
-        //                                              CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
-        //                                              OnExceptionDelegate                                 OnException                             = null,
+        /// <summary>
+        /// Parse the given JSON representation of a PullEVSEStatusById request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById JSON objects.</param>
+        public static PullEVSEStatusByIdRequest Parse(JObject                                                 JSON,
+                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        {
 
-        //                                              DateTime?                                           Timestamp                               = null,
-        //                                              CancellationToken?                                  CancellationToken                       = null,
-        //                                              EventTracking_Id                                    EventTrackingId                         = null,
-        //                                              TimeSpan?                                           RequestTimeout                          = null)
+            if (TryParse(JSON,
+                         out PullEVSEStatusByIdRequest  pullEVSEStatusResponse,
+                         out String                     ErrorResponse,
+                         CustomPullEVSEStatusByIdRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
 
-        //{
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusById request is invalid: " + ErrorResponse, nameof(JSON));
 
-        //    if (TryParse(PullEVSEStatusByIdXML,
-        //                 out PullEVSEStatusByIdRequest _PullEVSEStatusById,
-        //                 CustomPullEVSEStatusByIdRequestParser,
-        //                 OnException,
+        }
 
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
+        #endregion
 
-        //        return _PullEVSEStatusById;
+        #region (static) Parse   (Text, CustomPullEVSEStatusByIdRequestParser = null)
 
-        //    return null;
+        /// <summary>
+        /// Parse the given text representation of a PullEVSEStatusById request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
+        public static PullEVSEStatusByIdRequest Parse(String                                                  Text,
+                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        {
 
-        //}
+            if (TryParse(Text,
+                         out PullEVSEStatusByIdRequest  pullEVSEStatusResponse,
+                         out String                     ErrorResponse,
+                         CustomPullEVSEStatusByIdRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
 
-        //#endregion
+            throw new ArgumentException("The given text representation of a PullEVSEStatusById request is invalid: " + ErrorResponse, nameof(Text));
 
-        //#region (static) Parse(PullEVSEStatusByIdText, ..., OnException = null, ...)
+        }
 
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByIdText">The text to parse.</param>
-        ///// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static PullEVSEStatusByIdRequest Parse(String                                              PullEVSEStatusByIdText,
-        //                                              CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
-        //                                              OnExceptionDelegate                                 OnException                             = null,
+        #endregion
 
-        //                                              DateTime?                                           Timestamp                               = null,
-        //                                              CancellationToken?                                  CancellationToken                       = null,
-        //                                              EventTracking_Id                                    EventTrackingId                         = null,
-        //                                              TimeSpan?                                           RequestTimeout                          = null)
+        #region (static) TryParse(JSON, out PullEVSEStatusByIdRequest, out ErrorResponse, CustomPullEVSEStatusByIdRequestParser = null)
 
-        //{
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEStatusById request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEStatusByIdRequest">The parsed PullEVSEStatusById request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
+        public static Boolean TryParse(JObject                                                 JSON,
+                                       out PullEVSEStatusByIdRequest                           PullEVSEStatusByIdRequest,
+                                       out String                                              ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        {
 
-        //    if (TryParse(PullEVSEStatusByIdText,
-        //                 out PullEVSEStatusByIdRequest _PullEVSEStatusById,
-        //                 CustomPullEVSEStatusByIdRequestParser,
-        //                 OnException,
+            try
+            {
 
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
+                PullEVSEStatusByIdRequest = default;
 
-        //        return _PullEVSEStatusById;
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
 
-        //    return null;
+                #region Parse ProviderId     [mandatory]
 
-        //}
+                if (!JSON.ParseMandatory("ProviderID",
+                                         "provider identification",
+                                         Provider_Id.TryParse,
+                                         out Provider_Id ProviderId,
+                                         out             ErrorResponse))
+                {
+                    return false;
+                }
 
-        //#endregion
+                #endregion
 
-        //#region (static) TryParse(PullEVSEStatusByIdXML,  out PullEVSEStatusById, ..., OnException = null, ...)
+                #region Parse EVSEIds        [optional]
 
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByIdXML">The XML to parse.</param>
-        ///// <param name="PullEVSEStatusById">The parsed pull EVSE status by id request.</param>
-        ///// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static Boolean TryParse(XElement                                            PullEVSEStatusByIdXML,
-        //                               out PullEVSEStatusByIdRequest                       PullEVSEStatusById,
-        //                               CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
-        //                               OnExceptionDelegate                                 OnException                             = null,
+                if (JSON.ParseOptionalHashSet("EvseID",
+                                              "EVSE identifications",
+                                              EVSE_Id.TryParse,
+                                              out HashSet<EVSE_Id> EVSEIds,
+                                              out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
 
-        //                               DateTime?                                           Timestamp                               = null,
-        //                               CancellationToken?                                  CancellationToken                       = null,
-        //                               EventTracking_Id                                    EventTrackingId                         = null,
-        //                               TimeSpan?                                           RequestTimeout                          = null)
+                #endregion
 
-        //{
+                #region Parse CustomData     [optional]
 
-        //    try
-        //    {
+                var CustomData = JSON["CustomData"] as JObject;
 
-        //        if (PullEVSEStatusByIdXML.Name != OICPNS.EVSEStatus + "eRoamingPullEvseStatusById")
-        //        {
-        //            PullEVSEStatusById = null;
-        //            return false;
-        //        }
-
-        //        PullEVSEStatusById = new PullEVSEStatusByIdRequest(PullEVSEStatusByIdXML.MapValueOrFail (OICPNS.EVSEStatus + "ProviderID",
-        //                                                                                                 Provider_Id.Parse),
-
-        //                                                           PullEVSEStatusByIdXML.MapValuesOrFail(OICPNS.EVSEStatus + "EvseId",
-        //                                                                                                 EVSE_Id.Parse),
-
-        //                                                           Timestamp,
-        //                                                           CancellationToken,
-        //                                                           EventTrackingId,
-        //                                                           RequestTimeout);
+                #endregion
 
 
-        //        if (CustomPullEVSEStatusByIdRequestParser != null)
-        //            PullEVSEStatusById = CustomPullEVSEStatusByIdRequestParser(PullEVSEStatusByIdXML,
-        //                                                                       PullEVSEStatusById);
+                PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(ProviderId,
+                                                                          EVSEIds?.ToArray() ?? new EVSE_Id[0],
+                                                                          CustomData);
 
-        //        return true;
+                if (CustomPullEVSEStatusByIdRequestParser != null)
+                    PullEVSEStatusByIdRequest = CustomPullEVSEStatusByIdRequestParser(JSON,
+                                                                                      PullEVSEStatusByIdRequest);
 
-        //    }
-        //    catch (Exception e)
-        //    {
+                return true;
 
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusByIdXML, e);
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusByIdRequest  = default;
+                ErrorResponse              = "The given JSON representation of a PullEVSEStatusById request is invalid: " + e.Message;
+                return false;
+            }
 
-        //        PullEVSEStatusById = null;
-        //        return false;
+        }
 
-        //    }
+        #endregion
 
-        //}
+        #region (static) TryParse(Text, out PullEVSEStatusByIdRequest, out ErrorResponse, CustomPullEVSEStatusByIdRequestParser = null)
 
-        //#endregion
+        /// <summary>
+        /// Try to parse the given text representation of a PullEVSEStatusById request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="PullEVSEStatusByIdRequest">The parsed PullEVSEStatusById request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
+        public static Boolean TryParse(String                                                  Text,
+                                       out PullEVSEStatusByIdRequest                           PullEVSEStatusByIdRequest,
+                                       out String                                              ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        {
 
-        //#region (static) TryParse(PullEVSEStatusByIdText, out PullEVSEStatusById, ..., OnException = null, ...)
+            try
+            {
 
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByIdText">The text to parse.</param>
-        ///// <param name="PullEVSEStatusById">The parsed pull EVSE status by id request.</param>
-        ///// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static Boolean TryParse(String                                              PullEVSEStatusByIdText,
-        //                               out PullEVSEStatusByIdRequest                       PullEVSEStatusById,
-        //                               CustomXMLParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null,
-        //                               OnExceptionDelegate                                 OnException                             = null,
+                return TryParse(JObject.Parse(Text),
+                                out PullEVSEStatusByIdRequest,
+                                out ErrorResponse,
+                                CustomPullEVSEStatusByIdRequestParser);
 
-        //                               DateTime?                                           Timestamp                               = null,
-        //                               CancellationToken?                                  CancellationToken                       = null,
-        //                               EventTracking_Id                                    EventTrackingId                         = null,
-        //                               TimeSpan?                                           RequestTimeout                          = null)
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusByIdRequest  = default;
+                ErrorResponse              = "The given text representation of a PullEVSEStatusById request is invalid: " + e.Message;
+                return false;
+            }
 
-        //{
+        }
 
-        //    try
-        //    {
+        #endregion
 
-        //        if (TryParse(XDocument.Parse(PullEVSEStatusByIdText).Root,
-        //                     out PullEVSEStatusById,
-        //                     CustomPullEVSEStatusByIdRequestParser,
-        //                     OnException,
+        #region ToJSON(CustomPullEVSEStatusByIdRequestSerializer = null)
 
-        //                     Timestamp,
-        //                     CancellationToken,
-        //                     EventTrackingId,
-        //                     RequestTimeout))
+        /// <summary>
+        /// Return a JSON-representation of this object.
+        /// </summary>
+        /// <param name="CustomPullEVSEStatusByIdRequestSerializer">A delegate to customize the serialization of PullEVSEStatusByIdRequest responses.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer   = null)
+        {
 
-        //            return true;
+            var JSON = JSONObject.Create(
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusByIdText, e);
-        //    }
+                           new JProperty("ProviderID",        ProviderId.ToString()),
 
-        //    PullEVSEStatusById = null;
-        //    return false;
+                           new JProperty("EvseID",            new JArray(EVSEIds.Select(evseId => evseId.ToString()))),
 
-        //}
+                           CustomData != null
+                               ? new JProperty("CustomData",  CustomData)
+                               : null
 
-        //#endregion
+                       );
 
-        //#region ToXML(CustomPullEVSEStatusByIdRequestSerializer = null)
+            return CustomPullEVSEStatusByIdRequestSerializer != null
+                       ? CustomPullEVSEStatusByIdRequestSerializer(this, JSON)
+                       : JSON;
 
-        ///// <summary>
-        ///// Return a XML representation of this object.
-        ///// </summary>
-        ///// <param name="CustomPullEVSEStatusByIdRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusById XML elements.</param>
-        //public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer = null)
-        //{
+        }
 
-        //    var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusById",
-
-        //                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
-
-        //                           EVSEIds.SafeSelect(evseid => new XElement(OICPNS.EVSEStatus + "EvseId", evseid.ToString()))
-
-        //                          );
-
-        //    return CustomPullEVSEStatusByIdRequestSerializer != null
-        //               ? CustomPullEVSEStatusByIdRequestSerializer(this, XML)
-        //               : XML;
-
-        //}
-
-        //#endregion
+        #endregion
 
 
         #region Operator overloading

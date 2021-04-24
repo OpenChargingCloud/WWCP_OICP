@@ -553,12 +553,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// An enumeration of EVSE status records grouped by their operators.
             /// </summary>
-            public HashSet<OperatorEVSEStatus>  OperatorEVSEStatus   { get; }
+            public HashSet<OperatorEVSEStatus>  OperatorEVSEStatus    { get; }
 
             /// <summary>
             /// The status code for this request.
             /// </summary>
-            public StatusCode.Builder           StatusCode           { get; set; }
+            public StatusCode.Builder           StatusCode            { get; set; }
 
             #endregion
 

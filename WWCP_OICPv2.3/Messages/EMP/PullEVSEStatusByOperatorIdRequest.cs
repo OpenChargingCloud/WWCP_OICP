@@ -19,12 +19,12 @@
 
 using System;
 using System.Linq;
-using System.Xml.Linq;
 using System.Threading;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
 
 #endregion
 
@@ -58,6 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId">The unique identification of the EVSP.</param>
         /// <param name="OperatorIds">An enumeration of up to 100 operator identifications to query.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -65,13 +66,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEStatusByOperatorIdRequest(Provider_Id               ProviderId,
                                                  IEnumerable<Operator_Id>  OperatorIds,
+                                                 JObject                   CustomData          = null,
 
                                                  DateTime?                 Timestamp           = null,
                                                  CancellationToken?        CancellationToken   = null,
                                                  EventTracking_Id          EventTrackingId     = null,
                                                  TimeSpan?                 RequestTimeout      = null)
 
-            : base(null,
+            : base(CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -79,11 +81,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            if (OperatorIds.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(OperatorIds),  "The given enumeration of operator identifications must not be null!");
-
             this.ProviderId   = ProviderId;
-            this.OperatorIds  = OperatorIds;
+            this.OperatorIds  = OperatorIds ?? new Operator_Id[0];
 
         }
 
@@ -101,238 +100,201 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        //#region (static) Parse(PullEVSEStatusByOperatorIdXML,  ..., OnException = null, ...)
+        #region (static) Parse   (JSON, CustomPullEVSEStatusByOperatorIdRequestParser = null)
 
-        ///// <summary>
-        ///// Parse the given XML representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByOperatorIdXML">The XML to parse.</param>
-        ///// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static PullEVSEStatusByOperatorIdRequest Parse(XElement                                                    PullEVSEStatusByOperatorIdXML,
-        //                                                      CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
-        //                                                      OnExceptionDelegate                                         OnException                                     = null,
+        /// <summary>
+        /// Parse the given JSON representation of a PullEVSEStatusByOperatorId request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId JSON objects.</param>
+        public static PullEVSEStatusByOperatorIdRequest Parse(JObject                                                         JSON,
+                                                              CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
+        {
 
-        //                                                      DateTime?                                                   Timestamp                                       = null,
-        //                                                      CancellationToken?                                          CancellationToken                               = null,
-        //                                                      EventTracking_Id                                            EventTrackingId                                 = null,
-        //                                                      TimeSpan?                                                   RequestTimeout                                  = null)
+            if (TryParse(JSON,
+                         out PullEVSEStatusByOperatorIdRequest  pullEVSEStatusResponse,
+                         out String                             ErrorResponse,
+                         CustomPullEVSEStatusByOperatorIdRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
 
-        //{
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId request is invalid: " + ErrorResponse, nameof(JSON));
 
-        //    if (TryParse(PullEVSEStatusByOperatorIdXML,
-        //                 out PullEVSEStatusByOperatorIdRequest pullEVSEStatusByOperatorId,
-        //                 CustomPullEVSEStatusByOperatorIdRequestParser,
-        //                 OnException,
+        }
 
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
-        //    {
-        //        return pullEVSEStatusByOperatorId;
-        //    }
+        #endregion
 
-        //    return null;
+        #region (static) Parse   (Text, CustomPullEVSEStatusByOperatorIdRequestParser = null)
 
-        //}
+        /// <summary>
+        /// Parse the given text representation of a PullEVSEStatusByOperatorId request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId request JSON objects.</param>
+        public static PullEVSEStatusByOperatorIdRequest Parse(String                                                          Text,
+                                                              CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
+        {
 
-        //#endregion
+            if (TryParse(Text,
+                         out PullEVSEStatusByOperatorIdRequest  pullEVSEStatusResponse,
+                         out String                             ErrorResponse,
+                         CustomPullEVSEStatusByOperatorIdRequestParser))
+            {
+                return pullEVSEStatusResponse;
+            }
 
-        //#region (static) Parse(PullEVSEStatusByOperatorIdText, ..., OnException = null, ...)
+            throw new ArgumentException("The given text representation of a PullEVSEStatusByOperatorId request is invalid: " + ErrorResponse, nameof(Text));
 
-        ///// <summary>
-        ///// Parse the given text-representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByOperatorIdText">The text to parse.</param>
-        ///// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static PullEVSEStatusByOperatorIdRequest Parse(String                                                      PullEVSEStatusByOperatorIdText,
-        //                                                      CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
-        //                                                      OnExceptionDelegate                                         OnException                                     = null,
+        }
 
-        //                                                      DateTime?                                                   Timestamp                                       = null,
-        //                                                      CancellationToken?                                          CancellationToken                               = null,
-        //                                                      EventTracking_Id                                            EventTrackingId                                 = null,
-        //                                                      TimeSpan?                                                   RequestTimeout                                  = null)
+        #endregion
 
-        //{
+        #region (static) TryParse(JSON, out PullEVSEStatusByOperatorIdRequest, out ErrorResponse, CustomPullEVSEStatusByOperatorIdRequestParser = null)
 
-        //    if (TryParse(PullEVSEStatusByOperatorIdText,
-        //                 out PullEVSEStatusByOperatorIdRequest pullEVSEStatusByOperatorId,
-        //                 CustomPullEVSEStatusByOperatorIdRequestParser,
-        //                 OnException,
+        /// <summary>
+        /// Try to parse the given JSON representation of a PullEVSEStatusByOperatorId request.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="PullEVSEStatusByOperatorIdRequest">The parsed PullEVSEStatusByOperatorId request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId request JSON objects.</param>
+        public static Boolean TryParse(JObject                                                         JSON,
+                                       out PullEVSEStatusByOperatorIdRequest                           PullEVSEStatusByOperatorIdRequest,
+                                       out String                                                      ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
+        {
 
-        //                 Timestamp,
-        //                 CancellationToken,
-        //                 EventTrackingId,
-        //                 RequestTimeout))
-        //    {
-        //        return pullEVSEStatusByOperatorId;
-        //    }
+            try
+            {
 
-        //    return null;
+                PullEVSEStatusByOperatorIdRequest = default;
 
-        //}
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
 
-        //#endregion
+                #region Parse ProviderId     [mandatory]
 
-        //#region (static) TryParse(PullEVSEStatusByOperatorIdXML,  out PullEVSEStatusByOperatorId, ..., OnException = null, ...)
+                if (!JSON.ParseMandatory("ProviderID",
+                                         "provider identification",
+                                         Provider_Id.TryParse,
+                                         out Provider_Id ProviderId,
+                                         out             ErrorResponse))
+                {
+                    return false;
+                }
 
-        ///// <summary>
-        ///// Try to parse the given XML representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByOperatorIdXML">The XML to parse.</param>
-        ///// <param name="PullEVSEStatusByOperatorId">The parsed pull EVSE status by id request.</param>
-        ///// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static Boolean TryParse(XElement                                                    PullEVSEStatusByOperatorIdXML,
-        //                               out PullEVSEStatusByOperatorIdRequest                       PullEVSEStatusByOperatorId,
-        //                               CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
-        //                               OnExceptionDelegate                                         OnException                                     = null,
+                #endregion
 
-        //                               DateTime?                                                   Timestamp                                       = null,
-        //                               CancellationToken?                                          CancellationToken                               = null,
-        //                               EventTracking_Id                                            EventTrackingId                                 = null,
-        //                               TimeSpan?                                                   RequestTimeout                                  = null)
+                #region Parse OperatorIds    [optional]
 
-        //{
+                if (JSON.ParseOptionalHashSet("OperatorID",
+                                              "EVSE operator identifications",
+                                              Operator_Id.TryParse,
+                                              out HashSet<Operator_Id> OperatorIds,
+                                              out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
 
-        //    try
-        //    {
+                #endregion
 
-        //        if (PullEVSEStatusByOperatorIdXML.Name != OICPNS.EVSEStatus + "eRoamingPullEvseStatusByOperatorId")
-        //        {
-        //            PullEVSEStatusByOperatorId = null;
-        //            return false;
-        //        }
+                #region Parse CustomData     [optional]
 
-        //        PullEVSEStatusByOperatorId = new PullEVSEStatusByOperatorIdRequest(PullEVSEStatusByOperatorIdXML.MapValueOrFail (OICPNS.EVSEStatus + "ProviderID",
-        //                                                                                                                         Provider_Id.Parse),
+                var CustomData = JSON["CustomData"] as JObject;
 
-        //                                                                           PullEVSEStatusByOperatorIdXML.MapValuesOrFail(OICPNS.EVSEStatus + "OperatorID",
-        //                                                                                                                         Operator_Id.Parse),
-
-        //                                                                           Timestamp,
-        //                                                                           CancellationToken,
-        //                                                                           EventTrackingId,
-        //                                                                           RequestTimeout);
+                #endregion
 
 
-        //        if (CustomPullEVSEStatusByOperatorIdRequestParser != null)
-        //            PullEVSEStatusByOperatorId = CustomPullEVSEStatusByOperatorIdRequestParser(PullEVSEStatusByOperatorIdXML,
-        //                                                                       PullEVSEStatusByOperatorId);
+                PullEVSEStatusByOperatorIdRequest = new PullEVSEStatusByOperatorIdRequest(ProviderId,
+                                                                                          OperatorIds?.ToArray() ?? new Operator_Id[0],
+                                                                                          CustomData);
 
-        //        return true;
+                if (CustomPullEVSEStatusByOperatorIdRequestParser != null)
+                    PullEVSEStatusByOperatorIdRequest = CustomPullEVSEStatusByOperatorIdRequestParser(JSON,
+                                                                                                      PullEVSEStatusByOperatorIdRequest);
 
-        //    }
-        //    catch (Exception e)
-        //    {
+                return true;
 
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusByOperatorIdXML, e);
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusByOperatorIdRequest  = default;
+                ErrorResponse                      = "The given JSON representation of a PullEVSEStatusByOperatorId request is invalid: " + e.Message;
+                return false;
+            }
 
-        //        PullEVSEStatusByOperatorId = null;
-        //        return false;
+        }
 
-        //    }
+        #endregion
 
-        //}
+        #region (static) TryParse(Text, out PullEVSEStatusByOperatorIdRequest, out ErrorResponse, CustomPullEVSEStatusByOperatorIdRequestParser = null)
 
-        //#endregion
+        /// <summary>
+        /// Try to parse the given text representation of a PullEVSEStatusByOperatorId request.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="PullEVSEStatusByOperatorIdRequest">The parsed PullEVSEStatusByOperatorId request.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId request JSON objects.</param>
+        public static Boolean TryParse(String                                                          Text,
+                                       out PullEVSEStatusByOperatorIdRequest                           PullEVSEStatusByOperatorIdRequest,
+                                       out String                                                      ErrorResponse,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
+        {
 
-        //#region (static) TryParse(PullEVSEStatusByOperatorIdText, out PullEVSEStatusByOperatorId, ..., OnException = null, ...)
+            try
+            {
 
-        ///// <summary>
-        ///// Try to parse the given text-representation of an OICP pull EVSE status by id request.
-        ///// </summary>
-        ///// <param name="PullEVSEStatusByOperatorIdText">The text to parse.</param>
-        ///// <param name="PullEVSEStatusByOperatorId">The parsed pull EVSE status by id request.</param>
-        ///// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId requests.</param>
-        ///// <param name="OnException">An optional delegate called whenever an exception occured.</param>
-        ///// 
-        ///// <param name="Timestamp">The optional timestamp of the request.</param>
-        ///// <param name="CancellationToken">An optional token to cancel this request.</param>
-        ///// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        ///// <param name="RequestTimeout">The timeout for this request.</param>
-        //public static Boolean TryParse(String                                                      PullEVSEStatusByOperatorIdText,
-        //                               out PullEVSEStatusByOperatorIdRequest                       PullEVSEStatusByOperatorId,
-        //                               CustomXMLParserDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestParser   = null,
-        //                               OnExceptionDelegate                                         OnException                                     = null,
+                return TryParse(JObject.Parse(Text),
+                                out PullEVSEStatusByOperatorIdRequest,
+                                out ErrorResponse,
+                                CustomPullEVSEStatusByOperatorIdRequestParser);
 
-        //                               DateTime?                                                   Timestamp                                       = null,
-        //                               CancellationToken?                                          CancellationToken                               = null,
-        //                               EventTracking_Id                                            EventTrackingId                                 = null,
-        //                               TimeSpan?                                                   RequestTimeout                                  = null)
+            }
+            catch (Exception e)
+            {
+                PullEVSEStatusByOperatorIdRequest  = default;
+                ErrorResponse                      = "The given text representation of a PullEVSEStatusByOperatorId request is invalid: " + e.Message;
+                return false;
+            }
 
-        //{
+        }
 
-        //    try
-        //    {
+        #endregion
 
-        //        if (TryParse(XDocument.Parse(PullEVSEStatusByOperatorIdText).Root,
-        //                     out PullEVSEStatusByOperatorId,
-        //                     CustomPullEVSEStatusByOperatorIdRequestParser,
-        //                     OnException,
+        #region ToJSON(CustomPullEVSEStatusByOperatorIdRequestSerializer = null)
 
-        //                     Timestamp,
-        //                     CancellationToken,
-        //                     EventTrackingId,
-        //                     RequestTimeout))
+        /// <summary>
+        /// Return a JSON-representation of this object.
+        /// </summary>
+        /// <param name="CustomPullEVSEStatusByOperatorIdRequestSerializer">A delegate to customize the serialization of PullEVSEStatusByOperatorIdRequest responses.</param>
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestSerializer   = null)
+        {
 
-        //            return true;
+            var JSON = JSONObject.Create(
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        OnException?.Invoke(DateTime.UtcNow, PullEVSEStatusByOperatorIdText, e);
-        //    }
+                           new JProperty("ProviderID",        ProviderId.ToString()),
 
-        //    PullEVSEStatusByOperatorId = null;
-        //    return false;
+                           new JProperty("OperatorID",        new JArray(OperatorIds.Select(operatorId => operatorId.ToString()))),
 
-        //}
+                           CustomData != null
+                               ? new JProperty("CustomData",  CustomData)
+                               : null
 
-        //#endregion
+                       );
 
-        //#region ToXML(CustomPullEVSEStatusByOperatorIdRequestSerializer = null)
+            return CustomPullEVSEStatusByOperatorIdRequestSerializer != null
+                       ? CustomPullEVSEStatusByOperatorIdRequestSerializer(this, JSON)
+                       : JSON;
 
-        ///// <summary>
-        ///// Return a XML representation of this object.
-        ///// </summary>
-        ///// <param name="CustomPullEVSEStatusByOperatorIdRequestSerializer">A delegate to serialize custom eRoamingPullEvseStatusByOperatorId XML elements.</param>
-        //public XElement ToXML(CustomXMLSerializerDelegate<PullEVSEStatusByOperatorIdRequest>  CustomPullEVSEStatusByOperatorIdRequestSerializer  = null)
-        //{
+        }
 
-        //    var XML = new XElement(OICPNS.EVSEStatus + "eRoamingPullEvseStatusByOperatorID",
-
-        //                           new XElement(OICPNS.EVSEStatus + "ProviderID", ProviderId.ToString()),
-
-        //                           OperatorIds.SafeSelect(evseid => new XElement(OICPNS.EVSEStatus + "OperatorID", evseid.ToString()))
-
-        //                          );
-
-        //    return CustomPullEVSEStatusByOperatorIdRequestSerializer != null
-        //               ? CustomPullEVSEStatusByOperatorIdRequestSerializer(this, XML)
-        //               : XML;
-
-        //}
-
-        //#endregion
+        #endregion
 
 
         #region Operator overloading
