@@ -1383,15 +1383,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region GetChargeDetailRecords    (Request)
 
-        ///// <summary>
-        ///// Create a new task querying charge detail records from the OICP server.
-        ///// </summary>
-        ///// <param name="Request">An GetChargeDetailRecords request.</param>
-        //public Task<OICPResult<GetChargeDetailRecordsResponse>>
+        /// <summary>
+        /// Create a new task querying charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="Request">An GetChargeDetailRecords request.</param>
+        public Task<OICPResult<GetChargeDetailRecordsResponse>>
 
-        //    GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
+            GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
 
-        //        => EMPClient.GetChargeDetailRecords(Request);
+                => EMPClient.GetChargeDetailRecords(Request);
 
         #endregion
 

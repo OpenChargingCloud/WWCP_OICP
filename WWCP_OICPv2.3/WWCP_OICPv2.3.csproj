@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CPO\CPORoaming.cs" />
     <Compile Include="CPO\CPOServerAPILogger.cs" />
+    <Compile Include="CPO\ICPOClientExtentions.cs" />
     <Compile Include="CPO\ICPOClient.cs" />
     <Compile Include="CPO\CPOClientDelegates.cs" />
     <Compile Include="CPO\CPOServerAPI.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="EMP\EMPServerAPI.cs" />
     <Compile Include="EMP\EMPServerAPILogger.cs" />
     <Compile Include="EMP\EMPServerAPIDelegates.cs" />
+    <Compile Include="EMP\IEMPClientExtentions.cs" />
     <Compile Include="EMP\IEMPClient.cs" />
     <Compile Include="Messages\APagedRequest.cs" />
     <Compile Include="Messages\IPagedResponse.cs" />

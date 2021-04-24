@@ -17,13 +17,8 @@
 
 #region Usings
 
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json.Linq;
-
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -32,22 +27,70 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// Extention methods for the EMP client interface.
-    /// </summary>
-    public static class IEMPClientExtentions
-    {
-
-
-    }
-
-
-    /// <summary>
     /// The common interface for all EMP clients.
     /// </summary>
     public interface IEMPClient : IHTTPClient
     {
 
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Request">A PullEVSEData request.</param>
+        Task<OICPResult<PullEVSEDataResponse>>                                     PullEVSEData                   (PullEVSEDataRequest                     Request);
 
+        /// <summary>
+        /// Upload the given EVSE status records.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatus request.</param>
+        Task<OICPResult<PullEVSEStatusResponse>>                                   PullEVSEStatus                 (PullEVSEStatusRequest                   Request);
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        Task<OICPResult<PullEVSEStatusByIdResponse>>                               PullEVSEStatusById             (PullEVSEStatusByIdRequest               Request);
+
+        /// <summary>
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// </summary>
+        /// <param name="Request">A PullEVSEStatusByOperatorId request.</param>
+        Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>                       PullEVSEStatusByOperatorId     (PullEVSEStatusByOperatorIdRequest       Request);
+
+        ///// <summary>
+        ///// Create a new task pushing provider authentication data records onto the OICP server.
+        ///// </summary>
+        ///// <param name="Request">An PushAuthenticationData request.</param>
+        //Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>> PushAuthenticationData(PushAuthenticationDataRequest Request);
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>  AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request);
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>   AuthorizeRemoteReservationStop (AuthorizeRemoteReservationStopRequest   Request);
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>             AuthorizeRemoteStart           (AuthorizeRemoteStartRequest             Request);
+
+        /// <summary>
+        /// Stop the given charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>              AuthorizeRemoteStop            (AuthorizeRemoteStopRequest              Request);
+
+        /// <summary>
+        /// Create a new task querying charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="Request">An GetChargeDetailRecords request.</param>
+        Task<OICPResult<GetChargeDetailRecordsResponse>>                           GetChargeDetailRecords         (GetChargeDetailRecordsRequest           Request);
 
     }
 
