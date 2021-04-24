@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// An e-mobility provider identification.
+        /// The unique identification of the e-mobility provider.
         /// </summary>
         [Mandatory]
         public Provider_Id       ProviderId          { get; }
@@ -68,7 +68,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullEVSEStatus request.
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>

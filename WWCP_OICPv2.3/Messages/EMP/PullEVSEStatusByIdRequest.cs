@@ -40,12 +40,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The e-mobility provider identification.
+        /// The unique identification of the e-mobility provider.
         /// </summary>
         public Provider_Id           ProviderId     { get; }
 
         /// <summary>
-        /// The enumeration of EVSE identifications to query.
+        /// The enumeration of EVSE identifications.
         /// </summary>
         public IEnumerable<EVSE_Id>  EVSEIds        { get; }
 
@@ -56,8 +56,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullEVSEStatusById request.
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
-        /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications to query.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
+        /// <param name="EVSEIds">An enumeration of up to 100 EVSE identifications.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>

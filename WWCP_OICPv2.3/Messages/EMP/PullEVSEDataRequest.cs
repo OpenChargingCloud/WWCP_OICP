@@ -40,7 +40,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// An e-mobility provider identification.
+        /// The unique identification of the e-mobility provider.
         /// </summary>
         public Provider_Id                                    ProviderId                              { get; }
 
@@ -106,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
-        /// <param name="ProviderId">The unique identification of the EVSP.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="LastCall">An optional timestamp of the last call. Cannot be combined with 'SearchCenter'.</param>
         /// 
         /// <param name="GeoCoordinatesResponseFormat">An optional response format for representing geo coordinates.</param>
