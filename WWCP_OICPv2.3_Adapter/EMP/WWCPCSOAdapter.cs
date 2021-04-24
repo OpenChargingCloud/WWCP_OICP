@@ -3227,12 +3227,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public static Boolean operator == (WWCPCSOAdapter WWCPCSOAdapter1, WWCPCSOAdapter WWCPCSOAdapter2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (Object.ReferenceEquals(WWCPCSOAdapter1, WWCPCSOAdapter2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) WWCPCSOAdapter1 == null) || ((Object) WWCPCSOAdapter2 == null))
+            if (WWCPCSOAdapter1 is null || WWCPCSOAdapter2 is null)
                 return false;
 
             return WWCPCSOAdapter1.Equals(WWCPCSOAdapter2);
@@ -3267,7 +3265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           WWCPCSOAdapter  WWCPCSOAdapter2)
         {
 
-            if ((Object) WWCPCSOAdapter1 == null)
+            if (WWCPCSOAdapter1 is null)
                 throw new ArgumentNullException(nameof(WWCPCSOAdapter1),  "The given WWCPCSOAdapter must not be null!");
 
             return WWCPCSOAdapter1.CompareTo(WWCPCSOAdapter2) < 0;
@@ -3303,7 +3301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           WWCPCSOAdapter WWCPCSOAdapter2)
         {
 
-            if ((Object) WWCPCSOAdapter1 == null)
+            if (WWCPCSOAdapter1 is null)
                 throw new ArgumentNullException(nameof(WWCPCSOAdapter1),  "The given WWCPCSOAdapter must not be null!");
 
             return WWCPCSOAdapter1.CompareTo(WWCPCSOAdapter2) > 0;
