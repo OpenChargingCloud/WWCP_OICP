@@ -21,7 +21,6 @@ charge point operators (CPOs) and e-mobility providers (EMPs).
 ### Documentation
 
 - Overview on the [OICP v2.3 implementation](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3)
-- 
 
 ### Your participation
 
