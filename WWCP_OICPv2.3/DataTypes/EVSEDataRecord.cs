@@ -64,6 +64,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         /// <summary>
+        /// The unique identification of the operator of the EVSE.
+        /// </summary>
+        [Mandatory]
+        public Operator_Id                          OperatorId                             { get; }
+
+        /// <summary>
+        /// The name of the operator of the EVSE.
+        /// </summary>
+        [Mandatory]
+        public String                               OperatorName                           { get; }
+
+        /// <summary>
         /// The identification of the charging station hosting the EVSE.
         /// </summary>
         [Optional]
@@ -252,6 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Mandatory]
         public FalseTrueAuto                        DynamicInfoAvailable                   { get; }
 
+
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
@@ -266,6 +279,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new Electric Vehicle Supply Equipment (EVSE) data record.
         /// </summary>
         /// <param name="Id">A unique EVSE identification.</param>
+        /// <param name="OperatorId">The unique identification of the operator of the EVSE.</param>
+        /// <param name="OperatorName">The name of the operator of the EVSE.</param>
         /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
         /// <param name="Address">The address of the EVSE.</param>
         /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
@@ -305,6 +320,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEDataRecord(EVSE_Id                           Id,
+                              Operator_Id                       OperatorId,
+                              String                            OperatorName,
                               I18NText                          ChargingStationName,
                               Address                           Address,
                               GeoCoordinates                    GeoCoordinates,
@@ -371,6 +388,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #endregion
 
             this.Id                                = Id;
+            this.OperatorId                        = OperatorId;
+            this.OperatorName                      = OperatorName;
             this.ChargingStationName               = ChargingStationName;
             this.Address                           = Address;
             this.GeoCoordinates                    = GeoCoordinates;
@@ -651,7 +670,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ChargingStationName               [mandatory]
+                #region Parse OperatorId                        [mandatory]
+
+                if (!JSON.ParseMandatory("OperatorID",
+                                         "operator identification",
+                                         Operator_Id.TryParse,
+                                         out Operator_Id OperatorId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse OperatorName                      [mandatory]
+
+                if (!JSON.ParseMandatoryText("OperatorName",
+                                             "operator name",
+                                             out String OperatorName,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingStationName               [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatoryJSONArray2("ChargingStationNames",
                                                    "multi-language charging station name",
@@ -659,8 +703,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    out I18NText ChargingStationName,
                                                    out ErrorResponse))
                 {
+
                     ChargingStationName = new I18NText(LanguageCode.en, "Unnamed station");
+
                     //return false;
+
                 }
 
                 #endregion
@@ -704,7 +751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ChargingFacilities                [mandatory]
+                #region Parse ChargingFacilities                [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatoryJSON("ChargingFacilities",
                                              "charging facilities",
@@ -712,24 +759,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out IEnumerable<ChargingFacility> ChargingFacilities,
                                              out ErrorResponse))
                 {
-                    return false;
+
+                    ChargingFacilities = new ChargingFacility[] {
+                                             new ChargingFacility(
+                                                 PowerTypes.Unspecified,
+                                                 0
+                                             )
+                                         };
+
+                    //return false;
+
                 }
 
                 #endregion
 
-                #region Parse RenewableEnergy                   [mandatory]
+                #region Parse RenewableEnergy                   [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("RenewableEnergy",
                                          "renewable energy",
                                          out Boolean RenewableEnergy,
                                          out ErrorResponse))
                 {
-                    return false;
+
+                    RenewableEnergy = false;
+
+                    //return false;
+
                 }
 
                 #endregion
 
-                #region Parse CalibrationLawDataAvailability    [mandatory]
+                #region Parse CalibrationLawDataAvailability    [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("CalibrationLawDataAvailability",
                                          "calibration law data availability",
@@ -737,7 +797,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out CalibrationLawDataAvailabilities CalibrationLawDataAvailability,
                                          out ErrorResponse))
                 {
-                    return false;
+
+                    CalibrationLawDataAvailability = CalibrationLawDataAvailabilities.NotAvailable;
+
+                    //return false;
+
                 }
 
                 #endregion
@@ -755,7 +819,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse PaymentOptions                    [mandatory]
+                #region Parse PaymentOptions                    [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("PaymentOptions",
                                          "payment options",
@@ -763,7 +827,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out IEnumerable<PaymentOptions> PaymentOptions,
                                          out ErrorResponse))
                 {
-                    return false;
+
+                    PaymentOptions = new PaymentOptions[] {
+                                         OICPv2_3.PaymentOptions.Contract
+                                     };
+
+                    //return false;
+
                 }
 
                 #endregion
@@ -781,7 +851,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Accessibility                     [mandatory]
+                #region Parse Accessibility                     [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("Accessibility",
                                          "accessibility",
@@ -789,7 +859,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out AccessibilityTypes Accessibility,
                                          out ErrorResponse))
                 {
-                    return false;
+
+                    Accessibility = AccessibilityTypes.Unspecified;
+
+                    //return false;
+
                 }
 
                 #endregion
@@ -1088,6 +1162,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 EVSEDataRecord = new EVSEDataRecord(EVSEId,
+                                                    OperatorId,
+                                                    OperatorName,
                                                     ChargingStationName,
                                                     Address,
                                                     GeoCoordinates,
@@ -1219,7 +1295,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("IsOpen24Hours",                           IsOpen24Hours),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
                            new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
-
+                           new JProperty("OperatorID",                              OperatorId.                        ToString()),
+                           new JProperty("OperatorName",                            OperatorName),
 
                            DeltaType.                       HasValue
                                ? new JProperty("deltaType",                         DeltaType.                   Value.ToString())
@@ -1316,6 +1393,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSEDataRecord Clone
 
             => new EVSEDataRecord(Id.                               Clone,
+                                  OperatorId.                       Clone,
+                                  new String(OperatorName.ToCharArray()),
                                   ChargingStationName.              Clone,
                                   Address.                          Clone,
                                   GeoCoordinates.                   Clone,
@@ -1575,6 +1654,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
             => new Builder(NewEVSEId ?? Id,
+                           OperatorId,
+                           OperatorName,
                            ChargingStationName,
                            Address,
                            GeoCoordinates,
@@ -1646,6 +1727,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             [Optional]
             public DateTime?                          LastUpdate                          { get; set; }
 
+
+            /// <summary>
+            /// The unique identification of the operator of the EVSE.
+            /// </summary>
+            [Mandatory]
+            public Operator_Id?                       OperatorId                          { get; set; }
+
+            /// <summary>
+            /// The name of the operator of the EVSE.
+            /// </summary>
+            [Mandatory]
+            public String                             OperatorName                        { get; set; }
 
             /// <summary>
             /// The identification of the charging station hosting the EVSE.
@@ -1836,6 +1929,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             [Mandatory]
             public FalseTrueAuto?                     DynamicInfoAvailable                { get; set; }
 
+
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
@@ -1850,6 +1944,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Create a new EVSE data record builder.
             /// </summary>
             /// <param name="Id">A unique EVSE identification.</param>
+            /// <param name="OperatorId">The unique identification of the operator of the EVSE.</param>
+            /// <param name="OperatorName">The name of the operator of the EVSE.</param>
             /// <param name="ChargingStationName">The multi-language name of the charging station hosting the EVSE.</param>
             /// <param name="Address">The address of the EVSE.</param>
             /// <param name="GeoCoordinates">The geo coordinate of the EVSE.</param>
@@ -1889,6 +1985,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(EVSE_Id?                           Id                                 = null,
+                           Operator_Id?                       OperatorId                         = null,
+                           String                             OperatorName                       = null,
                            I18NText                           ChargingStationName                = null,
                            Address                            Address                            = null,
                            GeoCoordinates?                    GeoCoordinates                     = null,
@@ -1933,6 +2031,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 this.Id                                = Id;
+                this.OperatorId                        = OperatorId;
+                this.OperatorName                      = OperatorName;
                 this.ChargingStationName               = ChargingStationName;
                 this.Address                           = Address;
                 this.PlugTypes                         = PlugTypes.          SafeAny() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
@@ -1997,6 +2097,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!Id.                            HasValue)
                     throw new ArgumentException("The given EVSE identification must not be null!",               nameof(Id));
 
+                if (!OperatorId.                    HasValue)
+                    throw new ArgumentException("The given operator identification must not be null!",           nameof(OperatorId));
+
                 if (!GeoCoordinates.                HasValue)
                     throw new ArgumentException("The given geo coordinates must not be null!",                   nameof(GeoCoordinates));
 
@@ -2024,6 +2127,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
                 return new EVSEDataRecord(Id.                            Value,
+                                          OperatorId.                    Value,
+                                          OperatorName                   ?? "",
                                           ChargingStationName,
                                           Address,
                                           GeoCoordinates.                Value,

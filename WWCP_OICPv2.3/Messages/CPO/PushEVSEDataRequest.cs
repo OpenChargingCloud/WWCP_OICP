@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse OperatorEVSEData    [mandatory]
+                #region Parse OperatorEVSEData    [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("OperatorEvseData",
                                          "operator EVSE data",

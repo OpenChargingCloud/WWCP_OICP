@@ -24,6 +24,6 @@ using System;
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-    public delegate Boolean EVSEOperatorFilterDelegate(String OperatorName, Operator_Id OperatorId);
+    public delegate Boolean EVSEOperatorFilterDelegate(Operator_Id OperatorId);
 
 }

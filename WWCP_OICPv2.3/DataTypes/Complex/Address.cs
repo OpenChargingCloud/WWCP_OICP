@@ -303,26 +303,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse PostalCode        [mandatory]
+                #region Parse PostalCode        [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatoryText("PostalCode",
                                              "postal code",
                                              out String PostalCode,
                                              out ErrorResponse))
                 {
-                    return false;
+                    PostalCode = "";
+                    //return false;
                 }
 
                 #endregion
 
-                #region Parse HouseNumber       [mandatory]
+                #region Parse HouseNumber       [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatoryText("HouseNum",
                                              "house number",
                                              out String HouseNumber,
                                              out ErrorResponse))
                 {
-                    return false;
+                    HouseNumber = "";
+                    //return false;
                 }
 
                 #endregion

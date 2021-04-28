@@ -533,7 +533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEData[0],
+                                                 new EVSEDataRecord[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -652,7 +652,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          HTTPResponse.Timestamp,
                                                                                          HTTPResponse.EventTrackingId,
                                                                                          HTTPResponse.Runtime,
-                                                                                         new OperatorEVSEData[0],
+                                                                                         new EVSEDataRecord[0],
                                                                                          statusCode,
                                                                                          processId
                                                                                      ),
@@ -671,7 +671,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEData[0],
+                                                 new EVSEDataRecord[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -706,7 +706,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEData[0],
+                                 new EVSEDataRecord[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -725,7 +725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEData[0],
+                                 new EVSEDataRecord[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!"

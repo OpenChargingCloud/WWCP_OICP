@@ -254,7 +254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             try
             {
 
-                var MatchCollection = EVSEId_RegEx.Matches(Text.Trim().ToUpper());
+                var MatchCollection = EVSEId_RegEx.Matches(Text);
 
                 if (MatchCollection.Count == 1)
                 {

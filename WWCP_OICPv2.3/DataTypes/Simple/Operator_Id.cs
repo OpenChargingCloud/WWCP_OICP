@@ -40,9 +40,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Official regular expression: ^(([A-Za-z]{2}\*?[A-Za-z0-9]{3})|(\+?[0-9]{1,3}\*[0-9]{3}))$
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorIDType</remarks>
-        public static readonly Regex  OperatorId_RegEx  = new Regex(@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
-                                                                    @"^\+?([0-9]{1,3})\*([0-9]{3})$",
-                                                                    RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex  OperatorId_RegEx          = new Regex(@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
+                                                                            @"^\+?([0-9]{1,3})\*([0-9]{3})$",
+                                                                            RegexOptions.IgnorePatternWhitespace);
+
+        /// <summary>
+        /// The regular expression for parsing a country alpha-2 code.
+        /// Official regular expression: ^[A-Za-z]{2}$
+        /// </summary>
+        public static readonly Regex  CountryAlpha2Codes_RegEx  = new Regex(@"^[A-Za-z]{2}$",
+                                                                            RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -236,9 +243,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
                 {
 
-                    OperatorId = new Operator_Id(countryCode,
-                                                 MatchCollection[0].Groups[3].Value,
-                                                 MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+                    OperatorId = new Operator_Id(
+                                     countryCode,
+                                     MatchCollection[0].Groups[3].Value,
+                                     MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
 
                     return true;
 
@@ -248,13 +256,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
                 {
 
-                    OperatorId = new Operator_Id(countryCode,
-                                                 MatchCollection[0].Groups[5].Value,
-                                                 OperatorIdFormats.DIN);
+                    OperatorId = new Operator_Id(
+                                     countryCode,
+                                     MatchCollection[0].Groups[5].Value,
+                                     OperatorIdFormats.DIN);
 
                     return true;
 
                 }
+
+                // An unknown/unassigned alpha-2 country code, like e.g. "DT"...
+                if (CountryAlpha2Codes_RegEx.IsMatch(MatchCollection[0].Groups[1].Value))
+                {
+
+                    OperatorId = new Operator_Id(
+                                     new Country(
+                                         I18NString.Create(Languages.en, MatchCollection[0].Groups[1].Value),
+                                         MatchCollection[0].Groups[1].Value,
+                                         MatchCollection[0].Groups[1].Value + "X",
+                                         0,
+                                         0
+                                     ),
+                                     MatchCollection[0].Groups[3].Value,
+                                     MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+
+                    return true;
+
+                }
+
 
             }
 

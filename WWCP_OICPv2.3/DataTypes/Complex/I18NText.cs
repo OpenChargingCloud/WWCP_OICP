@@ -386,22 +386,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 var i18NText = new Dictionary<LanguageCode, String>();
 
-                foreach (JObject JSONObject in JSON)
+                foreach (JObject jsonObject in JSON)
                 {
-                    foreach (var JSONProperty in JSONObject)
+
+                    if (!jsonObject.ParseMandatory("lang", "language", LanguageCode.TryParse, out LanguageCode Language, out ErrorResponse))
                     {
-
-                        if (LanguageCode.TryParse(JSONProperty.Key, out LanguageCode language))
-                        {
-                            i18NText.Add(language,
-                                         JSONProperty.Value?.Value<String>()?.Trim());
-                        }
-
-                        I18NText = new I18NText(i18NText);
-
+                        return false;
                     }
+
+                    if (!jsonObject.ParseMandatoryText("value", "text", out String Value, out ErrorResponse))
+                    {
+                        return false;
+                    }
+
+                    i18NText.Add(Language, Value);
+
                 }
 
+                I18NText = new I18NText(i18NText);
                 return true;
 
             }
