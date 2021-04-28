@@ -251,22 +251,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse OperatorEVSEStatus    [mandatory]
 
-                if (!JSON.ParseMandatory("EvseData",
-                                         "EVSE data",
-                                         out JObject evseData,
-                                         out         ErrorResponse))
+                //if (!JSON.ParseMandatory("EvseData",
+                //                         "EVSE data",
+                //                         out JObject evseData,
+                //                         out         ErrorResponse))
+                //{
+                //    return false;
+                //}
+
+                if (!JSON.ParseMandatoryJSON("content",
+                                             "EVSE data",
+                                             EVSEDataRecord.TryParse,
+                                             out IEnumerable<EVSEDataRecord> EVSEDataRecords,
+                                             out ErrorResponse))
                 {
                     return false;
                 }
 
-                if (!evseData.ParseMandatoryJSON("OperatorEvseData",
-                                                 "operator EVSE data",
-                                                 OICPv2_3.OperatorEVSEData.TryParse,
-                                                 out IEnumerable<OperatorEVSEData> OperatorEVSEData,
-                                                 out ErrorResponse))
-                {
-                    return false;
-                }
+                //if (!evseData.ParseMandatoryJSON("OperatorEvseData",
+                //                                 "operator EVSE data",
+                //                                 OICPv2_3.OperatorEVSEData.TryParse,
+                //                                 out IEnumerable<OperatorEVSEData> OperatorEVSEData,
+                //                                 out ErrorResponse))
+                //{
+                //    return false;
+                //}
 
                 #endregion
 
@@ -295,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 ResponseTimestamp,
                                                                 EventTrackingId,
                                                                 Runtime,
-                                                                OperatorEVSEData,
+                                                                new OperatorEVSEData[0],
                                                                 StatusCode,
                                                                 ProcessId,
                                                                 HTTPResponse,

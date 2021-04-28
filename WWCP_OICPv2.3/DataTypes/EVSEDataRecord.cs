@@ -653,14 +653,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingStationName               [mandatory]
 
-                if (JSON.ParseMandatory("ChargingStationName",
-                                        "multi-language charging station name",
-                                        I18NText.TryParse,
-                                        out I18NText ChargingStationName,
-                                        out ErrorResponse))
+                if (!JSON.ParseMandatoryJSONArray2("ChargingStationNames",
+                                                   "multi-language charging station name",
+                                                   I18NText.TryParse,
+                                                   out I18NText ChargingStationName,
+                                                   out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
-                        return false;
+                    ChargingStationName = new I18NText(LanguageCode.en, "Unnamed station");
+                    //return false;
                 }
 
                 #endregion
@@ -680,21 +680,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse GeoCoordinates                    [mandatory]
 
-                if (JSON.ParseMandatory("GeoCoordinates",
-                                        "geo coordinates",
-                                        OICPv2_3.GeoCoordinates.TryParse,
-                                        out GeoCoordinates GeoCoordinates,
-                                        out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("GeoCoordinates",
+                                              "geo coordinates",
+                                              OICPv2_3.GeoCoordinates.TryParse,
+                                              out GeoCoordinates GeoCoordinates,
+                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
-                        return false;
+                    return false;
                 }
 
                 #endregion
 
                 #region Parse PlugTypes                         [mandatory]
 
-                if (!JSON.ParseMandatory("PlugTypes",
+                if (!JSON.ParseMandatory("Plugs",
                                          "plug types",
                                          PlugTypesExtentions.TryParse,
                                          out IEnumerable<PlugTypes> PlugTypes,
@@ -998,11 +997,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse AdditionalInfo                    [optional]
 
-                if (JSON.ParseOptionalJSON("AdditionalInfo",
-                                           "additional info",
-                                           I18NText.TryParse,
-                                           out I18NText AdditionalInfo,
-                                           out ErrorResponse))
+                if (JSON.ParseOptionalJSONArray("AdditionalInfo",
+                                                "additional info",
+                                                I18NText.TryParse,
+                                                out I18NText AdditionalInfo,
+                                                out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;
@@ -1012,11 +1011,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingStationLocationReference  [optional]
 
-                if (JSON.ParseOptionalJSON("ChargingStationLocationReference",
-                                           "charging station location reference",
-                                           I18NText.TryParse,
-                                           out I18NText ChargingStationLocationReference,
-                                           out ErrorResponse))
+                if (JSON.ParseOptionalJSONArray("ChargingStationLocationReference",
+                                                "charging station location reference",
+                                                I18NText.TryParse,
+                                                out I18NText ChargingStationLocationReference,
+                                                out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;

@@ -358,12 +358,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          X509Certificate                      ClientCert                   = null,
-                         String                               HTTPUserAgent                = null,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
-                         Byte?                                MaxNumberOfRetries           = null,
+                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                              DisableLogging               = false,
-                         String                               LoggingContext               = null,
+                         String                               LoggingContext               = Logger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
 
