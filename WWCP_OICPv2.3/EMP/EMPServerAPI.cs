@@ -233,20 +233,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new EMP HTTP server API.
+        /// Create a new CPO HTTP Server API.
         /// </summary>
-        /// <param name="ServerCertificateSelector"></param>
-        /// <param name="ClientCertificateSelector"></param>
-        /// <param name="ClientCertificateValidator"></param>
-        /// <param name="AllowedTLSProtocols"></param>
-        /// <param name="HTTPHostname"></param>
-        /// <param name="HTTPServerPort"></param>
-        /// <param name="HTTPServerName"></param>
-        /// <param name="ExternalDNSName"></param>
-        /// <param name="URLPathPrefix"></param>
-        /// <param name="ServiceName"></param>
-        /// <param name="DNSClient"></param>
-        /// <param name="AutoStart"></param>
         public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,
                             RemoteCertificateValidationCallback  ClientCertificateValidator,
@@ -255,9 +243,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             IPPort?                              HTTPServerPort        = null,
                             String                               HTTPServerName        = DefaultHTTPServerName,
                             String                               ExternalDNSName       = null,
-                            HTTPPath?                            URLPathPrefix         = null,
                             HTTPPath?                            BasePath              = null,
+                            HTTPPath?                            URLPathPrefix         = null,
                             String                               ServiceName           = DefaultHTTPServiceName,
+                            Boolean                              DisableLogging        = false,
+                            String                               LoggingContext        = null,
+                            LogfileCreatorDelegate               LogfileCreator        = null,
                             DNSClient                            DNSClient             = null,
                             Boolean                              AutoStart             = false)
 
@@ -278,6 +269,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         {
 
             RegisterURLTemplates();
+
+            this.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingContext,
+                                                LogfileCreator)
+                                   : null;
 
             if (AutoStart)
                 HTTPServer.Start();

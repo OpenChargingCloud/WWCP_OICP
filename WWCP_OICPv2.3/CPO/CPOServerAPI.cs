@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new CPO HTTP server API.
+        /// Create a new CPO HTTP Server API.
         /// </summary>
         public CPOServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
                             LocalCertificateSelectionCallback    ClientCertificateSelector,

@@ -150,39 +150,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Text.IsNullOrEmpty())
-            {
-                SessionId = default;
-                return false;
-            }
+            SessionId  = default;
+            Text       = Text?.Trim();
 
-            Text = Text.Trim();
+            if (Text.IsNullOrEmpty())
+                return false;
 
             #endregion
 
             try
             {
 
-                if (!SessionId_RegEx.IsMatch(Text))
+                if (SessionId_RegEx.IsMatch(Text))
                 {
-                    SessionId = default;
-                    return false;
+                    SessionId = new Session_Id(Text);
+                    return true;
                 }
 
-                SessionId = new Session_Id(Text);
-
-                return true;
-
             }
-
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
             catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
             { }
 
-            SessionId = default;
             return false;
 
         }
