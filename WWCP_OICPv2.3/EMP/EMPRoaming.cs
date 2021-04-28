@@ -1283,7 +1283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusById        (Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE identifications.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public Task<OICPResult<PullEVSEStatusByIdResponse>>
@@ -1297,7 +1297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusByOperatorId(Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// Create a new task requesting the current EVSE status of the given charging station operators.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>
@@ -1383,15 +1383,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region GetChargeDetailRecords    (Request)
 
-        ///// <summary>
-        ///// Create a new task querying charge detail records from the OICP server.
-        ///// </summary>
-        ///// <param name="Request">An GetChargeDetailRecords request.</param>
-        //public Task<OICPResult<GetChargeDetailRecordsResponse>>
+        /// <summary>
+        /// Create a new task querying charge detail records from the OICP server.
+        /// </summary>
+        /// <param name="Request">An GetChargeDetailRecords request.</param>
+        public Task<OICPResult<GetChargeDetailRecordsResponse>>
 
-        //    GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
+            GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)
 
-        //        => EMPClient.GetChargeDetailRecords(Request);
+                => EMPClient.GetChargeDetailRecords(Request);
 
         #endregion
 

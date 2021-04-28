@@ -965,23 +965,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  new PullEVSEDataRequest(
                                      providerId.Value,
                                      LastCall,
-                                     null, //Page,
-                                     null, //Size,
 
-                                     null, //OperatorIdFilter,
-                                     CountryCodeFilter,
-                                     null, //AccessibilityFilter                    = null,
-                                     null, //AuthenticationModeFilter               = null,
-                                     null, //CalibrationLawDataAvailabilityFilter   = null,
-                                     null, //RenewableEnergyFilter                  = null,
-                                     null, //IsHubjectCompatibleFilter              = null,
-                                     null, //IsOpen24HoursFilter                    = null,
+                                     null, // OperatorIdFilter
+                                     null, // CountryCodeFilter
+                                     null, // AccessibilityFilter
+                                     null, // AuthenticationModeFilter
+                                     null, // CalibrationLawDataAvailabilityFilter
+                                     null, // RenewableEnergyFilter
+                                     null, // IsHubjectCompatibleFilter
+                                     null, // IsOpen24HoursFilter
 
-                                     null, //SearchCenter,
-                                     null, //DistanceKM,
-                                     GeoCoordinatesFormats.DecimalDegree,
+                                     null, // SearchCenter
+                                     null, // DistanceKM
+                                     null, // GeoCoordinatesResponseFormat
 
-                                     null, //CustomData,
+                                     null, // Page
+                                     null, // Size
+                                     null, // SortOrder
+                                     null, // CustomData
 
                                      Timestamp,
                                      CancellationToken,
@@ -997,7 +998,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 var Warnings     = new List<String>();
                 WWCP.EVSE _EVSE  = null;
 
-                foreach (var operatorEVSEData in result.Result.OperatorEVSEData)
+                foreach (var operatorEVSEData in result.Response.OperatorEVSEData)
                 {
                     foreach (var evse in operatorEVSEData.EVSEDataRecords)
                     {
@@ -1025,9 +1026,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
 
             return new WWCP.POIDataPull<WWCP.EVSE>(new WWCP.EVSE[0],
-                                                   Warning.Create(I18NString.Create(Languages.en, result.Result.HTTPResponse.HTTPStatusCode +
-                                                                                                   (result.Result.HTTPResponse.ContentLength.HasValue && result.Result.HTTPResponse.ContentLength.Value > 0
-                                                                                                        ? Environment.NewLine + result.Result.HTTPResponse.HTTPBody.ToUTF8String()
+                                                   Warning.Create(I18NString.Create(Languages.en, result.Response.HTTPResponse.HTTPStatusCode +
+                                                                                                   (result.Response.HTTPResponse.ContentLength.HasValue && result.Response.HTTPResponse.ContentLength.Value > 0
+                                                                                                        ? Environment.NewLine + result.Response.HTTPResponse.HTTPBody.ToUTF8String()
                                                                                                         : ""))));
 
         }
@@ -1132,7 +1133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 WWCP.EVSE_Id?          evseId       = default;
                 WWCP.EVSEStatusTypes?  evseStatus   = default;
 
-                foreach (var operatorEVSEStatus in pullEVSEStatusResult.Result.OperatorEVSEStatus)
+                foreach (var operatorEVSEStatus in pullEVSEStatusResult.Response.OperatorEVSEStatus)
                 {
                     foreach (var evseStatusRecord in operatorEVSEStatus.EVSEStatusRecords)
                     {
@@ -1150,7 +1151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             EVSEStatusList.Add(new WWCP.EVSEStatus(
                                                    evseId.Value,
                                                    new Timestamped<WWCP.EVSEStatusTypes>(
-                                                       pullEVSEStatusResult.Result.HTTPResponse.Timestamp,
+                                                       pullEVSEStatusResult.Response.HTTPResponse.Timestamp,
                                                        evseStatus.Value
                                                    )
                                                    //evseStatusRecord.CustomData)
@@ -1165,8 +1166,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             return new WWCP.StatusPull<WWCP.EVSEStatus>(new WWCP.EVSEStatus[0],
                                                         new Warning[] {
-                                                            Warning.Create(I18NString.Create(Languages.en, pullEVSEStatusResult.Result.HTTPResponse.HTTPStatusCode.ToString())),
-                                                            Warning.Create(I18NString.Create(Languages.en, pullEVSEStatusResult.Result.HTTPResponse.HTTPBody.ToUTF8String()))
+                                                            Warning.Create(I18NString.Create(Languages.en, pullEVSEStatusResult.Response.HTTPResponse.HTTPStatusCode.ToString())),
+                                                            Warning.Create(I18NString.Create(Languages.en, pullEVSEStatusResult.Response.HTTPResponse.HTTPBody.ToUTF8String()))
                                                         });
 
         }
@@ -1642,9 +1643,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (reserveResponse.IsSuccess())
             {
 
-                result = WWCP.ReservationResult.Success(reserveResponse.Result.SessionId != null
+                result = WWCP.ReservationResult.Success(reserveResponse.Response.SessionId != null
                                                         ? new WWCP.ChargingReservation(Id:                        WWCP.ChargingReservation_Id.Parse(EVSEId.OperatorId.ToString() +
-                                                                                                                      "*R" + reserveResponse.Result.SessionId.ToString()),
+                                                                                                                      "*R" + reserveResponse.Response.SessionId.ToString()),
                                                                                        Timestamp:                 DateTime.UtcNow,
                                                                                        StartTime:                 DateTime.UtcNow,
                                                                                        Duration:                  Duration ?? DefaultReservationTime,
@@ -1666,7 +1667,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
 
             else
-                result = WWCP.ReservationResult.Error(reserveResponse.Result.HTTPResponse.HTTPStatusCode.ToString(),
+                result = WWCP.ReservationResult.Error(reserveResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
                                                       reserveResponse);
 
 
@@ -1811,8 +1812,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             return WWCP.CancelReservationResult.Error(ReservationId,
                                                       Reason,
-                                                      result.Result.HTTPResponse.HTTPStatusCode.ToString(),
-                                                      result.Result.HTTPResponse.EntirePDU);
+                                                      result.Response.HTTPResponse.HTTPStatusCode.ToString(),
+                                                      result.Response.HTTPResponse.EntirePDU);
 
         }
 
@@ -2010,16 +2011,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (remoteStartResponse.IsSuccess())
             {
 
-                result = WWCP.RemoteStartResult.Success(remoteStartResponse.Result.SessionId.HasValue
-                                                            ? new WWCP.ChargingSession(remoteStartResponse.Result.SessionId.ToWWCP().Value)
+                result = WWCP.RemoteStartResult.Success(remoteStartResponse.Response.SessionId.HasValue
+                                                            ? new WWCP.ChargingSession(remoteStartResponse.Response.SessionId.ToWWCP().Value)
                                                             : default,
                                                         Runtime);
 
             }
 
             else
-                result = WWCP.RemoteStartResult.Error(remoteStartResponse.Result.HTTPResponse.HTTPStatusCode.ToString(),
-                                                      remoteStartResponse.Result.HTTPResponse.HTTPBodyAsUTF8String,
+                result = WWCP.RemoteStartResult.Error(remoteStartResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
+                                                      remoteStartResponse.Response.HTTPResponse.HTTPBodyAsUTF8String,
                                                       Runtime);
 
 
@@ -2167,7 +2168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             else
                 result = WWCP.RemoteStopResult.Error(SessionId,
-                                                     remoteStopResponse.Result.HTTPResponse.HTTPStatusCode.ToString(),
+                                                     remoteStopResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
                                                      Runtime: DateTime.UtcNow - StartTime);
 
 
@@ -2460,7 +2461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // This will parse all nested data structures!
-                        var OperatorEVSEData = pullEVSEDataResponse.Result.OperatorEVSEData.ToArray();
+                        var OperatorEVSEData = pullEVSEDataResponse.Response.OperatorEVSEData.ToArray();
 
                         if (OperatorEVSEData.Length > 0)
                         {
@@ -3015,7 +3016,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         if (pullEVSEStatusResult.WasSuccessful)
                         {
 
-                            var OperatorEVSEStatus = pullEVSEStatusResult.Result.OperatorEVSEStatus;
+                            var OperatorEVSEStatus = pullEVSEStatusResult.Response.OperatorEVSEStatus;
 
                             if (OperatorEVSEStatus != null && OperatorEVSEStatus.Any())
                             {
@@ -3226,12 +3227,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public static Boolean operator == (WWCPCSOAdapter WWCPCSOAdapter1, WWCPCSOAdapter WWCPCSOAdapter2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (Object.ReferenceEquals(WWCPCSOAdapter1, WWCPCSOAdapter2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) WWCPCSOAdapter1 == null) || ((Object) WWCPCSOAdapter2 == null))
+            if (WWCPCSOAdapter1 is null || WWCPCSOAdapter2 is null)
                 return false;
 
             return WWCPCSOAdapter1.Equals(WWCPCSOAdapter2);
@@ -3266,7 +3265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           WWCPCSOAdapter  WWCPCSOAdapter2)
         {
 
-            if ((Object) WWCPCSOAdapter1 == null)
+            if (WWCPCSOAdapter1 is null)
                 throw new ArgumentNullException(nameof(WWCPCSOAdapter1),  "The given WWCPCSOAdapter must not be null!");
 
             return WWCPCSOAdapter1.CompareTo(WWCPCSOAdapter2) < 0;
@@ -3302,7 +3301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           WWCPCSOAdapter WWCPCSOAdapter2)
         {
 
-            if ((Object) WWCPCSOAdapter1 == null)
+            if (WWCPCSOAdapter1 is null)
                 throw new ArgumentNullException(nameof(WWCPCSOAdapter1),  "The given WWCPCSOAdapter must not be null!");
 
             return WWCPCSOAdapter1.CompareTo(WWCPCSOAdapter2) > 0;

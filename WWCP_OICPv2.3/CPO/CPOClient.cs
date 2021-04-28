@@ -187,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStart request will be send.
         /// </summary>
-        public event OnAuthorizeStartRequestHandler     OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestDelegate     OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeStart HTTP request will be send.
@@ -202,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStart request had been received.
         /// </summary>
-        public event OnAuthorizeStartResponseHandler    OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseDelegate    OnAuthorizeStartResponse;
 
         #endregion
 
@@ -211,7 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStop request will be send.
         /// </summary>
-        public event OnAuthorizeStopRequestHandler   OnAuthorizeStopRequest;
+        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeStop HTTP request will be send.
@@ -226,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStop request had been received.
         /// </summary>
-        public event OnAuthorizeStopResponseHandler  OnAuthorizeStopResponse;
+        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
 
         #endregion
 
@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingNotificationsStart will be send.
         /// </summary>
-        public event OnChargingNotificationsStartRequestHandler   OnChargingNotificationsStartRequest;
+        public event OnChargingNotificationsStartRequestDelegate   OnChargingNotificationsStartRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingNotificationsStart HTTP request will be send.
@@ -251,7 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a ChargingNotificationsStart had been received.
         /// </summary>
-        public event OnChargingNotificationsStartResponseHandler  OnChargingNotificationsStartResponse;
+        public event OnChargingNotificationsStartResponseDelegate  OnChargingNotificationsStartResponse;
 
         #endregion
 
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingNotificationsProgress will be send.
         /// </summary>
-        public event OnChargingNotificationsProgressRequestHandler   OnChargingNotificationsProgressRequest;
+        public event OnChargingNotificationsProgressRequestDelegate   OnChargingNotificationsProgressRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a ChargingNotificationsProgress had been received.
         /// </summary>
-        public event OnChargingNotificationsProgressResponseHandler  OnChargingNotificationsProgressResponse;
+        public event OnChargingNotificationsProgressResponseDelegate  OnChargingNotificationsProgressResponse;
 
         #endregion
 
@@ -284,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingNotificationsEnd will be send.
         /// </summary>
-        public event OnChargingNotificationsEndRequestHandler   OnChargingNotificationsEndRequest;
+        public event OnChargingNotificationsEndRequestDelegate   OnChargingNotificationsEndRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
@@ -299,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a ChargingNotificationsEnd had been received.
         /// </summary>
-        public event OnChargingNotificationsEndResponseHandler  OnChargingNotificationsEndResponse;
+        public event OnChargingNotificationsEndResponseDelegate  OnChargingNotificationsEndResponse;
 
         #endregion
 
@@ -308,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingNotificationsError will be send.
         /// </summary>
-        public event OnChargingNotificationsErrorRequestHandler   OnChargingNotificationsErrorRequest;
+        public event OnChargingNotificationsErrorRequestDelegate   OnChargingNotificationsErrorRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingNotificationsError HTTP request will be send.
@@ -323,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a ChargingNotificationsError had been received.
         /// </summary>
-        public event OnChargingNotificationsErrorResponseHandler  OnChargingNotificationsErrorResponse;
+        public event OnChargingNotificationsErrorResponseDelegate  OnChargingNotificationsErrorResponse;
 
         #endregion
 
@@ -333,7 +333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargeDetailRecord will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordRequestHandler   OnSendChargeDetailRecordRequest;
+        public event OnSendChargeDetailRecordRequestDelegate   OnSendChargeDetailRecordRequest;
 
         /// <summary>
         /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
@@ -348,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a ChargeDetailRecord had been received.
         /// </summary>
-        public event OnSendChargeDetailRecordResponseHandler  OnSendChargeDetailRecordResponse;
+        public event OnSendChargeDetailRecordResponseDelegate  OnSendChargeDetailRecordResponse;
 
         #endregion
 
@@ -456,14 +456,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
                                        Cast<OnPushEVSEDataRequestDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.Action,
-                                                     Request.EVSEDataRecords.ULongCount(),
-                                                     Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Description,
+                                                     Request))).
                                        ConfigureAwait(false);
 
             }
@@ -903,16 +898,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
                                        Cast<OnPushEVSEDataResponseDelegate>().
                                        Select(e => e(Endtime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.Action,
-                                                     Request.EVSEDataRecords.ULongCount(),
-                                                     Request.EVSEDataRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout,
-                                                     result,
-                                                     Endtime - StartTime))).
+                                                     Description,
+                                                     Request,
+                                                     result))).
                                        ConfigureAwait(false);
 
             }
@@ -965,14 +954,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
                                        Cast<OnPushEVSEStatusRequestDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.Action,
-                                                     Request.EVSEStatusRecords.ULongCount(),
-                                                     Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Description,
+                                                     Request))).
                                        ConfigureAwait(false);
 
             }
@@ -1409,16 +1393,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPushEVSEStatusResponseDelegate>().
                                        Select(e => e(Endtime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.Action,
-                                                     Request.EVSEStatusRecords.ULongCount(),
-                                                     Request.EVSEStatusRecords,
-                                                     Request.RequestTimeout ?? RequestTimeout,
-                                                     result,
-                                                     Endtime - StartTime))).
+                                                     Description,
+                                                     Request,
+                                                     result))).
                                        ConfigureAwait(false);
 
             }
@@ -1470,20 +1448,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 if (OnAuthorizeStartRequest != null)
                     await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
-                                       Cast<OnAuthorizeStartRequestHandler>().
+                                       Cast<OnAuthorizeStartRequestDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.OperatorId,
-                                                     Request.Identification,
-                                                     Request.EVSEId,
-                                                     Request.SessionId,
-                                                     Request.PartnerProductId,
-                                                     Request.CPOPartnerSessionId,
-                                                     Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout))).
+                                                     Description,
+                                                     Request))).
                                        ConfigureAwait(false);
 
             }
@@ -1813,22 +1782,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 if (OnAuthorizeStartResponse != null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
-                                       Cast<OnAuthorizeStartResponseHandler>().
+                                       Cast<OnAuthorizeStartResponseDelegate>().
                                        Select(e => e(StartTime,
-                                                     Request.Timestamp,
                                                      this,
-                                                     //ClientId,
-                                                     Request.EventTrackingId,
-                                                     Request.OperatorId,
-                                                     Request.Identification,
-                                                     Request.EVSEId,
-                                                     Request.SessionId,
-                                                     Request.PartnerProductId,
-                                                     Request.CPOPartnerSessionId,
-                                                     Request.EMPPartnerSessionId,
-                                                     Request.RequestTimeout ?? RequestTimeout,
-                                                     result,
-                                                     Endtime - StartTime))).
+                                                     Description,
+                                                     Request,
+                                                     result))).
                                        ConfigureAwait(false);
 
             }
@@ -1874,31 +1833,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnAuthorizeStopRequest != null)
-            //        await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
-            //                           Cast<OnAuthorizeStopRequestHandler>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp.Value,
-            //                                         this,
-            //                                         ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.OperatorId,
-            //                                         Request.SessionId,
-            //                                         Request.Identification,
-            //                                         Request.EVSEId,
-            //                                         Request.CPOPartnerSessionId,
-            //                                         Request.EMPPartnerSessionId,
-            //                                         Request.RequestTimeout ?? RequestTimeout.Value))).
-            //                           ConfigureAwait(false);
+                if (OnAuthorizeStopRequest != null)
+                    await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStopRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
+            }
 
             #endregion
 
@@ -2238,33 +2189,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnAuthorizeStopResponse != null)
-            //        await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
-            //                           Cast<OnAuthorizeStopResponseHandler>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp.Value,
-            //                                         this,
-            //                                         ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.OperatorId,
-            //                                         Request.SessionId,
-            //                                         Request.Identification,
-            //                                         Request.EVSEId,
-            //                                         Request.CPOPartnerSessionId,
-            //                                         Request.EMPPartnerSessionId,
-            //                                         Request.RequestTimeout ?? RequestTimeout.Value,
-            //                                         result.Content,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnAuthorizeStopResponse != null)
+                    await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStopResponseDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
+            }
 
             #endregion
 
@@ -2304,28 +2246,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsStartRequest != null)
-            //        await Task.WhenAll(OnChargingNotificationsStartRequest.GetInvocationList().
-            //                           Cast<OnChargingNotificationsStartRequestDelegate>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsStartRequest != null)
+                    await Task.WhenAll(OnChargingNotificationsStartRequest.GetInvocationList().
+                                       Cast<OnChargingNotificationsStartRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartRequest));
+            }
 
             #endregion
 
@@ -2711,30 +2648,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsStartResponse != null)
-            //        await Task.WhenAll(OnChargingNotificationsStartResponse.GetInvocationList().
-            //                           Cast<OnChargingNotificationsStartResponseDelegate>().
-            //                           Select(e => e(Endtime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout,
-            //                                         result,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsStartResponse != null)
+                    await Task.WhenAll(OnChargingNotificationsStartResponse.GetInvocationList().
+                                       Cast<OnChargingNotificationsStartResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartResponse));
+            }
 
             #endregion
 
@@ -2773,28 +2704,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsProgressRequest != null)
-            //        await Task.WhenAll(OnChargingNotificationsProgressRequest.GetInvocationList().
-            //                           Cast<OnChargingNotificationsProgressRequestDelegate>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsProgressRequest != null)
+                    await Task.WhenAll(OnChargingNotificationsProgressRequest.GetInvocationList().
+                                       Cast<OnChargingNotificationsProgressRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressRequest));
+            }
 
             #endregion
 
@@ -3180,30 +3106,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsProgressResponse != null)
-            //        await Task.WhenAll(OnChargingNotificationsProgressResponse.GetInvocationList().
-            //                           Cast<OnChargingNotificationsProgressResponseDelegate>().
-            //                           Select(e => e(Endtime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout,
-            //                                         result,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsProgressResponse != null)
+                    await Task.WhenAll(OnChargingNotificationsProgressResponse.GetInvocationList().
+                                       Cast<OnChargingNotificationsProgressResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressResponse));
+            }
 
             #endregion
 
@@ -3242,28 +3162,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsEndRequest != null)
-            //        await Task.WhenAll(OnChargingNotificationsEndRequest.GetInvocationList().
-            //                           Cast<OnChargingNotificationsEndRequestDelegate>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsEndRequest != null)
+                    await Task.WhenAll(OnChargingNotificationsEndRequest.GetInvocationList().
+                                       Cast<OnChargingNotificationsEndRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndRequest));
+            }
 
             #endregion
 
@@ -3321,7 +3236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                // HTTP/1.1 200
+                                // HTTP/1.1 200 OK
                                 // Server:             nginx/1.18.0 (Ubuntu)
                                 // Date:               Tue, 02 Mar 2021 17:51:14 GMT
                                 // Content-Type:       application/json;charset=utf-8
@@ -3396,7 +3311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
-                            // HTTP/1.1 400
+                            // HTTP/1.1 400 BadRequest
                             // Server:             nginx/1.18.0
                             // Date:               Fri, 08 Jan 2021 14:19:25 GMT
                             // Content-Type:       application/json;charset=utf-8
@@ -3452,7 +3367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // HTTP/1.1 401
+                        // HTTP/1.1 401 Unauthorized
                         // Server:          nginx/1.18.0 (Ubuntu)
                         // Date:            Tue, 02 Mar 2021 23:09:35 GMT
                         // Content-Type:    application/json;charset=UTF-8
@@ -3527,7 +3442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
-                        // HTTP/1.1 404
+                        // HTTP/1.1 404 NotFound
                         // Server: nginx/1.18.0 (Ubuntu)
                         // Date: Wed, 03 Mar 2021 01:00:15 GMT
                         // Content-Type: application/json;charset=UTF-8
@@ -3649,30 +3564,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsEndResponse != null)
-            //        await Task.WhenAll(OnChargingNotificationsEndResponse.GetInvocationList().
-            //                           Cast<OnChargingNotificationsEndResponseDelegate>().
-            //                           Select(e => e(Endtime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout,
-            //                                         result,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsEndResponse != null)
+                    await Task.WhenAll(OnChargingNotificationsEndResponse.GetInvocationList().
+                                       Cast<OnChargingNotificationsEndResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndResponse));
+            }
 
             #endregion
 
@@ -3711,28 +3620,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsErrorRequest != null)
-            //        await Task.WhenAll(OnChargingNotificationsErrorRequest.GetInvocationList().
-            //                           Cast<OnChargingNotificationsErrorRequestDelegate>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsErrorRequest != null)
+                    await Task.WhenAll(OnChargingNotificationsErrorRequest.GetInvocationList().
+                                       Cast<OnChargingNotificationsErrorRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorRequest));
+            }
 
             #endregion
 
@@ -3790,7 +3694,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                // HTTP/1.1 200
+                                // HTTP/1.1 200 OK
                                 // Server:             nginx/1.18.0 (Ubuntu)
                                 // Date:               Tue, 02 Mar 2021 17:51:14 GMT
                                 // Content-Type:       application/json;charset=utf-8
@@ -3865,7 +3769,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
-                            // HTTP/1.1 400
+                            // HTTP/1.1 400 BadRequest
                             // Server:             nginx/1.18.0
                             // Date:               Fri, 08 Jan 2021 14:19:25 GMT
                             // Content-Type:       application/json;charset=utf-8
@@ -3921,7 +3825,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // HTTP/1.1 401
+                        // HTTP/1.1 401 Unauthorized
                         // Server:          nginx/1.18.0 (Ubuntu)
                         // Date:            Tue, 02 Mar 2021 23:09:35 GMT
                         // Content-Type:    application/json;charset=UTF-8
@@ -3996,7 +3900,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
-                        // HTTP/1.1 404
+                        // HTTP/1.1 404 NotFound
                         // Server: nginx/1.18.0 (Ubuntu)
                         // Date: Wed, 03 Mar 2021 01:00:15 GMT
                         // Content-Type: application/json;charset=UTF-8
@@ -4118,30 +4022,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnChargingNotificationsErrorResponse != null)
-            //        await Task.WhenAll(OnChargingNotificationsErrorResponse.GetInvocationList().
-            //                           Cast<OnChargingNotificationsErrorResponseDelegate>().
-            //                           Select(e => e(Endtime,
-            //                                         Request.Timestamp,
-            //                                         this,
-            //                                         //ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.Action,
-            //                                         Request.EVSEStatusRecords.ULongCount(),
-            //                                         Request.EVSEStatusRecords,
-            //                                         Request.RequestTimeout ?? RequestTimeout,
-            //                                         result,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnChargingNotificationsErrorResponse != null)
+                    await Task.WhenAll(OnChargingNotificationsErrorResponse.GetInvocationList().
+                                       Cast<OnChargingNotificationsErrorResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorResponse));
+            }
 
             #endregion
 
@@ -4181,26 +4079,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnSendChargeDetailRecordRequest != null)
-            //        await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
-            //                           Cast<OnSendChargeDetailRecordRequestHandler>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp.Value,
-            //                                         this,
-            //                                         ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.ChargeDetailRecord,
-            //                                         Request.RequestTimeout ?? RequestTimeout.Value))).
-            //                           ConfigureAwait(false);
+                if (OnSendChargeDetailRecordRequest != null)
+                    await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
+            }
 
             #endregion
 
@@ -4314,7 +4209,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
-                            // HTTP/1.1 400
+                            // HTTP/1.1 400 OK
                             // Server:             nginx/1.18.0
                             // Date:               Fri, 08 Jan 2021 14:19:25 GMT
                             // Content-Type:       application/json;charset=utf-8
@@ -4370,7 +4265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
-                        // HTTP/1.1 401
+                        // HTTP/1.1 401 Unauthorized
                         // Server:          nginx/1.18.0 (Ubuntu)
                         // Date:            Tue, 02 Mar 2021 23:09:35 GMT
                         // Content-Type:    application/json;charset=UTF-8
@@ -4495,28 +4390,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var Endtime = DateTime.UtcNow;
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnSendChargeDetailRecordResponse != null)
-            //        await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
-            //                           Cast<OnSendChargeDetailRecordResponseHandler>().
-            //                           Select(e => e(StartTime,
-            //                                         Request.Timestamp.Value,
-            //                                         this,
-            //                                         ClientId,
-            //                                         Request.EventTrackingId,
-            //                                         Request.ChargeDetailRecord,
-            //                                         Request.RequestTimeout ?? RequestTimeout.Value,
-            //                                         result.Content,
-            //                                         Endtime - StartTime))).
-            //                           ConfigureAwait(false);
+                if (OnSendChargeDetailRecordResponse != null)
+                    await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordResponseDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
+            }
 
             #endregion
 

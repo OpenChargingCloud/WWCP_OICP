@@ -328,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authorize start request will be send.
         /// </summary>
-        public event OnAuthorizeStartRequestHandler OnAuthorizeStartRequest
+        public event OnAuthorizeStartRequestDelegate OnAuthorizeStartRequest
         {
 
             add
@@ -382,7 +382,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseHandler OnAuthorizeStartResponse
+        public event OnAuthorizeStartResponseDelegate OnAuthorizeStartResponse
         {
 
             add
@@ -404,7 +404,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authorize stop request will be send.
         /// </summary>
-        public event OnAuthorizeStopRequestHandler OnAuthorizeStopRequest
+        public event OnAuthorizeStopRequestDelegate OnAuthorizeStopRequest
         {
 
             add
@@ -458,7 +458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authorize start request was sent.
         /// </summary>
-        public event OnAuthorizeStopResponseHandler OnAuthorizeStopResponse
+        public event OnAuthorizeStopResponseDelegate OnAuthorizeStopResponse
         {
 
             add
@@ -475,12 +475,318 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+
+        #region OnChargingNotificationsStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsStart will be send.
+        /// </summary>
+        public event OnChargingNotificationsStartRequestDelegate   OnChargingNotificationsStartRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsStartRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsStartRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsStart HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnChargingNotificationsStartHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsStartHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsStartHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsStart HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnChargingNotificationsStartHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsStartHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsStartHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsStart had been received.
+        /// </summary>
+        public event OnChargingNotificationsStartResponseDelegate  OnChargingNotificationsStartResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsStartResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsStartResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnChargingNotificationsProgressRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsProgress will be send.
+        /// </summary>
+        public event OnChargingNotificationsProgressRequestDelegate   OnChargingNotificationsProgressRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsProgressRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsProgressRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsProgressHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsProgressHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsProgressHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsProgressHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsProgress had been received.
+        /// </summary>
+        public event OnChargingNotificationsProgressResponseDelegate  OnChargingNotificationsProgressResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsProgressResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsProgressResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnChargingNotificationsEndRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsEnd will be send.
+        /// </summary>
+        public event OnChargingNotificationsEndRequestDelegate   OnChargingNotificationsEndRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsEndRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsEndRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsEndHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsEndHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsEndHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsEndHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsEnd had been received.
+        /// </summary>
+        public event OnChargingNotificationsEndResponseDelegate  OnChargingNotificationsEndResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsEndResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsEndResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnChargingNotificationsErrorRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsError will be send.
+        /// </summary>
+        public event OnChargingNotificationsErrorRequestDelegate   OnChargingNotificationsErrorRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsErrorRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsErrorRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a ChargingNotificationsError HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsErrorHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsErrorHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsErrorHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsErrorHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingNotificationsError had been received.
+        /// </summary>
+        public event OnChargingNotificationsErrorResponseDelegate  OnChargingNotificationsErrorResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingNotificationsErrorResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingNotificationsErrorResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
         #region OnSendChargeDetailRecordRequest/-Response
 
         /// <summary>
         /// An event fired whenever a charge detail record will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordRequestHandler OnSendChargeDetailRecordRequest
+        public event OnSendChargeDetailRecordRequestDelegate OnSendChargeDetailRecordRequest
         {
 
             add
@@ -534,7 +840,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a response to a sent charge detail record had been received.
         /// </summary>
-        public event OnSendChargeDetailRecordResponseHandler OnSendChargeDetailRecordResponse
+        public event OnSendChargeDetailRecordResponseDelegate OnSendChargeDetailRecordResponse
         {
 
             add
@@ -548,83 +854,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
         }
-
-        #endregion
-
-
-        #region OnPullAuthenticationDataRequest/-Response
-
-        ///// <summary>
-        ///// An event fired whenever a request pulling authentication data will be send.
-        ///// </summary>
-        //public event OnPullAuthenticationDataRequestHandler OnPullAuthenticationDataRequest
-        //{
-
-        //    add
-        //    {
-        //        CPOClient.OnPullAuthenticationDataRequest += value;
-        //    }
-
-        //    remove
-        //    {
-        //        CPOClient.OnPullAuthenticationDataRequest -= value;
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// An event fired whenever a HTTP request pulling authentication data will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnPullAuthenticationDataHTTPRequest
-        //{
-
-        //    add
-        //    {
-        //        CPOClient.OnPullAuthenticationDataHTTPRequest += value;
-        //    }
-
-        //    remove
-        //    {
-        //        CPOClient.OnPullAuthenticationDataHTTPRequest -= value;
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// An event fired whenever a response to a pull authentication data HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnPullAuthenticationDataOICPResult
-        //{
-
-        //    add
-        //    {
-        //        CPOClient.OnPullAuthenticationDataOICPResult += value;
-        //    }
-
-        //    remove
-        //    {
-        //        CPOClient.OnPullAuthenticationDataOICPResult -= value;
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// An event fired whenever a response to a pull authentication data request was received.
-        ///// </summary>
-        //public event OnPullAuthenticationDataResponseHandler OnPullAuthenticationDataResponse
-        //{
-
-        //    add
-        //    {
-        //        CPOClient.OnPullAuthenticationDataResponse += value;
-        //    }
-
-        //    remove
-        //    {
-        //        CPOClient.OnPullAuthenticationDataResponse -= value;
-        //    }
-
-        //}
 
         #endregion
 

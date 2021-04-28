@@ -122,8 +122,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    ResponseTimestamp,
                    EventTrackingId,
                    Runtime,
-                   ProcessId,
                    HTTPResponse,
+                   ProcessId,
                    CustomData)
 
         {
@@ -994,7 +994,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Custom Data                           [optional]
+                #region Parse CustomData                            [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
@@ -1394,8 +1394,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        ResponseTimestamp,
                        EventTrackingId,
                        Runtime,
-                       ProcessId,
                        HTTPResponse,
+                       ProcessId,
                        CustomData)
 
             {

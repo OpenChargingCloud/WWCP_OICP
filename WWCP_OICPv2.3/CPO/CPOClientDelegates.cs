@@ -19,9 +19,6 @@
 
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-
-using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -46,30 +43,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new EVSE data record will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                            LogTimestamp,
-                                                        DateTime                                            RequestTimestamp,
-                                                        CPOClient                                           Sender,
-                                                        //String                                              SenderId,
-                                                        EventTracking_Id                                    EventTrackingId,
-                                                        ActionTypes                                         Action,
-                                                        UInt64                                              NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>                         EVSEDataRecords,
-                                                        TimeSpan                                            RequestTimeout);
+    public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                           Timestamp,
+                                                        CPOClient                                          Sender,
+                                                        String                                             SenderDescription,
+                                                        PushEVSEDataRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                            LogTimestamp,
-                                                        DateTime                                            RequestTimestamp,
-                                                        CPOClient                                           Sender,
-                                                        //String                                              SenderId,
-                                                        EventTracking_Id                                    EventTrackingId,
-                                                        ActionTypes                                         Action,
-                                                        UInt64                                              NumberOfEVSEDataRecords,
-                                                        IEnumerable<EVSEDataRecord>                         EVSEDataRecords,
-                                                        TimeSpan                                            RequestTimeout,
-                                                        OICPResult<Acknowledgement<PushEVSEDataRequest>>    Result,
-                                                        TimeSpan                                            Runtime);
+    public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                           Timestamp,
+                                                        CPOClient                                          Sender,
+                                                        String                                             SenderDescription,
+                                                        PushEVSEDataRequest                                Request,
+                                                        OICPResult<Acknowledgement<PushEVSEDataRequest>>   Result);
 
     #endregion
 
@@ -78,30 +64,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new EVSE status record will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                              LogTimestamp,
-                                                          DateTime                                              RequestTimestamp,
-                                                          CPOClient                                             Sender,
-                                                          //String                                                SenderId,
-                                                          EventTracking_Id                                      EventTrackingId,
-                                                          ActionTypes                                           Action,
-                                                          UInt64                                                NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>                         EVSEStatusRecords,
-                                                          TimeSpan                                              RequestTimeout);
+    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                             Timestamp,
+                                                          CPOClient                                            Sender,
+                                                          String                                               SenderDescription,
+                                                          PushEVSEStatusRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new EVSE status record had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                              LogTimestamp,
-                                                          DateTime                                              RequestTimestamp,
-                                                          CPOClient                                             Sender,
-                                                          //String                                                SenderId,
-                                                          EventTracking_Id                                      EventTrackingId,
-                                                          ActionTypes                                           Action,
-                                                          UInt64                                                NumberOfEVSEStatusRecords,
-                                                          IEnumerable<EVSEStatusRecord>                         EVSEStatusRecords,
-                                                          TimeSpan                                              RequestTimeout,
-                                                          OICPResult<Acknowledgement<PushEVSEStatusRequest>>    Result,
-                                                          TimeSpan                                              Runtime);
+    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                             Timestamp,
+                                                          CPOClient                                            Sender,
+                                                          String                                               SenderDescription,
+                                                          PushEVSEStatusRequest                                Request,
+                                                          OICPResult<Acknowledgement<PushEVSEStatusRequest>>   Result);
 
     #endregion
 
@@ -111,38 +86,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever an AuthorizeStart request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStartRequestHandler (DateTime                                  LogTimestamp,
-                                                         DateTime                                  RequestTimestamp,
-                                                         CPOClient                                 Sender,
-                                                         //String                                    SenderId,
-                                                         EventTracking_Id                          EventTrackingId,
-                                                         Operator_Id                               OperatorId,
-                                                         Identification                            Identification,
-                                                         EVSE_Id?                                  EVSEId,
-                                                         Session_Id?                               SessionId,
-                                                         PartnerProduct_Id?                        PartnerProductId,
-                                                         CPOPartnerSession_Id?                     CPOPartnerSessionId,
-                                                         EMPPartnerSession_Id?                     EMPPartnerSessionId,
-                                                         TimeSpan                                  RequestTimeout);
+    public delegate Task OnAuthorizeStartRequestDelegate (DateTime                                 Timestamp,
+                                                          CPOClient                                Sender,
+                                                          String                                   SenderDescription,
+                                                          AuthorizeStartRequest                    Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeStart request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStartResponseHandler(DateTime                                  LogTimestamp,
-                                                         DateTime                                  RequestTimestamp,
-                                                         CPOClient                                 Sender,
-                                                         //String                                    SenderId,
-                                                         EventTracking_Id                          EventTrackingId,
-                                                         Operator_Id                               OperatorId,
-                                                         Identification                            Identification,
-                                                         EVSE_Id?                                  EVSEId,
-                                                         Session_Id?                               SessionId,
-                                                         PartnerProduct_Id?                        PartnerProductId,
-                                                         CPOPartnerSession_Id?                     CPOPartnerSessionId,
-                                                         EMPPartnerSession_Id?                     EMPPartnerSessionId,
-                                                         TimeSpan                                  RequestTimeout,
-                                                         OICPResult<AuthorizationStartResponse>    Result,
-                                                         TimeSpan                                  Runtime);
+    public delegate Task OnAuthorizeStartResponseDelegate(DateTime                                 Timestamp,
+                                                          CPOClient                                Sender,
+                                                          String                                   SenderDescription,
+                                                          AuthorizeStartRequest                    Request,
+                                                          OICPResult<AuthorizationStartResponse>   Result);
 
     #endregion
 
@@ -151,36 +107,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever an AuthorizeStop request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStopRequestHandler (DateTime                      LogTimestamp,
-                                                        DateTime                      RequestTimestamp,
-                                                        CPOClient                     Sender,
-                                                        String                        SenderId,
-                                                        EventTracking_Id              EventTrackingId,
-                                                        Operator_Id                   OperatorId,
-                                                        Session_Id                    SessionId,
-                                                        Identification                Identification,
-                                                        EVSE_Id?                      EVSEId,
-                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
-                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
-                                                        TimeSpan                      RequestTimeout);
+    public delegate Task OnAuthorizeStopRequestDelegate (DateTime                                Timestamp,
+                                                         CPOClient                               Sender,
+                                                         String                                  SenderDescription,
+                                                         AuthorizeStopRequest                    Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeStop request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStopResponseHandler(DateTime                      LogTimestamp,
-                                                        DateTime                      RequestTimestamp,
-                                                        CPOClient                    Sender,
-                                                        String                        SenderId,
-                                                        EventTracking_Id              EventTrackingId,
-                                                        Operator_Id                   OperatorId,
-                                                        Session_Id                    SessionId,
-                                                        Identification                Identification,
-                                                        EVSE_Id?                      EVSEId,
-                                                        CPOPartnerSession_Id?         CPOPartnerSessionId,
-                                                        EMPPartnerSession_Id?         EMPPartnerSessionId,
-                                                        TimeSpan                      RequestTimeout,
-                                                        AuthorizationStopResponse     Result,
-                                                        TimeSpan                      Runtime);
+    public delegate Task OnAuthorizeStopResponseDelegate(DateTime                                Timestamp,
+                                                         CPOClient                               Sender,
+                                                         String                                  SenderDescription,
+                                                         AuthorizeStopRequest                    Request,
+                                                         OICPResult<AuthorizationStopResponse>   Result);
 
     #endregion
 
@@ -190,26 +129,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingNotificationsStart will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsStartRequestHandler (DateTime                                             LogTimestamp,
-                                                                     DateTime                                             RequestTimestamp,
-                                                                     CPOClient                                            Sender,
-                                                                     String                                               SenderId,
-                                                                     EventTracking_Id                                     EventTrackingId,
-                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
-                                                                     TimeSpan                                             RequestTimeout);
+    public delegate Task OnChargingNotificationsStartRequestDelegate (DateTime                                                         Timestamp,
+                                                                      CPOClient                                                        Sender,
+                                                                      String                                                           SenderDescription,
+                                                                      ChargingNotificationsStartRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingNotificationsStart had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsStartResponseHandler(DateTime                                             Timestamp,
-                                                                     DateTime                                             RequestTimestamp,
-                                                                     CPOClient                                            Sender,
-                                                                     String                                               SenderId,
-                                                                     EventTracking_Id                                     EventTrackingId,
-                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
-                                                                     TimeSpan                                             RequestTimeout,
-                                                                     Acknowledgement<ChargingNotificationsStartRequest>   Result,
-                                                                     TimeSpan                                             Runtime);
+    public delegate Task OnChargingNotificationsStartResponseDelegate(DateTime                                                         Timestamp,
+                                                                      CPOClient                                                        Sender,
+                                                                      String                                                           SenderDescription,
+                                                                      ChargingNotificationsStartRequest                                Request,
+                                                                      OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>   Result);
 
     #endregion
 
@@ -218,26 +150,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingNotificationsProgress will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsProgressRequestHandler (DateTime                                                LogTimestamp,
-                                                                        DateTime                                                RequestTimestamp,
-                                                                        CPOClient                                               Sender,
-                                                                        String                                                  SenderId,
-                                                                        EventTracking_Id                                        EventTrackingId,
-                                                                        ChargeDetailRecord                                      ChargeDetailRecord,
-                                                                        TimeSpan                                                RequestTimeout);
+    public delegate Task OnChargingNotificationsProgressRequestDelegate (DateTime                                                            Timestamp,
+                                                                         CPOClient                                                           Sender,
+                                                                         String                                                              SenderDescription,
+                                                                         ChargingNotificationsProgressRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingNotificationsProgress had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsProgressResponseHandler(DateTime                                                Timestamp,
-                                                                        DateTime                                                RequestTimestamp,
-                                                                        CPOClient                                               Sender,
-                                                                        String                                                  SenderId,
-                                                                        EventTracking_Id                                        EventTrackingId,
-                                                                        ChargeDetailRecord                                      ChargeDetailRecord,
-                                                                        TimeSpan                                                RequestTimeout,
-                                                                        Acknowledgement<ChargingNotificationsProgressRequest>   Result,
-                                                                        TimeSpan                                                Runtime);
+    public delegate Task OnChargingNotificationsProgressResponseDelegate(DateTime                                                            Timestamp,
+                                                                         CPOClient                                                           Sender,
+                                                                         String                                                              SenderDescription,
+                                                                         ChargingNotificationsProgressRequest                                Request,
+                                                                         OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>   Result);
 
     #endregion
 
@@ -246,26 +171,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingNotificationsEnd will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsEndRequestHandler (DateTime                                           LogTimestamp,
-                                                                   DateTime                                           RequestTimestamp,
-                                                                   CPOClient                                          Sender,
-                                                                   String                                             SenderId,
-                                                                   EventTracking_Id                                   EventTrackingId,
-                                                                   ChargeDetailRecord                                 ChargeDetailRecord,
-                                                                   TimeSpan                                           RequestTimeout);
+    public delegate Task OnChargingNotificationsEndRequestDelegate (DateTime                                                       Timestamp,
+                                                                    CPOClient                                                      Sender,
+                                                                    String                                                         SenderDescription,
+                                                                    ChargingNotificationsEndRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingNotificationsEnd had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsEndResponseHandler(DateTime                                           Timestamp,
-                                                                   DateTime                                           RequestTimestamp,
-                                                                   CPOClient                                          Sender,
-                                                                   String                                             SenderId,
-                                                                   EventTracking_Id                                   EventTrackingId,
-                                                                   ChargeDetailRecord                                 ChargeDetailRecord,
-                                                                   TimeSpan                                           RequestTimeout,
-                                                                   Acknowledgement<ChargingNotificationsEndRequest>   Result,
-                                                                   TimeSpan                                           Runtime);
+    public delegate Task OnChargingNotificationsEndResponseDelegate(DateTime                                                       Timestamp,
+                                                                    CPOClient                                                      Sender,
+                                                                    String                                                         SenderDescription,
+                                                                    ChargingNotificationsEndRequest                                Request,
+                                                                    OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>   Result);
 
     #endregion
 
@@ -274,26 +192,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingNotificationsError will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsErrorRequestHandler (DateTime                                             LogTimestamp,
-                                                                     DateTime                                             RequestTimestamp,
-                                                                     CPOClient                                            Sender,
-                                                                     String                                               SenderId,
-                                                                     EventTracking_Id                                     EventTrackingId,
-                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
-                                                                     TimeSpan                                             RequestTimeout);
+    public delegate Task OnChargingNotificationsErrorRequestDelegate (DateTime                                                         Timestamp,
+                                                                      CPOClient                                                        Sender,
+                                                                      String                                                           SenderDescription,
+                                                                      ChargingNotificationsErrorRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingNotificationsError had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsErrorResponseHandler(DateTime                                             Timestamp,
-                                                                     DateTime                                             RequestTimestamp,
-                                                                     CPOClient                                            Sender,
-                                                                     String                                               SenderId,
-                                                                     EventTracking_Id                                     EventTrackingId,
-                                                                     ChargeDetailRecord                                   ChargeDetailRecord,
-                                                                     TimeSpan                                             RequestTimeout,
-                                                                     Acknowledgement<ChargingNotificationsErrorRequest>   Result,
-                                                                     TimeSpan                                             Runtime);
+    public delegate Task OnChargingNotificationsErrorResponseDelegate(DateTime                                                         Timestamp,
+                                                                      CPOClient                                                        Sender,
+                                                                      String                                                           SenderDescription,
+                                                                      ChargingNotificationsErrorRequest                                Request,
+                                                                      OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>   Result);
 
     #endregion
 
@@ -301,28 +212,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     #region OnSendChargeDetailRecord
 
     /// <summary>
-    /// A delegate called whenever a ChargeDetailRecord will be send.
+    /// A delegate called whenever a SendChargeDetailRecord request will be send.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordRequestHandler (DateTime                                         LogTimestamp,
-                                                                 DateTime                                         RequestTimestamp,
-                                                                 CPOClient                                        Sender,
-                                                                 String                                           SenderId,
-                                                                 EventTracking_Id                                 EventTrackingId,
-                                                                 ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan                                         RequestTimeout);
+    public delegate Task OnSendChargeDetailRecordRequestDelegate (DateTime                                                     Timestamp,
+                                                                  CPOClient                                                    Sender,
+                                                                  String                                                       SenderDescription,
+                                                                  SendChargeDetailRecordRequest                                Request);
 
     /// <summary>
-    /// A delegate called whenever a response for a ChargeDetailRecord had been received.
+    /// A delegate called whenever a response for a SendChargeDetailRecord request had been received.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordResponseHandler(DateTime                                         Timestamp,
-                                                                 DateTime                                         RequestTimestamp,
-                                                                 CPOClient                                        Sender,
-                                                                 String                                           SenderId,
-                                                                 EventTracking_Id                                 EventTrackingId,
-                                                                 ChargeDetailRecord                               ChargeDetailRecord,
-                                                                 TimeSpan                                         RequestTimeout,
-                                                                 Acknowledgement<SendChargeDetailRecordRequest>   Result,
-                                                                 TimeSpan                                         Runtime);
+    public delegate Task OnSendChargeDetailRecordResponseDelegate(DateTime                                                     Timestamp,
+                                                                  CPOClient                                                    Sender,
+                                                                  String                                                       SenderDescription,
+                                                                  SendChargeDetailRecordRequest                                Request,
+                                                                  OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>   Result);
 
     #endregion
 

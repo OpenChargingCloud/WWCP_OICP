@@ -233,24 +233,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new CPO HTTP Server API.
+        /// Create a new EMP HTTP Server API.
         /// </summary>
-        public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector,
-                            LocalCertificateSelectionCallback    ClientCertificateSelector,
-                            RemoteCertificateValidationCallback  ClientCertificateValidator,
-                            SslProtocols                         AllowedTLSProtocols   = SslProtocols.Tls12 | SslProtocols.Tls13,
-                            HTTPHostname?                        HTTPHostname          = null,
-                            IPPort?                              HTTPServerPort        = null,
-                            String                               HTTPServerName        = DefaultHTTPServerName,
-                            String                               ExternalDNSName       = null,
-                            HTTPPath?                            BasePath              = null,
-                            HTTPPath?                            URLPathPrefix         = null,
-                            String                               ServiceName           = DefaultHTTPServiceName,
-                            Boolean                              DisableLogging        = false,
-                            String                               LoggingContext        = null,
-                            LogfileCreatorDelegate               LogfileCreator        = null,
-                            DNSClient                            DNSClient             = null,
-                            Boolean                              AutoStart             = false)
+        public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
+                            LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
+                            RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
+                            SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            HTTPHostname?                        HTTPHostname                 = null,
+                            IPPort?                              HTTPServerPort               = null,
+                            String                               HTTPServerName               = DefaultHTTPServerName,
+                            String                               ExternalDNSName              = null,
+                            HTTPPath?                            BasePath                     = null,
+                            HTTPPath?                            URLPathPrefix                = null,
+                            String                               ServiceName                  = DefaultHTTPServiceName,
+                            Boolean                              DisableLogging               = false,
+                            String                               LoggingContext               = null,
+                            LogfileCreatorDelegate               LogfileCreator               = null,
+                            DNSClient                            DNSClient                    = null,
+                            Boolean                              AutoStart                    = false)
 
             : base(ServerCertificateSelector,
                    ClientCertificateSelector,

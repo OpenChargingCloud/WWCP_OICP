@@ -36,6 +36,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <typeparam name="T">The type of the result.</typeparam>
         /// <param name="OICPResult">The OICP result.</param>
         public static Boolean IsSuccess<T>(this OICPResult<T> OICPResult)
+            where T : IResponse
+
             => (!(OICPResult is null)) && OICPResult.WasSuccessful;
 
     }
@@ -45,6 +47,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     public class OICPResult<T>
+        where T : IResponse
+
     {
 
         #region Properties
@@ -57,7 +61,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The result.
         /// </summary>
-        public T                    Result              { get; }
+        public T                    Response            { get; }
 
         /// <summary>
         /// The request was successful.
@@ -74,6 +78,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Process_Id?          ProcessId           { get; }
 
+
+        /// <summary>
+        /// The timestamp of the response.
+        /// </summary>
+        public DateTime             ResponseTimestamp
+            => Response.ResponseTimestamp;
+
+        /// <summary>
+        /// The runtime of the request leading to this response.
+        /// </summary>
+        public TimeSpan             Runtime
+            => Response.Runtime;
+
         #endregion
 
         #region Constructor(s)
@@ -82,19 +99,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new generic OICP result.
         /// </summary>
         /// <param name="Request">The request.</param>
-        /// <param name="Result">The result.</param>
+        /// <param name="Response">The result.</param>
         /// <param name="WasSuccessful">The request was successful.</param>
         /// <param name="ValidationErrors">Possible request data validation errors.</param>
         /// <param name="ProcessId">The process identification of the result.</param>
         private OICPResult(Object               Request,
-                           T                    Result,
+                           T                    Response,
                            Boolean              WasSuccessful,
                            ValidationErrorList  ValidationErrors,
                            Process_Id?          ProcessId)
         {
 
             this.Request           = Request;
-            this.Result            = Result;
+            this.Response          = Response;
             this.WasSuccessful     = WasSuccessful;
             this.ValidationErrors  = ValidationErrors;
             this.ProcessId         = ProcessId;
