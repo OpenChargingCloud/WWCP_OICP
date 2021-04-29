@@ -292,7 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         EnvironmentalImpact:               null,
                                                         MaxCapacity:                       null,
                                                         AccessibilityLocationType:         null,
-                                                        AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description) != null
+                                                        AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNeitherNullNorEmpty()
                                                                                                ? new I18NText(
                                                                                                      LanguageCode.Parse(
                                                                                                          (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
@@ -356,7 +356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEStatusType.HasValue
                    ? EVSEStatusType.Value.ToWWCP()
-                   : default;
+                   : new EVSEStatusTypes?();
 
         #endregion
 
@@ -388,7 +388,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEStatusType.HasValue
                    ? EVSEStatusType.Value.ToOICP()
-                   : default;
+                   : new EVSEStatusTypes?();
 
         #endregion
 
@@ -464,7 +464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => GeoLocation.HasValue
                    ? GeoLocation.Value.ToOICP()
-                   : default;
+                   : new GeoCoordinates?();
 
         #endregion
 
@@ -479,7 +479,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => GeoLocation.HasValue
                    ? GeoLocation.Value.ToWWCP()
-                   : default;
+                   : new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate?();
 
         #endregion
 
@@ -496,7 +496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OperatorId.HasValue
                    ? OperatorId.Value.ToOICP()
-                   : default;
+                   : new Operator_Id?();
 
         #endregion
 
@@ -510,7 +510,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OperatorId.HasValue
                    ? OperatorId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingStationOperator_Id?();
 
         #endregion
 
@@ -525,7 +525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToOICP()
-                   : default;
+                   : new Provider_Id?();
 
         #endregion
 
@@ -539,7 +539,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.eMobilityProvider_Id?();
 
         #endregion
 
@@ -555,7 +555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEId.HasValue
                    ? EVSEId.Value.ToOICP()
-                   : default;
+                   : new EVSE_Id?();
 
         #endregion
 
@@ -569,7 +569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEId.HasValue
                    ? EVSEId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.EVSE_Id?();
 
         #endregion
 
@@ -585,7 +585,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingStationId.HasValue
                    ? ChargingStationId.Value.ToOICP()
-                   : default;
+                   : new ChargingStation_Id?();
 
         #endregion
 
@@ -599,7 +599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingStationId.HasValue
                    ? ChargingStationId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingStation_Id?();
 
         #endregion
 
@@ -615,7 +615,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingPoolId.HasValue
                    ? ChargingPoolId.Value.ToOICP()
-                   : default;
+                   : new ChargingPool_Id?();
 
         #endregion
 
@@ -629,7 +629,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingPoolId.HasValue
                    ? ChargingPoolId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingPool_Id?();
 
         #endregion
 
@@ -644,7 +644,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => SessionId.HasValue
                    ? SessionId.Value.ToOICP()
-                   : default;
+                   : new Session_Id?();
 
         #endregion
 
@@ -658,7 +658,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => SessionId.HasValue
                    ? SessionId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingSession_Id?();
 
         #endregion
 
@@ -673,7 +673,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EMPPartnerSessionId.HasValue
                    ? EMPPartnerSessionId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingSession_Id?();
 
         #endregion
 
@@ -687,7 +687,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => CPOPartnerSessionId.HasValue
                    ? CPOPartnerSessionId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingSession_Id?();
 
         #endregion
 
@@ -702,7 +702,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingReservationId.HasValue
                    ? ChargingReservationId.Value.ToOICP()
-                   : default;
+                   : new Session_Id?();
 
         #endregion
 
@@ -725,12 +725,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingProductId.HasValue
                    ? ChargingProductId.Value.ToOICP()
-                   : default;
+                   : new PartnerProduct_Id?();
 
         public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct ChargingProduct)
 
             => ChargingProduct is null
-                   ? default
+                   ? new PartnerProduct_Id?()
                    : ChargingProduct.Id.ToOICP();
 
         #endregion
@@ -745,7 +745,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => PartnerProductId.HasValue
                    ? PartnerProductId.Value.ToWWCP()
-                   : default;
+                   : new WWCP.ChargingProduct_Id?();
 
         #endregion
 
