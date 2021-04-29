@@ -225,6 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                             EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord   = null,
                                             DeltaTypes?                  DeltaType             = null,
                                             DateTime?                    LastUpdate            = null,
+                                            String                       OperatorName          = null,
                                             Operator_Id?                 HubOperatorId         = null,
                                             ClearingHouse_Id?            ClearingHouseId       = null)
         {
@@ -263,6 +264,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 var evseDataRecord = new EVSEDataRecord(Id:                                EVSEId.Value,
+                                                        OperatorId:                        EVSEId.Value.OperatorId,
+                                                        OperatorName:                      OperatorName,
                                                         ChargingStationName:               EVSE.ChargingStation.Name.   ToOICP(),
                                                         Address:                           EVSE.ChargingStation.Address.ToOICP(),
                                                         GeoCoordinates:                    geoLocation.Value,

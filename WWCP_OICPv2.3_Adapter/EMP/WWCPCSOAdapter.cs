@@ -421,7 +421,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.EMPRoaming                       = EMPRoaming ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this._EVSEDataRecord2EVSE             = EVSEDataRecord2EVSE;
 
-            this.EVSEOperatorFilter               = EVSEOperatorFilter ?? ((name, id) => true);
+            this.EVSEOperatorFilter               = EVSEOperatorFilter ?? (id => true);
 
             this._PullDataServiceEvery            = (UInt32) (PullDataServiceEvery.HasValue
                                                                   ? PullDataServiceEvery.Value. TotalMilliseconds
@@ -998,38 +998,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 var Warnings     = new List<String>();
                 WWCP.EVSE _EVSE  = null;
 
-                foreach (var operatorEVSEData in result.Response.OperatorEVSEData)
+                foreach (var evseDataRecord in result.Response.EVSEDataRecords)
                 {
-                    foreach (var evse in operatorEVSEData.EVSEDataRecords)
+
+                    try
                     {
 
-                        try
-                        {
+                        _EVSE = evseDataRecord.ToWWCP();
 
-                            _EVSE = evse.ToWWCP();
+                        if (_EVSE != null)
+                            WWCPEVSEs.Add(_EVSE);
 
-                            if (_EVSE != null)
-                                WWCPEVSEs.Add(_EVSE);
-
-                            else
-                                Warnings.Add("Could not convert EVSE '" + evse.Id + "'!");
-
-                        }
-                        catch (Exception e)
-                        {
-                            Warnings.Add(evse.Id.ToString() + " - " + e.Message);
-                        }
+                        else
+                            Warnings.Add("Could not convert EVSE '" + evseDataRecord.Id + "'!");
 
                     }
+                    catch (Exception e)
+                    {
+                        Warnings.Add(evseDataRecord.Id.ToString() + " - " + e.Message);
+                    }
+
                 }
 
             }
 
             return new WWCP.POIDataPull<WWCP.EVSE>(new WWCP.EVSE[0],
                                                    Warning.Create(I18NString.Create(Languages.en, result.Response.HTTPResponse.HTTPStatusCode +
-                                                                                                   (result.Response.HTTPResponse.ContentLength.HasValue && result.Response.HTTPResponse.ContentLength.Value > 0
-                                                                                                        ? Environment.NewLine + result.Response.HTTPResponse.HTTPBody.ToUTF8String()
-                                                                                                        : ""))));
+                                                                                                 (result.Response.HTTPResponse.ContentLength.HasValue && result.Response.HTTPResponse.ContentLength.Value > 0
+                                                                                                      ? Environment.NewLine + result.Response.HTTPResponse.HTTPBody.ToUTF8String()
+                                                                                                      : ""))));
 
         }
 
@@ -2461,12 +2458,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         // This will parse all nested data structures!
-                        var OperatorEVSEData = pullEVSEDataResponse.Response.OperatorEVSEData.ToArray();
+                        var evseDataRecords = pullEVSEDataResponse.Response.EVSEDataRecords.ToArray();
 
-                        if (OperatorEVSEData.Length > 0)
+                        if (evseDataRecords.Length > 0)
                         {
 
-                            DebugX.Log(String.Concat("Imported data from ", OperatorEVSEData.Length, " OICP EVSE operators"));
+                            DebugX.Log(String.Concat("Imported ", evseDataRecords.Length, " OICP EVSE data records"));
 
                             WWCP.ChargingStationOperator      WWCPChargingStationOperator     = null;
                             WWCP.ChargingStationOperator_Id?  WWCPChargingStationOperatorId   = null;
@@ -2482,14 +2479,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             WWCP.EVSE_Id?                     CurrentEVSEId;
                             UInt64                            EVSEsSkipped;
 
-                            foreach (var CurrentOperatorEVSEData in OperatorEVSEData.OrderBy(evseoperator => evseoperator.OperatorName))
+                            foreach (var evseDataRecordGroup in evseDataRecords.GroupBy(evseDataRecord => evseDataRecord.OperatorId))
                             {
 
-                                if (EVSEOperatorFilter(CurrentOperatorEVSEData.OperatorName,
-                                                       CurrentOperatorEVSEData.OperatorId))
+                                if (EVSEOperatorFilter(evseDataRecordGroup.Key))
                                 {
 
-                                    WWCPChargingStationOperatorId = CurrentOperatorEVSEData.OperatorId.ToWWCP();
+                                    WWCPChargingStationOperatorId = evseDataRecordGroup.Key.ToWWCP();
 
                                     if (WWCPChargingStationOperatorId.HasValue)
                                     {
@@ -2499,13 +2495,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out WWCPChargingStationOperator))
                                         {
 
-                                            DebugX.Log(String.Concat("Creating OICP EVSE operator '", CurrentOperatorEVSEData.OperatorName,
-                                                                 "' (", CurrentOperatorEVSEData.OperatorId.ToString(),
-                                                                 " => ", WWCPChargingStationOperatorId, ")"));
+                                            DebugX.Log(String.Concat("Creating OICP EVSE operator '", WWCPChargingStationOperatorId, "'"));
 
                                             WWCPChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
                                                                                                                        I18NString.Create(Languages.unknown,
-                                                                                                                                         CurrentOperatorEVSEData.OperatorName));
+                                                                                                                                         evseDataRecordGroup.Key.ToString()));
 
                                         }
 
@@ -2516,9 +2510,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         else
                                         {
 
-                                            DebugX.Log(String.Concat("Updating OICP EVSE operator '", CurrentOperatorEVSEData.OperatorName,
-                                                                     "' (", CurrentOperatorEVSEData.OperatorId.ToString(),
-                                                                     " => ", WWCPChargingStationOperatorId, ")"));
+                                            DebugX.Log(String.Concat("Updating OICP EVSE operator '", WWCPChargingStationOperatorId, "'"));
 
                                             // Update name (via events)!
                                             //WWCPChargingStationOperator.Name = I18NString.Create(Languages.unknown,
@@ -2534,7 +2526,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         CurrentEVSEId           = null;
                                         EVSEsSkipped            = 0;
                                         _CPInfoList             = new CPInfoList(WWCPChargingStationOperator.Id);
-                                        CurrentEVSEDataRecords  = CurrentOperatorEVSEData.EVSEDataRecords.ToArray();
+                                        CurrentEVSEDataRecords  = evseDataRecordGroup.ToArray();
 
                                         foreach (var CurrentEVSEDataRecord in CurrentEVSEDataRecords)
                                         {
@@ -2843,9 +2835,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     else
                                     {
-                                        DebugX.Log("Illegal charging station operator identification: '" + CurrentOperatorEVSEData.OperatorId.ToString() + "'!");
+                                        DebugX.Log("Illegal charging station operator identification: '" + evseDataRecordGroup.Key.ToString() + "'!");
                                         IllegalOperatorsIds++;
-                                        TotalEVSEsSkipped += (UInt64) CurrentOperatorEVSEData.EVSEDataRecords.LongCount();
+                                        TotalEVSEsSkipped += (UInt64) evseDataRecordGroup.LongCount();
                                     }
 
                                     #endregion
@@ -2856,9 +2848,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 else
                                 {
-                                    DebugX.Log("Skipping EVSE operator " + CurrentOperatorEVSEData.OperatorName + " (" + CurrentOperatorEVSEData.OperatorId.ToString() + ") with " + CurrentOperatorEVSEData.EVSEDataRecords.Count() + " EVSE data records");
+                                    DebugX.Log("Skipping EVSE operator " + evseDataRecordGroup.Key.ToString() + " with " + evseDataRecordGroup.Count() + " EVSE data records");
                                     OperatorsSkipped++;
-                                    TotalEVSEsSkipped += (UInt64) CurrentOperatorEVSEData.EVSEDataRecords.LongCount();
+                                    TotalEVSEsSkipped += (UInt64) evseDataRecordGroup.LongCount();
                                 }
 
                                 #endregion
@@ -3036,8 +3028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 foreach (var CurrentOperatorEVSEStatus in OperatorEVSEStatus.OrderBy(evseoperator => evseoperator.OperatorName))
                                 {
 
-                                    if (EVSEOperatorFilter(CurrentOperatorEVSEStatus.OperatorName,
-                                                           CurrentOperatorEVSEStatus.OperatorId))
+                                    if (EVSEOperatorFilter(CurrentOperatorEVSEStatus.OperatorId))
                                     {
 
                                         DebugX.Log("Importing EVSE operator " + CurrentOperatorEVSEStatus.OperatorName + " (" + CurrentOperatorEVSEStatus.OperatorId.ToString() + ") with " + CurrentOperatorEVSEStatus.EVSEStatusRecords.Count() + " EVSE status records");

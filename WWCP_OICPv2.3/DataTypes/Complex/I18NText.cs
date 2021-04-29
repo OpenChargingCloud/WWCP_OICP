@@ -293,35 +293,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static I18NText Parse(String Text)
         {
 
-            String ErrorResponse;
+            if (TryParse(Text, out I18NText I18NText, out String ErrorResponse))
+                return I18NText;
 
-            try
-            {
-
-                if (TryParse(JObject.Parse(Text), out I18NText I18NText, out ErrorResponse))
-                    return I18NText;
-
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("Could not parse the given JSON representation of an internationalized (I18N) multi-language text: " + e.Message);
-            }
-
-            throw new ArgumentException("The given text representation of an internationalized (I18N) multi-language text is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) Parse   (JSON)
+        #region (static) Parse   (JSONArray)
 
-        public static I18NText Parse(JObject JSON)
+        public static I18NText Parse(JArray JSONArray)
         {
 
-            if (TryParse(JSON, out I18NText i18NText, out String ErrorResponse))
+            if (TryParse(JSONArray, out I18NText i18NText, out String ErrorResponse))
                 return i18NText;
 
-            throw new ArgumentException("The given JSON representation of an internationalized (I18N) multi-language text is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + ErrorResponse,
+                                        nameof(JSONArray));
 
         }
 
@@ -340,21 +330,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String    ErrorResponse)
         {
 
-            JObject JSON;
+            #region Initial checks
+
+            I18NText       = default;
+            ErrorResponse  = "Could not parse the given internationalized(I18N) multi-language text!";
+            Text           = Text?.Trim();
+
+            if (Text.IsNullOrEmpty())
+                return false;
+
+            #endregion
 
             try
             {
-                JSON = JObject.Parse(Text);
+
+                return TryParse(JArray.Parse(Text), out I18NText, out ErrorResponse);
+
             }
             catch (Exception e)
             {
-                ErrorResponse  = "Could not parse the given internationalized (I18N) multi-language text: " + e.Message;
-                I18NText       = null;
-                return false;
+                ErrorResponse = "Could not parse the given internationalized (I18N) multi-language text: " + e.Message;
             }
-
-            if (TryParse(JSON, out I18NText, out ErrorResponse))
-                return true;
 
             return false;
 
@@ -370,45 +366,53 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="I18NText">The parsed internationalized (I18N) multi-language text.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject       JSON,
+        public static Boolean TryParse(JArray        JSON,
                                        out I18NText  I18NText,
                                        out String    ErrorResponse)
         {
 
-            if (JSON?.HasValues == true)
+            #region Initial checks
+
+            I18NText       = default;
+            ErrorResponse  = "Could not parse the given internationalized(I18N) multi-language text!";
+
+            if (JSON?.HasValues == false)
+                return false;
+
+            #endregion
+
+            try
             {
 
                 var i18NText = new Dictionary<LanguageCode, String>();
 
-                foreach (var JSONProperty in JSON)
+                foreach (JObject jsonObject in JSON)
                 {
 
-                    try
+                    if (!jsonObject.ParseMandatory("lang", "language", LanguageCode.TryParse, out LanguageCode Language, out ErrorResponse))
                     {
-
-                        if (LanguageCode.TryParse(JSONProperty.Key, out LanguageCode language))
-                        {
-                            i18NText.Add(language,
-                                         JSONProperty.Value?.Value<String>()?.Trim());
-                        }
-
-                        I18NText = new I18NText(i18NText);
-
-                    }
-                    catch (Exception e)
-                    {
-                        ErrorResponse  = "Could not parse the given internationalized (I18N) multi-language text: " + e.Message;
-                        I18NText       = null;
                         return false;
                     }
 
+                    if (!jsonObject.ParseMandatoryText("value", "text", out String Value, out ErrorResponse))
+                    {
+                        return false;
+                    }
+
+                    i18NText.Add(Language, Value);
+
                 }
 
+                I18NText = new I18NText(i18NText);
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ErrorResponse = "Could not parse the given internationalized (I18N) multi-language text: " + e.Message;
             }
 
-            ErrorResponse  = default;
-            I18NText       = new I18NText();
-            return true;
+            return false;
 
         }
 

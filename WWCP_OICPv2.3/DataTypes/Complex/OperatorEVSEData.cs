@@ -134,8 +134,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out OperatorEVSEData operatorEVSEData,
-                         out String           ErrorResponse,
+                         out OperatorEVSEData  operatorEVSEData,
+                         out String            ErrorResponse,
                          CustomOperatorEVSEDataParser))
             {
                 return operatorEVSEData;
@@ -159,8 +159,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out OperatorEVSEData operatorEVSEData,
-                         out String           ErrorResponse,
+                         out OperatorEVSEData  operatorEVSEData,
+                         out String            ErrorResponse,
                          CustomOperatorEVSEDataParser))
             {
                 return operatorEVSEData;

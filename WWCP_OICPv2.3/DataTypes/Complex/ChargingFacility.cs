@@ -238,14 +238,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Power             [mandatory]
+                #region Parse Power             [mandatory => optional, because of Hubject data quality issues!]
 
                 if (!JSON.ParseMandatory("Power",
                                          "power",
                                          out UInt32 Power,
                                          out ErrorResponse))
                 {
-                    return false;
+                    //return false;
+                    Power = 0;
                 }
 
                 #endregion

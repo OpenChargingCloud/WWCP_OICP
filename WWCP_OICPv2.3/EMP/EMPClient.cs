@@ -358,12 +358,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                          X509Certificate                      ClientCert                   = null,
-                         String                               HTTPUserAgent                = null,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                            RequestTimeout               = null,
                          TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
-                         Byte?                                MaxNumberOfRetries           = null,
+                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                              DisableLogging               = false,
-                         String                               LoggingContext               = null,
+                         String                               LoggingContext               = Logger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
 
@@ -533,7 +533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEData[0],
+                                                 new EVSEDataRecord[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -652,7 +652,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          HTTPResponse.Timestamp,
                                                                                          HTTPResponse.EventTrackingId,
                                                                                          HTTPResponse.Runtime,
-                                                                                         new OperatorEVSEData[0],
+                                                                                         new EVSEDataRecord[0],
                                                                                          statusCode,
                                                                                          processId
                                                                                      ),
@@ -671,7 +671,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEData[0],
+                                                 new EVSEDataRecord[0],
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -706,7 +706,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEData[0],
+                                 new EVSEDataRecord[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -725,7 +725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEData[0],
+                                 new EVSEDataRecord[0],
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!"
@@ -1960,7 +1960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/start"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
@@ -2355,7 +2355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/stop"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
@@ -2750,7 +2750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/start"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
@@ -3145,7 +3145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/stop"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;

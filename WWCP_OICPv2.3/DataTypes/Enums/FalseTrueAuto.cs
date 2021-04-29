@@ -88,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 case "auto":
                     FalseTrueAuto = FalseTrueAuto.Auto;
-                    return false;
+                    return true;
 
                 default:
                     FalseTrueAuto = FalseTrueAuto.Auto;

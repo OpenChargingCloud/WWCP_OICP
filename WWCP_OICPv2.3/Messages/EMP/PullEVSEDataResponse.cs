@@ -41,16 +41,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// An enumeration of EVSE data records grouped by their operators.
+        /// An enumeration of EVSE data records.
         /// </summary>
         [Mandatory]
-        public IEnumerable<OperatorEVSEData>  OperatorEVSEData    { get; }
+        public IEnumerable<EVSEDataRecord>  EVSEDataRecords    { get; }
 
         /// <summary>
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode                     StatusCode          { get; }
+        public StatusCode                   StatusCode         { get; }
 
         #endregion
 
@@ -63,20 +63,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
+        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public PullEVSEDataResponse(PullEVSEDataRequest            Request,
-                                    DateTime                       ResponseTimestamp,
-                                    EventTracking_Id               EventTrackingId,
-                                    TimeSpan                       Runtime,
-                                    IEnumerable<OperatorEVSEData>  OperatorEVSEData,
-                                    StatusCode                     StatusCode     = null,
-                                    Process_Id?                    ProcessId      = null,
-                                    HTTPResponse                   HTTPResponse   = null,
-                                    JObject                        CustomData     = null)
+        public PullEVSEDataResponse(PullEVSEDataRequest          Request,
+                                    DateTime                     ResponseTimestamp,
+                                    EventTracking_Id             EventTrackingId,
+                                    TimeSpan                     Runtime,
+                                    IEnumerable<EVSEDataRecord>  EVSEDataRecords,
+                                    StatusCode                   StatusCode     = null,
+                                    Process_Id?                  ProcessId      = null,
+                                    HTTPResponse                 HTTPResponse   = null,
+                                    JObject                      CustomData     = null)
 
             : base(Request,
                    ResponseTimestamp,
@@ -88,8 +88,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.OperatorEVSEData  = OperatorEVSEData ?? throw new ArgumentNullException(nameof(OperatorEVSEData), "The given enumeration of EVSE data records must not be null!");
-            this.StatusCode        = StatusCode;
+            this.EVSEDataRecords  = EVSEDataRecords ?? throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
+            this.StatusCode       = StatusCode;
 
         }
 
@@ -101,26 +101,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#412-eroamingevsedata-message
 
         // {
-        //   "EvseData": {
-        //     "OperatorEvseData": [
-        //       {
-        //         "EvseDataRecord": [
-        //           {
+        //     "content": [
+        //         {
         //             "EvseID":    "string",
         //             [...]
-        //           },
-        //           [...]
-        //         ],
-        //         "OperatorID":    "string",
-        //         "OperatorName":  "string"
-        //       }
+        //         },
+        //         [...]
         //     ]
-        //   },
-        //   "StatusCode": {
-        //     "AdditionalInfo":    "string",
-        //     "Code":              "000",
-        //     "Description":       "string"
-        //   }
         // }
 
         #endregion
@@ -249,28 +236,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse OperatorEVSEStatus    [mandatory]
+                #region Parse Content       [mandatory]
 
-                if (!JSON.ParseMandatory("EvseData",
-                                         "EVSE data",
-                                         out JObject evseData,
-                                         out         ErrorResponse))
-                {
-                    return false;
-                }
-
-                if (!evseData.ParseMandatoryJSON("OperatorEvseData",
-                                                 "operator EVSE data",
-                                                 OICPv2_3.OperatorEVSEData.TryParse,
-                                                 out IEnumerable<OperatorEVSEData> OperatorEVSEData,
-                                                 out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("content",
+                                             "EVSE data",
+                                             EVSEDataRecord.TryParse,
+                                             out IEnumerable<EVSEDataRecord> EVSEDataRecords,
+                                             out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse StatusCode            [optional]
+                #region Parse StatusCode    [optional]
 
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
@@ -284,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData            [optional]
+                #region Parse CustomData    [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
@@ -295,7 +274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 ResponseTimestamp,
                                                                 EventTrackingId,
                                                                 Runtime,
-                                                                OperatorEVSEData,
+                                                                EVSEDataRecords,
                                                                 StatusCode,
                                                                 ProcessId,
                                                                 HTTPResponse,
@@ -372,13 +351,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomPullEVSEDataResponseSerializer = null, CustomOperatorEVSEDataSerializer = null,...)
+        #region ToJSON(CustomPullEVSEDataResponseSerializer = null, CustomEVSEDataRecordSerializer = null,...)
 
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomPullEVSEDataResponseSerializer">A delegate to customize the serialization of PullEVSEDataResponse responses.</param>
-        /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom operator EVSE data JSON objects.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
         /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
@@ -388,7 +366,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseSerializer   = null,
-                              CustomJObjectSerializerDelegate<OperatorEVSEData>      CustomOperatorEVSEDataSerializer       = null,
                               CustomJObjectSerializerDelegate<EVSEDataRecord>        CustomEVSEDataRecordSerializer         = null,
                               CustomJObjectSerializerDelegate<Address>               CustomAddressSerializer                = null,
                               CustomJObjectSerializerDelegate<ChargingFacility>      CustomChargingFacilitySerializer       = null,
@@ -401,16 +378,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("EvseData",
-                               new JProperty("OperatorEvseData",  new JArray(OperatorEVSEData.Select(operatorEVSEData => operatorEVSEData.ToJSON(CustomOperatorEVSEDataSerializer,
-                                                                                                                                                 CustomEVSEDataRecordSerializer,
-                                                                                                                                                 CustomAddressSerializer,
-                                                                                                                                                 CustomChargingFacilitySerializer,
-                                                                                                                                                 CustomGeoCoordinatesSerializer,
-                                                                                                                                                 CustomEnergySourceSerializer,
-                                                                                                                                                 CustomEnvironmentalImpactSerializer,
-                                                                                                                                                 CustomOpeningTimesSerializer))))
-                           ),
+                           new JProperty("content",           new JArray(EVSEDataRecords.Select(evseDataRecord => evseDataRecord.ToJSON(CustomEVSEDataRecordSerializer,
+                                                                                                                                        CustomAddressSerializer,
+                                                                                                                                        CustomChargingFacilitySerializer,
+                                                                                                                                        CustomGeoCoordinatesSerializer,
+                                                                                                                                        CustomEnergySourceSerializer,
+                                                                                                                                        CustomEnvironmentalImpactSerializer,
+                                                                                                                                        CustomOpeningTimesSerializer)))),
 
                            StatusCode != null
                                ? new JProperty("StatusCode",  StatusCode.ToJSON(CustomStatusCodeSerializer))
@@ -503,8 +477,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => !(PullEVSEDataResponse is null) &&
 
-               (!OperatorEVSEData.Any() && !PullEVSEDataResponse.OperatorEVSEData.Any()) ||
-                (OperatorEVSEData.Any() && PullEVSEDataResponse.OperatorEVSEData.Any() && OperatorEVSEData.Count().Equals(PullEVSEDataResponse.OperatorEVSEData.Count())) &&
+               (!EVSEDataRecords.Any() && !PullEVSEDataResponse.EVSEDataRecords.Any()) ||
+                (EVSEDataRecords.Any() && PullEVSEDataResponse.EVSEDataRecords.Any() && EVSEDataRecords.Count().Equals(PullEVSEDataResponse.EVSEDataRecords.Count())) &&
 
                ((StatusCode == null && PullEVSEDataResponse.StatusCode == null) ||
                 (StatusCode != null && PullEVSEDataResponse.StatusCode != null && StatusCode.Equals(PullEVSEDataResponse.StatusCode)));
@@ -524,7 +498,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return OperatorEVSEData.Aggregate(0, (hashCode, operatorEVSEData) => hashCode ^ operatorEVSEData.GetHashCode()) ^
+                return EVSEDataRecords.Aggregate(0, (hashCode, operatorEVSEData) => hashCode ^ operatorEVSEData.GetHashCode()) ^
                        StatusCode?.GetHashCode() ?? 0;
 
             }
@@ -539,7 +513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEData.Count() + " operator EVSE data record(s)",
+            => String.Concat(EVSEDataRecords.Count() + " operator EVSE data record(s)",
                              StatusCode != null
                                  ? " -> " + StatusCode.Code
                                  : "");
@@ -558,7 +532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            ResponseTimestamp,
                            EventTrackingId,
                            Runtime,
-                           OperatorEVSEData,
+                           EVSEDataRecords,
                            StatusCode,
                            ProcessId,
                            HTTPResponse,
@@ -578,14 +552,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #region Properties
 
             /// <summary>
-            /// An enumeration of EVSE data records grouped by their operators.
+            /// An enumeration of EVSE data records grouped.
             /// </summary>
-            public HashSet<OperatorEVSEData>  OperatorEVSEData    { get; }
+            public HashSet<EVSEDataRecord>  EVSEDataRecords    { get; }
 
             /// <summary>
             /// The optional status code for this request.
             /// </summary>
-            public StatusCode.Builder         StatusCode          { get; }
+            public StatusCode.Builder       StatusCode         { get; }
 
             #endregion
 
@@ -598,20 +572,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
             /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
             /// <param name="Runtime">The runtime of the request/response.</param>
-            /// <param name="OperatorEVSEData">An enumeration of EVSE data records grouped by their operators.</param>
+            /// <param name="EVSEDataRecords">An enumeration of EVSE data records grouped by their operators.</param>
             /// <param name="StatusCode">An optional status code for this request.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(PullEVSEDataRequest            Request             = null,
-                           DateTime?                      ResponseTimestamp   = null,
-                           EventTracking_Id               EventTrackingId     = null,
-                           TimeSpan?                      Runtime             = null,
-                           IEnumerable<OperatorEVSEData>  OperatorEVSEData    = null,
-                           StatusCode                     StatusCode          = null,
-                           Process_Id?                    ProcessId           = null,
-                           HTTPResponse                   HTTPResponse        = null,
-                           JObject                        CustomData          = null)
+            public Builder(PullEVSEDataRequest          Request             = null,
+                           DateTime?                    ResponseTimestamp   = null,
+                           EventTracking_Id             EventTrackingId     = null,
+                           TimeSpan?                    Runtime             = null,
+                           IEnumerable<EVSEDataRecord>  EVSEDataRecords     = null,
+                           StatusCode                   StatusCode          = null,
+                           Process_Id?                  ProcessId           = null,
+                           HTTPResponse                 HTTPResponse        = null,
+                           JObject                      CustomData          = null)
 
                 : base(Request,
                        ResponseTimestamp,
@@ -623,8 +597,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.OperatorEVSEData  = OperatorEVSEData != null ? new HashSet<OperatorEVSEData>(OperatorEVSEData) : new HashSet<OperatorEVSEData>();
-                this.StatusCode        = StatusCode       != null ? StatusCode.ToBuilder()                          : new StatusCode.Builder();
+                this.EVSEDataRecords  = EVSEDataRecords != null ? new HashSet<EVSEDataRecord>(EVSEDataRecords) : new HashSet<EVSEDataRecord>();
+                this.StatusCode       = StatusCode      != null ? StatusCode.ToBuilder()                       : new StatusCode.Builder();
 
             }
 
@@ -650,7 +624,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                             ResponseTimestamp ?? DateTime.UtcNow,
                                             EventTrackingId   ?? EventTracking_Id.New,
                                             Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
-                                            OperatorEVSEData,
+                                            EVSEDataRecords,
                                             StatusCode,
                                             ProcessId,
                                             HTTPResponse,
