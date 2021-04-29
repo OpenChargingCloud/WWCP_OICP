@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEStatusType.HasValue
                    ? EVSEStatusType.Value.ToWWCP()
-                   : new EVSEStatusTypes?();
+                   : new WWCP.EVSEStatusTypes?();
 
         #endregion
 
@@ -791,7 +791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => AuthToken.HasValue
                    ? UID.Parse(AuthToken.ToString())
-                   : default;
+                   : new UID?();
 
 
         public static WWCP.Auth_Token ToWWCP(this UID UID)
