@@ -5492,7 +5492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             result = WWCP.SendCDRResult.Success(DateTime.UtcNow,
-                                                                chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR].ToObject<org.GraphDefined.WWCP.ChargeDetailRecord>(),
+                                                                chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                                 Runtime: response.Response.Runtime);
 
                         }
@@ -5501,7 +5501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             result = WWCP.SendCDRResult.Error(DateTime.UtcNow,
-                                                              chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR].ToObject<org.GraphDefined.WWCP.ChargeDetailRecord>(),
+                                                              chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                               //I18NString.Create(Languages.en, response.HTTPBodyAsUTF8String),
                                                               Runtime: response.Response.Runtime);
 
@@ -5511,7 +5511,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     else
                         result = WWCP.SendCDRResult.Error(DateTime.UtcNow,
-                                                          chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR].ToObject<org.GraphDefined.WWCP.ChargeDetailRecord>(),
+                                                          chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                           //I18NString.Create(Languages.en, response.HTTPBodyAsUTF8String),
                                                           Runtime: response.Response.Runtime);
 
@@ -5520,7 +5520,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     result = WWCP.SendCDRResult.Error(DateTime.UtcNow,
-                                                      chargeDetailRecord.CustomData[OICPMapper.WWCP_CDR].ToObject<org.GraphDefined.WWCP.ChargeDetailRecord>(),
+                                                      chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
                                                       Warning.Create(I18NString.Create(Languages.en, e.Message)),
                                                       Runtime: TimeSpan.Zero);
 
