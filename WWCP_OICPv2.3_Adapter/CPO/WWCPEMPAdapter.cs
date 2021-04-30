@@ -1769,8 +1769,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            var List = new List<PropertyUpdateInfos>();
-                            List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            var List = new List<PropertyUpdateInfos> {
+                                           new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
+                                       };
                             EVSEsUpdateLog.Add(EVSE, List);
 
                         }
