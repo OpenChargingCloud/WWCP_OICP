@@ -1368,8 +1368,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           //MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
                           HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>("OICP.HubOperatorId"),
                           HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>("OICP.HubProviderId"),
-                          CustomData:            new JObject() {
-                                                     new JProperty(WWCP_CDR, ChargeDetailRecord)
+                          InternalData:          new Dictionary<String, Object>() {
+                                                     { WWCP_CDR, ChargeDetailRecord }
                                                  }
                       );
 
