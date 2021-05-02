@@ -376,48 +376,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         private void RegisterURLTemplates()
         {
 
-            HTTPServer.AddFilter(request => {
-
-                //if (request.RemoteSocket.IPAddress.IsIPv4 &&
-                //    request.RemoteSocket.IPAddress.IsLocalhost)
-                //{
-                //    return null;
-                //}
-
-                #region Got API Key...
-
-                if (request.API_Key.HasValue)
-                {
-
-                    if (request.API_Key.Value.ToString() == "1234")
-                        return null;
-
-                    //if (IsValidAPIKey(request.API_Key.Value))
-                    //    return null;
-
-                    DebugX.LogT("Invalid HTTP API Key: " + request.API_Key);
-
-                    return new HTTPResponse.Builder(request) {
-                        HTTPStatusCode  = HTTPStatusCode.Unauthorized,
-                        Date            = DateTime.UtcNow,
-                        Server          = HTTPServer.DefaultServerName,
-                        CacheControl    = "private, max-age=0, no-cache",
-                        Connection      = "close"
-                    };
-
-                }
-
-                #endregion
-
-                return null;
-
-            });
-
-            HTTPServer.Rewrite  (request => {
-                return request;
-            });
-
-
             #region / (HTTPRoot)
 
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
