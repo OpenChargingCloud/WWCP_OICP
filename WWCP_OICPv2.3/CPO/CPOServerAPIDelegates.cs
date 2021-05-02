@@ -25,6 +25,81 @@ using System.Threading.Tasks;
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
+    #region OnAuthorizeRemoteReservationStart(Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever an AuthorizeRemoteReservationStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartRequestDelegate(DateTime                                  Timestamp,
+                                                         CPOServerAPI                              Sender,
+                                                         AuthorizeRemoteReservationStartRequest    Request);
+
+
+    /// <summary>
+    /// Initiate a remote reservation start at the given EVSE.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">An AuthorizeStart request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteReservationStartRequest>>
+
+        OnAuthorizeRemoteReservationStartDelegate(DateTime                                  Timestamp,
+                                                  CPOServerAPI                              Sender,
+                                                  AuthorizeRemoteReservationStartRequest    Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a response for an AuthorizeRemoteReservationStart request was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                   Timestamp,
+                                                          CPOServerAPI                                               Sender,
+                                                          Acknowledgement<AuthorizeRemoteReservationStartRequest>    Response,
+                                                          TimeSpan                                                   Runtime);
+
+    #endregion
+
+    #region OnAuthorizeRemoteReservationStop (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever an AuthorizeRemoteReservationStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopRequestDelegate(DateTime                                 Timestamp,
+                                                        CPOServerAPI                             Sender,
+                                                        AuthorizeRemoteReservationStopRequest    Request);
+
+
+    /// <summary>
+    /// Initiate a remote reservation stop at the given EVSE.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">An AuthorizeStop request.</param>
+    public delegate Task<Acknowledgement<AuthorizeRemoteReservationStopRequest>>
+
+        OnAuthorizeRemoteReservationStopDelegate(DateTime                                 Timestamp,
+                                                 CPOServerAPI                             Sender,
+                                                 AuthorizeRemoteReservationStopRequest    Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a response for an AuthorizeRemoteReservationStop request was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                  Timestamp,
+                                                         CPOServerAPI                                              Sender,
+                                                         Acknowledgement<AuthorizeRemoteReservationStopRequest>    Response,
+                                                         TimeSpan                                                  Runtime);
+
+    #endregion
+
+
     #region OnAuthorizeRemoteStart(Request|Response)Delegate
 
     /// <summary>

@@ -378,15 +378,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomAuthorizeRemoteStopRequestSerializer = null, CustomIdentificationSerializer = null,...)
+        #region ToJSON(CustomAuthorizeRemoteStopRequestSerializer = null)
 
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomAuthorizeRemoteStopRequestSerializer">A delegate to customize the serialization of AuthorizeRemoteStopRequest responses.</param>
-        /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeRemoteStopRequest>  CustomAuthorizeRemoteStopRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeRemoteStopRequest> CustomAuthorizeRemoteStopRequestSerializer = null)
         {
 
             var JSON = JSONObject.Create(

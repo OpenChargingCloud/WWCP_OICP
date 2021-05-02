@@ -36,58 +36,58 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PushEVSEData request.</param>
-        Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>                   PushEVSEData                     (PushEVSEDataRequest                   Request);
+        Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>                  PushEVSEData                    (PushEVSEDataRequest                  Request);
 
         /// <summary>
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PushEVSEStatus request.</param>
-        Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>                 PushEVSEStatus                   (PushEVSEStatusRequest                 Request);
+        Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>                PushEVSEStatus                  (PushEVSEStatusRequest                Request);
 
 
         /// <summary>
         /// Create an AuthorizeStart request.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
-        Task<OICPResult<AuthorizationStartResponse>>                             AuthorizeStart                   (AuthorizeStartRequest                 Request);
+        Task<OICPResult<AuthorizationStartResponse>>                            AuthorizeStart                  (AuthorizeStartRequest                Request);
 
         /// <summary>
         /// Create an AuthorizeStop request.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
-        Task<OICPResult<AuthorizationStopResponse>>                              AuthorizeStop                    (AuthorizeStopRequest                  Request);
+        Task<OICPResult<AuthorizationStopResponse>>                             AuthorizeStop                   (AuthorizeStopRequest                 Request);
 
 
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsStart request.</param>
-        Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>>     SendChargingNotificationsStart   (ChargingNotificationsStartRequest     Request);
+        /// <param name="Request">A ChargingStartNotification request.</param>
+        Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>     SendChargingStartNotification   (ChargingStartNotificationRequest     Request);
 
         /// <summary>
         /// Send a charging progress notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsProgress request.</param>
-        Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>>  SendChargingNotificationsProgress(ChargingNotificationsProgressRequest  Request);
+        /// <param name="Request">A ChargingProgressNotification request.</param>
+        Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>  SendChargingProgressNotification(ChargingProgressNotificationRequest  Request);
 
         /// <summary>
         /// Send a charging end notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsEnd request.</param>
-        Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>>       SendChargingNotificationsEnd     (ChargingNotificationsEndRequest       Request);
+        /// <param name="Request">A ChargingEndNotification request.</param>
+        Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>       SendChargingEndNotification     (ChargingEndNotificationRequest       Request);
 
         /// <summary>
         /// Send a charging error notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsError request.</param>
-        Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>>     SendChargingNotificationsError   (ChargingNotificationsErrorRequest     Request);
+        /// <param name="Request">A ChargingErrorNotification request.</param>
+        Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>     SendChargingErrorNotification   (ChargingErrorNotificationRequest     Request);
 
 
         /// <summary>
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>         SendChargeDetailRecord           (SendChargeDetailRecordRequest         Request);
+        Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>        SendChargeDetailRecord          (SendChargeDetailRecordRequest        Request);
 
     }
 

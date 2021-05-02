@@ -25,16 +25,16 @@ using System.Threading.Tasks;
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
-    #region OnAuthorizeStart    (Request|Response)Delegate
+    #region OnAuthorizeStart              (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeStart request was received.
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartRequestDelegate(DateTime                 Timestamp,
-                                        EMPServerAPI             Sender,
-                                        AuthorizeStartRequest    Request);
+        OnAuthorizeStartRequestDelegate (DateTime                      Timestamp,
+                                         EMPServerAPI                  Sender,
+                                         AuthorizeStartRequest         Request);
 
 
     /// <summary>
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">An AuthorizeStart request.</param>
     public delegate Task<AuthorizationStartResponse>
 
-        OnAuthorizeStartDelegate(DateTime                 Timestamp,
-                                 EMPServerAPI             Sender,
-                                 AuthorizeStartRequest    Request);
+        OnAuthorizeStartDelegate        (DateTime                      Timestamp,
+                                         EMPServerAPI                  Sender,
+                                         AuthorizeStartRequest         Request);
 
 
     /// <summary>
@@ -62,16 +62,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnAuthorizeStop     (Request|Response)Delegate
+    #region OnAuthorizeStop               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeStop request was received.
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopRequestDelegate(DateTime                 Timestamp,
-                                       EMPServerAPI             Sender,
-                                       AuthorizeStopRequest     Request);
+        OnAuthorizeStopRequestDelegate (DateTime                     Timestamp,
+                                        EMPServerAPI                 Sender,
+                                        AuthorizeStopRequest         Request);
 
 
     /// <summary>
@@ -82,9 +82,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<AuthorizationStopResponse>
 
-        OnAuthorizeStopDelegate(DateTime                Timestamp,
-                                EMPServerAPI            Sender,
-                                AuthorizeStopRequest    Request);
+        OnAuthorizeStopDelegate        (DateTime                     Timestamp,
+                                        EMPServerAPI                 Sender,
+                                        AuthorizeStopRequest         Request);
 
 
     /// <summary>
@@ -99,16 +99,166 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnChargeDetailRecord(Request|Response)Delegate
+
+    #region OnChargingStartNotification   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a charging start notification request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargingStartNotificationRequestDelegate (DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    ChargingStartNotificationRequest                     ChargingStartNotification);
+
+
+    /// <summary>
+    /// Send a charging start notification.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the notification.</param>
+    /// <param name="Sender">The sender of the notification.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<ChargingStartNotificationRequest>>
+
+        OnChargingStartNotificationDelegate        (DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    ChargingStartNotificationRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a charging start notification response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargingStartNotificationResponseDelegate(DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    Acknowledgement<ChargingStartNotificationRequest>    Response,
+                                                    TimeSpan                                             Runtime);
+
+    #endregion
+
+    #region OnChargingProgressNotification(Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a charging progress notification request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargingProgressNotificationRequestDelegate (DateTime                                                Timestamp,
+                                                       EMPServerAPI                                            Sender,
+                                                       ChargingProgressNotificationRequest                     ChargingProgressNotification);
+
+
+    /// <summary>
+    /// Send a charging progress notification.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the notification.</param>
+    /// <param name="Sender">The sender of the notification.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<ChargingProgressNotificationRequest>>
+
+        OnChargingProgressNotificationDelegate        (DateTime                                                Timestamp,
+                                                       EMPServerAPI                                            Sender,
+                                                       ChargingProgressNotificationRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a charging progress notification response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargingProgressNotificationResponseDelegate(DateTime                                                Timestamp,
+                                                       EMPServerAPI                                            Sender,
+                                                       Acknowledgement<ChargingProgressNotificationRequest>    Response,
+                                                       TimeSpan                                                Runtime);
+
+    #endregion
+
+    #region OnChargingEndNotification     (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a charging end notification request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargingEndNotificationRequestDelegate (DateTime                                           Timestamp,
+                                                  EMPServerAPI                                       Sender,
+                                                  ChargingEndNotificationRequest                     ChargingEndNotification);
+
+
+    /// <summary>
+    /// Send a charging end notification.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the notification.</param>
+    /// <param name="Sender">The sender of the notification.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<ChargingEndNotificationRequest>>
+
+        OnChargingEndNotificationDelegate        (DateTime                                           Timestamp,
+                                                  EMPServerAPI                                       Sender,
+                                                  ChargingEndNotificationRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a charging end notification response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargingEndNotificationResponseDelegate(DateTime                                           Timestamp,
+                                                  EMPServerAPI                                       Sender,
+                                                  Acknowledgement<ChargingEndNotificationRequest>    Response,
+                                                  TimeSpan                                           Runtime);
+
+    #endregion
+
+    #region OnChargingErrorNotification   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a charging error notification request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargingErrorNotificationRequestDelegate (DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    ChargingErrorNotificationRequest                     ChargingErrorNotification);
+
+
+    /// <summary>
+    /// Send a charging error notification.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the notification.</param>
+    /// <param name="Sender">The sender of the notification.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<Acknowledgement<ChargingErrorNotificationRequest>>
+
+        OnChargingErrorNotificationDelegate        (DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    ChargingErrorNotificationRequest                     Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a charging error notification response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargingErrorNotificationResponseDelegate(DateTime                                             Timestamp,
+                                                    EMPServerAPI                                         Sender,
+                                                    Acknowledgement<ChargingErrorNotificationRequest>    Response,
+                                                    TimeSpan                                             Runtime);
+
+    #endregion
+
+
+    #region OnChargeDetailRecord          (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a charge detail record request was received.
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordRequestDelegate(DateTime              Timestamp,
-                                            EMPServerAPI          Sender,
-                                            ChargeDetailRecord    ChargeDetailRecord);
+        OnChargeDetailRecordRequestDelegate (DateTime                                          Timestamp,
+                                             EMPServerAPI                                      Sender,
+                                             ChargeDetailRecord                                ChargeDetailRecord);
 
 
     /// <summary>
@@ -119,9 +269,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<Acknowledgement<SendChargeDetailRecordRequest>>
 
-        OnChargeDetailRecordDelegate       (DateTime                       Timestamp,
-                                            EMPServerAPI                   Sender,
-                                            SendChargeDetailRecordRequest  Request);
+        OnChargeDetailRecordDelegate        (DateTime                                          Timestamp,
+                                             EMPServerAPI                                      Sender,
+                                             SendChargeDetailRecordRequest                     Request);
 
 
     /// <summary>

@@ -476,304 +476,304 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region OnChargingNotificationsStartRequest/-Response
+        #region OnChargingStartNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsStart will be send.
+        /// An event fired whenever a ChargingStartNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsStartRequestDelegate   OnChargingNotificationsStartRequest
+        public event OnChargingStartNotificationRequestDelegate   OnChargingStartNotificationRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsStartRequest += value;
+                CPOClient.OnChargingStartNotificationRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsStartRequest -= value;
+                CPOClient.OnChargingStartNotificationRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsStart HTTP request will be send.
+        /// An event fired whenever a ChargingStartNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingNotificationsStartHTTPRequest
+        public event ClientRequestLogHandler                      OnChargingStartNotificationHTTPRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsStartHTTPRequest += value;
+                CPOClient.OnChargingStartNotificationHTTPRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsStartHTTPRequest -= value;
+                CPOClient.OnChargingStartNotificationHTTPRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsStart HTTP request had been received.
+        /// An event fired whenever a response to a ChargingStartNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingNotificationsStartHTTPResponse
+        public event ClientResponseLogHandler                     OnChargingStartNotificationHTTPResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsStartHTTPResponse += value;
+                CPOClient.OnChargingStartNotificationHTTPResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsStartHTTPResponse -= value;
+                CPOClient.OnChargingStartNotificationHTTPResponse -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsStart had been received.
+        /// An event fired whenever a response to a ChargingStartNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsStartResponseDelegate  OnChargingNotificationsStartResponse
+        public event OnChargingStartNotificationResponseDelegate  OnChargingStartNotificationResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsStartResponse += value;
+                CPOClient.OnChargingStartNotificationResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsStartResponse -= value;
-            }
-
-        }
-
-        #endregion
-
-        #region OnChargingNotificationsProgressRequest/-Response
-
-        /// <summary>
-        /// An event fired whenever a ChargingNotificationsProgress will be send.
-        /// </summary>
-        public event OnChargingNotificationsProgressRequestDelegate   OnChargingNotificationsProgressRequest
-        {
-
-            add
-            {
-                CPOClient.OnChargingNotificationsProgressRequest += value;
-            }
-
-            remove
-            {
-                CPOClient.OnChargingNotificationsProgressRequest -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
-        /// </summary>
-        public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest
-        {
-
-            add
-            {
-                CPOClient.OnChargingNotificationsProgressHTTPRequest += value;
-            }
-
-            remove
-            {
-                CPOClient.OnChargingNotificationsProgressHTTPRequest -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
-        /// </summary>
-        public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse
-        {
-
-            add
-            {
-                CPOClient.OnChargingNotificationsProgressHTTPResponse += value;
-            }
-
-            remove
-            {
-                CPOClient.OnChargingNotificationsProgressHTTPResponse -= value;
-            }
-
-        }
-
-        /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsProgress had been received.
-        /// </summary>
-        public event OnChargingNotificationsProgressResponseDelegate  OnChargingNotificationsProgressResponse
-        {
-
-            add
-            {
-                CPOClient.OnChargingNotificationsProgressResponse += value;
-            }
-
-            remove
-            {
-                CPOClient.OnChargingNotificationsProgressResponse -= value;
+                CPOClient.OnChargingStartNotificationResponse -= value;
             }
 
         }
 
         #endregion
 
-        #region OnChargingNotificationsEndRequest/-Response
+        #region OnChargingProgressNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsEnd will be send.
+        /// An event fired whenever a ChargingProgressNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsEndRequestDelegate   OnChargingNotificationsEndRequest
+        public event OnChargingProgressNotificationRequestDelegate   OnChargingProgressNotificationRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsEndRequest += value;
+                CPOClient.OnChargingProgressNotificationRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsEndRequest -= value;
+                CPOClient.OnChargingProgressNotificationRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
+        /// An event fired whenever a ChargingProgressNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest
+        public event ClientRequestLogHandler                         OnChargingProgressNotificationHTTPRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsEndHTTPRequest += value;
+                CPOClient.OnChargingProgressNotificationHTTPRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsEndHTTPRequest -= value;
+                CPOClient.OnChargingProgressNotificationHTTPRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
+        /// An event fired whenever a response to a ChargingProgressNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse
+        public event ClientResponseLogHandler                        OnChargingProgressNotificationHTTPResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsEndHTTPResponse += value;
+                CPOClient.OnChargingProgressNotificationHTTPResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsEndHTTPResponse -= value;
+                CPOClient.OnChargingProgressNotificationHTTPResponse -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsEnd had been received.
+        /// An event fired whenever a response to a ChargingProgressNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsEndResponseDelegate  OnChargingNotificationsEndResponse
+        public event OnChargingProgressNotificationResponseDelegate  OnChargingProgressNotificationResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsEndResponse += value;
+                CPOClient.OnChargingProgressNotificationResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsEndResponse -= value;
+                CPOClient.OnChargingProgressNotificationResponse -= value;
             }
 
         }
 
         #endregion
 
-        #region OnChargingNotificationsErrorRequest/-Response
+        #region OnChargingEndNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsError will be send.
+        /// An event fired whenever a ChargingEndNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsErrorRequestDelegate   OnChargingNotificationsErrorRequest
+        public event OnChargingEndNotificationRequestDelegate   OnChargingEndNotificationRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsErrorRequest += value;
+                CPOClient.OnChargingEndNotificationRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsErrorRequest -= value;
+                CPOClient.OnChargingEndNotificationRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsError HTTP request will be send.
+        /// An event fired whenever a ChargingEndNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest
+        public event ClientRequestLogHandler                    OnChargingEndNotificationHTTPRequest
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsErrorHTTPRequest += value;
+                CPOClient.OnChargingEndNotificationHTTPRequest += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsErrorHTTPRequest -= value;
+                CPOClient.OnChargingEndNotificationHTTPRequest -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
+        /// An event fired whenever a response to a ChargingEndNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse
+        public event ClientResponseLogHandler                   OnChargingEndNotificationHTTPResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsErrorHTTPResponse += value;
+                CPOClient.OnChargingEndNotificationHTTPResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsErrorHTTPResponse -= value;
+                CPOClient.OnChargingEndNotificationHTTPResponse -= value;
             }
 
         }
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsError had been received.
+        /// An event fired whenever a response to a ChargingEndNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsErrorResponseDelegate  OnChargingNotificationsErrorResponse
+        public event OnChargingEndNotificationResponseDelegate  OnChargingEndNotificationResponse
         {
 
             add
             {
-                CPOClient.OnChargingNotificationsErrorResponse += value;
+                CPOClient.OnChargingEndNotificationResponse += value;
             }
 
             remove
             {
-                CPOClient.OnChargingNotificationsErrorResponse -= value;
+                CPOClient.OnChargingEndNotificationResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnChargingErrorNotificationRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingErrorNotification will be send.
+        /// </summary>
+        public event OnChargingErrorNotificationRequestDelegate   OnChargingErrorNotificationRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingErrorNotificationRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingErrorNotificationRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a ChargingErrorNotification HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                      OnChargingErrorNotificationHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnChargingErrorNotificationHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingErrorNotificationHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingErrorNotification HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                     OnChargingErrorNotificationHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingErrorNotificationHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingErrorNotificationHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingErrorNotification had been received.
+        /// </summary>
+        public event OnChargingErrorNotificationResponseDelegate  OnChargingErrorNotificationResponse
+        {
+
+            add
+            {
+                CPOClient.OnChargingErrorNotificationResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnChargingErrorNotificationResponse -= value;
             }
 
         }
@@ -1079,7 +1079,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
 
-        #region PushEVSEData  (Request)
+        #region PushEVSEData                    (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -1093,7 +1093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region PushEVSEStatus(Request)
+        #region PushEVSEStatus                  (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -1108,7 +1108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region AuthorizeStart        (Request)
+        #region AuthorizeStart                  (Request)
 
         /// <summary>
         /// Create an OICP authorize start request.
@@ -1122,7 +1122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop         (Request)
+        #region AuthorizeStop                   (Request)
 
         /// <summary>
         /// Create an OICP authorize stop request.
@@ -1137,64 +1137,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargeDetailRecord(Request)
+        #region SendChargingStartNotification   (Request)
 
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsStart request.</param>
-        public Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>>
+        /// <param name="Request">A ChargingStartNotification request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
-            SendChargingNotificationsStart(ChargingNotificationsStartRequest Request)
+            SendChargingStartNotification(ChargingStartNotificationRequest Request)
 
-                => CPOClient.SendChargingNotificationsStart(Request);
+                => CPOClient.SendChargingStartNotification(Request);
 
         #endregion
 
-        #region SendChargeDetailRecord(Request)
+        #region SendChargingProgressNotification(Request)
 
         /// <summary>
-        /// Send a charging start notification.
+        /// Send a charging progress notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsProgress request.</param>
-        public Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>>
+        /// <param name="Request">A ChargingProgressNotification request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
-            SendChargingNotificationsProgress(ChargingNotificationsProgressRequest Request)
+            SendChargingProgressNotification(ChargingProgressNotificationRequest Request)
 
-                => CPOClient.SendChargingNotificationsProgress(Request);
+                => CPOClient.SendChargingProgressNotification(Request);
 
         #endregion
 
-        #region SendChargeDetailRecord(Request)
+        #region SendChargingEndNotification     (Request)
 
         /// <summary>
-        /// Send a charging start notification.
+        /// Send a charging end notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsEnd request.</param>
-        public Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>>
+        /// <param name="Request">A ChargingEndNotification request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
-            SendChargingNotificationsEnd(ChargingNotificationsEndRequest Request)
+            SendChargingEndNotification(ChargingEndNotificationRequest Request)
 
-                => CPOClient.SendChargingNotificationsEnd(Request);
+                => CPOClient.SendChargingEndNotification(Request);
 
         #endregion
 
-        #region SendChargeDetailRecord(Request)
+        #region SendChargingErrorNotification   (Request)
 
         /// <summary>
-        /// Send a charging start notification.
+        /// Send a charging error notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsError request.</param>
-        public Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>>
+        /// <param name="Request">A ChargingErrorNotification request.</param>
+        public Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
-            SendChargingNotificationsError(ChargingNotificationsErrorRequest Request)
+            SendChargingErrorNotification(ChargingErrorNotificationRequest Request)
 
-                => CPOClient.SendChargingNotificationsError(Request);
+                => CPOClient.SendChargingErrorNotification(Request);
 
         #endregion
 
 
-        #region SendChargeDetailRecord(Request)
+        #region SendChargeDetailRecord          (Request)
 
         /// <summary>
         /// Send a charge detail record.
@@ -1209,7 +1209,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PullAuthenticationData(Request)
+        #region PullAuthenticationData          (Request)
 
         ///// <summary>
         ///// Pull authentication data from the OICP server.

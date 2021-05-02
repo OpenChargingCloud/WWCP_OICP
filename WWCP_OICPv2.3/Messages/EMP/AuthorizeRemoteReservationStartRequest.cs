@@ -196,14 +196,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart JSON objects.</param>
         public static AuthorizeRemoteReservationStartRequest Parse(JObject                                                              JSON,
+                                                                   TimeSpan                                                             RequestTimeout,
+                                                                   DateTime?                                                            Timestamp                                            = null,
+                                                                   EventTracking_Id                                                     EventTrackingId                                      = null,
                                                                    CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
+                         RequestTimeout,
                          out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
                          out String                                  ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeRemoteReservationStartRequestParser))
             {
                 return authorizeRemoteReservationStartRequest;
@@ -221,14 +230,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static AuthorizeRemoteReservationStartRequest Parse(String                                                               Text,
+                                                                   TimeSpan                                                             RequestTimeout,
+                                                                   DateTime?                                                            Timestamp                                            = null,
+                                                                   EventTracking_Id                                                     EventTrackingId                                      = null,
                                                                    CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null)
         {
 
             if (TryParse(Text,
+                         RequestTimeout,
                          out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
                          out String                                  ErrorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomAuthorizeRemoteReservationStartRequestParser))
             {
                 return authorizeRemoteReservationStartRequest;
@@ -242,35 +260,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out AuthorizeRemoteReservationStartRequest, out ErrorResponse, CustomAuthorizeRemoteReservationStartRequestParser = null)
 
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
         /// <summary>
         /// Try to parse the given JSON representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                                     JSON,
-                                       out AuthorizeRemoteReservationStartRequest  AuthorizeRemoteReservationStartRequest,
-                                       out String                                  ErrorResponse)
-
-            => TryParse(JSON,
-                        out AuthorizeRemoteReservationStartRequest,
-                        out ErrorResponse,
-                        null);
-
-
-        /// <summary>
-        /// Try to parse the given JSON representation of a AuthorizeRemoteReservationStart request.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                              JSON,
+                                       TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStartRequest                           AuthorizeRemoteReservationStartRequest,
                                        out String                                                           ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser)
+                                       DateTime?                                                            Timestamp                                            = null,
+                                       EventTracking_Id                                                     EventTrackingId                                      = null,
+                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null)
         {
 
             try
@@ -415,7 +421,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                     EMPPartnerSessionId,
                                                                                                     PartnerProductId,
                                                                                                     Duration,
-                                                                                                    CustomData);
+                                                                                                    CustomData,
+
+                                                                                                    Timestamp,
+                                                                                                    null,
+                                                                                                    EventTrackingId,
+                                                                                                    RequestTimeout);
 
                 if (CustomAuthorizeRemoteReservationStartRequestParser != null)
                     AuthorizeRemoteReservationStartRequest = CustomAuthorizeRemoteReservationStartRequestParser(JSON,
@@ -441,21 +452,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static Boolean TryParse(String                                                               Text,
+                                       TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStartRequest                           AuthorizeRemoteReservationStartRequest,
                                        out String                                                           ErrorResponse,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser)
+                                       DateTime?                                                            Timestamp                                            = null,
+                                       EventTracking_Id                                                     EventTrackingId                                      = null,
+                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
+                                RequestTimeout,
                                 out AuthorizeRemoteReservationStartRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomAuthorizeRemoteReservationStartRequestParser);
 
             }

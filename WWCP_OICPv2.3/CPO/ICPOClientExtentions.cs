@@ -494,7 +494,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>>
+        public static Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
             SendChargingNotificationsStart(this ICPOClient        CPOClient,
                                            Session_Id             SessionId,
@@ -516,8 +516,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            TimeSpan?              RequestTimeout        = null)
 
 
-                => CPOClient.SendChargingNotificationsStart(
-                       new ChargingNotificationsStartRequest(
+                => CPOClient.SendChargingStartNotification(
+                       new ChargingStartNotificationRequest(
                            SessionId,
                            Identification,
                            EVSEId,
@@ -566,7 +566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>>
+        public static Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
             SendChargingNotificationsProgress(this ICPOClient        CPOClient,
                                               Session_Id             SessionId,
@@ -592,8 +592,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               TimeSpan?              RequestTimeout           = null)
 
 
-                => CPOClient.SendChargingNotificationsProgress(
-                       new ChargingNotificationsProgressRequest(
+                => CPOClient.SendChargingProgressNotification(
+                       new ChargingProgressNotificationRequest(
                            SessionId,
                            Identification,
                            EVSEId,
@@ -648,7 +648,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>>
+        public static Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
             SendChargingNotificationsEnd(this ICPOClient        CPOClient,
                                          Session_Id             SessionId,
@@ -676,8 +676,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          TimeSpan?              RequestTimeout           = null)
 
 
-                => CPOClient.SendChargingNotificationsEnd(
-                       new ChargingNotificationsEndRequest(
+                => CPOClient.SendChargingEndNotification(
+                       new ChargingEndNotificationRequest(
                            SessionId,
                            Identification,
                            EVSEId,
@@ -725,7 +725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        public static Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>>
+        public static Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
             SendChargingNotificationsError(this ICPOClient        CPOClient,
                                            Session_Id             SessionId,
@@ -744,8 +744,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            TimeSpan?              RequestTimeout        = null)
 
 
-                => CPOClient.SendChargingNotificationsError(
-                       new ChargingNotificationsErrorRequest(
+                => CPOClient.SendChargingErrorNotification(
+                       new ChargingErrorNotificationRequest(
                            SessionId,
                            Identification,
                            EVSEId,

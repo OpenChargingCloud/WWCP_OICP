@@ -30,9 +30,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The ChargingNotificationsStart request.
+    /// The ChargingStartNotification request.
     /// </summary>
-    public class ChargingNotificationsStartRequest : ARequest<ChargingNotificationsStartRequest>
+    public class ChargingStartNotificationRequest : ARequest<ChargingStartNotificationRequest>
     {
 
         #region Properties
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new ChargingNotificationsStart request.
+        /// Create a new ChargingStartNotification request.
         /// </summary>
         /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
@@ -127,23 +127,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public ChargingNotificationsStartRequest(Session_Id             SessionId,
-                                                 Identification         Identification,
-                                                 EVSE_Id                EVSEId,
-                                                 DateTime               ChargingStart,
+        public ChargingStartNotificationRequest(Session_Id             SessionId,
+                                                Identification         Identification,
+                                                EVSE_Id                EVSEId,
+                                                DateTime               ChargingStart,
 
-                                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
-                                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                                 DateTime?              SessionStart          = null,
-                                                 Decimal?               MeterValueStart       = null,
-                                                 Operator_Id?           OperatorId            = null,
-                                                 PartnerProduct_Id?     PartnerProductId      = null,
-                                                 JObject                CustomData            = null,
+                                                CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                                DateTime?              SessionStart          = null,
+                                                Decimal?               MeterValueStart       = null,
+                                                Operator_Id?           OperatorId            = null,
+                                                PartnerProduct_Id?     PartnerProductId      = null,
+                                                JObject                CustomData            = null,
 
-                                                 DateTime?              Timestamp             = null,
-                                                 CancellationToken?     CancellationToken     = null,
-                                                 EventTracking_Id       EventTrackingId       = null,
-                                                 TimeSpan?              RequestTimeout        = null)
+                                                DateTime?              Timestamp             = null,
+                                                CancellationToken?     CancellationToken     = null,
+                                                EventTracking_Id       EventTrackingId       = null,
+                                                TimeSpan?              RequestTimeout        = null)
 
             : base(CustomData,
                    Timestamp,
@@ -181,7 +181,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomChargingNotificationsStartRequestParser = null)
+        #region (static) Parse   (JSON, CustomChargingStartNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a charging notification start request.
@@ -190,23 +190,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsStartRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static ChargingNotificationsStartRequest Parse(JObject                                                         JSON,
-                                                              TimeSpan                                                        RequestTimeout,
-                                                              DateTime?                                                       Timestamp                                       = null,
-                                                              EventTracking_Id                                                EventTrackingId                                 = null,
-                                                              CustomJObjectParserDelegate<ChargingNotificationsStartRequest>  CustomChargingNotificationsStartRequestParser   = null)
+        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
+        public static ChargingStartNotificationRequest Parse(JObject                                                        JSON,
+                                                             TimeSpan                                                       RequestTimeout,
+                                                             DateTime?                                                      Timestamp                                      = null,
+                                                             EventTracking_Id                                               EventTrackingId                                = null,
+                                                             CustomJObjectParserDelegate<ChargingStartNotificationRequest>  CustomChargingStartNotificationRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          RequestTimeout,
-                         out ChargingNotificationsStartRequest  chargingNotificationsStartRequest,
-                         out String                             ErrorResponse,
+                         out ChargingStartNotificationRequest  chargingStartNotificationRequest,
+                         out String                            ErrorResponse,
                          Timestamp,
                          EventTrackingId,
-                         CustomChargingNotificationsStartRequestParser))
+                         CustomChargingStartNotificationRequestParser))
             {
-                return chargingNotificationsStartRequest;
+                return chargingStartNotificationRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a charging notification start request is invalid: " + ErrorResponse, nameof(JSON));
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomChargingNotificationsStartRequestParser = null)
+        #region (static) Parse   (Text, CustomChargingStartNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a charging notification start request.
@@ -224,23 +224,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsStartRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static ChargingNotificationsStartRequest Parse(String                                                          Text,
-                                                              TimeSpan                                                        RequestTimeout,
-                                                              DateTime?                                                       Timestamp                                       = null,
-                                                              EventTracking_Id                                                EventTrackingId                                 = null,
-                                                              CustomJObjectParserDelegate<ChargingNotificationsStartRequest>  CustomChargingNotificationsStartRequestParser   = null)
+        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
+        public static ChargingStartNotificationRequest Parse(String                                                         Text,
+                                                             TimeSpan                                                       RequestTimeout,
+                                                             DateTime?                                                      Timestamp                                      = null,
+                                                             EventTracking_Id                                               EventTrackingId                                = null,
+                                                             CustomJObjectParserDelegate<ChargingStartNotificationRequest>  CustomChargingStartNotificationRequestParser   = null)
         {
 
             if (TryParse(Text,
                          RequestTimeout,
-                         out ChargingNotificationsStartRequest  chargingNotificationsStartRequest,
-                         out String                             ErrorResponse,
+                         out ChargingStartNotificationRequest  chargingStartNotificationRequest,
+                         out String                            ErrorResponse,
                          Timestamp,
                          EventTrackingId,
-                         CustomChargingNotificationsStartRequestParser))
+                         CustomChargingStartNotificationRequestParser))
             {
-                return chargingNotificationsStartRequest;
+                return chargingStartNotificationRequest;
             }
 
             throw new ArgumentException("The given text representation of a charging notification start request is invalid: " + ErrorResponse, nameof(Text));
@@ -249,31 +249,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out ChargingNotificationsStartRequest, out ErrorResponse, CustomChargingNotificationsStartRequestParser = null)
+        #region (static) TryParse(JSON, out ChargingStartNotificationRequest, out ErrorResponse, CustomChargingStartNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a charging notification start request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="ChargingNotificationsStartRequest">The parsed charging notification start request.</param>
+        /// <param name="ChargingStartNotificationRequest">The parsed charging notification start request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsStartRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                         JSON,
-                                       TimeSpan                                                        RequestTimeout,
-                                       out ChargingNotificationsStartRequest                           ChargingNotificationsStartRequest,
-                                       out String                                                      ErrorResponse,
-                                       DateTime?                                                       Timestamp                                       = null,
-                                       EventTracking_Id                                                EventTrackingId                                 = null,
-                                       CustomJObjectParserDelegate<ChargingNotificationsStartRequest>  CustomChargingNotificationsStartRequestParser   = null)
+        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
+        public static Boolean TryParse(JObject                                                        JSON,
+                                       TimeSpan                                                       RequestTimeout,
+                                       out ChargingStartNotificationRequest                           ChargingStartNotificationRequest,
+                                       out String                                                     ErrorResponse,
+                                       DateTime?                                                      Timestamp                                      = null,
+                                       EventTracking_Id                                               EventTrackingId                                = null,
+                                       CustomJObjectParserDelegate<ChargingStartNotificationRequest>  CustomChargingStartNotificationRequestParser   = null)
         {
 
             try
             {
 
-                ChargingNotificationsStartRequest = default;
+                ChargingStartNotificationRequest = default;
 
                 if (JSON?.HasValues != true)
                 {
@@ -433,35 +433,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingNotificationsStartRequest = new ChargingNotificationsStartRequest(SessionId,
-                                                                                          Identification,
-                                                                                          EVSEId,
-                                                                                          ChargingStart,
+                ChargingStartNotificationRequest = new ChargingStartNotificationRequest(SessionId,
+                                                                                        Identification,
+                                                                                        EVSEId,
+                                                                                        ChargingStart,
 
-                                                                                          CPOPartnerSessionId,
-                                                                                          EMPPartnerSessionId,
-                                                                                          SessionStart,
-                                                                                          MeterValueStart,
-                                                                                          OperatorId,
-                                                                                          PartnerProductId,
-                                                                                          CustomData,
+                                                                                        CPOPartnerSessionId,
+                                                                                        EMPPartnerSessionId,
+                                                                                        SessionStart,
+                                                                                        MeterValueStart,
+                                                                                        OperatorId,
+                                                                                        PartnerProductId,
+                                                                                        CustomData,
 
-                                                                                          Timestamp,
-                                                                                          null,
-                                                                                          EventTrackingId,
-                                                                                          RequestTimeout);
+                                                                                        Timestamp,
+                                                                                        null,
+                                                                                        EventTrackingId,
+                                                                                        RequestTimeout);
 
-                if (CustomChargingNotificationsStartRequestParser != null)
-                    ChargingNotificationsStartRequest = CustomChargingNotificationsStartRequestParser(JSON,
-                                                                                                      ChargingNotificationsStartRequest);
+                if (CustomChargingStartNotificationRequestParser != null)
+                    ChargingStartNotificationRequest = CustomChargingStartNotificationRequestParser(JSON,
+                                                                                                    ChargingStartNotificationRequest);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                ChargingNotificationsStartRequest  = default;
-                ErrorResponse                      = "The given JSON representation of a charging notification start request is invalid: " + e.Message;
+                ChargingStartNotificationRequest  = default;
+                ErrorResponse                     = "The given JSON representation of a charging notification start request is invalid: " + e.Message;
                 return false;
             }
 
@@ -469,25 +469,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ChargingNotificationsStartRequest, out ErrorResponse, CustomChargingNotificationsStartRequestParser = null)
+        #region (static) TryParse(Text, out ChargingStartNotificationRequest, out ErrorResponse, CustomChargingStartNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a charging notification start request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargingNotificationsStartRequest">The parsed charging notification start request.</param>
+        /// <param name="ChargingStartNotificationRequest">The parsed charging notification start request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsStartRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static Boolean TryParse(String                                                          Text,
-                                       TimeSpan                                                        RequestTimeout,
-                                       out ChargingNotificationsStartRequest                           ChargingNotificationsStartRequest,
-                                       out String                                                      ErrorResponse,
-                                       DateTime?                                                       Timestamp                                       = null,
-                                       EventTracking_Id                                                EventTrackingId                                 = null,
-                                       CustomJObjectParserDelegate<ChargingNotificationsStartRequest>  CustomChargingNotificationsStartRequestParser   = null)
+        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
+        public static Boolean TryParse(String                                                         Text,
+                                       TimeSpan                                                       RequestTimeout,
+                                       out ChargingStartNotificationRequest                           ChargingStartNotificationRequest,
+                                       out String                                                     ErrorResponse,
+                                       DateTime?                                                      Timestamp                                      = null,
+                                       EventTracking_Id                                               EventTrackingId                                = null,
+                                       CustomJObjectParserDelegate<ChargingStartNotificationRequest>  CustomChargingStartNotificationRequestParser   = null)
         {
 
             try
@@ -495,17 +495,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 RequestTimeout,
-                                out ChargingNotificationsStartRequest,
+                                out ChargingStartNotificationRequest,
                                 out ErrorResponse,
                                 Timestamp,
                                 EventTrackingId,
-                                CustomChargingNotificationsStartRequestParser);
+                                CustomChargingStartNotificationRequestParser);
 
             }
             catch (Exception e)
             {
-                ChargingNotificationsStartRequest  = default;
-                ErrorResponse                      = "The given text representation of a charging notification start request is invalid: " + e.Message;
+                ChargingStartNotificationRequest  = default;
+                ErrorResponse                     = "The given text representation of a charging notification start request is invalid: " + e.Message;
                 return false;
             }
 
@@ -513,15 +513,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomChargingNotificationsStartRequestSerializer = null, CustomIdentificationSerializer = null, ...)
+        #region ToJSON(CustomChargingStartNotificationRequestSerializer = null, CustomIdentificationSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomChargingNotificationsStartRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomChargingStartNotificationRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingNotificationsStartRequest>  CustomChargingNotificationsStartRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>                     CustomIdentificationSerializer                      = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingStartNotificationRequest>  CustomChargingStartNotificationRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>                    CustomIdentificationSerializer                     = null)
         {
 
             var JSON = JSONObject.Create(
@@ -561,8 +561,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomChargingNotificationsStartRequestSerializer != null
-                       ? CustomChargingNotificationsStartRequestSerializer(this, JSON)
+            return CustomChargingStartNotificationRequestSerializer != null
+                       ? CustomChargingStartNotificationRequestSerializer(this, JSON)
                        : JSON;
 
         }
@@ -574,9 +574,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Clone this request.
         /// </summary>
-        public ChargingNotificationsStartRequest Clone
+        public ChargingStartNotificationRequest Clone
 
-            => new ChargingNotificationsStartRequest(SessionId,
+            => new ChargingStartNotificationRequest(SessionId,
                                                      Identification,
                                                      EVSEId,
                                                      ChargingStart,
@@ -599,50 +599,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (ChargingNotificationsStart1, ChargingNotificationsStart2)
+        #region Operator == (ChargingStartNotification1, ChargingStartNotification2)
 
         /// <summary>
         /// Compares two charging notification start requests for equality.
         /// </summary>
-        /// <param name="ChargingNotificationsStart1">A charging notification start request.</param>
-        /// <param name="ChargingNotificationsStart2">Another charging notification start request.</param>
+        /// <param name="ChargingStartNotification1">A charging notification start request.</param>
+        /// <param name="ChargingStartNotification2">Another charging notification start request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (ChargingNotificationsStartRequest ChargingNotificationsStart1,
-                                           ChargingNotificationsStartRequest ChargingNotificationsStart2)
+        public static Boolean operator == (ChargingStartNotificationRequest ChargingStartNotification1,
+                                           ChargingStartNotificationRequest ChargingStartNotification2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(ChargingNotificationsStart1, ChargingNotificationsStart2))
+            if (ReferenceEquals(ChargingStartNotification1, ChargingStartNotification2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (ChargingNotificationsStart1 is null || ChargingNotificationsStart2 is null)
+            if (ChargingStartNotification1 is null || ChargingStartNotification2 is null)
                 return false;
 
-            return ChargingNotificationsStart1.Equals(ChargingNotificationsStart2);
+            return ChargingStartNotification1.Equals(ChargingStartNotification2);
 
         }
 
         #endregion
 
-        #region Operator != (ChargingNotificationsStart1, ChargingNotificationsStart2)
+        #region Operator != (ChargingStartNotification1, ChargingStartNotification2)
 
         /// <summary>
         /// Compares two charging notification start requests for inequality.
         /// </summary>
-        /// <param name="ChargingNotificationsStart1">A charging notification start request.</param>
-        /// <param name="ChargingNotificationsStart2">Another charging notification start request.</param>
+        /// <param name="ChargingStartNotification1">A charging notification start request.</param>
+        /// <param name="ChargingStartNotification2">Another charging notification start request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (ChargingNotificationsStartRequest ChargingNotificationsStart1,
-                                           ChargingNotificationsStartRequest ChargingNotificationsStart2)
+        public static Boolean operator != (ChargingStartNotificationRequest ChargingStartNotification1,
+                                           ChargingStartNotificationRequest ChargingStartNotification2)
 
-            => !(ChargingNotificationsStart1 == ChargingNotificationsStart2);
-
-        #endregion
+            => !(ChargingStartNotification1 == ChargingStartNotification2);
 
         #endregion
 
-        #region IEquatable<ChargingNotificationsStartRequest> Members
+        #endregion
+
+        #region IEquatable<ChargingStartNotificationRequest> Members
 
         #region Equals(Object)
 
@@ -653,27 +653,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is ChargingNotificationsStartRequest chargingNotificationsStartRequest &&
-                   Equals(chargingNotificationsStartRequest);
+            => Object is ChargingStartNotificationRequest chargingStartNotificationRequest &&
+                   Equals(chargingStartNotificationRequest);
 
         #endregion
 
-        #region Equals(ChargingNotificationsStartRequest)
+        #region Equals(ChargingStartNotificationRequest)
 
         /// <summary>
         /// Compares two charging notification start requests for equality.
         /// </summary>
-        /// <param name="ChargingNotificationsStartRequest">A charging notification start request to compare with.</param>
+        /// <param name="ChargingStartNotificationRequest">A charging notification start request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(ChargingNotificationsStartRequest ChargingNotificationsStartRequest)
+        public override Boolean Equals(ChargingStartNotificationRequest ChargingStartNotificationRequest)
 
-            => !(ChargingNotificationsStartRequest is null) &&
+            => !(ChargingStartNotificationRequest is null) &&
 
-                 Type.          Equals(ChargingNotificationsStartRequest.Type)           &&
-                 SessionId.     Equals(ChargingNotificationsStartRequest.SessionId)      &&
-                 Identification.Equals(ChargingNotificationsStartRequest.Identification) &&
-                 EVSEId.        Equals(ChargingNotificationsStartRequest.EVSEId)         &&
-                 ChargingStart. Equals(ChargingNotificationsStartRequest.ChargingStart);
+                 Type.          Equals(ChargingStartNotificationRequest.Type)           &&
+                 SessionId.     Equals(ChargingStartNotificationRequest.SessionId)      &&
+                 Identification.Equals(ChargingStartNotificationRequest.Identification) &&
+                 EVSEId.        Equals(ChargingStartNotificationRequest.EVSEId)         &&
+                 ChargingStart. Equals(ChargingStartNotificationRequest.ChargingStart);
 
         #endregion
 

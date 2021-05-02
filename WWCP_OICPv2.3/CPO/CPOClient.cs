@@ -115,13 +115,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<AuthorizationStopResponse>                              CustomAuthorizationStopResponseParser                         { get; set; }
 
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsStartRequest>>     CustomChargingNotificationsStartAcknowledgementParser         { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingStartNotificationRequest>>     CustomChargingStartNotificationAcknowledgementParser         { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsProgressRequest>>  CustomChargingNotificationsProgressAcknowledgementParser      { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingProgressNotificationRequest>>  CustomChargingProgressNotificationAcknowledgementParser      { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsEndRequest>>       CustomChargingNotificationsEndAcknowledgementParser           { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingEndNotificationRequest>>       CustomChargingEndNotificationAcknowledgementParser           { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingNotificationsErrorRequest>>     CustomChargingNotificationsErrorAcknowledgementParser         { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>     CustomChargingErrorNotificationAcknowledgementParser         { get; set; }
 
 
         public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
@@ -231,99 +231,99 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region OnChargingNotificationsStartRequest/-Response
+        #region OnChargingStartNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsStart will be send.
+        /// An event fired whenever a ChargingStartNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsStartRequestDelegate   OnChargingNotificationsStartRequest;
+        public event OnChargingStartNotificationRequestDelegate   OnChargingStartNotificationRequest;
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsStart HTTP request will be send.
+        /// An event fired whenever a ChargingStartNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingNotificationsStartHTTPRequest;
+        public event ClientRequestLogHandler                      OnChargingStartNotificationHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsStart HTTP request had been received.
+        /// An event fired whenever a response to a ChargingStartNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingNotificationsStartHTTPResponse;
+        public event ClientResponseLogHandler                     OnChargingStartNotificationHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsStart had been received.
+        /// An event fired whenever a response to a ChargingStartNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsStartResponseDelegate  OnChargingNotificationsStartResponse;
+        public event OnChargingStartNotificationResponseDelegate  OnChargingStartNotificationResponse;
 
         #endregion
 
-        #region OnChargingNotificationsProgressRequest/-Response
+        #region OnChargingProgressNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsProgress will be send.
+        /// An event fired whenever a ChargingProgressNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsProgressRequestDelegate   OnChargingNotificationsProgressRequest;
+        public event OnChargingProgressNotificationRequestDelegate   OnChargingProgressNotificationRequest;
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsProgress HTTP request will be send.
+        /// An event fired whenever a ChargingProgressNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                         OnChargingNotificationsProgressHTTPRequest;
+        public event ClientRequestLogHandler                         OnChargingProgressNotificationHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsProgress HTTP request had been received.
+        /// An event fired whenever a response to a ChargingProgressNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                        OnChargingNotificationsProgressHTTPResponse;
+        public event ClientResponseLogHandler                        OnChargingProgressNotificationHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsProgress had been received.
+        /// An event fired whenever a response to a ChargingProgressNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsProgressResponseDelegate  OnChargingNotificationsProgressResponse;
+        public event OnChargingProgressNotificationResponseDelegate  OnChargingProgressNotificationResponse;
 
         #endregion
 
-        #region OnChargingNotificationsEndRequest/-Response
+        #region OnChargingEndNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsEnd will be send.
+        /// An event fired whenever a ChargingEndNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsEndRequestDelegate   OnChargingNotificationsEndRequest;
+        public event OnChargingEndNotificationRequestDelegate   OnChargingEndNotificationRequest;
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsEnd HTTP request will be send.
+        /// An event fired whenever a ChargingEndNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                    OnChargingNotificationsEndHTTPRequest;
+        public event ClientRequestLogHandler                    OnChargingEndNotificationHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsEnd HTTP request had been received.
+        /// An event fired whenever a response to a ChargingEndNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                   OnChargingNotificationsEndHTTPResponse;
+        public event ClientResponseLogHandler                   OnChargingEndNotificationHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsEnd had been received.
+        /// An event fired whenever a response to a ChargingEndNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsEndResponseDelegate  OnChargingNotificationsEndResponse;
+        public event OnChargingEndNotificationResponseDelegate  OnChargingEndNotificationResponse;
 
         #endregion
 
-        #region OnChargingNotificationsErrorRequest/-Response
+        #region OnChargingErrorNotificationRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsError will be send.
+        /// An event fired whenever a ChargingErrorNotification will be send.
         /// </summary>
-        public event OnChargingNotificationsErrorRequestDelegate   OnChargingNotificationsErrorRequest;
+        public event OnChargingErrorNotificationRequestDelegate   OnChargingErrorNotificationRequest;
 
         /// <summary>
-        /// An event fired whenever a ChargingNotificationsError HTTP request will be send.
+        /// An event fired whenever a ChargingErrorNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingNotificationsErrorHTTPRequest;
+        public event ClientRequestLogHandler                      OnChargingErrorNotificationHTTPRequest;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsError HTTP request had been received.
+        /// An event fired whenever a response to a ChargingErrorNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingNotificationsErrorHTTPResponse;
+        public event ClientResponseLogHandler                     OnChargingErrorNotificationHTTPResponse;
 
         /// <summary>
-        /// An event fired whenever a response to a ChargingNotificationsError had been received.
+        /// An event fired whenever a response to a ChargingErrorNotification had been received.
         /// </summary>
-        public event OnChargingNotificationsErrorResponseDelegate  OnChargingNotificationsErrorResponse;
+        public event OnChargingErrorNotificationResponseDelegate  OnChargingErrorNotificationResponse;
 
         #endregion
 
@@ -2217,41 +2217,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargingNotificationsStart   (Request)
+        #region SendChargingStartNotification   (Request)
 
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsStart request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>> SendChargingNotificationsStart(ChargingNotificationsStartRequest Request)
+        /// <param name="Request">A ChargingStartNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>> SendChargingStartNotification(ChargingStartNotificationRequest Request)
         {
 
             #region Initial checks
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsStart request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingStartNotification request must not be null!");
 
-            //Request = _CustomSendChargingNotificationsStartRequestMapper(Request);
+            //Request = _CustomSendChargingStartNotificationRequestMapper(Request);
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsStart request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingStartNotification request must not be null!");
 
 
             Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingNotificationsStartRequest>> result             = null;
+            OICPResult<Acknowledgement<ChargingStartNotificationRequest>> result             = null;
 
             #endregion
 
-            #region  OnChargingNotificationsStartRequest event
+            #region  OnChargingStartNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsStartRequest != null)
-                    await Task.WhenAll(OnChargingNotificationsStartRequest.GetInvocationList().
-                                       Cast<OnChargingNotificationsStartRequestDelegate>().
+                if (OnChargingStartNotificationRequest != null)
+                    await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingStartNotificationRequestDelegate>().
                                        Select(e => e(StartTime,
                                                      this,
                                                      Description,
@@ -2261,7 +2261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartRequest));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingStartNotificationRequest));
             }
 
             #endregion
@@ -2297,8 +2297,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
-                                                         RequestLogDelegate:   OnChargingNotificationsStartHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingNotificationsStartHTTPResponse,
+                                                         RequestLogDelegate:   OnChargingStartNotificationHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingStartNotificationHTTPResponse,
                                                          CancellationToken:    Request.CancellationToken,
                                                          EventTrackingId:      Request.EventTrackingId,
                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -2340,19 +2340,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     "EMPPartnerSessionID":  null
                                 // }
 
-                                if (Acknowledgement<ChargingNotificationsStartRequest>.TryParse(Request,
+                                if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
                                                                                                 JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingNotificationsStartRequest>  acknowledgement,
+                                                                                                out Acknowledgement<ChargingStartNotificationRequest>  acknowledgement,
                                                                                                 out String                                              ErrorResponse,
                                                                                                 HTTPResponse,
                                                                                                 HTTPResponse.Timestamp,
                                                                                                 HTTPResponse.EventTrackingId,
                                                                                                 HTTPResponse.Runtime,
                                                                                                 processId,
-                                                                                                CustomChargingNotificationsStartAcknowledgementParser))
+                                                                                                CustomChargingStartNotificationAcknowledgementParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Success(Request,
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
                                                                                                                     acknowledgement,
                                                                                                                     processId);
 
@@ -2362,9 +2362,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<ChargingNotificationsStartRequest>(
+                                             new Acknowledgement<ChargingStartNotificationRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -2429,7 +2429,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out ValidationErrorList ValidationErrors))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.BadRequest(Request,
+                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.BadRequest(Request,
                                                                                                                    ValidationErrors,
                                                                                                                    processId);
 
@@ -2481,8 +2481,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsStartRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingStartNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -2498,9 +2498,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                new Acknowledgement<ChargingStartNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -2554,8 +2554,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsStartRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingStartNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -2571,9 +2571,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                                new Acknowledgement<ChargingStartNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -2606,9 +2606,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
 
-                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                new Acknowledgement<ChargingStartNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -2626,9 +2626,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             if (result == null)
-                result = OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsStartRequest>(
+                                new Acknowledgement<ChargingStartNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -2644,16 +2644,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             );
 
 
-            #region  OnChargingNotificationsStartResponse event
+            #region  OnChargingStartNotificationResponse event
 
             var Endtime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsStartResponse != null)
-                    await Task.WhenAll(OnChargingNotificationsStartResponse.GetInvocationList().
-                                       Cast<OnChargingNotificationsStartResponseDelegate>().
+                if (OnChargingStartNotificationResponse != null)
+                    await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingStartNotificationResponseDelegate>().
                                        Select(e => e(Endtime,
                                                      this,
                                                      Description,
@@ -2664,7 +2664,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsStartResponse));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingStartNotificationResponse));
             }
 
             #endregion
@@ -2675,41 +2675,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingNotificationsProgress(Request)
+        #region SendChargingProgressNotification(Request)
 
         /// <summary>
         /// Send a charging progress notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsProgress request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>> SendChargingNotificationsProgress(ChargingNotificationsProgressRequest Request)
+        /// <param name="Request">A ChargingProgressNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>> SendChargingProgressNotification(ChargingProgressNotificationRequest Request)
         {
 
             #region Initial checks
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsProgress request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingProgressNotification request must not be null!");
 
-            //Request = _CustomSendChargingNotificationsProgressRequestMapper(Request);
+            //Request = _CustomSendChargingProgressNotificationRequestMapper(Request);
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsProgress request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingProgressNotification request must not be null!");
 
 
             Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>> result             = null;
+            OICPResult<Acknowledgement<ChargingProgressNotificationRequest>> result             = null;
 
             #endregion
 
-            #region  OnChargingNotificationsProgressRequest event
+            #region  OnChargingProgressNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsProgressRequest != null)
-                    await Task.WhenAll(OnChargingNotificationsProgressRequest.GetInvocationList().
-                                       Cast<OnChargingNotificationsProgressRequestDelegate>().
+                if (OnChargingProgressNotificationRequest != null)
+                    await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingProgressNotificationRequestDelegate>().
                                        Select(e => e(StartTime,
                                                      this,
                                                      Description,
@@ -2719,7 +2719,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressRequest));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationRequest));
             }
 
             #endregion
@@ -2755,8 +2755,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
-                                                         RequestLogDelegate:   OnChargingNotificationsProgressHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingNotificationsProgressHTTPResponse,
+                                                         RequestLogDelegate:   OnChargingProgressNotificationHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingProgressNotificationHTTPResponse,
                                                          CancellationToken:    Request.CancellationToken,
                                                          EventTrackingId:      Request.EventTrackingId,
                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -2798,19 +2798,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     "EMPPartnerSessionID":  null
                                 // }
 
-                                if (Acknowledgement<ChargingNotificationsProgressRequest>.TryParse(Request,
+                                if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
                                                                                                 JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingNotificationsProgressRequest>  acknowledgement,
+                                                                                                out Acknowledgement<ChargingProgressNotificationRequest>  acknowledgement,
                                                                                                 out String                                              ErrorResponse,
                                                                                                 HTTPResponse,
                                                                                                 HTTPResponse.Timestamp,
                                                                                                 HTTPResponse.EventTrackingId,
                                                                                                 HTTPResponse.Runtime,
                                                                                                 processId,
-                                                                                                CustomChargingNotificationsProgressAcknowledgementParser))
+                                                                                                CustomChargingProgressNotificationAcknowledgementParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Success(Request,
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
                                                                                                                     acknowledgement,
                                                                                                                     processId);
 
@@ -2820,9 +2820,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                             new Acknowledgement<ChargingProgressNotificationRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -2887,7 +2887,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out ValidationErrorList ValidationErrors))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.BadRequest(Request,
+                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.BadRequest(Request,
                                                                                                                    ValidationErrors,
                                                                                                                    processId);
 
@@ -2939,8 +2939,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -2956,9 +2956,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                new Acknowledgement<ChargingProgressNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3012,8 +3012,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -3029,9 +3029,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                                new Acknowledgement<ChargingProgressNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3064,9 +3064,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
 
-                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                new Acknowledgement<ChargingProgressNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -3084,9 +3084,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             if (result == null)
-                result = OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsProgressRequest>(
+                                new Acknowledgement<ChargingProgressNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -3102,16 +3102,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             );
 
 
-            #region  OnChargingNotificationsProgressResponse event
+            #region  OnChargingProgressNotificationResponse event
 
             var Endtime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsProgressResponse != null)
-                    await Task.WhenAll(OnChargingNotificationsProgressResponse.GetInvocationList().
-                                       Cast<OnChargingNotificationsProgressResponseDelegate>().
+                if (OnChargingProgressNotificationResponse != null)
+                    await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingProgressNotificationResponseDelegate>().
                                        Select(e => e(Endtime,
                                                      this,
                                                      Description,
@@ -3122,7 +3122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsProgressResponse));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationResponse));
             }
 
             #endregion
@@ -3133,41 +3133,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingNotificationsEnd     (Request)
+        #region SendChargingEndNotification     (Request)
 
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsEnd request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>> SendChargingNotificationsEnd(ChargingNotificationsEndRequest Request)
+        /// <param name="Request">A ChargingEndNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>> SendChargingEndNotification(ChargingEndNotificationRequest Request)
         {
 
             #region Initial checks
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsEnd request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingEndNotification request must not be null!");
 
-            //Request = _CustomSendChargingNotificationsEndRequestMapper(Request);
+            //Request = _CustomSendChargingEndNotificationRequestMapper(Request);
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsEnd request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingEndNotification request must not be null!");
 
 
             Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingNotificationsEndRequest>> result             = null;
+            OICPResult<Acknowledgement<ChargingEndNotificationRequest>> result             = null;
 
             #endregion
 
-            #region  OnChargingNotificationsEndRequest event
+            #region  OnChargingEndNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsEndRequest != null)
-                    await Task.WhenAll(OnChargingNotificationsEndRequest.GetInvocationList().
-                                       Cast<OnChargingNotificationsEndRequestDelegate>().
+                if (OnChargingEndNotificationRequest != null)
+                    await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingEndNotificationRequestDelegate>().
                                        Select(e => e(StartTime,
                                                      this,
                                                      Description,
@@ -3177,7 +3177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndRequest));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingEndNotificationRequest));
             }
 
             #endregion
@@ -3213,8 +3213,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
-                                                         RequestLogDelegate:   OnChargingNotificationsEndHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingNotificationsEndHTTPResponse,
+                                                         RequestLogDelegate:   OnChargingEndNotificationHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingEndNotificationHTTPResponse,
                                                          CancellationToken:    Request.CancellationToken,
                                                          EventTrackingId:      Request.EventTrackingId,
                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -3256,19 +3256,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     "EMPPartnerSessionID":  null
                                 // }
 
-                                if (Acknowledgement<ChargingNotificationsEndRequest>.TryParse(Request,
+                                if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                              out Acknowledgement<ChargingNotificationsEndRequest>  acknowledgement,
+                                                                                              out Acknowledgement<ChargingEndNotificationRequest>  acknowledgement,
                                                                                               out String                                              ErrorResponse,
                                                                                               HTTPResponse,
                                                                                               HTTPResponse.Timestamp,
                                                                                               HTTPResponse.EventTrackingId,
                                                                                               HTTPResponse.Runtime,
                                                                                               processId,
-                                                                                              CustomChargingNotificationsEndAcknowledgementParser))
+                                                                                              CustomChargingEndNotificationAcknowledgementParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Success(Request,
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
                                                                                                                     acknowledgement,
                                                                                                                     processId);
 
@@ -3278,9 +3278,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<ChargingNotificationsEndRequest>(
+                                             new Acknowledgement<ChargingEndNotificationRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -3345,7 +3345,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out ValidationErrorList ValidationErrors))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.BadRequest(Request,
+                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.BadRequest(Request,
                                                                                                                    ValidationErrors,
                                                                                                                    processId);
 
@@ -3397,8 +3397,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsEndRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -3414,9 +3414,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                new Acknowledgement<ChargingEndNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3470,8 +3470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsEndRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -3487,9 +3487,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                                new Acknowledgement<ChargingEndNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3522,9 +3522,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
 
-                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                new Acknowledgement<ChargingEndNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -3542,9 +3542,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             if (result == null)
-                result = OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsEndRequest>(
+                                new Acknowledgement<ChargingEndNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -3560,16 +3560,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             );
 
 
-            #region  OnChargingNotificationsEndResponse event
+            #region  OnChargingEndNotificationResponse event
 
             var Endtime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsEndResponse != null)
-                    await Task.WhenAll(OnChargingNotificationsEndResponse.GetInvocationList().
-                                       Cast<OnChargingNotificationsEndResponseDelegate>().
+                if (OnChargingEndNotificationResponse != null)
+                    await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingEndNotificationResponseDelegate>().
                                        Select(e => e(Endtime,
                                                      this,
                                                      Description,
@@ -3580,7 +3580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsEndResponse));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingEndNotificationResponse));
             }
 
             #endregion
@@ -3591,41 +3591,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingNotificationsError   (Request)
+        #region SendChargingErrorNotification   (Request)
 
         /// <summary>
         /// Send a charging error notification.
         /// </summary>
-        /// <param name="Request">A ChargingNotificationsError request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>> SendChargingNotificationsError(ChargingNotificationsErrorRequest Request)
+        /// <param name="Request">A ChargingErrorNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>> SendChargingErrorNotification(ChargingErrorNotificationRequest Request)
         {
 
             #region Initial checks
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingNotificationsError request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The given ChargingErrorNotification request must not be null!");
 
-            //Request = _CustomSendChargingNotificationsErrorRequestMapper(Request);
+            //Request = _CustomSendChargingErrorNotificationRequestMapper(Request);
 
             if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingNotificationsError request must not be null!");
+                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingErrorNotification request must not be null!");
 
 
             Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>> result             = null;
+            OICPResult<Acknowledgement<ChargingErrorNotificationRequest>> result             = null;
 
             #endregion
 
-            #region  OnChargingNotificationsErrorRequest event
+            #region  OnChargingErrorNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsErrorRequest != null)
-                    await Task.WhenAll(OnChargingNotificationsErrorRequest.GetInvocationList().
-                                       Cast<OnChargingNotificationsErrorRequestDelegate>().
+                if (OnChargingErrorNotificationRequest != null)
+                    await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingErrorNotificationRequestDelegate>().
                                        Select(e => e(StartTime,
                                                      this,
                                                      Description,
@@ -3635,7 +3635,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorRequest));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationRequest));
             }
 
             #endregion
@@ -3671,8 +3671,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
-                                                         RequestLogDelegate:   OnChargingNotificationsErrorHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingNotificationsErrorHTTPResponse,
+                                                         RequestLogDelegate:   OnChargingErrorNotificationHTTPRequest,
+                                                         ResponseLogDelegate:  OnChargingErrorNotificationHTTPResponse,
                                                          CancellationToken:    Request.CancellationToken,
                                                          EventTrackingId:      Request.EventTrackingId,
                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -3714,19 +3714,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     "EMPPartnerSessionID":  null
                                 // }
 
-                                if (Acknowledgement<ChargingNotificationsErrorRequest>.TryParse(Request,
+                                if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
                                                                                                 JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingNotificationsErrorRequest>  acknowledgement,
+                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>  acknowledgement,
                                                                                                 out String                                              ErrorResponse,
                                                                                                 HTTPResponse,
                                                                                                 HTTPResponse.Timestamp,
                                                                                                 HTTPResponse.EventTrackingId,
                                                                                                 HTTPResponse.Runtime,
                                                                                                 processId,
-                                                                                                CustomChargingNotificationsErrorAcknowledgementParser))
+                                                                                                CustomChargingErrorNotificationAcknowledgementParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Success(Request,
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
                                                                                                                     acknowledgement,
                                                                                                                     processId);
 
@@ -3736,9 +3736,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                             new Acknowledgement<ChargingErrorNotificationRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -3803,7 +3803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out ValidationErrorList ValidationErrors))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.BadRequest(Request,
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.BadRequest(Request,
                                                                                                                    ValidationErrors,
                                                                                                                    processId);
 
@@ -3855,8 +3855,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -3872,9 +3872,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                new Acknowledgement<ChargingErrorNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3928,8 +3928,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String      ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                                        Request,
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
@@ -3945,9 +3945,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                 Request,
-                                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                                new Acknowledgement<ChargingErrorNotificationRequest>(
                                                     Request,
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
@@ -3980,9 +3980,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
 
-                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                new Acknowledgement<ChargingErrorNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -4000,9 +4000,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             if (result == null)
-                result = OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                 Request,
-                                new Acknowledgement<ChargingNotificationsErrorRequest>(
+                                new Acknowledgement<ChargingErrorNotificationRequest>(
                                     Request,
                                     DateTime.UtcNow,
                                     Request.EventTrackingId,
@@ -4018,16 +4018,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             );
 
 
-            #region  OnChargingNotificationsErrorResponse event
+            #region  OnChargingErrorNotificationResponse event
 
             var Endtime = DateTime.UtcNow;
 
             try
             {
 
-                if (OnChargingNotificationsErrorResponse != null)
-                    await Task.WhenAll(OnChargingNotificationsErrorResponse.GetInvocationList().
-                                       Cast<OnChargingNotificationsErrorResponseDelegate>().
+                if (OnChargingErrorNotificationResponse != null)
+                    await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingErrorNotificationResponseDelegate>().
                                        Select(e => e(Endtime,
                                                      this,
                                                      Description,
@@ -4038,7 +4038,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingNotificationsErrorResponse));
+                e.Log(nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationResponse));
             }
 
             #endregion

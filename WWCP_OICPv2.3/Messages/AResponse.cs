@@ -50,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public TRequest          Request              { get; }
 
         /// <summary>
-        /// The timestamp of the response message creation.
+        /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
         public DateTime          ResponseTimestamp    { get; }

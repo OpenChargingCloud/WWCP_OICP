@@ -124,87 +124,87 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     #endregion
 
 
-    #region OnChargingNotificationsStart
+    #region OnChargingStartNotificationRequest/-Response
 
     /// <summary>
-    /// A delegate called whenever a ChargingNotificationsStart will be send.
+    /// A delegate called whenever a ChargingStartNotification will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsStartRequestDelegate (DateTime                                                         Timestamp,
-                                                                      CPOClient                                                        Sender,
-                                                                      String                                                           SenderDescription,
-                                                                      ChargingNotificationsStartRequest                                Request);
+    public delegate Task OnChargingStartNotificationRequestDelegate (DateTime                                                         Timestamp,
+                                                                     CPOClient                                                        Sender,
+                                                                     String                                                           SenderDescription,
+                                                                     ChargingStartNotificationRequest                                 Request);
 
     /// <summary>
-    /// A delegate called whenever a response for a ChargingNotificationsStart had been received.
+    /// A delegate called whenever a response for a ChargingStartNotification had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsStartResponseDelegate(DateTime                                                         Timestamp,
-                                                                      CPOClient                                                        Sender,
-                                                                      String                                                           SenderDescription,
-                                                                      ChargingNotificationsStartRequest                                Request,
-                                                                      OICPResult<Acknowledgement<ChargingNotificationsStartRequest>>   Result);
+    public delegate Task OnChargingStartNotificationResponseDelegate(DateTime                                                         Timestamp,
+                                                                     CPOClient                                                        Sender,
+                                                                     String                                                           SenderDescription,
+                                                                     ChargingStartNotificationRequest                                 Request,
+                                                                     OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Result);
 
     #endregion
 
-    #region OnChargingNotificationsProgress
+    #region OnChargingProgressNotificationRequest/-Response
 
     /// <summary>
-    /// A delegate called whenever a ChargingNotificationsProgress will be send.
+    /// A delegate called whenever a ChargingProgressNotification will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsProgressRequestDelegate (DateTime                                                            Timestamp,
-                                                                         CPOClient                                                           Sender,
-                                                                         String                                                              SenderDescription,
-                                                                         ChargingNotificationsProgressRequest                                Request);
+    public delegate Task OnChargingProgressNotificationRequestDelegate (DateTime                                                            Timestamp,
+                                                                        CPOClient                                                           Sender,
+                                                                        String                                                              SenderDescription,
+                                                                        ChargingProgressNotificationRequest                                 Request);
 
     /// <summary>
-    /// A delegate called whenever a response for a ChargingNotificationsProgress had been received.
+    /// A delegate called whenever a response for a ChargingProgressNotification had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsProgressResponseDelegate(DateTime                                                            Timestamp,
-                                                                         CPOClient                                                           Sender,
-                                                                         String                                                              SenderDescription,
-                                                                         ChargingNotificationsProgressRequest                                Request,
-                                                                         OICPResult<Acknowledgement<ChargingNotificationsProgressRequest>>   Result);
+    public delegate Task OnChargingProgressNotificationResponseDelegate(DateTime                                                            Timestamp,
+                                                                        CPOClient                                                           Sender,
+                                                                        String                                                              SenderDescription,
+                                                                        ChargingProgressNotificationRequest                                 Request,
+                                                                        OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Result);
 
     #endregion
 
-    #region OnChargingNotificationsEnd
+    #region OnChargingEndNotificationRequest/-Response
 
     /// <summary>
-    /// A delegate called whenever a ChargingNotificationsEnd will be send.
+    /// A delegate called whenever a ChargingEndNotification will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsEndRequestDelegate (DateTime                                                       Timestamp,
-                                                                    CPOClient                                                      Sender,
-                                                                    String                                                         SenderDescription,
-                                                                    ChargingNotificationsEndRequest                                Request);
+    public delegate Task OnChargingEndNotificationRequestDelegate (DateTime                                                       Timestamp,
+                                                                   CPOClient                                                      Sender,
+                                                                   String                                                         SenderDescription,
+                                                                   ChargingEndNotificationRequest                                 Request);
 
     /// <summary>
-    /// A delegate called whenever a response for a ChargingNotificationsEnd had been received.
+    /// A delegate called whenever a response for a ChargingEndNotification had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsEndResponseDelegate(DateTime                                                       Timestamp,
-                                                                    CPOClient                                                      Sender,
-                                                                    String                                                         SenderDescription,
-                                                                    ChargingNotificationsEndRequest                                Request,
-                                                                    OICPResult<Acknowledgement<ChargingNotificationsEndRequest>>   Result);
+    public delegate Task OnChargingEndNotificationResponseDelegate(DateTime                                                       Timestamp,
+                                                                   CPOClient                                                      Sender,
+                                                                   String                                                         SenderDescription,
+                                                                   ChargingEndNotificationRequest                                 Request,
+                                                                   OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Result);
 
     #endregion
 
-    #region OnChargingNotificationsError
+    #region OnChargingErrorNotificationRequest/-Response
 
     /// <summary>
-    /// A delegate called whenever a ChargingNotificationsError will be send.
+    /// A delegate called whenever a ChargingErrorNotification will be send.
     /// </summary>
-    public delegate Task OnChargingNotificationsErrorRequestDelegate (DateTime                                                         Timestamp,
-                                                                      CPOClient                                                        Sender,
-                                                                      String                                                           SenderDescription,
-                                                                      ChargingNotificationsErrorRequest                                Request);
+    public delegate Task OnChargingErrorNotificationRequestDelegate (DateTime                                                         Timestamp,
+                                                                     CPOClient                                                        Sender,
+                                                                     String                                                           SenderDescription,
+                                                                     ChargingErrorNotificationRequest                                 Request);
 
     /// <summary>
-    /// A delegate called whenever a response for a ChargingNotificationsError had been received.
+    /// A delegate called whenever a response for a ChargingErrorNotification had been received.
     /// </summary>
-    public delegate Task OnChargingNotificationsErrorResponseDelegate(DateTime                                                         Timestamp,
-                                                                      CPOClient                                                        Sender,
-                                                                      String                                                           SenderDescription,
-                                                                      ChargingNotificationsErrorRequest                                Request,
-                                                                      OICPResult<Acknowledgement<ChargingNotificationsErrorRequest>>   Result);
+    public delegate Task OnChargingErrorNotificationResponseDelegate(DateTime                                                         Timestamp,
+                                                                     CPOClient                                                        Sender,
+                                                                     String                                                           SenderDescription,
+                                                                     ChargingErrorNotificationRequest                                 Request,
+                                                                     OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Result);
 
     #endregion
 

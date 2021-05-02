@@ -86,10 +86,10 @@
     <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
     <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
     <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
-    <Compile Include="Messages\CPO\ChargingNotificationsErrorRequest.cs" />
-    <Compile Include="Messages\CPO\ChargingNotificationsEndRequest.cs" />
-    <Compile Include="Messages\CPO\ChargingNotificationsProgressRequest.cs" />
-    <Compile Include="Messages\CPO\ChargingNotificationsStartRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingErrorNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingEndNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingProgressNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingStartNotificationRequest.cs" />
     <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />

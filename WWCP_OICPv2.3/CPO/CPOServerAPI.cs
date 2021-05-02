@@ -21,9 +21,7 @@ using System;
 using System.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -58,17 +56,138 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser      { get; set; }
+        // Custom JSON parsers
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser       { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser                 { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser     { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                  { get; set; }
+
+        public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser               { get; set; }
+
+        public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                { get; set; }
+
+
+        // Custom JSON serializers
+        public CustomJObjectSerializerDelegate<Acknowledgement>                     CustomAcknowledgementSerializer                       { get; set; }
+
+        public CustomJObjectSerializerDelegate<StatusCode>                          CustomStatusCodeSerializer                            { get; set; }
+
+
+        public Newtonsoft.Json.Formatting                                           JSONFormatting                                        { get; set; }
 
         #endregion
 
         #region Events
+
+        #region (protected internal) OnAuthorizeRemoteReservationStartHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new HTTPRequestLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTime     Timestamp,
+                                                                              HTTPAPI      API,
+                                                                              HTTPRequest  Request)
+
+            => OnAuthorizeRemoteReservationStartHTTPRequest?.WhenAll(Timestamp,
+                                                                     API ?? this,
+                                                                     Request);
+
+        #endregion
+
+        public event OnAuthorizeRemoteReservationStartRequestDelegate   OnAuthorizeRemoteReservationStartRequest;
+        public event OnAuthorizeRemoteReservationStartDelegate          OnAuthorizeRemoteReservationStart;
+        public event OnAuthorizeRemoteReservationStartResponseDelegate  OnAuthorizeRemoteReservationStartResponse;
+
+        #region (protected internal) OnAuthorizeRemoteReservationStartHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new HTTPResponseLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTime      Timestamp,
+                                                                               HTTPAPI       API,
+                                                                               HTTPRequest   Request,
+                                                                               HTTPResponse  Response)
+
+            => OnAuthorizeRemoteReservationStartHTTPResponse?.WhenAll(Timestamp,
+                                                                      API ?? this,
+                                                                      Request,
+                                                                      Response);
+
+        #endregion
+
+
+        #region (protected internal) OnAuthorizeRemoteReservationStopHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new HTTPRequestLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime      Timestamp,
+                                                                             HTTPAPI       API,
+                                                                             HTTPRequest   Request)
+
+            => OnAuthorizeRemoteReservationStopHTTPRequest?.WhenAll(Timestamp,
+                                                                    API ?? this,
+                                                                    Request);
+
+        #endregion
+
+        public event OnAuthorizeRemoteReservationStopRequestDelegate   OnAuthorizeRemoteReservationStopRequest;
+        public event OnAuthorizeRemoteReservationStopDelegate          OnAuthorizeRemoteReservationStop;
+        public event OnAuthorizeRemoteReservationStopResponseDelegate  OnAuthorizeRemoteReservationStopResponse;
+
+        #region (protected internal) OnAuthorizeRemoteReservationStopHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new HTTPResponseLogEvent();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Server HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTime      Timestamp,
+                                                                              HTTPAPI       API,
+                                                                              HTTPRequest   Request,
+                                                                              HTTPResponse  Response)
+
+            => OnAuthorizeRemoteReservationStopHTTPResponse?.WhenAll(Timestamp,
+                                                                     API ?? this,
+                                                                     Request,
+                                                                     Response);
+
+        #endregion
+
+
 
         #region (protected internal) OnAuthorizeRemoteStartHTTPRequest
 
@@ -304,6 +423,255 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
+
+            // POST /api/oicp/charging/v21/providers/DE*ICE/authorize-remote-reservation/start HTTP/1.1
+            // Accept:          application/json;charset=UTF-8
+            // Content-Type:    application/json;charset=UTF-8
+            // Content-Length:  250
+            // Host:            api.chargeit-mobility.com:3000
+            // Connection:      Keep-Alive
+            // User-Agent:      Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_265)
+            // 
+            // {
+            //     "SessionID":           "b3be9e19-ca56-4965-80f1-ba835d5069c7",
+            //     "CPOPartnerSessionID":  null,
+            //     "EMPPartnerSessionID":  null,
+            //     "ProviderID":          "DE*ICE",
+            //     "EvseID":              "DE*BDO*E*TEST*1",
+            //     "Identification": {
+            //         "RemoteReservationIdentification": {
+            //             "EvcoID":          "DE*ICE*I01000*6"
+            //         }
+            //     },
+            //     "PartnerProductID": null
+            // }
+
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                 out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
+                                                                                                 out String                                  errorResponse,
+                                                                                                 Request.Timestamp,
+                                                                                                 Request.EventTrackingId,
+                                                                                                 CustomAuthorizeRemoteReservationStartRequestParser))
+                                             {
+
+                                                 var OnAuthorizeRemoteReservationStartLocal = OnAuthorizeRemoteReservationStart;
+                                                 if (OnAuthorizeRemoteReservationStartLocal != null)
+                                                 {
+
+                                                     try
+                                                     {
+
+                                                         var response = await OnAuthorizeRemoteReservationStartLocal.Invoke(DateTime.UtcNow,
+                                                                                                                            this,
+                                                                                                                            authorizeRemoteReservationStartRequest);
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                          ToString(JSONFormatting).
+                                                                                                          ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
+                                                                                                                                                             Request:                   authorizeRemoteReservationStartRequest,
+                                                                                                                                                             StatusCodeDescription:     e.Message,
+                                                                                                                                                             StatusCodeAdditionalInfo:  e.StackTrace
+                                                                                                                                                         ).
+                                                                                                                                                         ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                                CustomStatusCodeSerializer).
+                                                                                                                                                         ToString(JSONFormatting).
+                                                                                                                                                         ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+
+                                                 }
+
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = DateTime.UtcNow,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
+                                                                                                                                                 Request:                   authorizeRemoteReservationStartRequest,
+                                                                                                                                                 StatusCodeDescription:     "We could not handle the given AuthorizeRemoteReservationStart request!",
+                                                                                                                                                 StatusCodeAdditionalInfo:  errorResponse
+                                                                                                                                             ).
+                                                                                                                                             ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                    CustomStatusCodeSerializer).
+                                                                                                                                             ToString(JSONFormatting).
+                                                                                                                                             ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
+
+            // POST /api/oicp/charging/v21/providers/DE*ICE/authorize-remote-reservation/stop HTTP/1.1
+            // Accept:          application/json;charset=UTF-8
+            // Content-Type:    application/json;charset=UTF-8
+            // Content-Length:  250
+            // Host:            api.chargeit-mobility.com:3000
+            // Connection:      Keep-Alive
+            // User-Agent:      Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_265)
+            // 
+            // {
+            //     "SessionID":           "b3be9e19-ca56-4965-80f1-ba835d5069c7",
+            //     "CPOPartnerSessionID":  null,
+            //     "EMPPartnerSessionID":  null,
+            //     "ProviderID":          "DE*ICE",
+            //     "EvseID":              "DE*BDO*E*TEST*1",
+            //     "Identification": {
+            //         "RemoteReservationIdentification": {
+            //             "EvcoID":          "DE*ICE*I01000*6"
+            //         }
+            //     },
+            //     "PartnerProductID": null
+            // }
+
+            // --------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
+            // --------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                out AuthorizeRemoteReservationStopRequest  authorizeRemoteReservationStopRequest,
+                                                                                                out String                                 errorResponse,
+                                                                                                Request.Timestamp,
+                                                                                                Request.EventTrackingId,
+                                                                                                CustomAuthorizeRemoteReservationStopRequestParser))
+                                             {
+
+                                                 var OnAuthorizeRemoteReservationStopLocal = OnAuthorizeRemoteReservationStop;
+                                                 if (OnAuthorizeRemoteReservationStopLocal != null)
+                                                 {
+
+                                                     try
+                                                     {
+
+                                                         var response = await OnAuthorizeRemoteReservationStopLocal.Invoke(DateTime.UtcNow,
+                                                                                                                           this,
+                                                                                                                           authorizeRemoteReservationStopRequest);
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                          ToString(JSONFormatting).
+                                                                                                          ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = DateTime.UtcNow,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
+                                                                                                                                                            Request:                   authorizeRemoteReservationStopRequest,
+                                                                                                                                                            StatusCodeDescription:     e.Message,
+                                                                                                                                                            StatusCodeAdditionalInfo:  e.StackTrace
+                                                                                                                                                        ).
+                                                                                                                                                        ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                               CustomStatusCodeSerializer).
+                                                                                                                                                        ToString(JSONFormatting).
+                                                                                                                                                        ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     }
+
+                                                 }
+
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = DateTime.UtcNow,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
+                                                                                                                                                Request:                   authorizeRemoteReservationStopRequest,
+                                                                                                                                                StatusCodeDescription:     "We could not handle the given AuthorizeRemoteReservationStop request!",
+                                                                                                                                                StatusCodeAdditionalInfo:  errorResponse
+                                                                                                                                            ).
+                                                                                                                                            ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                   CustomStatusCodeSerializer).
+                                                                                                                                            ToString(JSONFormatting).
+                                                                                                                                            ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
             #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
 
             // POST /api/oicp/charging/v21/providers/DE*ICE/authorize-remote/start HTTP/1.1
@@ -367,7 +735,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     AccessControlAllowMethods  = "POST",
                                                                     AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                                     ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                                    Content                    = response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                          ToString(JSONFormatting).
+                                                                                                          ToUTF8Bytes(),
                                                                     Connection                 = "close"
                                                                 }.AsImmutable;
 
@@ -388,8 +759,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                   StatusCodeDescription:     e.Message,
                                                                                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
                                                                                                                                               ).
-                                                                                                                                              ToJSON().
-                                                                                                                                              ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                              ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                                              ToString(JSONFormatting).
                                                                                                                                               ToUTF8Bytes(),
                                                                     Connection                 = "close"
                                                                 }.AsImmutable;
@@ -413,8 +785,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                       StatusCodeDescription:     "We could not handle the given AuthorizeRemoteStart request!",
                                                                                                                                       StatusCodeAdditionalInfo:  errorResponse
                                                                                                                                   ).
-                                                                                                                                  ToJSON().
-                                                                                                                                  ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                  ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                         CustomStatusCodeSerializer).
+                                                                                                                                  ToString(JSONFormatting).
                                                                                                                                   ToUTF8Bytes(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
@@ -486,7 +859,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     AccessControlAllowMethods  = "POST",
                                                                     AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                                     ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = response.ToJSON().ToString(Newtonsoft.Json.Formatting.None).ToUTF8Bytes(),
+                                                                    Content                    = response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                          ToString(JSONFormatting).
+                                                                                                          ToUTF8Bytes(),
                                                                     Connection                 = "close"
                                                                 }.AsImmutable;
 
@@ -507,8 +883,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                  StatusCodeDescription:     e.Message,
                                                                                                                                                  StatusCodeAdditionalInfo:  e.StackTrace
                                                                                                                                              ).
-                                                                                                                                             ToJSON().
-                                                                                                                                             ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                             ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                                    CustomStatusCodeSerializer).
+                                                                                                                                             ToString(JSONFormatting).
                                                                                                                                              ToUTF8Bytes(),
                                                                     Connection                 = "close"
                                                                 }.AsImmutable;
@@ -532,8 +909,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                      StatusCodeDescription:     "We could not handle the given AuthorizeRemoteStop request!",
                                                                                                                                      StatusCodeAdditionalInfo:  errorResponse
                                                                                                                                  ).
-                                                                                                                                 ToJSON().
-                                                                                                                                 ToString(Newtonsoft.Json.Formatting.None).
+                                                                                                                                 ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                        CustomStatusCodeSerializer).
+                                                                                                                                 ToString(JSONFormatting).
                                                                                                                                  ToUTF8Bytes(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
