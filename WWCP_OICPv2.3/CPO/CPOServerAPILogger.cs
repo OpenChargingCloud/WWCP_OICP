@@ -150,19 +150,52 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.CPOServerAPI = CPOServerAPI ?? throw new ArgumentNullException(nameof(CPOServerAPI), "The given CPO Server API must not be null!");
 
+                #region AuthorizeRemoteReservationStart/-Stop
+
+                RegisterEvent2("AuthorizeRemoteReservationStartRequest",
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
+                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "Request", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("AuthorizeRemoteReservationStartResponse",
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
+                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "Reservation", "Response", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent2("AuthorizeRemoteReservationStopRequest",
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
+                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "Request", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("AuthorizeRemoteReservationStopResponse",
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
+                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
+                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "Reservation", "Response", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
                 #region AuthorizeRemoteStart/-Stop
 
                 RegisterEvent2("AuthorizeRemoteStartRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "Request", "All").
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "Request", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteStartResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "Authorization", "Response", "All").
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "Authorization", "Response", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -170,14 +203,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("AuthorizeRemoteStopRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "Request", "All").
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "Request", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteStopResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "Authorization", "Response", "All").
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "Authorization", "Response", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
