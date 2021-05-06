@@ -44,10 +44,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ChargeDetailRecord  ChargeDetailRecord    { get; }
 
         /// <summary>
-        /// The unqiue identification of the charging station operator sending the given charge detail record.
+        /// The unqiue identification of the operator sending the given charge detail record
+        /// This means: Not the sub operator or the operator of the EVSE!
         /// </summary>
-        public Operator_Id OperatorId
-            => ChargeDetailRecord.EVSEId.OperatorId;
+        [Mandatory]
+        public Operator_Id         OperatorId            { get; }
 
         #endregion
 
@@ -57,13 +58,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new SendChargeDetailRecordStart request.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to send.</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers. This means: Not the sub operator or the operator of the EVSE!</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public SendChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
+                                             Operator_Id         OperatorId,
                                              JObject             CustomData          = null,
 
                                              DateTime?           Timestamp           = null,
@@ -80,6 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             this.ChargeDetailRecord  = ChargeDetailRecord ?? throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given charge detail record must not be null!");
+            this.OperatorId          = OperatorId;
 
         }
 
@@ -164,11 +168,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a SendChargeDetailRecordStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart JSON objects.</param>
         public static SendChargeDetailRecordRequest Parse(JObject                                                     JSON,
+                                                          Operator_Id                                                 OperatorId,
                                                           TimeSpan                                                    RequestTimeout,
                                                           DateTime?                                                   Timestamp                                   = null,
                                                           EventTracking_Id                                            EventTrackingId                             = null,
@@ -176,6 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
+                         OperatorId,
                          RequestTimeout,
                          out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                         ErrorResponse,
@@ -198,11 +205,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a SendChargeDetailRecordStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
         public static SendChargeDetailRecordRequest Parse(String                                                      Text,
+                                                          Operator_Id                                                 OperatorId,
                                                           TimeSpan                                                    RequestTimeout,
                                                           DateTime?                                                   Timestamp                                   = null,
                                                           EventTracking_Id                                            EventTrackingId                             = null,
@@ -210,6 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
+                         OperatorId,
                          RequestTimeout,
                          out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                         ErrorResponse,
@@ -232,6 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a SendChargeDetailRecordStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecordStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -239,6 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                     JSON,
+                                       Operator_Id                                                 OperatorId,
                                        TimeSpan                                                    RequestTimeout,
                                        out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
                                        out String                                                  ErrorResponse,
@@ -277,6 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 SendChargeDetailRecordRequest = new SendChargeDetailRecordRequest(CDR,
+                                                                                  OperatorId,
                                                                                   CustomData,
 
                                                                                   Timestamp,
@@ -308,6 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a SendChargeDetailRecordStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecordStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -315,6 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
         public static Boolean TryParse(String                                                      Text,
+                                       Operator_Id                                                 OperatorId,
                                        TimeSpan                                                    RequestTimeout,
                                        out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
                                        out String                                                  ErrorResponse,
@@ -327,6 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
+                                OperatorId,
                                 RequestTimeout,
                                 out SendChargeDetailRecordRequest,
                                 out ErrorResponse,

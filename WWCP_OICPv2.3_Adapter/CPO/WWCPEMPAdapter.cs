@@ -52,13 +52,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Data
 
+        private        readonly  WWCP.ChargingStationOperatorNameSelectorDelegate     OperatorNameSelector;
+
         private        readonly  EVSE2EVSEDataRecordDelegate                          _EVSE2EVSEDataRecord;
 
         private        readonly  EVSEStatusUpdate2EVSEStatusRecordDelegate            _EVSEStatusUpdate2EVSEStatusRecord;
 
         private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate    _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-        private        readonly  WWCP.ChargingStationOperatorNameSelectorDelegate     OperatorNameSelector;
 
         private static readonly  Regex                                                pattern                             = new Regex(@"\s=\s");
 
@@ -125,7 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public String       DefaultOperatorName   { get; }
 
 
-        protected readonly WWCP.CustomEVSEIdMapperDelegate CustomEVSEIdMapper;
+        //protected readonly WWCP.CustomEVSEIdMapperDelegate CustomEVSEIdMapper;
 
         #endregion
 
@@ -248,9 +249,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               WWCP.RoamingNetwork                                RoamingNetwork,
                               CPORoaming                                         CPORoaming,
 
-                              //EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
-                              //EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
-                              //WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                              EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
+                              EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
+                              WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
 
                               WWCP.ChargingStationOperator                       DefaultOperator                                 = null,
                               WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
@@ -260,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               WWCP.IncludeEVSEDelegate                           IncludeEVSEs                                    = null,
                               WWCP.ChargeDetailRecordFilterDelegate              ChargeDetailRecordFilter                        = null,
 
-                              WWCP.CustomEVSEIdMapperDelegate                    CustomEVSEIdMapper                              = null,
+                              //WWCP.CustomEVSEIdMapperDelegate                    CustomEVSEIdMapper                              = null,
 
                               TimeSpan?                                          ServiceCheckEvery                               = null,
                               TimeSpan?                                          StatusCheckEvery                                = null,
@@ -305,9 +306,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         {
 
             this.CPORoaming                                       = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
-            //this._EVSE2EVSEDataRecord                             = EVSE2EVSEDataRecord;
-            //this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
-            //this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
+            this._EVSE2EVSEDataRecord                             = EVSE2EVSEDataRecord;
+            this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
+            this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
             this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
@@ -319,7 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(DefaultOperator), "The given default charging station operator name must not be null!");
 
-            this.CustomEVSEIdMapper                               = CustomEVSEIdMapper;
+            //this.CustomEVSEIdMapper                               = CustomEVSEIdMapper;
 
 
             // Link incoming OICP events...
@@ -4991,6 +4992,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+                                                                                       DefaultOperator.Id.ToOICP().Value,
                                                                                        null,
 
                                                                                        Timestamp,
@@ -5478,6 +5480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     var response  = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord,
+                                                                            DefaultOperator.Id.ToOICP().Value,
                                                                             null,
 
                                                                             DateTime.UtcNow,

@@ -69,40 +69,40 @@ namespace org.GraphDefined.WWCP
         /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_3.CPO.WWCPEMPAdapter
 
-            CreateOICPv2_3_EMPRoamingProvider(this RoamingNetwork                                             RoamingNetwork,
-                                              EMPRoamingProvider_Id                                           Id,
-                                              I18NString                                                      Name,
-                                              I18NString                                                      Description,
-                                              OICPv2_3.CPO.CPORoaming                                         CPORoaming,
+            CreateOICPv2_3_EMPRoamingProvider(this RoamingNetwork                                         RoamingNetwork,
+                                              EMPRoamingProvider_Id                                       Id,
+                                              I18NString                                                  Name,
+                                              I18NString                                                  Description,
+                                              OICPv2_3.CPO.CPORoaming                                     CPORoaming,
 
-                                              //OICPv2_3.CPO.EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
-                                              //OICPv2_3.CPO.EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
-                                              //OICPv2_3.CPO.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                                              OICPv2_3.EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
+                                              OICPv2_3.EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
+                                              OICPv2_3.WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
 
-                                              ChargingStationOperator                                         DefaultOperator                                 = null,
-                                              OperatorIdFormats                                               DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
-                                              ChargingStationOperatorNameSelectorDelegate                     OperatorNameSelector                            = null,
+                                              ChargingStationOperator                                     DefaultOperator                                 = null,
+                                              OperatorIdFormats                                           DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
+                                              ChargingStationOperatorNameSelectorDelegate                 OperatorNameSelector                            = null,
 
-                                              IncludeEVSEIdDelegate                                           IncludeEVSEIds                                  = null,
-                                              IncludeEVSEDelegate                                             IncludeEVSEs                                    = null,
-                                              ChargeDetailRecordFilterDelegate                                ChargeDetailRecordFilter                        = null,
-                                              CustomEVSEIdMapperDelegate                                      CustomEVSEIdMapper                              = null,
+                                              IncludeEVSEIdDelegate                                       IncludeEVSEIds                                  = null,
+                                              IncludeEVSEDelegate                                         IncludeEVSEs                                    = null,
+                                              ChargeDetailRecordFilterDelegate                            ChargeDetailRecordFilter                        = null,
+                                              //CustomEVSEIdMapperDelegate                                  CustomEVSEIdMapper                              = null,
 
-                                              TimeSpan?                                                       ServiceCheckEvery                               = null,
-                                              TimeSpan?                                                       StatusCheckEvery                                = null,
-                                              TimeSpan?                                                       CDRCheckEvery                                   = null,
+                                              TimeSpan?                                                   ServiceCheckEvery                               = null,
+                                              TimeSpan?                                                   StatusCheckEvery                                = null,
+                                              TimeSpan?                                                   CDRCheckEvery                                   = null,
 
-                                              Boolean                                                         DisablePushData                                 = false,
-                                              Boolean                                                         DisablePushStatus                               = false,
-                                              Boolean                                                         DisableAuthentication                           = false,
-                                              Boolean                                                         DisableSendChargeDetailRecords                  = false,
+                                              Boolean                                                     DisablePushData                                 = false,
+                                              Boolean                                                     DisablePushStatus                               = false,
+                                              Boolean                                                     DisableAuthentication                           = false,
+                                              Boolean                                                     DisableSendChargeDetailRecords                  = false,
 
-                                              Action<OICPv2_3.CPO.WWCPEMPAdapter>                             OICPConfigurator                                = null,
-                                              Action<IEMPRoamingProvider>                                     Configurator                                    = null,
+                                              Action<OICPv2_3.CPO.WWCPEMPAdapter>                         OICPConfigurator                                = null,
+                                              Action<IEMPRoamingProvider>                                 Configurator                                    = null,
 
-                                              String                                                          EllipticCurve                                   = "P-256",
-                                              ECPrivateKeyParameters                                          PrivateKey                                      = null,
-                                              PublicKeyCertificates                                           PublicKeyCertificates                           = null)
+                                              String                                                      EllipticCurve                                   = "P-256",
+                                              ECPrivateKeyParameters                                      PrivateKey                                      = null,
+                                              PublicKeyCertificates                                       PublicKeyCertificates                           = null)
 
         {
 
@@ -128,9 +128,9 @@ namespace org.GraphDefined.WWCP
                                                                      RoamingNetwork,
                                                                      CPORoaming,
 
-                                                                     //EVSE2EVSEDataRecord,
-                                                                     //EVSEStatusUpdate2EVSEStatusRecord,
-                                                                     //WWCPChargeDetailRecord2OICPChargeDetailRecord,
+                                                                     EVSE2EVSEDataRecord,
+                                                                     EVSEStatusUpdate2EVSEStatusRecord,
+                                                                     WWCPChargeDetailRecord2OICPChargeDetailRecord,
 
                                                                      DefaultOperator,
                                                                      DefaultOperatorIdFormat,
@@ -139,7 +139,7 @@ namespace org.GraphDefined.WWCP
                                                                      IncludeEVSEIds,
                                                                      IncludeEVSEs,
                                                                      ChargeDetailRecordFilter,
-                                                                     CustomEVSEIdMapper,
+                                                                     //CustomEVSEIdMapper,
 
                                                                      ServiceCheckEvery,
                                                                      StatusCheckEvery,

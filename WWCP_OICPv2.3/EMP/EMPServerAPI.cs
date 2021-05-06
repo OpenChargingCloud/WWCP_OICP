@@ -616,20 +616,48 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             if (SendChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                        Request.Timeout ?? DefaultRequestTimeout,
-                                                                                        out SendChargeDetailRecordRequest  sendChargeDetailRecordRequest,
-                                                                                        out String                         errorResponse,
-                                                                                        Request.Timestamp,
-                                                                                        Request.EventTrackingId,
-                                                                                        CustomSendChargeDetailRecordRequestParser))
+                                             try
                                              {
 
-                                                 var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-                                                 if (OnChargeDetailRecordLocal != null)
+                                                 #region Check URI parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId)) {
+
+                                                     return new HTTPResponse.Builder(Request) {
+                                                                HTTPStatusCode             = HTTPStatusCode.BadRequest,
+                                                                Server                     = HTTPServer.DefaultServerName,
+                                                                Date                       = DateTime.UtcNow,
+                                                                AccessControlAllowOrigin   = "*",
+                                                                AccessControlAllowMethods  = "POST",
+                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                ContentType                = HTTPContentType.JSON_UTF8,
+                                                                Content                    = Acknowledgement.DataError(
+                                                                                                                 StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                                             ).
+                                                                                                             ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                    CustomStatusCodeSerializer).
+                                                                                                             ToString(JSONFormatting).
+                                                                                                             ToUTF8Bytes(),
+                                                                Connection                 = "close"
+                                                            }.AsImmutable;
+
+                                                 }
+
+                                                 #endregion
+
+
+                                                 if (SendChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                            operatorId,
+                                                                                            Request.Timeout ?? DefaultRequestTimeout,
+                                                                                            out SendChargeDetailRecordRequest  sendChargeDetailRecordRequest,
+                                                                                            out String                         errorResponse,
+                                                                                            Request.Timestamp,
+                                                                                            Request.EventTrackingId,
+                                                                                            CustomSendChargeDetailRecordRequestParser))
                                                  {
 
-                                                     try
+                                                     var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+                                                     if (OnChargeDetailRecordLocal != null)
                                                      {
 
                                                          var response = await OnChargeDetailRecord.Invoke(DateTime.UtcNow,
@@ -644,30 +672,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     AccessControlAllowMethods  = "POST",
                                                                     AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                                     ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = response.ToJSON().ToString(JSONFormatting).ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
-
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = Acknowledgement<SendChargeDetailRecordRequest>.DataError(
-                                                                                                                                                    Request:                   sendChargeDetailRecordRequest,
-                                                                                                                                                    StatusCodeDescription:     e.Message,
-                                                                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace
-                                                                                                                                                ).
-                                                                                                                                                ToJSON().
-                                                                                                                                                ToString(JSONFormatting).
-                                                                                                                                                ToUTF8Bytes(),
+                                                                    Content                    = response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                          ToString(JSONFormatting).
+                                                                                                          ToUTF8Bytes(),
                                                                     Connection                 = "close"
                                                                 }.AsImmutable;
 
@@ -675,26 +683,50 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
 
-                                             }
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.OK,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = DateTime.UtcNow,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = Acknowledgement<SendChargeDetailRecordRequest>.DataError(
+                                                                                                                                            Request:                   sendChargeDetailRecordRequest,
+                                                                                                                                            StatusCodeDescription:     "We could not parse the given ChargeDetailRecord request!",
+                                                                                                                                            StatusCodeAdditionalInfo:  errorResponse
+                                                                                                                                        ).
+                                                                                                                                        ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                               CustomStatusCodeSerializer).
+                                                                                                                                        ToString(JSONFormatting).
+                                                                                                                                        ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = DateTime.UtcNow,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = Acknowledgement<SendChargeDetailRecordRequest>.DataError(
-                                                                                                                                        Request:                   sendChargeDetailRecordRequest,
-                                                                                                                                        StatusCodeDescription:     "We could not handle the given ChargeDetailRecord request!",
-                                                                                                                                        StatusCodeAdditionalInfo:  errorResponse
-                                                                                                                                    ).
-                                                                                                                                    ToJSON().
-                                                                                                                                    ToString(JSONFormatting).
-                                                                                                                                    ToUTF8Bytes(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                             }
+                                             catch (Exception e)
+                                             {
+
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.OK,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = DateTime.UtcNow,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = Acknowledgement.DataError(
+                                                                                                             StatusCodeDescription:    "We could not parse the given ChargeDetailRecord request!",
+                                                                                                             StatusCodeAdditionalInfo: e.Message + Environment.NewLine + e.StackTrace
+                                                                                                         ).
+                                                                                                         ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                CustomStatusCodeSerializer).
+                                                                                                         ToString(JSONFormatting).
+                                                                                                         ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
+
+                                             }
 
                                           }, AllowReplacement: URLReplacement.Allow);
 

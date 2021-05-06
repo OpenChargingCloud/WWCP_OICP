@@ -225,9 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                             EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord   = null,
                                             DeltaTypes?                  DeltaType             = null,
                                             DateTime?                    LastUpdate            = null,
-                                            String                       OperatorName          = null,
-                                            Operator_Id?                 HubOperatorId         = null,
-                                            ClearingHouse_Id?            ClearingHouseId       = null)
+                                            String                       OperatorName          = null)
         {
 
             try
@@ -305,8 +303,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         ChargingStationLocationReference:  null,
                                                         GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool.EntranceLocation.ToOICP(),
                                                         OpeningTimes:                      null,//EVSE.ChargingStation.OpeningTimes?.ToOICP(),
-                                                        HubOperatorId:                     HubOperatorId,
-                                                        ClearingHouseId:                   ClearingHouseId,
+                                                        HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     ("OICP.HubOperatorId"),
+                                                        ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>("OICP.ClearingHouseId"),
 
                                                         CustomData:                        EVSE.CustomData,
                                                         InternalData:                      internalData);

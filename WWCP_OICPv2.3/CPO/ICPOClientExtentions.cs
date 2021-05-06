@@ -764,7 +764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargeDetailRecord           (ChargeDetailRecord, ...)
+        #region SendChargeDetailRecord           (ChargeDetailRecord, OperatorId, ...)
 
         /// <summary>
         /// Send a charge detail record.
@@ -772,6 +772,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// 
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
+        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -782,6 +783,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             SendChargeDetailRecord(this ICPOClient     CPOClient,
                                    ChargeDetailRecord  ChargeDetailRecord,
+                                   Operator_Id         OperatorId,
                                    JObject             CustomData         = null,
 
                                    DateTime?           Timestamp          = null,
@@ -793,6 +795,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 => CPOClient.SendChargeDetailRecord(
                        new SendChargeDetailRecordRequest(
                            ChargeDetailRecord,
+                           OperatorId,
                            CustomData,
 
                            Timestamp,
