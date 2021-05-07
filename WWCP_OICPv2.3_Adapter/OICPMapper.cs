@@ -564,7 +564,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id EVSEId)
 
-            => WWCP.EVSE_Id.TryParse(EVSEId.ToString());
+            => WWCP.EVSE_Id.TryParse(EVSEId.ToString(),
+                                     WWCP.EVSEIdParsingMode.relaxed);
 
         public static WWCP.EVSE_Id? ToWWCP(this EVSE_Id? EVSEId)
 
