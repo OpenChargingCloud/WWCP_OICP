@@ -52,6 +52,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public StatusCode                   StatusCode         { get; }
 
+        /// <summary>
+        /// Optional warnings.
+        /// </summary>
+        public IEnumerable<Warning>         Warnings           { get; }
+
         #endregion
 
         #region Constructor(s)
@@ -68,6 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="Warnings">Optional warnings.</param>
         public PullEVSEDataResponse(PullEVSEDataRequest          Request,
                                     DateTime                     ResponseTimestamp,
                                     EventTracking_Id             EventTrackingId,
@@ -76,7 +82,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     StatusCode                   StatusCode     = null,
                                     Process_Id?                  ProcessId      = null,
                                     HTTPResponse                 HTTPResponse   = null,
-                                    JObject                      CustomData     = null)
+                                    JObject                      CustomData     = null,
+                                    IEnumerable<Warning>         Warnings       = null)
 
             : base(Request,
                    ResponseTimestamp,
@@ -90,6 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.EVSEDataRecords  = EVSEDataRecords ?? throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
             this.StatusCode       = StatusCode;
+            this.Warnings         = Warnings        ?? new Warning[0];
 
         }
 
@@ -238,14 +246,66 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Content       [mandatory]
 
-                if (!JSON.ParseMandatoryJSON("content",
-                                             "EVSE data",
-                                             EVSEDataRecord.TryParse,
-                                             out IEnumerable<EVSEDataRecord> EVSEDataRecords,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("content",
+                                         "EVSE data content",
+                                         out JArray EVSEDataRecordsJSON,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
+
+                var EVSEDataRecords  = new List<EVSEDataRecord>();
+                var Warnings         = new List<Warning>();
+
+                foreach (var evseDataRecordJSON in EVSEDataRecordsJSON)
+                {
+
+                    try
+                    {
+
+                        var ErrorResponse2 = String.Empty;
+
+                        if (evseDataRecordJSON is JObject evseDataRecordJObject &&
+                            EVSEDataRecord.TryParse(evseDataRecordJObject,
+                                                    out EVSEDataRecord  evseDataRecord,
+                                                    out                 ErrorResponse2))
+                        {
+                            EVSEDataRecords.Add(evseDataRecord);
+                        }
+
+                        else
+                        {
+
+                            if (evseDataRecordJSON is JObject evseDataRecordJObject2)
+                                ErrorResponse2 = "EVSE " + evseDataRecordJObject2["EvseID"]?.Value<String>() + ": " + ErrorResponse2;
+
+                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, ErrorResponse2)));
+
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        var message = e.Message;
+
+                        if (evseDataRecordJSON is JObject evseDataRecordJObject2)
+                            message = "EVSE " + evseDataRecordJObject2["EvseID"]?.Value<String>() + ": " + message;
+
+                        Warnings.Add(Warning.Create(I18NString.Create(Languages.en, message)));
+
+                    }
+
+                }
+
+                //if (!JSON.ParseMandatoryJSON("content",
+                //                             "EVSE data",
+                //                             EVSEDataRecord.TryParse,
+                //                             out IEnumerable<EVSEDataRecord> EVSEDataRecords,
+                //                             out ErrorResponse))
+                //{
+                //    return false;
+                //}
 
                 #endregion
 
@@ -278,7 +338,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 StatusCode,
                                                                 ProcessId,
                                                                 HTTPResponse,
-                                                                CustomData);
+                                                                CustomData,
+                                                                Warnings);
 
                 if (CustomPullEVSEDataResponseParser != null)
                     PullEVSEDataResponse = CustomPullEVSEDataResponseParser(JSON,

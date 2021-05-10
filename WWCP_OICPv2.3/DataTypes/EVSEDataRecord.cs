@@ -1099,11 +1099,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse GeoChargingPointEntrance          [optional]
 
-                if (JSON.ParseOptionalStruct("GeoChargingPointEntrance",
-                                             "geo charging point entrance",
-                                             OICPv2_3.GeoCoordinates.TryParse,
-                                             out GeoCoordinates? GeoChargingPointEntrance,
-                                             out ErrorResponse))
+                if (JSON.ParseOptionalJSON("GeoChargingPointEntrance",
+                                           "geo charging point entrance",
+                                           OICPv2_3.GeoCoordinates.TryParse,
+                                           out GeoCoordinates? GeoChargingPointEntrance,
+                                           out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;

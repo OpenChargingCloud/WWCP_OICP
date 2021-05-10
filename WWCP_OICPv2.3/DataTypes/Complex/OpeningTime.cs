@@ -205,8 +205,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Periods               [mandatory]
 
-                if (!JSON.ParseMandatoryJSON("EvseID",
-                                             "EVSE identification",
+                if (!JSON.ParseMandatoryJSON("Period",
+                                             "periods",
                                              Period.TryParse,
                                              out IEnumerable<Period> Periods,
                                              out ErrorResponse))

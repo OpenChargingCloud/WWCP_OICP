@@ -21,6 +21,7 @@ using System;
 using System.Linq;
 using System.Net.Security;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
@@ -460,6 +461,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
+                    #region Create pagination query string
+
+                    // ?page=0&size=20
+
+                    var queryStrings = new List<String>();
+
+                    if (Request.Page.HasValue)
+                        queryStrings.Add("page=" + Request.Page.Value);
+
+                    if (Request.Size.HasValue)
+                        queryStrings.Add("size=" + Request.Size.Value);
+
+                    var queryString = queryStrings.Count > 0
+                                          ? "?" + queryStrings.AggregateWith("&")
+                                          : "";
+
+                    #endregion
+
                     var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
                                                                       VirtualHostname,
                                                                       Description,
@@ -474,7 +493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records" + queryString),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
