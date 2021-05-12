@@ -40,6 +40,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEDataDelegate(DateTime                     Timestamp,
+                                                WWCPCSOAdapter               Sender,
+                                                String                       SenderDescription,
+                                                IEnumerable<EVSEDataRecord>  EVSEDataRecords);
+
+    /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusDelegate(DateTime                       Timestamp,
+                                                  WWCPCSOAdapter                 Sender,
+                                                  String                         SenderDescription,
+                                                  IEnumerable<EVSEStatusRecord>  EVSEStatusRecords);
+
+    /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnGetChargeDetailRecordsDelegate(DateTime                         Timestamp,
+                                                          WWCPCSOAdapter                   Sender,
+                                                          String                           SenderDescription,
+                                                          IEnumerable<ChargeDetailRecord>  ChargeDetailRecords);
+
+
+    /// <summary>
     /// A WWCP wrapper for the OICP EMP roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
@@ -57,34 +82,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Data
 
-        private readonly EVSEDataRecord2EVSEDelegate _EVSEDataRecord2EVSE;
+        private static          SemaphoreSlim  PullEVSEDataLock                                = new SemaphoreSlim(1, 1);
+        private static          SemaphoreSlim  PullEVSEStatusLock                              = new SemaphoreSlim(1, 1);
+        private static          SemaphoreSlim  GetChargeDetailRecordsLock                      = new SemaphoreSlim(1, 1);
+
+        private readonly        Timer          PullEVSEData_Timer;
+        private readonly        Timer          PullEVSEStatus_Timer;
+        private readonly        Timer          GetChargeDetailRecords_Timer;
+
+        public  readonly static TimeSpan       Default_PullEVSEData_Every                      = TimeSpan.FromHours(3);
+        public  readonly static TimeSpan       Default_PullEVSEStatus_Every                    = TimeSpan.FromMinutes(1);
+        public  readonly static TimeSpan       Default_GetChargeDetailRecords_Every            = TimeSpan.FromMinutes(15);
+
+        public  readonly static TimeSpan       Default_PullEVSEData_RequestTimeout             = TimeSpan.FromMinutes(5);
+        public  readonly static TimeSpan       Default_PullEVSEStatus_RequestTimeout           = TimeSpan.FromMinutes(1);
+        public  readonly static TimeSpan       Default_GetChargeDetailRecords_RequestTimeout   = TimeSpan.FromMinutes(1);
+
 
         /// <summary>
         ///  The default reservation time.
         /// </summary>
-        public static readonly TimeSpan DefaultReservationTime = TimeSpan.FromMinutes(15);
-
-
-        //private readonly        Object         PullDataServiceLock;
-        private readonly        Timer          PullDataServiceTimer;
-
-        /// <summary>
-        /// The default status check intervall.
-        /// </summary>
-        public  readonly static TimeSpan       DefaultPullDataServiceEvery              = TimeSpan.FromMinutes(15);
-
-        public  readonly static TimeSpan       DefaultPullDataServiceRequestTimeout     = TimeSpan.FromMinutes(30);
-
-
-        //private readonly        Object         PullStatusServiceLock;
-        private readonly        Timer          PullStatusServiceTimer;
-
-        /// <summary>
-        /// The default status check intervall.
-        /// </summary>
-        public  readonly static TimeSpan       DefaultPullStatusServiceEvery            = TimeSpan.FromMinutes(1);
-
-        public  readonly static TimeSpan       DefaultPullStatusServiceRequestTimeout   = TimeSpan.FromMinutes(3);
+        public static readonly  TimeSpan       DefaultReservationTime                          = TimeSpan.FromMinutes(15);
 
         #endregion
 
@@ -135,8 +153,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public Provider_Id?  DefaultProviderId   { get; }
 
 
-
-        public EVSEOperatorFilterDelegate EVSEOperatorFilter;
+        public EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE    { get; }
+        public EVSEOperatorFilterDelegate   EVSEOperatorFilter;
 
 
         #region OnWWCPCSOAdapterException
@@ -151,72 +169,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullDataService
 
-        public Boolean  DisablePullPOIData { get; set; }
+        public Boolean         PullEVSEData_IsDisabled                      { get; set; }
 
-        private UInt32 _PullDataServiceEvery;
-
-        public TimeSpan PullDataServiceRequestTimeout { get; }
+        public TimeSpan        PullEVSEData_RequestTimeout                  { get; }
 
         /// <summary>
         /// The 'Pull Status' service intervall.
         /// </summary>
-        public TimeSpan PullDataServiceEvery
-        {
+        public TimeSpan        PullEVSEData_Every                           { get; set; }
 
-            get
-            {
-                return TimeSpan.FromSeconds(_PullDataServiceEvery);
-            }
+        public DateTime?       TimestampOfLastPullDataRun                   { get; private set; }
 
-            set
-            {
-                _PullDataServiceEvery = (UInt32) value.TotalSeconds;
-            }
+        //public delegate void PullEVSEDataDelegate(DateTime Timestamp, WWCPCSOAdapter Sender, TimeSpan Every);
 
-        }
-
-        public DateTime? TimestampOfLastPullDataRun { get; private set; }
-
-        private static SemaphoreSlim PullEVSEDataLock = new SemaphoreSlim(1, 1);
-
-        public delegate void PullEVSEDataDelegate(DateTime Timestamp, WWCPCSOAdapter Sender, TimeSpan Every);
-
-        public event PullEVSEDataDelegate FlushServiceQueuesEvent;
+        //public event PullEVSEDataDelegate FlushServiceQueuesEvent;
 
         #endregion
 
         #region PullStatusService
 
-        private static SemaphoreSlim PullEVSEStatusLock = new SemaphoreSlim(1, 1);
-
-        public Boolean  DisablePullStatus { get; set; }
-
-        private UInt32 _PullStatusServiceEvery;
-
-        public TimeSpan PullStatusServiceRequestTimeout { get; }
+        public Boolean         PullEVSEStatus_IsDisabled                    { get; set; }
 
         /// <summary>
         /// The 'Pull Status' service intervall.
         /// </summary>
-        public TimeSpan PullStatusServiceEvery
-        {
+        public TimeSpan        PullEVSEStatus_Every                         { get; set; }
 
-            get
-            {
-                return TimeSpan.FromSeconds(_PullStatusServiceEvery);
-            }
+        public TimeSpan        PullEVSEStatus_RequestTimeout                { get; }
 
-            set
-            {
-                _PullStatusServiceEvery = (UInt32) value.TotalSeconds;
-            }
-
-        }
+        public DateTime?       PullStatus_LastRunTimestamp                  { get; private set; }
 
         #endregion
 
-        public GeoCoordinate? DefaultSearchCenter { get; }
-        public UInt64?        DefaultDistanceKM   { get; }
+        #region GetChargeDetailRecords
+
+        public Boolean         GetChargeDetailRecords_IsDisabled            { get; set; }
+
+        /// <summary>
+        /// The 'GetChargeDetailRecords' service intervall.
+        /// </summary>
+        public TimeSpan        GetChargeDetailRecords_Every                 { get; set; }
+
+        public TimeSpan        GetChargeDetailRecords_RequestTimeout        { get; }
+
+        public DateTime?       GetChargeDetailRecords_LastRunTimestamp      { get; private set; }
+
+        #endregion
+
+        public GeoCoordinate?  DefaultSearchCenter                          { get; }
+        public UInt64?         DefaultDistanceKM                            { get; }
 
         public Func<WWCP.EVSEStatusReport, WWCP.ChargingStationStatusTypes> EVSEStatusAggregationDelegate { get; }
 
@@ -227,6 +228,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
         #region Events
+
+        #region OnPullEVSEData
+
+        /// <summary>
+        /// An event sent whenever new EVSEDataRecords had been received.
+        /// </summary>
+        public event OnPullEVSEDataDelegate OnPullEVSEData;
+
+        #endregion
+
+        #region OnPullEVSEStatus
+
+        /// <summary>
+        /// An event sent whenever new EVSEStatusRecords had been received.
+        /// </summary>
+        public event OnPullEVSEStatusDelegate OnPullEVSEStatus;
+
+        #endregion
+
+        #region OnGetChargeDetailRecords
+
+        /// <summary>
+        /// An event sent whenever new ChargeDetailRecords had been received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsDelegate OnGetChargeDetailRecords;
+
+        #endregion
+
 
         // Client methods (logging)
 
@@ -395,22 +424,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                               WWCP.RoamingNetwork          RoamingNetwork,
                               EMPRoaming                   EMPRoaming,
 
-                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE               = null,
+                              EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                     = null,
 
-                              EVSEOperatorFilterDelegate   EVSEOperatorFilter                = null,
+                              EVSEOperatorFilterDelegate   EVSEOperatorFilter                      = null,
 
-                              TimeSpan?                    PullDataServiceEvery              = null,
-                              Boolean                      DisablePullPOIData                = false,
-                              TimeSpan?                    PullDataServiceRequestTimeout     = null,
+                              Boolean                      PullEVSEData_IsDisabled                 = false,
+                              TimeSpan?                    PullEVSEData_InitialDelay               = null,
+                              TimeSpan?                    PullEVSEData_Every                      = null,
+                              TimeSpan?                    PullEVSEData_RequestTimeout             = null,
 
-                              TimeSpan?                    PullStatusServiceEvery            = null,
-                              Boolean                      DisablePullStatus                 = false,
-                              TimeSpan?                    PullStatusServiceRequestTimeout   = null,
+                              Boolean                      PullEVSEStatus_IsDisabled               = false,
+                              TimeSpan?                    PullEVSEStatus_InitialDelay             = null,
+                              TimeSpan?                    PullEVSEStatus_Every                    = null,
+                              TimeSpan?                    PullEVSEStatus_RequestTimeout           = null,
 
-                              WWCP.eMobilityProvider       DefaultProvider                   = null,
-                              WWCP.eMobilityProvider_Id?   DefaultProviderId                 = null,
-                              GeoCoordinate?               DefaultSearchCenter               = null,
-                              UInt64?                      DefaultDistanceKM                 = null)
+                              Boolean                      GetChargeDetailRecords_IsDisabled       = false,
+                              TimeSpan?                    GetChargeDetailRecords_InitialDelay     = null,
+                              TimeSpan?                    GetChargeDetailRecords_Every            = null,
+                              TimeSpan?                    GetChargeDetailRecords_RequestTimeout   = null,
+
+                              WWCP.eMobilityProvider       DefaultProvider                         = null,
+                              WWCP.eMobilityProvider_Id?   DefaultProviderId                       = null,
+                              GeoCoordinate?               DefaultSearchCenter                     = null,
+                              UInt64?                      DefaultDistanceKM                       = null)
 
             : base(Id,
                    Name,
@@ -418,31 +454,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.EMPRoaming                       = EMPRoaming ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
-            this._EVSEDataRecord2EVSE             = EVSEDataRecord2EVSE;
+            this.EMPRoaming                             = EMPRoaming                            ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
+            this.EVSEDataRecord2EVSE                    = EVSEDataRecord2EVSE;
+            this.EVSEOperatorFilter                     = EVSEOperatorFilter                    ?? (id => true);
 
-            this.EVSEOperatorFilter               = EVSEOperatorFilter ?? (id => true);
+            this.PullEVSEData_IsDisabled                = PullEVSEData_IsDisabled;
+            this.PullEVSEData_Every                     = PullEVSEData_Every                    ?? Default_PullEVSEData_Every;
+            this.PullEVSEData_RequestTimeout            = PullEVSEData_RequestTimeout           ?? Default_PullEVSEData_RequestTimeout;
+            this.PullEVSEData_Timer                     = new Timer(PullEVSEDataService,           null, PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10), this.PullEVSEData_Every);
 
-            this._PullDataServiceEvery            = (UInt32) (PullDataServiceEvery.HasValue
-                                                                  ? PullDataServiceEvery.Value. TotalMilliseconds
-                                                                  : DefaultPullDataServiceEvery.TotalMilliseconds);
-            this.PullDataServiceRequestTimeout    = PullDataServiceRequestTimeout ?? DefaultPullDataServiceRequestTimeout;
-            //this.PullDataServiceLock              = new Object();
-            this.PullDataServiceTimer             = new Timer(PullDataService, null, 5000, _PullDataServiceEvery);
-            this.DisablePullPOIData               = DisablePullPOIData;
+            this.PullEVSEStatus_IsDisabled              = PullEVSEStatus_IsDisabled;
+            this.PullEVSEStatus_Every                   = PullEVSEStatus_Every                  ?? Default_PullEVSEStatus_Every;
+            this.PullEVSEStatus_RequestTimeout          = PullEVSEStatus_RequestTimeout         ?? Default_PullEVSEStatus_RequestTimeout;
+            this.PullEVSEStatus_Timer                   = new Timer(PullStatusService,             null, PullEVSEStatus_InitialDelay         ?? TimeSpan.FromSeconds(10), this.PullEVSEStatus_Every);
 
+            this.GetChargeDetailRecords_IsDisabled      = GetChargeDetailRecords_IsDisabled;
+            this.GetChargeDetailRecords_Every           = GetChargeDetailRecords_Every          ?? Default_GetChargeDetailRecords_Every;
+            this.GetChargeDetailRecords_RequestTimeout  = GetChargeDetailRecords_RequestTimeout ?? Default_GetChargeDetailRecords_RequestTimeout;
+            this.GetChargeDetailRecords_Timer           = new Timer(GetChargeDetailRecordsService, null, GetChargeDetailRecords_InitialDelay ?? TimeSpan.FromSeconds(10), this.GetChargeDetailRecords_Every);
 
-            this._PullStatusServiceEvery          = (UInt32) (PullStatusServiceEvery.HasValue
-                                                                  ? PullStatusServiceEvery.Value. TotalMilliseconds
-                                                                  : DefaultPullStatusServiceEvery.TotalMilliseconds);
-            this.PullStatusServiceRequestTimeout  = PullStatusServiceRequestTimeout ?? DefaultPullStatusServiceRequestTimeout;
-            //this.PullStatusServiceLock            = new Object();
-            this.PullStatusServiceTimer           = new Timer(PullStatusService, null, 10000, _PullStatusServiceEvery);
-            this.DisablePullStatus                = DisablePullStatus;
-
-            this.DefaultProviderId                = (DefaultProvider?.Id ?? DefaultProviderId)?.ToOICP();
-            this.DefaultSearchCenter              = DefaultSearchCenter;
-            this.DefaultDistanceKM                = DefaultDistanceKM;
+            this.DefaultProviderId                      = (DefaultProvider?.Id                  ?? DefaultProviderId)?.ToOICP();
+            this.DefaultSearchCenter                    = DefaultSearchCenter;
+            this.DefaultDistanceKM                      = DefaultDistanceKM;
 
 
             // Link events...
@@ -2366,10 +2399,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (timer) PullDataService(State)
 
-        private void PullDataService(Object State)
+        private void PullEVSEDataService(Object State)
         {
 
-            if (!DisablePullPOIData)
+            if (!PullEVSEData_IsDisabled)
             {
 
                 try
@@ -2430,8 +2463,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                           IsHubjectCompatibleFilter:             null,
                                                           IsOpen24HoursFilter:                   null,
 
-                                                          SearchCenter:                          DefaultSearchCenter.ToOICP(),
-                                                          DistanceKM:                            DefaultDistanceKM,
+                                                          SearchCenter:                          DefaultSearchCenter.HasValue
+                                                                                                     ? DefaultSearchCenter.Value.ToOICP()
+                                                                                                     : new GeoCoordinates?(),
+                                                          DistanceKM:                            DefaultDistanceKM ?? 0,
                                                           GeoCoordinatesResponseFormat:          GeoCoordinatesFormats.DecimalDegree,
 
                                                           CustomData:                            null,
@@ -2439,7 +2474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                           Timestamp:                             null,
                                                           CancellationToken:                     new CancellationTokenSource().Token,
                                                           EventTrackingId:                       EventTracking_Id.New,
-                                                          RequestTimeout:                        PullDataServiceRequestTimeout
+                                                          RequestTimeout:                        PullEVSEData_RequestTimeout
                                                       )).ConfigureAwait(false);
 
                     //var PullEVSEData = new {
@@ -2872,6 +2907,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             if (TotalEVSEsSkipped > 0)
                                 DebugX.Log(TotalEVSEsSkipped   + " EVSEs skipped");
 
+
+                            #region Send OnPullEVSEData event
+
+                            try
+                            {
+
+                                if (OnPullEVSEData != null)
+                                    await Task.WhenAll(OnPullEVSEData.GetInvocationList().
+                                                       Cast<OnPullEVSEDataDelegate>().
+                                                       Select(e => e(StartTime,
+                                                                     this,
+                                                                     nameof(OICPv2_3) + "." + nameof(WWCPCSOAdapter),
+                                                                     evseDataRecords))).
+                                                       ConfigureAwait(false);
+
+                            }
+                            catch (Exception e)
+                            {
+                                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEData));
+                            }
+
+                            #endregion
+
                         }
 
                     }
@@ -2956,7 +3014,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         private void PullStatusService(Object State)
         {
 
-            if (!DisablePullStatus)
+            if (!PullEVSEStatus_IsDisabled)
             {
 
                 PullStatus().Wait();
@@ -2970,7 +3028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public async Task PullStatus()
         {
 
-            DebugX.LogT("[" + Id + "] 'Pull status service', as every " + _PullStatusServiceEvery + "ms!");
+            DebugX.LogT("[" + Id + "] 'Pull status service', as every " + PullEVSEStatus_Every.TotalSeconds + " seconds!");
 
             var DataLockTaken = await PullEVSEDataLock.WaitAsync(0).ConfigureAwait(false);
 
@@ -2985,6 +3043,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
                     var StartTime = DateTime.UtcNow;
+
+                    PullStatus_LastRunTimestamp = StartTime;
                     DebugX.LogT("[" + Id + "] 'Pull status service' started at " + StartTime.ToIso8601());
 
                     try
@@ -2993,12 +3053,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         var pullEVSEStatusResult = await EMPRoaming.PullEVSEStatus(
                                                          new PullEVSEStatusRequest(
                                                              DefaultProviderId.Value,
-                                                             DefaultSearchCenter.HasValue ? DefaultSearchCenter.Value.ToOICP() : default,
+                                                             DefaultSearchCenter.HasValue
+                                                                 ? DefaultSearchCenter.Value.ToOICP()
+                                                                 : new GeoCoordinates?(),
                                                              DefaultDistanceKM ?? 0,
 
                                                              CancellationToken:  new CancellationTokenSource().Token,
                                                              EventTrackingId:    EventTracking_Id.New,
-                                                             RequestTimeout:     PullStatusServiceRequestTimeout)
+                                                             RequestTimeout:     PullEVSEStatus_RequestTimeout)
                                                          );
 
                         var DownloadTime = DateTime.UtcNow;
@@ -3013,7 +3075,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             if (OperatorEVSEStatus != null && OperatorEVSEStatus.Any())
                             {
 
-                                DebugX.Log("Imported " + OperatorEVSEStatus.Count() + " OperatorEVSEStatus!");
+                                //DebugX.Log("Imported " + OperatorEVSEStatus.Count() + " OperatorEVSEStatus!");
                                 DebugX.Log("Imported " + OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSEStatusRecords!");
 
                                 WWCP.ChargingStationOperator      WWCPChargingStationOperator     = null;
@@ -3146,6 +3208,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     DebugX.LogT("[" + Id + "] 'Pull status service' could not write new status to log file:" + e.Message);
                                 }
 
+
+                                #region Send OnPullEVSEStatus event
+
+                                try
+                                {
+
+                                    if (OnPullEVSEStatus != null)
+                                        await Task.WhenAll(OnPullEVSEStatus.GetInvocationList().
+                                                           Cast<OnPullEVSEStatusDelegate>().
+                                                           Select(e => e(StartTime,
+                                                                         this,
+                                                                         nameof(OICPv2_3) + "." + nameof(WWCPCSOAdapter),
+                                                                         OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).ToArray()))).
+                                                           ConfigureAwait(false);
+
+                                }
+                                catch (Exception e)
+                                {
+                                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEStatus));
+                                }
+
+                                #endregion
+
                             }
 
                         }
@@ -3165,6 +3250,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         var EndTime = DateTime.UtcNow;
 
                         DebugX.LogT("[" + Id + "] 'Pull status service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
+
+
+                        
+
 
                     }
                     catch (Exception e)
@@ -3200,7 +3289,139 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        // Pull CDRs!
+        #region (timer) GetChargeDetailRecordsService(State)
+
+        private void GetChargeDetailRecordsService(Object State)
+        {
+
+            if (!GetChargeDetailRecords_IsDisabled)
+            {
+
+                _GetChargeDetailRecords().Wait();
+
+                //ToDo: Handle errors!
+
+            }
+
+        }
+
+        public async Task _GetChargeDetailRecords()
+        {
+
+            DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service', as every " + GetChargeDetailRecords_Every.TotalSeconds + " seconds!");
+
+
+            var GetChargeDetailRecordsLockTaken = await GetChargeDetailRecordsLock.WaitAsync(0).ConfigureAwait(false);
+
+            if (GetChargeDetailRecordsLockTaken)
+            {
+
+                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+
+                var oldGetChargeDetailRecords_LastRunTimestamp  = GetChargeDetailRecords_LastRunTimestamp;
+                var StartTime                                   = DateTime.UtcNow;
+
+                GetChargeDetailRecords_LastRunTimestamp         = StartTime;
+
+                DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service' started at " + StartTime.ToIso8601());
+
+                try
+                {
+
+                    var getChargeDetailRecordsResult = await EMPRoaming.GetChargeDetailRecords(
+                                                                 new GetChargeDetailRecordsRequest(
+                                                                     ProviderId:         DefaultProviderId.Value,
+                                                                     From:               oldGetChargeDetailRecords_LastRunTimestamp.HasValue
+                                                                                             ? oldGetChargeDetailRecords_LastRunTimestamp.Value - TimeSpan.FromMinutes(5)
+                                                                                             : DateTime.UtcNow - TimeSpan.FromDays(60),
+                                                                     To:                 DateTime.UtcNow,
+                                                                     OperatorIds:        null,
+                                                                     CDRForwarded:       null,
+                                                                     Page:               0,
+                                                                     Size:               2000,
+                                                                     SortOrder:          null,
+
+                                                                     CancellationToken:  new CancellationTokenSource().Token,
+                                                                     EventTrackingId:    EventTracking_Id.New,
+                                                                     RequestTimeout:     GetChargeDetailRecords_RequestTimeout)
+                                                                 );
+
+                    var DownloadTime = DateTime.UtcNow;
+
+                    #region Everything is ok!
+
+                    if (getChargeDetailRecordsResult.WasSuccessful)
+                    {
+
+                        var chargeDetailRecords = getChargeDetailRecordsResult.Response.ChargeDetailRecords;
+
+
+                        #region Send OnGetChargeDetailRecords event
+
+                        try
+                        {
+
+                            if (OnGetChargeDetailRecords != null)
+                                await Task.WhenAll(OnGetChargeDetailRecords.GetInvocationList().
+                                                   Cast<OnGetChargeDetailRecordsDelegate>().
+                                                   Select(e => e(StartTime,
+                                                                 this,
+                                                                 nameof(OICPv2_3) + "." + nameof(WWCPCSOAdapter),
+                                                                 chargeDetailRecords.ToArray()))).
+                                                   ConfigureAwait(false);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecords));
+                        }
+
+                        #endregion
+
+                    }
+
+                    #endregion
+
+                    #region Something unexpected happend!
+
+                    else
+                    {
+                        DebugX.Log("Importing charge detail records failed unexpectedly!");
+                    }
+
+                    #endregion
+
+
+                    var EndTime = DateTime.UtcNow;
+
+                    DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service' finished after " + (EndTime - StartTime).TotalSeconds + " seconds (" + (DownloadTime - StartTime).TotalSeconds + "/" + (EndTime - DownloadTime).TotalSeconds + ")");
+
+                }
+                catch (Exception e)
+                {
+
+                    while (e.InnerException != null)
+                        e = e.InnerException;
+
+                    DebugX.LogT(nameof(WWCPCSOAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+
+                }
+
+                finally
+                {
+                    GetChargeDetailRecordsLock.Release();
+                }
+
+            }
+
+            else
+                Console.WriteLine("GetChargeDetailRecords->GetChargeDetailRecordsLock missed!");
+
+            return;
+
+        }
+
+        #endregion
 
         // -----------------------------------------------------------------------------------------------------
 

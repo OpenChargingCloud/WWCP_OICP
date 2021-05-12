@@ -80,40 +80,44 @@ namespace org.GraphDefined.WWCP
                                               I18NString                                Name,
                                               OICPv2_3.EMP.EMPRoaming                   EMPRoaming,
 
-                                              OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                = null,
+                                              OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                     = null,
 
-                                              OICPv2_3.EVSEOperatorFilterDelegate       EVSEOperatorFilter                 = null,
+                                              OICPv2_3.EVSEOperatorFilterDelegate       EVSEOperatorFilter                      = null,
 
-                                              TimeSpan?                                 PullDataServiceEvery               = null,
-                                              Boolean                                   DisablePullData                    = false,
-                                              TimeSpan?                                 PullDataServiceRequestTimeout      = null,
+                                              Boolean                                   PullEVSEData_IsDisabled                 = false,
+                                              TimeSpan?                                 PullEVSEData_InitialDelay               = null,
+                                              TimeSpan?                                 PullEVSEData_Every                      = null,
+                                              TimeSpan?                                 PullEVSEData_RequestTimeout             = null,
 
-                                              TimeSpan?                                 PullStatusServiceEvery             = null,
-                                              Boolean                                   DisablePullStatus                  = false,
-                                              TimeSpan?                                 PullStatusServiceRequestTimeout    = null,
+                                              Boolean                                   PullEVSEStatus_IsDisabled               = false,
+                                              TimeSpan?                                 PullEVSEStatus_InitialDelay             = null,
+                                              TimeSpan?                                 PullEVSEStatus_Every                    = null,
+                                              TimeSpan?                                 PullEVSEStatus_RequestTimeout           = null,
 
-                                              eMobilityProvider                         DefaultProvider                    = null,
-                                              eMobilityProvider_Id?                     DefaultProviderId                  = null,
-                                              GeoCoordinate?                            DefaultSearchCenter                = null,
-                                              UInt64?                                   DefaultDistanceKM                  = null,
+                                              Boolean                                   GetChargeDetailRecords_IsDisabled       = false,
+                                              TimeSpan?                                 GetChargeDetailRecords_InitialDelay     = null,
+                                              TimeSpan?                                 GetChargeDetailRecords_Every            = null,
+                                              TimeSpan?                                 GetChargeDetailRecords_RequestTimeout   = null,
 
-                                              Action<OICPv2_3.EMP.WWCPCSOAdapter>       OICPConfigurator                   = null,
-                                              Action<ICSORoamingProvider>               Configurator                       = null)
+                                              eMobilityProvider                         DefaultProvider                         = null,
+                                              eMobilityProvider_Id?                     DefaultProviderId                       = null,
+                                              GeoCoordinate?                            DefaultSearchCenter                     = null,
+                                              UInt64?                                   DefaultDistanceKM                       = null,
+
+                                              Action<OICPv2_3.EMP.WWCPCSOAdapter>       OICPConfigurator                        = null,
+                                              Action<ICSORoamingProvider>               Configurator                            = null)
 
         {
 
             #region Initial checks
 
-            if (RoamingNetwork == null)
+            if (RoamingNetwork is null)
                 throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
-
-            if (Id == null)
-                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null!");
 
             if (Name.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
 
-            if (EMPRoaming == null)
+            if (EMPRoaming is null)
                 throw new ArgumentNullException(nameof(EMPRoaming),      "The given EMP Roaming must not be null!");
 
             #endregion
@@ -127,13 +131,20 @@ namespace org.GraphDefined.WWCP
 
                                                                      EVSEOperatorFilter,
 
-                                                                     PullDataServiceEvery,
-                                                                     DisablePullData,
-                                                                     PullDataServiceRequestTimeout,
+                                                                     PullEVSEData_IsDisabled,
+                                                                     PullEVSEData_InitialDelay,
+                                                                     PullEVSEData_Every,
+                                                                     PullEVSEData_RequestTimeout,
 
-                                                                     PullStatusServiceEvery,
-                                                                     DisablePullStatus,
-                                                                     PullStatusServiceRequestTimeout,
+                                                                     PullEVSEStatus_IsDisabled,
+                                                                     PullEVSEStatus_InitialDelay,
+                                                                     PullEVSEStatus_Every,
+                                                                     PullEVSEStatus_RequestTimeout,
+
+                                                                     GetChargeDetailRecords_IsDisabled,
+                                                                     GetChargeDetailRecords_InitialDelay,
+                                                                     GetChargeDetailRecords_Every,
+                                                                     GetChargeDetailRecords_RequestTimeout,
 
                                                                      DefaultProvider,
                                                                      DefaultProviderId,
