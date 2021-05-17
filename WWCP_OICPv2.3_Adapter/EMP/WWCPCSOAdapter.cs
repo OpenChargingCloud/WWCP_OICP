@@ -21,17 +21,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Net.Security;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Security.Authentication;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 using WWCP = org.GraphDefined.WWCP;
 
 #endregion
@@ -3333,7 +3328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      ProviderId:         DefaultProviderId.Value,
                                                                      From:               oldGetChargeDetailRecords_LastRunTimestamp.HasValue
                                                                                              ? oldGetChargeDetailRecords_LastRunTimestamp.Value - TimeSpan.FromMinutes(5)
-                                                                                             : DateTime.UtcNow - TimeSpan.FromDays(60),
+                                                                                             : DateTime.UtcNow - TimeSpan.FromDays(120),
                                                                      To:                 DateTime.UtcNow,
                                                                      OperatorIds:        null,
                                                                      CDRForwarded:       null,
