@@ -155,14 +155,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 RegisterEvent2("AuthorizeStartRequest",
                                handler => EMPServerAPI.OnAuthorizeStartHTTPRequest += handler,
                                handler => EMPServerAPI.OnAuthorizeStartHTTPRequest -= handler,
-                               "AuthorizeStart", "Authorize", "Request", "all").
+                               "AuthorizeStart", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizationStartResponse",
                                handler => EMPServerAPI.OnAuthorizationStartHTTPResponse += handler,
                                handler => EMPServerAPI.OnAuthorizationStartHTTPResponse -= handler,
-                               "AuthorizeStart", "Authorize", "Authorization", "Response", "all").
+                               "AuthorizeStart", "authorize", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -170,14 +170,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 RegisterEvent2("AuthorizeStopRequest",
                                handler => EMPServerAPI.OnAuthorizeStopHTTPRequest += handler,
                                handler => EMPServerAPI.OnAuthorizeStopHTTPRequest -= handler,
-                               "AuthorizeStop", "Authorize", "Request", "all").
+                               "AuthorizeStop", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizationStopResponse",
                                handler => EMPServerAPI.OnAuthorizationStopHTTPResponse += handler,
                                handler => EMPServerAPI.OnAuthorizationStopHTTPResponse -= handler,
-                               "AuthorizeStop", "Authorize", "Authorization", "Response", "all").
+                               "AuthorizeStop", "authorize", "authorization", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region ChargingNotification
+
+                RegisterEvent2("ChargingNotificationRequest",
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest += handler,
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest -= handler,
+                               "ChargingNotification", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("ChargingNotificationResponse",
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse += handler,
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse -= handler,
+                               "ChargingNotification", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -188,14 +206,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 RegisterEvent2("ChargeDetailRecordRequest",
                                handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest += handler,
                                handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest -= handler,
-                               "ChargeDetailRecord", "Request", "all").
+                               "ChargeDetailRecord", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("ChargeDetailRecordResponse",
                                handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse += handler,
                                handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse -= handler,
-                               "ChargeDetailRecord", "Response", "all").
+                               "ChargeDetailRecord", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

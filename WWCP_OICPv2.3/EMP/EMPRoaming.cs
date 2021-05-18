@@ -17,18 +17,12 @@
 
 #region Usings
 
-using System;
-using System.Xml.Linq;
-using System.Net.Security;
-using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
-
-using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.SOAP;
-using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
-using System.Security.Authentication;
+using System;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 #endregion
 
