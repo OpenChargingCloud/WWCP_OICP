@@ -205,8 +205,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The phone number of the charging station operator's hotline.
         /// </summary>
-        [Mandatory]
-        public Phone_Number                         HotlinePhoneNumber                     { get; }
+        [Optional]
+        public Phone_Number?                        HotlinePhoneNumber                     { get; }
 
         /// <summary>
         /// Optional multi-language information about the EVSE.
@@ -333,7 +333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               IEnumerable<PaymentOptions>       PaymentOptions,
                               IEnumerable<ValueAddedServices>   ValueAddedServices,
                               AccessibilityTypes                Accessibility,
-                              Phone_Number                      HotlinePhoneNumber,
+                              Phone_Number?                     HotlinePhoneNumber,
                               Boolean                           IsOpen24Hours,
                               Boolean                           IsHubjectCompatible,
                               FalseTrueAuto                     DynamicInfoAvailable,
@@ -575,14 +575,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EVSEDataRecord evseDataRecord,
-                         out String         ErrorResponse,
+                         out EVSEDataRecord  evseDataRecord,
+                         out String          errorResponse,
                          CustomEVSEDataRecordParser))
             {
                 return evseDataRecord;
             }
 
-            throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -600,14 +600,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out EVSEDataRecord evseDataRecord,
-                         out String         ErrorResponse,
+                         out EVSEDataRecord  evseDataRecord,
+                         out String          errorResponse,
                          CustomEVSEDataRecordParser))
             {
                 return evseDataRecord;
             }
 
-            throw new ArgumentException("The given text representation of an EVSE data record is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an EVSE data record is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -868,15 +868,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse HotlinePhoneNumber                [mandatory]
+                #region Parse HotlinePhoneNumber                [mandatory => optional, because of Hubject data quality issues!]
 
-                if (!JSON.ParseMandatory("HotlinePhoneNumber",
-                                         "hotline phone number",
-                                         Phone_Number.TryParse,
-                                         out Phone_Number HotlinePhoneNumber,
-                                         out ErrorResponse))
+                if (JSON.ParseOptional("HotlinePhoneNumber",
+                                       "hotline phone number",
+                                       Phone_Number.TryParse,
+                                       out Phone_Number? HotlinePhoneNumber,
+                                       out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -956,7 +957,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ErrorResponse))
                 {
                     if (ErrorResponse != null)
-                        return false;
+                    {
+
+                        if (JSON["ChargingStationID"]?.Value<String>() == String.Empty)
+                        {
+                            // Allow "", because of Hubject data quality issues!
+                        }
+
+                        else
+                            return false;
+
+                    }
                 }
 
                 #endregion
@@ -970,7 +981,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ErrorResponse))
                 {
                     if (ErrorResponse != null)
-                        return false;
+                    {
+
+                        if (JSON["ChargingPoolID"]?.Value<String>() == String.Empty)
+                        {
+                            // Allow "", because of Hubject data quality issues!
+                        }
+
+                        else
+                            return false;
+
+                    }
                 }
 
                 #endregion
@@ -1078,7 +1099,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 out ErrorResponse))
                 {
                     if (ErrorResponse != null)
-                        return false;
+                    {
+
+                        if ((JSON["AdditionalInfo"] as JArray).Count == 0)
+                        {
+                            // Allow "[]", because of Hubject data quality issues!
+                        }
+
+                        else
+                            return false;
+
+                    }
                 }
 
                 #endregion
@@ -1233,7 +1264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                       Text,
                                        out EVSEDataRecord                           EVSEDataRecord,
                                        out String                                   ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser)
+                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
         {
 
             try
@@ -1406,7 +1437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   PaymentOptions.                   ToArray(),
                                   ValueAddedServices.               ToArray(),
                                   Accessibility,
-                                  HotlinePhoneNumber.               Clone,
+                                  HotlinePhoneNumber?.              Clone,
                                   IsOpen24Hours,
                                   IsHubjectCompatible,
                                   DynamicInfoAvailable,
@@ -2112,8 +2143,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!Accessibility.                 HasValue)
                     throw new ArgumentException("The given accessibility must not be null!",                     nameof(Accessibility));
 
-                if (!HotlinePhoneNumber.            HasValue)
-                    throw new ArgumentException("The given hotline phone number must not be null!",              nameof(HotlinePhoneNumber));
+                //if (!HotlinePhoneNumber.            HasValue)
+                //    throw new ArgumentException("The given hotline phone number must not be null!",              nameof(HotlinePhoneNumber));
 
                 if (!IsOpen24Hours.                 HasValue)
                     throw new ArgumentException("The given 'is open 24 hours' must not be null!",                nameof(IsOpen24Hours));
@@ -2140,7 +2171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           PaymentOptions,
                                           ValueAddedServices,
                                           Accessibility.                 Value,
-                                          HotlinePhoneNumber.            Value,
+                                          HotlinePhoneNumber, //.            Value,
                                           IsOpen24Hours.                 Value,
                                           IsHubjectCompatible.           Value,
                                           DynamicInfoAvailable.          Value,

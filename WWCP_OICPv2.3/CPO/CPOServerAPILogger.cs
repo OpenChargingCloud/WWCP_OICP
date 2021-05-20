@@ -155,14 +155,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("AuthorizeRemoteReservationStartRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
-                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "Request", "all").
+                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteReservationStartResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
-                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "Reservation", "Response", "all").
+                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "reservations", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -170,14 +170,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("AuthorizeRemoteReservationStopRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
-                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "Request", "all").
+                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteReservationStopResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
-                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "Reservation", "Response", "all").
+                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "reservations", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -188,14 +188,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("AuthorizeRemoteStartRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "Request", "all").
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteStartResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "Authorization", "Response", "all").
+                               "AuthorizeRemoteStart", "AuthorizeRemote", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -203,14 +203,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("AuthorizeRemoteStopRequest",
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "Request", "all").
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("AuthorizeRemoteStopResponse",
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse += handler,
                                handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "Authorization", "Response", "all").
+                               "AuthorizeRemoteStop", "AuthorizeRemote", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

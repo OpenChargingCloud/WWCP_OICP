@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           Byte  Minute)
         {
 
-            if (Hour > 23)
+            if (Hour   > 24) // 24, because some people use "00:00" - "24:00" as "whole day" indication!
                 throw new ArgumentException("The given hour is invalid!",   nameof(Hour));
 
             if (Minute > 59)
@@ -117,7 +117,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out HourMinute HourMinute)
         {
 
-            HourMinute = default;
+            Text        = Text?.Trim();
+            HourMinute  = default;
 
             if (Text.IsNotNullOrEmpty())
             {

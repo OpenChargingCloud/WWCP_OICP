@@ -87,6 +87,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class OICPMapper
     {
 
+        public const String WWCP_CDR                  = "WWCP.CDR";
+        public const String OICP_CDR                  = "OICP.CDR";
+        public const String OICP_CPOPartnerSessionId  = "OICP.CPOPartnerSessionId";
+        public const String OICP_EMPPartnerSessionId  = "OICP.EMPPartnerSessionId";
+        public const String OICP_HubOperatorId        = "OICP.HubOperatorId";
+        public const String OICP_HubProviderId        = "OICP.HubProviderId";
+
+
         #region ToWWCP(this Action)
 
         /// <summary>
@@ -1274,20 +1282,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             var CustomData = new Dictionary<String, Object> {
-                                 { "OICP.CDR", ChargeDetailRecord }
+                                 { OICP_CDR, ChargeDetailRecord }
                              };
 
             if (ChargeDetailRecord.CPOPartnerSessionId.HasValue)
-                CustomData.Add("OICP.CPOPartnerSessionId",  ChargeDetailRecord.CPOPartnerSessionId.ToString());
+                CustomData.Add(OICP_CPOPartnerSessionId,  ChargeDetailRecord.CPOPartnerSessionId.ToString());
 
             if (ChargeDetailRecord.EMPPartnerSessionId.HasValue)
-                CustomData.Add("OICP.EMPPartnerSessionId",  ChargeDetailRecord.EMPPartnerSessionId.ToString());
+                CustomData.Add(OICP_EMPPartnerSessionId,  ChargeDetailRecord.EMPPartnerSessionId.ToString());
 
             if (ChargeDetailRecord.HubOperatorId.HasValue)
-                CustomData.Add("OICP.HubOperatorId",        ChargeDetailRecord.HubOperatorId.      ToString());
+                CustomData.Add(OICP_HubOperatorId,        ChargeDetailRecord.HubOperatorId.      ToString());
 
             if (ChargeDetailRecord.HubProviderId.HasValue)
-                CustomData.Add("OICP.HubProviderId",        ChargeDetailRecord.HubProviderId.      ToString());
+                CustomData.Add(OICP_HubProviderId,        ChargeDetailRecord.HubProviderId.      ToString());
 
 
             var CDR = new WWCP.ChargeDetailRecord(
@@ -1329,8 +1337,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                       );
 
-            //if (ChargeDetailRecord2WWCPChargeDetailRecord != null)
-            //    CDR = ChargeDetailRecord2WWCPChargeDetailRecord(ChargeDetailRecord, CDR);
+            if (ChargeDetailRecord2WWCPChargeDetailRecord != null)
+                CDR = ChargeDetailRecord2WWCPChargeDetailRecord(ChargeDetailRecord, CDR);
 
             return CDR;
 
@@ -1339,8 +1347,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
         #region ToOICP(this ChargeDetailRecord, WWCPChargeDetailRecord2ChargeDetailRecord = null)
-
-        public static String WWCP_CDR = "WWCP.CDR";
 
         /// <summary>
         /// Convert a WWCP charge detail record into a corresponding OICP charge detail record.
@@ -1358,8 +1364,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           SessionEnd:            ChargeDetailRecord.SessionTime.EndTime.Value,
                           Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          CPOPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>("OICP.CPOPartnerSessionId"),
-                          EMPPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>("OICP.EMPPartnerSessionId"),
+                          CPOPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>(OICP_CPOPartnerSessionId),
+                          EMPPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>(OICP_EMPPartnerSessionId),
                           ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
                           ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : ChargeDetailRecord.SessionTime.EndTime.Value,
                           MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : new Decimal?(),
@@ -1367,8 +1373,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select((Timestamped<Decimal> v) => v.Value) : null,
                           ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy ?? 0,
                           //MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
-                          HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>("OICP.HubOperatorId"),
-                          HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>("OICP.HubProviderId"),
+                          HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>(OICP_HubOperatorId),
+                          HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>(OICP_HubProviderId),
                           InternalData:          new Dictionary<String, Object>() {
                                                      { WWCP_CDR, ChargeDetailRecord }
                                                  }

@@ -44,18 +44,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// An enumeration of EVSE data records.
         /// </summary>
         [Mandatory]
-        public IEnumerable<EVSEDataRecord>  EVSEDataRecords    { get; }
+        public IEnumerable<EVSEDataRecord>  EVSEDataRecords         { get; }
+
+
+        public UInt64?                      Number                  { get; }
+        public UInt64?                      Size                    { get; }
+        public UInt64?                      TotalElements           { get; }
+        public Boolean?                     LastPage                { get; }
+        public Boolean?                     FirstPage               { get; }
+        public UInt64?                      TotalPages              { get; }
+        public UInt64?                      NumberOfElements        { get; }
+
 
         /// <summary>
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode                   StatusCode         { get; }
+        public StatusCode                   StatusCode              { get; }
 
         /// <summary>
         /// Optional warnings.
         /// </summary>
-        public IEnumerable<Warning>         Warnings           { get; }
+        public IEnumerable<Warning>         Warnings                { get; }
 
         #endregion
 
@@ -79,11 +89,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     EventTracking_Id             EventTrackingId,
                                     TimeSpan                     Runtime,
                                     IEnumerable<EVSEDataRecord>  EVSEDataRecords,
-                                    StatusCode                   StatusCode     = null,
-                                    Process_Id?                  ProcessId      = null,
-                                    HTTPResponse                 HTTPResponse   = null,
-                                    JObject                      CustomData     = null,
-                                    IEnumerable<Warning>         Warnings       = null)
+
+                                    UInt64?                      Number             = null,
+                                    UInt64?                      Size               = null,
+                                    UInt64?                      TotalElements      = null,
+                                    Boolean?                     LastPage           = null,
+                                    Boolean?                     FirstPage          = null,
+                                    UInt64?                      TotalPages         = null,
+                                    UInt64?                      NumberOfElements   = null,
+
+                                    StatusCode                   StatusCode         = null,
+                                    Process_Id?                  ProcessId          = null,
+                                    HTTPResponse                 HTTPResponse       = null,
+                                    JObject                      CustomData         = null,
+                                    IEnumerable<Warning>         Warnings           = null)
 
             : base(Request,
                    ResponseTimestamp,
@@ -95,9 +114,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.EVSEDataRecords  = EVSEDataRecords ?? throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
-            this.StatusCode       = StatusCode;
-            this.Warnings         = Warnings        ?? new Warning[0];
+            this.EVSEDataRecords   = EVSEDataRecords ?? throw new ArgumentNullException(nameof(EVSEDataRecords), "The given enumeration of EVSE data records must not be null!");
+
+            this.Number            = Number;
+            this.Size              = Size;
+            this.TotalElements     = TotalElements;
+            this.LastPage          = LastPage;
+            this.FirstPage         = FirstPage;
+            this.TotalPages        = TotalPages;
+            this.NumberOfElements  = NumberOfElements;
+
+            this.StatusCode        = StatusCode;
+            this.Warnings          = Warnings        ?? new Warning[0];
 
         }
 
@@ -109,13 +137,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#412-eroamingevsedata-message
 
         // {
+        // 
         //     "content": [
         //         {
-        //             "EvseID":    "string",
+        //             "EvseID":  "string",
         //             [...]
         //         },
         //         [...]
-        //     ]
+        //     ],
+        // 
+        //     "number":            0,
+        //     "size":              2000,
+        //     "totalElements":     144145,
+        //     "pageable": {
+        //         "sort": {
+        //             "sorted":            false,
+        //             "unsorted":          true,
+        //             "empty":             true
+        //         },
+        //         "pageSize":          2000,
+        //         "pageNumber":        0,
+        //         "offset":            0,
+        //         "paged":             true,
+        //         "unpaged":           false
+        //     },
+        //     "last":              false,
+        //     "totalPages":        73,
+        //     "first":             true,
+        //     "numberOfElements":  2000,
+        // 
+        //     "StatusCode": {
+        //         "Code":              "000",
+        //         "Description":       null,
+        //         "AdditionalInfo":    null
+        //     },
+        // 
+        //     "empty": false
+        // 
         // }
 
         #endregion
@@ -244,7 +302,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse Content       [mandatory]
+                #region Parse Content               [mandatory]
 
                 if (!JSON.ParseMandatory("content",
                                          "EVSE data content",
@@ -309,7 +367,100 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse StatusCode    [optional]
+
+                #region Parse Number                [optional]
+
+                if (JSON.ParseOptional("number",
+                                       "number",
+                                       out UInt64? Number,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse Size                  [optional]
+
+                if (JSON.ParseOptional("size",
+                                       "size",
+                                       out UInt64? Size,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse TotalElements         [optional]
+
+                if (JSON.ParseOptional("totalElements",
+                                       "total elements",
+                                       out UInt64? TotalElements,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse LastPage              [optional]
+
+                if (JSON.ParseOptional("last",
+                                       "last page",
+                                       out Boolean? LastPage,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse FirstPage             [optional]
+
+                if (JSON.ParseOptional("first",
+                                       "first page",
+                                       out Boolean? FirstPage,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse TotalPages            [optional]
+
+                if (JSON.ParseOptional("totalPages",
+                                       "total pages",
+                                       out UInt64? TotalPages,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse NumberOfElements      [optional]
+
+                if (JSON.ParseOptional("numberOfElements",
+                                       "number of elements",
+                                       out UInt64? NumberOfElements,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+
+                #region Parse StatusCode            [optional]
 
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
@@ -323,7 +474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData    [optional]
+                #region Parse CustomData            [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
@@ -335,6 +486,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 EventTrackingId,
                                                                 Runtime,
                                                                 EVSEDataRecords,
+                                                                Number,
+                                                                Size,
+                                                                TotalElements,
+                                                                LastPage,
+                                                                FirstPage,
+                                                                TotalPages,
+                                                                NumberOfElements,
                                                                 StatusCode,
                                                                 ProcessId,
                                                                 HTTPResponse,
@@ -594,6 +752,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            EventTrackingId,
                            Runtime,
                            EVSEDataRecords,
+                           Number,
+                           Size,
+                           TotalElements,
+                           LastPage,
+                           FirstPage,
+                           TotalPages,
+                           NumberOfElements,
                            StatusCode,
                            ProcessId,
                            HTTPResponse,
@@ -615,12 +780,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// An enumeration of EVSE data records grouped.
             /// </summary>
-            public HashSet<EVSEDataRecord>  EVSEDataRecords    { get; }
+            public HashSet<EVSEDataRecord>  EVSEDataRecords         { get; }
+
+            public UInt64?                  Number                  { get; set; }
+            public UInt64?                  Size                    { get; set; }
+            public UInt64?                  TotalElements           { get; set; }
+            public Boolean?                 LastPage                { get; set; }
+            public Boolean?                 FirstPage               { get; set; }
+            public UInt64?                  TotalPages              { get; set; }
+            public UInt64?                  NumberOfElements        { get; set; }
 
             /// <summary>
             /// The optional status code for this request.
             /// </summary>
-            public StatusCode.Builder       StatusCode         { get; }
+            public StatusCode.Builder       StatusCode              { get; }
 
             #endregion
 
@@ -643,6 +816,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            EventTracking_Id             EventTrackingId     = null,
                            TimeSpan?                    Runtime             = null,
                            IEnumerable<EVSEDataRecord>  EVSEDataRecords     = null,
+
+                           UInt64?                      Number              = null,
+                           UInt64?                      Size                = null,
+                           UInt64?                      TotalElements       = null,
+                           Boolean?                     LastPage            = null,
+                           Boolean?                     FirstPage           = null,
+                           UInt64?                      TotalPages          = null,
+                           UInt64?                      NumberOfElements    = null,
+
                            StatusCode                   StatusCode          = null,
                            Process_Id?                  ProcessId           = null,
                            HTTPResponse                 HTTPResponse        = null,
@@ -658,8 +840,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.EVSEDataRecords  = EVSEDataRecords != null ? new HashSet<EVSEDataRecord>(EVSEDataRecords) : new HashSet<EVSEDataRecord>();
-                this.StatusCode       = StatusCode      != null ? StatusCode.ToBuilder()                       : new StatusCode.Builder();
+                this.EVSEDataRecords   = EVSEDataRecords != null ? new HashSet<EVSEDataRecord>(EVSEDataRecords) : new HashSet<EVSEDataRecord>();
+
+                this.Number            = Number;
+                this.Size              = Size;
+                this.TotalElements     = TotalElements;
+                this.LastPage          = LastPage;
+                this.FirstPage         = FirstPage;
+                this.TotalPages        = TotalPages;
+                this.NumberOfElements  = NumberOfElements;
+
+                this.StatusCode        = StatusCode      != null ? StatusCode.ToBuilder()                       : new StatusCode.Builder();
 
             }
 
@@ -686,6 +877,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                             EventTrackingId   ?? EventTracking_Id.New,
                                             Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
                                             EVSEDataRecords,
+                                            Number,
+                                            Size,
+                                            TotalElements,
+                                            LastPage,
+                                            FirstPage,
+                                            TotalPages,
+                                            NumberOfElements,
                                             StatusCode,
                                             ProcessId,
                                             HTTPResponse,

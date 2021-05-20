@@ -553,6 +553,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
                                                  new EVSEDataRecord[0],
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -672,6 +679,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          HTTPResponse.EventTrackingId,
                                                                                          HTTPResponse.Runtime,
                                                                                          new EVSEDataRecord[0],
+                                                                                         null,
+                                                                                         null,
+                                                                                         null,
+                                                                                         null,
+                                                                                         null,
+                                                                                         null,
+                                                                                         null,
                                                                                          statusCode,
                                                                                          processId
                                                                                      ),
@@ -691,6 +705,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
                                                  new EVSEDataRecord[0],
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
@@ -726,6 +747,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
                                  new EVSEDataRecord[0],
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -745,6 +773,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
                                  new EVSEDataRecord[0],
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!"
@@ -3546,6 +3581,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
+                    #region Create pagination query string
+
+                    // ?page=0&size=20
+
+                    var queryStrings = new List<String>();
+
+                    if (Request.Page.HasValue)
+                        queryStrings.Add("page=" + Request.Page.Value);
+
+                    if (Request.Size.HasValue)
+                        queryStrings.Add("size=" + Request.Size.Value);
+
+                    var queryString = queryStrings.Count > 0
+                                          ? "?" + queryStrings.AggregateWith("&")
+                                          : "";
+
+                    #endregion
+
                     var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
                                                                       VirtualHostname,
                                                                       Description,
@@ -3560,7 +3613,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/get-charge-detail-records-request"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/get-charge-detail-records-request" + queryString),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
