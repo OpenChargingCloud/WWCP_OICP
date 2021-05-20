@@ -272,7 +272,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         RenewableEnergy:                   false,
                                                         CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
                                                         AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
-                                                        PaymentOptions:                    EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
+                                                        PaymentOptions:                    EVSE.IsFreeOfCharge
+                                                                                               ? new PaymentOptions[] { PaymentOptions.NoPayment }
+                                                                                               : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
                                                         ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
                                                         Accessibility:                     accessibility.Value,
                                                         HotlinePhoneNumber:                Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.FirstText()),
