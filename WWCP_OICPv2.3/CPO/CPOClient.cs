@@ -4143,7 +4143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -4155,8 +4155,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<SendChargeDetailRecordRequest>.TryParse(Request,
                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                            out Acknowledgement<SendChargeDetailRecordRequest>  acknowledgement,
-                                                                                            out String                                          ErrorResponse,
+                                                                                            out Acknowledgement<SendChargeDetailRecordRequest> acknowledgement,
+                                                                                            out String ErrorResponse,
                                                                                             HTTPResponse,
                                                                                             HTTPResponse.Timestamp,
                                                                                             HTTPResponse.EventTrackingId,
@@ -4262,7 +4262,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
+                             HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -4281,7 +4282,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        // Operator/provider identification is not linked to the TLS client certificate!
+                        // => Operator/provider identification is not linked to the TLS client certificate!
+
+
+                        // HTTP/1.1 404 Not Found
+                        // Server:             nginx/1.18.0 (Ubuntu)
+                        // Date:               Tue, 01 Jun 2021 21:22:45 GMT
+                        // Content-Type:       application/json
+                        // Transfer-Encoding:  chunked
+                        // Connection:         close
+                        // Process-ID:         51c4bb66-052c-4c1c-a288-31902dc81fd1
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "400",
+                        //         "Description":     "Session found but status is not valid CLOSED!",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
