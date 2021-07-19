@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -34,9 +35,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        //ToDo: Implement proper phone number id format!
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#PhoneNumberType
-        // ^\+[0-9]{5,15}$
+        /// <summary>
+        /// The regular expression for parsing a phone number.
+        /// </summary>
+        /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#PhoneNumberType</remarks>
+        public static readonly Regex Phone_Number_RegEx = new Regex(@"^\+[0-9]{5,15}$",
+                                                                    RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// The internal identification.
@@ -134,8 +138,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             try
             {
-                PhoneNumber = new Phone_Number(Text);
-                return true;
+                if (Phone_Number_RegEx.IsMatch(Text))
+                {
+                    PhoneNumber = new Phone_Number(Text);
+                    return true;
+                }
             }
 
             catch (Exception)
