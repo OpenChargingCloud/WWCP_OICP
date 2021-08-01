@@ -414,6 +414,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                if (SessionId.ToString() == "68f07880-8036-4267-bbf8-58818385b79e")
+                {
+
+                }
+
                 #region Parse EVSEId                            [mandatory]
 
                 if (!JSON.ParseMandatory("EvseID",
@@ -464,26 +469,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ChargingStart                     [mandatory]
+                #region Parse ChargingStart                     [mandatory => optional, because of Hubject data quality issues!]
 
-                if (!JSON.ParseMandatory("ChargingStart",
-                                         "charging start",
-                                         out DateTime ChargingStart,
-                                         out ErrorResponse))
+                if (JSON.ParseOptional("ChargingStart",
+                                       "charging start",
+                                       out DateTime? ChargingStart,
+                                       out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
 
-                #region Parse ChargingEnd                       [mandatory]
+                #region Parse ChargingEnd                       [mandatory => optional, because of Hubject data quality issues!]
 
-                if (!JSON.ParseMandatory("ChargingEnd",
-                                         "charging start",
-                                         out DateTime ChargingEnd,
-                                         out ErrorResponse))
+                if (JSON.ParseOptional("ChargingEnd",
+                                       "charging start",
+                                       out DateTime? ChargingEnd,
+                                       out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse != null)
+                        return false;
                 }
 
                 #endregion
@@ -664,8 +671,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                             Identification,
                                                             SessionStart,
                                                             SessionEnd,
-                                                            ChargingStart,
-                                                            ChargingEnd,
+                                                            ChargingStart ?? SessionStart,
+                                                            ChargingEnd   ?? SessionEnd,
                                                             ConsumedEnergy,
 
                                                             PartnerProductId,

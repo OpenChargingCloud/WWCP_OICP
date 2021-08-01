@@ -174,7 +174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public CPOPartnerSession_Id Clone
 
             => new CPOPartnerSession_Id(
-                   new String(InternalId.ToCharArray())
+                   new String(InternalId?.ToCharArray())
                );
 
         #endregion
@@ -348,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
 
-            => InternalId.GetHashCode();
+            => InternalId?.GetHashCode() ?? 0;
 
         #endregion
 
@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => InternalId;
+            => InternalId ?? "";
 
         #endregion
 

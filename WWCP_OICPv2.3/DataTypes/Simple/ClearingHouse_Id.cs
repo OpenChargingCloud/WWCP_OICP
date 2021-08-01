@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ClearingHouse_Id Clone
 
             => new ClearingHouse_Id(
-                   new String(InternalId.ToCharArray())
+                   new String(InternalId?.ToCharArray())
                );
 
         #endregion
