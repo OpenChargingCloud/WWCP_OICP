@@ -93,6 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public const String OICP_EMPPartnerSessionId  = "OICP.EMPPartnerSessionId";
         public const String OICP_HubOperatorId        = "OICP.HubOperatorId";
         public const String OICP_HubProviderId        = "OICP.HubProviderId";
+        public const String OICP_ClearingHouseId      = "OICP.ClearingHouseId";
 
 
         #region ToWWCP(this Action)
@@ -280,7 +281,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         RenewableEnergy:                   false,
                                                         CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
                                                         AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
-                                                        PaymentOptions:                    EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
+                                                        PaymentOptions:                    EVSE.IsFreeOfCharge
+                                                                                               ? new PaymentOptions[] { PaymentOptions.NoPayment }
+                                                                                               : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
                                                         ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
                                                         Accessibility:                     accessibility.Value,
                                                         HotlinePhoneNumber:                Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.FirstText()),
@@ -311,8 +314,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         ChargingStationLocationReference:  null,
                                                         GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool.EntranceLocation.ToOICP(),
                                                         OpeningTimes:                      null,//EVSE.ChargingStation.OpeningTimes?.ToOICP(),
-                                                        HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     ("OICP.HubOperatorId"),
-                                                        ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>("OICP.ClearingHouseId"),
+                                                        HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
+                                                        ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
 
                                                         CustomData:                        EVSE.CustomData,
                                                         InternalData:                      internalData);
