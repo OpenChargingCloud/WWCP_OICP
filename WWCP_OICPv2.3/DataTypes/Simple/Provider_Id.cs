@@ -159,34 +159,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (CountryCode == null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
 
-            if (Suffix != null)
-                Suffix = Suffix.Trim();
+            Suffix = Suffix?.Trim();
 
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given e-mobility provider identification suffix must not be null or empty!");
 
             #endregion
 
-            switch (IdFormat)
-            {
+            return IdFormat switch {
 
-                case ProviderIdFormats.DIN:
-                    return Parse(CountryCode.Alpha2Code +       Suffix);
+                ProviderIdFormats.DIN        => Parse(CountryCode.Alpha2Code +       Suffix),
 
-                case ProviderIdFormats.DIN_STAR:
-                    return Parse(CountryCode.Alpha2Code + "*" + Suffix);
+                ProviderIdFormats.DIN_STAR   => Parse(CountryCode.Alpha2Code + "*" + Suffix),
 
-                case ProviderIdFormats.DIN_HYPHEN:
-                    return Parse(CountryCode.Alpha2Code + "-" + Suffix);
+                ProviderIdFormats.DIN_HYPHEN => Parse(CountryCode.Alpha2Code + "-" + Suffix),
 
+                ProviderIdFormats.ISO        => Parse(CountryCode.Alpha2Code +       Suffix),
 
-                case ProviderIdFormats.ISO:
-                    return Parse(CountryCode.Alpha2Code +       Suffix);
+                _                            => Parse(CountryCode.Alpha2Code + "-" + Suffix)
 
-                default: // ISO_HYPHEN:
-                    return Parse(CountryCode.Alpha2Code + "-" + Suffix);
-
-            }
+            };
 
         }
 
@@ -204,7 +196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Provider_Id providerId))
                 return providerId;
 
-            return default;
+            return null;
 
         }
 
@@ -217,48 +209,45 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
         /// <param name="ProviderId">The parsed e-mobility provider identification.</param>
-        public static Boolean TryParse(String           Text,
-                                       out Provider_Id  ProviderId)
+        public static Boolean TryParse(String Text,
+                                       out Provider_Id ProviderId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            ProviderId  = default;
-            Text        = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
 
-                var MatchCollection = ProviderId_RegEx.Matches(Text);
-
-                if (MatchCollection.Count != 1)
-                    return false;
-
-                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
+                try
                 {
 
-                    ProviderId = new Provider_Id(_CountryCode,
-                                                 MatchCollection[0].Groups[3].Value,
-                                                 MatchCollection[0].Groups[2].Value switch{
-                                                     "-" => ProviderIdFormats.ISO_HYPHEN,
-                                                     "*" => ProviderIdFormats.DIN_STAR,
-                                                     _   => ProviderIdFormats.ISO,
-                                                 });
+                    var MatchCollection = ProviderId_RegEx.Matches(Text);
 
-                    return true;
+                    if (MatchCollection.Count == 1)
+                    {
+                        if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
+                        {
+
+                            ProviderId = new Provider_Id(_CountryCode,
+                                                         MatchCollection[0].Groups[3].Value,
+                                                         MatchCollection[0].Groups[2].Value switch {
+                                                             "-" => ProviderIdFormats.ISO_HYPHEN,
+                                                             "*" => ProviderIdFormats.DIN_STAR,
+                                                             _ => ProviderIdFormats.ISO,
+                                                         });
+
+                            return true;
+
+                        }
+                    }
 
                 }
+                catch
+                { }
 
             }
 
-            catch (Exception)
-            { }
-
+            ProviderId = default;
             return false;
 
         }
@@ -280,35 +269,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        ProviderIdFormats  IdFormat = ProviderIdFormats.ISO_HYPHEN)
         {
 
-            #region Initial checks
+            Suffix = Suffix?.Trim();
 
-            if (Suffix != null)
-                Suffix = Suffix.Trim();
-
-            if (CountryCode == null || Suffix.IsNullOrEmpty())
+            if (!(CountryCode is null) || Suffix.IsNullOrEmpty())
             {
-                ProviderId = default;
-                return false;
+                return IdFormat switch {
+
+                    ProviderIdFormats.DIN        => TryParse(CountryCode.Alpha2Code +       Suffix,
+                                                             out ProviderId),
+
+                    ProviderIdFormats.DIN_STAR   => TryParse(CountryCode.Alpha2Code + "*" + Suffix,
+                                                             out ProviderId),
+
+                    ProviderIdFormats.DIN_HYPHEN => TryParse(CountryCode.Alpha2Code + "-" + Suffix,
+                                                             out ProviderId),
+
+                    ProviderIdFormats.ISO        => TryParse(CountryCode.Alpha2Code +       Suffix,
+                                                             out ProviderId),
+
+                    _                            => TryParse(CountryCode.Alpha2Code + "-" + Suffix,
+                                                             out ProviderId),
+
+                };
             }
 
-            #endregion
-
-            switch (IdFormat)
-            {
-
-                case ProviderIdFormats.DIN_STAR:
-                    return TryParse(CountryCode.Alpha2Code + "*" + Suffix,
-                                    out ProviderId);
-
-                case ProviderIdFormats.ISO:
-                    return TryParse(CountryCode.Alpha2Code +       Suffix,
-                                    out ProviderId);
-
-                default: // ISO_HYPHEN:
-                    return TryParse(CountryCode.Alpha2Code + "-" + Suffix,
-                                    out ProviderId);
-
-            }
+            ProviderId = default;
+            return false;
 
         }
 

@@ -179,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out EVCO_Id EVCOId))
                 return EVCOId;
 
-            return default;
+            return null;
 
         }
 
@@ -195,59 +195,57 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out EVCO_Id EVCOId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            EVCOId  = default;
-            Text    = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
 
-                var matchCollection = EVCOId_RegEx.Matches(Text);
-
-                if (matchCollection.Count != 1)
-                    return false;
-
-
-                // ISO: DE-GDF-C12022187-X, DEGDFC12022187X
-                if (Provider_Id.TryParse(matchCollection[0].Groups[1].Value, out Provider_Id providerId))
+                try
                 {
 
-                    EVCOId = new EVCO_Id(Text,
-                                         providerId,
-                                         matchCollection[0].Groups[2].Value,
-                                         matchCollection[0].Groups[3].Value[0]);
+                    var matchCollection = EVCOId_RegEx.Matches(Text);
 
-                    return true;
+                    if (matchCollection.Count == 1)
+                    {
+
+                        // ISO: DE-GDF-C12022187-X, DEGDFC12022187X
+                        if (Provider_Id.TryParse(matchCollection[0].Groups[1].Value, out Provider_Id providerId))
+                        {
+
+                            EVCOId = new EVCO_Id(Text,
+                                                 providerId,
+                                                 matchCollection[0].Groups[2].Value,
+                                                 matchCollection[0].Groups[3].Value[0]);
+
+                            return true;
+
+                        }
+
+
+                        // DIN: DE*GDF*0010LY*3, DE-GDF-0010LY-3, DEGDF0010LY3
+                        if (Provider_Id.TryParse(matchCollection[0].Groups[4].Value, out providerId))
+                        {
+
+                            if (providerId.Format == ProviderIdFormats.ISO_HYPHEN)
+                                providerId = providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN);
+
+                            EVCOId = new EVCO_Id(Text,
+                                                 providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
+                                                 matchCollection[0].Groups[5].Value,
+                                                 matchCollection[0].Groups[6].Value[0]);
+
+                            return true;
+
+                        }
+
+                    }
 
                 }
-
-
-                // DIN: DE*GDF*0010LY*3, DE-GDF-0010LY-3, DEGDF0010LY3
-                if (Provider_Id.TryParse(matchCollection[0].Groups[4].Value,  out providerId))
-                {
-
-                    if (providerId.Format == ProviderIdFormats.ISO_HYPHEN)
-                        providerId = providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN);
-
-                    EVCOId = new EVCO_Id(Text,
-                                         providerId.ChangeFormat(ProviderIdFormats.DIN_HYPHEN),
-                                         matchCollection[0].Groups[5].Value,
-                                         matchCollection[0].Groups[6].Value[0]);
-
-                    return true;
-
-                }
-
+                catch
+                { }
             }
-            catch (Exception)
-            { }
 
+            EVCOId = default;
             return false;
 
         }

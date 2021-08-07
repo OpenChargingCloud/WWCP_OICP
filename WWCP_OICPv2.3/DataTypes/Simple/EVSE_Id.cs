@@ -214,7 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out EVSE_Id EVSEId))
                 return EVSEId;
 
-            return default;
+            return null;
 
         }
 
@@ -241,52 +241,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out EVSE_Id EVSEId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            EVSEId  = default;
-            Text    = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
 
-                var MatchCollection = EVSEId_RegEx.Matches(Text);
-
-                if (MatchCollection.Count == 1)
+                try
                 {
 
-                    // New format...
-                    if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out Operator_Id operatorId))
+                    var MatchCollection = EVSEId_RegEx.Matches(Text);
+
+                    if (MatchCollection.Count == 1)
                     {
 
-                        EVSEId = new EVSE_Id(operatorId,
-                                             MatchCollection[0].Groups[2].Value);
+                        // New format...
+                        if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out Operator_Id operatorId))
+                        {
 
-                        return true;
+                            EVSEId = new EVSE_Id(operatorId,
+                                                 MatchCollection[0].Groups[2].Value);
 
-                    }
+                            return true;
 
-                    // Old format...
-                    if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out operatorId))
-                    {
+                        }
 
-                        EVSEId = new EVSE_Id(operatorId,
-                                             MatchCollection[0].Groups[4].Value);
+                        // Old format...
+                        if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out operatorId))
+                        {
 
-                        return true;
+                            EVSEId = new EVSE_Id(operatorId,
+                                                 MatchCollection[0].Groups[4].Value);
+
+                            return true;
+
+                        }
 
                     }
 
                 }
+                catch
+                { }
 
             }
-            catch (Exception)
-            { }
 
+            EVSEId = default;
             return false;
 
         }

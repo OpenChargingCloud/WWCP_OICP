@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out UID uid))
                 return uid;
 
-            return default;
+            return null;
 
         }
 
@@ -126,29 +126,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out UID UID)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            UID   = default;
-            Text  = Text?.Trim()?.ToUpper();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty() &&
+                UID_RegEx.IsMatch(Text))
             {
-
-                if (UID_RegEx.IsMatch(Text))
+                try
                 {
                     UID = new UID(Text);
                     return true;
                 }
-
+                catch
+                { }
             }
-            catch
-            { }
 
+            UID = default;
             return false;
 
         }

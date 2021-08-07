@@ -121,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Session_Id sessionId))
                 return sessionId;
 
-            return default;
+            return null;
 
         }
 
@@ -148,29 +148,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Session_Id SessionId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            SessionId  = default;
-            Text       = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty() &&
+                SessionId_RegEx.IsMatch(Text))
             {
-
-                if (SessionId_RegEx.IsMatch(Text))
+                try
                 {
                     SessionId = new Session_Id(Text);
                     return true;
                 }
-
+                catch
+                { }
             }
-            catch (Exception)
-            { }
 
+            SessionId = default;
             return false;
 
         }

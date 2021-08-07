@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PIN uid))
                 return uid;
 
-            return default;
+            return null;
 
         }
 
@@ -125,29 +125,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PIN PIN)
         {
 
-            #region Initial checks
+            Text = Text?.Trim()?.ToUpper();
 
-            PIN   = default;
-            Text  = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty() &&
+                PIN_RegEx.IsMatch(Text))
             {
-
-                if (PIN_RegEx.IsMatch(Text.ToUpper()))
+                try
                 {
                     PIN = new PIN(Text);
                     return true;
                 }
-
+                catch
+                { }
             }
-            catch
-            { }
 
+            PIN = default;
             return false;
 
         }

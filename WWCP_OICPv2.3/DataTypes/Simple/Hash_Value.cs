@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Hash_Value hashValue))
                 return hashValue;
 
-            return default;
+            return null;
 
         }
 
@@ -121,25 +121,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Hash_Value HashValue)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            HashValue  = default;
-            Text       = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                HashValue = new Hash_Value(Text);
-                return true;
+                try
+                {
+                    HashValue = new Hash_Value(Text);
+                    return true;
+                }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            HashValue = default;
             return false;
 
         }

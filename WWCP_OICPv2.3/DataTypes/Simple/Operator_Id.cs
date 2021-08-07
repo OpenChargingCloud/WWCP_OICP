@@ -165,27 +165,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (CountryCode == null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
 
-            if (Suffix != null)
-                Suffix = Suffix.Trim();
+            Suffix = Suffix?.Trim();
 
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given charging station operator identification suffix must not be null or empty!");
 
             #endregion
 
-            switch (IdFormat)
-            {
+            return IdFormat switch {
 
-                case OperatorIdFormats.ISO:
-                    return Parse(CountryCode.Alpha2Code + Suffix);
+                OperatorIdFormats.DIN => Parse("+" + CountryCode.TelefonCode.ToString() + "*" + Suffix),
 
-                case OperatorIdFormats.ISO_STAR:
-                    return Parse(CountryCode.Alpha2Code + "*" + Suffix);
+                OperatorIdFormats.ISO => Parse(CountryCode.Alpha2Code +       Suffix),
 
-                default: // DIN:
-                    return Parse("+" + CountryCode.TelefonCode.ToString() + "*" + Suffix);
+                _                     => Parse(CountryCode.Alpha2Code + "*" + Suffix)
 
-            }
+            };
 
         }
 
@@ -203,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Operator_Id operatorId))
                 return operatorId;
 
-            return default;
+            return null;
 
         }
 
@@ -216,80 +211,118 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a charging station operator identification.</param>
         /// <param name="OperatorId">The parsed charging station operator identification.</param>
-        public static Boolean TryParse(String           Text,
-                                       out Operator_Id  OperatorId)
+        public static Boolean TryParse(String Text,
+                                       out Operator_Id OperatorId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            OperatorId  = default;
-            Text        = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
 
-                var MatchCollection = OperatorId_RegEx.Matches(Text);
-
-                if (MatchCollection.Count != 1)
-                    return false;
-
-
-                // DE...
-                if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
+                try
                 {
 
-                    OperatorId = new Operator_Id(
-                                     countryCode,
-                                     MatchCollection[0].Groups[3].Value,
-                                     MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+                    var MatchCollection = OperatorId_RegEx.Matches(Text);
 
-                    return true;
+                    if (MatchCollection.Count == 1)
+                    {
+
+                        // DE...
+                        if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
+                        {
+
+                            OperatorId = new Operator_Id(
+                                             countryCode,
+                                             MatchCollection[0].Groups[3].Value,
+                                             MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+
+                            return true;
+
+                        }
+
+                        // +49*...
+                        if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
+                        {
+
+                            OperatorId = new Operator_Id(
+                                             countryCode,
+                                             MatchCollection[0].Groups[5].Value,
+                                             OperatorIdFormats.DIN);
+
+                            return true;
+
+                        }
+
+                        // An unknown/unassigned alpha-2 country code, like e.g. "DT"...
+                        if (CountryAlpha2Codes_RegEx.IsMatch(MatchCollection[0].Groups[1].Value))
+                        {
+
+                            OperatorId = new Operator_Id(
+                                             new Country(
+                                                 I18NString.Create(Languages.en, MatchCollection[0].Groups[1].Value),
+                                                 MatchCollection[0].Groups[1].Value,
+                                                 MatchCollection[0].Groups[1].Value + "X",
+                                                 0,
+                                                 0
+                                             ),
+                                             MatchCollection[0].Groups[3].Value,
+                                             MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+
+                            return true;
+
+                        }
+
+                    }
 
                 }
 
-                // +49*...
-                if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
-                {
-
-                    OperatorId = new Operator_Id(
-                                     countryCode,
-                                     MatchCollection[0].Groups[5].Value,
-                                     OperatorIdFormats.DIN);
-
-                    return true;
-
-                }
-
-                // An unknown/unassigned alpha-2 country code, like e.g. "DT"...
-                if (CountryAlpha2Codes_RegEx.IsMatch(MatchCollection[0].Groups[1].Value))
-                {
-
-                    OperatorId = new Operator_Id(
-                                     new Country(
-                                         I18NString.Create(Languages.en, MatchCollection[0].Groups[1].Value),
-                                         MatchCollection[0].Groups[1].Value,
-                                         MatchCollection[0].Groups[1].Value + "X",
-                                         0,
-                                         0
-                                     ),
-                                     MatchCollection[0].Groups[3].Value,
-                                     MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
-
-                    return true;
-
-                }
-
+                catch
+                { }
 
             }
 
-            catch (Exception)
-            { }
+            OperatorId = default;
+            return false;
 
+        }
+
+        #endregion
+
+        #region TryParse(CountryCode, Suffix, out OperatorId, IdFormat = OperatorIdFormats.ISO_HYPHEN)
+
+        /// <summary>
+        /// Try to parse the given text-representation of an e-mobility operator identification.
+        /// </summary>
+        /// <param name="CountryCode">A country code.</param>
+        /// <param name="Suffix">The suffix of an e-mobility operator identification.</param>
+        /// <param name="OperatorId">The parsed e-mobility operator identification.</param>
+        /// <param name="IdFormat">The optional format of the e-mobility operator identification.</param>
+        public static Boolean TryParse(Country            CountryCode,
+                                       String             Suffix,
+                                       out Operator_Id    OperatorId,
+                                       OperatorIdFormats  IdFormat = OperatorIdFormats.ISO_STAR)
+        {
+
+            Suffix = Suffix?.Trim();
+
+            if (!(CountryCode is null) || Suffix.IsNullOrEmpty())
+            {
+                return IdFormat switch {
+
+                    OperatorIdFormats.DIN => TryParse("+" + CountryCode.TelefonCode.ToString() + "*" + Suffix,
+                                                      out OperatorId),
+
+                    OperatorIdFormats.ISO => TryParse(CountryCode.Alpha2Code +       Suffix,
+                                                      out OperatorId),
+
+                    _                     => TryParse(CountryCode.Alpha2Code + "*" + Suffix,
+                                                      out OperatorId),
+
+                };
+            }
+
+            OperatorId = default;
             return false;
 
         }

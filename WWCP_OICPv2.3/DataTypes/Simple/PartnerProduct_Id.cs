@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out PartnerProduct_Id partnerProductId))
                 return partnerProductId;
 
-            return default;
+            return null;
 
         }
 
@@ -131,25 +131,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            PartnerProductId  = default;
-            Text              = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                PartnerProductId = new PartnerProduct_Id(Text);
-                return true;
+                try
+                {
+                    PartnerProductId = new PartnerProduct_Id(Text);
+                    return true;
+                }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            PartnerProductId = default;
             return false;
 
         }

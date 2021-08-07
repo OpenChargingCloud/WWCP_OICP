@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ChargingStation_Id chargingStationId))
                 return chargingStationId;
 
-            return default;
+            return null;
 
         }
 
@@ -118,25 +118,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ChargingStation_Id ChargingStationId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            ChargingStationId  = default;
-            Text               = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                ChargingStationId = new ChargingStation_Id(Text);
-                return true;
+                try
+                {
+                    ChargingStationId = new ChargingStation_Id(Text);
+                    return true;
+                }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            ChargingStationId = default;
             return false;
 
         }

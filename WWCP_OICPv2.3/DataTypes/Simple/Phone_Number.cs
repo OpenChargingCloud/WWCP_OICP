@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Phone_Number phoneNumber))
                 return phoneNumber;
 
-            return default;
+            return null;
 
         }
 
@@ -126,28 +126,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Phone_Number PhoneNumber)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            PhoneNumber  = default;
-            Text         = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty() &&
+                Phone_Number_RegEx.IsMatch(Text))
             {
-                if (Phone_Number_RegEx.IsMatch(Text))
+                try
                 {
                     PhoneNumber = new Phone_Number(Text);
                     return true;
                 }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            PhoneNumber = default;
             return false;
 
         }

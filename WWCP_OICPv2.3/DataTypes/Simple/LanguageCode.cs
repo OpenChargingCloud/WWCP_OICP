@@ -107,7 +107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out LanguageCode languageCode))
                 return languageCode;
 
-            return default;
+            return null;
 
         }
 
@@ -123,24 +123,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out LanguageCode LanguageCode)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            LanguageCode  = default;
-            Text          = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                LanguageCode = new LanguageCode(Text);
-                return true;
+                try
+                {
+                    LanguageCode = new LanguageCode(Text);
+                    return true;
+                }
+                catch
+                { }
             }
-            catch (Exception)
-            { }
 
+            LanguageCode = default;
             return false;
 
         }

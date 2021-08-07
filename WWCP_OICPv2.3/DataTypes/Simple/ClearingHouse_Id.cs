@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
                 return clearingHouseId;
 
-            return default;
+            return null;
 
         }
 
@@ -117,25 +117,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ClearingHouse_Id ClearingHouseId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            ClearingHouseId  = default;
-            Text             = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                ClearingHouseId = new ClearingHouse_Id(Text);
-                return true;
+                try
+                {
+                    ClearingHouseId = new ClearingHouse_Id(Text);
+                    return true;
+                }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            ClearingHouseId = default;
             return false;
 
         }

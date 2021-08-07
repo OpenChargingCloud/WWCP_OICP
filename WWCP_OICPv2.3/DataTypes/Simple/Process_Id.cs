@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Process_Id processId))
                 return processId;
 
-            return default;
+            return null;
 
         }
 
@@ -117,25 +117,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Process_Id ProcessId)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            ProcessId  = default;
-            Text       = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty())
             {
-                ProcessId = new Process_Id(Text);
-                return true;
+                try
+                {
+                    ProcessId = new Process_Id(Text);
+                    return true;
+                }
+                catch
+                { }
             }
 
-            catch (Exception)
-            { }
-
+            ProcessId = default;
             return false;
 
         }

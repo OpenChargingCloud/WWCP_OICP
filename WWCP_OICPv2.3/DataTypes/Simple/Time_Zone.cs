@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out Time_Zone timeZone))
                 return timeZone;
 
-            return new Time_Zone?();
+            return null;
 
         }
 
@@ -126,36 +126,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Time_Zone TimeZone)
         {
 
-            #region Initial checks
+            Text = Text?.Trim();
 
-            TimeZone  = default;
-            Text      = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                return false;
-
-            #endregion
-
-            try
+            if (!Text.IsNullOrEmpty() &&
+                TimeZone_RegEx.IsMatch(Text))
             {
-
-                var MatchCollection = TimeZone_RegEx.Matches(Text);
-
-                if (MatchCollection.Count == 1)
+                try
                 {
                     TimeZone = new Time_Zone(Text);
                     return true;
                 }
-
+                catch
+                { }
             }
 
-#pragma warning disable RCS1075  // Avoid empty catch clause that catches System.Exception.
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-            catch (Exception)
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-#pragma warning restore RCS1075  // Avoid empty catch clause that catches System.Exception.
-            { }
-
+            TimeZone = default;
             return false;
 
         }
