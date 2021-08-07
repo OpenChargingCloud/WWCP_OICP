@@ -243,7 +243,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             Text = Text?.Trim();
 
-            if (!Text.IsNullOrEmpty())
+            if (Text.IsNotNullOrEmpty())
             {
 
                 try
