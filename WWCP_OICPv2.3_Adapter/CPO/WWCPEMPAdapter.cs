@@ -5228,7 +5228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send new EVSE data
 
-            if (EVSEsToAddQueueCopy.Count > 0)
+            if (EVSEsToAddQueueCopy.Any())
             {
 
                 var EVSEsToAddTask = await PushEVSEData(EVSEsToAddQueueCopy,
@@ -5264,34 +5264,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send changed EVSE data
 
-            if (EVSEsToUpdateQueueCopy.Count > 0)
+            if (EVSEsToUpdateQueueCopy.Any())
             {
 
                 // Surpress EVSE data updates for all newly added EVSEs
-                var EVSEsWithoutNewEVSEs = EVSEsToUpdateQueueCopy.
-                                               Where(evse => !EVSEsToAddQueueCopy.Contains(evse)).
-                                               ToArray();
+                foreach (var _evse in EVSEsToUpdateQueueCopy.Where(evse => EVSEsToAddQueueCopy.Contains(evse)).ToArray())
+                    EVSEsToUpdateQueueCopy.Remove(_evse);
 
-
-                if (EVSEsWithoutNewEVSEs.Length > 0)
+                if (EVSEsToUpdateQueueCopy.Any())
                 {
 
-                    var EVSEsToUpdateTask = await PushEVSEData(EVSEsWithoutNewEVSEs,
-                                                               ActionTypes.Update,
-                                                               EventTrackingId: EventTrackingId);
+                    var EVSEsToUpdateResult = await PushEVSEData(EVSEsToUpdateQueueCopy,
+                                                                 ActionTypes.Update,
+                                                                 EventTrackingId: EventTrackingId);
 
-                    foreach (var evseId in EVSEsToUpdateTask.SuccessfulEVSEs)
+                    foreach (var evseId in EVSEsToUpdateResult.SuccessfulEVSEs)
                         SuccessfullyUploadedEVSEs.Add(evseId.Id);
 
-                    if (EVSEsToUpdateTask.Warnings.Any())
+                    if (EVSEsToUpdateResult.Warnings.Any())
                     {
                         try
                         {
 
                             SendOnWarnings(DateTime.UtcNow,
                                            nameof(WWCPEMPAdapter) + Id,
-                                           nameof(EVSEsToUpdateTask),
-                                           EVSEsToUpdateTask.Warnings);
+                                           nameof(EVSEsToUpdateResult),
+                                           EVSEsToUpdateResult.Warnings);
 
                         }
                         catch (Exception)
