@@ -85,7 +85,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public DateTime                          ChargingEnd                        { get; }
 
         /// <summary>
-        /// The amount of consumed energy.
+        /// The amount of consumed energy [kWh].
         /// </summary>
         [Mandatory]
         public Decimal                           ConsumedEnergy                     { get; }
@@ -171,13 +171,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SessionEnd">The timestamp when the charging session ended.</param>
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// <param name="ChargingEnd">The timestamp when the charging process stopped.</param>
-        /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
+        /// <param name="ConsumedEnergy">The amount of consumed energy [kWh].</param>
         /// 
         /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
         /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
         /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
         /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
-        /// <param name="MeterValueEnd">An optional ending value of the energy meter [kWh].</param>
+        /// <param name="MeterValueEnd">An optional final value of the energy meter [kWh].</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session [kWh].</param>
         /// <param name="SignedMeteringValues">Optional signed metering values, with can e.g. verified via a transparency software.</param>
         /// <param name="CalibrationLawVerificationInfo">Optional additional information which could directly or indirectly help to verify the signed metering values by using a valid transparency software.</param>
@@ -1278,7 +1278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public DateTime?                         ChargingEnd                        { get; set; }
 
             /// <summary>
-            /// The amount of consumed energy.
+            /// The amount of consumed energy [kWh].
             /// </summary>
             [Mandatory]
             public Decimal?                          ConsumedEnergy                     { get; set; }
@@ -1303,13 +1303,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
             /// <summary>
-            /// An optional initial value of the energy meter.
+            /// The optional starting value of the energy meter [kWh].
             /// </summary>
             [Optional]
             public Decimal?                          MeterValueStart                    { get; set; }
 
             /// <summary>
-            /// An optional final value of the energy meter.
+            /// The optional final value of the energy meter [kWh].
             /// </summary>
             [Optional]
             public Decimal?                          MeterValueEnd                      { get; set; }
@@ -1360,19 +1360,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
             /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
-            /// <param name="Identification">The authentication data used to authorize the user or car.</param>
+            /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
             /// <param name="SessionStart">The timestamp when the charging session started.</param>
             /// <param name="SessionEnd">The timestamp when the charging session ended.</param>
             /// <param name="ChargingStart">The timestamp when the charging process started.</param>
             /// <param name="ChargingEnd">The timestamp when the charging process stopped.</param>
-            /// <param name="ConsumedEnergy">The optional amount of consumed energy.</param>
+            /// <param name="ConsumedEnergy">The amount of consumed energy [kWh].</param>
             /// 
             /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
             /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
             /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
-            /// <param name="MeterValueStart">An optional initial value of the energy meter.</param>
-            /// <param name="MeterValueEnd">An optional final value of the energy meter.</param>
-            /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session.</param>
+            /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
+            /// <param name="MeterValueEnd">An optional final value of the energy meter [kWh].</param>
+            /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session [kWh].</param>
             /// <param name="SignedMeteringValues">Optional signed metering values, with can e.g. verified via a transparency software.</param>
             /// <param name="CalibrationLawVerificationInfo">Optional additional information which could directly or indirectly help to verify the signed metering values by using a valid transparency software.</param>
             /// <param name="HubOperatorId">An optional operator identification of the hub operator.</param>
