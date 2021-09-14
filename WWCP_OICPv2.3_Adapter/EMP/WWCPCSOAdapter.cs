@@ -521,7 +521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStartRequest));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStartRequest));
                 }
 
                 #endregion
@@ -569,7 +569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStartResponse));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStartResponse));
                 }
 
                 #endregion
@@ -676,7 +676,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStopRequest));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStopRequest));
                 }
 
                 #endregion
@@ -721,7 +721,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStopResponse));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnAuthorizeStopResponse));
                 }
 
                 #endregion
@@ -802,7 +802,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnChargeDetailRecordRequest));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnChargeDetailRecordRequest));
                 }
 
                 #endregion
@@ -838,7 +838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
                 catch (Exception e)
                 {
-                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnChargeDetailRecordResponse));
+                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnChargeDetailRecordResponse));
                 }
 
                 #endregion
@@ -1125,7 +1125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             //}
             //catch (Exception e)
             //{
-            //    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPushAuthenticationDataRequest));
+            //    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnPushAuthenticationDataRequest));
             //}
 
             #endregion
@@ -1394,7 +1394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //    //}
         //    //catch (Exception e)
         //    //{
-        //    //    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPushAuthenticationDataRequest));
+        //    //    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnPushAuthenticationDataRequest));
         //    //}
 
         //    #endregion
@@ -1470,7 +1470,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //    //}
         //    //catch (Exception e)
         //    //{
-        //    //    e.Log(nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
+        //    //    DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
         //    //}
 
         //    #endregion
@@ -1569,7 +1569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log((string)(nameof(WWCPCSOAdapter) + "." + nameof(OnReserveRequest)));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnReserveRequest));
             }
 
             #endregion
@@ -1725,7 +1725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log((string)(nameof(WWCPCSOAdapter) + "." + nameof(OnReserveResponse)));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnReserveResponse));
             }
 
             #endregion
@@ -1800,7 +1800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnCancelReservationRequest));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnCancelReservationRequest));
             }
 
             #endregion
@@ -1925,7 +1925,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStartRequest));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStartRequest));
             }
 
             #endregion
@@ -2076,7 +2076,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStartResponse));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStartResponse));
             }
 
             #endregion
@@ -2157,7 +2157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStopRequest));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStopRequest));
             }
 
             #endregion
@@ -2222,7 +2222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStopResponse));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnRemoteStopResponse));
             }
 
             #endregion
@@ -2304,7 +2304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecordsRequest));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecordsRequest));
             }
 
             #endregion
@@ -2378,7 +2378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecordsResponse));
+                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecordsResponse));
             }
 
             #endregion
@@ -2920,7 +2920,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             }
                             catch (Exception e)
                             {
-                                e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEData));
+                                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEData));
                             }
 
                             #endregion
@@ -3221,7 +3221,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 }
                                 catch (Exception e)
                                 {
-                                    e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEStatus));
+                                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnPullEVSEStatus));
                                 }
 
                                 #endregion
@@ -3368,7 +3368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         }
                         catch (Exception e)
                         {
-                            e.Log(nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecords));
+                            DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnGetChargeDetailRecords));
                         }
 
                         #endregion

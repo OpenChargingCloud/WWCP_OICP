@@ -29,6 +29,8 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
+using social.OpenData.UsersAPI;
+
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
@@ -37,7 +39,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The OICP CPO HTTP Server API.
     /// </summary>
-    public partial class CPOServerAPI : HTTPAPI
+    public partial class CPOServerAPI : UsersAPI
     {
 
         #region Data
@@ -313,26 +315,81 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             String                               ExternalDNSName              = null,
                             HTTPPath?                            BasePath                     = null,
                             HTTPPath?                            URLPathPrefix                = null,
-                            String                               ServiceName                  = DefaultHTTPServiceName,
+                            String                               HTTPServiceName              = DefaultHTTPServiceName,
                             Boolean                              DisableLogging               = false,
                             String                               LoggingContext               = null,
                             LogfileCreatorDelegate               LogfileCreator               = null,
                             DNSClient                            DNSClient                    = null,
                             Boolean                              AutoStart                    = false)
 
-            : base(ServerCertificateSelector,
-                   ClientCertificateSelector,
-                   ClientCertificateValidator,
-                   AllowedTLSProtocols,
-                   HTTPHostname,
-                   HTTPServerPort,
-                   HTTPServerName,
+            : base(HTTPHostname,
                    ExternalDNSName,
-                   URLPathPrefix,
+                   HTTPServerPort,
                    BasePath,
-                   ServiceName,
+                   HTTPServerName,
+
+                   URLPathPrefix,
+                   HTTPServiceName,
+                   null, //HTMLTemplate,
+                   null, //APIVersionHashes,
+
+                   ServerCertificateSelector,
+                   ClientCertificateValidator,
+                   ClientCertificateSelector,
+                   AllowedTLSProtocols,
+
+                   null,  //ServerThreadName,
+                   null,  //ServerThreadPriority,
+                   null,  //ServerThreadIsBackground,
+                   null,  //ConnectionIdBuilder,
+                   null,  //ConnectionThreadsNameBuilder,
+                   null,  //ConnectionThreadsPriorityBuilder,
+                   null,  //ConnectionThreadsAreBackground,
+                   null,  //ConnectionTimeout,
+                   null,  //MaxClientConnections,
+
+                   null,  //AdminOrganizationId,
+                   null,  //APIRobotEMailAddress,
+                   null,  //APIRobotGPGPassphrase,
+                   null,  //SMTPClient,
+                   null,  //SMSClient,
+                   null,  //SMSSenderName,
+                   null,  //TelegramClient,
+
+                   null,  //PasswordQualityCheck,
+                   null,  //CookieName,
+                   false, //UseSecureCookies,
+                   null,  //MaxSignInSessionLifetime,
+                   null,  //DefaultLanguage,
+                   null,  //MinUserIdLength,
+                   null,  //MinRealmLength,
+                   null,  //MinUserNameLength,
+                   null,  //MinUserGroupIdLength,
+                   null,  //MinAPIKeyLength,
+                   null,  //MinMessageIdLength,
+                   null,  //MinOrganizationIdLength,
+                   null,  //MinOrganizationGroupIdLength,
+                   null,  //MinNotificationMessageIdLength,
+                   null,  //MinNewsPostingIdLength,
+                   null,  //MinNewsBannerIdLength,
+                   null,  //MinFAQIdLength,
+
+                   true,  //DisableMaintenanceTasks,
+                   null,  //MaintenanceInitialDelay,
+                   null,  //MaintenanceEvery,
+
+                   true,  //DisableWardenTasks,
+                   null,  //WardenInitialDelay,
+                   null,  //WardenCheckEvery,
+
+                   true,  //SkipURLTemplates,
+                   true,  //DisableNotifications,
+                   true,  //DisableLogfile,
+                   null,  //LoggingPath,
+                   null,  //DatabaseFileName,
+                   null,  //LogfileName,
                    DNSClient,
-                   false)
+                   false) //Autostart)
 
         {
 
@@ -446,7 +503,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
                                                      }
 
                                                      #endregion
@@ -494,7 +551,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
                                                      }
 
                                                      #endregion
@@ -633,7 +690,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
                                                      }
 
                                                      #endregion
@@ -681,7 +738,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
                                                      }
 
                                                      #endregion
@@ -821,7 +878,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartRequest));
                                                      }
 
                                                      #endregion
@@ -869,7 +926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartResponse));
                                                      }
 
                                                      #endregion
@@ -1008,7 +1065,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopRequest));
                                                      }
 
                                                      #endregion
@@ -1056,7 +1113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      }
                                                      catch (Exception e)
                                                      {
-                                                         e.Log(nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                                                         DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopResponse));
                                                      }
 
                                                      #endregion

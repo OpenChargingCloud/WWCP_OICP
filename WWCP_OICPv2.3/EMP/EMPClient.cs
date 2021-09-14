@@ -447,7 +447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataRequest));
             }
 
             #endregion
@@ -808,7 +808,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
             }
 
             #endregion
@@ -866,7 +866,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
             }
 
             #endregion
@@ -1176,7 +1176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
             }
 
             #endregion
@@ -1234,7 +1234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdRequest));
             }
 
             #endregion
@@ -1544,7 +1544,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
             }
 
             #endregion
@@ -1602,7 +1602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdRequest));
             }
 
             #endregion
@@ -1912,7 +1912,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
             }
 
             #endregion
@@ -1986,7 +1986,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
             }
 
             #endregion
@@ -2323,7 +2323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
             }
 
             #endregion
@@ -2381,7 +2381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
             }
 
             #endregion
@@ -2718,7 +2718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
             }
 
             #endregion
@@ -2776,7 +2776,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartRequest));
             }
 
             #endregion
@@ -3113,7 +3113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
             }
 
             #endregion
@@ -3171,7 +3171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopRequest));
             }
 
             #endregion
@@ -3508,7 +3508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
             }
 
             #endregion
@@ -3567,7 +3567,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsRequest));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsRequest));
             }
 
             #endregion
@@ -3902,7 +3902,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
             catch (Exception e)
             {
-                e.Log(nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsResponse));
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsResponse));
             }
 
             #endregion

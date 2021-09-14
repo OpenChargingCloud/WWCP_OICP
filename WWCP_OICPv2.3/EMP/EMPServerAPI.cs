@@ -31,6 +31,8 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
+using social.OpenData.UsersAPI;
+
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
@@ -39,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// The OICP EMP HTTP Server API.
     /// </summary>
-    public partial class EMPServerAPI : HTTPAPI
+    public partial class EMPServerAPI : UsersAPI
     {
 
         #region Data
@@ -326,32 +328,88 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
                             RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
                             SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12 | SslProtocols.Tls13,
+
                             HTTPHostname?                        HTTPHostname                 = null,
                             IPPort?                              HTTPServerPort               = null,
                             String                               HTTPServerName               = DefaultHTTPServerName,
                             String                               ExternalDNSName              = null,
                             HTTPPath?                            BasePath                     = null,
                             HTTPPath?                            URLPathPrefix                = null,
-                            String                               ServiceName                  = DefaultHTTPServiceName,
+                            String                               HTTPServiceName              = DefaultHTTPServiceName,
                             Boolean                              DisableLogging               = false,
                             String                               LoggingContext               = null,
                             LogfileCreatorDelegate               LogfileCreator               = null,
                             DNSClient                            DNSClient                    = null,
                             Boolean                              AutoStart                    = false)
 
-            : base(ServerCertificateSelector,
-                   ClientCertificateSelector,
-                   ClientCertificateValidator,
-                   AllowedTLSProtocols,
-                   HTTPHostname,
-                   HTTPServerPort,
-                   HTTPServerName,
+            : base(HTTPHostname,
                    ExternalDNSName,
-                   URLPathPrefix,
+                   HTTPServerPort,
                    BasePath,
-                   ServiceName,
+                   HTTPServerName,
+
+                   URLPathPrefix,
+                   HTTPServiceName,
+                   null, //HTMLTemplate,
+                   null, //APIVersionHashes,
+
+                   ServerCertificateSelector,
+                   ClientCertificateValidator,
+                   ClientCertificateSelector,
+                   AllowedTLSProtocols,
+
+                   null,  //ServerThreadName,
+                   null,  //ServerThreadPriority,
+                   null,  //ServerThreadIsBackground,
+                   null,  //ConnectionIdBuilder,
+                   null,  //ConnectionThreadsNameBuilder,
+                   null,  //ConnectionThreadsPriorityBuilder,
+                   null,  //ConnectionThreadsAreBackground,
+                   null,  //ConnectionTimeout,
+                   null,  //MaxClientConnections,
+
+                   null,  //AdminOrganizationId,
+                   null,  //APIRobotEMailAddress,
+                   null,  //APIRobotGPGPassphrase,
+                   null,  //SMTPClient,
+                   null,  //SMSClient,
+                   null,  //SMSSenderName,
+                   null,  //TelegramClient,
+
+                   null,  //PasswordQualityCheck,
+                   null,  //CookieName,
+                   false, //UseSecureCookies,
+                   null,  //MaxSignInSessionLifetime,
+                   null,  //DefaultLanguage,
+                   null,  //MinUserIdLength,
+                   null,  //MinRealmLength,
+                   null,  //MinUserNameLength,
+                   null,  //MinUserGroupIdLength,
+                   null,  //MinAPIKeyLength,
+                   null,  //MinMessageIdLength,
+                   null,  //MinOrganizationIdLength,
+                   null,  //MinOrganizationGroupIdLength,
+                   null,  //MinNotificationMessageIdLength,
+                   null,  //MinNewsPostingIdLength,
+                   null,  //MinNewsBannerIdLength,
+                   null,  //MinFAQIdLength,
+
+                   true,  //DisableMaintenanceTasks,
+                   null,  //MaintenanceInitialDelay,
+                   null,  //MaintenanceEvery,
+
+                   true,  //DisableWardenTasks,
+                   null,  //WardenInitialDelay,
+                   null,  //WardenCheckEvery,
+
+                   true,  //SkipURLTemplates,
+                   true,  //DisableNotifications,
+                   true,  //DisableLogfile,
+                   null,  //LoggingPath,
+                   null,  //DatabaseFileName,
+                   null,  //LogfileName,
                    DNSClient,
-                   false)
+                   false) //Autostart)
 
         {
 
@@ -690,7 +748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationRequest));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationRequest));
                                                              }
 
                                                              #endregion
@@ -738,7 +796,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationResponse));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationResponse));
                                                              }
 
                                                              #endregion
@@ -793,7 +851,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationRequest));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationRequest));
                                                              }
 
                                                              #endregion
@@ -841,7 +899,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationResponse));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationResponse));
                                                              }
 
                                                              #endregion
@@ -896,7 +954,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationRequest));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationRequest));
                                                              }
 
                                                              #endregion
@@ -944,7 +1002,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationResponse));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationResponse));
                                                              }
 
                                                              #endregion
@@ -999,7 +1057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationRequest));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationRequest));
                                                              }
 
                                                              #endregion
@@ -1047,7 +1105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              }
                                                              catch (Exception e)
                                                              {
-                                                                 e.Log(nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationResponse));
+                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationResponse));
                                                              }
 
                                                              #endregion
