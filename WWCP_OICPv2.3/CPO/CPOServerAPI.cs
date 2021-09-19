@@ -39,7 +39,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The OICP CPO HTTP Server API.
     /// </summary>
-    public partial class CPOServerAPI : UsersAPI
+    public partial class CPOServerAPI : HTTPAPI
     {
 
         #region Data
@@ -330,66 +330,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                    URLPathPrefix,
                    HTTPServiceName,
-                   null, //HTMLTemplate,
-                   null, //APIVersionHashes,
+                   null,           //HTMLTemplate,
+                   null,           //APIVersionHashes,
 
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
 
-                   null,  //ServerThreadName,
-                   null,  //ServerThreadPriority,
-                   null,  //ServerThreadIsBackground,
-                   null,  //ConnectionIdBuilder,
-                   null,  //ConnectionThreadsNameBuilder,
-                   null,  //ConnectionThreadsPriorityBuilder,
-                   null,  //ConnectionThreadsAreBackground,
-                   null,  //ConnectionTimeout,
-                   null,  //MaxClientConnections,
+                   null,           //ServerThreadName,
+                   null,           //ServerThreadPriority,
+                   null,           //ServerThreadIsBackground,
+                   null,           //ConnectionIdBuilder,
+                   null,           //ConnectionThreadsNameBuilder,
+                   null,           //ConnectionThreadsPriorityBuilder,
+                   null,           //ConnectionThreadsAreBackground,
+                   null,           //ConnectionTimeout,
+                   null,           //MaxClientConnections,
 
-                   null,  //AdminOrganizationId,
-                   null,  //APIRobotEMailAddress,
-                   null,  //APIRobotGPGPassphrase,
-                   null,  //SMTPClient,
-                   null,  //SMSClient,
-                   null,  //SMSSenderName,
-                   null,  //TelegramClient,
+                   false,          //DisableMaintenanceTasks,
+                   null,           //MaintenanceInitialDelay,
+                   null,           //MaintenanceEvery,
 
-                   null,  //PasswordQualityCheck,
-                   null,  //CookieName,
-                   false, //UseSecureCookies,
-                   null,  //MaxSignInSessionLifetime,
-                   null,  //DefaultLanguage,
-                   null,  //MinUserIdLength,
-                   null,  //MinRealmLength,
-                   null,  //MinUserNameLength,
-                   null,  //MinUserGroupIdLength,
-                   null,  //MinAPIKeyLength,
-                   null,  //MinMessageIdLength,
-                   null,  //MinOrganizationIdLength,
-                   null,  //MinOrganizationGroupIdLength,
-                   null,  //MinNotificationMessageIdLength,
-                   null,  //MinNewsPostingIdLength,
-                   null,  //MinNewsBannerIdLength,
-                   null,  //MinFAQIdLength,
+                   false,          //DisableWardenTasks,
+                   null,           //WardenInitialDelay,
+                   null,           //WardenCheckEvery,
 
-                   true,  //DisableMaintenanceTasks,
-                   null,  //MaintenanceInitialDelay,
-                   null,  //MaintenanceEvery,
-
-                   true,  //DisableWardenTasks,
-                   null,  //WardenInitialDelay,
-                   null,  //WardenCheckEvery,
-
-                   true,  //SkipURLTemplates,
-                   true,  //DisableNotifications,
-                   true,  //DisableLogfile,
-                   null,  //LoggingPath,
-                   null,  //DatabaseFileName,
-                   null,  //LogfileName,
+                   DisableLogging, //DisableLogfile,
+                   null,           //LoggingPath,
+                   null,           //LogfileName,
                    DNSClient,
-                   false) //Autostart)
+                   false)          //Autostart)
 
         {
 
