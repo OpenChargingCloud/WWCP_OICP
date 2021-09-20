@@ -19,8 +19,10 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -29,6 +31,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using social.OpenData.UsersAPI;
@@ -55,6 +58,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// The default HTTP service name.
         /// </summary>
         public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.Number + " EMP HTTP API";
+
+        /// <summary>
+        /// The default logging context.
+        /// </summary>
+        public     const String  DefaultLoggingContext   = "EMPServerAPI";
 
         #endregion
 
@@ -324,24 +332,89 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Create a new EMP HTTP Server API.
         /// </summary>
-        public EMPServerAPI(ServerCertificateSelectorDelegate    ServerCertificateSelector    = null,
-                            LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                            RemoteCertificateValidationCallback  ClientCertificateValidator   = null,
-                            SslProtocols                         AllowedTLSProtocols          = SslProtocols.Tls12 | SslProtocols.Tls13,
+        /// <param name="HTTPHostname">The HTTP hostname for all URLs within this API.</param>
+        /// <param name="ExternalDNSName">The offical URL/DNS name of this service, e.g. for sending e-mails.</param>
+        /// <param name="HTTPServerPort">A TCP port to listen on.</param>
+        /// <param name="BasePath">When the API is served from an optional subdirectory path.</param>
+        /// <param name="HTTPServerName">The default HTTP servername, used whenever no HTTP Host-header has been given.</param>
+        /// 
+        /// <param name="URLPathPrefix">A common prefix for all URLs.</param>
+        /// <param name="HTTPServiceName">The name of the HTTP service.</param>
+        /// <param name="APIVersionHashes">The API version hashes (git commit hash values).</param>
+        /// 
+        /// <param name="ServerCertificateSelector">An optional delegate to select a SSL/TLS server certificate.</param>
+        /// <param name="ClientCertificateValidator">An optional delegate to verify the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="ClientCertificateSelector">An optional delegate to select the SSL/TLS client certificate used for authentication.</param>
+        /// <param name="AllowedTLSProtocols">The SSL/TLS protocol(s) allowed for this connection.</param>
+        /// 
+        /// <param name="ServerThreadName">The optional name of the TCP server thread.</param>
+        /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
+        /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
+        /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
+        /// <param name="ConnectionThreadsNameBuilder">An optional delegate to set the name of the TCP connection threads.</param>
+        /// <param name="ConnectionThreadsPriorityBuilder">An optional delegate to set the priority of the TCP connection threads.</param>
+        /// <param name="ConnectionThreadsAreBackground">Whether the TCP connection threads are background threads or not (default: yes).</param>
+        /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
+        /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
+        /// 
+        /// <param name="DisableMaintenanceTasks">Disable all maintenance tasks.</param>
+        /// <param name="MaintenanceInitialDelay">The initial delay of the maintenance tasks.</param>
+        /// <param name="MaintenanceEvery">The maintenance intervall.</param>
+        /// 
+        /// <param name="DisableWardenTasks">Disable all warden tasks.</param>
+        /// <param name="WardenInitialDelay">The initial delay of the warden tasks.</param>
+        /// <param name="WardenCheckEvery">The warden intervall.</param>
+        /// 
+        /// <param name="IsDevelopment">This HTTP API runs in development mode.</param>
+        /// <param name="DevelopmentServers">An enumeration of server names which will imply to run this service in development mode.</param>
+        /// <param name="DisableLogging">Disable the log file.</param>
+        /// <param name="LoggingPath">The path for all logfiles.</param>
+        /// <param name="LoggingContext">The context of all logfiles.</param>
+        /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
+        /// <param name="DNSClient">The DNS client of the API.</param>
+        /// <param name="Autostart">Whether to start the API automatically.</param>
+        public EMPServerAPI(HTTPHostname?                        HTTPHostname                       = null,
+                            String                               ExternalDNSName                    = null,
+                            IPPort?                              HTTPServerPort                     = null,
+                            HTTPPath?                            BasePath                           = null,
+                            String                               HTTPServerName                     = DefaultHTTPServerName,
 
-                            HTTPHostname?                        HTTPHostname                 = null,
-                            IPPort?                              HTTPServerPort               = null,
-                            String                               HTTPServerName               = DefaultHTTPServerName,
-                            String                               ExternalDNSName              = null,
-                            HTTPPath?                            BasePath                     = null,
-                            HTTPPath?                            URLPathPrefix                = null,
-                            String                               HTTPServiceName              = DefaultHTTPServiceName,
+                            HTTPPath?                            URLPathPrefix                      = null,
+                            String                               HTTPServiceName                    = DefaultHTTPServiceName,
+                            JObject                              APIVersionHashes                   = null,
 
-                            Boolean                              DisableLogging               = false,
-                            String                               LoggingContext               = null,
-                            LogfileCreatorDelegate               LogfileCreator               = null,
-                            DNSClient                            DNSClient                    = null,
-                            Boolean                              AutoStart                    = false)
+                            ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
+                            LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
+                            RemoteCertificateValidationCallback  ClientCertificateValidator         = null,
+                            SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+
+                            String                               ServerThreadName                   = null,
+                            ThreadPriority?                      ServerThreadPriority               = null,
+                            Boolean?                             ServerThreadIsBackground           = null,
+                            ConnectionIdBuilder                  ConnectionIdBuilder                = null,
+                            ConnectionThreadsNameBuilder         ConnectionThreadsNameBuilder       = null,
+                            ConnectionThreadsPriorityBuilder     ConnectionThreadsPriorityBuilder   = null,
+                            Boolean?                             ConnectionThreadsAreBackground     = null,
+                            TimeSpan?                            ConnectionTimeout                  = null,
+                            UInt32?                              MaxClientConnections               = null,
+
+                            Boolean?                             DisableMaintenanceTasks            = false,
+                            TimeSpan?                            MaintenanceInitialDelay            = null,
+                            TimeSpan?                            MaintenanceEvery                   = null,
+
+                            Boolean?                             DisableWardenTasks                 = false,
+                            TimeSpan?                            WardenInitialDelay                 = null,
+                            TimeSpan?                            WardenCheckEvery                   = null,
+
+                            Boolean?                             IsDevelopment                      = null,
+                            IEnumerable<String>                  DevelopmentServers                 = null,
+                            Boolean                              DisableLogging                     = false,
+                            String                               LoggingPath                        = DefaultHTTPAPI_LoggingPath,
+                            String                               LoggingContext                     = DefaultLoggingContext,
+                            String                               LogfileName                        = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate               LogfileCreator                     = null,
+                            DNSClient                            DNSClient                          = null,
+                            Boolean                              Autostart                          = false)
 
             : base(HTTPHostname,
                    ExternalDNSName,
@@ -351,37 +424,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                    URLPathPrefix,
                    HTTPServiceName,
-                   null,           //HTMLTemplate,
-                   null,           //APIVersionHashes,
+                   null, //HTMLTemplate,
+                   APIVersionHashes,
 
                    ServerCertificateSelector,
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
 
-                   null,           //ServerThreadName,
-                   null,           //ServerThreadPriority,
-                   null,           //ServerThreadIsBackground,
-                   null,           //ConnectionIdBuilder,
-                   null,           //ConnectionThreadsNameBuilder,
-                   null,           //ConnectionThreadsPriorityBuilder,
-                   null,           //ConnectionThreadsAreBackground,
-                   null,           //ConnectionTimeout,
-                   null,           //MaxClientConnections,
+                   ServerThreadName,
+                   ServerThreadPriority,
+                   ServerThreadIsBackground,
+                   ConnectionIdBuilder,
+                   ConnectionThreadsNameBuilder,
+                   ConnectionThreadsPriorityBuilder,
+                   ConnectionThreadsAreBackground,
+                   ConnectionTimeout,
+                   MaxClientConnections,
 
-                   false,          //DisableMaintenanceTasks,
-                   null,           //MaintenanceInitialDelay,
-                   null,           //MaintenanceEvery,
+                   DisableMaintenanceTasks,
+                   MaintenanceInitialDelay,
+                   MaintenanceEvery,
 
-                   false,          //DisableWardenTasks,
-                   null,           //WardenInitialDelay,
-                   null,           //WardenCheckEvery,
+                   DisableWardenTasks,
+                   WardenInitialDelay,
+                   WardenCheckEvery,
 
-                   DisableLogging, //DisableLogfile,
-                   null,           //LoggingPath,
-                   null,           //LogfileName,
+                   IsDevelopment,
+                   DevelopmentServers,
+                   DisableLogging,
+                   LoggingPath,
+                   LogfileName,
+                   LogfileCreator,
                    DNSClient,
-                   false)          //Autostart)
+                   false) //Autostart)
 
         {
 
@@ -389,12 +465,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
-                                                LoggingContext,
+                                                LoggingContext ?? DefaultLoggingContext,
                                                 LogfileCreator)
                                    : null;
 
-            if (AutoStart)
-                HTTPServer.Start();
+            if (Autostart)
+                Start();
 
         }
 
