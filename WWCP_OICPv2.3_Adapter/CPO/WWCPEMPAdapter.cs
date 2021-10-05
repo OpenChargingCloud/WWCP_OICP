@@ -1017,7 +1017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
             }
 
             #endregion
@@ -1257,7 +1257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
             }
 
             #endregion
@@ -1379,7 +1379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
             }
 
             #endregion
@@ -1482,7 +1482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
             }
 
             #endregion
@@ -1548,7 +1548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -1645,7 +1645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -1752,7 +1752,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -1862,7 +1862,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -1960,7 +1960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2069,7 +2069,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2177,7 +2177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2285,7 +2285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2423,7 +2423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2553,7 +2553,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2660,7 +2660,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -2775,7 +2775,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3174,7 +3174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3283,7 +3283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -3398,7 +3398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 //}
                 //catch (Exception e)
                 //{
-                //    e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
+                //    DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRRequest));
                 //}
 
                 #endregion
@@ -4435,7 +4435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartRequest));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
@@ -4566,7 +4566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartResponse));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartResponse));
             }
 
             #endregion
@@ -4651,7 +4651,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopRequest));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopRequest));
             }
 
             #endregion
@@ -4780,7 +4780,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopResponse));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopResponse));
             }
 
             #endregion
@@ -4880,7 +4880,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
             }
 
             #endregion
@@ -4939,7 +4939,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             }
                             catch (Exception e)
                             {
-                                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
+                                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
                             }
 
                             #endregion
@@ -5116,7 +5116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsResponse));
+                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsResponse));
             }
 
             #endregion

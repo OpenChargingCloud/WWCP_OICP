@@ -75,6 +75,10 @@
       <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
       <Name>Styx</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\UsersAPI\UsersAPI\UsersAPI.csproj">
+      <Project>{4d5da5f5-0dce-4620-bce5-74a27e5cfc47}</Project>
+      <Name>UsersAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WWCP_Core\WWCP_Core\WWCP_Core.csproj">
       <Project>{33836742-af1d-4aa4-963f-b0a8e60e6480}</Project>
       <Name>WWCP_Core</Name>

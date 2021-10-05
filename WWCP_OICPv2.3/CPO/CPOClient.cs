@@ -464,7 +464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
             }
 
             #endregion
@@ -907,7 +907,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
             }
 
             #endregion
@@ -962,7 +962,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
             }
 
             #endregion
@@ -1402,7 +1402,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
             }
 
             #endregion
@@ -1458,7 +1458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
@@ -1793,7 +1793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
             }
 
             #endregion
@@ -1848,7 +1848,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
             }
 
             #endregion
@@ -2205,7 +2205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
             }
 
             #endregion
@@ -2261,7 +2261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingStartNotificationRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingStartNotificationRequest));
             }
 
             #endregion
@@ -2664,7 +2664,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingStartNotificationResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingStartNotificationResponse));
             }
 
             #endregion
@@ -2719,7 +2719,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationRequest));
             }
 
             #endregion
@@ -3122,7 +3122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationResponse));
             }
 
             #endregion
@@ -3177,7 +3177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingEndNotificationRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingEndNotificationRequest));
             }
 
             #endregion
@@ -3580,7 +3580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingEndNotificationResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingEndNotificationResponse));
             }
 
             #endregion
@@ -3635,7 +3635,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationRequest));
             }
 
             #endregion
@@ -4038,7 +4038,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationResponse));
             }
 
             #endregion
@@ -4094,7 +4094,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
             }
 
             #endregion
@@ -4424,7 +4424,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                e.Log(nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
             }
 
             #endregion
