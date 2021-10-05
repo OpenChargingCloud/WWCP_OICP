@@ -986,8 +986,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 }
                 catch (Exception e)
                 {
-                    DebugX.Log(e.Message);
-                    Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
+                    DebugX.Log(e.Message + (e.InnerException != null ? " " + e.InnerException.Message : ""));
+                    Warnings.Add(Warning.Create(I18NString.Create(Languages.en,
+                                                                  e.Message + (e.InnerException != null ? " " + e.InnerException.Message : "")),
+                                                evse));
                 }
 
             }

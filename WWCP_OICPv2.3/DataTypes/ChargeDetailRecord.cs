@@ -829,14 +829,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone(NewSessionId = null)
 
         /// <summary>
         /// Clone this object.
         /// </summary>
-        public ChargeDetailRecord Clone
+        /// <param name="NewSessionId">An optional new charging session identification.</param>
+        public ChargeDetailRecord Clone(Session_Id? NewSessionId = null)
 
-            => new ChargeDetailRecord(SessionId.                      Clone,
+            => new ChargeDetailRecord(NewSessionId ?? SessionId.      Clone,
                                       EVSEId.                         Clone,
                                       Identification.                 Clone,
                                       SessionStart,

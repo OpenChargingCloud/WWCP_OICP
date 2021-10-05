@@ -338,7 +338,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator == (Provider_Id ProviderId1,
+                                           Provider_Id ProviderId2)
+
             => ProviderId1.Equals(ProviderId2);
 
         #endregion
@@ -351,7 +353,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator != (Provider_Id ProviderId1,
+                                           Provider_Id ProviderId2)
+
             => !ProviderId1.Equals(ProviderId2);
 
         #endregion
@@ -364,7 +368,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator < (Provider_Id ProviderId1,
+                                          Provider_Id ProviderId2)
+
             => ProviderId1.CompareTo(ProviderId2) < 0;
 
         #endregion
@@ -377,7 +383,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator <= (Provider_Id ProviderId1,
+                                           Provider_Id ProviderId2)
+
             => ProviderId1.CompareTo(ProviderId2) <= 0;
 
         #endregion
@@ -390,7 +398,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator > (Provider_Id ProviderId1,
+                                          Provider_Id ProviderId2)
+
             => ProviderId1.CompareTo(ProviderId2) > 0;
 
         #endregion
@@ -403,7 +413,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Provider_Id ProviderId1, Provider_Id ProviderId2)
+        public static Boolean operator >= (Provider_Id ProviderId1,
+                                           Provider_Id ProviderId2)
+
             => ProviderId1.CompareTo(ProviderId2) >= 0;
 
         #endregion
@@ -458,9 +470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is Provider_Id providerId
-                   ? Equals(providerId)
-                   : false;
+            => Object is Provider_Id providerId &&
+               Equals(providerId);
 
         #endregion
 
