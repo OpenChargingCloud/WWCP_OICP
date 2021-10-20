@@ -64,13 +64,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// Create a new EMP Server API logger using the default logging delegates.
             /// </summary>
             /// <param name="EMPServerAPI">An EMP Server API.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPServerAPI            EMPServerAPI,
+                          String                  LoggingPath,
                           String                  Context         = DefaultContext,
                           LogfileCreatorDelegate  LogFileCreator  = null)
 
                 : this(EMPServerAPI,
+                       LoggingPath,
                        Context,
                        null,
                        null,
@@ -88,6 +91,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// Create a new EMP Server API logger using the given logging delegates.
             /// </summary>
             /// <param name="EMPServerAPI">An EMP Server API.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
             /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -107,6 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// 
             /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPServerAPI                EMPServerAPI,
+                          String                      LoggingPath,
                           String                      Context,
 
                           HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
@@ -127,6 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           LogfileCreatorDelegate      LogFileCreator              = null)
 
                 : base(EMPServerAPI.HTTPServer,
+                       LoggingPath,
                        Context,
 
                        LogHTTPRequest_toConsole,

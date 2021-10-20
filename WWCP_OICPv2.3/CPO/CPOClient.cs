@@ -384,6 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
                          UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                              DisableLogging               = false,
+                         String                               LoggingPath                  = null,
                          String                               LoggingContext               = Logger.DefaultContext,
                          LogfileCreatorDelegate               LogfileCreator               = null,
                          DNSClient                            DNSClient                    = null)
@@ -408,6 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             base.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
+                                                LoggingPath,
                                                 LoggingContext,
                                                 LogfileCreator)
                                    : null;

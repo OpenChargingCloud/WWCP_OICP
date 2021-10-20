@@ -64,13 +64,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// Create a new CPO Server API logger using the default logging delegates.
             /// </summary>
             /// <param name="CPOServerAPI">An CPO Server API.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(CPOServerAPI            CPOServerAPI,
+                          String                  LoggingPath,
                           String                  Context         = DefaultContext,
                           LogfileCreatorDelegate  LogFileCreator  = null)
 
                 : this(CPOServerAPI,
+                       LoggingPath,
                        Context,
                        null,
                        null,
@@ -88,6 +91,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// Create a new CPO Server API logger using the given logging delegates.
             /// </summary>
             /// <param name="CPOServerAPI">An CPO Server API.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
             /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -107,6 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// 
             /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(CPOServerAPI                CPOServerAPI,
+                          String                      LoggingPath,
                           String                      Context,
 
                           HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
@@ -127,6 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           LogfileCreatorDelegate      LogFileCreator              = null)
 
                 : base(CPOServerAPI.HTTPServer,
+                       LoggingPath,
                        Context,
 
                        LogHTTPRequest_toConsole,

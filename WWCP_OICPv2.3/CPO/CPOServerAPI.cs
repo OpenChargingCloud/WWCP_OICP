@@ -448,6 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
+                                                LoggingPath,
                                                 LoggingContext ?? DefaultLoggingContext,
                                                 LogfileCreator)
                                    : null;

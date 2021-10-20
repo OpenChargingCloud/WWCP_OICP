@@ -65,13 +65,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// Create a new EMP client logger using the default logging delegates.
             /// </summary>
             /// <param name="EMPClient">A EMP client.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPClient               EMPClient,
+                          String                  LoggingPath,
                           String                  Context         = DefaultContext,
                           LogfileCreatorDelegate  LogfileCreator  = null)
 
                 : this(EMPClient,
+                       LoggingPath,
                        Context.IsNotNullOrEmpty() ? Context : DefaultContext,
                        null,
                        null,
@@ -90,6 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// Create a new EMP client logger using the given logging delegates.
             /// </summary>
             /// <param name="EMPClient">A EMP client.</param>
+            /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
             /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
@@ -109,6 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPClient                   EMPClient,
+                          String                      LoggingPath,
                           String                      Context,
 
                           HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
@@ -129,6 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           LogfileCreatorDelegate      LogfileCreator              = null)
 
                 : base(EMPClient,
+                       LoggingPath,
                        Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
                        LogHTTPRequest_toConsole,
