@@ -1323,7 +1323,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
                            new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.                ToString().Replace(" ", "")),
-                           new JProperty("IsOpen24Hours",                           IsOpen24Hours),
+                           //new JProperty("IsOpen24Hours",                           IsOpen24Hours),
+                           new JProperty("IsOpen24Hours",                           true),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
                            new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
                            new JProperty("OperatorID",                              OperatorId.                        ToString()),
@@ -1390,9 +1391,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("GeoChargingPointEntrance",          GeoChargingPointEntrance.    Value.ToJSON(CustomGeoCoordinatesSerializer))
                                : null,
 
-                           !IsOpen24Hours && OpeningTimes.  IsNeitherNullNorEmpty()
-                               ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON(CustomOpeningTimesSerializer))))
-                               : null,
+                           //!IsOpen24Hours && OpeningTimes.  IsNeitherNullNorEmpty()
+                           //    ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON(CustomOpeningTimesSerializer))))
+                           //    : null,
 
                            HubOperatorId.                   HasValue
                                ? new JProperty("HubOperatorID",                     HubOperatorId.               Value.ToString())
