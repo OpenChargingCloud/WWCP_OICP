@@ -1390,7 +1390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("GeoChargingPointEntrance",          GeoChargingPointEntrance.    Value.ToJSON(CustomGeoCoordinatesSerializer))
                                : null,
 
-                           OpeningTimes.                    IsNeitherNullNorEmpty()
+                           !IsOpen24Hours && OpeningTimes.  IsNeitherNullNorEmpty()
                                ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON(CustomOpeningTimesSerializer))))
                                : null,
 
