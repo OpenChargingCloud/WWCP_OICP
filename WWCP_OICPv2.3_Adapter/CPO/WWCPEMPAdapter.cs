@@ -688,6 +688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             case WWCP.RemoteStartResultTypes.Offline:
                             case WWCP.RemoteStartResultTypes.Timeout:
                             case WWCP.RemoteStartResultTypes.CommunicationError:
+                            case WWCP.RemoteStartResultTypes.Error:
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
@@ -740,8 +741,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             default:
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
                                     Request:                   Request,
-                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + "\n" +
-                                                               response.Description + "\n" +
+                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + Environment.NewLine +
+                                                               response.Description.FirstText()                                 + Environment.NewLine +
                                                                response.AdditionalInfo,
                                     SessionId:                 Request.SessionId,
                                     EMPPartnerSessionId:       Request.EMPPartnerSessionId,
