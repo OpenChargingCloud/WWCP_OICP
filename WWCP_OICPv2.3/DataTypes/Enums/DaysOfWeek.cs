@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for day(s) of week.
+    /// Extensions methods for day(s) of week.
     /// </summary>
-    public static class DaysOfWeekExtentions
+    public static class DaysOfWeekExtensions
     {
 
         #region Parse(Text)

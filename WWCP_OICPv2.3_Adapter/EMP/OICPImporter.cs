@@ -91,10 +91,10 @@
 //                   UpdateEVSEDataEvery:       UpdateEVSEDataEvery,
 //                   UpdateEVSEStatusEvery:     UpdateEVSEStatusEvery,
 
-//                   //UpdateContextCreator:      ()               => "", //MySQLExtentions.CreateAndOpenConnection (DatabaseAccessString),
+//                   //UpdateContextCreator:      ()               => "", //MySQLExtensions.CreateAndOpenConnection (DatabaseAccessString),
 //                   //StartBulkUpdate:           (UpdateContext)  => {}, //EVSEDatabase.   StartBulkUpdate         (UpdateContext),
 //                   //StopBulkUpdate:            (UpdateContext)  => {}, //EVSEDatabase.   StopBulkUpdate          (UpdateContext),
-//                   //UpdateContextDisposer:     (UpdateContext)  => {}, //MySQLExtentions.CommitAndCloseConnection(UpdateContext),
+//                   //UpdateContextDisposer:     (UpdateContext)  => {}, //MySQLExtensions.CommitAndCloseConnection(UpdateContext),
 
 //                   #region EVSEOperatorDataHandler
 

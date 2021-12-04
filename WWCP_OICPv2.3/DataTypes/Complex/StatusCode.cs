@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("Code",
                                          "status code",
-                                         StatusCodesExtentions.TryParse,
+                                         StatusCodesExtensions.TryParse,
                                          out StatusCodes StatusCodeValue,
                                          out ErrorResponse))
                 {

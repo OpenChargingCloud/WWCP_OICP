@@ -26,9 +26,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for authorization status types.
+    /// Extensions methods for authorization status types.
     /// </summary>
-    public static class AuthorizationStatusTypesExtentions
+    public static class AuthorizationStatusTypesExtensions
     {
 
         #region Parse   (Text)

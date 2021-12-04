@@ -735,7 +735,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         ||
                                                      !JSONRequest.ParseMandatory("Type",
                                                                                  "charging notification type",
-                                                                                 ChargingNotificationTypesExtentions.TryParse,
+                                                                                 ChargingNotificationTypesExtensions.TryParse,
                                                                                  out ChargingNotificationTypes  ChargingNotificationType,
                                                                                  out                            errorResponse))
                                                  {

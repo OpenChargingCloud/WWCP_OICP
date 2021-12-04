@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for charging modes.
+    /// Extensions methods for charging modes.
     /// </summary>
-    public static class ChargingModesExtentions
+    public static class ChargingModesExtensions
     {
 
         #region Parse   (Text)

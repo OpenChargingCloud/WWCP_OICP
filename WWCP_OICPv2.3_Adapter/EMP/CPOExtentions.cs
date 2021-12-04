@@ -30,9 +30,9 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
+    /// Extensions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
     /// </summary>
-    public static class CPOExtentions
+    public static class CPOExtensions
     {
 
         /// <summary>

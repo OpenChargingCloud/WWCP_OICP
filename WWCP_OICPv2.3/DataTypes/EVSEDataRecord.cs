@@ -742,7 +742,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("Plugs",
                                          "plug types",
-                                         PlugTypesExtentions.TryParse,
+                                         PlugTypesExtensions.TryParse,
                                          out IEnumerable<PlugTypes> PlugTypes,
                                          out ErrorResponse))
                 {
@@ -793,7 +793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("CalibrationLawDataAvailability",
                                          "calibration law data availability",
-                                         CalibrationLawDataAvailabilitiesExtentions.TryParse,
+                                         CalibrationLawDataAvailabilitiesExtensions.TryParse,
                                          out CalibrationLawDataAvailabilities CalibrationLawDataAvailability,
                                          out ErrorResponse))
                 {
@@ -810,7 +810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("AuthenticationModes",
                                          "address",
-                                         AuthenticationModesExtentions.TryParse,
+                                         AuthenticationModesExtensions.TryParse,
                                          out IEnumerable<AuthenticationModes> AuthenticationModes,
                                          out ErrorResponse))
                 {
@@ -823,7 +823,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("PaymentOptions",
                                          "payment options",
-                                         PaymentOptionsExtentions.TryParse,
+                                         PaymentOptionsExtensions.TryParse,
                                          out IEnumerable<PaymentOptions> PaymentOptions,
                                          out ErrorResponse))
                 {
@@ -842,7 +842,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("ValueAddedServices",
                                          "value added services",
-                                         ValueAddedServicesExtentions.TryParse,
+                                         ValueAddedServicesExtensions.TryParse,
                                          out IEnumerable<ValueAddedServices> ValueAddedServices,
                                          out ErrorResponse))
                 {
@@ -855,7 +855,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("Accessibility",
                                          "accessibility",
-                                         AccessibilityTypesExtentions.TryParse,
+                                         AccessibilityTypesExtensions.TryParse,
                                          out AccessibilityTypes Accessibility,
                                          out ErrorResponse))
                 {
@@ -910,7 +910,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("DynamicInfoAvailable",
                                          "dynamic info available",
-                                         FalseTrueAutoExtentions.TryParse,
+                                         FalseTrueAutoExtensions.TryParse,
                                          out FalseTrueAuto DynamicInfoAvailable,
                                          out ErrorResponse))
                 {
@@ -924,7 +924,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalStruct("deltaType",
                                              "delta type",
-                                             DeltaTypesExtentions.TryParse,
+                                             DeltaTypesExtensions.TryParse,
                                              out DeltaTypes? DeltaType,
                                              out ErrorResponse))
                 {
@@ -1080,7 +1080,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalStruct("AccessibilityLocation",
                                              "accessibility location",
-                                             AccessibilityLocationTypesExtentions.TryParse,
+                                             AccessibilityLocationTypesExtensions.TryParse,
                                              out AccessibilityLocationTypes? AccessibilityLocationType,
                                              out ErrorResponse))
                 {

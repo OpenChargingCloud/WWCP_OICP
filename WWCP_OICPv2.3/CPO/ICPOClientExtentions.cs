@@ -33,9 +33,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// Extention methods for the CPO client interface.
+    /// Extension methods for the CPO client interface.
     /// </summary>
-    public static class ICPOClientExtentions
+    public static class ICPOClientExtensions
     {
 
         #region PushEVSEData(OperatorEVSEData, Action = fullLoad, ...)

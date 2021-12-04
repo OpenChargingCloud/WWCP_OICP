@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for energy types.
+    /// Extensions methods for energy types.
     /// </summary>
-    public static class EnergyTypesExtentions
+    public static class EnergyTypesExtensions
     {
 
         #region Parse   (Text)

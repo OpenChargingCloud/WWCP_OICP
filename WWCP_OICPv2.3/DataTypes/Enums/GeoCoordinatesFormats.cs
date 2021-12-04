@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for geo coordinates formats.
+    /// Extensions methods for geo coordinates formats.
     /// </summary>
-    public static class GeoCoordinatesFormatsExtentions
+    public static class GeoCoordinatesFormatsExtensions
     {
 
         #region Parse   (Text)

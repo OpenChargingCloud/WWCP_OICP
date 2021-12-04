@@ -337,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("ErrorType",
                                          "error type",
-                                         ErrorClassTypesExtentions.TryParse,
+                                         ErrorClassTypesExtensions.TryParse,
                                          out ErrorClassTypes ErrorType,
                                          out ErrorResponse))
                 {

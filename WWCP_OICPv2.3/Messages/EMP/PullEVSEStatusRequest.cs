@@ -265,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("EvseStatus",
                                        "EVSE status filter",
-                                       EVSEStatusTypesExtentions.TryParse,
+                                       EVSEStatusTypesExtensions.TryParse,
                                        out EVSEStatusTypes EVSEStatusFilter,
                                        out ErrorResponse))
                 {

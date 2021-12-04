@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for payment options.
+    /// Extensions methods for payment options.
     /// </summary>
-    public static class PaymentOptionsExtentions
+    public static class PaymentOptionsExtensions
     {
 
         #region Parse   (Text)
