@@ -517,7 +517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -581,7 +581,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -635,14 +635,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
                         // Hubject firewall problem!
                         // Only HTML response!
                         break;
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -732,7 +732,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -749,7 +749,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new EVSEDataRecord[0],
+                                 Array.Empty<EVSEDataRecord>(),
                                  null,
                                  null,
                                  null,
@@ -775,7 +775,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new EVSEDataRecord[0],
+                                 Array.Empty<EVSEDataRecord>(),
                                  null,
                                  null,
                                  null,
@@ -918,7 +918,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -975,7 +975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1029,7 +1029,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1038,7 +1038,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1114,7 +1114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1131,7 +1131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEStatus[0],
+                                 Array.Empty<OperatorEVSEStatus>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -1142,21 +1142,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             }
 
-            if (result == null)
-                result = OICPResult<PullEVSEStatusResponse>.Failed(
-                             Request,
-                             new PullEVSEStatusResponse(
-                                 Request,
-                                 DateTime.UtcNow,
-                                 Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEStatus[0],
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     "HTTP request failed!"
-                                 )
-                             )
-                         );
+            result ??= OICPResult<PullEVSEStatusResponse>.Failed(
+                           Request,
+                           new PullEVSEStatusResponse(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               Array.Empty<OperatorEVSEStatus>(),
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!"
+                               )
+                           )
+                       );
 
 
             #region Send OnPullEVSEStatusResponse event
@@ -1286,7 +1285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1343,7 +1342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1397,7 +1396,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1406,7 +1405,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1482,7 +1481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1499,7 +1498,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new EVSEStatusRecord[0],
+                                 Array.Empty<EVSEStatusRecord>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -1518,7 +1517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new EVSEStatusRecord[0],
+                                 Array.Empty<EVSEStatusRecord>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!"
@@ -1654,7 +1653,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1711,7 +1710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1765,7 +1764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1774,7 +1773,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1850,7 +1849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1867,7 +1866,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEStatus[0],
+                                 Array.Empty<OperatorEVSEStatus>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -1886,7 +1885,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
                                  DateTime.UtcNow - Request.Timestamp,
-                                 new OperatorEVSEStatus[0],
+                                 Array.Empty<OperatorEVSEStatus>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      "HTTP request failed!"

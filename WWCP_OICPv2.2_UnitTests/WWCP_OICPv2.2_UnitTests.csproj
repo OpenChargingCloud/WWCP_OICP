@@ -76,10 +76,6 @@
       <Project>{bd73e427-4d14-495b-8e8c-5b394e53841e}</Project>
       <Name>WWCP_OICPv2.2_Adapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WWCP_OICPv2.2_WebAPI\WWCP_OICPv2.2_WebAPI.csproj">
-      <Project>{0f2e8974-a9e2-4a2b-b566-29c9da16c928}</Project>
-      <Name>WWCP_OICPv2.2_WebAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
