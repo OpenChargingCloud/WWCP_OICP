@@ -108,7 +108,7 @@
 //                                                  EVSE             _EVSE                 = null;
 
 //                                                  EVSEInfo         EVSEInfo              = null;
-//                                                  CPInfoList       _CPInfoList           = null;
+//                                                  OperatorInfo       _CPInfoList           = null;
 //                                                  ChargingPool_Id  PoolId;
 //                                                  EVSEIdLookup     EVSEIdLookup          = null;
 
@@ -136,7 +136,7 @@
 
 //                                                      #region Generate a list of all charging pools/stations/EVSEs
 
-//                                                      _CPInfoList = new CPInfoList(_OperatorEvseData.OperatorId.ToWWCP().Value);
+//                                                      _CPInfoList = new OperatorInfo(_OperatorEvseData.OperatorId.ToWWCP().Value);
 
 //                                                      foreach (var EvseDataRecord in _OperatorEvseData.EVSEDataRecords)
 //                                                      {

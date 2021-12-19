@@ -418,6 +418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+
         //public override JObject ToJSON()
         //    => base.ToJSON(nameof(CPOClient));
 
@@ -537,7 +538,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                        if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -615,7 +616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -669,7 +670,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -692,7 +693,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -767,7 +768,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -840,7 +841,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -869,22 +870,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 }
 
-                if (result == null)
-                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                 Request,
-                                 new Acknowledgement<PushEVSEDataRequest>(
-                                     Request,
-                                     DateTime.UtcNow,
-                                     Request.EventTrackingId,
-                                     DateTime.UtcNow - Request.Timestamp,
-                                     new StatusCode(
-                                         StatusCodes.SystemError,
-                                         statusDescription ?? "HTTP request failed!"
-                                     ),
-                                     null,
-                                     false
-                                 )
-                             );
+                result ??= OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                               Request,
+                               new Acknowledgement<PushEVSEDataRequest>(
+                                   Request,
+                                   DateTime.UtcNow,
+                                   Request.EventTrackingId,
+                                   DateTime.UtcNow - Request.Timestamp,
+                                   new StatusCode(
+                                       StatusCodes.SystemError,
+                                       statusDescription ?? "HTTP request failed!"
+                                   ),
+                                   null,
+                                   false
+                               )
+                           );
 
             }
 
@@ -1035,7 +1035,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                        if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1113,7 +1113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1164,7 +1164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -1187,7 +1187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -1262,7 +1262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -1335,7 +1335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -1364,22 +1364,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 }
 
-                if (result == null)
-                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                 Request,
-                                 new Acknowledgement<PushEVSEStatusRequest>(
-                                     Request,
-                                     DateTime.UtcNow,
-                                     Request.EventTrackingId,
-                                     DateTime.UtcNow - Request.Timestamp,
-                                     new StatusCode(
-                                         StatusCodes.SystemError,
-                                         statusDescription ?? "HTTP request failed!"
-                                     ),
-                                     null,
-                                     false
-                                 )
-                             );
+                result ??= OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                               Request,
+                               new Acknowledgement<PushEVSEStatusRequest>(
+                                   Request,
+                                   DateTime.UtcNow,
+                                   Request.EventTrackingId,
+                                   DateTime.UtcNow - Request.Timestamp,
+                                   new StatusCode(
+                                       StatusCodes.SystemError,
+                                       statusDescription ?? "HTTP request failed!"
+                                   ),
+                                   null,
+                                   false
+                               )
+                           );
 
             }
 
@@ -1509,7 +1508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1610,7 +1609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1661,7 +1660,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1670,7 +1669,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -1738,7 +1737,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1762,17 +1761,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             }
 
-            if (result == null)
-                result = OICPResult<AuthorizationStartResponse>.Failed(
-                             Request,
-                             AuthorizationStartResponse.NotAuthorized(
-                                 Request,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     "HTTP request failed!"
-                                 )
-                             )
-                         );
+            result ??= OICPResult<AuthorizationStartResponse>.Failed(
+                           Request,
+                           AuthorizationStartResponse.NotAuthorized(
+                               Request,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!"
+                               )
+                           )
+                       );
 
 
             #region Send OnAuthorizeStartResponse event
@@ -1899,7 +1897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -1954,7 +1952,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -2005,7 +2003,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -2014,7 +2012,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -2082,7 +2080,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 401
@@ -2150,7 +2148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -2174,17 +2172,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             }
 
-            if (result == null)
-                result = OICPResult<AuthorizationStopResponse>.Failed(
-                             Request,
-                             AuthorizationStopResponse.NotAuthorized(
-                                 Request,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     "HTTP request failed!"
-                                 )
-                             )
-                         );
+            result ??= OICPResult<AuthorizationStopResponse>.Failed(
+                           Request,
+                           AuthorizationStopResponse.NotAuthorized(
+                               Request,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!"
+                               )
+                           )
+                       );
 
 
             #region Send OnAuthorizeStopResponse event
@@ -2312,7 +2309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -2390,7 +2387,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -2441,7 +2438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -2450,7 +2447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -2525,7 +2522,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404
@@ -2598,7 +2595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -2609,41 +2606,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingStartNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        e.Message,
-                                        e.StackTrace
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+                             Request,
+                             new Acknowledgement<ChargingStartNotificationRequest>(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 ),
+                                 null,
+                                 false
+                             )
+                         );
 
             }
 
-            if (result == null)
-                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingStartNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        "HTTP request failed!",
-                                        null
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+            result ??= OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                           Request,
+                           new Acknowledgement<ChargingStartNotificationRequest>(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!",
+                                   null
+                               ),
+                               null,
+                               false
+                           )
+                       );
 
 
             #region  OnChargingStartNotificationResponse event
@@ -2770,7 +2766,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -2848,7 +2844,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -2899,7 +2895,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -2908,7 +2904,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -2983,7 +2979,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404
@@ -3056,7 +3052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -3067,41 +3063,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingProgressNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        e.Message,
-                                        e.StackTrace
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+                             Request,
+                             new Acknowledgement<ChargingProgressNotificationRequest>(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 ),
+                                 null,
+                                 false
+                             )
+                         );
 
             }
 
-            if (result == null)
-                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingProgressNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        "HTTP request failed!",
-                                        null
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+            result ??= OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                           Request,
+                           new Acknowledgement<ChargingProgressNotificationRequest>(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!",
+                                   null
+                               ),
+                               null,
+                               false
+                           )
+                       );
 
 
             #region  OnChargingProgressNotificationResponse event
@@ -3228,7 +3223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -3306,7 +3301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -3357,7 +3352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -3366,7 +3361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -3441,7 +3436,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404 NotFound
@@ -3514,7 +3509,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -3525,41 +3520,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        e.Message,
-                                        e.StackTrace
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+                             Request,
+                             new Acknowledgement<ChargingEndNotificationRequest>(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 ),
+                                 null,
+                                 false
+                             )
+                         );
 
             }
 
-            if (result == null)
-                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        "HTTP request failed!",
-                                        null
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+            result ??= OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                           Request,
+                           new Acknowledgement<ChargingEndNotificationRequest>(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!",
+                                   null
+                               ),
+                               null,
+                               false
+                           )
+                       );
 
 
             #region  OnChargingEndNotificationResponse event
@@ -3686,7 +3680,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                    if      (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -3764,7 +3758,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -3815,7 +3809,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -3824,7 +3818,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -3899,7 +3893,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404 NotFound
@@ -3972,7 +3966,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -3983,41 +3977,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingErrorNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        e.Message,
-                                        e.StackTrace
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+                             Request,
+                             new Acknowledgement<ChargingErrorNotificationRequest>(
+                                 Request,
+                                 DateTime.UtcNow,
+                                 Request.EventTrackingId,
+                                 DateTime.UtcNow - Request.Timestamp,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 ),
+                                 null,
+                                 false
+                             )
+                         );
 
             }
 
-            if (result == null)
-                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                Request,
-                                new Acknowledgement<ChargingErrorNotificationRequest>(
-                                    Request,
-                                    DateTime.UtcNow,
-                                    Request.EventTrackingId,
-                                    DateTime.UtcNow - Request.Timestamp,
-                                    new StatusCode(
-                                        StatusCodes.SystemError,
-                                        "HTTP request failed!",
-                                        null
-                                    ),
-                                    null,
-                                    false
-                                )
-                            );
+            result ??= OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                           Request,
+                           new Acknowledgement<ChargingErrorNotificationRequest>(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!",
+                                   null
+                               ),
+                               null,
+                               false
+                           )
+                       );
 
 
             #region  OnChargingErrorNotificationResponse event
@@ -4145,7 +4138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -4204,7 +4197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
@@ -4255,7 +4248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -4264,8 +4257,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
-                             HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
+                        HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -4357,7 +4350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    else if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -4386,24 +4379,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             }
 
-            if (result == null)
-                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
-                             Request,
-                             new Acknowledgement<SendChargeDetailRecordRequest>(
-                                 Request,
-                                 DateTime.UtcNow,
-                                 Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     "HTTP request failed!",
-                                     null
-                                 ),
-                                 null,
-                                 false
-                             )
-                         );
-
+            result ??= OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+                           Request,
+                           new Acknowledgement<SendChargeDetailRecordRequest>(
+                               Request,
+                               DateTime.UtcNow,
+                               Request.EventTrackingId,
+                               DateTime.UtcNow - Request.Timestamp,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!",
+                                   null
+                               ),
+                               null,
+                               false
+                           )
+                       );
 
 
             #region Send OnChargeDetailRecordSent event
@@ -4437,16 +4428,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-
-        #region Dispose()
-
-        /// <summary>
-        /// Dispose this object.
-        /// </summary>
-        public void Dispose()
-        { }
-
-        #endregion
 
     }
 

@@ -340,14 +340,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                             text.Text)));
 
 
-        #region ToWWCP(this EVSEStatusTypes)
+        #region ToWWCP(this EVSEStatusType)
 
         /// <summary>
         /// Convert an OICP EVSE status into a corresponding WWCP EVSE status.
         /// </summary>
-        /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
+        /// <param name="EVSEStatusType">An OICP EVSE status.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
-        public static WWCP.EVSEStatusTypes ToWWCP(this EVSEStatusTypes EVSEStatusType)
+        public static WWCP.EVSEStatusTypes? ToWWCP(this EVSEStatusTypes EVSEStatusType)
 
             => EVSEStatusType switch {
                    EVSEStatusTypes.Available     => WWCP.EVSEStatusTypes.Available,
@@ -362,7 +362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Convert an OICP EVSE status into a corresponding WWCP EVSE status.
         /// </summary>
-        /// <param name="EVSEStatusTypes">An OICP EVSE status.</param>
+        /// <param name="EVSEStatusType">An OICP EVSE status type.</param>
         /// <returns>The corresponding WWCP EVSE status.</returns>
         public static WWCP.EVSEStatusTypes? ToWWCP(this EVSEStatusTypes? EVSEStatusType)
 
@@ -379,7 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
-        public static EVSEStatusTypes ToOICP(this WWCP.EVSEStatusTypes EVSEStatusType)
+        public static EVSEStatusTypes? ToOICP(this WWCP.EVSEStatusTypes EVSEStatusType)
 
             => EVSEStatusType switch {
                    WWCP.EVSEStatusTypes.Available     => EVSEStatusTypes.Available,
@@ -410,15 +410,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new OICP EVSE status record based on the given WWCP EVSE status.
         /// </summary>
         /// <param name="EVSEStatus">The current status of an EVSE.</param>
-        public static EVSEStatusRecord ToOICP(this WWCP.EVSEStatus EVSEStatus)
-
+        public static EVSEStatusRecord? ToOICP(this WWCP.EVSEStatus EVSEStatus)
         {
 
-            if (EVSEStatus == null)
-                throw new ArgumentNullException(nameof(EVSEStatus), "The given EVSE status must not be null!");
+            var evseId  = EVSEStatus?.Id.          ToOICP();
+            var status  = EVSEStatus?.Status.Value.ToOICP();
 
-            return new EVSEStatusRecord(EVSEStatus.Id.          ToOICP().Value,
-                                        EVSEStatus.Status.Value.ToOICP());
+            if (evseId.HasValue && status.HasValue)
+                return new EVSEStatusRecord(evseId.Value,
+                                            status.Value);
+
+            return new EVSEStatusRecord?();
 
         }
 

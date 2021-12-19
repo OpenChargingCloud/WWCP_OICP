@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParseJSON(JSON, ..., out Address, out ErrorResponse, CustomAddressParser = null)
+        #region (static) TryParse(JSON, ..., out Address, out ErrorResponse, CustomAddressParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
@@ -386,7 +386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptional("TimeZone",
                                        "time zone",
                                        Time_Zone.TryParse,
-                                       out Time_Zone TimeZone,
+                                       out Time_Zone? TimeZone,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse != null)

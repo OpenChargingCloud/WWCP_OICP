@@ -52,13 +52,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// An optional description of the result code.
         /// </summary>
         [Optional]
-        public String       Description       { get; }
+        public String?      Description       { get; }
 
         /// <summary>
         /// Optional additional information.
         /// </summary>
         [Optional]
-        public String       AdditionalInfo    { get; }
+        public String?      AdditionalInfo    { get; }
 
         #endregion
 
@@ -71,8 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Description">An optional description of the result code.</param>
         /// <param name="AdditionalInfo">Optional additional information.</param>
         public StatusCode(StatusCodes  Code,
-                          String       Description      = null,
-                          String       AdditionalInfo   = null)
+                          String?      Description      = null,
+                          String?      AdditionalInfo   = null)
         {
 
             this.Code            = Code;
@@ -325,8 +325,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (StatusCode StatusCode1,
                                            StatusCode StatusCode2)
+        {
 
-            => StatusCode1.Equals(StatusCode2);
+            // If both are null, or both are same instance, return true.
+            if (ReferenceEquals(StatusCode1, StatusCode2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (StatusCode1 is null || StatusCode2 is null)
+                return false;
+
+            return StatusCode1.Equals(StatusCode2);
+
+        }
 
         #endregion
 
@@ -341,7 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (StatusCode StatusCode1,
                                            StatusCode StatusCode2)
 
-            => !StatusCode1.Equals(StatusCode2);
+            => !(StatusCode1 == StatusCode2);
 
         #endregion
 
