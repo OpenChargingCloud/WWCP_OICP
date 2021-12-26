@@ -479,7 +479,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new HTTPResponse.Builder(Request) {
                                                      HTTPStatusCode  = HTTPStatusCode.OK,
                                                      Server          = HTTPServer.DefaultServerName,
-                                                     Date            = DateTime.UtcNow,
+                                                     Date            = Timestamp.Now,
                                                      ContentType     = HTTPContentType.TEXT_UTF8,
                                                      Content         = "This is an OICP v2.3 HTTP/JSON endpoint!".ToUTF8Bytes(),
                                                      CacheControl    = "public, max-age=300",
@@ -528,7 +528,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              try
                                              {
 
-                                                 var StartTime = DateTime.UtcNow;
+                                                 var StartTime = Timestamp.Now;
 
                                                  if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                                      Request.Timeout ?? DefaultRequestTimeout,
@@ -547,7 +547,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteReservationStartRequest != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               authorizeRemoteReservationStartRequest))).
                                                                                 ConfigureAwait(false);
@@ -569,7 +569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          var results = await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
                                                                                           Cast<OnAuthorizeRemoteReservationStartDelegate>().
-                                                                                          Select(e => e(DateTime.UtcNow,
+                                                                                          Select(e => e(Timestamp.Now,
                                                                                                         this,
                                                                                                         authorizeRemoteReservationStartRequest))).
                                                                                           ConfigureAwait(false);
@@ -594,10 +594,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteReservationStartResponse != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               acknowledgement,
-                                                                                              DateTime.UtcNow - StartTime))).
+                                                                                              Timestamp.Now - StartTime))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -611,7 +611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.OK,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -629,7 +629,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -654,7 +654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -715,7 +715,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              try
                                              {
 
-                                                 var StartTime = DateTime.UtcNow;
+                                                 var StartTime = Timestamp.Now;
 
                                                  if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                                     Request.Timeout ?? DefaultRequestTimeout,
@@ -734,7 +734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteReservationStopRequest != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               authorizeRemoteReservationStopRequest))).
                                                                                 ConfigureAwait(false);
@@ -756,7 +756,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          var results = await Task.WhenAll(OnAuthorizeRemoteReservationStop.GetInvocationList().
                                                                                           Cast<OnAuthorizeRemoteReservationStopDelegate>().
-                                                                                          Select(e => e(DateTime.UtcNow,
+                                                                                          Select(e => e(Timestamp.Now,
                                                                                                         this,
                                                                                                         authorizeRemoteReservationStopRequest))).
                                                                                           ConfigureAwait(false);
@@ -781,10 +781,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteReservationStopResponse != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               acknowledgement,
-                                                                                              DateTime.UtcNow - StartTime))).
+                                                                                              Timestamp.Now - StartTime))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -798,7 +798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.OK,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -816,7 +816,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -841,7 +841,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -903,7 +903,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              try
                                              {
 
-                                                 var StartTime = DateTime.UtcNow;
+                                                 var StartTime = Timestamp.Now;
 
                                                  if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                           Request.Timeout ?? DefaultRequestTimeout,
@@ -922,7 +922,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteStartRequest != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStartRequestDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               authorizeRemoteStartRequest))).
                                                                                 ConfigureAwait(false);
@@ -944,7 +944,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          var results = await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
                                                                                           Cast<OnAuthorizeRemoteStartDelegate>().
-                                                                                          Select(e => e(DateTime.UtcNow,
+                                                                                          Select(e => e(Timestamp.Now,
                                                                                                         this,
                                                                                                         authorizeRemoteStartRequest))).
                                                                                           ConfigureAwait(false);
@@ -956,7 +956,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      if (acknowledgement == null)
                                                          acknowledgement = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
                                                                                authorizeRemoteStartRequest,
-                                                                               "Could not process the incoming ChargingStartNotification request!"
+                                                                               "Could not process the incoming AuthorizeRemoteStart request!"
                                                                            );
 
                                                      #endregion
@@ -969,10 +969,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteStartResponse != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               acknowledgement,
-                                                                                              DateTime.UtcNow - StartTime))).
+                                                                                              Timestamp.Now - StartTime))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -986,7 +986,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.OK,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1004,7 +1004,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1029,7 +1029,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1090,7 +1090,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              try
                                              {
 
-                                                 var StartTime = DateTime.UtcNow;
+                                                 var StartTime = Timestamp.Now;
 
                                                  if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                          Request.Timeout ?? DefaultRequestTimeout,
@@ -1109,7 +1109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteStopRequest != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStopRequestDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               authorizeRemoteStopRequest))).
                                                                                 ConfigureAwait(false);
@@ -1131,7 +1131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          var results = await Task.WhenAll(OnAuthorizeRemoteStop.GetInvocationList().
                                                                                           Cast<OnAuthorizeRemoteStopDelegate>().
-                                                                                          Select(e => e(DateTime.UtcNow,
+                                                                                          Select(e => e(Timestamp.Now,
                                                                                                         this,
                                                                                                         authorizeRemoteStopRequest))).
                                                                                           ConfigureAwait(false);
@@ -1156,10 +1156,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          if (OnAuthorizeRemoteStopResponse != null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                                                                Select(e => e(DateTime.UtcNow,
+                                                                                Select(e => e(Timestamp.Now,
                                                                                               this,
                                                                                               acknowledgement,
-                                                                                              DateTime.UtcNow - StartTime))).
+                                                                                              Timestamp.Now - StartTime))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -1173,7 +1173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.OK,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1191,7 +1191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1216,7 +1216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",

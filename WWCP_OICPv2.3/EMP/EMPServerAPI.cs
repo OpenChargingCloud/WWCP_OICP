@@ -496,7 +496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  new HTTPResponse.Builder(Request) {
                                                      HTTPStatusCode  = HTTPStatusCode.OK,
                                                      Server          = HTTPServer.DefaultServerName,
-                                                     Date            = DateTime.UtcNow,
+                                                     Date            = Timestamp.Now,
                                                      ContentType     = HTTPContentType.TEXT_UTF8,
                                                      Content         = "This is an OICP v2.3 HTTP/JSON endpoint!".ToUTF8Bytes(),
                                                      CacheControl    = "public, max-age=300",
@@ -520,89 +520,181 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                Request.Timeout ?? DefaultRequestTimeout,
-                                                                                out AuthorizeStartRequest  authorizeStartRequest,
-                                                                                out String                 errorResponse,
-                                                                                Request.Timestamp,
-                                                                                Request.EventTrackingId,
-                                                                                CustomAuthorizeStartRequestParser))
+                                             try
                                              {
 
-                                                 var OnAuthorizeStartLocal = OnAuthorizeStart;
-                                                 if (OnAuthorizeStartLocal != null)
+                                                 var StartTime = Timestamp.Now;
+
+                                                 if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                    Request.Timeout ?? DefaultRequestTimeout,
+                                                                                    out AuthorizeStartRequest  authorizeStartRequest,
+                                                                                    out String                 errorResponse,
+                                                                                    Request.Timestamp,
+                                                                                    Request.EventTrackingId,
+                                                                                    CustomAuthorizeStartRequestParser))
                                                  {
+
+                                                     #region Send OnAuthorizeStartRequest event
 
                                                      try
                                                      {
 
-                                                         var response = await OnAuthorizeStartLocal.Invoke(DateTime.UtcNow,
-                                                                                                           this,
-                                                                                                           authorizeStartRequest);
-
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = response.ToJSON().ToString(JSONFormatting).ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
+                                                         if (OnAuthorizeStartRequest != null)
+                                                             await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeStartRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeStartRequest))).
+                                                                                ConfigureAwait(false);
 
                                                      }
                                                      catch (Exception e)
                                                      {
+                                                         DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnAuthorizeStartRequest));
+                                                     }
 
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = AuthorizationStartResponse.DataError(
-                                                                                                                                Request:                   authorizeStartRequest,
-                                                                                                                                StatusCodeDescription:     e.Message,
-                                                                                                                                StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                                                SessionId:                 authorizeStartRequest.SessionId,
-                                                                                                                                CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
-                                                                                                                            ).
-                                                                                                                            ToJSON().
-                                                                                                                            ToString(JSONFormatting).
-                                                                                                                            ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     AuthorizationStartResponse authorizationStartResponse = null;
+
+                                                     var OnAuthorizeStartLocal = OnAuthorizeStart;
+                                                     if (OnAuthorizeStartLocal != null)
+                                                     {
+
+                                                         try
+                                                         {
+
+                                                             var results = await Task.WhenAll(OnAuthorizeStartLocal.GetInvocationList().
+                                                                                      Cast<OnAuthorizeStartDelegate>().
+                                                                                      Select(e => e(Timestamp.Now,
+                                                                                                    this,
+                                                                                                    authorizeStartRequest))).
+                                                                                      ConfigureAwait(false);
+
+                                                             authorizationStartResponse = results.FirstOrDefault();
+
+                                                             if (authorizationStartResponse == null)
+                                                                 authorizationStartResponse = AuthorizationStartResponse.SystemError(
+                                                                                                  authorizeStartRequest,
+                                                                                                  "Could not process the incoming AuthorizeStart request!"
+                                                                                              );
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+
+                                                             return new HTTPResponse.Builder(Request) {
+                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                        Server                     = HTTPServer.DefaultServerName,
+                                                                        Date                       = Timestamp.Now,
+                                                                        AccessControlAllowOrigin   = "*",
+                                                                        AccessControlAllowMethods  = "POST",
+                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                                        Content                    = AuthorizationStartResponse.DataError(
+                                                                                                                                    Request:                   authorizeStartRequest,
+                                                                                                                                    StatusCodeDescription:     e.Message,
+                                                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                                    SessionId:                 authorizeStartRequest.SessionId,
+                                                                                                                                    CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                                                                ).
+                                                                                                                                ToJSON().
+                                                                                                                                ToString(JSONFormatting).
+                                                                                                                                ToUTF8Bytes(),
+                                                                        Connection                 = "close"
+                                                                    }.AsImmutable;
+
+                                                         }
 
                                                      }
 
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeStartResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeStartResponse != null)
+                                                             await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeStartResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizationStartResponse,
+                                                                                              Timestamp.Now - StartTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnAuthorizeStartResponse));
+                                                     }
+
+                                                     #endregion
+
+
+                                                     return new HTTPResponse.Builder(Request) {
+                                                                HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                Server                     = HTTPServer.DefaultServerName,
+                                                                Date                       = Timestamp.Now,
+                                                                AccessControlAllowOrigin   = "*",
+                                                                AccessControlAllowMethods  = "POST",
+                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                ContentType                = HTTPContentType.JSON_UTF8,
+                                                                Content                    = authorizationStartResponse.ToJSON().ToString(JSONFormatting).ToUTF8Bytes(),
+                                                                Connection                 = "close"
+                                                            }.AsImmutable;
+
                                                  }
 
-                                             }
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.OK,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = Timestamp.Now,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = AuthorizationStartResponse.DataError(
+                                                                                                                        Request:                   authorizeStartRequest,
+                                                                                                                        StatusCodeDescription:     "We could not handle the given AuthorizeStart request!",
+                                                                                                                        StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                                        SessionId:                 authorizeStartRequest.SessionId,
+                                                                                                                        CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                                                    ).
+                                                                                                                    ToJSON().
+                                                                                                                    ToString(JSONFormatting).
+                                                                                                                    ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = DateTime.UtcNow,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = AuthorizationStartResponse.DataError(
-                                                                                                                    Request:                   authorizeStartRequest,
-                                                                                                                    StatusCodeDescription:     "We could not handle the given AuthorizeStart request!",
-                                                                                                                    StatusCodeAdditionalInfo:  errorResponse,
-                                                                                                                    SessionId:                 authorizeStartRequest.SessionId,
-                                                                                                                    CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
-                                                                                                                ).
-                                                                                                                ToJSON().
-                                                                                                                ToString(JSONFormatting).
-                                                                                                                ToUTF8Bytes(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+
+                                             }
+                                             catch (Exception e)
+                                             {
+
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.BadRequest,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = Timestamp.Now,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = AuthorizationStartResponse.SystemError(
+                                                                                                                        Request:                   null,
+                                                                                                                        StatusCodeDescription:     e.Message,
+                                                                                                                        StatusCodeAdditionalInfo:  e.StackTrace
+                                                                                                                    ).
+                                                                                                                    ToJSON().
+                                                                                                                    ToString(JSONFormatting).
+                                                                                                                    ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
+
+                                             }
 
                                           }, AllowReplacement: URLReplacement.Allow);
 
@@ -621,89 +713,181 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                               Request.Timeout ?? DefaultRequestTimeout,
-                                                                               out AuthorizeStopRequest  authorizeStopRequest,
-                                                                               out String                errorResponse,
-                                                                               Request.Timestamp,
-                                                                               Request.EventTrackingId,
-                                                                               CustomAuthorizeStopRequestParser))
+                                             try
                                              {
 
-                                                 var OnAuthorizeStopLocal = OnAuthorizeStop;
-                                                 if (OnAuthorizeStopLocal != null)
+                                                 var StartTime = Timestamp.Now;
+
+                                                 if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                   Request.Timeout ?? DefaultRequestTimeout,
+                                                                                   out AuthorizeStopRequest  authorizeStopRequest,
+                                                                                   out String                errorResponse,
+                                                                                   Request.Timestamp,
+                                                                                   Request.EventTrackingId,
+                                                                                   CustomAuthorizeStopRequestParser))
                                                  {
+
+                                                     #region Send OnAuthorizeStopRequest event
 
                                                      try
                                                      {
 
-                                                         var response = await OnAuthorizeStopLocal.Invoke(DateTime.UtcNow,
-                                                                                                          this,
-                                                                                                          authorizeStopRequest);
-
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = response.ToJSON().ToString(JSONFormatting).ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
+                                                         if (OnAuthorizeStopRequest != null)
+                                                             await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeStopRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeStopRequest))).
+                                                                                ConfigureAwait(false);
 
                                                      }
                                                      catch (Exception e)
                                                      {
+                                                         DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnAuthorizeStopRequest));
+                                                     }
 
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = AuthorizationStopResponse.DataError(
-                                                                                                                               Request:                   authorizeStopRequest,
-                                                                                                                               StatusCodeDescription:     e.Message,
-                                                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                                               SessionId:                 authorizeStopRequest.SessionId,
-                                                                                                                               CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
-                                                                                                                           ).
-                                                                                                                           ToJSON().
-                                                                                                                           ToString(JSONFormatting).
-                                                                                                                           ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     AuthorizationStopResponse authorizationStopResponse = null;
+
+                                                     var OnAuthorizeStopLocal = OnAuthorizeStop;
+                                                     if (OnAuthorizeStopLocal != null)
+                                                     {
+
+                                                         try
+                                                         {
+
+                                                             var results = await Task.WhenAll(OnAuthorizeStopLocal.GetInvocationList().
+                                                                                      Cast<OnAuthorizeStopDelegate>().
+                                                                                      Select(e => e(Timestamp.Now,
+                                                                                                    this,
+                                                                                                    authorizeStopRequest))).
+                                                                                      ConfigureAwait(false);
+
+                                                             authorizationStopResponse = results.FirstOrDefault();
+
+                                                             if (authorizationStopResponse == null)
+                                                                 authorizationStopResponse = AuthorizationStopResponse.SystemError(
+                                                                                                 authorizeStopRequest,
+                                                                                                 "Could not process the incoming AuthorizeStop request!"
+                                                                                             );
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+
+                                                             return new HTTPResponse.Builder(Request) {
+                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                        Server                     = HTTPServer.DefaultServerName,
+                                                                        Date                       = Timestamp.Now,
+                                                                        AccessControlAllowOrigin   = "*",
+                                                                        AccessControlAllowMethods  = "POST",
+                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                                        Content                    = AuthorizationStopResponse.DataError(
+                                                                                                                                    Request:                   authorizeStopRequest,
+                                                                                                                                    StatusCodeDescription:     e.Message,
+                                                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                                    SessionId:                 authorizeStopRequest.SessionId,
+                                                                                                                                    CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                                                                ).
+                                                                                                                                ToJSON().
+                                                                                                                                ToString(JSONFormatting).
+                                                                                                                                ToUTF8Bytes(),
+                                                                        Connection                 = "close"
+                                                                    }.AsImmutable;
+
+                                                         }
 
                                                      }
 
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeStopResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeStopResponse != null)
+                                                             await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeStopResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizationStopResponse,
+                                                                                              Timestamp.Now - StartTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnAuthorizeStopResponse));
+                                                     }
+
+                                                     #endregion
+
+
+                                                     return new HTTPResponse.Builder(Request) {
+                                                                HTTPStatusCode             = HTTPStatusCode.OK,
+                                                                Server                     = HTTPServer.DefaultServerName,
+                                                                Date                       = Timestamp.Now,
+                                                                AccessControlAllowOrigin   = "*",
+                                                                AccessControlAllowMethods  = "POST",
+                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                ContentType                = HTTPContentType.JSON_UTF8,
+                                                                Content                    = authorizationStopResponse.ToJSON().ToString(JSONFormatting).ToUTF8Bytes(),
+                                                                Connection                 = "close"
+                                                            }.AsImmutable;
+
                                                  }
 
-                                             }
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.OK,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = Timestamp.Now,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = AuthorizationStopResponse.DataError(
+                                                                                                                       Request:                   authorizeStopRequest,
+                                                                                                                       StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
+                                                                                                                       StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                                       SessionId:                 authorizeStopRequest.SessionId,
+                                                                                                                       CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                                                   ).
+                                                                                                                   ToJSON().
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = DateTime.UtcNow,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = AuthorizationStopResponse.DataError(
-                                                                                                                   Request:                   authorizeStopRequest,
-                                                                                                                   StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
-                                                                                                                   StatusCodeAdditionalInfo:  errorResponse,
-                                                                                                                   SessionId:                 authorizeStopRequest.SessionId,
-                                                                                                                   CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
-                                                                                                               ).
-                                                                                                               ToJSON().
-                                                                                                               ToString(JSONFormatting).
-                                                                                                               ToUTF8Bytes(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+
+                                             }
+                                             catch (Exception e)
+                                             {
+
+                                                 return new HTTPResponse.Builder(Request) {
+                                                            HTTPStatusCode             = HTTPStatusCode.BadRequest,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = Timestamp.Now,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = AuthorizationStopResponse.SystemError(
+                                                                                                                       Request:                   null,
+                                                                                                                       StatusCodeDescription:     e.Message,
+                                                                                                                       StatusCodeAdditionalInfo:  e.StackTrace
+                                                                                                                   ).
+                                                                                                                   ToJSON().
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
+
+                                             }
 
                                           }, AllowReplacement: URLReplacement.Allow);
 
@@ -728,7 +912,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  #region Try to parse the charging notification
 
-                                                 var StartTime      = DateTime.UtcNow;
+                                                 var StartTime      = Timestamp.Now;
                                                  var errorResponse  = String.Empty;
 
                                                  if (!Request.TryParseJObjectRequestBody(out JObject JSONRequest, out HTTPResponse.Builder HTTPResponse)
@@ -743,7 +927,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -789,7 +973,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingStartNotificationRequest != null)
                                                                      await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
                                                                                         Cast<OnChargingStartNotificationRequestDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       chargingStartNotificationRequest))).
                                                                                         ConfigureAwait(false);
@@ -811,7 +995,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  var results = await Task.WhenAll(OnChargingStartNotification.GetInvocationList().
                                                                                                       Cast<OnChargingStartNotificationDelegate>().
-                                                                                                      Select(e => e(DateTime.UtcNow,
+                                                                                                      Select(e => e(Timestamp.Now,
                                                                                                                     this,
                                                                                                                     chargingStartNotificationRequest))).
                                                                                                       ConfigureAwait(false);
@@ -836,10 +1020,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingStartNotificationResponse != null)
                                                                      await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
                                                                                         Cast<OnChargingStartNotificationResponseDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      DateTime.UtcNow - StartTime))).
+                                                                                                      Timestamp.Now - StartTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -853,7 +1037,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              return new HTTPResponse.Builder(Request) {
                                                                         HTTPStatusCode             = HTTPStatusCode.OK,
                                                                         Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = DateTime.UtcNow,
+                                                                        Date                       = Timestamp.Now,
                                                                         AccessControlAllowOrigin   = "*",
                                                                         AccessControlAllowMethods  = "POST",
                                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -892,7 +1076,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingProgressNotificationRequest != null)
                                                                      await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
                                                                                         Cast<OnChargingProgressNotificationRequestDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       chargingProgressNotificationRequest))).
                                                                                         ConfigureAwait(false);
@@ -914,7 +1098,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  var results = await Task.WhenAll(OnChargingProgressNotification.GetInvocationList().
                                                                                                       Cast<OnChargingProgressNotificationDelegate>().
-                                                                                                      Select(e => e(DateTime.UtcNow,
+                                                                                                      Select(e => e(Timestamp.Now,
                                                                                                                     this,
                                                                                                                     chargingProgressNotificationRequest))).
                                                                                                       ConfigureAwait(false);
@@ -939,10 +1123,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingProgressNotificationResponse != null)
                                                                      await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
                                                                                         Cast<OnChargingProgressNotificationResponseDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      DateTime.UtcNow - StartTime))).
+                                                                                                      Timestamp.Now - StartTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -956,7 +1140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              return new HTTPResponse.Builder(Request) {
                                                                         HTTPStatusCode             = HTTPStatusCode.OK,
                                                                         Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = DateTime.UtcNow,
+                                                                        Date                       = Timestamp.Now,
                                                                         AccessControlAllowOrigin   = "*",
                                                                         AccessControlAllowMethods  = "POST",
                                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -995,7 +1179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingEndNotificationRequest != null)
                                                                      await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
                                                                                         Cast<OnChargingEndNotificationRequestDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       chargingEndNotificationRequest))).
                                                                                         ConfigureAwait(false);
@@ -1017,7 +1201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  var results = await Task.WhenAll(OnChargingEndNotification.GetInvocationList().
                                                                                                       Cast<OnChargingEndNotificationDelegate>().
-                                                                                                      Select(e => e(DateTime.UtcNow,
+                                                                                                      Select(e => e(Timestamp.Now,
                                                                                                                     this,
                                                                                                                     chargingEndNotificationRequest))).
                                                                                                       ConfigureAwait(false);
@@ -1042,10 +1226,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingEndNotificationResponse != null)
                                                                      await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
                                                                                         Cast<OnChargingEndNotificationResponseDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      DateTime.UtcNow - StartTime))).
+                                                                                                      Timestamp.Now - StartTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1059,7 +1243,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              return new HTTPResponse.Builder(Request) {
                                                                         HTTPStatusCode             = HTTPStatusCode.OK,
                                                                         Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = DateTime.UtcNow,
+                                                                        Date                       = Timestamp.Now,
                                                                         AccessControlAllowOrigin   = "*",
                                                                         AccessControlAllowMethods  = "POST",
                                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1098,7 +1282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingErrorNotificationRequest != null)
                                                                      await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
                                                                                         Cast<OnChargingErrorNotificationRequestDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       chargingErrorNotificationRequest))).
                                                                                         ConfigureAwait(false);
@@ -1120,7 +1304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  var results = await Task.WhenAll(OnChargingErrorNotification.GetInvocationList().
                                                                                                       Cast<OnChargingErrorNotificationDelegate>().
-                                                                                                      Select(e => e(DateTime.UtcNow,
+                                                                                                      Select(e => e(Timestamp.Now,
                                                                                                                     this,
                                                                                                                     chargingErrorNotificationRequest))).
                                                                                                       ConfigureAwait(false);
@@ -1145,10 +1329,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  if (OnChargingErrorNotificationResponse != null)
                                                                      await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
                                                                                         Cast<OnChargingErrorNotificationResponseDelegate>().
-                                                                                        Select(e => e(DateTime.UtcNow,
+                                                                                        Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      DateTime.UtcNow - StartTime))).
+                                                                                                      Timestamp.Now - StartTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1162,7 +1346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              return new HTTPResponse.Builder(Request) {
                                                                         HTTPStatusCode             = HTTPStatusCode.OK,
                                                                         Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = DateTime.UtcNow,
+                                                                        Date                       = Timestamp.Now,
                                                                         AccessControlAllowOrigin   = "*",
                                                                         AccessControlAllowMethods  = "POST",
                                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1185,7 +1369,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                         Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = DateTime.UtcNow,
+                                                        Date                       = Timestamp.Now,
                                                         AccessControlAllowOrigin   = "*",
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1209,7 +1393,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1256,7 +1440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      return new HTTPResponse.Builder(Request) {
                                                                 HTTPStatusCode             = HTTPStatusCode.BadRequest,
                                                                 Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = DateTime.UtcNow,
+                                                                Date                       = Timestamp.Now,
                                                                 AccessControlAllowOrigin   = "*",
                                                                 AccessControlAllowMethods  = "POST",
                                                                 AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1290,14 +1474,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      if (OnChargeDetailRecordLocal != null)
                                                      {
 
-                                                         var response = await OnChargeDetailRecord.Invoke(DateTime.UtcNow,
+                                                         var response = await OnChargeDetailRecord.Invoke(Timestamp.Now,
                                                                                                           this,
                                                                                                           sendChargeDetailRecordRequest);
 
                                                          return new HTTPResponse.Builder(Request) {
                                                                     HTTPStatusCode             = HTTPStatusCode.OK,
                                                                     Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = DateTime.UtcNow,
+                                                                    Date                       = Timestamp.Now,
                                                                     AccessControlAllowOrigin   = "*",
                                                                     AccessControlAllowMethods  = "POST",
                                                                     AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1316,7 +1500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.OK,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
@@ -1340,7 +1524,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  return new HTTPResponse.Builder(Request) {
                                                             HTTPStatusCode             = HTTPStatusCode.OK,
                                                             Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = DateTime.UtcNow,
+                                                            Date                       = Timestamp.Now,
                                                             AccessControlAllowOrigin   = "*",
                                                             AccessControlAllowMethods  = "POST",
                                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
