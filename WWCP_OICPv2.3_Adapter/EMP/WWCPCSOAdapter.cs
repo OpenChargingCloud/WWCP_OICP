@@ -469,7 +469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                               EVSEDataRecord2EVSEDelegate                    EVSEDataRecord2EVSE                                 = null,
 
-                              Boolean                                        pullOperatorInfosIsDisabled                             = false,
+                              Boolean                                        PullOperatorInfos_IsDisabled                        = false,
                               TimeSpan?                                      PullEVSEData_InitialDelay                           = null,
                               TimeSpan?                                      PullEVSEData_Every                                  = null,
                               UInt32?                                        PullEVSEData_RequestPageSize                        = null,
@@ -508,7 +508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.EMPRoaming                                         = EMPRoaming                            ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this.EVSEDataRecord2EVSE                                = EVSEDataRecord2EVSE;
 
-            this.PullOperatorInfos_IsDisabled                            = pullOperatorInfosIsDisabled;
+            this.PullOperatorInfos_IsDisabled                       = PullOperatorInfos_IsDisabled;
             this.PullEVSEData_Every                                 = PullEVSEData_Every                    ?? Default_PullEVSEData_Every;
             this.PullEVSEData_RequestPageSize                       = PullEVSEData_RequestPageSize          ?? 2000;
             this.PullEVSEData_RequestTimeout                        = PullEVSEData_RequestTimeout           ?? Default_PullEVSEData_RequestTimeout;
