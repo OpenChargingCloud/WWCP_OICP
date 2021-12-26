@@ -274,11 +274,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingPools   [optional]
 
-                if (JSON.Parallel_ParseOptionalJSON("chargingPools",
-                                                    "charging pools",
-                                                    ChargingPoolInfo.TryParse,
-                                                    out IEnumerable<ChargingPoolInfo> ChargingPools,
-                                                    out ErrorResponse))
+                if (JSON.ParseOptionalJSON("chargingPools",
+                                           "charging pools",
+                                           ChargingPoolInfo.TryParse,
+                                           out IEnumerable<ChargingPoolInfo> ChargingPools,
+                                           out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;

@@ -268,6 +268,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public IEnumerable<WWCP.ChargingSession>     ChargingSessions     => throw new NotImplementedException();
 
+        public Boolean PullEVSEData_IsDisabled { get; set; }
+
         #endregion
 
         #region Events
