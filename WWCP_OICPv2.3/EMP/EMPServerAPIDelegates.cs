@@ -258,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargeDetailRecordRequestDelegate (DateTime                                          Timestamp,
                                              EMPServerAPI                                      Sender,
-                                             ChargeDetailRecord                                ChargeDetailRecord);
+                                             ChargeDetailRecordRequest                     Request);
 
 
     /// <summary>
@@ -267,11 +267,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="Request">The request.</param>
-    public delegate Task<Acknowledgement<SendChargeDetailRecordRequest>>
+    public delegate Task<Acknowledgement<ChargeDetailRecordRequest>>
 
         OnChargeDetailRecordDelegate        (DateTime                                          Timestamp,
                                              EMPServerAPI                                      Sender,
-                                             SendChargeDetailRecordRequest                     Request);
+                                             ChargeDetailRecordRequest                     Request);
 
 
     /// <summary>
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargeDetailRecordResponseDelegate(DateTime                                          Timestamp,
                                              EMPServerAPI                                      Sender,
-                                             Acknowledgement<SendChargeDetailRecordRequest>    Response,
+                                             Acknowledgement<ChargeDetailRecordRequest>    Response,
                                              TimeSpan                                          Runtime);
 
     #endregion

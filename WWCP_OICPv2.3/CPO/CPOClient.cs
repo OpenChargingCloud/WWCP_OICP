@@ -124,7 +124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>     CustomChargingErrorNotificationAcknowledgementParser         { get; set; }
 
 
-        public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
 
 
         public Newtonsoft.Json.Formatting                                                          JSONFormat                                                    { get; set; }
@@ -4051,7 +4051,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        public async Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>> SendChargeDetailRecord(SendChargeDetailRecordRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>> SendChargeDetailRecord(ChargeDetailRecordRequest Request)
         {
 
             #region Initial checks
@@ -4066,7 +4066,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
             Byte                                                        TransmissionRetry   = 0;
-            OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>  result              = null;
+            OICPResult<Acknowledgement<ChargeDetailRecordRequest>>  result              = null;
 
             #endregion
 
@@ -4148,9 +4148,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (Acknowledgement<SendChargeDetailRecordRequest>.TryParse(Request,
+                                if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                            out Acknowledgement<SendChargeDetailRecordRequest> acknowledgement,
+                                                                                            out Acknowledgement<ChargeDetailRecordRequest> acknowledgement,
                                                                                             out String ErrorResponse,
                                                                                             HTTPResponse,
                                                                                             HTTPResponse.Timestamp,
@@ -4160,7 +4160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Success(Request,
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
                                                                                                                 acknowledgement,
                                                                                                                 processId);
 
@@ -4170,9 +4170,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<SendChargeDetailRecordRequest>(
+                                             new Acknowledgement<ChargeDetailRecordRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -4238,7 +4238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out ValidationErrorList ValidationErrors))
                             {
 
-                                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.BadRequest(Request,
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(Request,
                                                                                                                ValidationErrors,
                                                                                                                processId);
 
@@ -4308,8 +4308,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         out String ErrorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(Request,
-                                                                                                               new Acknowledgement<SendChargeDetailRecordRequest>(
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
+                                                                                                               new Acknowledgement<ChargeDetailRecordRequest>(
                                                                                                                    Request,
                                                                                                                    HTTPResponse.Timestamp,
                                                                                                                    HTTPResponse.EventTrackingId,
@@ -4325,9 +4325,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             catch (Exception e)
                             {
 
-                                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                              Request,
-                                             new Acknowledgement<SendChargeDetailRecordRequest>(
+                                             new Acknowledgement<ChargeDetailRecordRequest>(
                                                  Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
@@ -4360,9 +4360,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
 
-                result = OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                              Request,
-                             new Acknowledgement<SendChargeDetailRecordRequest>(
+                             new Acknowledgement<ChargeDetailRecordRequest>(
                                  Request,
                                  DateTime.UtcNow,
                                  Request.EventTrackingId,
@@ -4379,9 +4379,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             }
 
-            result ??= OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>.Failed(
+            result ??= OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                            Request,
-                           new Acknowledgement<SendChargeDetailRecordRequest>(
+                           new Acknowledgement<ChargeDetailRecordRequest>(
                                Request,
                                DateTime.UtcNow,
                                Request.EventTrackingId,

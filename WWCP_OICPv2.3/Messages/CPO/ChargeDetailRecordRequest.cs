@@ -30,9 +30,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The SendChargeDetailRecordStart request.
+    /// The ChargeDetailRecord request.
     /// </summary>
-    public class SendChargeDetailRecordRequest : ARequest<SendChargeDetailRecordRequest>
+    public class ChargeDetailRecordRequest : ARequest<ChargeDetailRecordRequest>
     {
 
         #region Properties
@@ -55,7 +55,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new SendChargeDetailRecordStart request.
+        /// Create a new ChargeDetailRecord request.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to send.</param>
         /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
@@ -65,14 +65,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public SendChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
-                                             Operator_Id         OperatorId,
-                                             JObject             CustomData          = null,
+        public ChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
+                                         Operator_Id         OperatorId,
+                                         JObject             CustomData          = null,
 
-                                             DateTime?           Timestamp           = null,
-                                             CancellationToken?  CancellationToken   = null,
-                                             EventTracking_Id    EventTrackingId     = null,
-                                             TimeSpan?           RequestTimeout      = null)
+                                         DateTime?           Timestamp           = null,
+                                         CancellationToken?  CancellationToken   = null,
+                                         EventTracking_Id    EventTrackingId     = null,
+                                         TimeSpan?           RequestTimeout      = null)
 
             : base(CustomData,
                    Timestamp,
@@ -162,107 +162,107 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomSendChargeDetailRecordRequestParser = null)
+        #region (static) Parse   (JSON, CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of a SendChargeDetailRecordStart request.
+        /// Parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart JSON objects.</param>
-        public static SendChargeDetailRecordRequest Parse(JObject                                                     JSON,
-                                                          Operator_Id                                                 OperatorId,
-                                                          TimeSpan                                                    RequestTimeout,
-                                                          DateTime?                                                   Timestamp                                   = null,
-                                                          EventTracking_Id                                            EventTrackingId                             = null,
-                                                          CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
+        /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord JSON objects.</param>
+        public static ChargeDetailRecordRequest Parse(JObject                                                 JSON,
+                                                      Operator_Id                                             OperatorId,
+                                                      TimeSpan                                                RequestTimeout,
+                                                      DateTime?                                               Timestamp                               = null,
+                                                      EventTracking_Id                                        EventTrackingId                         = null,
+                                                      CustomJObjectParserDelegate<ChargeDetailRecordRequest>  CustomChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorId,
                          RequestTimeout,
-                         out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
-                         out String                         ErrorResponse,
+                         out ChargeDetailRecordRequest  authorizeRemoteStopRequest,
+                         out String                     ErrorResponse,
                          Timestamp,
                          EventTrackingId,
-                         CustomSendChargeDetailRecordRequestParser))
+                         CustomChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest;
             }
 
-            throw new ArgumentException("The given JSON representation of a SendChargeDetailRecordStart request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a ChargeDetailRecord request is invalid: " + ErrorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomSendChargeDetailRecordRequestParser = null)
+        #region (static) Parse   (Text, CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
-        /// Parse the given text representation of a SendChargeDetailRecordStart request.
+        /// Parse the given text representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
-        public static SendChargeDetailRecordRequest Parse(String                                                      Text,
-                                                          Operator_Id                                                 OperatorId,
-                                                          TimeSpan                                                    RequestTimeout,
-                                                          DateTime?                                                   Timestamp                                   = null,
-                                                          EventTracking_Id                                            EventTrackingId                             = null,
-                                                          CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
+        /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
+        public static ChargeDetailRecordRequest Parse(String                                                  Text,
+                                                      Operator_Id                                             OperatorId,
+                                                      TimeSpan                                                RequestTimeout,
+                                                      DateTime?                                               Timestamp                               = null,
+                                                      EventTracking_Id                                        EventTrackingId                         = null,
+                                                      CustomJObjectParserDelegate<ChargeDetailRecordRequest>  CustomChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorId,
                          RequestTimeout,
-                         out SendChargeDetailRecordRequest  authorizeRemoteStopRequest,
-                         out String                         ErrorResponse,
+                         out ChargeDetailRecordRequest  authorizeRemoteStopRequest,
+                         out String                     ErrorResponse,
                          Timestamp,
                          EventTrackingId,
-                         CustomSendChargeDetailRecordRequestParser))
+                         CustomChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest;
             }
 
-            throw new ArgumentException("The given text representation of a SendChargeDetailRecordStart request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a ChargeDetailRecord request is invalid: " + ErrorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out SendChargeDetailRecordRequest, out ErrorResponse, CustomSendChargeDetailRecordRequestParser = null)
+        #region (static) TryParse(JSON, out ChargeDetailRecordRequest, out ErrorResponse, CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
-        /// Try to parse the given JSON representation of a SendChargeDetailRecordStart request.
+        /// Try to parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecordStart request.</param>
+        /// <param name="ChargeDetailRecordRequest">The parsed ChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                     JSON,
-                                       Operator_Id                                                 OperatorId,
-                                       TimeSpan                                                    RequestTimeout,
-                                       out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
-                                       out String                                                  ErrorResponse,
-                                       DateTime?                                                   Timestamp                                   = null,
-                                       EventTracking_Id                                            EventTrackingId                             = null,
-                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
+        /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
+        public static Boolean TryParse(JObject                                                 JSON,
+                                       Operator_Id                                             OperatorId,
+                                       TimeSpan                                                RequestTimeout,
+                                       out ChargeDetailRecordRequest                           ChargeDetailRecordRequest,
+                                       out String                                              ErrorResponse,
+                                       DateTime?                                               Timestamp                               = null,
+                                       EventTracking_Id                                        EventTrackingId                         = null,
+                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>  CustomChargeDetailRecordRequestParser   = null)
         {
 
             try
             {
 
-                SendChargeDetailRecordRequest = default;
+                ChargeDetailRecordRequest = default;
 
                 if (JSON?.HasValues != true)
                 {
@@ -270,44 +270,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse embdedded CDR     [mandatory]
+                #region Parse ChargeDetailRecord     [mandatory]
 
-                if (!ChargeDetailRecord.TryParse(JSON,
-                                                 out ChargeDetailRecord CDR,
-                                                 out ErrorResponse))
+                if (!OICPv2_3.ChargeDetailRecord.TryParse(JSON,
+                                                          out ChargeDetailRecord ChargeDetailRecord,
+                                                          out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse CustomData        [optional]
+                #region Parse CustomData             [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
                 #endregion
 
 
-                SendChargeDetailRecordRequest = new SendChargeDetailRecordRequest(CDR,
-                                                                                  OperatorId,
-                                                                                  CustomData,
+                ChargeDetailRecordRequest = new ChargeDetailRecordRequest(ChargeDetailRecord,
+                                                                          OperatorId,
+                                                                          CustomData,
 
-                                                                                  Timestamp,
-                                                                                  null,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                                          Timestamp,
+                                                                          null,
+                                                                          EventTrackingId,
+                                                                          RequestTimeout);
 
-                if (CustomSendChargeDetailRecordRequestParser != null)
-                    SendChargeDetailRecordRequest = CustomSendChargeDetailRecordRequestParser(JSON,
-                                                                                              SendChargeDetailRecordRequest);
+                if (CustomChargeDetailRecordRequestParser != null)
+                    ChargeDetailRecordRequest = CustomChargeDetailRecordRequestParser(JSON,
+                                                                                          ChargeDetailRecordRequest);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                SendChargeDetailRecordRequest  = default;
-                ErrorResponse                  = "The given JSON representation of a SendChargeDetailRecordStart request is invalid: " + e.Message;
+                ChargeDetailRecordRequest  = default;
+                ErrorResponse                  = "The given JSON representation of a ChargeDetailRecord request is invalid: " + e.Message;
                 return false;
             }
 
@@ -315,27 +315,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out SendChargeDetailRecordRequest, out ErrorResponse, CustomSendChargeDetailRecordRequestParser = null)
+        #region (static) TryParse(Text, out ChargeDetailRecordRequest, out ErrorResponse, CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
-        /// Try to parse the given text representation of a SendChargeDetailRecordStart request.
+        /// Try to parse the given text representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="SendChargeDetailRecordRequest">The parsed SendChargeDetailRecordStart request.</param>
+        /// <param name="ChargeDetailRecordRequest">The parsed ChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomSendChargeDetailRecordRequestParser">A delegate to parse custom SendChargeDetailRecordStart request JSON objects.</param>
-        public static Boolean TryParse(String                                                      Text,
-                                       Operator_Id                                                 OperatorId,
-                                       TimeSpan                                                    RequestTimeout,
-                                       out SendChargeDetailRecordRequest                           SendChargeDetailRecordRequest,
-                                       out String                                                  ErrorResponse,
-                                       DateTime?                                                   Timestamp                                   = null,
-                                       EventTracking_Id                                            EventTrackingId                             = null,
-                                       CustomJObjectParserDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestParser   = null)
+        /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
+        public static Boolean TryParse(String                                                  Text,
+                                       Operator_Id                                             OperatorId,
+                                       TimeSpan                                                RequestTimeout,
+                                       out ChargeDetailRecordRequest                           ChargeDetailRecordRequest,
+                                       out String                                              ErrorResponse,
+                                       DateTime?                                               Timestamp                               = null,
+                                       EventTracking_Id                                        EventTrackingId                         = null,
+                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>  CustomChargeDetailRecordRequestParser   = null)
         {
 
             try
@@ -344,17 +344,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 OperatorId,
                                 RequestTimeout,
-                                out SendChargeDetailRecordRequest,
+                                out ChargeDetailRecordRequest,
                                 out ErrorResponse,
                                 Timestamp,
                                 EventTrackingId,
-                                CustomSendChargeDetailRecordRequestParser);
+                                CustomChargeDetailRecordRequestParser);
 
             }
             catch (Exception e)
             {
-                SendChargeDetailRecordRequest  = default;
-                ErrorResponse                  = "The given text representation of a SendChargeDetailRecordStart request is invalid: " + e.Message;
+                ChargeDetailRecordRequest  = default;
+                ErrorResponse              = "The given text representation of a ChargeDetailRecord request is invalid: " + e.Message;
                 return false;
             }
 
@@ -362,21 +362,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomSendChargeDetailRecordRequestSerializer = null, CustomChargeDetailRecordSerializer = null,...)
+        #region ToJSON(CustomChargeDetailRecordRequestSerializer = null, CustomChargeDetailRecordSerializer = null,...)
 
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
-        /// <param name="CustomSendChargeDetailRecordRequestSerializer">A delegate to customize the serialization of SendChargeDetailRecordRequest responses.</param>
+        /// <param name="CustomChargeDetailRecordRequestSerializer">A delegate to customize the serialization of ChargeDetailRecordRequest responses.</param>
         /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<SendChargeDetailRecordRequest>  CustomSendChargeDetailRecordRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<ChargeDetailRecord>             CustomChargeDetailRecordSerializer              = null,
-                              CustomJObjectSerializerDelegate<Identification>                 CustomIdentificationSerializer                  = null,
-                              CustomJObjectSerializerDelegate<SignedMeteringValue>            CustomSignedMeteringValueSerializer             = null,
-                              CustomJObjectSerializerDelegate<CalibrationLawVerification>     CustomCalibrationLawVerificationSerializer      = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargeDetailRecordRequest>  CustomChargeDetailRecordRequestSerializer    = null,
+                              CustomJObjectSerializerDelegate<ChargeDetailRecord>         CustomChargeDetailRecordSerializer           = null,
+                              CustomJObjectSerializerDelegate<Identification>             CustomIdentificationSerializer               = null,
+                              CustomJObjectSerializerDelegate<SignedMeteringValue>        CustomSignedMeteringValueSerializer          = null,
+                              CustomJObjectSerializerDelegate<CalibrationLawVerification> CustomCalibrationLawVerificationSerializer   = null)
         {
 
             var JSON = ChargeDetailRecord.ToJSON(CustomChargeDetailRecordSerializer,
@@ -384,8 +384,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  CustomSignedMeteringValueSerializer,
                                                  CustomCalibrationLawVerificationSerializer);
 
-            return CustomSendChargeDetailRecordRequestSerializer != null
-                       ? CustomSendChargeDetailRecordRequestSerializer(this, JSON)
+            return CustomChargeDetailRecordRequestSerializer != null
+                       ? CustomChargeDetailRecordRequestSerializer(this, JSON)
                        : JSON;
 
         }
@@ -395,50 +395,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (SendChargeDetailRecordStart1, SendChargeDetailRecordStart2)
+        #region Operator == (ChargeDetailRecord1, ChargeDetailRecord2)
 
         /// <summary>
         /// Compares two send charge detail record requests for equality.
         /// </summary>
-        /// <param name="SendChargeDetailRecordStart1">An send charge detail record request.</param>
-        /// <param name="SendChargeDetailRecordStart2">Another send charge detail record request.</param>
+        /// <param name="ChargeDetailRecord1">An send charge detail record request.</param>
+        /// <param name="ChargeDetailRecord2">Another send charge detail record request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (SendChargeDetailRecordRequest SendChargeDetailRecordStart1,
-                                           SendChargeDetailRecordRequest SendChargeDetailRecordStart2)
+        public static Boolean operator == (ChargeDetailRecordRequest ChargeDetailRecord1,
+                                           ChargeDetailRecordRequest ChargeDetailRecord2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(SendChargeDetailRecordStart1, SendChargeDetailRecordStart2))
+            if (ReferenceEquals(ChargeDetailRecord1, ChargeDetailRecord2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (SendChargeDetailRecordStart1 is null || SendChargeDetailRecordStart2 is null)
+            if (ChargeDetailRecord1 is null || ChargeDetailRecord2 is null)
                 return false;
 
-            return SendChargeDetailRecordStart1.Equals(SendChargeDetailRecordStart2);
+            return ChargeDetailRecord1.Equals(ChargeDetailRecord2);
 
         }
 
         #endregion
 
-        #region Operator != (SendChargeDetailRecordStart1, SendChargeDetailRecordStart2)
+        #region Operator != (ChargeDetailRecord1, ChargeDetailRecord2)
 
         /// <summary>
         /// Compares two send charge detail record requests for inequality.
         /// </summary>
-        /// <param name="SendChargeDetailRecordStart1">An send charge detail record request.</param>
-        /// <param name="SendChargeDetailRecordStart2">Another send charge detail record request.</param>
+        /// <param name="ChargeDetailRecord1">An send charge detail record request.</param>
+        /// <param name="ChargeDetailRecord2">Another send charge detail record request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (SendChargeDetailRecordRequest SendChargeDetailRecordStart1,
-                                           SendChargeDetailRecordRequest SendChargeDetailRecordStart2)
+        public static Boolean operator != (ChargeDetailRecordRequest ChargeDetailRecord1,
+                                           ChargeDetailRecordRequest ChargeDetailRecord2)
 
-            => !(SendChargeDetailRecordStart1 == SendChargeDetailRecordStart2);
-
-        #endregion
+            => !(ChargeDetailRecord1 == ChargeDetailRecord2);
 
         #endregion
 
-        #region IEquatable<SendChargeDetailRecordStart> Members
+        #endregion
+
+        #region IEquatable<ChargeDetailRecord> Members
 
         #region Equals(Object)
 
@@ -449,22 +449,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object Object)
 
-            => Object is SendChargeDetailRecordRequest sendChargeDetailRecordRequest &&
-                   Equals(sendChargeDetailRecordRequest);
+            => Object is ChargeDetailRecordRequest chargeDetailRecordRequest &&
+                   Equals(chargeDetailRecordRequest);
 
         #endregion
 
-        #region Equals(SendChargeDetailRecordStart)
+        #region Equals(ChargeDetailRecord)
 
         /// <summary>
         /// Compares two send charge detail record requests for equality.
         /// </summary>
-        /// <param name="SendChargeDetailRecordStart">An send charge detail record request to compare with.</param>
+        /// <param name="ChargeDetailRecord">An send charge detail record request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(SendChargeDetailRecordRequest SendChargeDetailRecordStart)
+        public override Boolean Equals(ChargeDetailRecordRequest ChargeDetailRecord)
 
-            => !(SendChargeDetailRecordStart is null) &&
-                 ChargeDetailRecord.Equals(SendChargeDetailRecordStart.ChargeDetailRecord);
+            => !(ChargeDetailRecord is null) &&
+                 ChargeDetailRecord.Equals(ChargeDetailRecord.ChargeDetailRecord);
 
         #endregion
 

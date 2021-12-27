@@ -217,7 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     public delegate Task OnSendChargeDetailRecordRequestDelegate (DateTime                                                     Timestamp,
                                                                   CPOClient                                                    Sender,
                                                                   String                                                       SenderDescription,
-                                                                  SendChargeDetailRecordRequest                                Request);
+                                                                  ChargeDetailRecordRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a SendChargeDetailRecord request had been received.
@@ -225,8 +225,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     public delegate Task OnSendChargeDetailRecordResponseDelegate(DateTime                                                     Timestamp,
                                                                   CPOClient                                                    Sender,
                                                                   String                                                       SenderDescription,
-                                                                  SendChargeDetailRecordRequest                                Request,
-                                                                  OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>   Result);
+                                                                  ChargeDetailRecordRequest                                Request,
+                                                                  OICPResult<Acknowledgement<ChargeDetailRecordRequest>>   Result);
 
     #endregion
 

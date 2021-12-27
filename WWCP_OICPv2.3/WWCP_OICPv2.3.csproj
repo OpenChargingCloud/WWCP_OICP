@@ -91,7 +91,7 @@
     <Compile Include="Messages\CPO\ChargingEndNotificationRequest.cs" />
     <Compile Include="Messages\CPO\ChargingProgressNotificationRequest.cs" />
     <Compile Include="Messages\CPO\ChargingStartNotificationRequest.cs" />
-    <Compile Include="Messages\CPO\SendChargeDetailRecordRequest.cs" />
+    <Compile Include="Messages\CPO\ChargeDetailRecordRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
     <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />

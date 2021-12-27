@@ -920,7 +920,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     if (response.Result == WWCP.SendCDRsResultTypes.Success)
-                        return Acknowledgement<SendChargeDetailRecordRequest>.Success(
+                        return Acknowledgement<ChargeDetailRecordRequest>.Success(
                                    ChargeDetailRecordRequest,
                                    ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
                                    ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
@@ -944,7 +944,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //           );
 
                             case WWCP.SendCDRResultTypes.InvalidSessionId:
-                                return Acknowledgement<SendChargeDetailRecordRequest>.SessionIsInvalid(
+                                return Acknowledgement<ChargeDetailRecordRequest>.SessionIsInvalid(
                                            ChargeDetailRecordRequest,
                                            SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
                                            CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
@@ -952,7 +952,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        );
 
                             case WWCP.SendCDRResultTypes.UnknownLocation:
-                                return Acknowledgement<SendChargeDetailRecordRequest>.UnknownEVSEID(
+                                return Acknowledgement<ChargeDetailRecordRequest>.UnknownEVSEID(
                                            ChargeDetailRecordRequest,
                                            SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
                                            CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
@@ -960,7 +960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        );
 
                             case WWCP.SendCDRResultTypes.Error:
-                                return Acknowledgement<SendChargeDetailRecordRequest>.DataError(
+                                return Acknowledgement<ChargeDetailRecordRequest>.DataError(
                                            ChargeDetailRecordRequest,
                                            SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
                                            CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
@@ -974,7 +974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #endregion
 
-                return Acknowledgement<SendChargeDetailRecordRequest>.ServiceNotAvailable(
+                return Acknowledgement<ChargeDetailRecordRequest>.ServiceNotAvailable(
                            ChargeDetailRecordRequest,
                            SessionId: ChargeDetailRecordRequest.ChargeDetailRecord.SessionId
                        );

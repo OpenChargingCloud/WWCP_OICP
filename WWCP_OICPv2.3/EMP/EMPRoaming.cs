@@ -898,7 +898,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event sent whenever a authorize start command was received.
+        /// An event sent whenever a authorize start request was received.
         /// </summary>
         public event OnAuthorizeStartDelegate OnAuthorizeStart
         {
@@ -1106,7 +1106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a charge detail record response was sent.
         /// </summary>
-        public event OnChargeDetailRecordResponseDelegate OnChargeDetailRecordResponse
+        public event OnChargeDetailRecordResponseDelegate OnSendChargeDetailRecordResponse
         {
 
             add

@@ -1037,7 +1037,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         }
 
-        public CustomJObjectParserDelegate<Acknowledgement<SendChargeDetailRecordRequest>> CustomSendChargeDetailRecordAcknowledgementParser
+        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>> CustomSendChargeDetailRecordAcknowledgementParser
         {
 
             get
@@ -1200,9 +1200,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        public Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>
+        public Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
-            SendChargeDetailRecord(SendChargeDetailRecordRequest Request)
+            SendChargeDetailRecord(ChargeDetailRecordRequest Request)
 
                 => CPOClient.SendChargeDetailRecord(Request);
 
