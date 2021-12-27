@@ -40,10 +40,60 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The OICP EMP HTTP Server API.
+    /// The EMP HTTP Server API.
     /// </summary>
     public partial class EMPServerAPI : HTTPAPI
     {
+
+        #region (class) Counters
+
+        public class Counters
+        {
+
+            public CounterValues  AuthorizeStart                  { get; }
+            public CounterValues  AuthorizeStop                   { get; }
+            public CounterValues  ChargingStartNotification       { get; }
+            public CounterValues  ChargingProgressNotification    { get; }
+            public CounterValues  ChargingEndNotification         { get; }
+            public CounterValues  ChargingErrorNotification       { get; }
+            public CounterValues  ChargeDetailRecord              { get; }
+
+
+            public Counters(CounterValues? AuthorizeStart                 = null,
+                            CounterValues? AuthorizeStop                  = null,
+                            CounterValues? ChargingStartNotification      = null,
+                            CounterValues? ChargingProgressNotification   = null,
+                            CounterValues? ChargingEndNotification        = null,
+                            CounterValues? ChargingErrorNotification      = null,
+                            CounterValues? ChargeDetailRecord             = null)
+            {
+
+                this.AuthorizeStart                = AuthorizeStart               ?? new CounterValues();
+                this.AuthorizeStop                 = AuthorizeStop                ?? new CounterValues();
+                this.ChargingStartNotification     = ChargingStartNotification    ?? new CounterValues();
+                this.ChargingProgressNotification  = ChargingProgressNotification ?? new CounterValues();
+                this.ChargingEndNotification       = ChargingEndNotification      ?? new CounterValues();
+                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new CounterValues();
+                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new CounterValues();
+
+            }
+
+            public JObject ToJSON()
+
+                => JSONObject.Create(
+                       new JProperty("AuthorizeStart",                AuthorizeStart.              ToJSON()),
+                       new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
+                       new JProperty("ChargingStartNotification",     ChargingStartNotification.   ToJSON()),
+                       new JProperty("ChargingProgressNotification",  ChargingProgressNotification.ToJSON()),
+                       new JProperty("ChargingEndNotification",       ChargingEndNotification.     ToJSON()),
+                       new JProperty("ChargingErrorNotification",     ChargingErrorNotification.   ToJSON()),
+                       new JProperty("ChargeDetailRecord",            ChargeDetailRecord.          ToJSON())
+                   );
+
+        }
+
+        #endregion
+
 
         #region Data
 
@@ -65,6 +115,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
         #region Properties
+
+        public Counters                                                          Counter                                            { get; }
 
         // Custom JSON parsers
 
@@ -507,6 +559,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             RegisterURLTemplates();
 
+            this.Counter     = new Counters();
+
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
                                                 LoggingPath,
@@ -591,6 +645,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          Request.EventTrackingId,
                                                                                          CustomAuthorizeStartRequestParser))
                                                  {
+
+                                                     Counter.AuthorizeStart.IncRequests();
 
                                                      #region Send OnAuthorizeStartRequest event
 
@@ -748,6 +804,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         Request.EventTrackingId,
                                                                                         CustomAuthorizeStopRequestParser))
                                                  {
+
+                                                     Counter.AuthorizeStop.IncRequests();
 
                                                      #region Send OnAuthorizeStopRequest event
 
@@ -938,6 +996,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                        CustomChargingStartNotificationRequestParser))
                                                          {
 
+                                                             Counter.ChargingStartNotification.IncRequests();
+
                                                              #region Send OnChargingStartNotificationRequest event
 
                                                              try
@@ -1022,6 +1082,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           Request.EventTrackingId,
                                                                                                           CustomChargingProgressNotificationRequestParser))
                                                          {
+
+                                                             Counter.ChargingProgressNotification.IncRequests();
 
                                                              #region Send OnChargingProgressNotificationRequest event
 
@@ -1108,6 +1170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           CustomChargingEndNotificationRequestParser))
                                                          {
 
+                                                             Counter.ChargingEndNotification.IncRequests();
+
                                                              #region Send OnChargingEndNotificationRequest event
 
                                                              try
@@ -1192,6 +1256,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           Request.EventTrackingId,
                                                                                                           CustomChargingErrorNotificationRequestParser))
                                                          {
+
+                                                             Counter.ChargingErrorNotification.IncRequests();
 
                                                              #region Send OnChargingErrorNotificationRequest event
 
@@ -1390,6 +1456,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              Request.EventTrackingId,
                                                                                              CustomChargeDetailRecordRequestParser))
                                                  {
+
+                                                     Counter.ChargeDetailRecord.IncRequests();
 
                                                      #region  Send OnChargeDetailRecordRequest event
 

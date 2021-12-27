@@ -35,35 +35,81 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The OICP CPO client.
+    /// The CPO client.
     /// </summary>
     public partial class CPOClient : AHTTPClient,
                                      ICPOClient
     {
 
-        public class CPOCounters
+        #region (class) Counters
+
+        public class Counters
         {
 
-            public CounterValues GetTokens  { get; }
-            public CounterValues PostTokens { get; }
+            public CounterValues  PushEVSEData                        { get; }
+            public CounterValues  PushEVSEStatus                      { get; }
 
-            public CPOCounters(CounterValues? GetTokens  = null,
-                               CounterValues? PostTokens = null)
+            public CounterValues  AuthorizeStart                      { get; }
+            public CounterValues  AuthorizeStop                       { get; }
+
+            public CounterValues  SendChargingStartNotification       { get; }
+            public CounterValues  SendChargingProgressNotification    { get; }
+            public CounterValues  SendChargingEndNotification         { get; }
+            public CounterValues  SendChargingErrorNotification       { get; }
+
+            public CounterValues  SendChargeDetailRecord              { get; }
+
+
+            public Counters(CounterValues? PushEVSEData                       = null,
+                            CounterValues? PushEVSEStatus                     = null,
+
+                            CounterValues? AuthorizeStart                     = null,
+                            CounterValues? AuthorizeStop                      = null,
+
+                            CounterValues? SendChargingStartNotification      = null,
+                            CounterValues? SendChargingProgressNotification   = null,
+                            CounterValues? SendChargingEndNotification        = null,
+                            CounterValues? SendChargingErrorNotification      = null,
+
+                            CounterValues? SendChargeDetailRecord             = null)
+
             {
 
-                this.GetTokens  = GetTokens  ?? new CounterValues();
-                this.PostTokens = PostTokens ?? new CounterValues();
+                this.PushEVSEData                      = PushEVSEData                     ?? new CounterValues();
+                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new CounterValues();
+
+                this.AuthorizeStart                    = AuthorizeStart                   ?? new CounterValues();
+                this.AuthorizeStop                     = AuthorizeStop                    ?? new CounterValues();
+
+                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new CounterValues();
+                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new CounterValues();
+                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new CounterValues();
+                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new CounterValues();
+
+                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new CounterValues();
 
             }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("GetTokens",  GetTokens. ToJSON()),
-                       new JProperty("PostTokens", PostTokens.ToJSON())
+                       new JProperty("PushEVSEData",                     PushEVSEData.                    ToJSON()),
+                       new JProperty("PushEVSEStatus",                   PushEVSEStatus.                  ToJSON()),
+
+                       new JProperty("AuthorizeStart",                   AuthorizeStart.                  ToJSON()),
+                       new JProperty("AuthorizeStop",                    AuthorizeStop.                   ToJSON()),
+
+                       new JProperty("SendChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
+                       new JProperty("SendChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
+                       new JProperty("SendChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
+                       new JProperty("SendChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
+
+                       new JProperty("SendChargeDetailRecord",           SendChargeDetailRecord.          ToJSON())
                    );
 
         }
+
+        #endregion
 
 
         #region Data
@@ -106,6 +152,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 base.HTTPLogger = value;
             }
         }
+
+        public Counters                                                                            Counter                                                       { get; }
 
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                   CustomPushEVSEDataAcknowledgementParser                       { get; set; }
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                 CustomPushEVSEStatusAcknowledgementParser                     { get; set; }
@@ -405,6 +453,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
+            this.Counter     = new Counters();
+
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger  = DisableLogging == false
@@ -451,6 +501,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPushEVSEDataRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.PushEVSEData.IncRequests();
 
             try
             {
@@ -949,6 +1001,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.PushEVSEStatus.IncRequests();
+
             try
             {
 
@@ -1444,6 +1498,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.AuthorizeStart.IncRequests();
+
             try
             {
 
@@ -1832,6 +1888,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeStopRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.AuthorizeStop.IncRequests();
 
             try
             {
@@ -2244,6 +2302,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingStartNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.SendChargingStartNotification.IncRequests();
 
             try
             {
@@ -2702,6 +2762,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.SendChargingProgressNotification.IncRequests();
+
             try
             {
 
@@ -3158,6 +3220,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingEndNotificationRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.SendChargingEndNotification.IncRequests();
 
             try
             {
@@ -3616,6 +3680,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.SendChargingErrorNotification.IncRequests();
+
             try
             {
 
@@ -4073,6 +4139,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnSendChargeDetailRecord event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.SendChargeDetailRecord.IncRequests();
 
             try
             {

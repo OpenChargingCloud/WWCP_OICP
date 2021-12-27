@@ -289,7 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 ChargeDetailRecordRequest = new ChargeDetailRecordRequest(ChargeDetailRecord,
-                                                                          OperatorId,
+                                                                          OperatorIdURL,
                                                                           CustomData,
 
                                                                           Timestamp,
@@ -299,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (CustomChargeDetailRecordRequestParser != null)
                     ChargeDetailRecordRequest = CustomChargeDetailRecordRequestParser(JSON,
-                                                                                          ChargeDetailRecordRequest);
+                                                                                      ChargeDetailRecordRequest);
 
                 return true;
 
@@ -307,7 +307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 ChargeDetailRecordRequest  = default;
-                ErrorResponse                  = "The given JSON representation of a ChargeDetailRecord request is invalid: " + e.Message;
+                ErrorResponse              = "The given JSON representation of a ChargeDetailRecord request is invalid: " + e.Message;
                 return false;
             }
 

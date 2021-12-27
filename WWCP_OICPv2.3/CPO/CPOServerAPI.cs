@@ -40,10 +40,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The OICP CPO HTTP Server API.
+    /// The CPO HTTP Server API.
     /// </summary>
     public partial class CPOServerAPI : HTTPAPI
     {
+
+        #region (class) Counters
+
+        public class Counters
+        {
+
+            public CounterValues  AuthorizeRemoteReservationStart    { get; }
+            public CounterValues  AuthorizeRemoteReservationStop     { get; }
+            public CounterValues  AuthorizeRemoteStart               { get; }
+            public CounterValues  AuthorizeRemoteStop                { get; }
+
+            public Counters(CounterValues? AuthorizeRemoteReservationStart   = null,
+                            CounterValues? AuthorizeRemoteReservationStop    = null,
+                            CounterValues? AuthorizeRemoteStart              = null,
+                            CounterValues? AuthorizeRemoteStop               = null)
+            {
+
+                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new CounterValues();
+                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new CounterValues();
+                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new CounterValues();
+                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new CounterValues();
+
+            }
+
+            public JObject ToJSON()
+
+                => JSONObject.Create(
+                       new JProperty("AuthorizeRemoteReservationStart",  AuthorizeRemoteReservationStart.ToJSON()),
+                       new JProperty("AuthorizeRemoteReservationStop",   AuthorizeRemoteReservationStop. ToJSON()),
+                       new JProperty("AuthorizeRemoteStart",             AuthorizeRemoteStart.           ToJSON()),
+                       new JProperty("AuthorizeRemoteStop",              AuthorizeRemoteStop.            ToJSON())
+                   );
+
+        }
+
+        #endregion
+
 
         #region Data
 
@@ -65,6 +102,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
         #region Properties
+
+        public Counters                                                             Counter                                               { get; }
 
         // Custom JSON parsers
 
@@ -444,6 +483,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             RegisterURLTemplates();
 
+            this.Counter     = new Counters();
+
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
                                                 LoggingPath,
@@ -548,6 +589,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           Request.EventTrackingId,
                                                                                                           CustomAuthorizeRemoteReservationStartRequestParser))
                                                  {
+
+                                                     Counter.AuthorizeRemoteReservationStart.IncRequests();
 
                                                      #region Send OnAuthorizeRemoteReservationStartRequest event
 
@@ -728,6 +771,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          Request.EventTrackingId,
                                                                                                          CustomAuthorizeRemoteReservationStopRequestParser))
                                                  {
+
+                                                     Counter.AuthorizeRemoteReservationStop.IncRequests();
 
                                                      #region Send OnAuthorizeRemoteReservationStopRequest event
 
@@ -910,6 +955,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                CustomAuthorizeRemoteStartRequestParser))
                                                  {
 
+                                                     Counter.AuthorizeRemoteStart.IncRequests();
+
                                                      #region Send OnAuthorizeRemoteStartRequest event
 
                                                      try
@@ -1089,6 +1136,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               Request.EventTrackingId,
                                                                                               CustomAuthorizeRemoteStopRequestParser))
                                                  {
+
+                                                     Counter.AuthorizeRemoteStop.IncRequests();
 
                                                      #region Send OnAuthorizeRemoteStopRequest event
 
