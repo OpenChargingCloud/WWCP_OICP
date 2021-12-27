@@ -168,13 +168,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(JObject                                                 JSON,
-                                                      Operator_Id                                             OperatorId,
+                                                      Operator_Id                                             OperatorIdURL,
                                                       TimeSpan                                                RequestTimeout,
                                                       DateTime?                                               Timestamp                               = null,
                                                       EventTracking_Id                                        EventTrackingId                         = null,
@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         OperatorId,
+                         OperatorIdURL,
                          RequestTimeout,
                          out ChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                     ErrorResponse,
@@ -205,13 +205,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(String                                                  Text,
-                                                      Operator_Id                                             OperatorId,
+                                                      Operator_Id                                             OperatorIdURL,
                                                       TimeSpan                                                RequestTimeout,
                                                       DateTime?                                               Timestamp                               = null,
                                                       EventTracking_Id                                        EventTrackingId                         = null,
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         OperatorId,
+                         OperatorIdURL,
                          RequestTimeout,
                          out ChargeDetailRecordRequest  authorizeRemoteStopRequest,
                          out String                     ErrorResponse,
@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="ChargeDetailRecordRequest">The parsed ChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(JObject                                                 JSON,
-                                       Operator_Id                                             OperatorId,
+                                       Operator_Id                                             OperatorIdURL,
                                        TimeSpan                                                RequestTimeout,
                                        out ChargeDetailRecordRequest                           ChargeDetailRecordRequest,
                                        out String                                              ErrorResponse,
@@ -321,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="ChargeDetailRecordRequest">The parsed ChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(String                                                  Text,
-                                       Operator_Id                                             OperatorId,
+                                       Operator_Id                                             OperatorIdURL,
                                        TimeSpan                                                RequestTimeout,
                                        out ChargeDetailRecordRequest                           ChargeDetailRecordRequest,
                                        out String                                              ErrorResponse,
@@ -342,7 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
-                                OperatorId,
+                                OperatorIdURL,
                                 RequestTimeout,
                                 out ChargeDetailRecordRequest,
                                 out ErrorResponse,

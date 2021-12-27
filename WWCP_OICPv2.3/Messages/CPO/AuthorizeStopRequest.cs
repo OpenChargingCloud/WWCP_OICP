@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The unqiue identification of the charging station operator.
+        /// The unqiue identification of the EVSE operator sending this request.
         /// </summary>
         [Mandatory]
         public Operator_Id            OperatorId             { get; }
@@ -80,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new AuthorizeStop request.
         /// </summary>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
+        /// <param name="OperatorId">The unqiue identification of the EVSE operator sending this request.</param>
         /// <param name="SessionId">The charging session identification.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
@@ -177,11 +177,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(JObject                                            JSON,
+                                                 Operator_Id                                        OperatorIdURL,
                                                  TimeSpan                                           RequestTimeout,
                                                  DateTime?                                          Timestamp                          = null,
                                                  EventTracking_Id                                   EventTrackingId                    = null,
@@ -189,6 +191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
+                         OperatorIdURL,
                          RequestTimeout,
                          out AuthorizeStopRequest  auhorizeStopRequest,
                          out String                ErrorResponse,
@@ -211,11 +214,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(String                                             Text,
+                                                 Operator_Id                                        OperatorIdURL,
                                                  TimeSpan                                           RequestTimeout,
                                                  DateTime?                                          Timestamp                          = null,
                                                  EventTracking_Id                                   EventTrackingId                    = null,
@@ -223,6 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
+                         OperatorIdURL,
                          RequestTimeout,
                          out AuthorizeStopRequest  auhorizeStopRequest,
                          out String                ErrorResponse,
@@ -245,6 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -252,6 +259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
+                                       Operator_Id                                        OperatorIdURL,
                                        TimeSpan                                           RequestTimeout,
                                        out AuthorizeStopRequest                           AuthorizeStopRequest,
                                        out String                                         ErrorResponse,
@@ -277,8 +285,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          "operator identification",
                                          Operator_Id.TryParse,
                                          out Operator_Id OperatorId,
-                                         out             ErrorResponse))
+                                         out ErrorResponse))
                 {
+                    return false;
+                }
+
+                if (OperatorId != OperatorIdURL)
+                {
+                    ErrorResponse = "Inconsistend operator identifications: '" + OperatorIdURL + "' (URL) <> '" + OperatorId + "' (JSON)!";
                     return false;
                 }
 
@@ -395,6 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of an AuthorizeStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -402,6 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(String                                             Text,
+                                       Operator_Id                                        OperatorIdURL,
                                        TimeSpan                                           RequestTimeout,
                                        out AuthorizeStopRequest                           AuthorizeStopRequest,
                                        out String                                         ErrorResponse,
@@ -414,6 +430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
+                                OperatorIdURL,
                                 RequestTimeout,
                                 out AuthorizeStopRequest,
                                 out ErrorResponse,

@@ -551,6 +551,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
 
+            //Note: OperatorId is the remote EMP sending an authorize start/stop request!
+
             #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/start
 
             // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -581,7 +583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                         //operatorId,
+                                                                                         operatorId,
                                                                                          Request.Timeout ?? DefaultRequestTimeout,
                                                                                          out AuthorizeStartRequest  authorizeStartRequest,
                                                                                          out String                 errorResponse,
@@ -641,7 +643,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          if (authorizationStartResponse == null)
                                                              authorizationStartResponse = AuthorizationStartResponse.SystemError(
                                                                                               authorizeStartRequest,
-                                                                                              "Could not process the incoming AuthorizeStart request!"
+                                                                                              "Could not process the received AuthorizeStart request!"
                                                                                           );
 
                                                      }
@@ -738,7 +740,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                        //operatorId,
+                                                                                        operatorId,
                                                                                         Request.Timeout ?? DefaultRequestTimeout,
                                                                                         out AuthorizeStopRequest  authorizeStopRequest,
                                                                                         out String                errorResponse,
@@ -798,7 +800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      if (authorizationStopResponse == null)
                                                          authorizationStopResponse = AuthorizationStopResponse.SystemError(
                                                                                          authorizeStopRequest,
-                                                                                         "Could not process the incoming AuthorizeStop request!"
+                                                                                         "Could not process the received AuthorizeStop request!"
                                                                                      );
 
                                                      #endregion
@@ -882,15 +884,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  #region Try to parse the charging notification
 
-                                                 var StartTime      = Timestamp.Now;
+                                                 var startTime      = Timestamp.Now;
                                                  var errorResponse  = String.Empty;
+
+                                                 JObject acknowledgementJSON = null;
 
                                                  if (!Request.TryParseJObjectRequestBody(out JObject JSONRequest, out HTTPResponse.Builder HTTPResponse)
                                                         ||
                                                      !JSONRequest.ParseMandatory("Type",
                                                                                  "charging notification type",
                                                                                  ChargingNotificationTypesExtensions.TryParse,
-                                                                                 out ChargingNotificationTypes  ChargingNotificationType,
+                                                                                 out ChargingNotificationTypes  chargingNotificationType,
                                                                                  out                            errorResponse))
                                                  {
 
@@ -918,8 +922,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  #endregion
 
-
-                                                 switch (ChargingNotificationType)
+                                                 switch (chargingNotificationType)
                                                  {
 
                                                      #region Start
@@ -961,23 +964,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              Acknowledgement<ChargingStartNotificationRequest> acknowledgement = null;
 
                                                              if (OnChargingStartNotification != null)
-                                                             {
-
-                                                                 var results = await Task.WhenAll(OnChargingStartNotification.GetInvocationList().
-                                                                                                      Cast<OnChargingStartNotificationDelegate>().
-                                                                                                      Select(e => e(Timestamp.Now,
-                                                                                                                    this,
-                                                                                                                    chargingStartNotificationRequest))).
-                                                                                                      ConfigureAwait(false);
-
-                                                                 acknowledgement = results.FirstOrDefault();
-
-                                                             }
+                                                                 acknowledgement = (await Task.WhenAll(OnChargingStartNotification.GetInvocationList().
+                                                                                                       Cast<OnChargingStartNotificationDelegate>().
+                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                     this,
+                                                                                                                     chargingStartNotificationRequest))).
+                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
 
                                                              if (acknowledgement == null)
                                                                  acknowledgement = Acknowledgement<ChargingStartNotificationRequest>.SystemError(
                                                                                        chargingStartNotificationRequest,
-                                                                                       "Could not process the incoming ChargingStartNotification request!"
+                                                                                       "Could not process the received ChargingStartNotification request!"
                                                                                    );
 
                                                              #endregion
@@ -993,7 +990,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      Timestamp.Now - StartTime))).
+                                                                                                      Timestamp.Now - startTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1004,20 +1001,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                              #endregion
 
-                                                             return new HTTPResponse.Builder(Request) {
-                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                        Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = Timestamp.Now,
-                                                                        AccessControlAllowOrigin   = "*",
-                                                                        AccessControlAllowMethods  = "POST",
-                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
-                                                                        Connection                 = "close"
-                                                                    }.AsImmutable;
+                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                          CustomStatusCodeSerializer);
 
                                                          }
 
@@ -1064,23 +1049,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              Acknowledgement<ChargingProgressNotificationRequest> acknowledgement = null;
 
                                                              if (OnChargingProgressNotification != null)
-                                                             {
-
-                                                                 var results = await Task.WhenAll(OnChargingProgressNotification.GetInvocationList().
-                                                                                                      Cast<OnChargingProgressNotificationDelegate>().
-                                                                                                      Select(e => e(Timestamp.Now,
-                                                                                                                    this,
-                                                                                                                    chargingProgressNotificationRequest))).
-                                                                                                      ConfigureAwait(false);
-
-                                                                 acknowledgement = results.FirstOrDefault();
-
-                                                             }
+                                                                 acknowledgement = (await Task.WhenAll(OnChargingProgressNotification.GetInvocationList().
+                                                                                                       Cast<OnChargingProgressNotificationDelegate>().
+                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                     this,
+                                                                                                                     chargingProgressNotificationRequest))).
+                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
 
                                                              if (acknowledgement == null)
                                                                  acknowledgement = Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
                                                                                        chargingProgressNotificationRequest,
-                                                                                       "Could not process the incoming ChargingProgressNotification request!"
+                                                                                       "Could not process the received ChargingProgressNotification request!"
                                                                                    );
 
                                                              #endregion
@@ -1096,7 +1075,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      Timestamp.Now - StartTime))).
+                                                                                                      Timestamp.Now - startTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1107,20 +1086,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                              #endregion
 
-                                                             return new HTTPResponse.Builder(Request) {
-                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                        Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = Timestamp.Now,
-                                                                        AccessControlAllowOrigin   = "*",
-                                                                        AccessControlAllowMethods  = "POST",
-                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
-                                                                        Connection                 = "close"
-                                                                    }.AsImmutable;
+                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                          CustomStatusCodeSerializer);
 
                                                          }
 
@@ -1167,23 +1134,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              Acknowledgement<ChargingEndNotificationRequest> acknowledgement = null;
 
                                                              if (OnChargingEndNotification != null)
-                                                             {
-
-                                                                 var results = await Task.WhenAll(OnChargingEndNotification.GetInvocationList().
-                                                                                                      Cast<OnChargingEndNotificationDelegate>().
-                                                                                                      Select(e => e(Timestamp.Now,
-                                                                                                                    this,
-                                                                                                                    chargingEndNotificationRequest))).
-                                                                                                      ConfigureAwait(false);
-
-                                                                 acknowledgement = results.FirstOrDefault();
-
-                                                             }
+                                                                 acknowledgement = (await Task.WhenAll(OnChargingEndNotification.GetInvocationList().
+                                                                                                       Cast<OnChargingEndNotificationDelegate>().
+                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                     this,
+                                                                                                                     chargingEndNotificationRequest))).
+                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
 
                                                              if (acknowledgement == null)
                                                                  acknowledgement = Acknowledgement<ChargingEndNotificationRequest>.SystemError(
                                                                                        chargingEndNotificationRequest,
-                                                                                       "Could not process the incoming ChargingEndNotification request!"
+                                                                                       "Could not process the received ChargingEndNotification request!"
                                                                                    );
 
                                                              #endregion
@@ -1199,7 +1160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      Timestamp.Now - StartTime))).
+                                                                                                      Timestamp.Now - startTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1210,20 +1171,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                              #endregion
 
-                                                             return new HTTPResponse.Builder(Request) {
-                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                        Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = Timestamp.Now,
-                                                                        AccessControlAllowOrigin   = "*",
-                                                                        AccessControlAllowMethods  = "POST",
-                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
-                                                                        Connection                 = "close"
-                                                                    }.AsImmutable;
+                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                          CustomStatusCodeSerializer);
 
                                                          }
 
@@ -1270,23 +1219,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              Acknowledgement<ChargingErrorNotificationRequest> acknowledgement = null;
 
                                                              if (OnChargingErrorNotification != null)
-                                                             {
-
-                                                                 var results = await Task.WhenAll(OnChargingErrorNotification.GetInvocationList().
-                                                                                                      Cast<OnChargingErrorNotificationDelegate>().
-                                                                                                      Select(e => e(Timestamp.Now,
-                                                                                                                    this,
-                                                                                                                    chargingErrorNotificationRequest))).
-                                                                                                      ConfigureAwait(false);
-
-                                                                 acknowledgement = results.FirstOrDefault();
-
-                                                             }
+                                                                 acknowledgement = (await Task.WhenAll(OnChargingErrorNotification.GetInvocationList().
+                                                                                                       Cast<OnChargingErrorNotificationDelegate>().
+                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                     this,
+                                                                                                                     chargingErrorNotificationRequest))).
+                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
 
                                                              if (acknowledgement == null)
                                                                  acknowledgement = Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
                                                                                        chargingErrorNotificationRequest,
-                                                                                       "Could not process the incoming ChargingErrorNotification request!"
+                                                                                       "Could not process the received ChargingErrorNotification request!"
                                                                                    );
 
                                                              #endregion
@@ -1302,7 +1245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         Select(e => e(Timestamp.Now,
                                                                                                       this,
                                                                                                       acknowledgement,
-                                                                                                      Timestamp.Now - StartTime))).
+                                                                                                      Timestamp.Now - startTime))).
                                                                                         ConfigureAwait(false);
 
                                                              }
@@ -1313,20 +1256,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                              #endregion
 
-                                                             return new HTTPResponse.Builder(Request) {
-                                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                                        Server                     = HTTPServer.DefaultServerName,
-                                                                        Date                       = Timestamp.Now,
-                                                                        AccessControlAllowOrigin   = "*",
-                                                                        AccessControlAllowMethods  = "POST",
-                                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
-                                                                        Connection                 = "close"
-                                                                    }.AsImmutable;
+                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                          CustomStatusCodeSerializer);
 
                                                          }
 
@@ -1334,27 +1265,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                      #endregion
 
+                                                     #region ...or default
+
+                                                     default:
+                                                         return new HTTPResponse.Builder(Request) {
+                                                                    HTTPStatusCode             = HTTPStatusCode.BadRequest,
+                                                                    Server                     = HTTPServer.DefaultServerName,
+                                                                    Date                       = Timestamp.Now,
+                                                                    AccessControlAllowOrigin   = "*",
+                                                                    AccessControlAllowMethods  = "POST",
+                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                                    ContentType                = HTTPContentType.JSON_UTF8,
+                                                                    Content                    = Acknowledgement.DataError(
+                                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                                     StatusCodeDescription:     "We could not handle the given charging notification request!",
+                                                                                                                     StatusCodeAdditionalInfo:  errorResponse
+                                                                                                                 ).
+                                                                                                                 ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                        CustomStatusCodeSerializer).
+                                                                                                                 ToString(JSONFormatting).
+                                                                                                                 ToUTF8Bytes(),
+                                                                    Connection                 = "close"
+                                                                }.AsImmutable;
+
+                                                     #endregion
+
                                                  }
 
                                                  return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = Acknowledgement.DataError(
-                                                                                                         RequestTimestamp:          Request.Timestamp,
-                                                                                                         StatusCodeDescription:     "We could not handle the given charging notification request!",
-                                                                                                         StatusCodeAdditionalInfo:  errorResponse
-                                                                                                     ).
-                                                                                                     ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                                            HTTPStatusCode             = HTTPStatusCode.OK,
+                                                            Server                     = HTTPServer.DefaultServerName,
+                                                            Date                       = Timestamp.Now,
+                                                            AccessControlAllowOrigin   = "*",
+                                                            AccessControlAllowMethods  = "POST",
+                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                            ContentType                = HTTPContentType.JSON_UTF8,
+                                                            Content                    = acknowledgementJSON.ToString(JSONFormatting).
+                                                                                                             ToUTF8Bytes(),
+                                                            Connection                 = "close"
+                                                        }.AsImmutable;
 
                                              }
                                              catch (Exception e)
@@ -1493,7 +1442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          if (chargeDetailRecordResponse == null)
                                                              chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
                                                                                                   chargeDetailRecordRequest,
-                                                                                                  "Could not process the incoming charge detail record!"
+                                                                                                  "Could not process the received charge detail record!"
                                                                                               );
 
                                                      }

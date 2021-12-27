@@ -196,11 +196,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart JSON objects.</param>
         public static AuthorizeRemoteReservationStartRequest Parse(JObject                                                              JSON,
+                                                                   Provider_Id                                                          ProviderIdURL,
                                                                    TimeSpan                                                             RequestTimeout,
                                                                    DateTime?                                                            Timestamp                                            = null,
                                                                    EventTracking_Id                                                     EventTrackingId                                      = null,
@@ -208,6 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
+                         ProviderIdURL,
                          RequestTimeout,
                          out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
                          out String                                  ErrorResponse,
@@ -230,11 +233,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static AuthorizeRemoteReservationStartRequest Parse(String                                                               Text,
+                                                                   Provider_Id                                                          ProviderIdURL,
                                                                    TimeSpan                                                             RequestTimeout,
                                                                    DateTime?                                                            Timestamp                                            = null,
                                                                    EventTracking_Id                                                     EventTrackingId                                      = null,
@@ -242,6 +247,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
+                         ProviderIdURL,
                          RequestTimeout,
                          out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
                          out String                                  ErrorResponse,
@@ -264,6 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -271,6 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                              JSON,
+                                       Provider_Id                                                          ProviderIdURL,
                                        TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStartRequest                           AuthorizeRemoteReservationStartRequest,
                                        out String                                                           ErrorResponse,
@@ -298,6 +306,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out Provider_Id ProviderId,
                                          out             ErrorResponse))
                 {
+                    return false;
+                }
+
+                if (ProviderId != ProviderIdURL)
+                {
+                    ErrorResponse = "Inconsistend provider identifications: '" + ProviderIdURL + "' (URL) <> '" + ProviderId + "' (JSON)!";
                     return false;
                 }
 
@@ -452,6 +466,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a AuthorizeRemoteReservationStart request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -459,6 +474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static Boolean TryParse(String                                                               Text,
+                                       Provider_Id                                                          ProviderIdURL,
                                        TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStartRequest                           AuthorizeRemoteReservationStartRequest,
                                        out String                                                           ErrorResponse,
@@ -471,6 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
+                                ProviderIdURL,
                                 RequestTimeout,
                                 out AuthorizeRemoteReservationStartRequest,
                                 out ErrorResponse,
