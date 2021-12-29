@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for charging notification types.
+    /// Extensions methods for charging notification types.
     /// </summary>
-    public static class ChargingNotificationTypesExtentions
+    public static class ChargingNotificationTypesExtensions
     {
 
         #region Parse   (Text)

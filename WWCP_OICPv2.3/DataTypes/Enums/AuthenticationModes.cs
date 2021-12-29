@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for authentication modes.
+    /// Extensions methods for authentication modes.
     /// </summary>
-    public static class AuthenticationModesExtentions
+    public static class AuthenticationModesExtensions
     {
 
         #region Parse   (Text)

@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalHashSet("ChargingModes",
                                               "charging modes",
-                                              ChargingModesExtentions.TryParse,
+                                              ChargingModesExtensions.TryParse,
                                               out HashSet<ChargingModes> ChargingModes,
                                               out ErrorResponse))
                 {

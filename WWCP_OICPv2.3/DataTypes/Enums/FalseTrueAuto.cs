@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for FalseTrueAuto.
+    /// Extensions methods for FalseTrueAuto.
     /// </summary>
-    public static class FalseTrueAutoExtentions
+    public static class FalseTrueAutoExtensions
     {
 
         #region Parse   (AccessibilityType)

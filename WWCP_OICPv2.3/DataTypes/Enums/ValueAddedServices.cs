@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for value added services.
+    /// Extensions methods for value added services.
     /// </summary>
-    public static class ValueAddedServicesExtentions
+    public static class ValueAddedServicesExtensions
     {
 
         #region Parse   (Text)

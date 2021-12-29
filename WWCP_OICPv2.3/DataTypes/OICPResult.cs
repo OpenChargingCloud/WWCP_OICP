@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extention methods for the OICP result.
+    /// Extension methods for the OICP result.
     /// </summary>
-    public static class OICPResultExtentions
+    public static class OICPResultExtensions
     {
 
         /// <summary>

@@ -688,6 +688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             case WWCP.RemoteStartResultTypes.Offline:
                             case WWCP.RemoteStartResultTypes.Timeout:
                             case WWCP.RemoteStartResultTypes.CommunicationError:
+                            case WWCP.RemoteStartResultTypes.Error:
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
@@ -740,8 +741,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             default:
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.ServiceNotAvailable(
                                     Request:                   Request,
-                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + "\n" +
-                                                               response.Description + "\n" +
+                                    StatusCodeAdditionalInfo:  "Unknown WWCP RemoteStart result: " + response.Result.ToString() + Environment.NewLine +
+                                                               response.Description.FirstText()                                 + Environment.NewLine +
                                                                response.AdditionalInfo,
                                     SessionId:                 Request.SessionId,
                                     EMPPartnerSessionId:       Request.EMPPartnerSessionId,
@@ -1317,14 +1318,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Get effective number of EVSEStatus/EVSEStatusRecords to upload
 
-            var Warnings     = new List<Warning>();
-            var _EVSEStatus  = new List<EVSEStatusRecord>();
+            var warnings        = new List<Warning>();
+            var evseStatusList  = new List<EVSEStatusRecord>();
 
-            foreach (var evsestatusupdate in EVSEStatusUpdates.
-                                                 Where       (evsestatusupdate => IncludeEVSEs  (evsestatusupdate.EVSE) &&
-                                                                                  IncludeEVSEIds(evsestatusupdate.EVSE.Id)).
-                                                 ToLookup    (evsestatusupdate => evsestatusupdate.EVSE.Id,
-                                                              evsestatusupdate => evsestatusupdate).
+            foreach (var evseStatusUpdate in EVSEStatusUpdates.
+                                                 Where       (evseStatusUpdate => IncludeEVSEs  (evseStatusUpdate.EVSE) &&
+                                                                                  IncludeEVSEIds(evseStatusUpdate.EVSE.Id)).
+                                                 ToLookup    (evseStatusUpdate => evseStatusUpdate.EVSE.Id,
+                                                              evseStatusUpdate => evseStatusUpdate).
                                                  ToDictionary(group            => group.Key,
                                                               group            => group.AsEnumerable().OrderByDescending(item => item.NewStatus.Timestamp)))
 
@@ -1333,22 +1334,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 try
                 {
 
-                    var _EVSEId = evsestatusupdate.Key.ToOICP();
-
-                    if (!_EVSEId.HasValue)
-                        throw new InvalidEVSEIdentificationException(evsestatusupdate.Key.ToString());
-
                     // Only push the current status of the latest status update!
-                    _EVSEStatus.Add(new EVSEStatusRecord(
-                                        _EVSEId.Value,
-                                        evsestatusupdate.Value.First().NewStatus.Value.ToOICP()
-                                    ));
+                    var evseId  = evseStatusUpdate.Key.                          ToOICP();
+                    var status  = evseStatusUpdate.Value.First().NewStatus.Value.ToOICP();
+
+                    if (evseId.HasValue && status.HasValue)
+                        evseStatusList.Add(new EVSEStatusRecord(
+                                               evseId.Value,
+                                               status.Value
+                                           ));
 
                 }
                 catch (Exception e)
                 {
-                    DebugX.  Log(e.Message);
-                    Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evsestatusupdate));
+
+                    DebugX.LogException(e);
+
+                    warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message),
+                                                evseStatusUpdate));
+
                 }
 
             }
@@ -1372,8 +1376,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                     EventTrackingId,
                                                     RoamingNetwork.Id,
                                                     ServerAction,
-                                                    _EVSEStatus,
-                                                    Warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
+                                                    evseStatusList,
+                                                    warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
                                                     RequestTimeout);
 
             }
@@ -1385,7 +1389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            if (_EVSEStatus.Count > 0)
+            if (evseStatusList.Any())
             {
 
                 var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
@@ -1393,7 +1397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 var response    = await CPORoaming.PushEVSEStatus(
                                         new PushEVSEStatusRequest(
                                             new OperatorEVSEStatus(
-                                                _EVSEStatus,
+                                                evseStatusList,
                                                 operatorId.Value,
                                                 DefaultOperatorName
                                             ),
@@ -1416,8 +1420,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    this,
                                                                    response.Response.StatusCode.Description,
                                                                    response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                       ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
-                                                                       : Warnings,
+                                                                       ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
+                                                                       : warnings,
                                                                    Runtime);
 
                     else
@@ -1426,8 +1430,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  EVSEStatusUpdates,
                                                                  response.Response.StatusCode.Description,
                                                                  response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                     ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
-                                                                     : Warnings,
+                                                                     ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
+                                                                     : warnings,
                                                                  Runtime);
 
                 }
@@ -1454,7 +1458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  this,
                                                                  "No EVSEStatusRecords to push!",
                                                                  EVSEStatusUpdates,
-                                                                 Warnings,
+                                                                 warnings,
                                                                  Runtime: TimeSpan.Zero);
 
             }
@@ -1474,7 +1478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      EventTrackingId,
                                                      RoamingNetwork.Id,
                                                      ServerAction,
-                                                     _EVSEStatus,
+                                                     evseStatusList,
                                                      RequestTimeout,
                                                      result,
                                                      Runtime);
@@ -4984,7 +4988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            OICPResult<Acknowledgement<SendChargeDetailRecordRequest>> response;
+                            OICPResult<Acknowledgement<ChargeDetailRecordRequest>> response;
                             WWCP.SendCDRResult result;
 
                             foreach (var chargeDetailRecord in ChargeDetailRecords)

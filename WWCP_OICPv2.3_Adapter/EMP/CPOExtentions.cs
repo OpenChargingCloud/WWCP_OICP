@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
@@ -30,9 +31,9 @@ namespace org.GraphDefined.WWCP
 {
 
     /// <summary>
-    /// Extentions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
+    /// Extensions methods for the WWCP wrapper for OICP roaming clients for e-mobility providers/EMPs.
     /// </summary>
-    public static class CPOExtentions
+    public static class CPOExtensions
     {
 
         /// <summary>
@@ -75,37 +76,45 @@ namespace org.GraphDefined.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static OICPv2_3.EMP.WWCPCSOAdapter
 
-            CreateOICPv2_3_CPORoamingProvider(this RoamingNetwork                       RoamingNetwork,
-                                              CSORoamingProvider_Id                     Id,
-                                              I18NString                                Name,
-                                              OICPv2_3.EMP.EMPRoaming                   EMPRoaming,
+            CreateOICPv2_3_CPORoamingProvider(this RoamingNetwork                                     RoamingNetwork,
+                                              CSORoamingProvider_Id                                   Id,
+                                              I18NString                                              Name,
+                                              OICPv2_3.EMP.EMPRoaming                                 EMPRoaming,
 
-                                              OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate  EVSEDataRecord2EVSE                     = null,
+                                              OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate                EVSEDataRecord2EVSE                                 = null,
 
-                                              OICPv2_3.EVSEOperatorFilterDelegate       EVSEOperatorFilter                      = null,
+                                              Boolean                                                 PullEVSEData_IsDisabled                             = false,
+                                              TimeSpan?                                               PullEVSEData_InitialDelay                           = null,
+                                              TimeSpan?                                               PullEVSEData_Every                                  = null,
+                                              UInt32?                                                 PullEVSEData_RequestPageSize                        = null,
+                                              TimeSpan?                                               PullEVSEData_RequestTimeout                         = null,
 
-                                              Boolean                                   PullEVSEData_IsDisabled                 = false,
-                                              TimeSpan?                                 PullEVSEData_InitialDelay               = null,
-                                              TimeSpan?                                 PullEVSEData_Every                      = null,
-                                              TimeSpan?                                 PullEVSEData_RequestTimeout             = null,
+                                              IEnumerable<OICPv2_3.Operator_Id>                       PullEVSEData_OperatorIdFilter                       = null,
+                                              IEnumerable<Country>                                    PullEVSEData_CountryCodeFilter                      = null,
+                                              IEnumerable<OICPv2_3.AccessibilityTypes>                PullEVSEData_AccessibilityFilter                    = null,
+                                              IEnumerable<OICPv2_3.AuthenticationModes>               PullEVSEData_AuthenticationModeFilter               = null,
+                                              IEnumerable<OICPv2_3.CalibrationLawDataAvailabilities>  PullEVSEData_CalibrationLawDataAvailabilityFilter   = null,
+                                              Boolean?                                                PullEVSEData_RenewableEnergyFilter                  = null,
+                                              Boolean?                                                PullEVSEData_IsHubjectCompatibleFilter              = null,
+                                              Boolean?                                                PullEVSEData_IsOpen24HoursFilter                    = null,
 
-                                              Boolean                                   PullEVSEStatus_IsDisabled               = false,
-                                              TimeSpan?                                 PullEVSEStatus_InitialDelay             = null,
-                                              TimeSpan?                                 PullEVSEStatus_Every                    = null,
-                                              TimeSpan?                                 PullEVSEStatus_RequestTimeout           = null,
+                                              Boolean                                                 PullEVSEStatus_IsDisabled                           = false,
+                                              TimeSpan?                                               PullEVSEStatus_InitialDelay                         = null,
+                                              TimeSpan?                                               PullEVSEStatus_Every                                = null,
+                                              TimeSpan?                                               PullEVSEStatus_RequestTimeout                       = null,
 
-                                              Boolean                                   GetChargeDetailRecords_IsDisabled       = false,
-                                              TimeSpan?                                 GetChargeDetailRecords_InitialDelay     = null,
-                                              TimeSpan?                                 GetChargeDetailRecords_Every            = null,
-                                              TimeSpan?                                 GetChargeDetailRecords_RequestTimeout   = null,
+                                              Boolean                                                 GetChargeDetailRecords_IsDisabled                   = false,
+                                              TimeSpan?                                               GetChargeDetailRecords_InitialDelay                 = null,
+                                              TimeSpan?                                               GetChargeDetailRecords_Every                        = null,
+                                              TimeSpan?                                               GetChargeDetailRecords_RequestTimeout               = null,
 
-                                              eMobilityProvider                         DefaultProvider                         = null,
-                                              eMobilityProvider_Id?                     DefaultProviderId                       = null,
-                                              GeoCoordinate?                            DefaultSearchCenter                     = null,
-                                              UInt64?                                   DefaultDistanceKM                       = null,
+                                              eMobilityProvider                                       DefaultProvider                                     = null,
+                                              eMobilityProvider_Id?                                   DefaultProviderId                                   = null,
+                                              GeoCoordinate?                                          DefaultSearchCenter                                 = null,
+                                              UInt64?                                                 DefaultDistanceKM                                   = null,
 
-                                              Action<OICPv2_3.EMP.WWCPCSOAdapter>       OICPConfigurator                        = null,
-                                              Action<ICSORoamingProvider>               Configurator                            = null)
+                                              Action<OICPv2_3.EMP.WWCPCSOAdapter>                     OICPConfigurator                                    = null,
+                                              Action<ICSORoamingProvider>                             Configurator                                        = null)
 
         {
 
@@ -129,12 +138,20 @@ namespace org.GraphDefined.WWCP
 
                                                                      EVSEDataRecord2EVSE,
 
-                                                                     EVSEOperatorFilter,
-
                                                                      PullEVSEData_IsDisabled,
                                                                      PullEVSEData_InitialDelay,
                                                                      PullEVSEData_Every,
+                                                                     PullEVSEData_RequestPageSize,
                                                                      PullEVSEData_RequestTimeout,
+
+                                                                     PullEVSEData_OperatorIdFilter,
+                                                                     PullEVSEData_CountryCodeFilter,
+                                                                     PullEVSEData_AccessibilityFilter,
+                                                                     PullEVSEData_AuthenticationModeFilter,
+                                                                     PullEVSEData_CalibrationLawDataAvailabilityFilter,
+                                                                     PullEVSEData_RenewableEnergyFilter,
+                                                                     PullEVSEData_IsHubjectCompatibleFilter,
+                                                                     PullEVSEData_IsOpen24HoursFilter,
 
                                                                      PullEVSEStatus_IsDisabled,
                                                                      PullEVSEStatus_InitialDelay,

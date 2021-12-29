@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for accessibility types.
+    /// Extensions methods for accessibility types.
     /// </summary>
-    public static class AccessibilityTypesExtentions
+    public static class AccessibilityTypesExtensions
     {
 
         #region Parse   (AccessibilityType)

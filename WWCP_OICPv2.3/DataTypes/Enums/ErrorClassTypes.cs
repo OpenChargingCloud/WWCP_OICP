@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for error class types.
+    /// Extensions methods for error class types.
     /// </summary>
-    public static class ErrorClassTypesExtentions
+    public static class ErrorClassTypesExtensions
     {
 
         #region Parse   (Text)

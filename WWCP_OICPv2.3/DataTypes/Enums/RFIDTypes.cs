@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for RFID types.
+    /// Extensions methods for RFID types.
     /// </summary>
-    public static class RFIDTypesExtentions
+    public static class RFIDTypesExtensions
     {
 
         #region Parse   (Text)

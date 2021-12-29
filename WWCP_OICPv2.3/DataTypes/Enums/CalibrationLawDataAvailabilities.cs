@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for EVSE status types.
+    /// Extensions methods for EVSE status types.
     /// </summary>
-    public static class CalibrationLawDataAvailabilitiesExtentions
+    public static class CalibrationLawDataAvailabilitiesExtensions
     {
 
         #region Parse   (Text)

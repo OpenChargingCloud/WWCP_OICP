@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for power types.
+    /// Extensions methods for power types.
     /// </summary>
-    public static class PowerTypesExtentions
+    public static class PowerTypesExtensions
     {
 
         #region Parse   (Text)

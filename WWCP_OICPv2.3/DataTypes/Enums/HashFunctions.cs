@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for hash functions.
+    /// Extensions methods for hash functions.
     /// </summary>
-    public static class HashFunctionExtentions
+    public static class HashFunctionExtensions
     {
 
         #region Parse   (Text)

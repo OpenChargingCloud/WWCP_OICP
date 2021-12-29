@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for delta types.
+    /// Extensions methods for delta types.
     /// </summary>
-    public static class DeltaTypesExtentions
+    public static class DeltaTypesExtensions
     {
 
         #region Parse   (Text)

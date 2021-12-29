@@ -21,6 +21,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
 
@@ -32,115 +34,223 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     public class ChargingPoolInfo : IEquatable<ChargingPoolInfo>,
-                                    IEnumerable<ChargeStationInfo>
+                                    IEnumerable<ChargingStationInfo>
     {
 
         #region Data
 
-        private readonly List<ChargeStationInfo> _ChargingStations;
+        private readonly Dictionary<ChargingStation_Id, ChargingStationInfo> _ChargingStations;
 
         #endregion
 
         #region Properties
 
-        public CPInfoList                      CPInfoList     { get; }
+        public OperatorInfo                      OperatorInfo      { get; internal set; }
 
-        public ChargingPool_Id                 PoolId         { get; }
+        public ChargingPool_Id                   PoolId            { get; }
 
-        public Address                         Address        { get; }
+        public Address?                          Address           { get; }
 
-        public GeoCoordinates?                 GeoLocation    { get; }
+        public GeoCoordinates?                   GeoCoordinates    { get; }
 
-        public IEnumerable<ChargeStationInfo>  ChargingStations
-            => _ChargingStations;
+        public IEnumerable<ChargingStationInfo>  ChargingStations
+            => _ChargingStations.Values;
 
         #endregion
 
         #region Constructor(s)
 
-        public ChargingPoolInfo(CPInfoList       CPInfoList,
-                                ChargingPool_Id  PoolId,
-                                Address          Address,
-                                GeoCoordinates?  GeoLocation)
+        public ChargingPoolInfo(OperatorInfo                       OperatorInfo,
+                                ChargingPool_Id                    PoolId,
+                                Address?                           Address                = null,
+                                GeoCoordinates?                    GeoCoordinates         = null,
+                                IEnumerable<ChargingStationInfo>?  ChargingStationInfos   = null)
         {
 
-            this.CPInfoList         = CPInfoList  ?? throw new ArgumentNullException(nameof(CPInfoList),   "The given CPInfoList must not be null!");
+            if (PoolId.IsNullOrEmpty)
+                throw new ArgumentNullException(nameof(PoolId), "The given pool identification must not be null or empty!");
+
+            this.OperatorInfo       = OperatorInfo   ?? throw new ArgumentNullException(nameof(OperatorInfo),    "The given OperatorInfo must not be null!");
             this.PoolId             = PoolId;
-            this.Address            = Address     ?? throw new ArgumentNullException(nameof(Address),      "The given address must not be null!");
-            this.GeoLocation        = GeoLocation ?? throw new ArgumentNullException(nameof(GeoLocation),  "The given geo location must not be null!");
-            this._ChargingStations  = new List<ChargeStationInfo>();
+            this.Address            = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
+            this.GeoCoordinates     = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
+
+            this._ChargingStations  = ChargingStationInfos != null
+                                          ? ChargingStationInfos.ToDictionary(station => station.StationId)
+                                          : new Dictionary<ChargingStation_Id, ChargingStationInfo>();
 
         }
 
         #endregion
 
 
-        #region (private) AddCSInfo(ChargingStationXMLId, EVSEId)
+        #region AddOrUpdateChargingStation(CurrentEVSEDataRecord)
 
-        private void AddCSInfo(String   ChargingStationXMLId,
-                               EVSE_Id  EVSEId)
+        public void AddOrUpdateChargingStation(EVSEDataRecord CurrentEVSEDataRecord)
         {
 
-            var _CSInfo = new ChargeStationInfo(this, ChargingStationXMLId, EVSEId);
+            var chargingStationId = CurrentEVSEDataRecord.ChargingStationId
+                                        ?? ChargingStation_Id.Generate(CurrentEVSEDataRecord.OperatorId,
+                                                                       CurrentEVSEDataRecord.Address,
+                                                                       CurrentEVSEDataRecord.GeoCoordinates,
+                                                                       CurrentEVSEDataRecord.SubOperatorName,
+                                                                       CurrentEVSEDataRecord.ChargingStationName);
 
-            this._ChargingStations.Add(_CSInfo);
-
-            Check();
-
-        }
-
-        #endregion
-
-        #region AddOrUpdateCSInfo(ChargingStationXMLId, EVSEId)
-
-        public void AddOrUpdateCSInfo(String   ChargingStationXMLId,
-                                      EVSE_Id  EVSEId)
-        {
-
-            var ExCSInfos = ChargingStationXMLId.IsNotNullOrEmpty()
-                                ? _ChargingStations.
-                                      FirstOrDefault(CSInfo => CSInfo.StationXMLId == ChargingStationXMLId)
-                                : _ChargingStations.
-                                      FirstOrDefault(CSInfo => CSInfo.StationId    == ChargingStation_Id.Parse(EVSEId.ToWWCP().Value.ToString()));
-
-            if (ChargingStationXMLId.IsNullOrEmpty())
+            if (!_ChargingStations.TryGetValue(chargingStationId, out ChargingStationInfo chargingStationInfo))
             {
+
+                chargingStationInfo = new ChargingStationInfo(this,
+                                                              chargingStationId,
+                                                              CurrentEVSEDataRecord.Address,
+                                                              CurrentEVSEDataRecord.GeoCoordinates);
+
+                _ChargingStations.Add(chargingStationInfo.StationId, chargingStationInfo);
 
             }
 
-            if (ExCSInfos == null)
-                AddCSInfo(ChargingStationXMLId.IsNotNullOrEmpty()
-                              ? ChargingStationXMLId
-                              : WWCP.ChargingStation_Id.Create(EVSEId.ToWWCP().Value).ToString(),
-                          EVSEId);
+            chargingStationInfo.AddOrUpdateEVSE(CurrentEVSEDataRecord);
 
-            else
+        }
+
+        #endregion
+
+
+        #region (static) TryParse(JSON, out ChargingPoolInfo, out ErrorResponse)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an operator info.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ChargingPoolInfo">The parsed charging pool info.</param>
+        /// <param name="ErrorResponse">An optional error response.</param>
+        public static Boolean TryParse(JObject                JSON,
+                                       out ChargingPoolInfo?  ChargingPoolInfo,
+                                       out String?            ErrorResponse)
+        {
+
+            try
             {
-                ExCSInfos.AddEVSEId(EVSEId);
-                Check();
+
+                ChargingPoolInfo = default;
+
+                if (JSON?.HasValues != true)
+                {
+                    ErrorResponse = "The given JSON object must not be null or empty!";
+                    return false;
+                }
+
+                #region Parse PoolId              [mandatory]
+
+                if (!JSON.ParseMandatory("poolId",
+                                         "charging pool identification",
+                                         ChargingPool_Id.TryParse,
+                                         out ChargingPool_Id PoolId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse Address             [optional]
+
+                if (JSON.ParseOptionalJSON("address",
+                                           "charging pool address",
+                                           OICPv2_3.Address.TryParse,
+                                           out Address Address,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse GeoCoordinates      [optional]
+
+                if (JSON.ParseOptionalJSON("geoCoordinates",
+                                           "charging pool geo coordinates",
+                                           OICPv2_3.GeoCoordinates.TryParse,
+                                           out GeoCoordinates GeoCoordinates,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse ChargingStations    [optional]
+
+                if (JSON.ParseOptionalJSON("chargingStations",
+                                           "charging stations",
+                                           ChargingStationInfo.TryParse,
+                                           out IEnumerable<ChargingStationInfo> ChargingStations,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+
+                ChargingPoolInfo = new ChargingPoolInfo(null,
+                                                        PoolId,
+                                                        Address,
+                                                        GeoCoordinates,
+                                                        null);
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ChargingPoolInfo  = default;
+                ErrorResponse     = "The given JSON representation of a charging pool info is invalid: " + e.Message;
+                return false;
             }
 
         }
 
         #endregion
 
-        #region Check()
+        #region ToJSON()
 
-        public void Check()
-        {
-            _ChargingStations.ForEach(cs => cs.Check());
-        }
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+
+        public JObject ToJSON()
+
+            => JSONObject.Create(
+
+                         new JProperty("poolId",            PoolId.              ToString()),
+
+                   Address != null
+                       ? new JProperty("address",           Address.             ToJSON())
+                       : null,
+
+                   GeoCoordinates.HasValue
+                       ? new JProperty("geoCoordinates",    GeoCoordinates.Value.ToJSON())
+                       : null,
+
+                   ChargingStations.SafeAny()
+                       ? new JProperty("chargingStations",  JSONArray.Create(ChargingStations.Select(chargingStation => chargingStation.ToJSON())))
+                       : null
+
+               );
 
         #endregion
 
 
         #region IEnumerable<ChargeStationInfo> Members
 
-        public IEnumerator<ChargeStationInfo> GetEnumerator()
-            => _ChargingStations.GetEnumerator();
+        public IEnumerator<ChargingStationInfo> GetEnumerator()
+            => _ChargingStations.Values.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => _ChargingStations.GetEnumerator();
+            => _ChargingStations.Values.GetEnumerator();
 
         #endregion
 
@@ -219,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => String.Concat("'", PoolId, "' => ",
                              _ChargingStations.Count,
                              " charging stations, ",
-                             _ChargingStations.SelectMany(v => v.EVSEIds).Count(),
+                             _ChargingStations.SelectMany(v => v.Value.EVSEDataRecords).Count(),
                              " EVSEs");
 
         #endregion

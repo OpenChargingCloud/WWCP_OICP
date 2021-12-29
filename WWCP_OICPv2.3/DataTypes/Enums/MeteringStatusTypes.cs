@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for metering status types.
+    /// Extensions methods for metering status types.
     /// </summary>
-    public static class MeteringStatusTypesExtentions
+    public static class MeteringStatusTypesExtensions
     {
 
         #region Parse   (Text)

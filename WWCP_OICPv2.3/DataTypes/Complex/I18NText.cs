@@ -31,9 +31,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extention methods for internationalized (I18N) multi-language text.
+    /// Extension methods for internationalized (I18N) multi-language text.
     /// </summary>
-    public static class I18NTextExtentions
+    public static class I18NTextExtensions
     {
 
         /// <summary>

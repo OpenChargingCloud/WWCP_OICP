@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for action types.
+    /// Extensions methods for action types.
     /// </summary>
-    public static class ActionTypesExtentions
+    public static class ActionTypesExtensions
     {
 
         #region Parse   (Text)

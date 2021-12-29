@@ -11,6 +11,7 @@
     <AssemblyName>WWCP_OICPv2.3_Adapter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -53,9 +54,9 @@
     <Compile Include="EMP\EMPDelegates.cs" />
     <Compile Include="EMP\OICPImporter.cs" />
     <Compile Include="EMP\WWCPCSOAdapter.cs" />
-    <Compile Include="Helper\ChargeStationInfo.cs" />
+    <Compile Include="Helper\ChargingStationInfo.cs" />
     <Compile Include="Helper\ChargingPoolInfo.cs" />
-    <Compile Include="Helper\CPInfoList.cs" />
+    <Compile Include="Helper\OperatorInfo.cs" />
     <Compile Include="Helper\EVSEIdLookup.cs" />
     <Compile Include="Helper\EVSEInfo.cs" />
     <Compile Include="OICPExceptions.cs" />

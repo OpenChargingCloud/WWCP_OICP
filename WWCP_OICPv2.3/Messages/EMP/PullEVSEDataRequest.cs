@@ -377,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalJSON("Accessibility",
                                            "accessibility filter",
-                                           AccessibilityTypesExtentions.TryParse,
+                                           AccessibilityTypesExtensions.TryParse,
                                            out IEnumerable<AccessibilityTypes> AccessibilityFilter,
                                            out ErrorResponse))
                 {
@@ -391,7 +391,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalJSON("AuthenticationModes",
                                            "authentication mode filter",
-                                           AuthenticationModesExtentions.TryParse,
+                                           AuthenticationModesExtensions.TryParse,
                                            out IEnumerable<AuthenticationModes> AuthenticationModeFilter,
                                            out ErrorResponse))
                 {
@@ -405,7 +405,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptionalJSON("CalibrationLawDataAvailability",
                                            "calibration law data availability filter",
-                                           CalibrationLawDataAvailabilitiesExtentions.TryParse,
+                                           CalibrationLawDataAvailabilitiesExtensions.TryParse,
                                            out IEnumerable<CalibrationLawDataAvailabilities> CalibrationLawDataAvailabilityFilter,
                                            out ErrorResponse))
                 {
@@ -497,7 +497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("GeoCoordinatesResponseFormat",
                                        "geo coordinates response format",
-                                       GeoCoordinatesFormatsExtentions.TryParse,
+                                       GeoCoordinatesFormatsExtensions.TryParse,
                                        out GeoCoordinatesFormats GeoCoordinatesResponseFormat,
                                        out ErrorResponse))
                 {

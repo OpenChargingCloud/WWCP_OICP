@@ -136,11 +136,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop JSON objects.</param>
         public static AuthorizeRemoteStopRequest Parse(JObject                                                  JSON,
+                                                       Provider_Id                                              ProviderIdURL,
                                                        TimeSpan                                                 RequestTimeout,
                                                        DateTime?                                                Timestamp                                = null,
                                                        EventTracking_Id                                         EventTrackingId                          = null,
@@ -148,6 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
+                         ProviderIdURL,
                          RequestTimeout,
                          out AuthorizeRemoteStopRequest  authorizeRemoteStopRequest,
                          out String                      ErrorResponse,
@@ -170,11 +173,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given text representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static AuthorizeRemoteStopRequest Parse(String                                                   Text,
+                                                       Provider_Id                                              ProviderIdURL,
                                                        TimeSpan                                                 RequestTimeout,
                                                        DateTime?                                                Timestamp                                = null,
                                                        EventTracking_Id                                         EventTrackingId                          = null,
@@ -182,6 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
+                         ProviderIdURL,
                          RequestTimeout,
                          out AuthorizeRemoteStopRequest  authorizeRemoteStopRequest,
                          out String                      ErrorResponse,
@@ -204,6 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -211,6 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
+                                       Provider_Id                                              ProviderIdURL,
                                        TimeSpan                                                 RequestTimeout,
                                        out AuthorizeRemoteStopRequest                           AuthorizeRemoteStopRequest,
                                        out String                                               ErrorResponse,
@@ -238,6 +246,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out Provider_Id ProviderId,
                                          out             ErrorResponse))
                 {
+                    return false;
+                }
+
+                if (ProviderId != ProviderIdURL)
+                {
+                    ErrorResponse = "Inconsistend provider identifications: '" + ProviderIdURL + "' (URL) <> '" + ProviderId + "' (JSON)!";
                     return false;
                 }
 
@@ -340,6 +354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given text representation of a AuthorizeRemoteStop request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
@@ -347,6 +362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static Boolean TryParse(String                                                   Text,
+                                       Provider_Id                                              ProviderIdURL,
                                        TimeSpan                                                 RequestTimeout,
                                        out AuthorizeRemoteStopRequest                           AuthorizeRemoteStopRequest,
                                        out String                                               ErrorResponse,
@@ -359,6 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
+                                ProviderIdURL,
                                 RequestTimeout,
                                 out AuthorizeRemoteStopRequest,
                                 out ErrorResponse,

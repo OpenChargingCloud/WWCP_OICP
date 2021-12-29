@@ -25,9 +25,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extentions methods for status codes.
+    /// Extensions methods for status codes.
     /// </summary>
-    public static class StatusCodesExtentions
+    public static class StatusCodesExtensions
     {
 
         #region Parse   (Text)

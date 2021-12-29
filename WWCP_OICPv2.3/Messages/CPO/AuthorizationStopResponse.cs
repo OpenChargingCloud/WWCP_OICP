@@ -877,7 +877,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("AuthorizationStatus",
                                          "authorization status",
-                                         AuthorizationStatusTypesExtentions.TryParse,
+                                         AuthorizationStatusTypesExtensions.TryParse,
                                          out AuthorizationStatusTypes AuthorizationStatus,
                                          out ErrorResponse))
                 {
