@@ -340,9 +340,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => _ChargingPools.Values.                                                                                           Count() + " charging pools, " +
-               _ChargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count() + " charging stations, " +
-               _ChargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count() + " EVSEs.";
+            => String.Concat(OperatorName, " (", OperatorId.ToString(), ") ", " => ",
+                             _ChargingPools.Values.                                                                                           Count(), " charging pools, ",
+                             _ChargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count(), " charging stations, ",
+                             _ChargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count(), " EVSEs.");
 
         #endregion
 
