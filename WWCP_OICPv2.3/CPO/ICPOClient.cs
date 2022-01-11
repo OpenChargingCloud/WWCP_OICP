@@ -87,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        Task<OICPResult<Acknowledgement<SendChargeDetailRecordRequest>>>        SendChargeDetailRecord          (SendChargeDetailRecordRequest        Request);
+        Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>        SendChargeDetailRecord          (ChargeDetailRecordRequest        Request);
 
     }
 

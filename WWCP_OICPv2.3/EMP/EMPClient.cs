@@ -36,35 +36,71 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The OICP EMP client.
+    /// The EMP client.
     /// </summary>
     public partial class EMPClient : AHTTPClient,
                                      IEMPClient
     {
 
-        public class EMPCounters
+        #region (class) Counters
+
+        public class Counters
         {
 
-            public CounterValues GetTokens  { get; }
-            public CounterValues PostTokens { get; }
+            public CounterValues  PullEVSEData                  { get; }
+            public CounterValues  PullEVSEStatus                { get; }
+            public CounterValues  PullEVSEStatusById            { get; }
+            public CounterValues  PullEVSEStatusByOperatorId    { get; }
+            public CounterValues  PushAuthenticationData        { get; }
+            public CounterValues  RemoteReservationStart        { get; }
+            public CounterValues  RemoteReservationStop         { get; }
+            public CounterValues  RemoteStart                   { get; }
+            public CounterValues  RemoteStop                    { get; }
+            public CounterValues  GetChargeDetailRecords        { get; }
 
-            public EMPCounters(CounterValues? GetTokens  = null,
-                               CounterValues? PostTokens = null)
+            public Counters(CounterValues? PullEVSEData                 = null,
+                            CounterValues? PullEVSEStatus               = null,
+                            CounterValues? PullEVSEStatusById           = null,
+                            CounterValues? PullEVSEStatusByOperatorId   = null,
+                            CounterValues? PushAuthenticationData       = null,
+                            CounterValues? RemoteReservationStart       = null,
+                            CounterValues? RemoteReservationStop        = null,
+                            CounterValues? RemoteStart                  = null,
+                            CounterValues? RemoteStop                   = null,
+                            CounterValues? GetChargeDetailRecords       = null)
             {
 
-                this.GetTokens  = GetTokens  ?? new CounterValues();
-                this.PostTokens = PostTokens ?? new CounterValues();
+                this.PullEVSEData                = PullEVSEData               ?? new CounterValues();
+                this.PullEVSEStatus              = PullEVSEStatus             ?? new CounterValues();
+                this.PullEVSEStatusById          = PullEVSEStatusById         ?? new CounterValues();
+                this.PullEVSEStatusByOperatorId  = PullEVSEStatusByOperatorId ?? new CounterValues();
+                this.PushAuthenticationData      = PushAuthenticationData     ?? new CounterValues();
+                this.RemoteReservationStart      = RemoteReservationStart     ?? new CounterValues();
+                this.RemoteReservationStop       = RemoteReservationStop      ?? new CounterValues();
+                this.RemoteStart                 = RemoteStart                ?? new CounterValues();
+                this.RemoteStop                  = RemoteStop                 ?? new CounterValues();
+                this.GetChargeDetailRecords      = GetChargeDetailRecords     ?? new CounterValues();
 
             }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("GetTokens",  GetTokens. ToJSON()),
-                       new JProperty("PostTokens", PostTokens.ToJSON())
+                       new JProperty("PullEVSEData",                PullEVSEData.              ToJSON()),
+                       new JProperty("PullEVSEStatus",              PullEVSEStatus.            ToJSON()),
+                       new JProperty("PullEVSEStatusById",          PullEVSEStatusById.        ToJSON()),
+                       new JProperty("PullEVSEStatusByOperatorId",  PullEVSEStatusByOperatorId.ToJSON()),
+                       new JProperty("PushAuthenticationData",      PushAuthenticationData.    ToJSON()),
+                       new JProperty("RemoteReservationStart",      RemoteReservationStart.    ToJSON()),
+                       new JProperty("RemoteReservationStop",       RemoteReservationStop.     ToJSON()),
+                       new JProperty("RemoteStart",                 RemoteStart.               ToJSON()),
+                       new JProperty("RemoteStop",                  RemoteStop.                ToJSON()),
+                       new JProperty("GetChargeDetailRecords",      GetChargeDetailRecords.    ToJSON())
                    );
 
         }
+
+        #endregion
 
 
         #region Data
@@ -92,6 +128,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
         #region Properties
+
+        public Counters  Counter    { get; }
 
         /// <summary>
         /// The attached HTTP client logger.
@@ -386,6 +424,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
+            this.Counter     = new Counters();
+
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger  = DisableLogging == false
@@ -435,6 +475,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnPullEVSEDataRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.PullEVSEData.IncRequests();
 
             try
             {
@@ -854,6 +896,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.PullEVSEStatus.IncRequests();
+
             try
             {
 
@@ -1221,6 +1265,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.PullEVSEStatusById.IncRequests();
+
             try
             {
 
@@ -1587,6 +1633,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnPullEVSEStatusByOperatorIdRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.PullEVSEStatusByOperatorId.IncRequests();
 
             try
             {
@@ -1970,6 +2018,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.RemoteReservationStart.IncRequests();
 
             try
             {
@@ -2365,6 +2415,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.RemoteReservationStop.IncRequests();
+
             try
             {
 
@@ -2758,6 +2810,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnAuthorizeRemoteStartRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.RemoteStart.IncRequests();
 
             try
             {
@@ -3153,6 +3207,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = DateTime.UtcNow;
 
+            Counter.RemoteStop.IncRequests();
+
             try
             {
 
@@ -3547,6 +3603,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnGetChargeDetailRecordsRequest event
 
             var StartTime = DateTime.UtcNow;
+
+            Counter.GetChargeDetailRecords.IncRequests();
 
             try
             {

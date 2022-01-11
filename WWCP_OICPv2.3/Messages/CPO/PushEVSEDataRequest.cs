@@ -67,7 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional name of the charging station operator maintaining the given EVSE data records.
         /// </summary>
         public String                       OperatorName
-            => OperatorEVSEData.OperatorName;
+            => OperatorEVSEData?.OperatorName;
 
         #endregion
 

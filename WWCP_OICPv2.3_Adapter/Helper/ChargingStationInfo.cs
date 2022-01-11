@@ -168,11 +168,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse EVSEDataRecords     [optional]
 
-                if (JSON.Parallel_ParseOptionalJSON("evses",
-                                                    "evses",
-                                                    EVSEDataRecord.TryParse,
-                                                    out IEnumerable<EVSEDataRecord> EVSEDataRecords,
-                                                    out ErrorResponse))
+                if (JSON.ParseOptionalJSON("evses",
+                                           "evses",
+                                           EVSEDataRecord.TryParse,
+                                           out IEnumerable<EVSEDataRecord> EVSEDataRecords,
+                                           out ErrorResponse))
                 {
                     if (ErrorResponse != null)
                         return false;

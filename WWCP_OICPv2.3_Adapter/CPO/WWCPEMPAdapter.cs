@@ -4988,7 +4988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            OICPResult<Acknowledgement<SendChargeDetailRecordRequest>> response;
+                            OICPResult<Acknowledgement<ChargeDetailRecordRequest>> response;
                             WWCP.SendCDRResult result;
 
                             foreach (var chargeDetailRecord in ChargeDetailRecords)
