@@ -184,7 +184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullDataService
 
-        public Boolean                                        PullOperatorInfos_IsDisabled                              { get; set; }
+        public Boolean                                        PullOperatorInfos_IsDisabled                         { get; set; }
 
         /// <summary>
         /// The 'Pull EVSE Data' service interval.
