@@ -797,12 +797,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static UID ToOICP(this WWCP.Auth_Token AuthToken)
 
-            => UID.Parse(AuthToken.ToString());
+            => UID.Parse(AuthToken.ToString().ToUpper());
 
         public static UID? ToOICP(this WWCP.Auth_Token? AuthToken)
 
             => AuthToken.HasValue
-                   ? UID.Parse(AuthToken.ToString())
+                   ? UID.Parse(AuthToken.ToString().ToUpper())
                    : new UID?();
 
 
@@ -850,7 +850,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (Authentication.AuthToken.                  HasValue)
-                return Identification.FromUID                        (UID.Parse(Authentication.AuthToken.ToString()));
+                return Identification.FromUID                        (UID.Parse(Authentication.AuthToken.ToString().ToUpper()));
 
             if (Authentication.QRCodeIdentification.       HasValue)
                 return Identification.FromQRCodeIdentification       (          Authentication.QRCodeIdentification.Value.eMAId.ToOICP(),
