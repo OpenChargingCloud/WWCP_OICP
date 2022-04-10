@@ -3217,9 +3217,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (GetChargeDetailRecordsLockTaken)
             {
 
-                Thread.CurrentThread.Priority            = ThreadPriority.BelowNormal;
-                var StartTime                            = Timestamp.Now;
-                GetChargeDetailRecords_LastRunTimestamp  = StartTime;
+                Thread.CurrentThread.Priority                   = ThreadPriority.BelowNormal;
+                var oldGetChargeDetailRecords_LastRunTimestamp  = GetChargeDetailRecords_LastRunTimestamp;
+                var StartTime                                   = Timestamp.Now;
+                GetChargeDetailRecords_LastRunTimestamp         = StartTime;
 
                 DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service' started at " + StartTime.ToIso8601());
 
@@ -3229,7 +3230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     var getChargeDetailRecordsResult = await EMPRoaming.GetChargeDetailRecords(
                                                                  new GetChargeDetailRecordsRequest(
                                                                      ProviderId:         DefaultProviderId,
-                                                                     From:               GetChargeDetailRecords_LastRunTimestamp,
+                                                                     From:               oldGetChargeDetailRecords_LastRunTimestamp,
                                                                      To:                 Timestamp.Now,
                                                                      OperatorIds:        null,
                                                                      CDRForwarded:       null,
