@@ -246,21 +246,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region GetChargeDetailRecords
 
-        public Boolean         GetChargeDetailRecords_IsDisabled            { get; set; }
+        public Boolean         GetChargeDetailRecords_IsDisabled                 { get; set; }
 
         /// <summary>
         /// The 'GetChargeDetailRecords' service intervall.
         /// </summary>
-        public TimeSpan        GetChargeDetailRecords_Every                 { get; set; }
+        public TimeSpan        GetChargeDetailRecords_Every                      { get; set; }
 
-        public TimeSpan        GetChargeDetailRecords_RequestTimeout        { get; }
+        public TimeSpan        GetChargeDetailRecords_RequestTimeout             { get; }
 
-        public DateTime?       GetChargeDetailRecords_LastRunTimestamp      { get; private set; }
+        public DateTime        GetChargeDetailRecords_LastRunTimestamp           { get; private set; }
 
         #endregion
 
-        public GeoCoordinate?  DefaultSearchCenter                          { get; }
-        public UInt64?         DefaultDistanceKM                            { get; }
+        public GeoCoordinate?  DefaultSearchCenter                               { get; }
+        public UInt64?         DefaultDistanceKM                                 { get; }
 
         public Func<WWCP.EVSEStatusReport, WWCP.ChargingStationStatusTypes> EVSEStatusAggregationDelegate { get; }
 
@@ -492,6 +492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                               Boolean                                        GetChargeDetailRecords_IsDisabled                   = false,
                               TimeSpan?                                      GetChargeDetailRecords_InitialDelay                 = null,
                               TimeSpan?                                      GetChargeDetailRecords_Every                        = null,
+                              DateTime?                                      GetChargeDetailRecords_LastRunTimestamp             = null,
                               TimeSpan?                                      GetChargeDetailRecords_RequestTimeout               = null,
 
                               WWCP.eMobilityProvider                         DefaultProvider                                     = null,
@@ -505,14 +506,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.EMPRoaming                                         = EMPRoaming                            ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
+            this.EMPRoaming                                         = EMPRoaming                              ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this.EVSEDataRecord2EVSE                                = EVSEDataRecord2EVSE;
 
             this.PullOperatorInfos_IsDisabled                       = PullOperatorInfos_IsDisabled;
-            this.PullEVSEData_Every                                 = PullEVSEData_Every                    ?? Default_PullEVSEData_Every;
-            this.PullEVSEData_RequestPageSize                       = PullEVSEData_RequestPageSize          ?? 2000;
-            this.PullEVSEData_RequestTimeout                        = PullEVSEData_RequestTimeout           ?? Default_PullEVSEData_RequestTimeout;
-            this.PullEVSEData_Timer                                 = new Timer(PullOperatorInfosService,           null, PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10), this.PullEVSEData_Every);
+            this.PullEVSEData_Every                                 = PullEVSEData_Every                      ?? Default_PullEVSEData_Every;
+            this.PullEVSEData_RequestPageSize                       = PullEVSEData_RequestPageSize            ?? 2000;
+            this.PullEVSEData_RequestTimeout                        = PullEVSEData_RequestTimeout             ?? Default_PullEVSEData_RequestTimeout;
+            this.PullEVSEData_Timer                                 = new Timer(PullOperatorInfosService,             null, PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10), this.PullEVSEData_Every);
 
             this.PullEVSEData_OperatorIdFilter                      = PullEVSEData_OperatorIdFilter;
             this.PullEVSEData_CountryCodeFilter                     = PullEVSEData_CountryCodeFilter;
@@ -524,13 +525,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEData_IsOpen24HoursFilter                   = PullEVSEData_IsOpen24HoursFilter;
 
             this.PullEVSEStatus_IsDisabled                          = PullEVSEStatus_IsDisabled;
-            this.PullEVSEStatus_Every                               = PullEVSEStatus_Every                  ?? Default_PullEVSEStatus_Every;
-            this.PullEVSEStatus_RequestTimeout                      = PullEVSEStatus_RequestTimeout         ?? Default_PullEVSEStatus_RequestTimeout;
-            this.PullEVSEStatus_Timer                               = new Timer(PullStatusService,             null, PullEVSEStatus_InitialDelay         ?? this.PullEVSEStatus_Every, this.PullEVSEStatus_Every);
+            this.PullEVSEStatus_Every                               = PullEVSEStatus_Every                    ?? Default_PullEVSEStatus_Every;
+            this.PullEVSEStatus_RequestTimeout                      = PullEVSEStatus_RequestTimeout           ?? Default_PullEVSEStatus_RequestTimeout;
+            this.PullEVSEStatus_Timer                               = new Timer(PullStatusService,               null, PullEVSEStatus_InitialDelay         ?? this.PullEVSEStatus_Every, this.PullEVSEStatus_Every);
 
             this.GetChargeDetailRecords_IsDisabled                  = GetChargeDetailRecords_IsDisabled;
-            this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every          ?? Default_GetChargeDetailRecords_Every;
-            this.GetChargeDetailRecords_RequestTimeout              = GetChargeDetailRecords_RequestTimeout ?? Default_GetChargeDetailRecords_RequestTimeout;
+            this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every            ?? Default_GetChargeDetailRecords_Every;
+            this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp ?? DateTime.Now - TimeSpan.FromDays(3);
+            this.GetChargeDetailRecords_RequestTimeout              = GetChargeDetailRecords_RequestTimeout   ?? Default_GetChargeDetailRecords_RequestTimeout;
             this.GetChargeDetailRecords_Timer                       = new Timer(GetChargeDetailRecordsService, null, GetChargeDetailRecords_InitialDelay ?? TimeSpan.FromSeconds(10),  this.GetChargeDetailRecords_Every);
 
             var defaultProviderId = (DefaultProvider?.Id ?? DefaultProviderId)?.ToOICP();
@@ -3215,12 +3217,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (GetChargeDetailRecordsLockTaken)
             {
 
-                Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-
-                var oldGetChargeDetailRecords_LastRunTimestamp  = GetChargeDetailRecords_LastRunTimestamp;
-                var StartTime                                   = Timestamp.Now;
-
-                GetChargeDetailRecords_LastRunTimestamp         = StartTime;
+                Thread.CurrentThread.Priority            = ThreadPriority.BelowNormal;
+                var StartTime                            = Timestamp.Now;
+                GetChargeDetailRecords_LastRunTimestamp  = StartTime;
 
                 DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service' started at " + StartTime.ToIso8601());
 
@@ -3230,9 +3229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     var getChargeDetailRecordsResult = await EMPRoaming.GetChargeDetailRecords(
                                                                  new GetChargeDetailRecordsRequest(
                                                                      ProviderId:         DefaultProviderId,
-                                                                     From:               oldGetChargeDetailRecords_LastRunTimestamp.HasValue
-                                                                                             ? oldGetChargeDetailRecords_LastRunTimestamp.Value - TimeSpan.FromMinutes(5)
-                                                                                             : Timestamp.Now - TimeSpan.FromDays(120),
+                                                                     From:               GetChargeDetailRecords_LastRunTimestamp,
                                                                      To:                 Timestamp.Now,
                                                                      OperatorIds:        null,
                                                                      CDRForwarded:       null,
