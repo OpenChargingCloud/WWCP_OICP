@@ -133,33 +133,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// The EMP client.
         /// </summary>
         public EMPClient EMPClient
-            => EMPRoaming?.EMPClient;
+            => EMPRoaming.EMPClient;
 
         /// <summary>
         /// The EMP client logger.
         /// </summary>
         public EMPClient.Logger ClientLogger
-            => EMPRoaming?.EMPClient?.HTTPLogger;
+            => EMPRoaming.EMPClient.HTTPLogger;
 
 
         /// <summary>
         /// The EMP server.
         /// </summary>
         public EMPServerAPI EMPServer
-            => EMPRoaming?.EMPServer;
+            => EMPRoaming.EMPServer;
 
         /// <summary>
         /// The EMP server logger.
         /// </summary>
         public EMPServerAPI.Logger ServerLogger
-            => EMPRoaming?.EMPServer?.HTTPLogger as EMPServerAPI.Logger;
+            => EMPRoaming.EMPServer.HTTPLogger as EMPServerAPI.Logger;
 
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
         public DNSClient DNSClient
-            => EMPRoaming?.EMPClient?.DNSClient;
+            => EMPRoaming.EMPClient.DNSClient;
 
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                WWCPCSOAdapter  Sender,
                                                                Exception       Exception);
 
-        public event OnWWCPCSOAdapterExceptionDelegate OnWWCPCSOAdapterException;
+        public event OnWWCPCSOAdapterExceptionDelegate? OnWWCPCSOAdapterException;
 
         #endregion
 
@@ -2465,13 +2465,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (timer) PullOperatorInfosService(State)
 
-        private void PullOperatorInfosService(Object State)
+        private void PullOperatorInfosService(Object? State)
         {
             if (!PullOperatorInfos_IsDisabled)
                 PullOperatorInfos(State).Wait();
         }
 
-        private async Task PullOperatorInfos(Object State)
+        private async Task PullOperatorInfos(Object? State)
         {
 
             DebugX.LogT("[" + Id + "] 'Pull operator infos service', as every " + PullEVSEData_Every.TotalMinutes + " minutes!");
@@ -2963,13 +2963,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (timer) PullStatusService(State)
 
-        private void PullStatusService(Object State)
+        private void PullStatusService(Object? State)
         {
             if (!PullEVSEStatus_IsDisabled)
                 PullStatus(State).Wait();
         }
 
-        private async Task PullStatus(Object State)
+        private async Task PullStatus(Object? State)
         {
 
             DebugX.LogT("[" + Id + "] 'Pull status service', as every " + PullEVSEStatus_Every.TotalSeconds + " seconds!");
@@ -3200,13 +3200,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (timer) GetChargeDetailRecordsService(State)
 
-        private void GetChargeDetailRecordsService(Object State)
+        private void GetChargeDetailRecordsService(Object? State)
         {
             if (!GetChargeDetailRecords_IsDisabled)
                 _GetChargeDetailRecords(State).Wait();
         }
 
-        private async Task _GetChargeDetailRecords(Object State)
+        private async Task _GetChargeDetailRecords(Object? State)
         {
 
             DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service', as every " + GetChargeDetailRecords_Every.TotalSeconds + " seconds!");
