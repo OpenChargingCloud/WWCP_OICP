@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\..\Hermod\NET6\Hermod\Hermod.csproj" />
     <ProjectReference Include="..\..\..\Styx\NET6\Styx\Styx.csproj" />
     <ProjectReference Include="..\..\..\WWCP_Core\NET6\WWCP_Core\WWCP_Core.csproj" />
-    <ProjectReference Include="..\WWCP_OCPIv2.3\WWCP_OCPIv2.3.csproj" />
+    <ProjectReference Include="..\WWCP_OICPv2.3\WWCP_OICPv2.3.csproj" />
   </ItemGroup>
 
 </Project>
