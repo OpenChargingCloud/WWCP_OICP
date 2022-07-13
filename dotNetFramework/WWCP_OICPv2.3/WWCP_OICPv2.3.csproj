@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{337CE1CC-2C12-4E1D-81FF-9E521C27D4E6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>cloud.charging.open.protocols.OICPv2_3</RootNamespace>
+    <AssemblyName>cloud.charging.open.protocols.OICPv2_3</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\cloud.charging.open.protocols.OICPv2_3.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Styx\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CPO\CPORoaming.cs" />
+    <Compile Include="CPO\CPOServerAPILogger.cs" />
+    <Compile Include="CPO\ICPOClientExtensions.cs" />
+    <Compile Include="CPO\ICPOClient.cs" />
+    <Compile Include="CPO\CPOClientDelegates.cs" />
+    <Compile Include="CPO\CPOServerAPI.cs" />
+    <Compile Include="CPO\CPOClient.cs" />
+    <Compile Include="CPO\CPOClientLogger.cs" />
+    <Compile Include="CPO\CPOServerAPIDelegates.cs" />
+    <Compile Include="DataTypes\ChargeDetailRecord.cs" />
+    <Compile Include="DataTypes\Complex\ChargingFacility.cs" />
+    <Compile Include="DataTypes\Complex\Address.cs" />
+    <Compile Include="DataTypes\Complex\EnergySource.cs" />
+    <Compile Include="DataTypes\Complex\CalibrationLawVerification.cs" />
+    <Compile Include="DataTypes\Complex\ValidationErrorList.cs" />
+    <Compile Include="DataTypes\Complex\ValidationError.cs" />
+    <Compile Include="DataTypes\Enums\AuthorizationStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingNotificationTypes.cs" />
+    <Compile Include="DataTypes\Enums\ErrorClassTypes.cs" />
+    <Compile Include="DataTypes\OICPResult.cs" />
+    <Compile Include="EMP\EMPClientDelegates.cs" />
+    <Compile Include="EMP\EMPRoaming.cs" />
+    <Compile Include="EMP\EMPServerAPI.cs" />
+    <Compile Include="EMP\EMPServerAPILogger.cs" />
+    <Compile Include="EMP\EMPServerAPIDelegates.cs" />
+    <Compile Include="EMP\IEMPClientExtensions.cs" />
+    <Compile Include="EMP\IEMPClient.cs" />
+    <Compile Include="Messages\APagedRequest.cs" />
+    <Compile Include="Messages\IPagedResponse.cs" />
+    <Compile Include="Messages\APagedResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStopResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizationStartResponse.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStopRequest.cs" />
+    <Compile Include="Messages\CPO\AuthorizeStartRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingErrorNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingEndNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingProgressNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargingStartNotificationRequest.cs" />
+    <Compile Include="Messages\CPO\ChargeDetailRecordRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteReservationStartRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStopRequest.cs" />
+    <Compile Include="Messages\EMP\AuthorizeRemoteStartRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdResponse.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsRequest.cs" />
+    <Compile Include="Messages\EMP\GetChargeDetailRecordsResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdResponse.cs" />
+    <Compile Include="DataTypes\Complex\I18NText.cs" />
+    <Compile Include="DataTypes\Complex\Identification.cs" />
+    <Compile Include="DataTypes\Complex\HashedPIN.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEStatus.cs" />
+    <Compile Include="DataTypes\Complex\OperatorEVSEData.cs" />
+    <Compile Include="DataTypes\Complex\QRCodeIdentification.cs" />
+    <Compile Include="DataTypes\Complex\RFIDIdentification.cs" />
+    <Compile Include="DataTypes\Complex\SignedMeteringValue.cs" />
+    <Compile Include="DataTypes\Complex\StatusCode.cs" />
+    <Compile Include="DataTypes\Enums\ActionTypes.cs" />
+    <Compile Include="DataTypes\Enums\HashFunctions.cs" />
+    <Compile Include="DataTypes\EVSEDataRecord.cs" />
+    <Compile Include="DataTypes\Complex\EnvironmentalImpact.cs" />
+    <Compile Include="DataTypes\Complex\GeoCoordinates.cs" />
+    <Compile Include="DataTypes\Complex\HourMinute.cs" />
+    <Compile Include="DataTypes\Complex\Period.cs" />
+    <Compile Include="DataTypes\Complex\OpeningTime.cs" />
+    <Compile Include="DataTypes\EVSEStatusRecord.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityLocationTypes.cs" />
+    <Compile Include="DataTypes\Enums\ChargingModes.cs" />
+    <Compile Include="DataTypes\Enums\MeteringStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\PowerTypes.cs" />
+    <Compile Include="DataTypes\Enums\FalseTrueAuto.cs" />
+    <Compile Include="DataTypes\Enums\AccessibilityTypes.cs" />
+    <Compile Include="DataTypes\Enums\AuthenticationModes.cs" />
+    <Compile Include="DataTypes\Enums\DaysOfWeek.cs" />
+    <Compile Include="DataTypes\Enums\DeltaTypes.cs" />
+    <Compile Include="DataTypes\Enums\EVSEStatusTypes.cs" />
+    <Compile Include="DataTypes\Enums\GeoCoordinatesFormats.cs" />
+    <Compile Include="DataTypes\Enums\OperatorIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\CalibrationLawDataAvailabilities.cs" />
+    <Compile Include="DataTypes\Enums\PaymentOptions.cs" />
+    <Compile Include="DataTypes\Enums\EnergyTypes.cs" />
+    <Compile Include="DataTypes\Enums\PlugTypes.cs" />
+    <Compile Include="DataTypes\Enums\ProviderIdFormats.cs" />
+    <Compile Include="DataTypes\Enums\RFIDTypes.cs" />
+    <Compile Include="DataTypes\Enums\StatusCodes.cs" />
+    <Compile Include="DataTypes\Enums\ValueAddedServices.cs" />
+    <Compile Include="DataTypes\Simple\Process_Id.cs" />
+    <Compile Include="DataTypes\Simple\CPOPartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\EMPPartnerSession_Id.cs" />
+    <Compile Include="DataTypes\Simple\EVCO_Id.cs" />
+    <Compile Include="DataTypes\Simple\LanguageCode.cs" />
+    <Compile Include="DataTypes\Simple\PartnerProduct_Id.cs" />
+    <Compile Include="DataTypes\Simple\Hash_Value.cs" />
+    <Compile Include="DataTypes\Simple\Phone_Number.cs" />
+    <Compile Include="DataTypes\Simple\Provider_Id.cs" />
+    <Compile Include="DataTypes\Simple\Session_Id.cs" />
+    <Compile Include="DataTypes\Simple\Time_Zone.cs" />
+    <Compile Include="DataTypes\Simple\ChargingPool_Id.cs" />
+    <Compile Include="DataTypes\Simple\ChargingStation_Id.cs" />
+    <Compile Include="DataTypes\Simple\ClearingHouse_Id.cs" />
+    <Compile Include="DataTypes\Simple\EVSE_Id.cs" />
+    <Compile Include="DataTypes\Simple\Operator_Id.cs" />
+    <Compile Include="DataTypes\Simple\PIN.cs" />
+    <Compile Include="DataTypes\Simple\UID.cs" />
+    <Compile Include="Delegates.cs" />
+    <Compile Include="EMP\EMPClient.cs" />
+    <Compile Include="EMP\EMPClientLogger.cs" />
+    <Compile Include="Messages\ARequest.cs" />
+    <Compile Include="Messages\AResponse.cs" />
+    <Compile Include="Messages\Common\Acknowledgement.cs" />
+    <Compile Include="Messages\CPO\PushEVSEStatusRequest.cs" />
+    <Compile Include="Messages\CPO\PushEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEDataResponse.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByIdRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusByOperatorIdRequest.cs" />
+    <Compile Include="Messages\EMP\PullEVSEStatusRequest.cs" />
+    <Compile Include="Messages\IRequest.cs" />
+    <Compile Include="Messages\IResponse.cs" />
+    <Compile Include="OICPExceptions.cs" />
+    <Compile Include="Version.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BouncyCastle\crypto\crypto.csproj">
+      <Project>{38872a5f-e87e-4fad-b109-8eb7b2e6a4a0}</Project>
+      <Name>crypto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
+      <Project>{477efd16-3627-4473-957d-44ca9a9dfb79}</Project>
+      <Name>Hermod</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SMSAPI\smsapi\SMSAPI2.csproj">
+      <Project>{05c2a720-2cd1-401b-a832-9ce85313c248}</Project>
+      <Name>SMSAPI2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Styx\Styx\Styx.csproj">
+      <Project>{af76ecc0-2ca5-4cff-9e1e-ff5478c4b6e4}</Project>
+      <Name>Styx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TelegramBotAPI\TelegramBotAPI\TelegramBotAPI.csproj">
+      <Project>{2fee90e4-7e55-49a6-8be9-5a434ffa5a00}</Project>
+      <Name>TelegramBotAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UsersAPI\UsersAPI\UsersAPI.csproj">
+      <Project>{4d5da5f5-0dce-4620-bce5-74a27e5cfc47}</Project>
+      <Name>UsersAPI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

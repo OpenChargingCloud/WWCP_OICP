@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
 
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
@@ -106,6 +105,7 @@ namespace org.GraphDefined.WWCP
                                               Boolean                                                 GetChargeDetailRecords_IsDisabled                   = false,
                                               TimeSpan?                                               GetChargeDetailRecords_InitialDelay                 = null,
                                               TimeSpan?                                               GetChargeDetailRecords_Every                        = null,
+                                              DateTime?                                               GetChargeDetailRecords_LastRunTimestamp             = null,
                                               TimeSpan?                                               GetChargeDetailRecords_RequestTimeout               = null,
 
                                               eMobilityProvider                                       DefaultProvider                                     = null,
@@ -161,6 +161,7 @@ namespace org.GraphDefined.WWCP
                                                                      GetChargeDetailRecords_IsDisabled,
                                                                      GetChargeDetailRecords_InitialDelay,
                                                                      GetChargeDetailRecords_Every,
+                                                                     GetChargeDetailRecords_LastRunTimestamp,
                                                                      GetChargeDetailRecords_RequestTimeout,
 
                                                                      DefaultProvider,
