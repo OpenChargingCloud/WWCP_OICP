@@ -5,7 +5,7 @@ This software will allow the communication between World Wide Charging Protocol
 (WWCP) entities and entities implementing the [Open InterCharge Protocol (OICP)](https://github.com/hubject/oicp/),
 which is defined and used by [Hubject GmbH](http://www.hubject.com). The focus
 of this protocol are the communication aspects between a central clearing house,
-charge point operators (CPOs) and e-mobility providers (EMPs).
+charge point operators (CPOs) and e-mobility providers (EMPs) in electric mobility.
 
 ### Requirements & Configuration
 
