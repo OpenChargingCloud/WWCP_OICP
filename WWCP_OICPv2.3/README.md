@@ -1,5 +1,4 @@
-WWCP OICP v2.3
-==============
+# WWCP OICP v2.3
 
 This software implements the _Open InterCharge Protocol (OICP)_, which is
 defined and used by Hubject GmbH. The focus of this protocol are the
