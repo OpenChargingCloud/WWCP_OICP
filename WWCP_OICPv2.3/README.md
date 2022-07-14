@@ -1,11 +1,10 @@
 WWCP OICP v2.3
 ==============
 
-This software will allow the communication between WWCP entities and
-entities implementing the _Open InterCharge Protocol (OICP)_, which is
+This software implements the _Open InterCharge Protocol (OICP)_, which is
 defined and used by Hubject GmbH. The focus of this protocol are the
-communication aspects of a central clearing house. For more details on
-this protocol please visit http://www.intercharge.eu.
+communication aspects of a central clearing house in electric mobility.
+For more details on this protocol please visit http://www.intercharge.eu.
 
 ### Your participation
 
