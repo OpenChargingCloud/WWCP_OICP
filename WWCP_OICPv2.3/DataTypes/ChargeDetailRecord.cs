@@ -312,16 +312,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static ChargeDetailRecord Parse(JObject                                      JSON,
-                                           CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null)
+        public static ChargeDetailRecord Parse(JObject                                       JSON,
+                                           CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser   = null)
         {
 
             if (TryParse(JSON,
-                         out ChargeDetailRecord chargeDetailRecord,
-                         out String             ErrorResponse,
+                         out ChargeDetailRecord? chargeDetailRecord,
+                         out String?             ErrorResponse,
                          CustomChargeDetailRecordParser))
             {
-                return chargeDetailRecord;
+                return chargeDetailRecord!;
             }
 
             throw new ArgumentException("The given JSON representation of a charge detail record is invalid: " + ErrorResponse, nameof(JSON));
@@ -337,16 +337,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static ChargeDetailRecord Parse(String                                           Text,
-                                               CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser   = null)
+        public static ChargeDetailRecord Parse(String                                            Text,
+                                               CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser   = null)
         {
 
             if (TryParse(Text,
-                         out ChargeDetailRecord chargeDetailRecord,
-                         out String             ErrorResponse,
+                         out ChargeDetailRecord? chargeDetailRecord,
+                         out String?             ErrorResponse,
                          CustomChargeDetailRecordParser))
             {
-                return chargeDetailRecord;
+                return chargeDetailRecord!;
             }
 
             throw new ArgumentException("The given text representation of a charge detail record is invalid: " + ErrorResponse, nameof(Text));
@@ -365,9 +365,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                 JSON,
-                                       out ChargeDetailRecord  ChargeDetailRecord,
-                                       out String              ErrorResponse)
+        public static Boolean TryParse(JObject                  JSON,
+                                       out ChargeDetailRecord?  ChargeDetailRecord,
+                                       out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out ChargeDetailRecord,
@@ -382,10 +382,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static Boolean TryParse(JObject                                          JSON,
-                                       out ChargeDetailRecord                           ChargeDetailRecord,
-                                       out String                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser)
+        public static Boolean TryParse(JObject                                           JSON,
+                                       out ChargeDetailRecord?                           ChargeDetailRecord,
+                                       out String?                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser)
         {
 
             try
@@ -411,11 +411,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 }
 
                 #endregion
-
-                if (SessionId.ToString() == "68f07880-8036-4267-bbf8-58818385b79e")
-                {
-
-                }
 
                 #region Parse EVSEId                            [mandatory]
 
@@ -686,7 +681,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                             CustomData);
 
-                if (CustomChargeDetailRecordParser != null)
+                if (CustomChargeDetailRecordParser is not null)
                     ChargeDetailRecord = CustomChargeDetailRecordParser(JSON,
                                                                         ChargeDetailRecord);
 
@@ -713,10 +708,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static Boolean TryParse(String                                           Text,
-                                       out ChargeDetailRecord                           ChargeDetailRecord,
-                                       out String                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargeDetailRecord>  CustomChargeDetailRecordParser)
+        public static Boolean TryParse(String                                            Text,
+                                       out ChargeDetailRecord?                           ChargeDetailRecord,
+                                       out String?                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser)
         {
 
             try
@@ -748,10 +743,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargeDetailRecord>          CustomChargeDetailRecordSerializer           = null,
-                              CustomJObjectSerializerDelegate<Identification>              CustomIdentificationSerializer               = null,
-                              CustomJObjectSerializerDelegate<SignedMeteringValue>         CustomSignedMeteringValueSerializer          = null,
-                              CustomJObjectSerializerDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargeDetailRecord>?          CustomChargeDetailRecordSerializer           = null,
+                              CustomJObjectSerializerDelegate<Identification>?              CustomIdentificationSerializer               = null,
+                              CustomJObjectSerializerDelegate<SignedMeteringValue>?         CustomSignedMeteringValueSerializer          = null,
+                              CustomJObjectSerializerDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationSerializer   = null)
 
         {
 
@@ -786,7 +781,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeterValueEnd",                   String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
                                : null,
 
-                           MeterValuesInBetween.SafeAny()
+                           MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",             new JArray(MeterValuesInBetween.
@@ -796,12 +791,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  )
                                : null,
 
-                           SignedMeteringValues.SafeAny()
+                           SignedMeteringValues is not null && SignedMeteringValues.Any()
                                ? new JProperty("SignedMeteringValues",            new JArray(SignedMeteringValues.
                                                                                                  Select(signedMeteringValue => signedMeteringValue.ToJSON(CustomSignedMeteringValueSerializer))))
                                : null,
 
-                           CalibrationLawVerificationInfo != null
+                           CalibrationLawVerificationInfo is not null
                                ? new JProperty("CalibrationLawVerificationInfo",  CalibrationLawVerificationInfo.ToJSON(CustomCalibrationLawVerificationSerializer))
                                : null,
 
@@ -819,7 +814,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     );
 
-            return CustomChargeDetailRecordSerializer != null
+            return CustomChargeDetailRecordSerializer is not null
                        ? CustomChargeDetailRecordSerializer(this, JSON)
                        : JSON;
 
@@ -835,27 +830,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewSessionId">An optional new charging session identification.</param>
         public ChargeDetailRecord Clone(Session_Id? NewSessionId = null)
 
-            => new ChargeDetailRecord(NewSessionId ?? SessionId.      Clone,
-                                      EVSEId.                         Clone,
-                                      Identification.                 Clone,
-                                      SessionStart,
-                                      SessionEnd,
-                                      ChargingStart,
-                                      ChargingEnd,
-                                      ConsumedEnergy,
+            => new (NewSessionId ?? SessionId.      Clone,
+                    EVSEId.                         Clone,
+                    Identification.                 Clone,
+                    SessionStart,
+                    SessionEnd,
+                    ChargingStart,
+                    ChargingEnd,
+                    ConsumedEnergy,
 
-                                      PartnerProductId?.              Clone,
-                                      CPOPartnerSessionId?.           Clone,
-                                      EMPPartnerSessionId?.           Clone,
-                                      MeterValueStart,
-                                      MeterValueEnd,
-                                      MeterValuesInBetween?.                                                            ToArray(),
-                                      SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray(),
-                                      CalibrationLawVerificationInfo?.Clone,
-                                      HubOperatorId?.                 Clone,
-                                      HubProviderId?.                 Clone,
+                    PartnerProductId?.              Clone,
+                    CPOPartnerSessionId?.           Clone,
+                    EMPPartnerSessionId?.           Clone,
+                    MeterValueStart,
+                    MeterValueEnd,
+                    MeterValuesInBetween?.                                                                  ToArray(),
+                    SignedMeteringValues is not null && SignedMeteringValues.Any()
+                        ? SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray()
+                        : Array.Empty<SignedMeteringValue>(),
+                    CalibrationLawVerificationInfo?.Clone,
+                    HubOperatorId?.                 Clone,
+                    HubProviderId?.                 Clone,
 
-                                      CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 

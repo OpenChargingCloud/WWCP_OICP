@@ -54,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject               CustomData        { get; }
+        public JObject?              CustomData        { get; }
 
         #endregion
 
@@ -68,11 +68,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public SignedMeteringValue(String                Value,
                                    MeteringStatusTypes?  MeteringStatus   = null,
-                                   JObject               CustomData       = null)
+                                   JObject?              CustomData       = null)
 
         {
 
-            Value = Value?.Trim();
+            Value = Value.Trim();
 
             if (Value.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Value), "The given signed metering value must not be null or empty!");
@@ -104,16 +104,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static SignedMeteringValue Parse(JObject                                           JSON,
-                                                CustomJObjectParserDelegate<SignedMeteringValue>  CustomSignedMeteringValueParser   = null)
+        public static SignedMeteringValue Parse(JObject                                            JSON,
+                                                CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser   = null)
         {
 
             if (TryParse(JSON,
-                         out SignedMeteringValue signedMeteringValue,
-                         out String              ErrorResponse,
+                         out SignedMeteringValue?  signedMeteringValue,
+                         out String?               ErrorResponse,
                          CustomSignedMeteringValueParser))
             {
-                return signedMeteringValue;
+                return signedMeteringValue!;
             }
 
             throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + ErrorResponse, nameof(JSON));
@@ -129,16 +129,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static SignedMeteringValue Parse(String                                            Text,
-                                                CustomJObjectParserDelegate<SignedMeteringValue>  CustomSignedMeteringValueParser   = null)
+        public static SignedMeteringValue Parse(String                                             Text,
+                                                CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser   = null)
         {
 
             if (TryParse(Text,
-                         out SignedMeteringValue signedMeteringValue,
-                         out String              ErrorResponse,
+                         out SignedMeteringValue?  signedMeteringValue,
+                         out String?               ErrorResponse,
                          CustomSignedMeteringValueParser))
             {
-                return signedMeteringValue;
+                return signedMeteringValue!;
             }
 
             throw new ArgumentException("The given text representation of a signed metering value is invalid: " + ErrorResponse, nameof(Text));
@@ -157,9 +157,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out SignedMeteringValue  SignedMeteringValue,
-                                       out String               ErrorResponse)
+        public static Boolean TryParse(JObject                   JSON,
+                                       out SignedMeteringValue?  SignedMeteringValue,
+                                       out String?               ErrorResponse)
 
             => TryParse(JSON,
                         out SignedMeteringValue,
@@ -174,10 +174,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static Boolean TryParse(JObject                                           JSON,
-                                       out SignedMeteringValue                           SignedMeteringValue,
-                                       out String                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<SignedMeteringValue>  CustomSignedMeteringValueParser)
+        public static Boolean TryParse(JObject                                            JSON,
+                                       out SignedMeteringValue?                           SignedMeteringValue,
+                                       out String?                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser)
         {
 
             try
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData     [optional]
+                #region Parse CustomData        [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               MeteringStatus,
                                                               CustomData);
 
-                if (CustomSignedMeteringValueParser != null)
+                if (CustomSignedMeteringValueParser is not null)
                     SignedMeteringValue = CustomSignedMeteringValueParser(JSON,
                                                                           SignedMeteringValue);
 
@@ -254,10 +254,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out SignedMeteringValue                           SignedMeteringValue,
-                                       out String                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<SignedMeteringValue>  CustomSignedMeteringValueParser)
+        public static Boolean TryParse(String                                             Text,
+                                       out SignedMeteringValue?                           SignedMeteringValue,
+                                       out String?                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser)
         {
 
             try
@@ -286,7 +286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<SignedMeteringValue>  CustomSignedMeteringValueSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<SignedMeteringValue>?  CustomSignedMeteringValueSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -303,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomSignedMeteringValueSerializer != null
+            return CustomSignedMeteringValueSerializer is not null
                        ? CustomSignedMeteringValueSerializer(this, JSON)
                        : JSON;
 
@@ -318,9 +318,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public SignedMeteringValue Clone
 
-            => new SignedMeteringValue(new String(Value.ToCharArray()),
-                                       MeteringStatus,
-                                       CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (new String(Value.ToCharArray()),
+                    MeteringStatus,
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -450,7 +452,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is SignedMeteringValue signedMeteringValue
                    ? CompareTo(signedMeteringValue)
@@ -465,7 +467,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="SignedMeteringValue">An object to compare with.</param>
-        public Int32 CompareTo(SignedMeteringValue SignedMeteringValue)
+        public Int32 CompareTo(SignedMeteringValue? SignedMeteringValue)
         {
 
             var result = Value.CompareTo(SignedMeteringValue.Value);
@@ -489,7 +491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is SignedMeteringValue signedMeteringValue &&
                    Equals(signedMeteringValue);
@@ -503,7 +505,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue">A signed metering value to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(SignedMeteringValue SignedMeteringValue)
+        public Boolean Equals(SignedMeteringValue? SignedMeteringValue)
 
             => Value.         Equals(SignedMeteringValue.Value) &&
                MeteringStatus.Equals(SignedMeteringValue.MeteringStatus);
@@ -522,10 +524,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
-                return Value.           GetHashCode() * 3 ^
-                       (MeteringStatus?.GetHashCode() ?? 0);
-
+                return Value.          GetHashCode() * 3 ^
+                      (MeteringStatus?.GetHashCode() ?? 0);
             }
         }
 
