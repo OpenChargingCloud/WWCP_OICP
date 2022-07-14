@@ -1,5 +1,4 @@
-WWCP OICP
-=========
+# WWCP OICP
 
 This software will allow the communication between World Wide Charging Protocol
 (WWCP) entities and entities implementing the [Open InterCharge Protocol (OICP)](https://github.com/hubject/oicp/),
