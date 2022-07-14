@@ -9,14 +9,15 @@ charge point operators (CPOs) and e-mobility providers (EMPs).
 
 ### Requirements & Configuration
 
-1. You need .NET 4.8+
+1. You need .NET6+
 2. The mutual authentication (TLS client certificates) with Hubject must be set up.
 3. Your server(s) must be registered within the Hubject firewalls.
 
 ### Versions
 
-- [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.2) is deprecated and only left for reference
-- [OICP v2.3](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
+- [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
+- [OICP v2.3](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
+- [OICP v2.3 NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
 
 ### Documentation
 
