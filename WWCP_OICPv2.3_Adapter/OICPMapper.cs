@@ -87,13 +87,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class OICPMapper
     {
 
-        public const String WWCP_CDR                  = "WWCP.CDR";
-        public const String OICP_CDR                  = "OICP.CDR";
-        public const String OICP_CPOPartnerSessionId  = "OICP.CPOPartnerSessionId";
-        public const String OICP_EMPPartnerSessionId  = "OICP.EMPPartnerSessionId";
-        public const String OICP_HubOperatorId        = "OICP.HubOperatorId";
-        public const String OICP_HubProviderId        = "OICP.HubProviderId";
-        public const String OICP_ClearingHouseId      = "OICP.ClearingHouseId";
+        public const String WWCP_CDR                              = "WWCP.CDR";
+        public const String OICP_CDR                              = "OICP.CDR";
+        public const String OICP_CPOPartnerSessionId              = "OICP.CPOPartnerSessionId";
+        public const String OICP_EMPPartnerSessionId              = "OICP.EMPPartnerSessionId";
+        public const String OICP_MeterValuesInBetween             = "OICP.MeterValuesInBetween";
+        public const String OICP_SignedMeteringValues             = "OICP.SignedMeteringValues";
+        public const String OICP_CalibrationLawVerificationInfo   = "OICP.CalibrationLawVerificationInfo";
+        public const String OICP_HubOperatorId                    = "OICP.HubOperatorId";
+        public const String OICP_HubProviderId                    = "OICP.HubProviderId";
+        public const String OICP_ClearingHouseId                  = "OICP.ClearingHouseId";
 
 
         #region ToWWCP(this Action)
@@ -1280,8 +1283,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
         /// <param name="ChargeDetailRecord2WWCPChargeDetailRecord">A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.</param>
-        public static WWCP.ChargeDetailRecord ToWWCP(this ChargeDetailRecord                            ChargeDetailRecord,
-                                                     ChargeDetailRecord2WWCPChargeDetailRecordDelegate  ChargeDetailRecord2WWCPChargeDetailRecord = null)
+        public static WWCP.ChargeDetailRecord? ToWWCP(this ChargeDetailRecord                            ChargeDetailRecord,
+                                                      ChargeDetailRecord2WWCPChargeDetailRecordDelegate  ChargeDetailRecord2WWCPChargeDetailRecord = null)
         {
 
             var customData = new Dictionary<String, Object?> {
@@ -1289,23 +1292,42 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              };
 
             if (ChargeDetailRecord.CPOPartnerSessionId.HasValue)
-                customData.Add(OICP_CPOPartnerSessionId,  ChargeDetailRecord.CPOPartnerSessionId.ToString());
+                customData.Add(OICP_CPOPartnerSessionId,             ChargeDetailRecord.CPOPartnerSessionId. ToString());
 
             if (ChargeDetailRecord.EMPPartnerSessionId.HasValue)
-                customData.Add(OICP_EMPPartnerSessionId,  ChargeDetailRecord.EMPPartnerSessionId.ToString());
+                customData.Add(OICP_EMPPartnerSessionId,             ChargeDetailRecord.EMPPartnerSessionId. ToString());
+
+            if (ChargeDetailRecord.MeterValuesInBetween           is not null && ChargeDetailRecord.MeterValuesInBetween.Any())
+                customData.Add(OICP_MeterValuesInBetween,            ChargeDetailRecord.MeterValuesInBetween.ToArray());
+
+            if (ChargeDetailRecord.SignedMeteringValues           is not null && ChargeDetailRecord.SignedMeteringValues.Any())
+                customData.Add(OICP_SignedMeteringValues,            ChargeDetailRecord.SignedMeteringValues.ToArray());
+
+            if (ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
+                customData.Add(OICP_CalibrationLawVerificationInfo,  ChargeDetailRecord.CalibrationLawVerificationInfo);
 
             if (ChargeDetailRecord.HubOperatorId.HasValue)
-                customData.Add(OICP_HubOperatorId,        ChargeDetailRecord.HubOperatorId.      ToString());
+                customData.Add(OICP_HubOperatorId,                   ChargeDetailRecord.HubOperatorId.       ToString());
 
             if (ChargeDetailRecord.HubProviderId.HasValue)
-                customData.Add(OICP_HubProviderId,        ChargeDetailRecord.HubProviderId.      ToString());
+                customData.Add(OICP_HubProviderId,                   ChargeDetailRecord.HubProviderId.       ToString());
 
+
+            var sessionId = ChargeDetailRecord.SessionId.ToWWCP();
+            if (sessionId is null)
+                return null;
+
+            var evseId    = ChargeDetailRecord.EVSEId.ToWWCP();
+            if (evseId    is null)
+                return null;
 
             var CDR = new WWCP.ChargeDetailRecord(
                           Id:                    WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP()?.ToString() ?? ""),
-                          SessionId:             ChargeDetailRecord.SessionId.ToWWCP().Value,
-                          EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
-                          ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue ? new WWCP.eMobilityProvider_Id?(WWCP.eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString())) : null,
+                          SessionId:             sessionId.Value,
+                          EVSEId:                evseId.   Value,
+                          ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue
+                                                     ? new WWCP.eMobilityProvider_Id?(WWCP.eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString()))
+                                                     : null,
 
                           ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
                                                      ? WWCP.ChargingProduct.FromId(ChargeDetailRecord.PartnerProductId.Value.ToString())

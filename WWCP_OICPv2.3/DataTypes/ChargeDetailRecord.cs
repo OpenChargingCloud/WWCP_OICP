@@ -18,9 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Globalization;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -46,116 +44,116 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The Hubject session identification, that identifies the charging process.
         /// </summary>
         [Mandatory]
-        public Session_Id                        SessionId                          { get; }
+        public Session_Id                         SessionId                          { get; }
 
         /// <summary>
         /// The EVSE identification, that identifies the location of the charging process.
         /// </summary>
         [Mandatory]
-        public EVSE_Id                           EVSEId                             { get; }
+        public EVSE_Id                            EVSEId                             { get; }
 
         /// <summary>
         /// The authentication data used to authorize the user or the car.
         /// </summary>
         [Mandatory]
-        public Identification                    Identification                     { get; }
+        public Identification                     Identification                     { get; }
 
         /// <summary>
         /// The timestamp when the charging session started.
         /// </summary>
         [Mandatory]
-        public DateTime                          SessionStart                       { get; }
+        public DateTime                           SessionStart                       { get; }
 
         /// <summary>
         /// The timestamp when the charging session ended.
         /// </summary>
         [Mandatory]
-        public DateTime                          SessionEnd                         { get; }
+        public DateTime                           SessionEnd                         { get; }
 
         /// <summary>
         /// The timestamp when the charging process started.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingStart                      { get; }
+        public DateTime                           ChargingStart                      { get; }
 
         /// <summary>
         /// The timestamp when the charging process stopped.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingEnd                        { get; }
+        public DateTime                           ChargingEnd                        { get; }
 
         /// <summary>
         /// The amount of consumed energy [kWh].
         /// </summary>
         [Mandatory]
-        public Decimal                           ConsumedEnergy                     { get; }
+        public Decimal                            ConsumedEnergy                     { get; }
 
         /// <summary>
         /// The optional pricing product name (for identifying a tariff) that must be unique.
         /// </summary>
         [Optional]
-        public PartnerProduct_Id?                PartnerProductId                   { get; }
+        public PartnerProduct_Id?                 PartnerProductId                   { get; }
 
         /// <summary>
         /// The optional session identification assinged by the CPO partner.
         /// </summary>
         [Optional]
-        public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
+        public CPOPartnerSession_Id?              CPOPartnerSessionId                { get; }
 
         /// <summary>
         /// The optional session identification assinged by the EMP partner.
         /// </summary>
         [Optional]
-        public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
+        public EMPPartnerSession_Id?              EMPPartnerSessionId                { get; }
 
         /// <summary>
         /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueStart                    { get; }
+        public Decimal?                           MeterValueStart                    { get; }
 
         /// <summary>
         /// The optional ending value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueEnd                      { get; }
+        public Decimal?                           MeterValueEnd                      { get; }
 
         /// <summary>
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
+        public IEnumerable<Decimal>?              MeterValuesInBetween               { get; }
 
         /// <summary>
         /// Optional signed metering values, with can e.g. verified via a transparency software.
         /// </summary>
         [Optional]
-        public IEnumerable<SignedMeteringValue>  SignedMeteringValues               { get; }
+        public IEnumerable<SignedMeteringValue>?  SignedMeteringValues               { get; }
 
         /// <summary>
         /// Optional additional information which could directly or indirectly help to verify the
         /// signed metering values by using a valid transparency software.
         /// </summary>
         [Optional]
-        public CalibrationLawVerification        CalibrationLawVerificationInfo     { get; }
+        public CalibrationLawVerification?        CalibrationLawVerificationInfo     { get; }
 
         /// <summary>
         /// The optional operator identification of the hub operator.
         /// </summary>
         [Optional]
-        public Operator_Id?                      HubOperatorId                      { get; }
+        public Operator_Id?                       HubOperatorId                      { get; }
 
         /// <summary>
         /// The optional provider identification of the hub provider.
         /// </summary>
         [Optional]
-        public Provider_Id?                      HubProviderId                      { get; }
+        public Provider_Id?                       HubProviderId                      { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject                           CustomData                         { get; }
+        public JObject?                           CustomData                         { get; }
 
         #endregion
 
@@ -186,28 +184,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
         /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public ChargeDetailRecord(Session_Id                        SessionId,
-                                  EVSE_Id                           EVSEId,
-                                  Identification                    Identification,
-                                  DateTime                          SessionStart,
-                                  DateTime                          SessionEnd,
-                                  DateTime                          ChargingStart,
-                                  DateTime                          ChargingEnd,
-                                  Decimal                           ConsumedEnergy,
+        public ChargeDetailRecord(Session_Id                         SessionId,
+                                  EVSE_Id                            EVSEId,
+                                  Identification                     Identification,
+                                  DateTime                           SessionStart,
+                                  DateTime                           SessionEnd,
+                                  DateTime                           ChargingStart,
+                                  DateTime                           ChargingEnd,
+                                  Decimal                            ConsumedEnergy,
 
-                                  PartnerProduct_Id?                PartnerProductId                 = null,
-                                  CPOPartnerSession_Id?             CPOPartnerSessionId              = null,
-                                  EMPPartnerSession_Id?             EMPPartnerSessionId              = null,
-                                  Decimal?                          MeterValueStart                  = null,
-                                  Decimal?                          MeterValueEnd                    = null,
-                                  IEnumerable<Decimal>              MeterValuesInBetween             = null,
-                                  IEnumerable<SignedMeteringValue>  SignedMeteringValues             = null,
-                                  CalibrationLawVerification        CalibrationLawVerificationInfo   = null,
-                                  Operator_Id?                      HubOperatorId                    = null,
-                                  Provider_Id?                      HubProviderId                    = null,
+                                  PartnerProduct_Id?                 PartnerProductId                 = null,
+                                  CPOPartnerSession_Id?              CPOPartnerSessionId              = null,
+                                  EMPPartnerSession_Id?              EMPPartnerSessionId              = null,
+                                  Decimal?                           MeterValueStart                  = null,
+                                  Decimal?                           MeterValueEnd                    = null,
+                                  IEnumerable<Decimal>?              MeterValuesInBetween             = null,
+                                  IEnumerable<SignedMeteringValue>?  SignedMeteringValues             = null,
+                                  CalibrationLawVerification?        CalibrationLawVerificationInfo   = null,
+                                  Operator_Id?                       HubOperatorId                    = null,
+                                  Provider_Id?                       HubProviderId                    = null,
 
-                                  JObject                           CustomData                       = null,
-                                  Dictionary<String, Object>        InternalData                     = null)
+                                  JObject?                           CustomData                       = null,
+                                  Dictionary<String, Object>?        InternalData                     = null)
 
                 : base(InternalData)
 
@@ -227,8 +225,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId             = EMPPartnerSessionId;
             this.MeterValueStart                 = MeterValueStart;
             this.MeterValueEnd                   = MeterValueEnd;
-            this.MeterValuesInBetween            = MeterValuesInBetween ?? new Decimal[0];
-            this.SignedMeteringValues            = SignedMeteringValues ?? new SignedMeteringValue[0];
+            this.MeterValuesInBetween            = MeterValuesInBetween ?? Array.Empty<Decimal>();
+            this.SignedMeteringValues            = SignedMeteringValues ?? Array.Empty<SignedMeteringValue>();
             this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
@@ -987,7 +985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ChargeDetailRecord chargeDetailRecord
                    ? CompareTo(chargeDetailRecord)
@@ -1002,7 +1000,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record object to compare with.</param>
-        public Int32 CompareTo(ChargeDetailRecord ChargeDetailRecord)
+        public Int32 CompareTo(ChargeDetailRecord? ChargeDetailRecord)
         {
 
             if (ChargeDetailRecord is null)
@@ -1032,8 +1030,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 result = ConsumedEnergy.CompareTo(ChargeDetailRecord.ConsumedEnergy);
 
 
-            if (result == 0 && PartnerProductId.HasValue && ChargeDetailRecord.PartnerProductId.HasValue)
-                result = PartnerProductId.Value.CompareTo(ChargeDetailRecord.PartnerProductId.Value);
+            if (result == 0 && PartnerProductId.   HasValue && ChargeDetailRecord.PartnerProductId.   HasValue)
+                result = PartnerProductId.   Value.CompareTo(ChargeDetailRecord.PartnerProductId.   Value);
 
             if (result == 0 && CPOPartnerSessionId.HasValue && ChargeDetailRecord.CPOPartnerSessionId.HasValue)
                 result = CPOPartnerSessionId.Value.CompareTo(ChargeDetailRecord.CPOPartnerSessionId.Value);
@@ -1041,17 +1039,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (result == 0 && EMPPartnerSessionId.HasValue && ChargeDetailRecord.EMPPartnerSessionId.HasValue)
                 result = EMPPartnerSessionId.Value.CompareTo(ChargeDetailRecord.EMPPartnerSessionId.Value);
 
-            if (result == 0 && MeterValueStart.HasValue && ChargeDetailRecord.MeterValueStart.HasValue)
-                result = MeterValueStart.Value.CompareTo(ChargeDetailRecord.MeterValueStart.Value);
+            if (result == 0 && MeterValueStart.    HasValue && ChargeDetailRecord.MeterValueStart.    HasValue)
+                result = MeterValueStart.    Value.CompareTo(ChargeDetailRecord.MeterValueStart.    Value);
 
-            if (result == 0 && MeterValueEnd.HasValue && ChargeDetailRecord.MeterValueEnd.HasValue)
-                result = MeterValueEnd.Value.CompareTo(ChargeDetailRecord.MeterValueEnd.Value);
+            if (result == 0 && MeterValueEnd.      HasValue && ChargeDetailRecord.MeterValueEnd.      HasValue)
+                result = MeterValueEnd.      Value.CompareTo(ChargeDetailRecord.MeterValueEnd.      Value);
 
             // MeterValuesInBetween
 
             // SignedMeteringValues
 
-            if (result == 0 && CalibrationLawVerificationInfo != null && ChargeDetailRecord.CalibrationLawVerificationInfo != null)
+            if (result == 0 && CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
                 result = CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo);
 
             if (result == 0 && HubOperatorId.HasValue && ChargeDetailRecord.HubOperatorId.HasValue)
@@ -1077,7 +1075,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargeDetailRecord chargeDetailRecord &&
                    Equals(chargeDetailRecord);
@@ -1091,9 +1089,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargeDetailRecord ChargeDetailRecord)
+        public Boolean Equals(ChargeDetailRecord? ChargeDetailRecord)
 
-            => !(ChargeDetailRecord is null) &&
+            => ChargeDetailRecord is not null &&
 
                  SessionId.     Equals(ChargeDetailRecord.SessionId)      &&
                  EVSEId.        Equals(ChargeDetailRecord.EVSEId)         &&
@@ -1119,15 +1117,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                  ((!MeterValueEnd.      HasValue && !ChargeDetailRecord.MeterValueEnd.      HasValue) ||
                    (MeterValueEnd.      HasValue &&  ChargeDetailRecord.MeterValueEnd.      HasValue && MeterValueEnd.      Value.Equals(ChargeDetailRecord.MeterValueEnd.      Value))) &&
 
-                 MeterValuesInBetween.Count().Equals(ChargeDetailRecord.MeterValuesInBetween.Count()) &&
-                 MeterValuesInBetween.All(meterValue => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue)) &&
+                 ((MeterValuesInBetween is null && ChargeDetailRecord.MeterValuesInBetween is null) ||
+                 (MeterValuesInBetween is not null && ChargeDetailRecord.MeterValuesInBetween is not null &&
+                  MeterValuesInBetween.Count().Equals(ChargeDetailRecord.MeterValuesInBetween.Count()) &&
+                  MeterValuesInBetween.All(meterValue => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue)))) &&
 
-                 ((SignedMeteringValues == null  &&  ChargeDetailRecord.SignedMeteringValues == null) ||
-                  (SignedMeteringValues != null  &&  ChargeDetailRecord.SignedMeteringValues != null  && SignedMeteringValues.    Equals(ChargeDetailRecord.SignedMeteringValues))) &&
+                 ((SignedMeteringValues is     null  &&  ChargeDetailRecord.SignedMeteringValues is     null) ||
+                  (SignedMeteringValues is not null  &&  ChargeDetailRecord.SignedMeteringValues is not null  && SignedMeteringValues.    Equals(ChargeDetailRecord.SignedMeteringValues))) &&
 
-                 ((CalibrationLawVerificationInfo == null && ChargeDetailRecord.CalibrationLawVerificationInfo == null) ||
-                  (CalibrationLawVerificationInfo != null && ChargeDetailRecord.CalibrationLawVerificationInfo != null &&
-                   CalibrationLawVerificationInfo.CompareTo( ChargeDetailRecord.CalibrationLawVerificationInfo) != 0)) &&
+                 ((CalibrationLawVerificationInfo is     null && ChargeDetailRecord.CalibrationLawVerificationInfo is     null) ||
+                  (CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null &&
+                   CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo) != 0)) &&
 
                  ((!HubOperatorId.      HasValue && !ChargeDetailRecord.HubOperatorId.      HasValue) ||
                    (HubOperatorId.      HasValue &&  ChargeDetailRecord.HubOperatorId.      HasValue && HubOperatorId.      Value.Equals(ChargeDetailRecord.HubOperatorId.      Value))) &&
@@ -1161,8 +1161,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
                (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
 
-               MeterValuesInBetween.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ^
-               SignedMeteringValues.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ^
+               (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
+               (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
 
                (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
                (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
@@ -1252,7 +1252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The authentication data used to authorize the user or car.
             /// </summary>
             [Optional]
-            public Identification                    Identification                     { get; set; }
+            public Identification?                   Identification                     { get; set; }
 
             /// <summary>
             /// The timestamp when the charging session started.
@@ -1325,14 +1325,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Optional signed metering values, with can e.g. verified via a transparency software.
             /// </summary>
             [Optional]
-            public List<SignedMeteringValue>         SignedMeteringValues               { get; }
+            public List<SignedMeteringValue>?        SignedMeteringValues               { get; }
 
             /// <summary>
             /// Optional additional information which could directly or indirectly help to verify the
             /// signed metering values by using a valid transparency software.
             /// </summary>
             [Optional]
-            public CalibrationLawVerification        CalibrationLawVerificationInfo     { get; set; }
+            public CalibrationLawVerification?       CalibrationLawVerificationInfo     { get; set; }
 
             /// <summary>
             /// An optional operator identification of the hub operator.
@@ -1350,7 +1350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject                           CustomData                         { get; set; }
+            public JObject?                          CustomData                         { get; set; }
 
             #endregion
 
@@ -1381,28 +1381,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// 
             /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
             /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(Session_Id?                       SessionId                        = null,
-                           EVSE_Id?                          EVSEId                           = null,
-                           Identification                    Identification                   = null,
-                           DateTime?                         SessionStart                     = null,
-                           DateTime?                         SessionEnd                       = null,
-                           DateTime?                         ChargingStart                    = null,
-                           DateTime?                         ChargingEnd                      = null,
-                           Decimal?                          ConsumedEnergy                   = null,
+            public Builder(Session_Id?                        SessionId                        = null,
+                           EVSE_Id?                           EVSEId                           = null,
+                           Identification?                    Identification                   = null,
+                           DateTime?                          SessionStart                     = null,
+                           DateTime?                          SessionEnd                       = null,
+                           DateTime?                          ChargingStart                    = null,
+                           DateTime?                          ChargingEnd                      = null,
+                           Decimal?                           ConsumedEnergy                   = null,
 
-                           PartnerProduct_Id?                PartnerProductId                 = null,
-                           CPOPartnerSession_Id?             CPOPartnerSessionId              = null,
-                           EMPPartnerSession_Id?             EMPPartnerSessionId              = null,
-                           Decimal?                          MeterValueStart                  = null,
-                           Decimal?                          MeterValueEnd                    = null,
-                           IEnumerable<Decimal>              MeterValuesInBetween             = null,
-                           IEnumerable<SignedMeteringValue>  SignedMeteringValues             = null,
-                           CalibrationLawVerification        CalibrationLawVerificationInfo   = null,
-                           Operator_Id?                      HubOperatorId                    = null,
-                           Provider_Id?                      HubProviderId                    = null,
+                           PartnerProduct_Id?                 PartnerProductId                 = null,
+                           CPOPartnerSession_Id?              CPOPartnerSessionId              = null,
+                           EMPPartnerSession_Id?              EMPPartnerSessionId              = null,
+                           Decimal?                           MeterValueStart                  = null,
+                           Decimal?                           MeterValueEnd                    = null,
+                           IEnumerable<Decimal>?              MeterValuesInBetween             = null,
+                           IEnumerable<SignedMeteringValue>?  SignedMeteringValues             = null,
+                           CalibrationLawVerification?        CalibrationLawVerificationInfo   = null,
+                           Operator_Id?                       HubOperatorId                    = null,
+                           Provider_Id?                       HubProviderId                    = null,
 
-                           JObject                           CustomData                       = null,
-                           Dictionary<String, Object>        InternalData                     = null)
+                           JObject?                           CustomData                       = null,
+                           Dictionary<String, Object>?        InternalData                     = null)
 
                 : base(InternalData)
 
@@ -1422,8 +1422,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.EMPPartnerSessionId             = EMPPartnerSessionId;
                 this.MeterValueStart                 = MeterValueStart;
                 this.MeterValueEnd                   = MeterValueEnd;
-                this.MeterValuesInBetween            = MeterValuesInBetween.SafeAny() ? new List<Decimal>            (MeterValuesInBetween) : new List<Decimal>();
-                this.SignedMeteringValues            = SignedMeteringValues.SafeAny() ? new List<SignedMeteringValue>(SignedMeteringValues) : new List<SignedMeteringValue>();
+                this.MeterValuesInBetween            = MeterValuesInBetween is not null && MeterValuesInBetween.Any()
+                                                           ? new List<Decimal>            (MeterValuesInBetween)
+                                                           : new List<Decimal>();
+                this.SignedMeteringValues            = SignedMeteringValues is not null && SignedMeteringValues.Any()
+                                                           ? new List<SignedMeteringValue>(SignedMeteringValues)
+                                                           : new List<SignedMeteringValue>();
                 this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
                 this.HubOperatorId                   = HubOperatorId;
                 this.HubProviderId                   = HubProviderId;
@@ -1442,7 +1446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="Builder">A charge detail record builder.</param>
             public static implicit operator ChargeDetailRecord(Builder Builder)
 
-                => Builder?.ToImmutable();
+                => Builder.ToImmutable();
 
 
             /// <summary>
@@ -1459,7 +1463,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!EVSEId.        HasValue)
                     throw new ArgumentException("The given EVSE identification must not be null!",          nameof(EVSEId));
 
-                if (Identification. IsNullOrEmpty)
+                if (Identification is null || Identification.IsNullOrEmpty)
                     throw new ArgumentException("The given user/contract identification must not be null!", nameof(Identification));
 
                 if (!SessionStart.  HasValue)
