@@ -639,8 +639,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                          operatorId,
                                                                                          Request.Timeout ?? DefaultRequestTimeout,
-                                                                                         out AuthorizeStartRequest  authorizeStartRequest,
-                                                                                         out String                 errorResponse,
+                                                                                         out AuthorizeStartRequest?  authorizeStartRequest,
+                                                                                         out String?                 errorResponse,
                                                                                          Request.Timestamp,
                                                                                          Request.EventTrackingId,
                                                                                          CustomAuthorizeStartRequestParser))
@@ -653,12 +653,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStartRequest != null)
+                                                         if (OnAuthorizeStartRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeStartRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStartRequest))).
+                                                                                              authorizeStartRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -672,7 +672,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeStartLocal = OnAuthorizeStart;
-                                                     if (OnAuthorizeStartLocal != null)
+                                                     if (OnAuthorizeStartLocal is not null)
                                                      {
 
                                                          try
@@ -682,23 +682,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                     Cast<OnAuthorizeStartDelegate>().
                                                                                                                                     Select(e => e(Timestamp.Now,
                                                                                                                                                   this,
-                                                                                                                                                  authorizeStartRequest))))?.FirstOrDefault();
+                                                                                                                                                  authorizeStartRequest!))))?.FirstOrDefault();
 
                                                          }
                                                          catch (Exception e)
                                                          {
                                                              authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                              Request:                   authorizeStartRequest,
+                                                                                              Request:                   authorizeStartRequest!,
                                                                                               StatusCodeDescription:     e.Message,
                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                              SessionId:                 authorizeStartRequest.SessionId,
-                                                                                              CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                              SessionId:                 authorizeStartRequest?.SessionId,
+                                                                                              CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                           );
                                                          }
 
-                                                         if (authorizationStartResponse == null)
+                                                         if (authorizationStartResponse is null)
                                                              authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                              authorizeStartRequest,
+                                                                                              authorizeStartRequest!,
                                                                                               "Could not process the received AuthorizeStart request!"
                                                                                           );
 
@@ -716,7 +716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizationStartResponse,
+                                                                                              authorizationStartResponse!,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
 
@@ -731,11 +731,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  }
                                                  else
                                                      authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                      Request:                   authorizeStartRequest,
-                                                                                      StatusCodeDescription:     "We could not handle the given AuthorizeStart request!",
+                                                                                      Request:                   authorizeStartRequest, // maybe null!
+                                                                                      StatusCodeDescription:     "We could not parse the given AuthorizeStart request!",
                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                      SessionId:                 authorizeStartRequest.SessionId,
-                                                                                      CPOPartnerSessionId:       authorizeStartRequest.CPOPartnerSessionId
+                                                                                      SessionId:                 authorizeStartRequest?.SessionId,
+                                                                                      CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                   );
 
                                              }

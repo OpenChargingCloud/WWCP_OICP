@@ -20,8 +20,9 @@
 using System;
 
 using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -44,12 +45,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The request leading to this response.
-        /// </summary>
-        [Mandatory]
-        public TRequest          Request              { get; }
-
-        /// <summary>
         /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
@@ -66,10 +61,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public TimeSpan          Runtime              { get; }
 
         /// <summary>
+        /// The request leading to this response.
+        /// Might be null, when the request was not parsable!
+        /// </summary>
+        [Optional]
+        public TRequest?         Request              { get; }
+
+        /// <summary>
         /// The HTTP response.
         /// </summary>
         [Optional]
-        public HTTPResponse      HTTPResponse         { get; }
+        public HTTPResponse?     HTTPResponse         { get; }
 
         /// <summary>
         /// The optional Hubject process identification of the request.
@@ -81,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject           CustomData           { get; }
+        public JObject?          CustomData           { get; }
 
         #endregion
 
@@ -90,26 +92,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic response.
         /// </summary>
-        /// <param name="Request">The request leading to this result.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="Request">The request leading to this result. Might be null, when the request was not parsable!</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        protected AResponse(TRequest          Request,
-                            DateTime          ResponseTimestamp,
+        protected AResponse(DateTime          ResponseTimestamp,
                             EventTracking_Id  EventTrackingId,
                             TimeSpan          Runtime,
-                            HTTPResponse      HTTPResponse   = null,
+                            TRequest?         Request        = null,
+                            HTTPResponse?     HTTPResponse   = null,
                             Process_Id?       ProcessId      = null,
-                            JObject           CustomData     = null)
+                            JObject?          CustomData     = null)
         {
 
-            this.Request            = Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!");
             this.ResponseTimestamp  = ResponseTimestamp;
             this.EventTrackingId    = EventTrackingId;
             this.Runtime            = Runtime;
+            this.Request            = Request;
             this.HTTPResponse       = HTTPResponse;
             this.ProcessId          = ProcessId;
             this.CustomData         = CustomData;
@@ -125,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compare two abstract responses for equality.
         /// </summary>
         /// <param name="AResponse">Another abstract response.</param>
-        public abstract Boolean Equals(TResponse AResponse);
+        public abstract Boolean Equals(TResponse? AResponse);
 
         #endregion
 
@@ -141,44 +143,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
             #region Properties
 
             /// <summary>
-            /// The request leading to this response.
-            /// </summary>
-            [Mandatory]
-            public TRequest          Request              { get; set; }
-
-            /// <summary>
             /// The timestamp of the response message creation.
             /// </summary>
             [Mandatory]
-            public DateTime?         ResponseTimestamp    { get; set; }
+            public DateTime?          ResponseTimestamp    { get; set; }
 
             /// <summary>
             /// An optional event tracking identification for correlating this response with other events.
             /// </summary>
-            public EventTracking_Id  EventTrackingId      { get; set; }
+            public EventTracking_Id?  EventTrackingId      { get; set; }
 
             /// <summary>
             /// The runtime of the request/response.
             /// </summary>
-            public TimeSpan?         Runtime              { get; set; }
+            public TimeSpan?          Runtime              { get; set; }
 
             /// <summary>
             /// The optional Hubject process identification of the request.
             /// </summary>
             [Optional]
-            public Process_Id?       ProcessId            { get; set; }
+            public Process_Id?        ProcessId            { get; set; }
+
+            /// <summary>
+            /// The request leading to this response.
+            /// </summary>
+            [Mandatory]
+            public TRequest?          Request              { get; set; }
 
             /// <summary>
             /// The HTTP response.
             /// </summary>
             [Optional]
-            public HTTPResponse      HTTPResponse         { get; set; }
+            public HTTPResponse?      HTTPResponse         { get; set; }
 
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject           CustomData           { get; set; }
+            public JObject?           CustomData           { get; set; }
 
             #endregion
 
@@ -194,19 +196,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest          Request             = null,
-                              DateTime?         ResponseTimestamp   = null,
-                              EventTracking_Id  EventTrackingId     = null,
-                              TimeSpan?         Runtime             = null,
-                              HTTPResponse      HTTPResponse        = null,
-                              Process_Id?       ProcessId           = null,
-                              JObject           CustomData          = null)
+            protected Builder(DateTime?          ResponseTimestamp   = null,
+                              EventTracking_Id?  EventTrackingId     = null,
+                              TimeSpan?          Runtime             = null,
+                              TRequest?          Request             = null,
+                              HTTPResponse?      HTTPResponse        = null,
+                              Process_Id?        ProcessId           = null,
+                              JObject?           CustomData          = null)
             {
 
-                this.Request            = Request;
                 this.ResponseTimestamp  = ResponseTimestamp;
                 this.EventTrackingId    = EventTrackingId;
                 this.Runtime            = Runtime;
+                this.Request            = Request;
                 this.HTTPResponse       = HTTPResponse;
                 this.ProcessId          = ProcessId;
                 this.CustomData         = CustomData;

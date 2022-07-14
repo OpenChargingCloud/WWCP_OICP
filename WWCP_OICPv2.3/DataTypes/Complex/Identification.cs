@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// A RFID identification.
         /// </summary>
-        public RFIDIdentification     RFIDIdentification             { get; }
+        public RFIDIdentification?    RFIDIdentification             { get; }
 
         /// <summary>
         /// An e-mobility account identification (EVCO Id) and a (hashed) PIN.
@@ -67,7 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject                CustomData                     { get; }
+        public JObject?               CustomData                     { get; }
 
         #endregion
 
@@ -89,7 +89,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                EVCO_Id?               PlugAndChargeIdentification   = null,
                                EVCO_Id?               RemoteIdentification          = null,
 
-                               JObject                CustomData                    = null)
+                               JObject?               CustomData                    = null)
         {
 
             this.RFIDId                       = RFIDId;
@@ -112,26 +112,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MifareUID">A Mifare user identification.</param>
         /// <param name="CustomData">Optional customer specific data.</param>
-        public static Identification FromUID(UID      MifareUID,
-                                             JObject  CustomData  = null)
+        public static Identification FromUID(UID       MifareUID,
+                                             JObject?  CustomData  = null)
 
-            => new Identification(RFIDId:      MifareUID,
-                                  CustomData:  CustomData);
+            => new (RFIDId:      MifareUID,
+                    CustomData:  CustomData);
 
         #endregion
 
-        #region (static) FromRFIDId                     (UID,                             CustomData = null)
+        #region (static) FromRFIDIdentification         (RFIDIdentification,              CustomData = null)
 
         /// <summary>
         /// Create a new identification.
         /// </summary>
-        /// <param name="UID">An user identification.</param>
+        /// <param name="RFIDIdentification">An RFID identification.</param>
         /// <param name="CustomData">Optional customer specific data.</param>
-        public static Identification FromRFID(UID      UID,
-                                              JObject  CustomData  = null)
+        public static Identification FromRFIDIdentification(RFIDIdentification  RFIDIdentification,
+                                                            JObject?            CustomData  = null)
 
-            => new Identification(RFIDId:      UID,
-                                  CustomData:  CustomData);
+            => new (RFIDIdentification: RFIDIdentification,
+                    CustomData:         CustomData);
 
         #endregion
 
@@ -143,10 +143,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="QRCodeIdentification">A QR-code identification (EVCO Id).</param>
         /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(QRCodeIdentification  QRCodeIdentification,
-                                                              JObject               CustomData   = null)
+                                                              JObject?              CustomData   = null)
 
-            => new Identification(QRCodeIdentification:  QRCodeIdentification,
-                                  CustomData:            CustomData);
+            => new (QRCodeIdentification:  QRCodeIdentification,
+                    CustomData:            CustomData);
 
         #endregion
 
@@ -158,15 +158,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVCOId">An electric vehicle contract identification (EVCO Id).</param>
         /// <param name="PIN">A PIN.</param>
         /// <param name="CustomData">Optional customer specific data.</param>
-        public static Identification FromQRCodeIdentification(EVCO_Id  EVCOId,
-                                                              PIN      PIN,
-                                                              JObject  CustomData   = null)
+        public static Identification FromQRCodeIdentification(EVCO_Id   EVCOId,
+                                                              PIN       PIN,
+                                                              JObject?  CustomData   = null)
 
-            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
-                                                             EVCOId,
-                                                             PIN
-                                                         ),
-                                  CustomData:            CustomData);
+            => new (QRCodeIdentification:  new QRCodeIdentification(
+                                               EVCOId,
+                                               PIN
+                                           ),
+                    CustomData:            CustomData);
 
         #endregion
 
@@ -180,13 +180,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data.</param>
         public static Identification FromQRCodeIdentification(EVCO_Id    EVCOId,
                                                               HashedPIN  HashedPIN,
-                                                              JObject    CustomData   = null)
+                                                              JObject?   CustomData   = null)
 
-            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
-                                                             EVCOId,
-                                                             HashedPIN
-                                                         ),
-                                  CustomData:            CustomData);
+            => new (QRCodeIdentification:  new QRCodeIdentification(
+                                               EVCOId,
+                                               HashedPIN
+                                           ),
+                    CustomData:            CustomData);
 
         #endregion
 
@@ -202,16 +202,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Identification FromQRCodeIdentification(EVCO_Id        EVCOId,
                                                               Hash_Value     HashValue,
                                                               HashFunctions  HashFunction,
-                                                              JObject        CustomData   = null)
+                                                              JObject?       CustomData   = null)
 
-            => new Identification(QRCodeIdentification:  new QRCodeIdentification(
-                                                             EVCOId,
-                                                             new HashedPIN(
-                                                                 HashValue,
-                                                                 HashFunction
-                                                             )
-                                                         ),
-                                  CustomData:            CustomData);
+            => new (QRCodeIdentification:  new QRCodeIdentification(
+                                               EVCOId,
+                                               new HashedPIN(
+                                                   HashValue,
+                                                   HashFunction
+                                               )
+                                           ),
+                    CustomData:            CustomData);
 
         #endregion
 
@@ -222,11 +222,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PlugAndChargeIdentification">A plug'n'charge identification (EVCO Id).</param>
         /// <param name="CustomData">Optional customer specific data.</param>
-        public static Identification FromPlugAndChargeIdentification(EVCO_Id  PlugAndChargeIdentification,
-                                                                     JObject  CustomData   = null)
+        public static Identification FromPlugAndChargeIdentification(EVCO_Id   PlugAndChargeIdentification,
+                                                                     JObject?  CustomData   = null)
 
-            => new Identification(PlugAndChargeIdentification:  PlugAndChargeIdentification,
-                                  CustomData:                   CustomData);
+            => new (PlugAndChargeIdentification:  PlugAndChargeIdentification,
+                    CustomData:                   CustomData);
 
         #endregion
 
@@ -237,11 +237,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RemoteIdentification">A remote identification (EVCO Id).</param>
         /// <param name="CustomData">Optional customer specific data.</param>
-        public static Identification FromRemoteIdentification(EVCO_Id  RemoteIdentification,
-                                                              JObject  CustomData   = null)
+        public static Identification FromRemoteIdentification(EVCO_Id   RemoteIdentification,
+                                                              JObject?  CustomData   = null)
 
-            => new Identification(RemoteIdentification:  RemoteIdentification,
-                                  CustomData:            CustomData);
+            => new (RemoteIdentification:  RemoteIdentification,
+                    CustomData:            CustomData);
 
         #endregion
 

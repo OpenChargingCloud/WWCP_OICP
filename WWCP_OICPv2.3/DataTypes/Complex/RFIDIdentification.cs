@@ -60,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// A number printed on a customer’s card for manual authorization (e.q. via a call center).
         /// </summary>
         [Optional]
-        public String     PrintedNumber    { get; }
+        public String?    PrintedNumber    { get; }
 
         /// <summary>
         /// Until when this card is valid. Should not be set if card does not have an expiration yet.
@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject    CustomData       { get; }
+        public JObject?   CustomData       { get; }
 
         #endregion
 
@@ -90,9 +90,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public RFIDIdentification(UID         UID,
                                   RFIDTypes   RFIDType,
                                   EVCO_Id?    EVCOId          = null,
-                                  String      PrintedNumber   = null,
+                                  String?     PrintedNumber   = null,
                                   DateTime?   ExpiryDate      = null,
-                                  JObject     CustomData      = null)
+                                  JObject?    CustomData      = null)
         {
 
             this.UID            = UID;
@@ -230,10 +230,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse RFIDType          [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("RFID",
-                                             "RFID type",
-                                             out RFIDTypes RFIDType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("RFID",
+                                         "RFID type",
+                                         RFIDTypesExtensions.TryParse,
+                                         out RFIDTypes RFIDType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -651,7 +652,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => String.Concat(UID.ToString(),
                              " (", RFIDType, ") ",
 
-                             PrintedNumber.IsNeitherNullNorEmpty()
+                             PrintedNumber is not null && PrintedNumber.IsNeitherNullNorEmpty()
                                  ? ", '" + PrintedNumber + "'"
                                  : "",
 

@@ -99,7 +99,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) NewRandom
+
+        /// <summary>
+        /// Create a new random process identification.
+        /// </summary>
+        public static Process_Id NewRandom
+            => Parse(Guid.NewGuid().ToString());
+
+        #endregion
+
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a process identification.
@@ -118,7 +128,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a process identification.
@@ -136,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ProcessId)
+        #region (static) TryParse(Text, out ProcessId)
 
         /// <summary>
         /// Try to parse the given string as a process identification.
@@ -146,7 +156,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Process_Id ProcessId)
         {
 
-            Text = Text?.Trim();
+            Text = Text.Trim();
 
             if (Text.IsNotNullOrEmpty())
             {
@@ -173,9 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Process_Id Clone
 
-            => new Process_Id(
-                   new String(InternalId?.ToCharArray())
-               );
+            => new (new String(InternalId?.ToCharArray()));
 
         #endregion
 
