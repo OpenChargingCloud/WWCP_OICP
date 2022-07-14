@@ -28,6 +28,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for PINs.
+    /// </summary>
+    public static class PINExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this PIN is null or empty.
+        /// </summary>
+        /// <param name="PIN">A PIN.</param>
+        public static Boolean IsNullOrEmpty(this PIN? PIN)
+            => !PIN.HasValue || PIN.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this PIN is null or empty.
+        /// </summary>
+        /// <param name="PIN">A PIN.</param>
+        public static Boolean IsNotNullOrEmpty(this PIN? PIN)
+            => PIN.HasValue && PIN.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// A PIN.
     /// </summary>
     public readonly struct PIN : IId<PIN>
@@ -51,16 +74,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this PIN is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this PIN is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
         /// The length of the PIN.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -87,8 +116,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PIN Parse(String Text)
         {
 
-            if (TryParse(Text, out PIN uid))
-                return uid;
+            if (TryParse(Text, out PIN pin))
+                return pin;
 
             throw new ArgumentException("Invalid text-representation of a PIN: '" + Text + "'!",
                                         nameof(Text));
@@ -106,8 +135,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PIN? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PIN uid))
-                return uid;
+            if (TryParse(Text, out PIN pin))
+                return pin;
 
             return null;
 
@@ -262,10 +291,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
-            => Object is PIN uid
-                   ? CompareTo(uid)
+            => Object is PIN pin
+                   ? CompareTo(pin)
                    : throw new ArgumentException("The given object is not a PIN!",
                                                  nameof(Object));
 
@@ -296,10 +325,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
-            => Object is PIN uid &&
-                   Equals(uid);
+            => Object is PIN pin &&
+                   Equals(pin);
 
         #endregion
 

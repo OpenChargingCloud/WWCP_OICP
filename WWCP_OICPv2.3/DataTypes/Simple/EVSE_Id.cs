@@ -30,6 +30,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for EVSE identifications.
+    /// </summary>
+    public static class EVSEIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this EVSE identification is null or empty.
+        /// </summary>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        public static Boolean IsNullOrEmpty(this EVSE_Id? EVSEId)
+            => !EVSEId.HasValue || EVSEId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this EVSE identification is null or empty.
+        /// </summary>
+        /// <param name="EVSEId">An EVSE identification.</param>
+        public static Boolean IsNotNullOrEmpty(this EVSE_Id? EVSEId)
+            => EVSEId.HasValue && EVSEId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of an Electric Vehicle Supply Equipment (EVSE).
     /// </summary>
     public readonly struct EVSE_Id : IId<EVSE_Id>
@@ -69,10 +92,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => OperatorId.Format;
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this EVSE identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => Suffix.IsNullOrEmpty();
+
+        /// <summary>
+        /// Indicates whether this EVSE identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => Suffix.IsNotNullOrEmpty();
 
         /// <summary>
         /// Returns the length of the identification.
@@ -86,13 +115,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 {
 
                     case OperatorIdFormats.DIN:
-                        return OperatorId.Length + 1 + (UInt64) Suffix?.Length;
+                        return OperatorId.Length + 1 + (UInt64) (Suffix?.Length ?? 0);
 
                     case OperatorIdFormats.ISO_STAR:
-                        return OperatorId.Length + 2 + (UInt64) Suffix?.Length;
+                        return OperatorId.Length + 2 + (UInt64) (Suffix?.Length ?? 0);
 
                     default:  // ISO
-                        return OperatorId.Length + 1 + (UInt64) Suffix?.Length;
+                        return OperatorId.Length + 1 + (UInt64) (Suffix?.Length ?? 0);
 
                 }
 
@@ -394,7 +423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is EVSE_Id EVSEId
                    ? CompareTo(EVSEId)
@@ -432,7 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is EVSE_Id EVSEId &&
                    Equals(EVSEId);

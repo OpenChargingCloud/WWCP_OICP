@@ -29,6 +29,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for charging pool identifications.
+    /// </summary>
+    public static class ChargingPoolIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this charging pool identification is null or empty.
+        /// </summary>
+        /// <param name="ChargingPoolId">A charging pool identification.</param>
+        public static Boolean IsNullOrEmpty(this ChargingPool_Id? ChargingPoolId)
+            => !ChargingPoolId.HasValue || ChargingPoolId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this charging pool identification is null or empty.
+        /// </summary>
+        /// <param name="ChargingPoolId">A charging pool identification.</param>
+        public static Boolean IsNotNullOrEmpty(this ChargingPool_Id? ChargingPoolId)
+            => ChargingPoolId.HasValue && ChargingPoolId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of a charging pool.
     /// </summary>
     public readonly struct ChargingPool_Id : IId<ChargingPool_Id>
@@ -328,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ChargingPool_Id chargingPoolId
                    ? CompareTo(chargingPoolId)
@@ -362,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingPool_Id chargingPoolId &&
                    Equals(chargingPoolId);

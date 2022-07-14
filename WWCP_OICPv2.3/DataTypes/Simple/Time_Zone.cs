@@ -28,6 +28,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for time zones.
+    /// </summary>
+    public static class TimeZoneExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this time zone is null or empty.
+        /// </summary>
+        /// <param name="TimeZone">A time zone.</param>
+        public static Boolean IsNullOrEmpty(this Time_Zone? TimeZone)
+            => !TimeZone.HasValue || TimeZone.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this time zone is null or empty.
+        /// </summary>
+        /// <param name="TimeZone">A time zone.</param>
+        public static Boolean IsNotNullOrEmpty(this Time_Zone? TimeZone)
+            => TimeZone.HasValue && TimeZone.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of a time zone.
     /// </summary>
     public readonly struct Time_Zone : IId<Time_Zone>
@@ -53,16 +76,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this time zone is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this time zone is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
         /// The length of the time zone identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -251,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Time_Zone timeZone
                    ? CompareTo(timeZone)
@@ -285,7 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Time_Zone timeZone &&
                    Equals(timeZone);

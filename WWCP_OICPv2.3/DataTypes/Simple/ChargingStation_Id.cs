@@ -29,6 +29,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for charging station identifications.
+    /// </summary>
+    public static class ChargingStationIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this charging station identification is null or empty.
+        /// </summary>
+        /// <param name="ChargingStationId">A charging station identification.</param>
+        public static Boolean IsNullOrEmpty(this ChargingStation_Id? ChargingStationId)
+            => !ChargingStationId.HasValue || ChargingStationId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this charging station identification is null or empty.
+        /// </summary>
+        /// <param name="ChargingStationId">A charging station identification.</param>
+        public static Boolean IsNotNullOrEmpty(this ChargingStation_Id? ChargingStationId)
+            => ChargingStationId.HasValue && ChargingStationId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of a charging station.
     /// </summary>
     public readonly struct ChargingStation_Id : IId<ChargingStation_Id>
@@ -328,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ChargingStation_Id chargingStationId
                    ? CompareTo(chargingStationId)
@@ -362,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingStation_Id chargingStationId &&
                    Equals(chargingStationId);

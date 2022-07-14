@@ -1284,25 +1284,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      ChargeDetailRecord2WWCPChargeDetailRecordDelegate  ChargeDetailRecord2WWCPChargeDetailRecord = null)
         {
 
-            var CustomData = new Dictionary<String, Object> {
+            var customData = new Dictionary<String, Object?> {
                                  { OICP_CDR, ChargeDetailRecord }
                              };
 
             if (ChargeDetailRecord.CPOPartnerSessionId.HasValue)
-                CustomData.Add(OICP_CPOPartnerSessionId,  ChargeDetailRecord.CPOPartnerSessionId.ToString());
+                customData.Add(OICP_CPOPartnerSessionId,  ChargeDetailRecord.CPOPartnerSessionId.ToString());
 
             if (ChargeDetailRecord.EMPPartnerSessionId.HasValue)
-                CustomData.Add(OICP_EMPPartnerSessionId,  ChargeDetailRecord.EMPPartnerSessionId.ToString());
+                customData.Add(OICP_EMPPartnerSessionId,  ChargeDetailRecord.EMPPartnerSessionId.ToString());
 
             if (ChargeDetailRecord.HubOperatorId.HasValue)
-                CustomData.Add(OICP_HubOperatorId,        ChargeDetailRecord.HubOperatorId.      ToString());
+                customData.Add(OICP_HubOperatorId,        ChargeDetailRecord.HubOperatorId.      ToString());
 
             if (ChargeDetailRecord.HubProviderId.HasValue)
-                CustomData.Add(OICP_HubProviderId,        ChargeDetailRecord.HubProviderId.      ToString());
+                customData.Add(OICP_HubProviderId,        ChargeDetailRecord.HubProviderId.      ToString());
 
 
             var CDR = new WWCP.ChargeDetailRecord(
-                          Id:                    WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP().ToString()),
+                          Id:                    WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP()?.ToString() ?? ""),
                           SessionId:             ChargeDetailRecord.SessionId.ToWWCP().Value,
                           EVSEId:                ChargeDetailRecord.EVSEId.   ToWWCP(),
                           ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue ? new WWCP.eMobilityProvider_Id?(WWCP.eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString())) : null,
@@ -1336,7 +1336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                           //Signatures:            new String[] { ChargeDetailRecord.MeteringSignature },
 
-                          CustomData:            CustomData
+                          CustomData:            customData
 
                       );
 

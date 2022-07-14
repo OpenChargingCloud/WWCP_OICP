@@ -28,6 +28,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for operator identifications.
+    /// </summary>
+    public static class OperatorIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this operator identification is null or empty.
+        /// </summary>
+        /// <param name="OperatorId">A operator identification.</param>
+        public static Boolean IsNullOrEmpty(this Operator_Id? OperatorId)
+            => !OperatorId.HasValue || OperatorId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this operator identification is null or empty.
+        /// </summary>
+        /// <param name="OperatorId">A operator identification.</param>
+        public static Boolean IsNotNullOrEmpty(this Operator_Id? OperatorId)
+            => OperatorId.HasValue && OperatorId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of an operator.
     /// </summary>
     public readonly struct Operator_Id : IId<Operator_Id>
@@ -71,13 +94,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public OperatorIdFormats  Format        { get; }
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this operator identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => Suffix.IsNullOrEmpty();
 
         /// <summary>
-        /// Returns the length of the identification.
+        /// Indicates whether this operator identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => Suffix.IsNotNullOrEmpty();
+
+        /// <summary>
+        /// Returns the length of the operator identification.
         /// </summary>
         public UInt64 Length
         {
@@ -447,7 +476,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Operator_Id operatorId
                    ? CompareTo(operatorId)
@@ -485,7 +514,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Operator_Id operatorId &&
                    Equals(operatorId);

@@ -29,7 +29,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The unique identification of a charging session.
+    /// Extension methods for CPO partner session identifications.
+    /// </summary>
+    public static class CPOPartnerSessionIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this CPO partner session identification is null or empty.
+        /// </summary>
+        /// <param name="CPOPartnerSessionId">A CPO partner session identification.</param>
+        public static Boolean IsNullOrEmpty(this CPOPartnerSession_Id? CPOPartnerSessionId)
+            => !CPOPartnerSessionId.HasValue || CPOPartnerSessionId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this CPO partner session identification is null or empty.
+        /// </summary>
+        /// <param name="CPOPartnerSessionId">A CPO partner session identification.</param>
+        public static Boolean IsNotNullOrEmpty(this CPOPartnerSession_Id? CPOPartnerSessionId)
+            => CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
+    /// The unique identification of a CPO partner charging session.
     /// </summary>
     public readonly struct CPOPartnerSession_Id : IId<CPOPartnerSession_Id>
     {
@@ -46,16 +69,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this charging session identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this charging session identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
         /// The length of the charging session identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -277,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is CPOPartnerSession_Id sessionId
                    ? CompareTo(sessionId)
@@ -310,7 +339,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is CPOPartnerSession_Id sessionId
                    ? Equals(sessionId)

@@ -27,6 +27,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for clearing house identifications.
+    /// </summary>
+    public static class ClearingHouseIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this clearing house identification is null or empty.
+        /// </summary>
+        /// <param name="ClearingHouseId">A clearing house identification.</param>
+        public static Boolean IsNullOrEmpty(this ClearingHouse_Id? ClearingHouseId)
+            => !ClearingHouseId.HasValue || ClearingHouseId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this clearing house identification is null or empty.
+        /// </summary>
+        /// <param name="ClearingHouseId">A clearing house identification.</param>
+        public static Boolean IsNotNullOrEmpty(this ClearingHouse_Id? ClearingHouseId)
+            => ClearingHouseId.HasValue && ClearingHouseId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of a clearing house.
     /// </summary>
     public readonly struct ClearingHouse_Id : IId<ClearingHouse_Id>
@@ -44,16 +67,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this clearing house identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this clearing house identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
         /// The length of the clearing house identificator.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -253,7 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ClearingHouse_Id clearingHouseId
                    ? CompareTo(clearingHouseId)
@@ -287,7 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ClearingHouse_Id clearingHouseId &&
                    Equals(clearingHouseId);

@@ -27,14 +27,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The unique identification of a hash value.
+    /// Extension methods for hash values.
+    /// </summary>
+    public static class HashValueExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this hash value is null or empty.
+        /// </summary>
+        /// <param name="HashValue">A hash value.</param>
+        public static Boolean IsNullOrEmpty(this Hash_Value? HashValue)
+            => !HashValue.HasValue || HashValue.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this hash value is null or empty.
+        /// </summary>
+        /// <param name="HashValue">A hash value.</param>
+        public static Boolean IsNotNullOrEmpty(this Hash_Value? HashValue)
+            => HashValue.HasValue && HashValue.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
+    /// A hash value.
     /// </summary>
     public readonly struct Hash_Value : IId<Hash_Value>
     {
 
         #region Data
 
-        //ToDo: Implement proper hash value id format!
+        //ToDo: Implement proper hash value format!
         // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#HashValueType
         // ^[0-9A-Za-z\\.+/=\\$]{10,100}$
 
@@ -48,16 +71,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this hash value is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the hash value identificator.
+        /// Indicates whether this hash value is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
+        /// The length of the hash value.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -245,7 +274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Hash_Value hashValue
                    ? CompareTo(hashValue)
@@ -279,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Hash_Value hashValue &&
                    Equals(hashValue);

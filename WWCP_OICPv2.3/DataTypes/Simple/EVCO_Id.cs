@@ -28,6 +28,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for electric vehicle contract identifications.
+    /// </summary>
+    public static class EVCOIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this electric vehicle contract identification is null or empty.
+        /// </summary>
+        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        public static Boolean IsNullOrEmpty(this EVCO_Id? EVCOId)
+            => !EVCOId.HasValue || EVCOId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this electric vehicle contract identification is null or empty.
+        /// </summary>
+        /// <param name="EVCOId">An electric vehicle contract identification.</param>
+        public static Boolean IsNotNullOrEmpty(this EVCO_Id? EVCOId)
+            => EVCOId.HasValue && EVCOId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of an electric vehicle contract identification (EVCOId).
     /// </summary>
     public readonly struct EVCO_Id : IId<EVCO_Id>
@@ -64,16 +87,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Char?        CheckDigit    { get; }
 
         /// <summary>
-        /// Indicates whether this identification is null or empty.
+        /// Indicates whether this EVCO identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this EVCO identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => InternalId.IsNotNullOrEmpty();
+
+        /// <summary>
         /// The length of the identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -368,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is EVCO_Id EVCOId
                    ? CompareTo(EVCOId)
@@ -402,7 +431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is EVCO_Id EVCOId &&
                    Equals(EVCOId);

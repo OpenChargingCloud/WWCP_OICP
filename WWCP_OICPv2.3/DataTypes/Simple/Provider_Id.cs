@@ -28,6 +28,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// Extension methods for provider identifications.
+    /// </summary>
+    public static class ProviderIdExtensions
+    {
+
+        /// <summary>
+        /// Indicates whether this provider identification is null or empty.
+        /// </summary>
+        /// <param name="ProviderId">A provider identification.</param>
+        public static Boolean IsNullOrEmpty(this Provider_Id? ProviderId)
+            => !ProviderId.HasValue || ProviderId.Value.IsNullOrEmpty;
+
+        /// <summary>
+        /// Indicates whether this provider identification is null or empty.
+        /// </summary>
+        /// <param name="ProviderId">A provider identification.</param>
+        public static Boolean IsNotNullOrEmpty(this Provider_Id? ProviderId)
+            => ProviderId.HasValue && ProviderId.Value.IsNotNullOrEmpty;
+
+    }
+
+
+    /// <summary>
     /// The unique identification of an e-mobility provider.
     /// </summary>
     public readonly struct Provider_Id : IId<Provider_Id>
@@ -67,6 +90,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => Suffix.IsNullOrEmpty();
 
         /// <summary>
+        /// Indicates whether this identification is NOT null or empty.
+        /// </summary>
+        public Boolean IsNotNullOrEmpty
+            => Suffix.IsNotNullOrEmpty();
+
+        /// <summary>
         /// Returns the length of the identification.
         /// </summary>
         public UInt64 Length
@@ -78,13 +107,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 {
 
                     case ProviderIdFormats.DIN_STAR:
-                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix?.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + (Suffix?.Length ?? 0));
 
                     case ProviderIdFormats.ISO:
-                        return (UInt64) (CountryCode.Alpha2Code.Length     + Suffix?.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length     + (Suffix?.Length ?? 0));
 
                     default: // ISO_HYPHEN
-                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + Suffix?.Length);
+                        return (UInt64) (CountryCode.Alpha2Code.Length + 1 + (Suffix?.Length ?? 0));
 
                 }
 
@@ -430,7 +459,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Provider_Id providerId
                    ? CompareTo(providerId)
@@ -468,7 +497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Provider_Id providerId &&
                Equals(providerId);
