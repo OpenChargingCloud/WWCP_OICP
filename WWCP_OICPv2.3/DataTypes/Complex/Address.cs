@@ -72,13 +72,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional floor level.
         /// </summary>
         [Optional]
-        public String      Floor              { get; }
+        public String?     Floor              { get; }
 
         /// <summary>
         /// The optional region.
         /// </summary>
         [Optional]
-        public String      Region             { get; }
+        public String?     Region             { get; }
 
         /// <summary>
         /// Whether a parking facility exists.
@@ -90,7 +90,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional parking spot.
         /// </summary>
         [Optional]
-        public String      ParkingSpot        { get; }
+        public String?     ParkingSpot        { get; }
 
         /// <summary>
         /// The optional time zone.
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject     CustomData         { get; }
+        public JObject?    CustomData         { get; }
 
         #endregion
 
@@ -127,12 +127,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        String      Street,
                        String      PostalCode,
                        String      HouseNumber,
-                       String      Floor             = null,
-                       String      Region            = null,
+                       String?     Floor             = null,
+                       String?     Region            = null,
                        Boolean?    ParkingFacility   = null,
-                       String      ParkingSpot       = null,
+                       String?     ParkingSpot       = null,
                        Time_Zone?  TimeZone          = null,
-                       JObject     CustomData        = null)
+                       JObject?    CustomData        = null)
 
         {
 
@@ -179,19 +179,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom address JSON objects.</param>
-        public static Address Parse(JObject                               JSON,
-                                    CustomJObjectParserDelegate<Address>  CustomAddressParser   = null)
+        public static Address Parse(JObject                                JSON,
+                                    CustomJObjectParserDelegate<Address>?  CustomAddressParser   = null)
         {
 
             if (TryParse(JSON,
-                         out Address address,
-                         out String  ErrorResponse,
+                         out Address?  address,
+                         out String?   errorResponse,
                          CustomAddressParser))
             {
                 return address;
             }
 
-            throw new ArgumentException("The given JSON representation of an address is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an address is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -204,19 +204,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom address JSON objects.</param>
-        public static Address Parse(String                                Text,
-                                    CustomJObjectParserDelegate<Address>  CustomAddressParser   = null)
+        public static Address Parse(String                                 Text,
+                                    CustomJObjectParserDelegate<Address>?  CustomAddressParser   = null)
         {
 
             if (TryParse(Text,
-                         out Address address,
-                         out String  ErrorResponse,
+                         out Address?  address,
+                         out String?   errorResponse,
                          CustomAddressParser))
             {
                 return address;
             }
 
-            throw new ArgumentException("The given text representation of an address is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an address is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -232,9 +232,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Address">The parsed address.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject      JSON,
-                                       out Address  Address,
-                                       out String   ErrorResponse)
+        public static Boolean TryParse(JObject       JSON,
+                                       out Address?  Address,
+                                       out String?   ErrorResponse)
 
             => TryParse(JSON,
                         out Address,
@@ -249,10 +249,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Address">The parsed address.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom addresss JSON objects.</param>
-        public static Boolean TryParse(JObject                               JSON,
-                                       out Address                           Address,
-                                       out String                            ErrorResponse,
-                                       CustomJObjectParserDelegate<Address>  CustomAddressParser)
+        public static Boolean TryParse(JObject                                JSON,
+                                       out Address?                           Address,
+                                       out String?                            ErrorResponse,
+                                       CustomJObjectParserDelegate<Address>?  CustomAddressParser)
         {
 
             try
@@ -414,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       TimeZone,
                                       CustomData);
 
-                if (CustomAddressParser != null)
+                if (CustomAddressParser is not null)
                     Address = CustomAddressParser(JSON,
                                                   Address);
 
@@ -441,10 +441,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Address">The parsed address.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom addresss JSON objects.</param>
-        public static Boolean TryParse(String                                Text,
-                                       out Address                           Address,
-                                       out String                            ErrorResponse,
-                                       CustomJObjectParserDelegate<Address>  CustomAddressParser)
+        public static Boolean TryParse(String                                 Text,
+                                       out Address?                           Address,
+                                       out String?                            ErrorResponse,
+                                       CustomJObjectParserDelegate<Address>?  CustomAddressParser)
         {
 
             try
@@ -473,7 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<Address> CustomAddressSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<Address>?  CustomAddressSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -510,7 +510,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 );
 
-            return CustomAddressSerializer != null
+            return CustomAddressSerializer is not null
                        ? CustomAddressSerializer(this, JSON)
                        : JSON;
 
@@ -525,17 +525,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Address Clone
 
-            => new Address(Country.Clone,
-                           City        != null ? new String(City.       ToCharArray())                               : null,
-                           Street      != null ? new String(Street.     ToCharArray())                               : null,
-                           PostalCode  != null ? new String(PostalCode. ToCharArray())                               : null,
-                           HouseNumber != null ? new String(HouseNumber.ToCharArray())                               : null,
-                           Floor       != null ? new String(Floor.      ToCharArray())                               : null,
-                           Region      != null ? new String(Region.     ToCharArray())                               : null,
-                           ParkingFacility,
-                           ParkingSpot != null ? new String(ParkingSpot.ToCharArray())                               : null,
-                           TimeZone?.Clone,
-                           CustomData  != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (Country.Clone,
+                    new String(City.       ToCharArray()),
+                    new String(Street.     ToCharArray()),
+                    new String(PostalCode. ToCharArray()),
+                    new String(HouseNumber.ToCharArray()),
+                    Floor       is not null ? new String(Floor.      ToCharArray())                               : null,
+                    Region      is not null ? new String(Region.     ToCharArray())                               : null,
+                    ParkingFacility,
+                    ParkingSpot is not null ? new String(ParkingSpot.ToCharArray())                               : null,
+                    TimeZone?.Clone,
+                    CustomData  is not null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 
@@ -655,7 +655,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Address address
                    ? CompareTo(address)
@@ -670,7 +670,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Address">An object to compare with.</param>
-        public Int32 CompareTo(Address Address)
+        public Int32 CompareTo(Address? Address)
         {
 
             if (Address is null)
@@ -729,7 +729,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Address address &&
                    Equals(address);
@@ -743,7 +743,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Address">An address to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(Address Address)
+        public Boolean Equals(Address? Address)
 
             => !(Address is null) &&
                  Country         == Address.Country         &&

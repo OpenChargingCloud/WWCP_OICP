@@ -45,39 +45,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <example>PTB - X-X-XXXX : V1 : 01Jan2020</example>
         [Optional]
-        public String   CalibrationLawCertificateId                    { get; }
+        public String?   CalibrationLawCertificateId                    { get; }
 
         /// <summary>
         /// Unique PublicKey for EVSEID (or the smart energy meter within the charging station) can be provided here.
         /// </summary>
         [Optional]
-        public String   PublicKey                                      { get; }
+        public String?   PublicKey                                      { get; }
 
         /// <summary>
         /// In this field CPO can also provide an url to a external data set. This data set can give calibration law information which can be simply added to the end customer invoice of the EMP.
         /// The information can contain for eg Charging Station Details, Charging Session Date/Time, SignedMeteringValues(Transparency Software format), SignedMeterValuesVerificationInstruction etc.
         /// </summary>
         [Optional]
-        public URL?     MeteringSignatureURL                           { get; }
+        public URL?      MeteringSignatureURL                           { get; }
 
         /// <summary>
         /// Encoding format of the metering signature data as well as the version.
         /// </summary>
         /// <example>EDL40 Mennekes: V1</example>
         [Optional]
-        public String   MeteringSignatureEncodingFormat                { get; }
+        public String?   MeteringSignatureEncodingFormat                { get; }
 
         /// <summary>
         /// Additional information (e.g. instruction on how to use the transparency software).
         /// </summary>
         [Optional]
-        public String   SignedMeteringValuesVerificationInstruction    { get; }
+        public String?   SignedMeteringValuesVerificationInstruction    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject  CustomData                                     { get; }
+        public JObject?  CustomData                                     { get; }
 
         #endregion
 
@@ -92,16 +92,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="MeteringSignatureEncodingFormat">Encoding format of the metering signature data as well as the version.</param>
         /// <param name="SignedMeteringValuesVerificationInstruction">Additional information (e.g. instruction on how to use the transparency software).</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public CalibrationLawVerification(String  CalibrationLawCertificateId                   = null,
-                                          String  PublicKey                                     = null,
-                                          URL?    MeteringSignatureURL                          = null,
-                                          String  MeteringSignatureEncodingFormat               = null,
-                                          String  SignedMeteringValuesVerificationInstruction   = null,
-                                          JObject CustomData                                    = null)
+        public CalibrationLawVerification(String?  CalibrationLawCertificateID                   = null,
+                                          String?  PublicKey                                     = null,
+                                          URL?     MeteringSignatureURL                          = null,
+                                          String?  MeteringSignatureEncodingFormat               = null,
+                                          String?  SignedMeteringValuesVerificationInstruction   = null,
+                                          JObject? CustomData                                    = null)
 
         {
 
-            this.CalibrationLawCertificateId                  = CalibrationLawCertificateId;
+            this.CalibrationLawCertificateId                  = CalibrationLawCertificateID;
             this.PublicKey                                    = PublicKey;
             this.MeteringSignatureURL                         = MeteringSignatureURL;
             this.MeteringSignatureEncodingFormat              = MeteringSignatureEncodingFormat;
@@ -134,19 +134,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static CalibrationLawVerification Parse(JObject                                                  JSON,
-                                                       CustomJObjectParserDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationParser   = null)
+        public static CalibrationLawVerification Parse(JObject                                                   JSON,
+                                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser   = null)
         {
 
             if (TryParse(JSON,
-                         out CalibrationLawVerification calibrationLawVerification,
-                         out String                     ErrorResponse,
+                         out CalibrationLawVerification?  calibrationLawVerification,
+                         out String?                      errorResponse,
                          CustomCalibrationLawVerificationParser))
             {
-                return calibrationLawVerification;
+                return calibrationLawVerification!;
             }
 
-            throw new ArgumentException("The given JSON representation of a calibration law verification is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a calibration law verification is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -159,19 +159,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static CalibrationLawVerification Parse(String                                                   Text,
-                                                       CustomJObjectParserDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationParser   = null)
+        public static CalibrationLawVerification Parse(String                                                    Text,
+                                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser   = null)
         {
 
             if (TryParse(Text,
-                         out CalibrationLawVerification calibrationLawVerification,
-                         out String                     ErrorResponse,
+                         out CalibrationLawVerification?  calibrationLawVerification,
+                         out String?                      errorResponse,
                          CustomCalibrationLawVerificationParser))
             {
-                return calibrationLawVerification;
+                return calibrationLawVerification!;
             }
 
-            throw new ArgumentException("The given text representation of a calibration law verification is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a calibration law verification is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -187,9 +187,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                         JSON,
-                                       out CalibrationLawVerification  CalibrationLawVerification,
-                                       out String                      ErrorResponse)
+        public static Boolean TryParse(JObject                          JSON,
+                                       out CalibrationLawVerification?  CalibrationLawVerification,
+                                       out String?                      ErrorResponse)
 
             => TryParse(JSON,
                         out CalibrationLawVerification,
@@ -204,10 +204,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static Boolean TryParse(JObject                                                  JSON,
-                                       out CalibrationLawVerification                           CalibrationLawVerification,
-                                       out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationParser)
+        public static Boolean TryParse(JObject                                                   JSON,
+                                       out CalibrationLawVerification?                           CalibrationLawVerification,
+                                       out String?                                               ErrorResponse,
+                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser)
         {
 
             try
@@ -216,7 +216,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 CalibrationLawVerification  = default;
                 ErrorResponse               = default;
 
-                #region Parse MeteringSignatureURL      [optional]
+                #region Parse CalibrationLawCertificateId                     [optional]
+
+                if (JSON.ParseOptional("CalibrationLawCertificateID",
+                                       "calibration law certificate identification",
+                                       out String CalibrationLawCertificateId,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse PublicKey                                       [optional]
+
+                if (JSON.ParseOptional("PublicKey",
+                                       "public key",
+                                       out String PublicKey,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse MeteringSignatureURL                            [optional]
 
                 if (JSON.ParseOptional("MeteringSignatureUrl",
                                        "metering signature URL",
@@ -230,21 +256,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData                [optional]
+                #region Parse MeteringSignatureEncodingFormat                 [optional]
+
+                if (JSON.ParseOptional("MeteringSignatureEncodingFormat",
+                                       "metering signature encoding format",
+                                       out String MeteringSignatureEncodingFormat,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse SignedMeteringValuesVerificationInstruction     [optional]
+
+                if (JSON.ParseOptional("SignedMeteringValuesVerificationInstruction",
+                                       "signed metering values verification instruction",
+                                       out String SignedMeteringValuesVerificationInstruction,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse != null)
+                        return false;
+                }
+
+                #endregion
+
+                #region Parse CustomData                                      [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 
                 #endregion
 
 
-                CalibrationLawVerification  = new CalibrationLawVerification(JSON["CalibrationLawCertificateID"                ]?.Value<String>(),
-                                                                             JSON["PublicKey"                                  ]?.Value<String>(),
+                CalibrationLawVerification  = new CalibrationLawVerification(CalibrationLawCertificateId,
+                                                                             PublicKey,
                                                                              MeteringSignatureURL,
-                                                                             JSON["MeteringSignatureEncodingFormat"            ]?.Value<String>(),
-                                                                             JSON["SignedMeteringValuesVerificationInstruction"]?.Value<String>(),
+                                                                             MeteringSignatureEncodingFormat,
+                                                                             SignedMeteringValuesVerificationInstruction,
                                                                              CustomData);
 
-                if (CustomCalibrationLawVerificationParser != null)
+                if (CustomCalibrationLawVerificationParser is not null)
                     CalibrationLawVerification = CustomCalibrationLawVerificationParser(JSON,
                                                                                         CalibrationLawVerification);
 
@@ -271,10 +323,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static Boolean TryParse(String                                                   Text,
-                                       out CalibrationLawVerification                           CalibrationLawVerification,
-                                       out String                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationParser)
+        public static Boolean TryParse(String                                                    Text,
+                                       out CalibrationLawVerification?                           CalibrationLawVerification,
+                                       out String?                                               ErrorResponse,
+                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser)
         {
 
             try
@@ -303,38 +355,38 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<CalibrationLawVerification>  CustomCalibrationLawVerificationSerializer   = null)
+        public JObject? ToJSON(CustomJObjectSerializerDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
 
-                           CalibrationLawCertificateId.IsNotNullOrEmpty()
-                               ? new JProperty("CalibrationLawCertificateID",                  CalibrationLawCertificateId)
+                           CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.IsNotNullOrEmpty()
+                               ? new JProperty(nameof(CalibrationLawCertificateId),                  CalibrationLawCertificateId)
                                : null,
 
-                           PublicKey.IsNotNullOrEmpty()
-                               ? new JProperty("PublicKey",                                    PublicKey)
+                           PublicKey                                   is not null && PublicKey.IsNotNullOrEmpty()
+                               ? new JProperty(nameof(PublicKey),                                    PublicKey)
                                : null,
 
                            MeteringSignatureURL.HasValue
-                               ? new JProperty("MeteringSignatureUrl",                         MeteringSignatureURL.Value.ToString())
+                               ? new JProperty(nameof(MeteringSignatureURL),                         MeteringSignatureURL.Value.ToString())
                                : null,
 
-                           MeteringSignatureEncodingFormat.IsNotNullOrEmpty()
-                               ? new JProperty("MeteringSignatureEncodingFormat",              MeteringSignatureEncodingFormat)
+                           MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.IsNotNullOrEmpty()
+                               ? new JProperty(nameof(MeteringSignatureEncodingFormat),              MeteringSignatureEncodingFormat)
                                : null,
 
-                           SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty()
-                               ? new JProperty("SignedMeteringValuesVerificationInstruction",  SignedMeteringValuesVerificationInstruction)
+                           SignedMeteringValuesVerificationInstruction is not null && SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty()
+                               ? new JProperty(nameof(SignedMeteringValuesVerificationInstruction),  SignedMeteringValuesVerificationInstruction)
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",                                   CustomData)
+                               ? new JProperty(nameof(CustomData),                                   CustomData)
                                : null
 
                        );
 
-            var JSON2 = CustomCalibrationLawVerificationSerializer != null
+            var JSON2 = CustomCalibrationLawVerificationSerializer is not null
                             ? CustomCalibrationLawVerificationSerializer(this, JSON)
                             : JSON;
 
@@ -353,12 +405,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public CalibrationLawVerification Clone
 
-            => new CalibrationLawVerification(CalibrationLawCertificateId                 != null ? new String(CalibrationLawCertificateId.                ToCharArray()) : null,
-                                              PublicKey                                   != null ? new String(PublicKey.                                  ToCharArray()) : null,
-                                              MeteringSignatureURL?.Clone,
-                                              MeteringSignatureEncodingFormat             != null ? new String(MeteringSignatureEncodingFormat.            ToCharArray()) : null,
-                                              SignedMeteringValuesVerificationInstruction != null ? new String(SignedMeteringValuesVerificationInstruction.ToCharArray()) : null,
-                                              CustomData                                  != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))   : null);
+            => new (CalibrationLawCertificateId                 is not null ? new String(CalibrationLawCertificateId.                ToCharArray()) : null,
+                    PublicKey                                   is not null ? new String(PublicKey.                                  ToCharArray()) : null,
+                    MeteringSignatureURL?.Clone,
+                    MeteringSignatureEncodingFormat             is not null ? new String(MeteringSignatureEncodingFormat.            ToCharArray()) : null,
+                    SignedMeteringValuesVerificationInstruction is not null ? new String(SignedMeteringValuesVerificationInstruction.ToCharArray()) : null,
+                    CustomData                                  is not null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))   : null);
 
         #endregion
 
@@ -488,7 +540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is CalibrationLawVerification CalibrationLawVerification
                    ? CompareTo(CalibrationLawVerification)
@@ -503,22 +555,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="CalibrationLawVerification">An object to compare with.</param>
-        public Int32 CompareTo(CalibrationLawVerification CalibrationLawVerification)
+        public Int32 CompareTo(CalibrationLawVerification? CalibrationLawVerification)
         {
 
-            var result = String.Compare(PublicKey,                                    CalibrationLawVerification.PublicKey);
+            var result = String.Compare(PublicKey,                                    CalibrationLawVerification?.PublicKey);
 
             if (result == 0)
-                result = String.Compare(CalibrationLawCertificateId,                  CalibrationLawVerification.CalibrationLawCertificateId);
+                result = String.Compare(CalibrationLawCertificateId,                  CalibrationLawVerification?.CalibrationLawCertificateId);
 
-            if (result == 0 && MeteringSignatureURL.HasValue && CalibrationLawVerification.MeteringSignatureURL.HasValue)
+            if (result == 0 && MeteringSignatureURL.HasValue && CalibrationLawVerification?.MeteringSignatureURL.HasValue == true)
                 result =                MeteringSignatureURL.Value.CompareTo(         CalibrationLawVerification.MeteringSignatureURL.Value);
 
             if (result == 0)
-                result = String.Compare(MeteringSignatureEncodingFormat,              CalibrationLawVerification.MeteringSignatureEncodingFormat);
+                result = String.Compare(MeteringSignatureEncodingFormat,              CalibrationLawVerification?.MeteringSignatureEncodingFormat);
 
             if (result == 0)
-                result = String.Compare(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification.SignedMeteringValuesVerificationInstruction);
+                result = String.Compare(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification?.SignedMeteringValuesVerificationInstruction);
 
             return result;
 
@@ -537,10 +589,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
-            => Object is CalibrationLawVerification calibrationLawVerificationute &&
-                   Equals(calibrationLawVerificationute);
+            => Object is CalibrationLawVerification calibrationLawVerification &&
+                   Equals(calibrationLawVerification);
 
         #endregion
 
@@ -551,15 +603,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CalibrationLawVerification">A calibration law verification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(CalibrationLawVerification CalibrationLawVerification)
+        public Boolean Equals(CalibrationLawVerification? CalibrationLawVerification)
 
-            => String.Equals(PublicKey,                                    CalibrationLawVerification.PublicKey)                                   &&
-               String.Equals(CalibrationLawCertificateId,                  CalibrationLawVerification.CalibrationLawCertificateId)                 &&
-               String.Equals(MeteringSignatureEncodingFormat,              CalibrationLawVerification.MeteringSignatureEncodingFormat)             &&
-               String.Equals(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification.SignedMeteringValuesVerificationInstruction) &&
+            => CalibrationLawVerification is not null &&
+               String.Equals(PublicKey,                                    CalibrationLawVerification?.PublicKey)                                   &&
+               String.Equals(CalibrationLawCertificateId,                  CalibrationLawVerification?.CalibrationLawCertificateId)                 &&
+               String.Equals(MeteringSignatureEncodingFormat,              CalibrationLawVerification?.MeteringSignatureEncodingFormat)             &&
+               String.Equals(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification?.SignedMeteringValuesVerificationInstruction) &&
 
-             ((!MeteringSignatureURL.HasValue && !CalibrationLawVerification.MeteringSignatureURL.HasValue) ||
-               (MeteringSignatureURL.HasValue &&  CalibrationLawVerification.MeteringSignatureURL.HasValue &&
+             ((!MeteringSignatureURL.HasValue && !CalibrationLawVerification?.MeteringSignatureURL.HasValue == true) ||
+               (MeteringSignatureURL.HasValue &&  CalibrationLawVerification?.MeteringSignatureURL.HasValue == true &&
                              MeteringSignatureURL.Equals(                  CalibrationLawVerification.MeteringSignatureURL)));
 
         #endregion
@@ -596,11 +649,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => new String[] {
-                   PublicKey.                                  IsNotNullOrEmpty() ? "pk: "       + PublicKey.                                  SubstringMax(10) : "",
-                   CalibrationLawCertificateId.                IsNotNullOrEmpty() ? "certId: "   + CalibrationLawCertificateId.                SubstringMax(10) : "",
-                   MeteringSignatureURL.                       HasValue           ? "URL: "      + MeteringSignatureURL.Value.ToString().      SubstringMax(10) : "",
-                   MeteringSignatureEncodingFormat.            IsNotNullOrEmpty() ? "encoding: " + MeteringSignatureEncodingFormat.            SubstringMax(10) : "",
-                   SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty() ? "info: "     + SignedMeteringValuesVerificationInstruction.SubstringMax(10) : ""
+                   PublicKey                                   is not null && PublicKey.                                  IsNotNullOrEmpty() ? "pk: "       + PublicKey.                                  SubstringMax(10) : "",
+                   CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.                IsNotNullOrEmpty() ? "certId: "   + CalibrationLawCertificateId.                SubstringMax(10) : "",
+                   MeteringSignatureURL                        is not null && MeteringSignatureURL.                       HasValue           ? "URL: "      + MeteringSignatureURL.Value.ToString().      SubstringMax(10) : "",
+                   MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.            IsNotNullOrEmpty() ? "encoding: " + MeteringSignatureEncodingFormat.            SubstringMax(10) : "",
+                   SignedMeteringValuesVerificationInstruction is not null && SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty() ? "info: "     + SignedMeteringValuesVerificationInstruction.SubstringMax(10) : ""
                }.AggregateWith(", ");
 
         #endregion
