@@ -55,7 +55,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public readonly JObject          CustomData    { get; }
+        public readonly JObject?         CustomData    { get; }
 
         #endregion
 
@@ -69,7 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEStatusRecord(EVSE_Id          Id,
                                 EVSEStatusTypes  Status,
-                                JObject          CustomData  = null)
+                                JObject?         CustomData  = null)
         {
 
             this.Id          = Id;
@@ -99,8 +99,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static EVSEStatusRecord Parse(JObject                                        JSON,
-                                             CustomJObjectParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null)
+        public static EVSEStatusRecord Parse(JObject                                         JSON,
+                                             CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser   = null)
         {
 
             if (TryParse(JSON,
@@ -124,8 +124,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static EVSEStatusRecord Parse(String                                         Text,
-                                             CustomJObjectParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser   = null)
+        public static EVSEStatusRecord Parse(String                                          Text,
+                                             CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser   = null)
         {
 
             if (TryParse(Text,
@@ -169,10 +169,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(JObject                                        JSON,
-                                       out EVSEStatusRecord                           EVSEStatusRecord,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser)
+        public static Boolean TryParse(JObject                                         JSON,
+                                       out EVSEStatusRecord                            EVSEStatusRecord,
+                                       out String                                      ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser)
         {
 
             try
@@ -250,10 +250,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(String                                         Text,
-                                       out EVSEStatusRecord                           EVSEStatusRecord,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordParser)
+        public static Boolean TryParse(String                                          Text,
+                                       out EVSEStatusRecord                            EVSEStatusRecord,
+                                       out String                                      ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser)
         {
 
             try
@@ -282,7 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSE status record JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEStatusRecord>  CustomEVSEStatusRecordSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -311,9 +311,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EVSEStatusRecord Clone
 
-            => new EVSEStatusRecord(Id.Clone,
-                                    Status,
-                                    CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (Id.Clone,
+                    Status,
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -328,7 +330,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        public static Boolean operator == (EVSEStatusRecord EVSEStatusRecord1,
+                                           EVSEStatusRecord EVSEStatusRecord2)
+
             => EVSEStatusRecord1.Equals(EVSEStatusRecord2);
 
         #endregion
@@ -341,8 +345,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-            => !(EVSEStatusRecord1 == EVSEStatusRecord2);
+        public static Boolean operator != (EVSEStatusRecord EVSEStatusRecord1,
+                                           EVSEStatusRecord EVSEStatusRecord2)
+
+            => !EVSEStatusRecord1.Equals(EVSEStatusRecord2);
 
         #endregion
 
@@ -354,7 +360,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        public static Boolean operator < (EVSEStatusRecord EVSEStatusRecord1,
+                                          EVSEStatusRecord EVSEStatusRecord2)
+
             => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) < 0;
 
         #endregion
@@ -367,8 +375,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-            => !(EVSEStatusRecord1 > EVSEStatusRecord2);
+        public static Boolean operator <= (EVSEStatusRecord EVSEStatusRecord1,
+                                           EVSEStatusRecord EVSEStatusRecord2)
+
+            => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) <= 0;
 
         #endregion
 
@@ -380,7 +390,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
+        public static Boolean operator > (EVSEStatusRecord EVSEStatusRecord1,
+                                          EVSEStatusRecord EVSEStatusRecord2)
+
             => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) > 0;
 
         #endregion
@@ -393,8 +405,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusRecord1">An EVSE status record.</param>
         /// <param name="EVSEStatusRecord2">Another EVSE status record.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EVSEStatusRecord EVSEStatusRecord1, EVSEStatusRecord EVSEStatusRecord2)
-            => !(EVSEStatusRecord1 < EVSEStatusRecord2);
+        public static Boolean operator >= (EVSEStatusRecord EVSEStatusRecord1,
+                                          EVSEStatusRecord EVSEStatusRecord2)
+
+            => EVSEStatusRecord1.CompareTo(EVSEStatusRecord2) >= 0;
 
         #endregion
 
@@ -408,7 +422,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is EVSEStatusRecord evseStatusRecord
                    ? CompareTo(evseStatusRecord)
@@ -446,7 +460,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is EVSEStatusRecord evseStatusRecord &&
                    Equals(evseStatusRecord);
@@ -479,10 +493,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Id.    GetHashCode() * 3 ^
                        Status.GetHashCode();
-
             }
         }
 

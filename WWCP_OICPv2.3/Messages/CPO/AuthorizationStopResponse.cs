@@ -107,10 +107,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           HTTPResponse                 HTTPResponse                       = null,
                                           JObject                      CustomData                         = null)
 
-            : base(Request,
-                   ResponseTimestamp,
+            : base(ResponseTimestamp,
                    EventTrackingId,
                    Runtime,
+                   Request,
                    HTTPResponse,
                    ProcessId,
                    CustomData)
@@ -1337,10 +1337,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            HTTPResponse               HTTPResponse          = null,
                            JObject                    CustomData            = null)
 
-                : base(Request,
-                       ResponseTimestamp,
+                : base(ResponseTimestamp,
                        EventTrackingId,
                        Runtime,
+                       Request,
                        HTTPResponse,
                        ProcessId,
                        CustomData)

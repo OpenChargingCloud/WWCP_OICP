@@ -97,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional name of the EVSE manufacturer.
         /// </summary>
         [Optional]
-        public String                               HardwareManufacturer                   { get; }
+        public String?                              HardwareManufacturer                   { get; }
 
         /// <summary>
         /// Optional URL to an image of the EVSE.
@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional name of the sub operator owning the EVSE.
         /// </summary>
         [Optional]
-        public String                               SubOperatorName                        { get; }
+        public String?                              SubOperatorName                        { get; }
 
         /// <summary>
         /// Whether the EVSE is able to deliver different power outputs.
@@ -164,7 +164,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Optional enumeration of energy sources that the EVSE uses to supply electric energy.
         /// </summary>
-        public IEnumerable<EnergySource>            EnergySources                          { get; }
+        [Optional]
+        public IEnumerable<EnergySource>?           EnergySources                          { get; }
 
         /// <summary>
         /// Optional environmental impact produced by the energy sources used by the EVSE.
@@ -212,13 +213,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional multi-language information about the EVSE.
         /// </summary>
         [Optional]
-        public I18NText                             AdditionalInfo                         { get; }
+        public I18NText?                            AdditionalInfo                         { get; }
 
         /// <summary>
         /// Optional last meters information regarding the location of the EVSE.
         /// </summary>
         [Optional]
-        public I18NText                             ChargingStationLocationReference       { get; }
+        public I18NText?                            ChargingStationLocationReference       { get; }
 
         /// <summary>
         /// In case that the EVSE is part of a bigger facility (e.g. parking place),
@@ -237,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional opening times in case that the EVSE cannot be accessed around the clock.
         /// </summary>
         [Optional]
-        public IEnumerable<OpeningTime>             OpeningTimes                           { get; }
+        public IEnumerable<OpeningTime>?            OpeningTimes                           { get; }
 
         /// <summary>
         /// The optional hub operator of the EVSE.
@@ -269,7 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject                              CustomData                             { get; }
+        public JObject?                             CustomData                             { get; }
 
         #endregion
 
@@ -343,23 +344,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                               ChargingStation_Id?               ChargingStationId                  = null,
                               ChargingPool_Id?                  ChargingPoolId                     = null,
-                              String                            HardwareManufacturer               = null,
+                              String?                           HardwareManufacturer               = null,
                               URL?                              ChargingStationImageURL            = null,
-                              String                            SubOperatorName                    = null,
+                              String?                           SubOperatorName                    = null,
                               Boolean?                          DynamicPowerLevel                  = null,
-                              IEnumerable<EnergySource>         EnergySources                      = null,
+                              IEnumerable<EnergySource>?        EnergySources                      = null,
                               EnvironmentalImpact?              EnvironmentalImpact                = null,
                               UInt32?                           MaxCapacity                        = null,
                               AccessibilityLocationTypes?       AccessibilityLocationType          = null,
-                              I18NText                          AdditionalInfo                     = null,
-                              I18NText                          ChargingStationLocationReference   = null,
+                              I18NText?                         AdditionalInfo                     = null,
+                              I18NText?                         ChargingStationLocationReference   = null,
                               GeoCoordinates?                   GeoChargingPointEntrance           = null,
-                              IEnumerable<OpeningTime>          OpeningTimes                       = null,
+                              IEnumerable<OpeningTime>?         OpeningTimes                       = null,
                               Operator_Id?                      HubOperatorId                      = null,
                               ClearingHouse_Id?                 ClearingHouseId                    = null,
 
-                              JObject                           CustomData                         = null,
-                              Dictionary<String, Object>        InternalData                       = null)
+                              JObject?                          CustomData                         = null,
+                              Dictionary<String, Object>?       InternalData                       = null)
 
             : base(InternalData)
 
@@ -415,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
-            this.EnergySources                     = EnergySources?.      Distinct() ?? new EnergySource[0];
+            this.EnergySources                     = EnergySources?.      Distinct() ?? Array.Empty<EnergySource>();
             this.EnvironmentalImpact               = EnvironmentalImpact;
             this.MaxCapacity                       = MaxCapacity;
             this.AccessibilityLocationType         = AccessibilityLocationType;
@@ -570,16 +571,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static EVSEDataRecord Parse(JObject                                      JSON,
-                                           CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
+        public static EVSEDataRecord Parse(JObject                                       JSON,
+                                           CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser   = null)
         {
 
             if (TryParse(JSON,
-                         out EVSEDataRecord  evseDataRecord,
-                         out String          errorResponse,
+                         out EVSEDataRecord? evseDataRecord,
+                         out String?         errorResponse,
                          CustomEVSEDataRecordParser))
             {
-                return evseDataRecord;
+                return evseDataRecord!;
             }
 
             throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse, nameof(JSON));
@@ -595,16 +596,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static EVSEDataRecord Parse(String                                       Text,
-                                           CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
+        public static EVSEDataRecord Parse(String                                        Text,
+                                           CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser   = null)
         {
 
             if (TryParse(Text,
-                         out EVSEDataRecord  evseDataRecord,
-                         out String          errorResponse,
+                         out EVSEDataRecord? evseDataRecord,
+                         out String?         errorResponse,
                          CustomEVSEDataRecordParser))
             {
-                return evseDataRecord;
+                return evseDataRecord!;
             }
 
             throw new ArgumentException("The given text representation of an EVSE data record is invalid: " + errorResponse, nameof(Text));
@@ -623,9 +624,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject             JSON,
-                                       out EVSEDataRecord  EVSEDataRecord,
-                                       out String          ErrorResponse)
+        public static Boolean TryParse(JObject              JSON,
+                                       out EVSEDataRecord?  EVSEDataRecord,
+                                       out String?          ErrorResponse)
 
             => TryParse(JSON,
                         out EVSEDataRecord,
@@ -640,10 +641,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static Boolean TryParse(JObject                                      JSON,
-                                       out EVSEDataRecord                           EVSEDataRecord,
-                                       out String                                   ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser)
+        public static Boolean TryParse(JObject                                       JSON,
+                                       out EVSEDataRecord?                           EVSEDataRecord,
+                                       out String?                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser)
         {
 
             try
@@ -1261,10 +1262,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static Boolean TryParse(String                                       Text,
-                                       out EVSEDataRecord                           EVSEDataRecord,
-                                       out String                                   ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEDataRecord>  CustomEVSEDataRecordParser   = null)
+        public static Boolean TryParse(String                                        Text,
+                                       out EVSEDataRecord?                           EVSEDataRecord,
+                                       out String?                                   ErrorResponse,
+                                       CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser   = null)
         {
 
             try
@@ -1299,13 +1300,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null,
-                              CustomJObjectSerializerDelegate<Address>              CustomAddressSerializer               = null,
-                              CustomJObjectSerializerDelegate<ChargingFacility>     CustomChargingFacilitySerializer      = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null,
-                              CustomJObjectSerializerDelegate<EnergySource>         CustomEnergySourceSerializer          = null,
-                              CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null,
-                              CustomJObjectSerializerDelegate<OpeningTime>          CustomOpeningTimesSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord>?       CustomEVSEDataRecordSerializer        = null,
+                              CustomJObjectSerializerDelegate<Address>?              CustomAddressSerializer               = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>?     CustomChargingFacilitySerializer      = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?       CustomGeoCoordinatesSerializer        = null,
+                              CustomJObjectSerializerDelegate<EnergySource>?         CustomEnergySourceSerializer          = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactSerializer   = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>?          CustomOpeningTimesSerializer          = null)
         {
 
             var JSON = JSONObject.Create(
@@ -1323,8 +1324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
                            new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.                ToString().Replace(" ", "")),
-                           //new JProperty("IsOpen24Hours",                           IsOpen24Hours),
-                           new JProperty("IsOpen24Hours",                           true),
+                           new JProperty("IsOpen24Hours",                           IsOpen24Hours),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
                            new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
                            new JProperty("OperatorID",                              OperatorId.                        ToString()),
@@ -1347,7 +1347,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("ChargingPoolID",                    ChargingPoolId.              Value.ToString())
                                : null,
 
-                           HardwareManufacturer.            IsNeitherNullNorEmpty()
+                           HardwareManufacturer             is not null && HardwareManufacturer.IsNeitherNullNorEmpty()
                                ? new JProperty("HardwareManufacturer",              HardwareManufacturer)
                                : null,
 
@@ -1355,7 +1355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("ChargingStationImage",              ChargingStationImageURL.     Value.ToString())
                                : null,
 
-                           SubOperatorName.                 IsNeitherNullNorEmpty()
+                           SubOperatorName                  is not null && SubOperatorName.IsNeitherNullNorEmpty()
                                ? new JProperty("SubOperatorName",                   SubOperatorName)
                                : null,
 
@@ -1363,7 +1363,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("DynamicPowerLevel",                 DynamicPowerLevel.           Value)
                                : null,
 
-                           EnergySources.                   IsNeitherNullNorEmpty()
+                           EnergySources                    is not null && EnergySources.Any()
                                ? new JProperty("EnergySource",                      new JArray(EnergySources.Select(energySource => energySource.ToJSON(CustomEnergySourceSerializer))))
                                : null,
 
@@ -1379,11 +1379,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("AccessibilityLocation",             AccessibilityLocationType.   Value.AsString())
                                : null,
 
-                           AdditionalInfo.                  IsNeitherNullNorEmpty()
+                           AdditionalInfo                   is not null && AdditionalInfo.Any()
                                ? new JProperty("AdditionalInfo",                    AdditionalInfo.                    ToJSON())
                                : null,
 
-                           ChargingStationLocationReference.IsNeitherNullNorEmpty()
+                           ChargingStationLocationReference is not null && ChargingStationLocationReference.Any()
                                ? new JProperty("ChargingStationLocationReference",  ChargingStationLocationReference.  ToJSON())
                                : null,
 
@@ -1391,9 +1391,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("GeoChargingPointEntrance",          GeoChargingPointEntrance.    Value.ToJSON(CustomGeoCoordinatesSerializer))
                                : null,
 
-                           //!IsOpen24Hours && OpeningTimes.  IsNeitherNullNorEmpty()
-                           //    ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON(CustomOpeningTimesSerializer))))
-                           //    : null,
+                           !IsOpen24Hours && OpeningTimes is not null && OpeningTimes.Any()
+                               ? new JProperty("OpeningTimes",                      new JArray(OpeningTimes.Select(openingTime => openingTime.ToJSON(CustomOpeningTimesSerializer))))
+                               : null,
 
                            HubOperatorId.                   HasValue
                                ? new JProperty("HubOperatorID",                     HubOperatorId.               Value.ToString())
@@ -1593,7 +1593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is EVSEDataRecord evseDataRecord
                    ? CompareTo(evseDataRecord)
@@ -1608,7 +1608,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="EVSEDataRecord">An object to compare with.</param>
-        public Int32 CompareTo(EVSEDataRecord EVSEDataRecord)
+        public Int32 CompareTo(EVSEDataRecord? EVSEDataRecord)
         {
 
             if (EVSEDataRecord is null)
@@ -1631,7 +1631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is EVSEDataRecord evseDataRecord &&
                    Equals(evseDataRecord);
@@ -1645,10 +1645,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord">An EVSE data record to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(EVSEDataRecord EVSEDataRecord)
+        public Boolean Equals(EVSEDataRecord? EVSEDataRecord)
 
-            => !(EVSEDataRecord is null) &&
-
+            => EVSEDataRecord is not null &&
                  Id.Equals(EVSEDataRecord.Id);
 
         #endregion

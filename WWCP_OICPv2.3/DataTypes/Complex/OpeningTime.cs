@@ -18,8 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -54,13 +52,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional unstructured information about the opening time.
         /// </summary>
         [Optional]
-        public readonly String               UnstructuredText    { get; }
+        public readonly String?              UnstructuredText    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public readonly JObject              CustomData          { get; }
+        public readonly JObject?             CustomData          { get; }
 
         #endregion
 
@@ -75,8 +73,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public OpeningTime(IEnumerable<Period>  Periods,
                            DaysOfWeek           On,
-                           String               UnstructuredText,
-                           JObject              CustomData  = null)
+                           String?              UnstructuredText,
+                           JObject?             CustomData  = null)
         {
 
             if (Periods.IsNullOrEmpty())
@@ -116,8 +114,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(JObject                                        JSON,
-                                             CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser   = null)
+        public static OpeningTime Parse(JObject                                         JSON,
+                                             CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(JSON,
@@ -141,8 +139,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(String                                         Text,
-                                             CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser   = null)
+        public static OpeningTime Parse(String                                          Text,
+                                             CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(Text,
@@ -186,10 +184,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static Boolean TryParse(JObject                                   JSON,
-                                       out OpeningTime                           OpeningTimes,
-                                       out String                                ErrorResponse,
-                                       CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser)
+        public static Boolean TryParse(JObject                                    JSON,
+                                       out OpeningTime                            OpeningTimes,
+                                       out String                                 ErrorResponse,
+                                       CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
 
             try
@@ -274,10 +272,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static Boolean TryParse(String                                    Text,
-                                       out OpeningTime                           OpeningTimes,
-                                       out String                                ErrorResponse,
-                                       CustomJObjectParserDelegate<OpeningTime>  CustomOpeningTimesParser)
+        public static Boolean TryParse(String                                     Text,
+                                       out OpeningTime                            OpeningTimes,
+                                       out String                                 ErrorResponse,
+                                       CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
 
             try
@@ -306,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<OpeningTime>  CustomOpeningTimesSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<OpeningTime>?  CustomOpeningTimesSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -323,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomOpeningTimesSerializer != null
+            return CustomOpeningTimesSerializer is not null
                        ? CustomOpeningTimesSerializer(this, JSON)
                        : JSON;
 
@@ -356,7 +354,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (OpeningTime OpeningTimes1, OpeningTime OpeningTimes2)
+        public static Boolean operator == (OpeningTime OpeningTimes1,
+                                           OpeningTime OpeningTimes2)
+
             => OpeningTimes1.Equals(OpeningTimes2);
 
         #endregion
@@ -369,8 +369,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (OpeningTime OpeningTimes1, OpeningTime OpeningTimes2)
-            => !(OpeningTimes1 == OpeningTimes2);
+        public static Boolean operator != (OpeningTime OpeningTimes1,
+                                           OpeningTime OpeningTimes2)
+
+            => !OpeningTimes1.Equals(OpeningTimes2);
 
         #endregion
 
@@ -385,7 +387,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is OpeningTime openingTime &&
                    Equals(openingTime);

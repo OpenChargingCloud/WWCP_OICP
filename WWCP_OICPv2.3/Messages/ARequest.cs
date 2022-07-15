@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Threading;
 
 using Newtonsoft.Json.Linq;
 
@@ -54,33 +53,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        public DateTime                 Timestamp                  { get; }
+        public DateTime                  Timestamp                  { get; }
 
         /// <summary>
         /// An optional token source to cancel this request.
         /// </summary>
-        public CancellationTokenSource  CancellationTokenSource    { get; }
+        public CancellationTokenSource?  CancellationTokenSource    { get; }
 
         /// <summary>
         /// An optional token to cancel this request.
         /// </summary>
-        public CancellationToken?       CancellationToken          { get; }
+        public CancellationToken?        CancellationToken          { get; }
 
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
-        public EventTracking_Id         EventTrackingId            { get; }
+        public EventTracking_Id?         EventTrackingId            { get; }
 
         /// <summary>
         /// An optional timeout for this request.
         /// </summary>
-        public TimeSpan?                RequestTimeout             { get; }
+        public TimeSpan?                 RequestTimeout             { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject                  CustomData                 { get; }
+        public JObject?                  CustomData                 { get; }
 
         #endregion
 
@@ -94,17 +93,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public ARequest(JObject             CustomData          = null,
+        public ARequest(JObject?            CustomData          = null,
                         DateTime?           Timestamp           = null,
                         CancellationToken?  CancellationToken   = null,
-                        EventTracking_Id    EventTrackingId     = null,
+                        EventTracking_Id?   EventTrackingId     = null,
                         TimeSpan?           RequestTimeout      = null)
         {
 
             this.CustomData               = CustomData;
             this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
-            this.CancellationTokenSource  = CancellationToken == null ? new CancellationTokenSource() : null;
-            this.CancellationToken        = CancellationToken ?? CancellationTokenSource.Token;
+            this.CancellationTokenSource  = CancellationToken is null
+                                                ? new CancellationTokenSource()
+                                                : null;
+            this.CancellationToken        = CancellationToken ?? CancellationTokenSource!.Token;
             this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;
             this.RequestTimeout           = RequestTimeout    ?? DefaultRequestTimeout;
 
@@ -119,7 +120,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compare two abstract requests for equality.
         /// </summary>
         /// <param name="ARequest">Another abstract OICP request.</param>
-        public abstract Boolean Equals(TRequest ARequest);
+        public abstract Boolean Equals(TRequest? ARequest);
 
         #endregion
 
