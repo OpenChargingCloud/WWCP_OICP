@@ -18,13 +18,11 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Illias;
 
-using WWCP = org.GraphDefined.WWCP;
+using Newtonsoft.Json.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
@@ -98,9 +96,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-
-
-
         #region (static) TryParse(JSON, out ChargingStationInfo, out ErrorResponse)
 
         /// <summary>
@@ -146,7 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out Address Address,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -157,10 +152,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("geoCoordinates",
                                            "charging station geo coordinates",
                                            OICPv2_3.GeoCoordinates.TryParse,
-                                           out GeoCoordinates GeoCoordinates,
+                                           out GeoCoordinates? GeoCoordinates,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -174,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<EVSEDataRecord> EVSEDataRecords,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

@@ -707,11 +707,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                                 out ValidationErrorList ValidationErrors))
+                                                                 out ValidationErrorList?  validationErrors,
+                                                                 out String?               errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.BadRequest(Request,
-                                                                                                         ValidationErrors,
+                                                                                                         validationErrors,
                                                                                                          processId);
 
                                 }
@@ -1205,11 +1206,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                                 out ValidationErrorList ValidationErrors))
+                                                                 out ValidationErrorList?  validationErrors,
+                                                                 out String?               errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.BadRequest(Request,
-                                                                                                           ValidationErrors,
+                                                                                                           validationErrors,
                                                                                                            processId);
 
                                 }
@@ -1703,11 +1705,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStartResponse>.BadRequest(Request,
-                                                                                           ValidationErrors,
+                                                                                           validationErrors,
                                                                                            processId);
 
                             }
@@ -2048,11 +2051,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStopResponse>.BadRequest(Request,
-                                                                                          ValidationErrors,
+                                                                                          validationErrors,
                                                                                           processId);
 
                             }
@@ -2485,12 +2489,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.BadRequest(Request,
-                                                                                                                   ValidationErrors,
-                                                                                                                   processId);
+                                                                                                                  validationErrors,
+                                                                                                                  processId);
 
                             }
 
@@ -2944,12 +2949,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.BadRequest(Request,
-                                                                                                                   ValidationErrors,
-                                                                                                                   processId);
+                                                                                                                     validationErrors,
+                                                                                                                     processId);
 
                             }
 
@@ -3403,12 +3409,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.BadRequest(Request,
-                                                                                                                   ValidationErrors,
-                                                                                                                   processId);
+                                                                                                                validationErrors,
+                                                                                                                processId);
 
                             }
 
@@ -3862,12 +3869,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.BadRequest(Request,
-                                                                                                                   ValidationErrors,
-                                                                                                                   processId);
+                                                                                                                  validationErrors,
+                                                                                                                  processId);
 
                             }
 
@@ -4303,12 +4311,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(Request,
-                                                                                                               ValidationErrors,
-                                                                                                               processId);
+                                                                                                           validationErrors,
+                                                                                                           processId);
 
                             }
 

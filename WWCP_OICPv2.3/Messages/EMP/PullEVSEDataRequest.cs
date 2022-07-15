@@ -457,8 +457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse SearchCenter                              [optional]
 
-                GeoCoordinates SearchCenter  = default;
-                Single?        DistanceKM    = default;
+                GeoCoordinates? SearchCenter   = default;
+                Single?         DistanceKM     = default;
 
                 if (JSON.ParseOptional("SearchCenter",
                                        "SearchCenter",

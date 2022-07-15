@@ -731,11 +731,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("GeoCoordinates",
                                               "geo coordinates",
                                               OICPv2_3.GeoCoordinates.TryParse,
-                                              out GeoCoordinates GeoCoordinates,
+                                              out GeoCoordinates? geoCoordinates,
                                               out ErrorResponse))
                 {
                     return false;
                 }
+
+                var GeoCoordinates = geoCoordinates!.Value;
 
                 #endregion
 

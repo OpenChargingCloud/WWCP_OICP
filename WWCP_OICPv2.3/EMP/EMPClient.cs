@@ -663,11 +663,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<PullEVSEDataResponse>.BadRequest(Request,
-                                                                                     ValidationErrors,
+                                                                                     validationErrorList,
                                                                                      processId);
 
                             }
@@ -1058,11 +1059,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<PullEVSEStatusResponse>.BadRequest(Request,
-                                                                                       ValidationErrors,
+                                                                                       validationErrorList,
                                                                                        processId);
 
                             }
@@ -1427,11 +1429,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<PullEVSEStatusByIdResponse>.BadRequest(Request,
-                                                                                           ValidationErrors,
+                                                                                           validationErrorList,
                                                                                            processId);
 
                             }
@@ -1796,12 +1799,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<PullEVSEStatusByOperatorIdResponse>.BadRequest(Request,
-                                                                                       ValidationErrors,
-                                                                                       processId);
+                                                                                                   validationErrorList,
+                                                                                                   processId);
 
                             }
 
@@ -2186,11 +2190,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.BadRequest(Request,
-                                                                                                                        ValidationErrors,
+                                                                                                                        validationErrorList,
                                                                                                                         processId);
 
                             }
@@ -2582,11 +2587,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.BadRequest(Request,
-                                                                                                                       ValidationErrors,
+                                                                                                                       validationErrorList,
                                                                                                                        processId);
 
                             }
@@ -2978,11 +2984,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.BadRequest(Request,
-                                                                                                             ValidationErrors,
+                                                                                                             validationErrorList,
                                                                                                              processId);
 
                             }
@@ -3374,12 +3381,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.BadRequest(Request,
-                                                                                                             ValidationErrors,
-                                                                                                             processId);
+                                                                                                            validationErrorList,
+                                                                                                            processId);
 
                             }
 
@@ -3785,11 +3793,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             // }
 
                             if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
-                                                             out ValidationErrorList ValidationErrors))
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
                             {
 
                                 result = OICPResult<GetChargeDetailRecordsResponse>.BadRequest(Request,
-                                                                                               ValidationErrors,
+                                                                                               validationErrorList,
                                                                                                processId);
 
                             }
