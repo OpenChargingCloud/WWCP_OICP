@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
     /// EMP authorization tests.
     /// </summary>
     [TestFixture]
-    public class EMPAuthorizationTests : AEMPTests
+    public class CPORemoteAuthorizationTests : AEMPTests
     {
 
         //ToDo: OperatorId != OperatorIdURL

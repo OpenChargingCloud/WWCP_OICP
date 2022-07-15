@@ -32,17 +32,17 @@ using org.GraphDefined.Vanaheimr.Illias;
 using social.OpenData.UsersAPI;
 
 using WWCP = org.GraphDefined.WWCP;
-using cloud.charging.open.protocols.OICPv2_3.EMP;
+using cloud.charging.open.protocols.OICPv2_3.CPO;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
+namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 {
 
     /// <summary>
-    /// OICP EMP test defaults.
+    /// OICP CPO test defaults.
     /// </summary>
-    public abstract class AEMPTests
+    public abstract class ACPOTests
     {
 
         #region (class) NotificationReceiverAPI
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
         #region Data
 
-        protected EMPServerAPI              empServerAPI;
+        protected CPOServerAPI              cpoServerAPI;
 
         protected NotificationReceiverAPI   NotificationAPI;
 
@@ -251,122 +251,109 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Timestamp.Reset();
 
-            empServerAPI = new EMPServerAPI(
+            cpoServerAPI = new CPOServerAPI(
                                ExternalDNSName:  "open.charging.cloud",
-                               HTTPServerPort:   IPPort.Parse(8000),
+                               HTTPServerPort:   IPPort.Parse(7000),
                                LoggingPath:      "tests",
                                Autostart:        true
                            );
 
 
 
-            empServerAPI.OnAuthorizeStart += (timestamp, sender, authorizeStartRequest) => {
+            cpoServerAPI.OnAuthorizeRemoteStart += (timestamp, sender, authorizeRemoteStartRequest) => {
 
-                if (authorizeStartRequest.Identification is not null)
+                if (authorizeRemoteStartRequest.Identification is not null)
                 {
 
-                    if (authorizeStartRequest.Identification.RFIDId is not null)
+                    if (authorizeRemoteStartRequest.Identification.RFIDId is not null)
                     {
-                        return authorizeStartRequest.Identification.RFIDId.ToString() switch
+                        return authorizeRemoteStartRequest.Identification.RFIDId.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStartResponse.Authorized   (Request:                           authorizeStartRequest,
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   StatusCodeDescription:             null,
-                                                                                                   StatusCodeAdditionalInfo:          null,
-                                                                                                   AuthorizationStopIdentifications:  new Identification[] {
-                                                                                                                                          Identification.FromUID(UID.Parse("11223344")),
-                                                                                                                                          Identification.FromUID(UID.Parse("55667788"))
-                                                                                                                                      },
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null)),
+                            "AABBCCDD" => Task.FromResult(new Acknowledgement<AuthorizeRemoteStartRequest>(Request:               authorizeRemoteStartRequest,
+                                                                                                           ResponseTimestamp:     Timestamp.Now,
+                                                                                                           EventTrackingId:       EventTracking_Id.New,
+                                                                                                           Runtime:               TimeSpan.FromMilliseconds(2),
+                                                                                                           StatusCode:            new StatusCode(StatusCodes.Success),
+                                                                                                           HTTPResponse:          null,
+                                                                                                           Result:                true,
+                                                                                                           SessionId:             authorizeRemoteStartRequest.SessionId,
+                                                                                                           CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                                                           EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                                                           ProcessId:             Process_Id.NewRandom,
+                                                                                                           CustomData:            null)),
 
-                            _          => Task.FromResult(AuthorizationStartResponse.NotAuthorized(Request:                           authorizeStartRequest,
-                                                                                                   StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null))
+                            _          => Task.FromResult(new Acknowledgement<AuthorizeRemoteStartRequest>(Request:               authorizeRemoteStartRequest,
+                                                                                                           ResponseTimestamp:     Timestamp.Now,
+                                                                                                           EventTrackingId:       EventTracking_Id.New,
+                                                                                                           Runtime:               TimeSpan.FromMilliseconds(2),
+                                                                                                           StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                                                                                           HTTPResponse:          null,
+                                                                                                           Result:                false,
+                                                                                                           SessionId:             authorizeRemoteStartRequest.SessionId,
+                                                                                                           CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                                                           EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                                                           ProcessId:             Process_Id.NewRandom,
+                                                                                                           CustomData:            null))
                         };
 
                     }
 
 
-                    if (authorizeStartRequest.Identification.RFIDIdentification is not null)
+                    if (authorizeRemoteStartRequest.Identification.RFIDIdentification is not null)
                     {
-                        return authorizeStartRequest.Identification.RFIDIdentification.UID.ToString() switch
+                        return authorizeRemoteStartRequest.Identification.RFIDIdentification.UID.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStartResponse.Authorized   (Request:                           authorizeStartRequest,
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   StatusCodeDescription:             null,
-                                                                                                   StatusCodeAdditionalInfo:          null,
-                                                                                                   AuthorizationStopIdentifications:  new Identification[] {
-                                                                                                                                          Identification.FromUID(UID.Parse("11223344")),
-                                                                                                                                          Identification.FromUID(UID.Parse("55667788"))
-                                                                                                                                      },
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null)),
+                            "AABBCCDD" => Task.FromResult(new Acknowledgement<AuthorizeRemoteStartRequest>(Request:               authorizeRemoteStartRequest,
+                                                                                                           ResponseTimestamp:     Timestamp.Now,
+                                                                                                           EventTrackingId:       EventTracking_Id.New,
+                                                                                                           Runtime:               TimeSpan.FromMilliseconds(2),
+                                                                                                           StatusCode:            new StatusCode(StatusCodes.Success),
+                                                                                                           HTTPResponse:          null,
+                                                                                                           Result:                true,
+                                                                                                           SessionId:             authorizeRemoteStartRequest.SessionId,
+                                                                                                           CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                                                           EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                                                           ProcessId:             Process_Id.NewRandom,
+                                                                                                           CustomData:            null)),
 
-                            _          => Task.FromResult(AuthorizationStartResponse.NotAuthorized(Request:                           authorizeStartRequest,
-                                                                                                   StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null))
+                            _          => Task.FromResult(new Acknowledgement<AuthorizeRemoteStartRequest>(Request:               authorizeRemoteStartRequest,
+                                                                                                           ResponseTimestamp:     Timestamp.Now,
+                                                                                                           EventTrackingId:       EventTracking_Id.New,
+                                                                                                           Runtime:               TimeSpan.FromMilliseconds(2),
+                                                                                                           StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                                                                                           HTTPResponse:          null,
+                                                                                                           Result:                false,
+                                                                                                           SessionId:             authorizeRemoteStartRequest.SessionId,
+                                                                                                           CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                                                           EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                                                           ProcessId:             Process_Id.NewRandom,
+                                                                                                           CustomData:            null))
                         };
 
                     }
 
                 }
 
-                return Task.FromResult(AuthorizationStartResponse.DataError     (Request:                           authorizeStartRequest,
-                                                                                 StatusCodeDescription:             "authorizeStartRequest.Identification is null!",
-                                                                                 StatusCodeAdditionalInfo:          null,
-                                                                                 SessionId:                         authorizeStartRequest.SessionId,
-                                                                                 CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                 EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                 ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                 ResponseTimestamp:                 Timestamp.Now,
-                                                                                 EventTrackingId:                   EventTracking_Id.New,
-                                                                                 Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                 ProcessId:                         Process_Id.NewRandom,
-                                                                                 HTTPResponse:                      null,
-                                                                                 CustomData:                        null));
+                return Task.FromResult(new Acknowledgement<AuthorizeRemoteStartRequest>(Request:               authorizeRemoteStartRequest,
+                                                                                        ResponseTimestamp:     Timestamp.Now,
+                                                                                        EventTrackingId:       EventTracking_Id.New,
+                                                                                        Runtime:               TimeSpan.FromMilliseconds(2),
+                                                                                        StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                                                                        HTTPResponse:          null,
+                                                                                        Result:                false,
+                                                                                        SessionId:             authorizeRemoteStartRequest.SessionId,
+                                                                                        CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                                        EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                                        ProcessId:             Process_Id.NewRandom,
+                                                                                        CustomData:            null));
 
             };
 
             //NotificationAPI    = new NotificationReceiverAPI();
 
             #endregion
-
-
 
         }
 
@@ -396,11 +383,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
 
 
-        protected static async Task<HTTPResponse> SendEMPAuthorizeStart(AuthorizeStartRequest Request)
+        protected static async Task<HTTPResponse> SendCPOAuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
         {
 
-            return await new HTTPSClient(URL.Parse("http://127.0.0.1:8000")).
-                             Execute(client => client.POSTRequest(HTTPPath.Parse("/api/oicp/charging/v21/operators/DE*GEF/authorize/start"),
+            return await new HTTPSClient(URL.Parse("http://127.0.0.1:7000")).
+                             Execute(client => client.POSTRequest(HTTPPath.Parse("api/oicp/charging/v21/providers/DE*GDF/authorize-remote/start"),
                                                                   requestbuilder => {
                                                                       requestbuilder.Host         = HTTPHostname.Localhost;
                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
