@@ -302,7 +302,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<Session_Id> SessionIds,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -316,7 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<Operator_Id> OperatorIds,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? CDRForwarded,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

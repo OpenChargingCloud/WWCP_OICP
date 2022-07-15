@@ -122,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#QRCodeIdentificationType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#QRCodeIdentificationType
 
         // {
         //   "EvcoID":    "string",
@@ -147,19 +147,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static QRCodeIdentification Parse(JObject                                            JSON,
-                                                 CustomJObjectParserDelegate<QRCodeIdentification>  CustomQRCodeIdentificationParser   = null)
+        public static QRCodeIdentification Parse(JObject                                             JSON,
+                                                 CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
         {
 
             if (TryParse(JSON,
-                         out QRCodeIdentification hashedPIN,
-                         out String               ErrorResponse,
+                         out QRCodeIdentification  qrCodeIdentification,
+                         out String?               errorResponse,
                          CustomQRCodeIdentificationParser))
             {
-                return hashedPIN;
+                return qrCodeIdentification;
             }
 
-            throw new ArgumentException("The given JSON representation of a QR code identification is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a QR code identification is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -172,19 +172,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static QRCodeIdentification Parse(String                                             Text,
-                                                 CustomJObjectParserDelegate<QRCodeIdentification>  CustomQRCodeIdentificationParser   = null)
+        public static QRCodeIdentification Parse(String                                              Text,
+                                                 CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
         {
 
             if (TryParse(Text,
-                         out QRCodeIdentification hashedPIN,
-                         out String               ErrorResponse,
+                         out QRCodeIdentification  qrCodeIdentification,
+                         out String?               errorResponse,
                          CustomQRCodeIdentificationParser))
             {
-                return hashedPIN;
+                return qrCodeIdentification;
             }
 
-            throw new ArgumentException("The given text representation of a QR code identification is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a QR code identification is invalid: " + errorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, CustomQRCodeIdentificationParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a QR code identification.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
+        public static QRCodeIdentification? TryParse(JObject                                             JSON,
+                                                     CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out QRCodeIdentification qrCodeIdentification,
+                         out _,
+                         CustomQRCodeIdentificationParser))
+            {
+                return qrCodeIdentification;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) Parse   (Text, CustomQRCodeIdentificationParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a QR code identification.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
+        public static QRCodeIdentification? TryParse(String                                              Text,
+                                                     CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out QRCodeIdentification qrCodeIdentification,
+                         out _,
+                         CustomQRCodeIdentificationParser))
+            {
+                return qrCodeIdentification;
+            }
+
+            return null;
 
         }
 
@@ -202,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                   JSON,
                                        out QRCodeIdentification  QRCodeIdentification,
-                                       out String                ErrorResponse)
+                                       out String?               ErrorResponse)
 
             => TryParse(JSON,
                         out QRCodeIdentification,
@@ -217,10 +267,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static Boolean TryParse(JObject                                            JSON,
-                                       out QRCodeIdentification                           QRCodeIdentification,
-                                       out String                                         ErrorResponse,
-                                       CustomJObjectParserDelegate<QRCodeIdentification>  CustomQRCodeIdentificationParser)
+        public static Boolean TryParse(JObject                                             JSON,
+                                       out QRCodeIdentification                            QRCodeIdentification,
+                                       out String?                                         ErrorResponse,
+                                       CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser)
         {
 
             try
@@ -255,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out HashedPIN? HashedPIN,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -280,7 +330,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 PIN);
 
 
-                if (CustomQRCodeIdentificationParser != null)
+                if (CustomQRCodeIdentificationParser is not null)
                     QRCodeIdentification = CustomQRCodeIdentificationParser(JSON,
                                                                             QRCodeIdentification);
 
@@ -307,10 +357,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       out QRCodeIdentification                           QRCodeIdentification,
-                                       out String                                         ErrorResponse,
-                                       CustomJObjectParserDelegate<QRCodeIdentification>  CustomQRCodeIdentificationParser)
+        public static Boolean TryParse(String                                              Text,
+                                       out QRCodeIdentification                            QRCodeIdentification,
+                                       out String?                                         ErrorResponse,
+                                       CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser)
         {
 
             try
@@ -340,8 +390,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomQRCodeIdentificationSerializer">A delegate to serialize custom QR code identification JSON objects.</param>
         /// <param name="CustomHashedPINSerializer">A delegate to serialize custom QR code identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<QRCodeIdentification>  CustomQRCodeIdentificationSerializer   = null,
-                              CustomJObjectSerializerDelegate<HashedPIN>             CustomHashedPINSerializer              = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationSerializer   = null,
+                              CustomJObjectSerializerDelegate<HashedPIN>?             CustomHashedPINSerializer              = null)
         {
 
             var JSON = JSONObject.Create(
@@ -358,7 +408,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomQRCodeIdentificationSerializer != null
+            return CustomQRCodeIdentificationSerializer is not null
                        ? CustomQRCodeIdentificationSerializer(this, JSON)
                        : JSON;
 
@@ -373,9 +423,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public QRCodeIdentification Clone
 
-            => new QRCodeIdentification(EVCOId.    Clone,
-                                        HashedPIN?.Clone,
-                                        PIN?.      Clone);
+            => new (EVCOId.    Clone,
+                    HashedPIN?.Clone,
+                    PIN?.      Clone);
 
         #endregion
 
@@ -408,7 +458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (QRCodeIdentification QRCodeIdentification1,
                                            QRCodeIdentification QRCodeIdentification2)
 
-            => !(QRCodeIdentification1.Equals(QRCodeIdentification2));
+            => !QRCodeIdentification1.Equals(QRCodeIdentification2);
 
         #endregion
 
@@ -438,7 +488,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (QRCodeIdentification QRCodeIdentification1,
                                            QRCodeIdentification QRCodeIdentification2)
 
-            => !(QRCodeIdentification1 > QRCodeIdentification2);
+            => QRCodeIdentification1.CompareTo(QRCodeIdentification2) <= 0;
 
         #endregion
 
@@ -468,7 +518,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (QRCodeIdentification QRCodeIdentification1,
                                            QRCodeIdentification QRCodeIdentification2)
 
-            => !(QRCodeIdentification1 < QRCodeIdentification2);
+            => QRCodeIdentification1.CompareTo(QRCodeIdentification2) >= 0;
 
         #endregion
 
@@ -482,7 +532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is QRCodeIdentification qrCodeIdentification
                    ? CompareTo(qrCodeIdentification)
@@ -500,15 +550,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(QRCodeIdentification QRCodeIdentification)
         {
 
-            var result = EVCOId.CompareTo(QRCodeIdentification.EVCOId);
+            var c = EVCOId.CompareTo(QRCodeIdentification.EVCOId);
 
-            if (result == 0 && HashedPIN.HasValue && QRCodeIdentification.HashedPIN.HasValue)
-                result = HashedPIN.Value.CompareTo(QRCodeIdentification.HashedPIN.Value);
+            if (c == 0 && HashedPIN.HasValue && QRCodeIdentification.HashedPIN.HasValue)
+                c = HashedPIN.Value.CompareTo(QRCodeIdentification.HashedPIN.Value);
 
-            if (result == 0 && PIN.      HasValue && QRCodeIdentification.PIN.      HasValue)
-                result = PIN.      Value.CompareTo(QRCodeIdentification.PIN.      Value);
+            if (c == 0 && PIN.      HasValue && QRCodeIdentification.PIN.      HasValue)
+                c = PIN.      Value.CompareTo(QRCodeIdentification.PIN.      Value);
 
-            return result;
+            return c;
 
         }
 
@@ -525,7 +575,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is QRCodeIdentification qrCodeIdentification &&
                    Equals(qrCodeIdentification);
@@ -558,11 +608,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return EVCOId.   GetHashCode() * 5 ^
                        HashedPIN.GetHashCode() * 3 ^
                        PIN.      GetHashCode();
-
             }
         }
 

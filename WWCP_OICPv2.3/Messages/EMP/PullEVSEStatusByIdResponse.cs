@@ -269,7 +269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out StatusCode StatusCode,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#CalibrationLawVerificationType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#CalibrationLawVerificationType
 
         // {
         //   "CalibrationLawCertificateID":                  "string",
@@ -223,7 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String CalibrationLawCertificateId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String PublicKey,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out URL? MeteringSignatureURL,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String MeteringSignatureEncodingFormat,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -276,7 +276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String SignedMeteringValuesVerificationInstruction,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

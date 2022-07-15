@@ -324,7 +324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -338,7 +338,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

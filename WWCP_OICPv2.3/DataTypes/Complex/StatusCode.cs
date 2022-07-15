@@ -103,19 +103,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static StatusCode Parse(JObject                                  JSON,
-                                       CustomJObjectParserDelegate<StatusCode>  CustomStatusCodeParser   = null)
+        public static StatusCode Parse(JObject                                   JSON,
+                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser   = null)
         {
 
             if (TryParse(JSON,
-                         out StatusCode statusCode,
-                         out String     ErrorResponse,
+                         out StatusCode?  statusCode,
+                         out String?      errorResponse,
                          CustomStatusCodeParser))
             {
                 return statusCode;
             }
 
-            throw new ArgumentException("The given JSON representation of a status code is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a status code is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -128,19 +128,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static StatusCode Parse(String                                   Text,
-                                       CustomJObjectParserDelegate<StatusCode>  CustomStatusCodeParser   = null)
+        public static StatusCode Parse(String                                    Text,
+                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser   = null)
         {
 
             if (TryParse(Text,
-                         out StatusCode statusCode,
-                         out String     ErrorResponse,
+                         out StatusCode?  statusCode,
+                         out String?      errorResponse,
                          CustomStatusCodeParser))
             {
                 return statusCode;
             }
 
-            throw new ArgumentException("The given text representation of a status code is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a status code is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -156,9 +156,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="StatusCode">The parsed status code.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject         JSON,
-                                       out StatusCode  StatusCode,
-                                       out String      ErrorResponse)
+        public static Boolean TryParse(JObject          JSON,
+                                       out StatusCode?  StatusCode,
+                                       out String?      ErrorResponse)
 
             => TryParse(JSON,
                         out StatusCode,
@@ -173,10 +173,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">The parsed status code.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static Boolean TryParse(JObject                                  JSON,
-                                       out StatusCode                           StatusCode,
-                                       out String                               ErrorResponse,
-                                       CustomJObjectParserDelegate<StatusCode>  CustomStatusCodeParser)
+        public static Boolean TryParse(JObject                                   JSON,
+                                       out StatusCode?                           StatusCode,
+                                       out String?                               ErrorResponse,
+                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser)
         {
 
             try
@@ -214,7 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              Description,
                                              AdditionalInfo);
 
-                if (CustomStatusCodeParser != null)
+                if (CustomStatusCodeParser is not null)
                     StatusCode = CustomStatusCodeParser(JSON,
                                                         StatusCode);
 
@@ -241,10 +241,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">The parsed status code.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static Boolean TryParse(String                                   Text,
-                                       out StatusCode                           StatusCode,
-                                       out String                               ErrorResponse,
-                                       CustomJObjectParserDelegate<StatusCode>  CustomStatusCodeParser)
+        public static Boolean TryParse(String                                    Text,
+                                       out StatusCode?                           StatusCode,
+                                       out String?                               ErrorResponse,
+                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser)
         {
 
             try
@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomStatusCodeSerializer != null
+            return CustomStatusCodeSerializer is not null
                        ? CustomStatusCodeSerializer(this, JSON)
                        : JSON;
 
@@ -306,9 +306,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public StatusCode Clone
 
-            => new StatusCode(Code,
-                              Description    != null ? new String(Description.   ToCharArray()) : null,
-                              AdditionalInfo != null ? new String(AdditionalInfo.ToCharArray()) : null);
+            => new (Code,
+                    Description    != null ? new String(Description.   ToCharArray()) : null,
+                    AdditionalInfo != null ? new String(AdditionalInfo.ToCharArray()) : null);
 
         #endregion
 
@@ -367,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is StatusCode statusCode &&
                    Equals(statusCode);
@@ -383,14 +383,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(StatusCode StatusCode)
 
-            => !(StatusCode is null)                  &&
+            => StatusCode is not null                 &&
                Code.          Equals(StatusCode.Code) &&
 
-             ((Description    == null && StatusCode.Description    == null) ||
-              (Description    != null && StatusCode.Description    != null && Description.   Equals(StatusCode.Description))) &&
+             ((Description    is     null && StatusCode.Description    is     null) ||
+              (Description    is not null && StatusCode.Description    is not null && Description.   Equals(StatusCode.Description))) &&
 
-             ((AdditionalInfo == null && StatusCode.AdditionalInfo == null) ||
-              (AdditionalInfo != null && StatusCode.AdditionalInfo != null && AdditionalInfo.Equals(StatusCode.AdditionalInfo)));
+             ((AdditionalInfo is     null && StatusCode.AdditionalInfo is     null) ||
+              (AdditionalInfo is not null && StatusCode.AdditionalInfo is not null && AdditionalInfo.Equals(StatusCode.AdditionalInfo)));
 
         #endregion
 
@@ -406,11 +406,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return  Code.           GetHashCode()       * 5 ^
                        (Description?.   GetHashCode() ?? 0) * 3 ^
                        (AdditionalInfo?.GetHashCode() ?? 0);
-
             }
         }
 
@@ -443,9 +441,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Builder ToBuilder()
 
-            => new Builder(Code,
-                           Description,
-                           AdditionalInfo);
+            => new (Code,
+                    Description,
+                    AdditionalInfo);
 
         #endregion
 
@@ -475,13 +473,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// An optional description of the result code.
             /// </summary>
             [Optional]
-            public String        Description       { get; set; }
+            public String?       Description       { get; set; }
 
             /// <summary>
             /// Optional additional information.
             /// </summary>
             [Optional]
-            public String        AdditionalInfo    { get; set; }
+            public String?       AdditionalInfo    { get; set; }
 
             #endregion
 
@@ -494,8 +492,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="Description">An optional description of the result code.</param>
             /// <param name="AdditionalInfo">Optional additional information.</param>
             public Builder(StatusCodes?  Code             = null,
-                           String        Description      = null,
-                           String        AdditionalInfo   = null)
+                           String?       Description      = null,
+                           String?       AdditionalInfo   = null)
             {
 
                 this.Code            = Code;
@@ -514,7 +512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="Builder">A status code builder.</param>
             public static implicit operator StatusCode(Builder Builder)
 
-                => Builder?.ToImmutable();
+                => Builder.ToImmutable();
 
 
             /// <summary>

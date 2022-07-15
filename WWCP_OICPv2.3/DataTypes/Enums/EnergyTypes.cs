@@ -86,11 +86,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EnergyType = EnergyTypes.Wind;
                     return true;
 
-                case "Hydro Power":
+                case "HydroPower":
                     EnergyType = EnergyTypes.HydroPower;
                     return true;
 
-                case "Geothermal Energy":
+                case "GeothermalEnergy":
                     EnergyType = EnergyTypes.GeothermalEnergy;
                     return true;
 
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EnergyType = EnergyTypes.Coal;
                     return true;
 
-                case "Nuclear Energy":
+                case "NuclearEnergy":
                     EnergyType = EnergyTypes.NuclearEnergy;
                     return true;
 
@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EnergyType = EnergyTypes.Petroleum;
                     return true;
 
-                case "Natural Gas":
+                case "NaturalGas":
                     EnergyType = EnergyTypes.NaturalGas;
                     return true;
 
@@ -134,13 +134,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => EnergyType switch {
                    EnergyTypes.Solar             => "Solar",
                    EnergyTypes.Wind              => "Wind",
-                   EnergyTypes.HydroPower        => "Hydro Power",
-                   EnergyTypes.GeothermalEnergy  => "Geothermal Energy",
+                   EnergyTypes.HydroPower        => "HydroPower",
+                   EnergyTypes.GeothermalEnergy  => "GeothermalEnergy",
                    EnergyTypes.Biomass           => "Biomass",
                    EnergyTypes.Coal              => "Coal",
-                   EnergyTypes.NuclearEnergy     => "Nuclear Energy",
+                   EnergyTypes.NuclearEnergy     => "NuclearEnergy",
                    EnergyTypes.Petroleum         => "Petroleum",
-                   EnergyTypes.NaturalGas        => "Natural Gas",
+                   EnergyTypes.NaturalGas        => "NaturalGas",
                    _                             => "unknown",
                };
 

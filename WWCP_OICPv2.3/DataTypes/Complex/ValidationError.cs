@@ -61,11 +61,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                String  ErrorMessage)
         {
 
-            if (FieldReference?.Trim().IsNullOrEmpty() == true)
-                throw new ArgumentException("The given field reference is invalid!",  nameof(FieldReference));
+            if (FieldReference is null)
+                throw new ArgumentException(nameof(FieldReference), "The given field reference must not be null!");
 
-            if (ErrorMessage?.  Trim().IsNullOrEmpty() == true)
-                throw new ArgumentException("The given error message is invalid!",    nameof(ErrorMessage));
+            if (FieldReference.Trim().IsNullOrEmpty())
+                throw new ArgumentException("The given field reference is invalid!", nameof(FieldReference));
+
+
+            if (ErrorMessage   is null)
+                throw new ArgumentNullException(nameof(ErrorMessage), "The given error message must not be null!");
+
+            if (ErrorMessage.  Trim().IsNullOrEmpty())
+                throw new ArgumentException    ("The given error message is invalid!", nameof(ErrorMessage));
+
 
             this.FieldReference  = FieldReference;
             this.ErrorMessage    = ErrorMessage;
@@ -87,10 +95,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out ValidationError validationError))
                 return validationError;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a validation error must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a validation error îs invalid!", nameof(Text));
+            throw new ArgumentException("The given text representation of a validation error is invalid!", nameof(Text));
 
         }
 
@@ -108,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON, out ValidationError validationError))
                 return validationError;
 
-            throw new ArgumentException("The given JSON representation of a validation error îs invalid!", nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a validation error is invalid!", nameof(JSON));
 
         }
 
@@ -183,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             ValidationError = default;
 
-            if (JSON != null)
+            if (JSON is not null)
             {
                 try
                 {
@@ -236,8 +241,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ValidationError Clone
 
-            => new ValidationError(FieldReference,
-                                   ErrorMessage);
+            => new (FieldReference,
+                    ErrorMessage);
 
         #endregion
 
@@ -270,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
-            => !(ValidationError1 == ValidationError2);
+            => !ValidationError1.Equals(ValidationError2);
 
         #endregion
 
@@ -300,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
-            => !(ValidationError1 > ValidationError2);
+            => ValidationError1.CompareTo(ValidationError2) <= 0;
 
         #endregion
 
@@ -330,7 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
-            => !(ValidationError1 < ValidationError2);
+            => ValidationError1.CompareTo(ValidationError2) >= 0;
 
         #endregion
 
@@ -344,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ValidationError validationError
                    ? CompareTo(validationError)
@@ -362,11 +367,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(ValidationError ValidationError)
         {
 
-            var result = FieldReference.CompareTo(ValidationError.FieldReference);
+            var c = FieldReference.CompareTo(ValidationError.FieldReference);
 
-            return result == 0
-                       ? ErrorMessage.CompareTo(ValidationError.ErrorMessage)
-                       : result;
+            if (c == 0)
+                return ErrorMessage.CompareTo(ValidationError.ErrorMessage);
+
+            return c;
 
         }
 
@@ -383,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ValidationError validationError &&
                    Equals(validationError);

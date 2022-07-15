@@ -877,7 +877,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Phone_Number? HotlinePhoneNumber,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -929,7 +929,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out DeltaTypes? DeltaType,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -942,7 +942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? LastUpdate,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -957,7 +957,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ChargingStation_Id? ChargingStationId,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                     {
 
                         if (JSON["ChargingStationID"]?.Value<String>() == String.Empty)
@@ -981,7 +981,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ChargingPool_Id? ChargingPoolId,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                     {
 
                         if (JSON["ChargingPoolID"]?.Value<String>() == String.Empty)
@@ -1011,7 +1011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out URL? ChargingStationImageURL,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1030,7 +1030,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? DynamicPowerLevel,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1044,7 +1044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<EnergySource> EnergySources,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1058,7 +1058,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out EnvironmentalImpact? EnvironmentalImpact,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1071,7 +1071,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? MaxCapacity,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1085,7 +1085,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out AccessibilityLocationTypes? AccessibilityLocationType,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1099,7 +1099,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 out I18NText AdditionalInfo,
                                                 out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                     {
 
                         if ((JSON["AdditionalInfo"] as JArray).Count == 0)
@@ -1123,7 +1123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 out I18NText ChargingStationLocationReference,
                                                 out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1137,7 +1137,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out GeoCoordinates? GeoChargingPointEntrance,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1151,7 +1151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<OpeningTime> OpeningTimes,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1165,7 +1165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out Operator_Id? HubOperatorId,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1179,7 +1179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ClearingHouse_Id? ClearingHouseId,
                                              out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

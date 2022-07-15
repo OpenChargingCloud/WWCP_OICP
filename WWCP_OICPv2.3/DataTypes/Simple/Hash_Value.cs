@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Data
 
         //ToDo: Implement proper hash value format!
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#HashValueType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#HashValueType
         // ^[0-9A-Za-z\\.+/=\\$]{10,100}$
 
         /// <summary>

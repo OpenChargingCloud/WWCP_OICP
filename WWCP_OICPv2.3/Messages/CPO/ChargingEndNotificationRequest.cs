@@ -371,7 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -448,7 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? SessionStart,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -461,7 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? SessionEnd,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -474,7 +474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? ConsumedEnergy,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -487,7 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueStart,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -500,7 +500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueEnd,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -516,7 +516,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out ErrorResponse))
                 {
 
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
 
                     if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
@@ -525,7 +525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                    out MeterValuesInBetween,
                                                                    out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -541,7 +541,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Operator_Id? OperatorId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -555,7 +555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PartnerProduct_Id? PartnerProductId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -568,7 +568,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? PenaltyTimeStart,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

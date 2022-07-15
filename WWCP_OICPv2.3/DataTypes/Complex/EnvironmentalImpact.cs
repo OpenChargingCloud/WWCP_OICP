@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#EnvironmentalImpactType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#EnvironmentalImpactType
 
         // {
         //     "CO2Emission":   0,
@@ -87,19 +87,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static EnvironmentalImpact Parse(JObject                                           JSON,
-                                                CustomJObjectParserDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactParser   = null)
+        public static EnvironmentalImpact Parse(JObject                                            JSON,
+                                                CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
         {
 
             if (TryParse(JSON,
-                         out EnvironmentalImpact environmentalImpact,
-                         out String ErrorResponse,
+                         out EnvironmentalImpact  environmentalImpact,
+                         out String?              errorResponse,
                          CustomEnvironmentalImpactParser))
             {
                 return environmentalImpact;
             }
 
-            throw new ArgumentException("The given JSON representation of an environmental impact is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an environmental impact is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -112,19 +112,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static EnvironmentalImpact Parse(String                                            Text,
-                                                CustomJObjectParserDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactParser   = null)
+        public static EnvironmentalImpact Parse(String                                             Text,
+                                                CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
         {
 
             if (TryParse(Text,
-                         out EnvironmentalImpact environmentalImpact,
-                         out String ErrorResponse,
+                         out EnvironmentalImpact  environmentalImpact,
+                         out String?              errorResponse,
                          CustomEnvironmentalImpactParser))
             {
                 return environmentalImpact;
             }
 
-            throw new ArgumentException("The given text representation of an environmental impact is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an environmental impact is invalid: " + errorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, CustomEnvironmentalImpactParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an environmental impact.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
+        public static EnvironmentalImpact? TryParse(JObject                                            JSON,
+                                                    CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out EnvironmentalImpact environmentalImpact,
+                         out _,
+                         CustomEnvironmentalImpactParser))
+            {
+                return environmentalImpact;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, CustomEnvironmentalImpactParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an environmental impact.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
+        public static EnvironmentalImpact? TryParse(String                                             Text,
+                                                    CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out EnvironmentalImpact environmentalImpact,
+                         out _,
+                         CustomEnvironmentalImpactParser))
+            {
+                return environmentalImpact;
+            }
+
+            return null;
 
         }
 
@@ -142,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                  JSON,
                                        out EnvironmentalImpact  EnvironmentalImpact,
-                                       out String               ErrorResponse)
+                                       out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out EnvironmentalImpact,
@@ -157,10 +207,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static Boolean TryParse(JObject                                           JSON,
-                                       out EnvironmentalImpact                           EnvironmentalImpact,
-                                       out String                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactParser)
+        public static Boolean TryParse(JObject                                            JSON,
+                                       out EnvironmentalImpact                            EnvironmentalImpact,
+                                       out String?                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser)
         {
 
             try
@@ -168,33 +218,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 EnvironmentalImpact = default;
 
-                if (JSON?.HasValues != true)
-                {
-                    ErrorResponse = "The given JSON object must not be null or empty!";
-                    return false;
-                }
-
-                #region Parse CO2Emission       [optional]
+                #region Parse CO2Emission     [optional]
 
                 if (JSON.ParseOptional("CO2Emission",
                                        "CO2 emission",
                                        out Decimal? CO2Emission,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
                 #endregion
 
-                #region Parse NuclearWaste      [optional]
+                #region Parse NuclearWaste    [optional]
 
                 if (JSON.ParseOptional("NuclearWaste",
                                        "nuclear waste",
                                        out Decimal? NuclearWaste,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -204,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 EnvironmentalImpact = new EnvironmentalImpact(CO2Emission,
                                                               NuclearWaste);
 
-                if (CustomEnvironmentalImpactParser != null)
+                if (CustomEnvironmentalImpactParser is not null)
                     EnvironmentalImpact = CustomEnvironmentalImpactParser(JSON,
                                                                           EnvironmentalImpact);
 
@@ -231,10 +275,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out EnvironmentalImpact                           EnvironmentalImpact,
-                                       out String                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactParser)
+        public static Boolean TryParse(String                                             Text,
+                                       out EnvironmentalImpact                            EnvironmentalImpact,
+                                       out String?                                        ErrorResponse,
+                                       CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser)
         {
 
             try
@@ -263,7 +307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null)
+        public JObject? ToJSON(CustomJObjectSerializerDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactSerializer   = null)
         {
 
             if (!CO2Emission. HasValue &&
@@ -284,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomEnvironmentalImpactSerializer != null
+            return CustomEnvironmentalImpactSerializer is not null
                        ? CustomEnvironmentalImpactSerializer(this, JSON)
                        : JSON;
 
@@ -299,8 +343,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EnvironmentalImpact Clone
 
-            => new EnvironmentalImpact(CO2Emission,
-                                       NuclearWaste);
+            => new (CO2Emission,
+                    NuclearWaste);
 
         #endregion
 
@@ -333,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
-            => !(EnvironmentalImpact1 == EnvironmentalImpact2);
+            => !EnvironmentalImpact1.Equals(EnvironmentalImpact2);
 
         #endregion
 
@@ -363,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
-            => !(EnvironmentalImpact1 > EnvironmentalImpact2);
+            => EnvironmentalImpact1.CompareTo(EnvironmentalImpact2) <= 0;
 
         #endregion
 
@@ -393,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
-            => !(EnvironmentalImpact1 < EnvironmentalImpact2);
+            => EnvironmentalImpact1.CompareTo(EnvironmentalImpact2) >= 0;
 
         #endregion
 
@@ -407,10 +451,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
-            => Object is EnvironmentalImpact EnvironmentalImpact
-                   ? CompareTo(EnvironmentalImpact)
+            => Object is EnvironmentalImpact environmentalImpact
+                   ? CompareTo(environmentalImpact)
                    : throw new ArgumentException("The given object is not an environmental impact!",
                                                  nameof(Object));
 
@@ -425,13 +469,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(EnvironmentalImpact EnvironmentalImpact)
         {
 
-            var result = CO2Emission.HasValue && EnvironmentalImpact.CO2Emission.HasValue
-                             ? CO2Emission.Value.CompareTo(EnvironmentalImpact.CO2Emission.Value)
-                             : 0;
+            var c = CO2Emission.HasValue && EnvironmentalImpact.CO2Emission.HasValue
+                        ? CO2Emission.Value.CompareTo(EnvironmentalImpact.CO2Emission.Value)
+                        : 0;
 
-            return result == 0 && NuclearWaste.HasValue && EnvironmentalImpact.NuclearWaste.HasValue
-                       ? NuclearWaste.Value.CompareTo(EnvironmentalImpact.NuclearWaste.Value)
-                       : result;
+            if (c == 0 && NuclearWaste.HasValue && EnvironmentalImpact.NuclearWaste.HasValue)
+                return NuclearWaste.Value.CompareTo(EnvironmentalImpact.NuclearWaste.Value);
+
+            return c;
 
         }
 
@@ -448,7 +493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is EnvironmentalImpact environmentalImpactute &&
                    Equals(environmentalImpactute);

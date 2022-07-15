@@ -18,8 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -74,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public readonly JObject                     CustomData       { get; }
+        public readonly JObject?                    CustomData       { get; }
 
         #endregion
 
@@ -91,14 +89,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingModes">Optional enumeration of supported charging modes.</param>
         /// 
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public ChargingFacility(PowerTypes                  PowerType,
-                                UInt32                      Power,
+        public ChargingFacility(PowerTypes                   PowerType,
+                                UInt32                       Power,
 
-                                UInt32?                     Voltage         = null,
-                                UInt32?                     Amperage        = null,
-                                IEnumerable<ChargingModes>  ChargingModes   = null,
+                                UInt32?                      Voltage         = null,
+                                UInt32?                      Amperage        = null,
+                                IEnumerable<ChargingModes>?  ChargingModes   = null,
 
-                                JObject                     CustomData      = null)
+                                JObject?                     CustomData      = null)
 
         {
 
@@ -107,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Voltage        = Voltage;
             this.Amperage       = Amperage;
-            this.ChargingModes  = ChargingModes?.Distinct() ?? new ChargingModes[0];
+            this.ChargingModes  = ChargingModes?.Distinct() ?? Array.Empty<ChargingModes>();
 
             this.CustomData     = CustomData;
 
@@ -139,19 +137,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility Parse(JObject                                        JSON,
-                                             CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
+        public static ChargingFacility Parse(JObject                                         JSON,
+                                             CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
         {
 
             if (TryParse(JSON,
-                         out ChargingFacility chargingFacility,
-                         out String           ErrorResponse,
+                         out ChargingFacility  chargingFacility,
+                         out String?           errorResponse,
                          CustomChargingFacilityParser))
             {
                 return chargingFacility;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging facility is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charging facility is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -164,25 +162,75 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility Parse(String                                         Text,
-                                             CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser   = null)
+        public static ChargingFacility Parse(String                                          Text,
+                                             CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
         {
 
             if (TryParse(Text,
-                         out ChargingFacility chargingFacility,
-                         out String           ErrorResponse,
+                         out ChargingFacility  chargingFacility,
+                         out String?           errorResponse,
                          CustomChargingFacilityParser))
             {
                 return chargingFacility;
             }
 
-            throw new ArgumentException("The given text representation of a charging facility is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charging facility is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParseJSON(JSON, ..., out ChargingFacility, out ErrorResponse, CustomChargingFacilityParser = null)
+        #region (static) TryParse(JSON, CustomChargingFacilityParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a charging facility.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
+        public static ChargingFacility? TryParse(JObject                                         JSON,
+                                                 CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out ChargingFacility chargingFacility,
+                         out _,
+                         CustomChargingFacilityParser))
+            {
+                return chargingFacility;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, CustomChargingFacilityParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a charging facility.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
+        public static ChargingFacility? TryParse(String                                          Text,
+                                                 CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out ChargingFacility chargingFacility,
+                         out _,
+                         CustomChargingFacilityParser))
+            {
+                return chargingFacility;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, ..., out ChargingFacility, out ErrorResponse, CustomChargingFacilityParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
@@ -194,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject               JSON,
                                        out ChargingFacility  ChargingFacility,
-                                       out String            ErrorResponse)
+                                       out String?           ErrorResponse)
 
             => TryParse(JSON,
                         out ChargingFacility,
@@ -209,10 +257,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
-        public static Boolean TryParse(JObject                                        JSON,
-                                       out ChargingFacility                           ChargingFacility,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser)
+        public static Boolean TryParse(JObject                                         JSON,
+                                       out ChargingFacility                            ChargingFacility,
+                                       out String?                                     ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser)
         {
 
             try
@@ -258,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Voltage,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -271,7 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Amperage,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -285,7 +333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<ChargingModes> ChargingModes,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -305,7 +353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         ChargingModes,
                                                         CustomData);
 
-                if (CustomChargingFacilityParser != null)
+                if (CustomChargingFacilityParser is not null)
                     ChargingFacility = CustomChargingFacilityParser(JSON,
                                                                     ChargingFacility);
 
@@ -332,10 +380,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
-        public static Boolean TryParse(String                                         Text,
-                                       out ChargingFacility                           ChargingFacility,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargingFacility>  CustomChargingFacilityParser)
+        public static Boolean TryParse(String                                          Text,
+                                       out ChargingFacility                            ChargingFacility,
+                                       out String?                                     ErrorResponse,
+                                       CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser)
         {
 
             try
@@ -390,7 +438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 );
 
-            return CustomChargingFacilitySerializer != null
+            return CustomChargingFacilitySerializer is not null
                        ? CustomChargingFacilitySerializer(this, JSON)
                        : JSON;
 
@@ -405,12 +453,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingFacility Clone
 
-            => new ChargingFacility(PowerType,
-                                    Power,
-                                    Voltage,
-                                    Amperage,
-                                    ChargingModes?.ToArray(),
-                                    CustomData != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (PowerType,
+                    Power,
+                    Voltage,
+                    Amperage,
+                    ChargingModes?.ToArray(),
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -443,7 +493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (ChargingFacility ChargingFacility1,
                                            ChargingFacility ChargingFacility2)
 
-            => !(ChargingFacility1 == ChargingFacility2);
+            => !ChargingFacility1.Equals(ChargingFacility2);
 
         #endregion
 
@@ -473,7 +523,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (ChargingFacility ChargingFacility1,
                                            ChargingFacility ChargingFacility2)
 
-            => !(ChargingFacility1 > ChargingFacility2);
+            => ChargingFacility1.CompareTo(ChargingFacility2) <= 0;
 
         #endregion
 
@@ -503,7 +553,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (ChargingFacility ChargingFacility1,
                                            ChargingFacility ChargingFacility2)
 
-            => !(ChargingFacility1 < ChargingFacility2);
+            => ChargingFacility1.CompareTo(ChargingFacility2) >= 0;
 
         #endregion
 
@@ -517,7 +567,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ChargingFacility chargingFacility
                    ? CompareTo(chargingFacility)
@@ -563,7 +613,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingFacility chargingFacility &&
                    Equals(chargingFacility);
@@ -601,11 +651,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return PowerType.GetHashCode()       * 11 ^
-                       Power.    GetHashCode()       *  7 ^
-                      (Voltage?. GetHashCode() ?? 0) *  5 ^
-                      (Amperage?.GetHashCode() ?? 0) *  3 ^
-                      ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
+                return PowerType.    GetHashCode()       * 11 ^
+                       Power.        GetHashCode()       *  7 ^
+                      (Voltage?.     GetHashCode() ?? 0) *  5 ^
+                      (Amperage?.    GetHashCode() ?? 0) *  3 ^
+                       ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
 
             }
         }

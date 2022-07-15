@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Hash value created by partner.
         /// </summary>
         [Mandatory]
-        public Hash_Value    Value       { get; }
+        public Hash_Value     Value       { get; }
 
         /// <summary>
         /// Function that was used to generate the hash value.
@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Value">Hash value created by partner.</param>
         /// <param name="Function">Function that was used to generate the hash value.</param>
-        public HashedPIN(Hash_Value    Value,
+        public HashedPIN(Hash_Value     Value,
                          HashFunctions  Function)
         {
 
@@ -73,7 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#HashedPINType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#HashedPINType
 
         // {
         //   "Function":  "Bcrypt",
@@ -94,19 +94,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static HashedPIN Parse(JObject                                 JSON,
-                                      CustomJObjectParserDelegate<HashedPIN>  CustomHashedPINParser   = null)
+        public static HashedPIN Parse(JObject                                  JSON,
+                                      CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
         {
 
             if (TryParse(JSON,
-                         out HashedPIN hashedPIN,
-                         out String    ErrorResponse,
+                         out HashedPIN  hashedPIN,
+                         out String?    errorResponse,
                          CustomHashedPINParser))
             {
                 return hashedPIN;
             }
 
-            throw new ArgumentException("The given JSON representation of a hashed PIN is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a hashed PIN is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -119,19 +119,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static HashedPIN Parse(String                                  Text,
-                                      CustomJObjectParserDelegate<HashedPIN>  CustomHashedPINParser   = null)
+        public static HashedPIN Parse(String                                   Text,
+                                      CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
         {
 
             if (TryParse(Text,
-                         out HashedPIN hashedPIN,
-                         out String    ErrorResponse,
+                         out HashedPIN  hashedPIN,
+                         out String?    errorResponse,
                          CustomHashedPINParser))
             {
                 return hashedPIN;
             }
 
-            throw new ArgumentException("The given text representation of a hashed PIN is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a hashed PIN is invalid: " + errorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, CustomHashedPINParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a hashed PIN.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
+        public static HashedPIN? TryParse(JObject                                  JSON,
+                                          CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out HashedPIN hashedPIN,
+                         out _,
+                         CustomHashedPINParser))
+            {
+                return hashedPIN;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, CustomHashedPINParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a hashed PIN.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
+        public static HashedPIN? TryParse(String                                   Text,
+                                          CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out HashedPIN hashedPIN,
+                         out _,
+                         CustomHashedPINParser))
+            {
+                return hashedPIN;
+            }
+
+            return null;
 
         }
 
@@ -149,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject        JSON,
                                        out HashedPIN  HashedPIN,
-                                       out String     ErrorResponse)
+                                       out String?    ErrorResponse)
 
             => TryParse(JSON,
                         out HashedPIN,
@@ -164,10 +214,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashedPIN">The parsed hashed PIN.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static Boolean TryParse(JObject                                 JSON,
-                                       out HashedPIN                           HashedPIN,
-                                       out String                              ErrorResponse,
-                                       CustomJObjectParserDelegate<HashedPIN>  CustomHashedPINParser)
+        public static Boolean TryParse(JObject                                  JSON,
+                                       out HashedPIN                            HashedPIN,
+                                       out String?                              ErrorResponse,
+                                       CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser)
         {
 
             try
@@ -181,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse Value         [mandatory]
+                #region Parse Value       [mandatory]
 
                 if (!JSON.ParseMandatory("Value",
                                          "hash value",
@@ -194,7 +244,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse Function      [mandatory]
+                #region Parse Function    [mandatory]
 
                 if (!JSON.ParseMandatoryEnum("Function",
                                              "hash function",
@@ -211,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           Function);
 
 
-                if (CustomHashedPINParser != null)
+                if (CustomHashedPINParser is not null)
                     HashedPIN = CustomHashedPINParser(JSON,
                                                       HashedPIN);
 
@@ -238,10 +288,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashedPIN">The parsed hashed PIN.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static Boolean TryParse(String                                  Text,
-                                       out HashedPIN                           HashedPIN,
-                                       out String                              ErrorResponse,
-                                       CustomJObjectParserDelegate<HashedPIN>  CustomHashedPINParser)
+        public static Boolean TryParse(String                                   Text,
+                                       out HashedPIN                            HashedPIN,
+                                       out String?                              ErrorResponse,
+                                       CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser)
         {
 
             try
@@ -270,7 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomHashedPINSerializer">A delegate to serialize custom hashed PIN JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<HashedPIN>  CustomHashedPINSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<HashedPIN>?  CustomHashedPINSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -278,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("Value",     Value.   ToString())
                        );
 
-            return CustomHashedPINSerializer != null
+            return CustomHashedPINSerializer is not null
                        ? CustomHashedPINSerializer(this, JSON)
                        : JSON;
 
@@ -293,8 +343,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public HashedPIN Clone
 
-            => new HashedPIN(Value.Clone,
-                             Function);
+            => new (Value.Clone,
+                    Function);
 
         #endregion
 
@@ -327,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
-            => !(HashedPIN1 == HashedPIN2);
+            => !HashedPIN1.Equals(HashedPIN2);
 
         #endregion
 
@@ -357,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
-            => !(HashedPIN1 > HashedPIN2);
+            => HashedPIN1.CompareTo(HashedPIN2) <= 0;
 
         #endregion
 
@@ -387,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
-            => !(HashedPIN1 < HashedPIN2);
+            => HashedPIN1.CompareTo(HashedPIN2) >= 0;
 
         #endregion
 
@@ -401,7 +451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is HashedPIN hashedPIN
                    ? CompareTo(hashedPIN)
@@ -419,12 +469,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(HashedPIN HashedPIN)
         {
 
-            var result = Value.CompareTo(HashedPIN.Value);
+            var c = Value.CompareTo(HashedPIN.Value);
 
-            if (result == 0)
-                result = Function.CompareTo(HashedPIN.Function);
+            if (c == 0)
+                c = Function.CompareTo(HashedPIN.Function);
 
-            return result;
+            return c;
 
         }
 
@@ -441,7 +491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is HashedPIN hashedPIN &&
                    Equals(hashedPIN);
@@ -473,10 +523,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Value.   GetHashCode() * 3 ^
                        Function.GetHashCode();
-
             }
         }
 

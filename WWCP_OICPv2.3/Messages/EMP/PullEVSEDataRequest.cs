@@ -338,7 +338,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? LastCall,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -353,7 +353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Operator_Id> OperatorIdFilter,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -367,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Country> CountryCodeFilter,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -381,7 +381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<AccessibilityTypes> AccessibilityFilter,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -395,7 +395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<AuthenticationModes> AuthenticationModeFilter,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<CalibrationLawDataAvailabilities> CalibrationLawDataAvailabilityFilter,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -422,7 +422,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? RenewableEnergyFilter,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -435,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? IsHubjectCompatibleFilter,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -448,7 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? IsOpen24HoursFilter,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -472,7 +472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        out SearchCenter,
                                                        out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -485,7 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    out DistanceKM,
                                                    out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -501,7 +501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out GeoCoordinatesFormats GeoCoordinatesResponseFormat,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

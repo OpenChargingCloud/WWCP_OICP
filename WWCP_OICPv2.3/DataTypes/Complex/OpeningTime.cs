@@ -114,19 +114,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(JObject                                         JSON,
-                                             CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        public static OpeningTime Parse(JObject                                    JSON,
+                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(JSON,
-                         out OpeningTime openingTime,
-                         out String      ErrorResponse,
+                         out OpeningTime  openingTime,
+                         out String?      errorResponse,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
             }
 
-            throw new ArgumentException("The given JSON representation of an opening time is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an opening time is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -139,19 +139,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(String                                          Text,
-                                             CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        public static OpeningTime Parse(String                                     Text,
+                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(Text,
-                         out OpeningTime openingTime,
-                         out String      ErrorResponse,
+                         out OpeningTime  openingTime,
+                         out String?      errorResponse,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
             }
 
-            throw new ArgumentException("The given text representation of an opening time is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an opening time is invalid: " + errorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, CustomOpeningTimesParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an opening time.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
+        public static OpeningTime? TryParse(JObject                                    JSON,
+                                            CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out OpeningTime openingTime,
+                         out _,
+                         CustomOpeningTimesParser))
+            {
+                return openingTime;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, CustomOpeningTimesParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of an opening time.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
+        public static OpeningTime? TryParse(String                                     Text,
+                                            CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out OpeningTime openingTime,
+                         out _,
+                         CustomOpeningTimesParser))
+            {
+                return openingTime;
+            }
+
+            return null;
 
         }
 
@@ -169,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject          JSON,
                                        out OpeningTime  OpeningTimes,
-                                       out String       ErrorResponse)
+                                       out String?      ErrorResponse)
 
             => TryParse(JSON,
                         out OpeningTimes,
@@ -186,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
                                        out OpeningTime                            OpeningTimes,
-                                       out String                                 ErrorResponse,
+                                       out String?                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
 
@@ -245,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                CustomData);
 
 
-                if (CustomOpeningTimesParser != null)
+                if (CustomOpeningTimesParser is not null)
                     OpeningTimes = CustomOpeningTimesParser(JSON,
                                                             OpeningTimes);
 
@@ -274,7 +324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(String                                     Text,
                                        out OpeningTime                            OpeningTimes,
-                                       out String                                 ErrorResponse,
+                                       out String?                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
 
@@ -336,10 +386,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public OpeningTime Clone
 
-            => new OpeningTime(Periods.SafeSelect(period => period.Clone).ToArray(),
-                               On,
-                               UnstructuredText != null ? new String(UnstructuredText.ToCharArray())                          : null,
-                               CustomData       != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (Periods.SafeSelect(period => period.Clone).ToArray(),
+                    On,
+                    UnstructuredText != null ? new String(UnstructuredText.ToCharArray())                          : null,
+                    CustomData       != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 
@@ -429,7 +479,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
                        On.     GetHashCode() * 3 ^
 
-                       (UnstructuredText.IsNullOrEmpty()
+                       (UnstructuredText is not null && UnstructuredText.IsNullOrEmpty()
                            ? UnstructuredText.GetHashCode()
                            : 0);
 

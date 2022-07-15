@@ -82,13 +82,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HourMinute Parse(String Text)
         {
 
-            if (TryParse(Text, out HourMinute hourMin))
-                return hourMin;
+            if (TryParse(Text, out HourMinute hourMinute))
+                return hourMinute;
 
             if (Text.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Text), "The given text representation of a HourMinute must not be null or empty!");
 
-            throw new ArgumentException("The given text representation of a HourMinute îs invalid!", nameof(Text));
+            throw new ArgumentException("The given text representation of a HourMinute is invalid!", nameof(Text));
 
         }
 
@@ -103,8 +103,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HourMinute? TryParse(String Text)
         {
 
-            if (TryParse(Text, out HourMinute hourMin))
-                return hourMin;
+            if (TryParse(Text, out HourMinute hourMinute))
+                return hourMinute;
 
             return null;
 
@@ -117,7 +117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out HourMinute HourMinute)
         {
 
-            Text        = Text?.Trim();
+            Text        = Text.Trim();
             HourMinute  = default;
 
             if (Text.IsNotNullOrEmpty())
@@ -158,8 +158,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public HourMinute Clone
 
-            => new HourMinute(Hour,
-                              Minute);
+            => new (Hour,
+                    Minute);
 
         #endregion
 
@@ -192,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
-            => !(HourMinute1 == HourMinute2);
+            => !HourMinute1.Equals(HourMinute2);
 
         #endregion
 
@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator <= (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
-            => !(HourMinute1 > HourMinute2);
+            => HourMinute1.CompareTo(HourMinute2) <= 0;
 
         #endregion
 
@@ -252,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator >= (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
-            => !(HourMinute1 < HourMinute2);
+            => HourMinute1.CompareTo(HourMinute2) >= 0;
 
         #endregion
 
@@ -266,7 +266,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is HourMinute HourMinute
                    ? CompareTo(HourMinute)
@@ -284,11 +284,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(HourMinute HourMinute)
         {
 
-            var result = Hour.CompareTo(HourMinute.Hour);
+            var c = Hour.CompareTo(HourMinute.Hour);
 
-            return result == 0
-                       ? Minute.CompareTo(HourMinute.Minute)
-                       : result;
+            if (c == 0)
+                return Minute.CompareTo(HourMinute.Minute);
+
+            return c;
 
         }
 
@@ -305,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is HourMinute hourMinute &&
                    Equals(hourMinute);

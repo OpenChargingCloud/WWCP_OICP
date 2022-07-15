@@ -240,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        out SearchCenter,
                                                        out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -253,7 +253,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    out DistanceKM,
                                                    out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -269,7 +269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EVSEStatusTypes EVSEStatusFilter,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

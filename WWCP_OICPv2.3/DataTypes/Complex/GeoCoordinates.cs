@@ -18,7 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -261,8 +260,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            Latitude  = Latitude?.Trim();
-            Longitude = Longitude?.Trim();
+            Latitude  = Latitude. Trim();
+            Longitude = Longitude.Trim();
 
             if (Latitude.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Latitude),   "The given text representation of a latitude must not be null or empty!");
@@ -274,13 +273,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParseLatLng(Latitude,
                                Longitude,
-                               out GeoCoordinates geoCoordinates,
-                               out String         ErrorResponse))
+                               out GeoCoordinates?  geoCoordinates,
+                               out String?          errorResponse))
             {
-                return geoCoordinates;
+                return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid text representation of geo coordinates: '" + ErrorResponse + "'!");
+            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!");
 
         }
 
@@ -314,8 +313,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            Latitude  = Latitude?.Trim();
-            Longitude = Longitude?.Trim();
+            Latitude  = Latitude. Trim();
+            Longitude = Longitude.Trim();
 
             if (Latitude.IsNullOrEmpty() || Longitude.IsNullOrEmpty())
                 return default;
@@ -324,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParseLatLng(Latitude,
                                Longitude,
-                               out GeoCoordinates geoCoordinates,
+                               out GeoCoordinates? geoCoordinates,
                                out _))
             {
                 return geoCoordinates;
@@ -360,16 +359,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Longitude">The longitude ("Längengrad": West -180° to East +180°).</param>
         /// <param name="GeoCoordinate">The parsed geo coordinate.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParseLatLng(String              Latitude,
-                                             String              Longitude,
-                                             out GeoCoordinates  GeoCoordinate,
-                                             out String          ErrorResponse)
+        public static Boolean TryParseLatLng(String               Latitude,
+                                             String               Longitude,
+                                             out GeoCoordinates?  GeoCoordinate,
+                                             out String?          ErrorResponse)
         {
 
             GeoCoordinate  = default;
             ErrorResponse  = default;
-            Latitude       = Latitude?.Trim();
-            Longitude      = Longitude?.Trim();
+            Latitude       = Latitude. Trim();
+            Longitude      = Longitude.Trim();
 
             // 50.927054  11.5892372
             if (Double.TryParse(Latitude,  NumberStyles.Float, CultureInfo.InvariantCulture, out Double latitude)  &&
@@ -386,8 +385,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
 
             // 50.927054 N  11.5892372 E
-            if ((Latitude. Contains("S") || Latitude. Contains("N")) &&
-                (Longitude.Contains("W") || Longitude.Contains("E")) &&
+            if ((Latitude. Contains('S') || Latitude. Contains('N')) &&
+                (Longitude.Contains('W') || Longitude.Contains('E')) &&
                 Double.TryParse(Latitude. Replace("S", "").Replace("N", ""), NumberStyles.Float, CultureInfo.InvariantCulture, out latitude)  &&
                 Double.TryParse(Longitude.Replace("W", "").Replace("E", ""), NumberStyles.Float, CultureInfo.InvariantCulture, out longitude) &&
                 0 <= latitude  && latitude  <=  90 &&
@@ -443,10 +442,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Latitude">The latitude ("Breitengrad": South -90° to Nord +90°).</param>
         /// <param name="GeoCoordinate">The parsed geo coordinate.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParseLngLat(String              Longitude,
-                                             String              Latitude,
-                                             out GeoCoordinates  GeoCoordinate,
-                                             out String          ErrorResponse)
+        public static Boolean TryParseLngLat(String               Longitude,
+                                             String               Latitude,
+                                             out GeoCoordinates?  GeoCoordinate,
+                                             out String?          ErrorResponse)
 
             => TryParseLatLng(Latitude,
                               Longitude,
@@ -465,23 +464,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static GeoCoordinates Parse(String Text)
         {
 
-            #region Initial checks
-
-            Text = Text?.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of geo coordinates must not be null or empty!");
-
-            #endregion
-
             if (TryParse(Text,
-                         out GeoCoordinates geoCoordinates,
-                         out String         ErrorResponse))
+                         out GeoCoordinates?  geoCoordinates,
+                         out String?          errorResponse))
             {
-                return geoCoordinates;
+                return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid text representation of geo coordinates: '" + ErrorResponse + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!", nameof(Text));
 
         }
 
@@ -497,13 +487,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out GeoCoordinates geoCoordinates,
+                         out GeoCoordinates? geoCoordinates,
                          out _))
             {
                 return geoCoordinates;
             }
 
-            return default;
+            return null;
 
         }
 
@@ -517,14 +507,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">A text representation of geo coordinates.</param>
         /// <param name="GeoCoordinates">The parsed geo coordinates.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(String              Text,
-                                       out GeoCoordinates  GeoCoordinates,
-                                       out String          ErrorResponse)
+        public static Boolean TryParse(String               Text,
+                                       out GeoCoordinates?  GeoCoordinates,
+                                       out String?          ErrorResponse)
         {
 
             GeoCoordinates  = default;
             ErrorResponse   = default;
-            Text            = Text?.Trim();
+            Text            = Text.Trim();
 
             if (Text.IsNullOrEmpty())
             {
@@ -582,19 +572,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (JSON == null || !JSON.HasValues)
+            if (JSON is null || !JSON.HasValues)
                 throw new ArgumentNullException(nameof(JSON), "The given JSON representation of geo coordinates must not be null or empty!");
 
             #endregion
 
             if (TryParse(JSON,
-                         out GeoCoordinates geoCoordinates,
-                         out String         ErrorResponse))
+                         out GeoCoordinates?  geoCoordinates,
+                         out String?          errorResponse))
             {
-                return geoCoordinates;
+                return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid JSON representation of geo coordinates: '" + ErrorResponse + "'!", nameof(JSON));
+            throw new ArgumentException("Invalid JSON representation of geo coordinates: '" + errorResponse + "'!", nameof(JSON));
 
         }
 
@@ -610,13 +600,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out GeoCoordinates geoCoordinates,
+                         out GeoCoordinates? geoCoordinates,
                          out _))
             {
                 return geoCoordinates;
             }
 
-            return default;
+            return null;
 
         }
 
@@ -630,9 +620,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">A JSON representation of geo coordinates.</param>
         /// <param name="GeoCoordinates">The parsed geo coordinates.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject             JSON,
-                                       out GeoCoordinates  GeoCoordinates,
-                                       out String          ErrorResponse)
+        public static Boolean TryParse(JObject              JSON,
+                                       out GeoCoordinates?  GeoCoordinates,
+                                       out String?          ErrorResponse)
         {
 
             GeoCoordinates  = default;
@@ -646,40 +636,45 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (JSON["Google"] is JObject GoogleFormat)
             {
 
-                if (TryParse(GoogleFormat["Coordinates"]?.Value<String>(),
-                             out GeoCoordinates geoCoordinates,
+                if (TryParse(GoogleFormat["Coordinates"]?.Value<String>() ?? "",
+                             out GeoCoordinates? geoCoordinates,
                              out ErrorResponse))
+                {
+
+                    GeoCoordinates = new GeoCoordinates(geoCoordinates!.Value.Latitude,
+                                                        geoCoordinates!.Value.Longitude,
+                                                        GeoCoordinatesFormats.Google);
+
                     return true;
 
-                GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
-                                                    geoCoordinates.Longitude,
-                                                    GeoCoordinatesFormats.Google);
+                }
 
-                return true;
+                ErrorResponse = "Invalid 'Google' format!";
+                return false;
 
             }
 
             if (JSON["DecimalDegree"] is JObject DecimalDegreeFormat)
             {
 
-                var latitude  = DecimalDegreeFormat["Latitude"]?. Value<String>();
-                var longitude = DecimalDegreeFormat["Longitude"]?.Value<String>();
+                var latitude  = DecimalDegreeFormat[nameof(Latitude)]?. Value<String>();
+                var longitude = DecimalDegreeFormat[nameof(Longitude)]?.Value<String>();
 
                 if (latitude  != null &&
                     longitude != null &&
                     TryParseLatLng(latitude,
                                    longitude,
-                                   out GeoCoordinates geoCoordinates,
+                                   out GeoCoordinates? geoCoordinates,
                                    out ErrorResponse))
-                    {
+                {
 
-                        GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
-                                                            geoCoordinates.Longitude,
-                                                            GeoCoordinatesFormats.DecimalDegree);
+                    GeoCoordinates = new GeoCoordinates(geoCoordinates!.Value.Latitude,
+                                                        geoCoordinates!.Value.Longitude,
+                                                        GeoCoordinatesFormats.DecimalDegree);
 
-                        return true;
+                    return true;
 
-                    }
+                }
 
                 ErrorResponse = "Invalid 'DecimalDegree' format!";
                 return false;
@@ -689,24 +684,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (JSON["DegreeMinuteSeconds"] is JObject DegreeMinuteSecondsFormat)
             {
 
-                var latitude  = DegreeMinuteSecondsFormat["Latitude"]?. Value<String>();
-                var longitude = DegreeMinuteSecondsFormat["Longitude"]?.Value<String>();
+                var latitude  = DegreeMinuteSecondsFormat[nameof(Latitude)]?. Value<String>();
+                var longitude = DegreeMinuteSecondsFormat[nameof(Longitude)]?.Value<String>();
 
                 if (latitude  != null &&
                     longitude != null &&
                     TryParseLatLng(latitude,
                                    longitude,
-                                   out GeoCoordinates geoCoordinates,
+                                   out GeoCoordinates? geoCoordinates,
                                    out ErrorResponse))
-                    {
+                {
 
-                        GeoCoordinates = new GeoCoordinates(geoCoordinates.Latitude,
-                                                            geoCoordinates.Longitude,
-                                                            GeoCoordinatesFormats.DegreeMinuteSeconds);
+                    GeoCoordinates = new GeoCoordinates(geoCoordinates!.Value.Latitude,
+                                                        geoCoordinates!.Value.Longitude,
+                                                        GeoCoordinatesFormats.DegreeMinuteSeconds);
 
-                        return true;
+                    return true;
 
-                    }
+                }
 
                 ErrorResponse = "Invalid 'DegreeMinuteSeconds' format!";
                 return false;
@@ -726,10 +721,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GeoCoordinates>  CustomGeoCoordinatesSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GeoCoordinates>?  CustomGeoCoordinatesSerializer   = null)
         {
 
-            JObject JSON = default;
+            JObject? JSON = default;
 
             switch (GeoFormat)
             {
@@ -768,7 +763,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-            return CustomGeoCoordinatesSerializer != null
+            return CustomGeoCoordinatesSerializer is not null
                        ? CustomGeoCoordinatesSerializer(this, JSON)
                        : JSON;
 
@@ -866,7 +861,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (GeoCoordinates GeoCoordinates1,
                                            GeoCoordinates GeoCoordinates2)
 
-            => !(GeoCoordinates1 == GeoCoordinates2);
+            => !GeoCoordinates1.Equals(GeoCoordinates2);
 
         #endregion
 
@@ -881,7 +876,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">Another geo coordinate.</param>
         /// <returns>True if both are equal; False otherwise.</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is GeoCoordinates geoCoordinate &&
                    Equals(geoCoordinate);
@@ -914,10 +909,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Latitude. GetHashCode() * 3 ^
                        Longitude.GetHashCode();
-
             }
         }
 

@@ -469,7 +469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? ChargingStart,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -482,7 +482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? ChargingEnd,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -508,7 +508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PartnerProduct_Id? PartnerProductId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -522,7 +522,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -536,7 +536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -549,7 +549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueStart,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -562,7 +562,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Decimal? MeterValueEnd,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -578,7 +578,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out ErrorResponse))
                 {
 
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
 
                     if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
@@ -587,7 +587,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                    out MeterValuesInBetween,
                                                                    out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -603,7 +603,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<SignedMeteringValue> SignedMeteringValues,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -617,7 +617,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out CalibrationLawVerification CalibrationLawVerification,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -631,7 +631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Operator_Id? HubOperatorId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -645,7 +645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? HubProviderId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

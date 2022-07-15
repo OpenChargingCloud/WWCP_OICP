@@ -199,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<EVSE_Id> EVSEIds,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

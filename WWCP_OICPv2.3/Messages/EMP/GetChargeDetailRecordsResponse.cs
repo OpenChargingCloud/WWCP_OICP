@@ -270,7 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<ChargeDetailRecord> ChargeDetailRecords,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -284,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out StatusCode StatusCode,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? First,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -310,7 +310,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? Last,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -323,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Number,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -336,7 +336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? NumberOfElements,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Size,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -362,7 +362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? TotalElements,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? TotalPages,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

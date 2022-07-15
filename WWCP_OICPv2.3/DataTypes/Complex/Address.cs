@@ -336,7 +336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String Floor,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String Region,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -362,7 +362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? ParkingFacility,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String ParkingSpot,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -389,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Time_Zone? TimeZone,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

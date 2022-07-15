@@ -18,8 +18,7 @@
 #region Usings
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -62,11 +61,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    IEnumerable<ValidationError>  ValidationErrors)
         {
 
-            if (Message?.Trim().IsNullOrEmpty() == true)
+            if (Message is null)
+                throw new ArgumentNullException(nameof(Message), "The given message must not be null!");
+
+            if (Message.Trim().IsNullOrEmpty())
                 throw new ArgumentException("The given message is invalid!", nameof(Message));
 
             this.Message           = Message;
-            this.ValidationErrors  = ValidationErrors ?? new ValidationError[0];
+            this.ValidationErrors  = ValidationErrors ?? Array.Empty<ValidationError>();
 
         }
 
@@ -82,13 +84,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValidationErrorList Parse(String Text)
         {
 
-            if (TryParse(Text, out ValidationErrorList validationError))
-                return validationError;
+            if (TryParse(Text,
+                         out ValidationErrorList?  validationErrorList,
+                         out String?               errorResponse))
+            { 
+                return validationErrorList!;
+            }
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a validation error must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a validation error îs invalid!", nameof(Text));
+            throw new ArgumentException("The given JSON representation of a validation error list is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -103,8 +106,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValidationErrorList? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ValidationErrorList validationError))
-                return validationError;
+            if (TryParse(Text,
+                         out ValidationErrorList? validationErrorList,
+                         out _))
+            { 
+                return validationErrorList;
+            }
 
             return null;
 
@@ -112,40 +119,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ValidationErrorList)
+        #region (static) TryParse(Text, out ValidationErrorList, out ErrorResponse)
 
-        public static Boolean TryParse(String Text, out ValidationErrorList ValidationErrorList)
+        public static Boolean TryParse(String                    Text,
+                                       out ValidationErrorList?  ValidationErrorList,
+                                       out String?               ErrorResponse)
         {
 
-            ValidationErrorList = default;
-
-            if (Text?.Trim().IsNotNullOrEmpty() == true)
+            if (Text.Trim().IsNotNullOrEmpty() == true)
             {
                 try
                 {
 
-                    if (TryParse(JObject.Parse(Text), out ValidationErrorList))
+                    if (TryParse(JObject.Parse(Text),
+                                 out ValidationErrorList,
+                                 out ErrorResponse))
+                    {
                         return true;
+                    }
 
                 }
                 catch (Exception)
                 { }
             }
 
+            ValidationErrorList  = default;
+            ErrorResponse        = default;
             return false;
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out ValidationErrorList)
+        #region (static) TryParse(JSON, out ValidationErrorList, out ErrorResponse)
 
-        public static Boolean TryParse(JObject JSON, out ValidationErrorList ValidationErrorList)
+        public static Boolean TryParse(JObject                   JSON,
+                                       out ValidationErrorList?  ValidationErrorList,
+                                       out String?               ErrorResponse)
         {
 
-            ValidationErrorList = default;
+            ValidationErrorList  = default;
+            ErrorResponse        = default;
 
-            if (JSON != null)
+            if (JSON is not null)
             {
                 try
                 {
@@ -154,8 +170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     if (!JSON.ParseMandatoryText("message",
                                                  "message",
-                                                 out String Message,
-                                                 out String ErrorResponse))
+                                                 out String  Message,
+                                                 out         ErrorResponse))
                     {
                         return false;
                     }
@@ -199,8 +215,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ValidationErrorList Clone
 
-            => new ValidationErrorList(Message,
-                                       ValidationErrors);
+            => new (Message,
+                    ValidationErrors);
 
         #endregion
 
@@ -307,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is ValidationErrorList validationErrorList
                    ? CompareTo(validationErrorList)
@@ -322,8 +338,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="ValidationErrorList">An object to compare with.</param>
-        public Int32 CompareTo(ValidationErrorList ValidationErrorList)
+        public Int32 CompareTo(ValidationErrorList? ValidationErrorList)
         {
+
+            if (ValidationErrorList is null)
+                throw new ArgumentNullException(nameof(ValidationErrorList), "The given ValidationErrorList must not be null!");
 
             var c = Message.CompareTo(ValidationErrorList.Message);
 
@@ -358,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ValidationErrorList validationErrorList &&
                    Equals(validationErrorList);
@@ -372,8 +391,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList">A ValidationErrorList to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ValidationErrorList ValidationErrorList)
+        public Boolean Equals(ValidationErrorList? ValidationErrorList)
         {
+
+            if (ValidationErrorList is null)
+                return false;
 
             if (!Message.Equals(ValidationErrorList.Message))
                 return false;

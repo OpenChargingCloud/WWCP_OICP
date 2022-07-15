@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#RFIDIdentificationType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#RFIDIdentificationType
 
         // {
         //   "EvcoID":         "string",
@@ -128,19 +128,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static RFIDIdentification Parse(JObject                                          JSON,
-                                               CustomJObjectParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null)
+        public static RFIDIdentification Parse(JObject                                           JSON,
+                                               CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser   = null)
         {
 
             if (TryParse(JSON,
-                         out RFIDIdentification calibrationLawVerification,
-                         out String             ErrorResponse,
+                         out RFIDIdentification?  calibrationLawVerification,
+                         out String?              errorResponse,
                          CustomRFIDIdentificationParser))
             {
                 return calibrationLawVerification;
             }
 
-            throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -153,19 +153,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static RFIDIdentification Parse(String                                           Text,
-                                               CustomJObjectParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser   = null)
+        public static RFIDIdentification Parse(String                                            Text,
+                                               CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser   = null)
         {
 
             if (TryParse(Text,
-                         out RFIDIdentification calibrationLawVerification,
-                         out String             ErrorResponse,
+                         out RFIDIdentification?  calibrationLawVerification,
+                         out String?              errorResponse,
                          CustomRFIDIdentificationParser))
             {
                 return calibrationLawVerification;
             }
 
-            throw new ArgumentException("The given text representation of a RFID identification is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a RFID identification is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -181,9 +181,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                 JSON,
-                                       out RFIDIdentification  RFIDIdentification,
-                                       out String              ErrorResponse)
+        public static Boolean TryParse(JObject                  JSON,
+                                       out RFIDIdentification?  RFIDIdentification,
+                                       out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out RFIDIdentification,
@@ -198,10 +198,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static Boolean TryParse(JObject                                          JSON,
-                                       out RFIDIdentification                           RFIDIdentification,
-                                       out String                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser)
+        public static Boolean TryParse(JObject                                           JSON,
+                                       out RFIDIdentification?                           RFIDIdentification,
+                                       out String?                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser)
         {
 
             try
@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EVCO_Id? EVCOId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -268,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out DateTime? ExpiryDate,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -289,7 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                             CustomData);
 
 
-                if (CustomRFIDIdentificationParser != null)
+                if (CustomRFIDIdentificationParser is not null)
                     RFIDIdentification = CustomRFIDIdentificationParser(JSON,
                                                                         RFIDIdentification);
 
@@ -316,10 +316,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static Boolean TryParse(String                                           Text,
-                                       out RFIDIdentification                           RFIDIdentification,
-                                       out String                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<RFIDIdentification>  CustomRFIDIdentificationParser)
+        public static Boolean TryParse(String                                            Text,
+                                       out RFIDIdentification?                           RFIDIdentification,
+                                       out String?                                       ErrorResponse,
+                                       CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser)
         {
 
             try
@@ -348,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomRFIDIdentificationSerializer">A delegate to serialize custom RFID identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<RFIDIdentification>  CustomRFIDIdentificationSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<RFIDIdentification>?  CustomRFIDIdentificationSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -361,7 +361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EvcoID",            EVCOId.Value.ToString())
                                : null,
 
-                           PrintedNumber.IsNeitherNullNorEmpty()
+                           PrintedNumber is not null && PrintedNumber.IsNeitherNullNorEmpty()
                                ? new JProperty("PrintedNumber",     PrintedNumber)
                                : null,
 
@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomRFIDIdentificationSerializer != null
+            return CustomRFIDIdentificationSerializer is not null
                        ? CustomRFIDIdentificationSerializer(this, JSON)
                        : JSON;
 
@@ -390,12 +390,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public RFIDIdentification Clone
 
-            => new RFIDIdentification(UID.Clone,
-                                      RFIDType,
-                                      EVCOId?.Clone,
-                                      PrintedNumber != null ? new String(PrintedNumber.ToCharArray())                             : null,
-                                      ExpiryDate,
-                                      CustomData    != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (UID.Clone,
+                    RFIDType,
+                    EVCOId?.Clone,
+                    PrintedNumber is not null
+                        ? new String(PrintedNumber.ToCharArray())
+                        : null,
+                    ExpiryDate,
+                    CustomData    is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -525,7 +529,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is RFIDIdentification rfidIdentification
                    ? CompareTo(rfidIdentification)
@@ -540,27 +544,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="RFIDIdentification">An RFID identification object to compare with.</param>
-        public Int32 CompareTo(RFIDIdentification RFIDIdentification)
+        public Int32 CompareTo(RFIDIdentification? RFIDIdentification)
         {
 
             if (RFIDIdentification is null)
                 throw new ArgumentNullException(nameof(RFIDIdentification),  "The given RFID identification must not be null!");
 
-            var result = UID.CompareTo(RFIDIdentification.UID);
+            var c = UID.CompareTo(RFIDIdentification.UID);
 
-            if (result == 0)
-                result = RFIDType.CompareTo(RFIDIdentification.RFIDType);
+            if (c == 0)
+                c = RFIDType.CompareTo(RFIDIdentification.RFIDType);
 
-            if (result == 0 && EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue)
-                result = EVCOId.Value.CompareTo(RFIDIdentification.EVCOId.Value);
+            if (c == 0 && EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue)
+                c = EVCOId.Value.CompareTo(RFIDIdentification.EVCOId.Value);
 
-            if (result == 0)
-                result = String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase);
+            if (c == 0)
+                c = String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase);
 
-            if (result == 0 && ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue)
-                result = ExpiryDate.Value.CompareTo(RFIDIdentification.ExpiryDate.Value);
+            if (c == 0 && ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue)
+                c = ExpiryDate.Value.CompareTo(RFIDIdentification.ExpiryDate.Value);
 
-            return result;
+            return c;
 
         }
 
@@ -577,7 +581,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is RFIDIdentification rfidIdentification &&
                    Equals(rfidIdentification);
@@ -591,22 +595,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RFIDIdentification">An RFID identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(RFIDIdentification RFIDIdentification)
+        public Boolean Equals(RFIDIdentification? RFIDIdentification)
 
-            => !(RFIDIdentification is null) &&
+            => RFIDIdentification is not null &&
 
-                 UID.     Equals(RFIDIdentification.UID)      &&
-                 RFIDType.Equals(RFIDIdentification.RFIDType) &&
+               UID.     Equals(RFIDIdentification.UID)      &&
+               RFIDType.Equals(RFIDIdentification.RFIDType) &&
 
-                 ((!EVCOId.HasValue && !RFIDIdentification.EVCOId.HasValue) ||
-                   (EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue && EVCOId.Value.Equals(RFIDIdentification.EVCOId.Value))) &&
+               ((!EVCOId.HasValue && !RFIDIdentification.EVCOId.HasValue) ||
+                 (EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue && EVCOId.Value.Equals(RFIDIdentification.EVCOId.Value))) &&
 
-                 ((PrintedNumber == null && RFIDIdentification.PrintedNumber == null) ||
-                  (PrintedNumber != null && RFIDIdentification.PrintedNumber != null &&
-                   String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase) != 0)) &&
+               ((PrintedNumber == null && RFIDIdentification.PrintedNumber == null) ||
+                (PrintedNumber != null && RFIDIdentification.PrintedNumber != null &&
+                 String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase) != 0)) &&
 
-                 ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
-                   (ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value)));
+               ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
+                 (ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value)));
 
         #endregion
 

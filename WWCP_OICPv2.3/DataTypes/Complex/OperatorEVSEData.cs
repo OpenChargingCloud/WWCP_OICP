@@ -18,8 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -62,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject                      CustomData         { get; }
+        public JObject?                     CustomData         { get; }
 
         #endregion
 
@@ -80,13 +78,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Operator_Id                  OperatorId,
                                 String                       OperatorName,
 
-                                JObject                      CustomData   = null)
+                                JObject?                     CustomData   = null)
         {
 
             if (!EVSEDataRecords.SafeAny())
                 throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given enumeration of EVSE data records must not be null or empty!");
 
-            OperatorName = OperatorName?.Trim();
+            OperatorName = OperatorName.Trim();
 
             if (OperatorName.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(OperatorName),     "The given EVSE operator name must not be null or empty!");
@@ -129,19 +127,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static OperatorEVSEData Parse(JObject                                        JSON,
-                                             CustomJObjectParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null)
+        public static OperatorEVSEData Parse(JObject                                         JSON,
+                                             CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser   = null)
         {
 
             if (TryParse(JSON,
-                         out OperatorEVSEData  operatorEVSEData,
-                         out String            ErrorResponse,
+                         out OperatorEVSEData?  operatorEVSEData,
+                         out String?            errorResponse,
                          CustomOperatorEVSEDataParser))
             {
                 return operatorEVSEData;
             }
 
-            throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -154,19 +152,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static OperatorEVSEData Parse(String                                         Text,
-                                             CustomJObjectParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser   = null)
+        public static OperatorEVSEData Parse(String                                          Text,
+                                             CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser   = null)
         {
 
             if (TryParse(Text,
-                         out OperatorEVSEData  operatorEVSEData,
-                         out String            ErrorResponse,
+                         out OperatorEVSEData?  operatorEVSEData,
+                         out String?            errorResponse,
                          CustomOperatorEVSEDataParser))
             {
                 return operatorEVSEData;
             }
 
-            throw new ArgumentException("The given text representation of operator EVSE data is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of operator EVSE data is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -182,9 +180,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OperatorEVSEData">The parsed operator EVSE data.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
-                                       out OperatorEVSEData  OperatorEVSEData,
-                                       out String            ErrorResponse)
+        public static Boolean TryParse(JObject                JSON,
+                                       out OperatorEVSEData?  OperatorEVSEData,
+                                       out String?            ErrorResponse)
 
             => TryParse(JSON,
                         out OperatorEVSEData,
@@ -199,10 +197,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData">The parsed operator EVSE data.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static Boolean TryParse(JObject                                        JSON,
-                                       out OperatorEVSEData                           OperatorEVSEData,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser)
+        public static Boolean TryParse(JObject                                         JSON,
+                                       out OperatorEVSEData?                           OperatorEVSEData,
+                                       out String?                                     ErrorResponse,
+                                       CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser)
         {
 
             try
@@ -266,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         CustomData);
 
 
-                if (CustomOperatorEVSEDataParser != null)
+                if (CustomOperatorEVSEDataParser is not null)
                     OperatorEVSEData = CustomOperatorEVSEDataParser(JSON,
                                                                     OperatorEVSEData);
 
@@ -293,10 +291,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData">The parsed operator EVSE data.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static Boolean TryParse(String                                         Text,
-                                       out OperatorEVSEData                           OperatorEVSEData,
-                                       out String                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<OperatorEVSEData>  CustomOperatorEVSEDataParser)
+        public static Boolean TryParse(String                                          Text,
+                                       out OperatorEVSEData?                           OperatorEVSEData,
+                                       out String?                                     ErrorResponse,
+                                       CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser)
         {
 
             try
@@ -332,14 +330,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<OperatorEVSEData>     CustomOperatorEVSEDataSerializer      = null,
-                              CustomJObjectSerializerDelegate<EVSEDataRecord>       CustomEVSEDataRecordSerializer        = null,
-                              CustomJObjectSerializerDelegate<Address>              CustomAddressSerializer               = null,
-                              CustomJObjectSerializerDelegate<ChargingFacility>     CustomChargingFacilitySerializer      = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null,
-                              CustomJObjectSerializerDelegate<EnergySource>         CustomEnergySourceSerializer          = null,
-                              CustomJObjectSerializerDelegate<EnvironmentalImpact>  CustomEnvironmentalImpactSerializer   = null,
-                              CustomJObjectSerializerDelegate<OpeningTime>          CustomOpeningTimesSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<OperatorEVSEData>?     CustomOperatorEVSEDataSerializer      = null,
+                              CustomJObjectSerializerDelegate<EVSEDataRecord>?       CustomEVSEDataRecordSerializer        = null,
+                              CustomJObjectSerializerDelegate<Address>?              CustomAddressSerializer               = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>?     CustomChargingFacilitySerializer      = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?       CustomGeoCoordinatesSerializer        = null,
+                              CustomJObjectSerializerDelegate<EnergySource>?         CustomEnergySourceSerializer          = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactSerializer   = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>?          CustomOpeningTimesSerializer          = null)
         {
 
             var JSON = JSONObject.Create(
@@ -360,7 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomOperatorEVSEDataSerializer != null
+            return CustomOperatorEVSEDataSerializer is not null
                        ? CustomOperatorEVSEDataSerializer(this, JSON)
                        : JSON;
 
@@ -375,10 +373,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public OperatorEVSEData Clone
 
-            => new OperatorEVSEData(EVSEDataRecords.SafeSelect(evseDataRecord => evseDataRecord.Clone).ToArray(),
-                                    OperatorId.Clone,
-                                    new String(OperatorName.ToCharArray()),
-                                    CustomData   != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (EVSEDataRecords.SafeSelect(evseDataRecord => evseDataRecord.Clone).ToArray(),
+                    OperatorId.Clone,
+                    new String(OperatorName.ToCharArray()),
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -508,7 +508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is OperatorEVSEData operatorEVSEData
                    ? CompareTo(operatorEVSEData)
@@ -523,25 +523,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="OperatorEVSEData">An object to compare with.</param>
-        public Int32 CompareTo(OperatorEVSEData OperatorEVSEData)
+        public Int32 CompareTo(OperatorEVSEData? OperatorEVSEData)
         {
 
             if (OperatorEVSEData is null)
                 throw new ArgumentNullException(nameof(OperatorEVSEData), "The given operator EVSE data must not be null!");
 
-            var result = OperatorId.  CompareTo(OperatorEVSEData.OperatorId);
+            var c = OperatorId.  CompareTo(OperatorEVSEData.OperatorId);
 
-            if (result == 0)
-                result = OperatorName.CompareTo(OperatorEVSEData.OperatorName);
+            if (c == 0)
+                c = OperatorName.CompareTo(OperatorEVSEData.OperatorName);
 
-            if (result == 0)
-                result = EVSEDataRecords.Count().CompareTo(OperatorEVSEData.EVSEDataRecords.Count());
+            if (c == 0)
+                c = EVSEDataRecords.Count().CompareTo(OperatorEVSEData.EVSEDataRecords.Count());
 
-            if (result == 0)
-                result = EVSEDataRecords.Select(evseDataRecord => evseDataRecord.Id.ToString()).AggregateWith("-").
+            if (c == 0)
+                c = EVSEDataRecords.Select(evseDataRecord => evseDataRecord.Id.ToString()).AggregateWith("-").
                              CompareTo(OperatorEVSEData.EVSEDataRecords.Select(evseDataRecord => evseDataRecord.Id.ToString()).AggregateWith("-"));
 
-            return result;
+            return c;
 
         }
 
@@ -558,7 +558,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is OperatorEVSEData operatorEVSEData &&
                    Equals(operatorEVSEData);
@@ -572,15 +572,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEData">A operator EVSE data to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(OperatorEVSEData OperatorEVSEData)
+        public Boolean Equals(OperatorEVSEData? OperatorEVSEData)
 
-            => !(OperatorEVSEData is null) &&
+            => OperatorEVSEData is not null &&
 
-                 OperatorId.  Equals(OperatorEVSEData.OperatorId)   &&
-                 OperatorName.Equals(OperatorEVSEData.OperatorName) &&
+               OperatorId.  Equals(OperatorEVSEData.OperatorId)   &&
+               OperatorName.Equals(OperatorEVSEData.OperatorName) &&
 
-                 EVSEDataRecords.Count().Equals(OperatorEVSEData.EVSEDataRecords.Count()) &&
-                 EVSEDataRecords.All(evseDataRecord => OperatorEVSEData.EVSEDataRecords.Contains(evseDataRecord));
+               EVSEDataRecords.Count().Equals(OperatorEVSEData.EVSEDataRecords.Count()) &&
+               EVSEDataRecords.All(evseDataRecord => OperatorEVSEData.EVSEDataRecords.Contains(evseDataRecord));
 
         #endregion
 

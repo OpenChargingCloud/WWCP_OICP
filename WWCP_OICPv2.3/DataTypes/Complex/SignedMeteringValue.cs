@@ -88,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/ahzf/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#SignedMeteringValueType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#SignedMeteringValueType
 
         // {
         //   "SignedMeteringValue":  "string",
@@ -110,13 +110,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          out SignedMeteringValue?  signedMeteringValue,
-                         out String?               ErrorResponse,
+                         out String?               errorResponse,
                          CustomSignedMeteringValueParser))
             {
                 return signedMeteringValue!;
             }
 
-            throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -135,13 +135,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Text,
                          out SignedMeteringValue?  signedMeteringValue,
-                         out String?               ErrorResponse,
+                         out String?               errorResponse,
                          CustomSignedMeteringValueParser))
             {
                 return signedMeteringValue!;
             }
 
-            throw new ArgumentException("The given text representation of a signed metering value is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a signed metering value is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -210,7 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out MeteringStatusTypes? MeteringStatus,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -470,11 +470,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(SignedMeteringValue? SignedMeteringValue)
         {
 
-            var result = Value.CompareTo(SignedMeteringValue.Value);
+            var c = Value.CompareTo(SignedMeteringValue?.Value);
 
-            return result == 0 && MeteringStatus.HasValue && SignedMeteringValue.MeteringStatus.HasValue
-                       ? MeteringStatus.Value.CompareTo(SignedMeteringValue.MeteringStatus.Value)
-                       : result;
+            if (c == 0 && MeteringStatus.HasValue && SignedMeteringValue is not null && SignedMeteringValue.MeteringStatus.HasValue)
+                return MeteringStatus.Value.CompareTo(SignedMeteringValue.MeteringStatus.Value);
+
+            return c;
 
         }
 
@@ -507,7 +508,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(SignedMeteringValue? SignedMeteringValue)
 
-            => Value.         Equals(SignedMeteringValue.Value) &&
+            => SignedMeteringValue is not null &&
+               Value.         Equals(SignedMeteringValue.Value) &&
                MeteringStatus.Equals(SignedMeteringValue.MeteringStatus);
 
         #endregion

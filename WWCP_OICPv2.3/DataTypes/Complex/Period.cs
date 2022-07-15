@@ -42,13 +42,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The begin of the period.
         /// </summary>
         [Mandatory]
-        public readonly HourMinute Begin    { get; }
+        public readonly HourMinute  Begin    { get; }
 
         /// <summary>
         /// The end of the period.
         /// </summary>
         [Mandatory]
-        public readonly HourMinute End      { get; }
+        public readonly HourMinute  End      { get; }
 
         #endregion
 
@@ -89,19 +89,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Period Parse(JObject                              JSON,
-                                   CustomJObjectParserDelegate<Period>  CustomPeriodParser   = null)
+        public static Period Parse(JObject                               JSON,
+                                   CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
         {
 
             if (TryParse(JSON,
-                         out Period period,
-                         out String ErrorResponse,
+                         out Period   period,
+                         out String?  errorResponse,
                          CustomPeriodParser))
             {
                 return period;
             }
 
-            throw new ArgumentException("The given JSON representation of a time period is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a time period is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -114,19 +114,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Period Parse(String                               Text,
-                                   CustomJObjectParserDelegate<Period>  CustomPeriodParser   = null)
+        public static Period Parse(String                                Text,
+                                   CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
         {
 
             if (TryParse(Text,
-                         out Period period,
-                         out String ErrorResponse,
+                         out Period   period,
+                         out String?  errorResponse,
                          CustomPeriodParser))
             {
                 return period;
             }
 
-            throw new ArgumentException("The given text representation of a time period is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a time period is invalid: " + errorResponse, nameof(Text));
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(JSON, CustomPeriodParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of a time period.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
+        public static Period? TryParse(JObject                               JSON,
+                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out Period period,
+                         out _,
+                         CustomPeriodParser))
+            {
+                return period;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
+        #region (static) TryParse(Text, CustomPeriodParser = null)
+
+        /// <summary>
+        /// Try to parse the given text representation of a time period.
+        /// </summary>
+        /// <param name="Text">The text to parse.</param>
+        /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
+        public static Period? TryParse(String                                Text,
+                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
+        {
+
+            if (TryParse(Text,
+                         out Period period,
+                         out _,
+                         CustomPeriodParser))
+            {
+                return period;
+            }
+
+            return null;
 
         }
 
@@ -142,9 +192,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject     JSON,
-                                       out Period  Period,
-                                       out String  ErrorResponse)
+        public static Boolean TryParse(JObject      JSON,
+                                       out Period   Period,
+                                       out String?  ErrorResponse)
 
             => TryParse(JSON,
                         out Period,
@@ -159,10 +209,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Boolean TryParse(JObject                              JSON,
-                                       out Period                           Period,
-                                       out String                           ErrorResponse,
-                                       CustomJObjectParserDelegate<Period>  CustomPeriodParser)
+        public static Boolean TryParse(JObject                               JSON,
+                                       out Period                            Period,
+                                       out String?                           ErrorResponse,
+                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser)
         {
 
             try
@@ -206,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 Period = new Period(Begin,
                                     End);
 
-                if (CustomPeriodParser != null)
+                if (CustomPeriodParser is not null)
                     Period = CustomPeriodParser(JSON,
                                                 Period);
 
@@ -233,10 +283,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Boolean TryParse(String                               Text,
-                                       out Period                           Period,
-                                       out String                           ErrorResponse,
-                                       CustomJObjectParserDelegate<Period>  CustomPeriodParser)
+        public static Boolean TryParse(String                                Text,
+                                       out Period                            Period,
+                                       out String?                           ErrorResponse,
+                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser)
         {
 
             try
@@ -265,7 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomPeriodSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<Period> CustomPeriodSerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<Period>?  CustomPeriodSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -273,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("end",    End.  ToString())
                        );
 
-            return CustomPeriodSerializer != null
+            return CustomPeriodSerializer is not null
                        ? CustomPeriodSerializer(this, JSON)
                        : JSON;
 
@@ -288,8 +338,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Period Clone
 
-            => new Period(Begin,
-                          End);
+            => new (Begin,
+                    End);
 
         #endregion
 
@@ -304,7 +354,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Period Period1, Period Period2)
+        public static Boolean operator == (Period Period1,
+                                           Period Period2)
+
             => Period1.Equals(Period2);
 
         #endregion
@@ -317,8 +369,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Period Period1, Period Period2)
-            => !(Period1 == Period2);
+        public static Boolean operator != (Period Period1,
+                                           Period Period2)
+
+            => !Period1.Equals(Period2);
 
         #endregion
 
@@ -330,7 +384,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Period Period1, Period Period2)
+        public static Boolean operator < (Period Period1,
+                                          Period Period2)
+
             => Period1.CompareTo(Period2) < 0;
 
         #endregion
@@ -343,8 +399,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Period Period1, Period Period2)
-            => !(Period1 > Period2);
+        public static Boolean operator <= (Period Period1,
+                                           Period Period2)
+
+            => Period1.CompareTo(Period2) <= 0;
 
         #endregion
 
@@ -356,7 +414,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Period Period1, Period Period2)
+        public static Boolean operator > (Period Period1,
+                                          Period Period2)
+
             => Period1.CompareTo(Period2) > 0;
 
         #endregion
@@ -369,8 +429,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Period Period1, Period Period2)
-            => !(Period1 < Period2);
+        public static Boolean operator >= (Period Period1,
+                                           Period Period2)
+
+            => Period1.CompareTo(Period2) >= 0;
 
         #endregion
 
@@ -384,7 +446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public Int32 CompareTo(Object Object)
+        public Int32 CompareTo(Object? Object)
 
             => Object is Period period
                    ? CompareTo(period)
@@ -402,11 +464,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(Period Period)
         {
 
-            var result = Begin.CompareTo(Period.Begin);
+            var c = Begin.CompareTo(Period.Begin);
 
-            return result == 0
-                       ? End.CompareTo(Period.End)
-                       : result;
+            if (c == 0)
+                return End.CompareTo(Period.End);
+
+            return c;
 
         }
 
@@ -423,7 +486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is Period period &&
                    Equals(period);
@@ -456,10 +519,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Begin.GetHashCode() * 3 ^
                        End.  GetHashCode();
-
             }
         }
 
