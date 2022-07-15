@@ -51,8 +51,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                                           EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
                                                           SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,  // Not really useful!
-                                                          EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom);
+                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                          EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
@@ -86,8 +86,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                                           EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
                                                           SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,  // Not really useful!
-                                                          EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom);
+                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                          EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
@@ -122,8 +122,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                                           EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
                                                           SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,  // Not really useful!
-                                                          EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom);
+                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                          EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
@@ -157,8 +157,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                                           EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
                                                           SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,  // Not really useful!
-                                                          EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom);
+                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                          EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
