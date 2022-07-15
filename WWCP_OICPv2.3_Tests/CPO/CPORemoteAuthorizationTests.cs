@@ -76,40 +76,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
         #endregion
 
-        //#region AuthorizeStart_UID_Test2()
+        #region AuthorizeRemoteStart_UID_Test2()
 
-        //[Test]
-        //public async Task AuthorizeStart_UID_Test2()
-        //{
+        [Test]
+        public async Task AuthorizeRemoteStart_UID_Test2()
+        {
 
-        //    var request       = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-        //                                                  Identification:       Identification.FromUID(UID.Parse("CCDDAABB")),
-        //                                                  EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-        //                                                  PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-        //                                                  SessionId:            Session_Id.NewRandom,
-        //                                                  CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-        //                                                  EMPPartnerSessionId:  null);
+            var request       = new AuthorizeRemoteStartRequest(ProviderId:           Provider_Id.Parse("DE*GDF"),
+                                                                Identification:       Identification.FromUID(UID.Parse("CCDDAABB")),
+                                                                EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                                                SessionId:            Session_Id.NewRandom,
+                                                                CPOPartnerSessionId:  null,
+                                                                EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom);
 
-        //    Assert.IsNotNull(request);
+            Assert.IsNotNull(request);
 
-        //    var httpresult    = await SendEMPAuthorizeStart(request);
+            var httpresult    = await SendCPOAuthorizeRemoteStart(request);
 
-        //    Assert.IsNotNull(httpresult);
-        //    Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
+            Assert.IsNotNull(httpresult);
+            Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
 
-        //    var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
+            var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
 
-        //    Assert.IsNotNull(jsonResponse);
+            Assert.IsNotNull(jsonResponse);
 
-        //    var response      = AuthorizationStartResponse.Parse(request,
-        //                                                         jsonResponse);
+            var response      = Acknowledgement<AuthorizeRemoteStartRequest>.Parse(request,
+                                                                                   jsonResponse);
 
-        //    Assert.IsNotNull(response);
-        //    Assert.AreEqual(AuthorizationStatusTypes.NotAuthorized, response.AuthorizationStatus);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(false,                                 response.Result);
+            Assert.AreEqual(StatusCodes.CommunicationToEVSEFailed, response.StatusCode.Code);
 
-        //}
+        }
 
-        //#endregion
+        #endregion
 
 
         //#region AuthorizeStart_RFIDIdentification_Test1()
