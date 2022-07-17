@@ -18,10 +18,8 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Net.Security;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
@@ -392,21 +390,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="LoggingContext">An optional context for logging.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">The DNS client to use.</param>
-        public EMPClient(URL?                                 RemoteURL                    = null,
-                         HTTPHostname?                        VirtualHostname              = null,
-                         String                               Description                  = null,
-                         RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
-                         LocalCertificateSelectionCallback    ClientCertificateSelector    = null,
-                         X509Certificate                      ClientCert                   = null,
-                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
-                         TimeSpan?                            RequestTimeout               = null,
-                         TransmissionRetryDelayDelegate       TransmissionRetryDelay       = null,
-                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
-                         Boolean                              DisableLogging               = false,
-                         String                               LoggingPath                  = null,
-                         String                               LoggingContext               = Logger.DefaultContext,
-                         LogfileCreatorDelegate               LogfileCreator               = null,
-                         DNSClient                            DNSClient                    = null)
+        public EMPClient(URL?                                  RemoteURL                    = null,
+                         HTTPHostname?                         VirtualHostname              = null,
+                         String?                               Description                  = null,
+                         RemoteCertificateValidationCallback?  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionCallback?    ClientCertificateSelector    = null,
+                         X509Certificate?                      ClientCert                   = null,
+                         SslProtocols?                         TLSProtocol                  = null,
+                         Boolean?                              PreferIPv4                   = null,
+                         String                                HTTPUserAgent                = DefaultHTTPUserAgent,
+                         TimeSpan?                             RequestTimeout               = null,
+                         TransmissionRetryDelayDelegate?       TransmissionRetryDelay       = null,
+                         UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         Boolean                               DisableLogging               = false,
+                         String?                               LoggingPath                  = null,
+                         String                                LoggingContext               = Logger.DefaultContext,
+                         LogfileCreatorDelegate?               LogfileCreator               = null,
+                         DNSClient?                            DNSClient                    = null)
 
             : base(RemoteURL           ?? DefaultRemoteURL,
                    VirtualHostname,
@@ -414,6 +414,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    RemoteCertificateValidator,
                    ClientCertificateSelector,
                    ClientCert,
+                   TLSProtocol,
+                   PreferIPv4,
                    HTTPUserAgent       ?? DefaultHTTPUserAgent,
                    RequestTimeout,
                    TransmissionRetryDelay,
@@ -531,6 +533,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -934,6 +938,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -1304,6 +1310,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -1674,6 +1682,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -1976,6 +1986,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        //ToDo: PushAuthenticationData!
         #region PushAuthenticationData    (Request)
 
         ///// <summary>
@@ -2060,6 +2071,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -2457,6 +2470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -2854,6 +2869,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -3251,6 +3268,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
@@ -3594,12 +3613,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
+            if (Request is null)
                 throw new ArgumentNullException(nameof(Request), "The given GetChargeDetailRecords request must not be null!");
 
             //Request = _CustomGetChargeDetailRecordsRequestMapper(Request);
 
-            if (Request == null)
+            if (Request is null)
                 throw new ArgumentNullException(nameof(Request), "The mapped GetChargeDetailRecords request must not be null!");
 
 
@@ -3617,7 +3636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnGetChargeDetailRecordsRequest != null)
+                if (OnGetChargeDetailRecordsRequest is not null)
                     await Task.WhenAll(OnGetChargeDetailRecordsRequest.GetInvocationList().
                                        Cast<OnGetChargeDetailRecordsRequestDelegate>().
                                        Select(e => e(StartTime,
@@ -3667,6 +3686,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       RemoteCertificateValidator,
                                                                       ClientCertificateSelector,
                                                                       ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
                                                                       HTTPUserAgent,
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,

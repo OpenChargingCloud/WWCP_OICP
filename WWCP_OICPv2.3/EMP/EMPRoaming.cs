@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2022 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,13 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using System;
 using System.Net.Security;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -86,6 +87,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         X509Certificate                      IHTTPClient.ClientCert
             => EMPClient.ClientCert;
+
+        /// <summary>
+        /// The TLS protocol to use.
+        /// </summary>
+        SslProtocols                         IHTTPClient.TLSProtocol
+            => EMPClient.TLSProtocol;
+
+        /// <summary>
+        /// Prefer IPv4 instead of IPv6.
+        /// </summary>
+        Boolean                              IHTTPClient.PreferIPv4
+            => EMPClient.PreferIPv4;
 
         /// <summary>
         /// The HTTP user agent identification.
