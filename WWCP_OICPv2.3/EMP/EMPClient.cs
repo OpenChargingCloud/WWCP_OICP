@@ -3622,8 +3622,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 throw new ArgumentNullException(nameof(Request), "The mapped GetChargeDetailRecords request must not be null!");
 
 
-            Byte                                        TransmissionRetry   = 0;
-            OICPResult<GetChargeDetailRecordsResponse>  result              = null;
+            Byte                                         TransmissionRetry   = 0;
+            OICPResult<GetChargeDetailRecordsResponse>?  result              = null;
 
             #endregion
 

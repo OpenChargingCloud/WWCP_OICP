@@ -124,6 +124,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Properties
 
         /// <summary>
+        /// An optional (multi-language) description.
+        /// </summary>
+        [Optional]
+        public I18NString  Description    { get; }
+
+
+        /// <summary>
         /// The wrapped EMP roaming object.
         /// </summary>
         public EMPRoaming EMPRoaming { get; }
@@ -464,6 +471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         public WWCPCSOAdapter(WWCP.CSORoamingProvider_Id                     Id,
                               I18NString                                     Name,
+                              I18NString                                     Description,
                               WWCP.RoamingNetwork                            RoamingNetwork,
                               EMPRoaming                                     EMPRoaming,
 
@@ -505,6 +513,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    RoamingNetwork)
 
         {
+
+            this.Description                                        = Description;
 
             this.EMPRoaming                                         = EMPRoaming                              ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this.EVSEDataRecord2EVSE                                = EVSEDataRecord2EVSE;
