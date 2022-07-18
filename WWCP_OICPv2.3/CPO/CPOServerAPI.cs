@@ -18,11 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
 using System.Net.Security;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -103,27 +99,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public Counters                                                             Counter                                               { get; }
+        public Counters                                                              Counter                                               { get; }
 
         // Custom JSON parsers
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>   CustomAuthorizeRemoteReservationStopRequestParser     { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?   CustomAuthorizeRemoteReservationStopRequestParser     { get; set; }
 
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>             CustomAuthorizeRemoteStartRequestParser               { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?             CustomAuthorizeRemoteStartRequestParser               { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>              CustomAuthorizeRemoteStopRequestParser                { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>?              CustomAuthorizeRemoteStopRequestParser                { get; set; }
 
 
         // Custom JSON serializers
-        public CustomJObjectSerializerDelegate<Acknowledgement>                     CustomAcknowledgementSerializer                       { get; set; }
+        public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                       { get; set; }
 
-        public CustomJObjectSerializerDelegate<StatusCode>                          CustomStatusCodeSerializer                            { get; set; }
+        public CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                            { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                           JSONFormatting                                        { get; set; }
+        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
 
         #endregion
 
@@ -134,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
@@ -146,22 +142,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               HTTPAPI      API,
                                                                               HTTPRequest  Request)
 
-            => OnAuthorizeRemoteReservationStartHTTPRequest?.WhenAll(Timestamp,
-                                                                     API ?? this,
-                                                                     Request);
+            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
+                                                                    API ?? this,
+                                                                    Request);
 
         #endregion
 
-        public event OnAuthorizeRemoteReservationStartRequestDelegate   OnAuthorizeRemoteReservationStartRequest;
-        public event OnAuthorizeRemoteReservationStartDelegate          OnAuthorizeRemoteReservationStart;
-        public event OnAuthorizeRemoteReservationStartResponseDelegate  OnAuthorizeRemoteReservationStartResponse;
+        public event OnAuthorizeRemoteReservationStartRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
+        public event OnAuthorizeRemoteReservationStartDelegate?          OnAuthorizeRemoteReservationStart;
+        public event OnAuthorizeRemoteReservationStartResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
 
         #region (protected internal) OnAuthorizeRemoteReservationStartHTTPResponse
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
@@ -175,10 +171,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                HTTPRequest   Request,
                                                                                HTTPResponse  Response)
 
-            => OnAuthorizeRemoteReservationStartHTTPResponse?.WhenAll(Timestamp,
-                                                                      API ?? this,
-                                                                      Request,
-                                                                      Response);
+            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
+                                                                     API ?? this,
+                                                                     Request,
+                                                                     Response);
 
         #endregion
 
@@ -188,7 +184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
@@ -196,26 +192,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime      Timestamp,
-                                                                             HTTPAPI       API,
-                                                                             HTTPRequest   Request)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime     Timestamp,
+                                                                             HTTPAPI      API,
+                                                                             HTTPRequest  Request)
 
-            => OnAuthorizeRemoteReservationStopHTTPRequest?.WhenAll(Timestamp,
-                                                                    API ?? this,
-                                                                    Request);
+            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
+                                                                   API ?? this,
+                                                                   Request);
 
         #endregion
 
-        public event OnAuthorizeRemoteReservationStopRequestDelegate   OnAuthorizeRemoteReservationStopRequest;
-        public event OnAuthorizeRemoteReservationStopDelegate          OnAuthorizeRemoteReservationStop;
-        public event OnAuthorizeRemoteReservationStopResponseDelegate  OnAuthorizeRemoteReservationStopResponse;
+        public event OnAuthorizeRemoteReservationStopRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
+        public event OnAuthorizeRemoteReservationStopDelegate?          OnAuthorizeRemoteReservationStop;
+        public event OnAuthorizeRemoteReservationStopResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
 
         #region (protected internal) OnAuthorizeRemoteReservationStopHTTPResponse
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
@@ -229,10 +225,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               HTTPRequest   Request,
                                                                               HTTPResponse  Response)
 
-            => OnAuthorizeRemoteReservationStopHTTPResponse?.WhenAll(Timestamp,
-                                                                     API ?? this,
-                                                                     Request,
-                                                                     Response);
+            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
+                                                                    API ?? this,
+                                                                    Request,
+                                                                    Response);
 
         #endregion
 
@@ -243,7 +239,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
@@ -255,22 +251,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    HTTPAPI      API,
                                                                    HTTPRequest  Request)
 
-            => OnAuthorizeRemoteStartHTTPRequest?.WhenAll(Timestamp,
-                                                          API ?? this,
-                                                          Request);
+            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request);
 
         #endregion
 
-        public event OnAuthorizeRemoteStartRequestDelegate   OnAuthorizeRemoteStartRequest;
-        public event OnAuthorizeRemoteStartDelegate          OnAuthorizeRemoteStart;
-        public event OnAuthorizeRemoteStartResponseDelegate  OnAuthorizeRemoteStartResponse;
+        public event OnAuthorizeRemoteStartRequestDelegate?   OnAuthorizeRemoteStartRequest;
+        public event OnAuthorizeRemoteStartDelegate?          OnAuthorizeRemoteStart;
+        public event OnAuthorizeRemoteStartResponseDelegate?  OnAuthorizeRemoteStartResponse;
 
         #region (protected internal) OnAuthorizeRemoteStartHTTPResponse
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
@@ -284,10 +280,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     HTTPRequest   Request,
                                                                     HTTPResponse  Response)
 
-            => OnAuthorizeRemoteStartHTTPResponse?.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request,
-                                                           Response);
+            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
+                                                          API ?? this,
+                                                          Request,
+                                                          Response);
 
         #endregion
 
@@ -297,7 +293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
@@ -305,26 +301,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTime      Timestamp,
-                                                                   HTTPAPI       API,
-                                                                   HTTPRequest   Request)
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTime     Timestamp,
+                                                                  HTTPAPI      API,
+                                                                  HTTPRequest  Request)
 
-            => OnAuthorizeRemoteStopHTTPRequest?.WhenAll(Timestamp,
-                                                          API ?? this,
-                                                          Request);
+            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request);
 
         #endregion
 
-        public event OnAuthorizeRemoteStopRequestDelegate   OnAuthorizeRemoteStopRequest;
-        public event OnAuthorizeRemoteStopDelegate          OnAuthorizeRemoteStop;
-        public event OnAuthorizeRemoteStopResponseDelegate  OnAuthorizeRemoteStopResponse;
+        public event OnAuthorizeRemoteStopRequestDelegate?   OnAuthorizeRemoteStopRequest;
+        public event OnAuthorizeRemoteStopDelegate?          OnAuthorizeRemoteStop;
+        public event OnAuthorizeRemoteStopResponseDelegate?  OnAuthorizeRemoteStopResponse;
 
         #region (protected internal) OnAuthorizeRemoteStopHTTPResponse
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
@@ -334,14 +330,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
         protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTime      Timestamp,
-                                                                    HTTPAPI       API,
-                                                                    HTTPRequest   Request,
-                                                                    HTTPResponse  Response)
+                                                                   HTTPAPI       API,
+                                                                   HTTPRequest   Request,
+                                                                   HTTPResponse  Response)
 
-            => OnAuthorizeRemoteStopHTTPResponse?.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request,
-                                                           Response);
+            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request,
+                                                         Response);
 
         #endregion
 
@@ -393,48 +389,48 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
         /// <param name="DNSClient">The DNS client of the API.</param>
         /// <param name="Autostart">Whether to start the API automatically.</param>
-        public CPOServerAPI(HTTPHostname?                        HTTPHostname                       = null,
-                            String                               ExternalDNSName                    = null,
-                            IPPort?                              HTTPServerPort                     = null,
-                            HTTPPath?                            BasePath                           = null,
-                            String                               HTTPServerName                     = DefaultHTTPServerName,
+        public CPOServerAPI(HTTPHostname?                         HTTPHostname                       = null,
+                            String?                               ExternalDNSName                    = null,
+                            IPPort?                               HTTPServerPort                     = null,
+                            HTTPPath?                             BasePath                           = null,
+                            String                                HTTPServerName                     = DefaultHTTPServerName,
 
-                            HTTPPath?                            URLPathPrefix                      = null,
-                            String                               HTTPServiceName                    = DefaultHTTPServiceName,
-                            JObject                              APIVersionHashes                   = null,
+                            HTTPPath?                             URLPathPrefix                      = null,
+                            String                                HTTPServiceName                    = DefaultHTTPServiceName,
+                            JObject?                              APIVersionHashes                   = null,
 
-                            ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
-                            LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
-                            RemoteCertificateValidationCallback  ClientCertificateValidator         = null,
-                            SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
+                            LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
+                            RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
+                            SslProtocols                          AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
 
-                            String                               ServerThreadName                   = null,
-                            ThreadPriority?                      ServerThreadPriority               = null,
-                            Boolean?                             ServerThreadIsBackground           = null,
-                            ConnectionIdBuilder                  ConnectionIdBuilder                = null,
-                            ConnectionThreadsNameBuilder         ConnectionThreadsNameBuilder       = null,
-                            ConnectionThreadsPriorityBuilder     ConnectionThreadsPriorityBuilder   = null,
-                            Boolean?                             ConnectionThreadsAreBackground     = null,
-                            TimeSpan?                            ConnectionTimeout                  = null,
-                            UInt32?                              MaxClientConnections               = null,
+                            String?                               ServerThreadName                   = null,
+                            ThreadPriority?                       ServerThreadPriority               = null,
+                            Boolean?                              ServerThreadIsBackground           = null,
+                            ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
+                            ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
+                            ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
+                            Boolean?                              ConnectionThreadsAreBackground     = null,
+                            TimeSpan?                             ConnectionTimeout                  = null,
+                            UInt32?                               MaxClientConnections               = null,
 
-                            Boolean?                             DisableMaintenanceTasks            = false,
-                            TimeSpan?                            MaintenanceInitialDelay            = null,
-                            TimeSpan?                            MaintenanceEvery                   = null,
+                            Boolean?                              DisableMaintenanceTasks            = false,
+                            TimeSpan?                             MaintenanceInitialDelay            = null,
+                            TimeSpan?                             MaintenanceEvery                   = null,
 
-                            Boolean?                             DisableWardenTasks                 = false,
-                            TimeSpan?                            WardenInitialDelay                 = null,
-                            TimeSpan?                            WardenCheckEvery                   = null,
+                            Boolean?                              DisableWardenTasks                 = false,
+                            TimeSpan?                             WardenInitialDelay                 = null,
+                            TimeSpan?                             WardenCheckEvery                   = null,
 
-                            Boolean?                             IsDevelopment                      = null,
-                            IEnumerable<String>                  DevelopmentServers                 = null,
-                            Boolean                              DisableLogging                     = false,
-                            String                               LoggingPath                        = DefaultHTTPAPI_LoggingPath,
-                            String                               LoggingContext                     = DefaultLoggingContext,
-                            String                               LogfileName                        = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate               LogfileCreator                     = null,
-                            DNSClient                            DNSClient                          = null,
-                            Boolean                              Autostart                          = false)
+                            Boolean?                              IsDevelopment                      = null,
+                            IEnumerable<String>?                  DevelopmentServers                 = null,
+                            Boolean                               DisableLogging                     = false,
+                            String                                LoggingPath                        = DefaultHTTPAPI_LoggingPath,
+                            String                                LoggingContext                     = DefaultLoggingContext,
+                            String                                LogfileName                        = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?               LogfileCreator                     = null,
+                            DNSClient?                            DNSClient                          = null,
+                            Boolean                               Autostart                          = false)
 
             : base(HTTPHostname,
                    ExternalDNSName,
