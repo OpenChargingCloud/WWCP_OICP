@@ -621,14 +621,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             AuthorizationStartResponse authorizationStartResponse = null;
+                                             AuthorizationStartResponse? authorizationStartResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId))
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
                                                      authorizationStartResponse = AuthorizationStartResponse.SystemError(
                                                                                       null,
                                                                                       "The expected 'operatorId' URL parameter could not be parsed!"

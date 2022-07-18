@@ -476,7 +476,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEDataRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PullEVSEData.IncRequests();
 
@@ -794,9 +794,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new PullEVSEDataResponse(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  Array.Empty<EVSEDataRecord>(),
                                  null,
                                  null,
@@ -819,9 +819,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new PullEVSEDataResponse(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                Array.Empty<EVSEDataRecord>(),
                                null,
                                null,
@@ -840,7 +840,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -899,7 +899,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PullEVSEStatus.IncRequests();
 
@@ -1180,9 +1180,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new PullEVSEStatusResponse(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  Array.Empty<OperatorEVSEStatus>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -1198,9 +1198,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new PullEVSEStatusResponse(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                Array.Empty<OperatorEVSEStatus>(),
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -1212,7 +1212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -1271,7 +1271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PullEVSEStatusById.IncRequests();
 
@@ -1552,9 +1552,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new PullEVSEStatusByIdResponse(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  Array.Empty<EVSEStatusRecord>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -1570,9 +1570,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new PullEVSEStatusByIdResponse(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                Array.Empty<EVSEStatusRecord>(),
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -1584,7 +1584,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -1643,7 +1643,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByOperatorIdRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PullEVSEStatusByOperatorId.IncRequests();
 
@@ -1924,9 +1924,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new PullEVSEStatusByOperatorIdResponse(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  Array.Empty<OperatorEVSEStatus>(),
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -1942,9 +1942,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new PullEVSEStatusByOperatorIdResponse(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                Array.Empty<OperatorEVSEStatus>(),
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -1956,7 +1956,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByOperatorIdResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -2032,7 +2032,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.RemoteReservationStart.IncRequests();
 
@@ -2328,9 +2328,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -2352,9 +2352,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -2372,7 +2372,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -2431,7 +2431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.RemoteReservationStop.IncRequests();
 
@@ -2727,9 +2727,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -2751,9 +2751,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -2771,7 +2771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -2814,23 +2814,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
+            if (Request is null)
                 throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteStart request must not be null!");
 
             //Request = _CustomAuthorizeRemoteStartRequestMapper(Request);
 
-            if (Request == null)
+            if (Request is null)
                 throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStart request must not be null!");
 
 
-            Byte                                                      TransmissionRetry   = 0;
-            OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>  result              = null;
+            Byte                                                       TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>?  result              = null;
 
             #endregion
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.RemoteStart.IncRequests();
 
@@ -3126,9 +3126,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteStartRequest>(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -3150,9 +3150,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteStartRequest>(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -3170,7 +3170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -3229,7 +3229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.RemoteStop.IncRequests();
 
@@ -3525,9 +3525,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteStopRequest>(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -3549,9 +3549,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteStopRequest>(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -3569,7 +3569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -3629,7 +3629,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.GetChargeDetailRecords.IncRequests();
 
@@ -3931,9 +3931,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new GetChargeDetailRecordsResponse(
                                  Request,
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  Array.Empty<ChargeDetailRecord>(),
                                  null,
                                  null,
@@ -3951,9 +3951,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new GetChargeDetailRecordsResponse(
                                Request,
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                Array.Empty<ChargeDetailRecord>(),
                                null,
                                null,
@@ -3967,7 +3967,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {

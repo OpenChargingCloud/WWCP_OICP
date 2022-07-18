@@ -71,6 +71,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             Assert.IsNotNull(response);
             Assert.AreEqual(AuthorizationStatusTypes.Authorized, response.AuthorizationStatus);
 
+
+
+            // The same again...
+
+            var empServerAPIClient = new EMPServerAPIClient(URL.Parse("http://127.0.0.1:8000"),
+                                                            RequestTimeout: TimeSpan.FromSeconds(10));
+
+            var oicpResult = await empServerAPIClient.AuthorizeStart(request);
+
+            Assert.IsNotNull(oicpResult);
+            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+
+
         }
 
         #endregion
