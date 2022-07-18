@@ -364,8 +364,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
         [TearDown]
         public void ShutdownEachTest()
         {
-
-           // NotificationAPI.Shutdown();
+            cpoServerAPI.Shutdown();
+            //NotificationAPI.Shutdown();
         }
 
         #endregion

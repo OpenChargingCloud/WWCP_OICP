@@ -300,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnAuthorizeStartRequest != null)
+                if (OnAuthorizeStartRequest is not null)
                     await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeStartClientRequestDelegate>().
                                        Select(e => e(startTime,
@@ -682,7 +682,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnAuthorizeStopRequest != null)
+                if (OnAuthorizeStopRequest is not null)
                     await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeStopClientRequestDelegate>().
                                        Select(e => e(startTime,
@@ -723,7 +723,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/Stop"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;

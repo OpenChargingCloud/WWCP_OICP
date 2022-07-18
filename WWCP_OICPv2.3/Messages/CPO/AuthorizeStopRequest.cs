@@ -98,11 +98,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     EVSE_Id?               EVSEId                = null,
                                     CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                     EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                    JObject                CustomData            = null,
+                                    JObject?               CustomData            = null,
 
                                     DateTime?              Timestamp             = null,
                                     CancellationToken?     CancellationToken     = null,
-                                    EventTracking_Id       EventTrackingId       = null,
+                                    EventTracking_Id?      EventTrackingId       = null,
                                     TimeSpan?              RequestTimeout        = null)
 
             : base(CustomData,
@@ -182,27 +182,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
-        public static AuthorizeStopRequest Parse(JObject                                            JSON,
-                                                 Operator_Id                                        OperatorIdURL,
-                                                 TimeSpan                                           RequestTimeout,
-                                                 DateTime?                                          Timestamp                          = null,
-                                                 EventTracking_Id                                   EventTrackingId                    = null,
-                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
+        public static AuthorizeStopRequest Parse(JObject                                             JSON,
+                                                 Operator_Id                                         OperatorIdURL,
+                                                 TimeSpan                                            RequestTimeout,
+                                                 DateTime?                                           Timestamp                          = null,
+                                                 EventTracking_Id?                                   EventTrackingId                    = null,
+                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorIdURL,
                          RequestTimeout,
-                         out AuthorizeStopRequest  auhorizeStopRequest,
-                         out String                ErrorResponse,
+                         out AuthorizeStopRequest?  auhorizeStopRequest,
+                         out String?                errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomAuthorizeStopRequestParser))
             {
-                return auhorizeStopRequest;
+                return auhorizeStopRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -219,27 +219,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
-        public static AuthorizeStopRequest Parse(String                                             Text,
-                                                 Operator_Id                                        OperatorIdURL,
-                                                 TimeSpan                                           RequestTimeout,
-                                                 DateTime?                                          Timestamp                          = null,
-                                                 EventTracking_Id                                   EventTrackingId                    = null,
-                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
+        public static AuthorizeStopRequest Parse(String                                              Text,
+                                                 Operator_Id                                         OperatorIdURL,
+                                                 TimeSpan                                            RequestTimeout,
+                                                 DateTime?                                           Timestamp                          = null,
+                                                 EventTracking_Id?                                   EventTrackingId                    = null,
+                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorIdURL,
                          RequestTimeout,
-                         out AuthorizeStopRequest  auhorizeStopRequest,
-                         out String                ErrorResponse,
+                         out AuthorizeStopRequest?  auhorizeStopRequest,
+                         out String?                errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomAuthorizeStopRequestParser))
             {
-                return auhorizeStopRequest;
+                return auhorizeStopRequest!;
             }
 
-            throw new ArgumentException("The given text representation of an AuthorizeStop request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an AuthorizeStop request is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -258,14 +258,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
-        public static Boolean TryParse(JObject                                            JSON,
-                                       Operator_Id                                        OperatorIdURL,
-                                       TimeSpan                                           RequestTimeout,
-                                       out AuthorizeStopRequest                           AuthorizeStopRequest,
-                                       out String                                         ErrorResponse,
-                                       DateTime?                                          Timestamp                          = null,
-                                       EventTracking_Id                                   EventTrackingId                    = null,
-                                       CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
+        public static Boolean TryParse(JObject                                             JSON,
+                                       Operator_Id                                         OperatorIdURL,
+                                       TimeSpan                                            RequestTimeout,
+                                       out AuthorizeStopRequest?                           AuthorizeStopRequest,
+                                       out String?                                         ErrorResponse,
+                                       DateTime?                                           Timestamp                          = null,
+                                       EventTracking_Id?                                   EventTrackingId                    = null,
+                                       CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             try
@@ -416,14 +416,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       Operator_Id                                        OperatorIdURL,
-                                       TimeSpan                                           RequestTimeout,
-                                       out AuthorizeStopRequest                           AuthorizeStopRequest,
-                                       out String                                         ErrorResponse,
-                                       DateTime?                                          Timestamp                          = null,
-                                       EventTracking_Id                                   EventTrackingId                    = null,
-                                       CustomJObjectParserDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestParser   = null)
+        public static Boolean TryParse(String                                              Text,
+                                       Operator_Id                                         OperatorIdURL,
+                                       TimeSpan                                            RequestTimeout,
+                                       out AuthorizeStopRequest?                           AuthorizeStopRequest,
+                                       out String?                                         ErrorResponse,
+                                       DateTime?                                           Timestamp                          = null,
+                                       EventTracking_Id?                                   EventTrackingId                    = null,
+                                       CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             try
@@ -457,8 +457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomAuthorizeStopRequestSerializer">A delegate to customize the serialization of AuthorizeStopRequest responses.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStopRequest>  CustomAuthorizeStopRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>         CustomIdentificationSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?        CustomIdentificationSerializer         = null)
         {
 
             var JSON = JSONObject.Create(
@@ -548,7 +548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is AuthorizeStopRequest authorizeStopRequest &&
                    Equals(authorizeStopRequest);
@@ -562,26 +562,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AuthorizeStop">An authorize stop request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizeStopRequest AuthorizeStop)
-        {
+        public override Boolean Equals(AuthorizeStopRequest? AuthorizeStop)
 
-            if (AuthorizeStop is null)
-                return false;
+            => AuthorizeStop is not null &&
+               OperatorId.    Equals(AuthorizeStop.OperatorId)     &&
+               SessionId.     Equals(AuthorizeStop.SessionId)      &&
+               Identification.Equals(AuthorizeStop.Identification) &&
 
-            return OperatorId.    Equals(AuthorizeStop.OperatorId)     &&
-                   SessionId.     Equals(AuthorizeStop.SessionId)      &&
-                   Identification.Equals(AuthorizeStop.Identification) &&
+               ((!EVSEId.             HasValue && !AuthorizeStop.EVSEId.             HasValue) ||
+                 (EVSEId.             HasValue &&  AuthorizeStop.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStop.EVSEId.             Value))) &&
 
-                   ((!EVSEId.             HasValue && !AuthorizeStop.EVSEId.             HasValue) ||
-                     (EVSEId.             HasValue &&  AuthorizeStop.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStop.EVSEId.             Value))) &&
+               ((!CPOPartnerSessionId.HasValue && !AuthorizeStop.CPOPartnerSessionId.HasValue) ||
+                 (CPOPartnerSessionId.HasValue &&  AuthorizeStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStop.CPOPartnerSessionId.Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !AuthorizeStop.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  AuthorizeStop.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStop.CPOPartnerSessionId.Value))) &&
-
-                   ((!EMPPartnerSessionId.HasValue && !AuthorizeStop.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  AuthorizeStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStop.EMPPartnerSessionId.Value)));
-
-        }
+               ((!EMPPartnerSessionId.HasValue && !AuthorizeStop.EMPPartnerSessionId.HasValue) ||
+                 (EMPPartnerSessionId.HasValue &&  AuthorizeStop.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStop.EMPPartnerSessionId.Value)));
 
         #endregion
 
@@ -597,7 +592,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return OperatorId.          GetHashCode()       * 13 ^
                        SessionId.           GetHashCode()       * 11 ^
                        Identification.      GetHashCode()       *  7 ^
@@ -605,7 +599,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (EVSEId?.             GetHashCode() ?? 0) *  5 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0);
-
             }
         }
 

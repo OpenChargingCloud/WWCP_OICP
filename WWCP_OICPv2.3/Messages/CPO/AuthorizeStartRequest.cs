@@ -205,27 +205,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart JSON objects.</param>
-        public static AuthorizeStartRequest Parse(JObject                                             JSON,
-                                                  Operator_Id                                         OperatorIdURL,
-                                                  TimeSpan                                            RequestTimeout,
-                                                  DateTime?                                           Timestamp                           = null,
-                                                  EventTracking_Id                                    EventTrackingId                     = null,
-                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
+        public static AuthorizeStartRequest Parse(JObject                                              JSON,
+                                                  Operator_Id                                          OperatorIdURL,
+                                                  TimeSpan                                             RequestTimeout,
+                                                  DateTime?                                            Timestamp                           = null,
+                                                  EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>?  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorIdURL,
                          RequestTimeout,
-                         out AuthorizeStartRequest  auhorizeStartRequest,
-                         out String                 ErrorResponse,
+                         out AuthorizeStartRequest?  auhorizeStartRequest,
+                         out String?                 errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
-                return auhorizeStartRequest;
+                return auhorizeStartRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeStart request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an AuthorizeStart request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -242,27 +242,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
-        public static AuthorizeStartRequest Parse(String                                              Text,
-                                                  Operator_Id                                         OperatorIdURL,
-                                                  TimeSpan                                            RequestTimeout,
-                                                  DateTime?                                           Timestamp                           = null,
-                                                  EventTracking_Id                                    EventTrackingId                     = null,
-                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestParser   = null)
+        public static AuthorizeStartRequest Parse(String                                               Text,
+                                                  Operator_Id                                          OperatorIdURL,
+                                                  TimeSpan                                             RequestTimeout,
+                                                  DateTime?                                            Timestamp                           = null,
+                                                  EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>?  CustomAuthorizeStartRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorIdURL,
                          RequestTimeout,
-                         out AuthorizeStartRequest  auhorizeStartRequest,
-                         out String                 ErrorResponse,
+                         out AuthorizeStartRequest?  auhorizeStartRequest,
+                         out String?                 errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomAuthorizeStartRequestParser))
             {
-                return auhorizeStartRequest;
+                return auhorizeStartRequest!;
             }
 
-            throw new ArgumentException("The given text representation of an AuthorizeStart request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an AuthorizeStart request is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -496,8 +496,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomAuthorizeStartRequestSerializer">A delegate to customize the serialization of AuthorizeStartRequest responses.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStartRequest>  CustomAuthorizeStartRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>         CustomIdentificationSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeStartRequest>?  CustomAuthorizeStartRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?         CustomIdentificationSerializer          = null)
         {
 
             var JSON = JSONObject.Create(
@@ -594,7 +594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is AuthorizeStartRequest authorizeStartRequest &&
                    Equals(authorizeStartRequest);
@@ -608,31 +608,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AuthorizeStart">An authorize start request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizeStartRequest AuthorizeStart)
-        {
+        public override Boolean Equals(AuthorizeStartRequest? AuthorizeStart)
 
-            if (AuthorizeStart is null)
-                return false;
+            => AuthorizeStart is not null &&
+               OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
+               Identification.Equals(AuthorizeStart.Identification) &&
 
-            return OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
-                   Identification.Equals(AuthorizeStart.Identification) &&
+               ((!EVSEId.             HasValue && !AuthorizeStart.EVSEId.             HasValue) ||
+                 (EVSEId.             HasValue &&  AuthorizeStart.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStart.EVSEId.             Value))) &&
 
-                   ((!EVSEId.             HasValue && !AuthorizeStart.EVSEId.             HasValue) ||
-                     (EVSEId.             HasValue &&  AuthorizeStart.EVSEId.             HasValue && EVSEId.             Value.Equals(AuthorizeStart.EVSEId.             Value))) &&
+               ((!PartnerProductId.   HasValue && !AuthorizeStart.PartnerProductId.   HasValue) ||
+                 (PartnerProductId.   HasValue &&  AuthorizeStart.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeStart.PartnerProductId.   Value))) &&
 
-                   ((!PartnerProductId.   HasValue && !AuthorizeStart.PartnerProductId.   HasValue) ||
-                     (PartnerProductId.   HasValue &&  AuthorizeStart.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeStart.PartnerProductId.   Value))) &&
+               ((!SessionId.          HasValue && !AuthorizeStart.SessionId.          HasValue) ||
+                 (SessionId.          HasValue &&  AuthorizeStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeStart.SessionId.          Value))) &&
 
-                   ((!SessionId.          HasValue && !AuthorizeStart.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  AuthorizeStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeStart.SessionId.          Value))) &&
+               ((!CPOPartnerSessionId.HasValue && !AuthorizeStart.CPOPartnerSessionId.HasValue) ||
+                 (CPOPartnerSessionId.HasValue &&  AuthorizeStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStart.CPOPartnerSessionId.Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !AuthorizeStart.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  AuthorizeStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeStart.CPOPartnerSessionId.Value))) &&
-
-                   ((!EMPPartnerSessionId.HasValue && !AuthorizeStart.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  AuthorizeStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStart.EMPPartnerSessionId.Value)));
-
-        }
+               ((!EMPPartnerSessionId.HasValue && !AuthorizeStart.EMPPartnerSessionId.HasValue) ||
+                 (EMPPartnerSessionId.HasValue &&  AuthorizeStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeStart.EMPPartnerSessionId.Value)));
 
         #endregion
 
@@ -648,7 +643,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return OperatorId.          GetHashCode()       * 17 ^
                        Identification.      GetHashCode()       * 13 ^
 
@@ -657,7 +651,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (PartnerProductId?.   GetHashCode() ?? 0);
-
             }
         }
 

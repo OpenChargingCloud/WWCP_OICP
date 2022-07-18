@@ -94,19 +94,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        private AuthorizationStopResponse(DateTime                     ResponseTimestamp,
-                                          EventTracking_Id             EventTrackingId,
-                                          TimeSpan                     Runtime,
-                                          AuthorizationStatusTypes     AuthorizationStatus,
-                                          StatusCode                   StatusCode,
-                                          AuthorizeStopRequest?        Request                            = null,
-                                          Session_Id?                  SessionId                          = null,
-                                          CPOPartnerSession_Id?        CPOPartnerSessionId                = null,
-                                          EMPPartnerSession_Id?        EMPPartnerSessionId                = null,
-                                          Provider_Id?                 ProviderId                         = null,
-                                          Process_Id?                  ProcessId                          = null,
-                                          HTTPResponse?                HTTPResponse                       = null,
-                                          JObject?                     CustomData                         = null)
+        private AuthorizationStopResponse(DateTime                  ResponseTimestamp,
+                                          EventTracking_Id          EventTrackingId,
+                                          TimeSpan                  Runtime,
+                                          AuthorizationStatusTypes  AuthorizationStatus,
+                                          StatusCode                StatusCode,
+                                          AuthorizeStopRequest?     Request               = null,
+                                          Session_Id?               SessionId             = null,
+                                          CPOPartnerSession_Id?     CPOPartnerSessionId   = null,
+                                          EMPPartnerSession_Id?     EMPPartnerSessionId   = null,
+                                          Provider_Id?              ProviderId            = null,
+                                          Process_Id?               ProcessId             = null,
+                                          HTTPResponse?             HTTPResponse          = null,
+                                          JObject?                  CustomData            = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -611,7 +611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse DataError(AuthorizeStopRequest   Request,
+        public static AuthorizationStopResponse DataError(AuthorizeStopRequest?  Request                    = null,
                                                           String?                StatusCodeDescription      = null,
                                                           String?                StatusCodeAdditionalInfo   = null,
                                                           Session_Id?            SessionId                  = null,
@@ -663,7 +663,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse SystemError(AuthorizeStopRequest   Request,
+        public static AuthorizationStopResponse SystemError(AuthorizeStopRequest?  Request                    = null,
                                                             String?                StatusCodeDescription      = null,
                                                             String?                StatusCodeAdditionalInfo   = null,
                                                             Session_Id?            SessionId                  = null,

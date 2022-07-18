@@ -1047,11 +1047,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public Acknowledgement(TRequest               Request,
-                               DateTime               ResponseTimestamp,
+        public Acknowledgement(DateTime               ResponseTimestamp,
                                EventTracking_Id       EventTrackingId,
                                TimeSpan               Runtime,
                                StatusCode             StatusCode,
+                               TRequest?              Request               = null,
                                HTTPResponse?          HTTPResponse          = null,
                                Boolean?               Result                = null,
                                Session_Id?            SessionId             = null,
@@ -1111,15 +1111,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     HTTPResponse?          HTTPResponse               = null,
                     JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.Success,
                             StatusCodeDescription ?? "Success",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         true,
                         SessionId,
@@ -1147,7 +1149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
-            DataError(TRequest               Request,
+            DataError(TRequest?              Request                    = null,
                       String?                StatusCodeDescription      = null,
                       String?                StatusCodeAdditionalInfo   = null,
                       Session_Id?            SessionId                  = null,
@@ -1160,15 +1162,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       HTTPResponse?          HTTPResponse               = null,
                       JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.DataError,
                             StatusCodeDescription ?? "Data Error!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1196,7 +1200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Runtime">The runtime of the request/response.</param>
         public static Acknowledgement<TRequest>
 
-            SystemError(TRequest               Request,
+            SystemError(TRequest?              Request                    = null,
                         String?                StatusCodeDescription      = null,
                         String?                StatusCodeAdditionalInfo   = null,
                         Session_Id?            SessionId                  = null,
@@ -1209,15 +1213,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         HTTPResponse?          HTTPResponse               = null,
                         JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.SystemError,
                             StatusCodeDescription ?? "System Error!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1258,15 +1264,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 HTTPResponse?          HTTPResponse               = null,
                                 JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.ServiceNotAvailable,
                             StatusCodeDescription ?? "Service not available!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1307,15 +1315,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              HTTPResponse?          HTTPResponse               = null,
                              JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.SessionIsInvalid,
                             StatusCodeDescription ?? "Session is invalid!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1356,15 +1366,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       HTTPResponse?          HTTPResponse               = null,
                                       JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.CommunicationToEVSEFailed,
                             StatusCodeDescription ?? "Communication to EVSE failed!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1405,15 +1417,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 HTTPResponse?          HTTPResponse               = null,
                                 JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.EVSEAlreadyReserved,
                             StatusCodeDescription ?? "EVSE already reserved!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1454,15 +1468,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         HTTPResponse?          HTTPResponse               = null,
                                         JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.EVSEAlreadyInUse_WrongToken,
                             StatusCodeDescription ?? "EVSE is already in use!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1503,15 +1519,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           HTTPResponse?          HTTPResponse               = null,
                           JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.UnknownEVSEID,
                             StatusCodeDescription ?? "Unknown EVSE identification!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1552,15 +1570,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              HTTPResponse?          HTTPResponse               = null,
                              JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.EVSEOutOfService,
                             StatusCodeDescription ?? "EVSE out of service!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1601,15 +1621,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             HTTPResponse?          HTTPResponse               = null,
                             JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.NoValidContract,
                             StatusCodeDescription ?? "No valid contract!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1650,15 +1672,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 HTTPResponse?          HTTPResponse               = null,
                                 JObject?               CustomData                 = null)
 
-                => new (Request,
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
                         new StatusCode(
                             StatusCodes.NoEVConnectedToEVSE,
                             StatusCodeDescription ?? "No electric vehicle connected to EVSE!",
                             StatusCodeAdditionalInfo
                         ),
+                        Request,
                         HTTPResponse,
                         false,
                         SessionId,
@@ -1916,11 +1940,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                Acknowledgement = new Acknowledgement<TRequest>(Request,
-                                                                ResponseTimestamp ?? Timestamp.Now,
+                Acknowledgement = new Acknowledgement<TRequest>(ResponseTimestamp ?? Timestamp.Now,
                                                                 EventTrackingId   ?? Request.EventTrackingId,
                                                                 Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                 StatusCode,
+                                                                Request,
                                                                 HTTPResponse,
                                                                 Result,
                                                                 SessionId,
@@ -2305,11 +2329,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override Acknowledgement<TRequest> ToImmutable()
 
-                => new Acknowledgement<TRequest>(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                                                 ResponseTimestamp ?? Timestamp.Now,
+                => new Acknowledgement<TRequest>(ResponseTimestamp ?? Timestamp.Now,
                                                  EventTrackingId   ?? EventTracking_Id.New,
-                                                 Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                                                 Runtime           ?? (Request is not null
+                                                                           ? Timestamp.Now - Request.Timestamp
+                                                                           : TimeSpan.Zero),
                                                  StatusCode.ToImmutable(),
+                                                 Request,
                                                  HTTPResponse,
                                                  Result,
                                                  SessionId,

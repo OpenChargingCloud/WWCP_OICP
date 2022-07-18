@@ -197,7 +197,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
 
 
-        //ToDo: AuthorizeStop
+        //ToDo: More AuthorizeStop
+        #region AuthorizeStop_UID_Test1()
+
+        [Test]
+        public async Task AuthorizeStop_UID_Test1()
+        {
+
+            var request             = new AuthorizeStopRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                               Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                               EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                               SessionId:            Session_Id.NewRandom,
+                                                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                               EMPPartnerSessionId:  null);
+
+            var empServerAPIClient  = new EMPServerAPIClient  (URL.Parse("http://127.0.0.1:8000"),
+                                                               RequestTimeout: TimeSpan.FromSeconds(10));
+
+            var oicpResult          = await empServerAPIClient.AuthorizeStop(request);
+
+            Assert.IsNotNull(oicpResult);
+            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+
+        }
+
+        #endregion
+
 
 
         //ToDo: charging-notifications

@@ -576,6 +576,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        //ToDo: Refactor event-based invocations to virtual methods!
+
         #region (private) RegisterURLTemplates()
 
         private void RegisterURLTemplates()
@@ -630,8 +632,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
                                                      authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                      null,
-                                                                                      "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                      StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                   );
 
                                                  #endregion
@@ -674,7 +675,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      var OnAuthorizeStartLocal = OnAuthorizeStart;
                                                      if (OnAuthorizeStartLocal is not null)
                                                      {
-
                                                          try
                                                          {
 
@@ -688,21 +688,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          catch (Exception e)
                                                          {
                                                              authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                              Request:                   authorizeStartRequest!,
+                                                                                              Request:                   authorizeStartRequest,
                                                                                               StatusCodeDescription:     e.Message,
                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
                                                                                               SessionId:                 authorizeStartRequest?.SessionId,
                                                                                               CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                           );
                                                          }
-
-                                                         if (authorizationStartResponse is null)
-                                                             authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                              authorizeStartRequest!,
-                                                                                              "Could not process the received AuthorizeStart request!"
-                                                                                          );
-
                                                      }
+
+                                                     if (authorizationStartResponse is null)
+                                                         authorizationStartResponse = AuthorizationStartResponse.SystemError(
+                                                                                          authorizeStartRequest!,
+                                                                                          "Could not process the received AuthorizeStart request!"
+                                                                                      );
 
                                                      #endregion
 
@@ -711,12 +710,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStartResponse != null)
+                                                         if (OnAuthorizeStartResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizationStartResponse!,
+                                                                                              authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
 
@@ -731,7 +730,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  }
                                                  else
                                                      authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                      Request:                   authorizeStartRequest, // maybe null!
+                                                                                      Request:                   authorizeStartRequest,
                                                                                       StatusCodeDescription:     "We could not parse the given AuthorizeStart request!",
                                                                                       StatusCodeAdditionalInfo:  errorResponse,
                                                                                       SessionId:                 authorizeStartRequest?.SessionId,
@@ -780,17 +779,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             AuthorizationStopResponse authorizationStopResponse = null;
+                                             AuthorizationStopResponse? authorizationStopResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId))
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
                                                      authorizationStopResponse = AuthorizationStopResponse.SystemError(
-                                                                                     null,
-                                                                                     "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                     StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                  );
 
                                                  #endregion
@@ -798,8 +796,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                         operatorId,
                                                                                         Request.Timeout ?? DefaultRequestTimeout,
-                                                                                        out AuthorizeStopRequest  authorizeStopRequest,
-                                                                                        out String                errorResponse,
+                                                                                        out AuthorizeStopRequest?  authorizeStopRequest,
+                                                                                        out String?                errorResponse,
                                                                                         Request.Timestamp,
                                                                                         Request.EventTrackingId,
                                                                                         CustomAuthorizeStopRequestParser))
@@ -812,12 +810,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStopRequest != null)
+                                                         if (OnAuthorizeStopRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeStopRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStopRequest))).
+                                                                                              authorizeStopRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -831,7 +829,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeStopLocal = OnAuthorizeStop;
-                                                     if (OnAuthorizeStopLocal != null)
+                                                     if (OnAuthorizeStopLocal is not null)
                                                      {
                                                          try
                                                          {
@@ -840,7 +838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                   Cast<OnAuthorizeStopDelegate>().
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
-                                                                                                                                                authorizeStopRequest))))?.FirstOrDefault();
+                                                                                                                                                authorizeStopRequest!))))?.FirstOrDefault();
 
                                                          }
                                                          catch (Exception e)
@@ -849,13 +847,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              Request:                   authorizeStopRequest,
                                                                                              StatusCodeDescription:     e.Message,
                                                                                              StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                             SessionId:                 authorizeStopRequest.SessionId,
-                                                                                             CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                             SessionId:                 authorizeStopRequest?.SessionId,
+                                                                                             CPOPartnerSessionId:       authorizeStopRequest?.CPOPartnerSessionId
                                                                                          );
                                                          }
                                                      }
 
-                                                     if (authorizationStopResponse == null)
+                                                     if (authorizationStopResponse is null)
                                                          authorizationStopResponse = AuthorizationStopResponse.SystemError(
                                                                                          authorizeStopRequest,
                                                                                          "Could not process the received AuthorizeStop request!"
@@ -868,7 +866,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStopResponse != null)
+                                                         if (OnAuthorizeStopResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -891,8 +889,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                      Request:                   authorizeStopRequest,
                                                                                      StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
                                                                                      StatusCodeAdditionalInfo:  errorResponse,
-                                                                                     SessionId:                 authorizeStopRequest.SessionId,
-                                                                                     CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                     SessionId:                 authorizeStopRequest?.SessionId,
+                                                                                     CPOPartnerSessionId:       authorizeStopRequest?.CPOPartnerSessionId
                                                                                  );
 
                                              }
@@ -1416,42 +1414,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             Acknowledgement<ChargeDetailRecordRequest> chargeDetailRecordResponse = null;
+                                             Acknowledgement<ChargeDetailRecordRequest>? chargeDetailRecordResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId)) {
-
-                                                     return new HTTPResponse.Builder(Request) {
-                                                                HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                                Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = Timestamp.Now,
-                                                                AccessControlAllowOrigin   = "*",
-                                                                AccessControlAllowMethods  = "POST",
-                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                ContentType                = HTTPContentType.JSON_UTF8,
-                                                                Content                    = Acknowledgement.DataError(
-                                                                                                 StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                             ).
-                                                                                             ToJSON(CustomAcknowledgementSerializer,
-                                                                                                    CustomStatusCodeSerializer).
-                                                                                             ToString(JSONFormatting).
-                                                                                             ToUTF8Bytes(),
-                                                                Connection                 = "close"
-                                                            }.AsImmutable;
-
-                                                 }
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                     chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                                                      StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                  );
 
                                                  #endregion
 
                                                  else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                              operatorId,
                                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                                             out ChargeDetailRecordRequest  chargeDetailRecordRequest,
-                                                                                             out String                     errorResponse,
+                                                                                             out ChargeDetailRecordRequest?  chargeDetailRecordRequest,
+                                                                                             out String?                     errorResponse,
                                                                                              Request.Timestamp,
                                                                                              Request.EventTrackingId,
                                                                                              CustomChargeDetailRecordRequestParser))
@@ -1464,12 +1445,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnChargeDetailRecordRequest != null)
+                                                         if (OnChargeDetailRecordRequest is not null)
                                                              await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
                                                                                 Cast<OnChargeDetailRecordRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              chargeDetailRecordRequest))).
+                                                                                              chargeDetailRecordRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -1483,9 +1464,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      #region Call async subscribers
 
                                                      var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-                                                     if (OnChargeDetailRecordLocal != null)
+                                                     if (OnChargeDetailRecordLocal is not null)
                                                      {
-
                                                          try
                                                          {
 
@@ -1499,21 +1479,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          catch (Exception e)
                                                          {
                                                              chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.DataError(
-                                                                                                  Request:                   chargeDetailRecordRequest,
-                                                                                                  StatusCodeDescription:     e.Message,
-                                                                                                  StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                  SessionId:                 chargeDetailRecordRequest.ChargeDetailRecord?.SessionId,
-                                                                                                  CPOPartnerSessionId:       chargeDetailRecordRequest.ChargeDetailRecord?.CPOPartnerSessionId
-                                                                                              );
+                                                                                             Request:                   chargeDetailRecordRequest,
+                                                                                             StatusCodeDescription:     e.Message,
+                                                                                             StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                             SessionId:                 chargeDetailRecordRequest?.ChargeDetailRecord?.SessionId,
+                                                                                             CPOPartnerSessionId:       chargeDetailRecordRequest?.ChargeDetailRecord?.CPOPartnerSessionId
+                                                                                          );
                                                          }
-
-                                                         if (chargeDetailRecordResponse == null)
-                                                             chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
-                                                                                                  chargeDetailRecordRequest,
-                                                                                                  "Could not process the received charge detail record!"
-                                                                                              );
-
                                                      }
+
+                                                     if (chargeDetailRecordResponse is null)
+                                                         chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                                                          chargeDetailRecordRequest,
+                                                                                          "Could not process the received charge detail record!"
+                                                                                      );
 
                                                      #endregion
 
@@ -1522,7 +1501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnChargeDetailRecordResponse != null)
+                                                         if (OnChargeDetailRecordResponse is not null)
                                                              await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
                                                                                 Cast<OnChargeDetailRecordResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
