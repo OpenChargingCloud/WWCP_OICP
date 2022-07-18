@@ -247,8 +247,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task SetupEachTest()
         {
 
-            #region Create OICPAPI
-
             Timestamp.Reset();
 
             empServerAPI = new EMPServerAPI(
@@ -460,8 +458,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
 
             //NotificationAPI    = new NotificationReceiverAPI();
-
-            #endregion
 
         }
 

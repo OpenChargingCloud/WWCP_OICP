@@ -247,8 +247,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
         public async Task SetupEachTest()
         {
 
-            #region Create OICPAPI
-
             Timestamp.Reset();
 
             cpoServerAPI = new CPOServerAPI(
@@ -257,8 +255,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
                                LoggingPath:      "tests",
                                Autostart:        true
                            );
-
-
 
             cpoServerAPI.OnAuthorizeRemoteStart += (timestamp, sender, authorizeRemoteStartRequest) => {
 
@@ -353,7 +349,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
             //NotificationAPI    = new NotificationReceiverAPI();
 
-            #endregion
 
         }
 
