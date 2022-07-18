@@ -410,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                               EventTrackingId,
                                                                               RequestTimeout);
 
-                if (CustomAuthorizeRemoteStartRequestParser != null)
+                if (CustomAuthorizeRemoteStartRequestParser is not null)
                     AuthorizeRemoteStartRequest = CustomAuthorizeRemoteStartRequestParser(JSON,
                                                                                           AuthorizeRemoteStartRequest);
 
@@ -508,13 +508,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("PartnerProductID",      PartnerProductId.   Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeRemoteStartRequestSerializer != null
+            return CustomAuthorizeRemoteStartRequestSerializer is not null
                        ? CustomAuthorizeRemoteStartRequestSerializer(this, JSON)
                        : JSON;
 

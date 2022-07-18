@@ -255,8 +255,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordRequestDelegate (DateTime                                          Timestamp,
-                                             EMPServerAPI                                      Sender,
+        OnChargeDetailRecordRequestDelegate (DateTime                                      Timestamp,
+                                             EMPServerAPI                                  Sender,
                                              ChargeDetailRecordRequest                     Request);
 
 
@@ -268,8 +268,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<Acknowledgement<ChargeDetailRecordRequest>>
 
-        OnChargeDetailRecordDelegate        (DateTime                                          Timestamp,
-                                             EMPServerAPI                                      Sender,
+        OnChargeDetailRecordDelegate        (DateTime                                      Timestamp,
+                                             EMPServerAPI                                  Sender,
                                              ChargeDetailRecordRequest                     Request);
 
 
@@ -278,10 +278,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordResponseDelegate(DateTime                                          Timestamp,
-                                             EMPServerAPI                                      Sender,
+        OnChargeDetailRecordResponseDelegate(DateTime                                      Timestamp,
+                                             EMPServerAPI                                  Sender,
                                              Acknowledgement<ChargeDetailRecordRequest>    Response,
-                                             TimeSpan                                          Runtime);
+                                             TimeSpan                                      Runtime);
 
     #endregion
 

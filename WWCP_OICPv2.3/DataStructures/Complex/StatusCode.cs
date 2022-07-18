@@ -112,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?      errorResponse,
                          CustomStatusCodeParser))
             {
-                return statusCode;
+                return statusCode!;
             }
 
             throw new ArgumentException("The given JSON representation of a status code is invalid: " + errorResponse, nameof(JSON));
@@ -137,7 +137,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?      errorResponse,
                          CustomStatusCodeParser))
             {
-                return statusCode;
+                return statusCode!;
             }
 
             throw new ArgumentException("The given text representation of a status code is invalid: " + errorResponse, nameof(Text));
@@ -273,7 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<StatusCode>  CustomStatusCodeSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<StatusCode>?  CustomStatusCodeSerializer   = null)
 
         {
 

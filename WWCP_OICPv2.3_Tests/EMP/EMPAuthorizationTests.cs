@@ -196,6 +196,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         #endregion
 
 
+
+        //ToDo: AuthorizeStop
+
+
+        //ToDo: charging-notifications
+
+
+        //ToDo: SendCDR
+
+
     }
 
 }

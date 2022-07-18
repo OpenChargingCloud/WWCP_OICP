@@ -537,7 +537,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                               CustomData);
 
-                if (CustomPullEVSEDataRequestParser != null)
+                if (CustomPullEVSEDataRequestParser is not null)
                     PullEVSEDataRequest = CustomPullEVSEDataRequestParser(JSON,
                                                                           PullEVSEDataRequest);
 
@@ -655,13 +655,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   ))
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",                      CustomData)
                                : null
 
                        );
 
-            return CustomPullEVSEDataRequestSerializer != null
+            return CustomPullEVSEDataRequestSerializer is not null
                        ? CustomPullEVSEDataRequestSerializer(this, JSON)
                        : JSON;
 

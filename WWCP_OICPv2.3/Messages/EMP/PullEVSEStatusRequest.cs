@@ -288,7 +288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   EVSEStatusFilter,
                                                                   CustomData);
 
-                if (CustomPullEVSEStatusRequestParser != null)
+                if (CustomPullEVSEStatusRequestParser is not null)
                     PullEVSEStatusRequest = CustomPullEVSEStatusRequestParser(JSON,
                                                                           PullEVSEStatusRequest);
 
@@ -367,13 +367,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EvseStatus",              EVSEStatusFilter.Value.AsString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",              CustomData)
                                : null
 
                        );
 
-            return CustomPullEVSEStatusRequestSerializer != null
+            return CustomPullEVSEStatusRequestSerializer is not null
                        ? CustomPullEVSEStatusRequestSerializer(this, JSON)
                        : JSON;
 

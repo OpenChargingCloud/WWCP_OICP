@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                           EVSEIds?.ToArray() ?? new EVSE_Id[0],
                                                                           CustomData);
 
-                if (CustomPullEVSEStatusByIdRequestParser != null)
+                if (CustomPullEVSEStatusByIdRequestParser is not null)
                     PullEVSEStatusByIdRequest = CustomPullEVSEStatusByIdRequestParser(JSON,
                                                                                       PullEVSEStatusByIdRequest);
 
@@ -284,13 +284,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            new JProperty("EvseID",            new JArray(EVSEIds.Select(evseId => evseId.ToString()))),
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",  CustomData)
                                : null
 
                        );
 
-            return CustomPullEVSEStatusByIdRequestSerializer != null
+            return CustomPullEVSEStatusByIdRequestSerializer is not null
                        ? CustomPullEVSEStatusByIdRequestSerializer(this, JSON)
                        : JSON;
 

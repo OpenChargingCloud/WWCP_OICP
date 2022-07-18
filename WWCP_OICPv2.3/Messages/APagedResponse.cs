@@ -195,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomIPagedResponseSerializer != null
+            return CustomIPagedResponseSerializer is not null
                        ? CustomIPagedResponseSerializer(this, JSON)
                        : JSON;
 

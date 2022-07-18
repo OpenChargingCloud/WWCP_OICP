@@ -298,7 +298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                     HTTPResponse,
                                                                     CustomData);
 
-                if (CustomPullEVSEStatusResponseParser != null)
+                if (CustomPullEVSEStatusResponseParser is not null)
                     PullEVSEStatusResponse = CustomPullEVSEStatusResponseParser(JSON,
                                                                                 PullEVSEStatusResponse);
 
@@ -397,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomPullEVSEStatusResponseSerializer != null
+            return CustomPullEVSEStatusResponseSerializer is not null
                        ? CustomPullEVSEStatusResponseSerializer(this, JSON)
                        : JSON;
 

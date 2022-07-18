@@ -259,7 +259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               EventTrackingId,
                                                               RequestTimeout);
 
-                if (CustomPushEVSEDataRequestParser != null)
+                if (CustomPushEVSEDataRequestParser is not null)
                     PushEVSEDataRequest = CustomPushEVSEDataRequestParser(JSON,
                                                                           PushEVSEDataRequest);
 
@@ -358,7 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                       CustomOpeningTimesSerializer))
                        );
 
-            return CustomPushEVSEDataRequestSerializer != null
+            return CustomPushEVSEDataRequestSerializer is not null
                        ? CustomPushEVSEDataRequestSerializer(this, JSON)
                        : JSON;
 

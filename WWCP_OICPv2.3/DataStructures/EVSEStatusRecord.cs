@@ -223,7 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         CustomData);
 
 
-                if (CustomEVSEStatusRecordParser != null)
+                if (CustomEVSEStatusRecordParser is not null)
                     EVSEStatusRecord = CustomEVSEStatusRecordParser(JSON,
                                                                     EVSEStatusRecord);
 
@@ -296,7 +296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomEVSEStatusRecordSerializer != null
+            return CustomEVSEStatusRecordSerializer is not null
                        ? CustomEVSEStatusRecordSerializer(this, JSON)
                        : JSON;
 

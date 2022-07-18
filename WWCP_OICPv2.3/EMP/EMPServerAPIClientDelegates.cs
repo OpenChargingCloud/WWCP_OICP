@@ -31,9 +31,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartClientRequestDelegate (DateTime                      Timestamp,
-                                               EMPServerAPIClient            Sender,
-                                               AuthorizeStartRequest         Request);
+        OnAuthorizeStartClientRequestDelegate (DateTime                                  Timestamp,
+                                               EMPServerAPIClient                        Sender,
+                                               AuthorizeStartRequest                     Request);
 
 
     /// <summary>
@@ -68,9 +68,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopClientRequestDelegate(DateTime                                  Timestamp,
-                                             EMPServerAPIClient                        Sender,
-                                             AuthorizeStopRequest                      Request);
+        OnAuthorizeStopClientRequestDelegate (DateTime                                  Timestamp,
+                                              EMPServerAPIClient                        Sender,
+                                              AuthorizeStopRequest                      Request);
 
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Timestamp">The timestamp of the request.</param>
     /// <param name="Sender">The sender of the request.</param>
     /// <param name="Request">The request.</param>
-    public delegate Task<AuthorizationStopResponse>
+    public delegate Task<OICPResult<AuthorizationStopResponse>>
 
         OnAuthorizeStopClientDelegate        (DateTime                                 Timestamp,
                                               EMPServerAPIClient                       Sender,
@@ -95,6 +95,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               EMPServerAPIClient                       Sender,
                                               OICPResult<AuthorizationStopResponse>    Response,
                                               TimeSpan                                 Runtime);
+
+    #endregion
+
+
+
+    #region OnChargeDetailRecord          (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a charge detail record request was received.
+    /// </summary>
+    public delegate Task
+
+        OnChargeDetailRecordClientRequestDelegate (DateTime                                                  Timestamp,
+                                                   EMPServerAPIClient                                        Sender,
+                                                   ChargeDetailRecordRequest                                 Request);
+
+
+    /// <summary>
+    /// Send a charge detail record.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
+
+        OnChargeDetailRecordClientDelegate        (DateTime                                                  Timestamp,
+                                                   EMPServerAPIClient                                        Sender,
+                                                   ChargeDetailRecordRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a charge detail record response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnChargeDetailRecordClientResponseDelegate(DateTime                                                  Timestamp,
+                                                   EMPServerAPIClient                                        Sender,
+                                                   OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Response,
+                                                   TimeSpan                                                  Runtime);
 
     #endregion
 

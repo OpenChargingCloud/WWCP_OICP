@@ -45,55 +45,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public class Counters
         {
 
-            public CounterValues  PullEVSEData                  { get; }
-            public CounterValues  PullEVSEStatus                { get; }
-            public CounterValues  PullEVSEStatusById            { get; }
-            public CounterValues  PullEVSEStatusByOperatorId    { get; }
-            public CounterValues  PushAuthenticationData        { get; }
-            public CounterValues  RemoteReservationStart        { get; }
-            public CounterValues  RemoteReservationStop         { get; }
-            public CounterValues  RemoteStart                   { get; }
-            public CounterValues  RemoteStop                    { get; }
-            public CounterValues  GetChargeDetailRecords        { get; }
+            public CounterValues  AuthorizeStart                   { get; }
+            public CounterValues  AuthorizeStop                    { get; }
+            public CounterValues  SendChargeDetailRecord           { get; }
 
-            public Counters(CounterValues? PullEVSEData                 = null,
-                            CounterValues? PullEVSEStatus               = null,
-                            CounterValues? PullEVSEStatusById           = null,
-                            CounterValues? PullEVSEStatusByOperatorId   = null,
-                            CounterValues? PushAuthenticationData       = null,
-                            CounterValues? RemoteReservationStart       = null,
-                            CounterValues? RemoteReservationStop        = null,
-                            CounterValues? RemoteStart                  = null,
-                            CounterValues? RemoteStop                   = null,
-                            CounterValues? GetChargeDetailRecords       = null)
+            public Counters(CounterValues? AuthorizeStart           = null,
+                            CounterValues? AuthorizeStop            = null,
+                            CounterValues? SendChargeDetailRecord   = null)
             {
 
-                this.PullEVSEData                = PullEVSEData               ?? new CounterValues();
-                this.PullEVSEStatus              = PullEVSEStatus             ?? new CounterValues();
-                this.PullEVSEStatusById          = PullEVSEStatusById         ?? new CounterValues();
-                this.PullEVSEStatusByOperatorId  = PullEVSEStatusByOperatorId ?? new CounterValues();
-                this.PushAuthenticationData      = PushAuthenticationData     ?? new CounterValues();
-                this.RemoteReservationStart      = RemoteReservationStart     ?? new CounterValues();
-                this.RemoteReservationStop       = RemoteReservationStop      ?? new CounterValues();
-                this.RemoteStart                 = RemoteStart                ?? new CounterValues();
-                this.RemoteStop                  = RemoteStop                 ?? new CounterValues();
-                this.GetChargeDetailRecords      = GetChargeDetailRecords     ?? new CounterValues();
+                this.AuthorizeStart          = AuthorizeStart         ?? new CounterValues();
+                this.AuthorizeStop           = AuthorizeStop          ?? new CounterValues();
+                this.SendChargeDetailRecord  = SendChargeDetailRecord ?? new CounterValues();
 
             }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("PullEVSEData",                PullEVSEData.              ToJSON()),
-                       new JProperty("PullEVSEStatus",              PullEVSEStatus.            ToJSON()),
-                       new JProperty("PullEVSEStatusById",          PullEVSEStatusById.        ToJSON()),
-                       new JProperty("PullEVSEStatusByOperatorId",  PullEVSEStatusByOperatorId.ToJSON()),
-                       new JProperty("PushAuthenticationData",      PushAuthenticationData.    ToJSON()),
-                       new JProperty("RemoteReservationStart",      RemoteReservationStart.    ToJSON()),
-                       new JProperty("RemoteReservationStop",       RemoteReservationStop.     ToJSON()),
-                       new JProperty("RemoteStart",                 RemoteStart.               ToJSON()),
-                       new JProperty("RemoteStop",                  RemoteStop.                ToJSON()),
-                       new JProperty("GetChargeDetailRecords",      GetChargeDetailRecords.    ToJSON())
+                       new JProperty("RemoteStart",            AuthorizeStart.        ToJSON()),
+                       new JProperty("RemoteStop",             AuthorizeStop.         ToJSON()),
+                       new JProperty("SendChargeDetailRecord", SendChargeDetailRecord.ToJSON())
                    );
 
         }
@@ -198,6 +170,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
+
+        //ToDo: charging-notifications
+
+
+        #region OnChargeDetailRecordRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargeDetailRecord request will be send.
+        /// </summary>
+        public event OnChargeDetailRecordClientRequestDelegate   OnChargeDetailRecordRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                     OnChargeDetailRecordHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a ChargeDetailRecord HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                    OnChargeDetailRecordHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a ChargeDetailRecord request had been received.
+        /// </summary>
+        public event OnChargeDetailRecordClientResponseDelegate  OnChargeDetailRecordResponse;
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -278,33 +278,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Send an authorize start request.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
-        public async Task<OICPResult<AuthorizationStartResponse>>
-
-            AuthorizeStart(AuthorizeStartRequest Request)
-
+        public async Task<OICPResult<AuthorizationStartResponse>> AuthorizeStart(AuthorizeStartRequest Request)
         {
 
             #region Initial checks
 
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeStart request must not be null!");
-
             //Request = _CustomAuthorizeStartRequestMapper(Request);
-
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStart request must not be null!");
-
 
             Byte                                     TransmissionRetry   = 0;
             OICPResult<AuthorizationStartResponse>?  result              = null;
+            var                                      processId           = Process_Id.NewRandom;
 
             #endregion
 
             #region Send OnAuthorizeStartClientRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
-            Counter.RemoteStart.IncRequests();
+            Counter.AuthorizeStart.IncRequests();
 
             try
             {
@@ -312,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeStartRequest != null)
                     await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeStartClientRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
                                                      Request))).
                                        ConfigureAwait(false);
@@ -331,8 +322,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 do
                 {
-
-                    var processId = Process_Id.NewRandom;
 
                     #region Upstream HTTP request...
 
@@ -607,7 +596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Timestamp.Now,
                                  Request.EventTrackingId,
                                  Timestamp.Now - Request.Timestamp,
-                                 null, // ProcessId
+                                 processId,
                                  null, // HTTPResponse
                                  Request.CustomData
                              )
@@ -628,7 +617,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Timestamp.Now,
                                Request.EventTrackingId,
                                Timestamp.Now - Request.Timestamp,
-                               null, // ProcessId
+                               processId,
                                null, // HTTPResponse
                                Request.CustomData
                            )
@@ -637,7 +626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeStartClientResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
@@ -645,9 +634,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeStartResponse != null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartClientResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                    // Description,
                                                      result,
                                                      result.Runtime))).
                                        ConfigureAwait(false);
@@ -656,6 +644,771 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             catch (Exception e)
             {
                 DebugX.LogException(e, nameof(EMPServerAPIClient) + "." + nameof(OnAuthorizeStartResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region AuthorizeStop                (Request)
+
+        /// <summary>
+        /// Send an authorize Stop request.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStop request.</param>
+        public async Task<OICPResult<AuthorizationStopResponse>> AuthorizeStop(AuthorizeStopRequest Request)
+        {
+
+            #region Initial checks
+
+            //Request = _CustomAuthorizeStopRequestMapper(Request);
+
+            Byte                                    TransmissionRetry   = 0;
+            OICPResult<AuthorizationStopResponse>?  result              = null;
+            var                                     processId           = Process_Id.NewRandom;
+
+            #endregion
+
+            #region Send OnAuthorizeStopClientRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counter.AuthorizeStop.IncRequests();
+
+            try
+            {
+
+                if (OnAuthorizeStopRequest != null)
+                    await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStopClientRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPServerAPIClient) + "." + nameof(OnAuthorizeStopRequest));
+            }
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                      VirtualHostname,
+                                                                      Description,
+                                                                      RemoteCertificateValidator,
+                                                                      ClientCertificateSelector,
+                                                                      ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
+                                                                      HTTPUserAgent,
+                                                                      RequestTimeout,
+                                                                      TransmissionRetryDelay,
+                                                                      MaxNumberOfRetries,
+                                                                      false,
+                                                                      null,
+                                                                      DNSClient).
+
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/Stop"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
+                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
+                                                                                   }),
+
+                                                      RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
+                                                      ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                              ConfigureAwait(false);
+
+                    #endregion
+
+
+                    // Re-read it from the HTTP response!
+                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    //ToDo: Verify that processId == processId2!
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (AuthorizationStopResponse.TryParse(Request,
+                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                        out AuthorizationStopResponse?  AuthorizeStopResponse,
+                                                                        out String?                      ErrorResponse,
+                                                                        HTTPResponse.Timestamp,
+                                                                        HTTPResponse.EventTrackingId,
+                                                                        HTTPResponse.Runtime,
+                                                                        processId,
+                                                                        HTTPResponse))
+                                {
+
+                                    result = OICPResult<AuthorizationStopResponse>.Success(Request,
+                                                                                            AuthorizeStopResponse,
+                                                                                            processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<AuthorizationStopResponse>.Failed(
+                                             Request,
+                                             AuthorizationStopResponse.SystemError(
+                                                 Request,
+                                                 e.Message,
+                                                 e.StackTrace,
+                                                 Request.SessionId,
+                                                 Request.CPOPartnerSessionId,
+                                                 Request.EMPPartnerSessionId,
+                                                 null, // ProviderId
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 processId,
+                                                 HTTPResponse,
+                                                 Request.CustomData
+                                             ),
+                                             processId
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400 BadRequest
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
+                            {
+
+                                result = OICPResult<AuthorizationStopResponse>.BadRequest(Request,
+                                                                                                             validationErrorList,
+                                                                                                             processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401 Unauthorized
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<AuthorizationStopResponse>.Failed(Request,
+                                                                                           AuthorizationStopResponse.DataError(
+                                                                                               Request,
+                                                                                               statusCode!.Description,
+                                                                                               statusCode!.AdditionalInfo,
+                                                                                               Request.SessionId,
+                                                                                               Request.CPOPartnerSessionId,
+                                                                                               Request.EMPPartnerSessionId,
+                                                                                               null, // ProviderId
+                                                                                               HTTPResponse.Timestamp,
+                                                                                               HTTPResponse.EventTrackingId,
+                                                                                               HTTPResponse.Runtime,
+                                                                                               processId,
+                                                                                               HTTPResponse,
+                                                                                               Request.CustomData
+                                                                                           ),
+                                                                                           processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<AuthorizationStopResponse>.Failed(
+                                             Request,
+                                             AuthorizationStopResponse.SystemError(
+                                                 Request,
+                                                 e.Message,
+                                                 e.StackTrace,
+                                                 Request.SessionId,
+                                                 Request.CPOPartnerSessionId,
+                                                 Request.EMPPartnerSessionId,
+                                                 null, // ProviderId
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 processId,
+                                                 HTTPResponse,
+                                                 Request.CustomData
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<AuthorizationStopResponse>.Failed(
+                             Request,
+                             AuthorizationStopResponse.SystemError(
+                                 Request,
+                                 e.Message,
+                                 e.StackTrace,
+                                 Request.SessionId,
+                                 Request.CPOPartnerSessionId,
+                                 Request.EMPPartnerSessionId,
+                                 null, // ProviderId
+                                 Timestamp.Now,
+                                 Request.EventTrackingId,
+                                 Timestamp.Now - Request.Timestamp,
+                                 processId,
+                                 null, // HTTPResponse
+                                 Request.CustomData
+                             )
+                         );
+
+            }
+
+            result ??= OICPResult<AuthorizationStopResponse>.Failed(
+                           Request,
+                           AuthorizationStopResponse.SystemError(
+                               Request,
+                               "HTTP request failed!",
+                               null,
+                               Request.SessionId,
+                               Request.CPOPartnerSessionId,
+                               Request.EMPPartnerSessionId,
+                               null, // ProviderId
+                               Timestamp.Now,
+                               Request.EventTrackingId,
+                               Timestamp.Now - Request.Timestamp,
+                               processId,
+                               null, // HTTPResponse
+                               Request.CustomData
+                           )
+                       );
+
+
+            #region Send OnAuthorizeStopClientResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeStopResponse != null)
+                    await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStopClientResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     result,
+                                                     result.Runtime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPServerAPIClient) + "." + nameof(OnAuthorizeStopResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        //ToDo: charging-notifications
+
+
+        #region SendChargeDetailRecord       (Request)
+
+        /// <summary>
+        /// Send a charge detail record.
+        /// </summary>
+        /// <param name="Request">A charge detail record request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>> SendChargeDetailRecord(ChargeDetailRecordRequest Request)
+        {
+
+            #region Initial checks
+
+            //Request = _CustomChargeDetailRecordRequestMapper(Request);
+
+            Byte                                                     TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargeDetailRecordRequest>>?  result              = null;
+            var                                                      processId           = Process_Id.NewRandom;
+
+            #endregion
+
+            #region Send OnChargeDetailRecordClientRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counter.AuthorizeStop.IncRequests();
+
+            try
+            {
+
+                if (OnChargeDetailRecordRequest != null)
+                    await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
+                                       Cast<OnChargeDetailRecordClientRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPServerAPIClient) + "." + nameof(OnChargeDetailRecordRequest));
+            }
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                      VirtualHostname,
+                                                                      Description,
+                                                                      RemoteCertificateValidator,
+                                                                      ClientCertificateSelector,
+                                                                      ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
+                                                                      HTTPUserAgent,
+                                                                      RequestTimeout,
+                                                                      TransmissionRetryDelay,
+                                                                      MaxNumberOfRetries,
+                                                                      false,
+                                                                      null,
+                                                                      DNSClient).
+
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
+                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
+                                                                                   }),
+
+                                                      RequestLogDelegate:   OnChargeDetailRecordHTTPRequest,
+                                                      ResponseLogDelegate:  OnChargeDetailRecordHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                              ConfigureAwait(false);
+
+                    #endregion
+
+
+                    // Re-read it from the HTTP response!
+                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    //ToDo: Verify that processId == processId2!
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                        out Acknowledgement<ChargeDetailRecordRequest>?  ChargeDetailRecordResponse,
+                                                                                        out String?                                      ErrorResponse,
+                                                                                        HTTPResponse,
+                                                                                        HTTPResponse.Timestamp,
+                                                                                        HTTPResponse.EventTrackingId,
+                                                                                        HTTPResponse.Runtime,
+                                                                                        processId))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
+                                                                                                            ChargeDetailRecordResponse,
+                                                                                                            processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                             Request,
+                                             Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                 Request,
+                                                 e.Message,
+                                                 e.StackTrace,
+                                                 null, //Request.SessionId,
+                                                 null, //Request.CPOPartnerSessionId,
+                                                 null, //Request.EMPPartnerSessionId,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 processId,
+                                                 HTTPResponse,
+                                                 Request.CustomData
+                                             ),
+                                             processId
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400 BadRequest
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(Request,
+                                                                                                           validationErrorList,
+                                                                                                           processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401 Unauthorized
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
+                                                                                           Acknowledgement<ChargeDetailRecordRequest>.DataError(
+                                                                                               Request,
+                                                                                               statusCode.Description,
+                                                                                               statusCode.AdditionalInfo,
+                                                                                               null, // Request.SessionId,
+                                                                                               null, // Request.CPOPartnerSessionId,
+                                                                                               null, // Request.EMPPartnerSessionId,
+                                                                                               HTTPResponse.Timestamp,
+                                                                                               HTTPResponse.EventTrackingId,
+                                                                                               HTTPResponse.Runtime,
+                                                                                               processId,
+                                                                                               HTTPResponse,
+                                                                                               Request.CustomData
+                                                                                           ),
+                                                                                           processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                             Request,
+                                             Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                 Request,
+                                                 e.Message,
+                                                 e.StackTrace,
+                                                 null, // Request.SessionId,
+                                                 null, // Request.CPOPartnerSessionId,
+                                                 null, // Request.EMPPartnerSessionId,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 processId,
+                                                 HTTPResponse,
+                                                 Request.CustomData
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                 Request,
+                                 e.Message,
+                                 e.StackTrace,
+                                 null, // Request.SessionId,
+                                 null, // Request.CPOPartnerSessionId,
+                                 null, // Request.EMPPartnerSessionId,
+                                 Timestamp.Now,
+                                 Request.EventTrackingId,
+                                 Timestamp.Now - Request.Timestamp,
+                                 processId,
+                                 null, // HTTPResponse
+                                 Request.CustomData
+                             )
+                         );
+
+            }
+
+            result ??= OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                           Request,
+                           Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                               Request,
+                               "HTTP request failed!",
+                               null,
+                               null, // Request.SessionId,
+                               null, // Request.CPOPartnerSessionId,
+                               null, // Request.EMPPartnerSessionId,
+                               Timestamp.Now,
+                               Request.EventTrackingId,
+                               Timestamp.Now - Request.Timestamp,
+                               processId,
+                               null, // HTTPResponse
+                               Request.CustomData
+                           )
+                       );
+
+
+            #region Send OnChargeDetailRecordClientResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnChargeDetailRecordResponse != null)
+                    await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
+                                       Cast<OnChargeDetailRecordClientResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     result,
+                                                     result.Runtime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPServerAPIClient) + "." + nameof(OnChargeDetailRecordResponse));
             }
 
             #endregion

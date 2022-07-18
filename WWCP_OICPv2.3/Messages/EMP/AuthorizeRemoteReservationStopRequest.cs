@@ -363,7 +363,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                   EventTrackingId,
                                                                                                   RequestTimeout);
 
-                if (CustomAuthorizeRemoteReservationStopRequestParser != null)
+                if (CustomAuthorizeRemoteReservationStopRequestParser is not null)
                     AuthorizeRemoteReservationStopRequest = CustomAuthorizeRemoteReservationStopRequestParser(JSON,
                                                                                                               AuthorizeRemoteReservationStopRequest);
 
@@ -451,13 +451,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EMPPartnerSessionID",   EMPPartnerSessionId.Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeRemoteReservationStopRequestSerializer != null
+            return CustomAuthorizeRemoteReservationStopRequestSerializer is not null
                        ? CustomAuthorizeRemoteReservationStopRequestSerializer(this, JSON)
                        : JSON;
 

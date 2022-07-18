@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                           EventTrackingId,
                                                                           RequestTimeout);
 
-                if (CustomChargeDetailRecordRequestParser != null)
+                if (CustomChargeDetailRecordRequestParser is not null)
                     ChargeDetailRecordRequest = CustomChargeDetailRecordRequestParser(JSON,
                                                                                       ChargeDetailRecordRequest);
 
@@ -384,7 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  CustomSignedMeteringValueSerializer,
                                                  CustomCalibrationLawVerificationSerializer);
 
-            return CustomChargeDetailRecordRequestSerializer != null
+            return CustomChargeDetailRecordRequestSerializer is not null
                        ? CustomChargeDetailRecordRequestSerializer(this, JSON)
                        : JSON;
 

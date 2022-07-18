@@ -525,13 +525,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",           CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeStartRequestSerializer != null
+            return CustomAuthorizeStartRequestSerializer is not null
                        ? CustomAuthorizeStartRequestSerializer(this, JSON)
                        : JSON;
 

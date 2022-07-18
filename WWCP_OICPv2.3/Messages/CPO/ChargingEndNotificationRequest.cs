@@ -605,7 +605,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                      EventTrackingId,
                                                                                      RequestTimeout);
 
-                if (CustomChargingNotificationsEndRequestParser != null)
+                if (CustomChargingNotificationsEndRequestParser is not null)
                     ChargingNotificationsEndRequest = CustomChargingNotificationsEndRequestParser(JSON,
                                                                                                   ChargingNotificationsEndRequest);
 
@@ -736,13 +736,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("PenaltyTimeStart",      PenaltyTimeStart.   Value.ToIso8601())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomChargingNotificationsEndRequestSerializer != null
+            return CustomChargingNotificationsEndRequestSerializer is not null
                        ? CustomChargingNotificationsEndRequestSerializer(this, JSON)
                        : JSON;
 

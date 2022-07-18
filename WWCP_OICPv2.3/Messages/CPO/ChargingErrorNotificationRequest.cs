@@ -374,7 +374,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                         EventTrackingId,
                                                                                         RequestTimeout);
 
-                if (CustomChargingErrorNotificationRequestParser != null)
+                if (CustomChargingErrorNotificationRequestParser is not null)
                     ChargingErrorNotificationRequest = CustomChargingErrorNotificationRequestParser(JSON,
                                                                                                     ChargingErrorNotificationRequest);
 
@@ -466,13 +466,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("ErrorAdditionalInfo",   ErrorAdditionalInfo)
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomChargingErrorNotificationRequestSerializer != null
+            return CustomChargingErrorNotificationRequestSerializer is not null
                        ? CustomChargingErrorNotificationRequestSerializer(this, JSON)
                        : JSON;
 

@@ -442,7 +442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                     EventTrackingId,
                                                                                                     RequestTimeout);
 
-                if (CustomAuthorizeRemoteReservationStartRequestParser != null)
+                if (CustomAuthorizeRemoteReservationStartRequestParser is not null)
                     AuthorizeRemoteReservationStartRequest = CustomAuthorizeRemoteReservationStartRequestParser(JSON,
                                                                                                                 AuthorizeRemoteReservationStartRequest);
 
@@ -544,13 +544,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("Duration",              (Int32) Duration.   Value.TotalMinutes)
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeRemoteReservationStartRequestSerializer != null
+            return CustomAuthorizeRemoteReservationStartRequestSerializer is not null
                        ? CustomAuthorizeRemoteReservationStartRequestSerializer(this, JSON)
                        : JSON;
 

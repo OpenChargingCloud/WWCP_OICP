@@ -566,7 +566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                 EventTrackingId,
                                                                                                 RequestTimeout);
 
-                if (CustomChargingProgressNotificationRequestParser != null)
+                if (CustomChargingProgressNotificationRequestParser is not null)
                     ChargingProgressNotificationRequest = CustomChargingProgressNotificationRequestParser(JSON,
                                                                                                             ChargingProgressNotificationRequest);
 
@@ -689,13 +689,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("PartnerProductID",        PartnerProductId.   Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",              CustomData)
                                : null
 
                        );
 
-            return CustomChargingProgressNotificationRequestSerializer != null
+            return CustomChargingProgressNotificationRequestSerializer is not null
                        ? CustomChargingProgressNotificationRequestSerializer(this, JSON)
                        : JSON;
 

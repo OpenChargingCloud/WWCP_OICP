@@ -407,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                                                     CustomData);
 
-                if (CustomGetChargeDetailRecordsResponseParser != null)
+                if (CustomGetChargeDetailRecordsResponseParser is not null)
                     GetChargeDetailRecordsResponse = CustomGetChargeDetailRecordsResponseParser(JSON,
                                                                                                 GetChargeDetailRecordsResponse);
 
@@ -509,7 +509,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                                              CustomSignedMeteringValueSerializer,
                                                                                                                              CustomCalibrationLawVerificationSerializer)))));
 
-            return CustomGetChargeDetailRecordsResponseSerializer != null
+            return CustomGetChargeDetailRecordsResponseSerializer is not null
                        ? CustomGetChargeDetailRecordsResponseSerializer(this, JSON)
                        : JSON;
 

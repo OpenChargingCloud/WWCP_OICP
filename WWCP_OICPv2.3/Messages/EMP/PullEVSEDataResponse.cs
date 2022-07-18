@@ -499,7 +499,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 CustomData,
                                                                 Warnings);
 
-                if (CustomPullEVSEDataResponseParser != null)
+                if (CustomPullEVSEDataResponseParser is not null)
                     PullEVSEDataResponse = CustomPullEVSEDataResponseParser(JSON,
                                                                             PullEVSEDataResponse);
 
@@ -609,13 +609,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("StatusCode",  StatusCode.ToJSON(CustomStatusCodeSerializer))
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",  CustomData)
                                : null
 
                        );
 
-            return CustomPullEVSEDataResponseSerializer != null
+            return CustomPullEVSEDataResponseSerializer is not null
                        ? CustomPullEVSEDataResponseSerializer(this, JSON)
                        : JSON;
 

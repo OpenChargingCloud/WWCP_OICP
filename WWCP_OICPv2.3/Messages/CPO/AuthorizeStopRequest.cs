@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 EventTrackingId,
                                                                 RequestTimeout);
 
-                if (CustomAuthorizeStopRequestParser != null)
+                if (CustomAuthorizeStopRequestParser is not null)
                     AuthorizeStopRequest = CustomAuthorizeStopRequestParser(JSON,
                                                                             AuthorizeStopRequest);
 
@@ -479,13 +479,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",           CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeStopRequestSerializer != null
+            return CustomAuthorizeStopRequestSerializer is not null
                        ? CustomAuthorizeStopRequestSerializer(this, JSON)
                        : JSON;
 

@@ -353,7 +353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   SortOrder,
                                                                                   CustomData);
 
-                if (CustomGetChargeDetailRecordsRequestParser != null)
+                if (CustomGetChargeDetailRecordsRequestParser is not null)
                     GetChargeDetailRecordsRequest = CustomGetChargeDetailRecordsRequestParser(JSON,
                                                                                               GetChargeDetailRecordsRequest);
 
@@ -438,13 +438,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("OperatorID",   new JArray(SessionIds.Select(sessionId => sessionId.ToString())))
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",   CustomData)
                                : null
 
                        );
 
-            return CustomGetChargeDetailRecordsRequestSerializer != null
+            return CustomGetChargeDetailRecordsRequestSerializer is not null
                        ? CustomGetChargeDetailRecordsRequestSerializer(this, JSON)
                        : JSON;
 

@@ -18,8 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -1107,24 +1105,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("AuthorizationStatus",                     AuthorizationStatus.ToString()),
+                           new JProperty("AuthorizationStatus",                     AuthorizationStatus.      ToString()),
 
-                           new JProperty("StatusCode",                              StatusCode.         ToJSON(CustomStatusCodeSerializer)),
+                           new JProperty("StatusCode",                              StatusCode.               ToJSON(CustomStatusCodeSerializer)),
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",                        ProviderId.         ToString())
+                               ? new JProperty("ProviderID",                        ProviderId.         Value.ToString())
                                : null,
 
                            SessionId.HasValue
-                               ? new JProperty("SessionID",                         SessionId.          ToString())
+                               ? new JProperty("SessionID",                         SessionId.          Value.ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
-                               ? new JProperty("CPOPartnerSessionID",               CPOPartnerSessionId.ToString())
+                               ? new JProperty("CPOPartnerSessionID",               CPOPartnerSessionId.Value.ToString())
                                : null,
 
                            EMPPartnerSessionId.HasValue
-                               ? new JProperty("EMPPartnerSessionID",               EMPPartnerSessionId.ToString())
+                               ? new JProperty("EMPPartnerSessionID",               EMPPartnerSessionId.Value.ToString())
                                : null,
 
                            AuthorizationStopIdentifications is not null && AuthorizationStopIdentifications.Any()
@@ -1219,7 +1217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => AuthorizationStart is not null &&
                AuthorizationStatus.Equals(AuthorizationStart.AuthorizationStatus) &&
                StatusCode.         Equals(AuthorizationStart.StatusCode)          &&
-               //AuthorizationStopIdentifications
+               //ToDo: AuthorizationStopIdentifications
 
                ((!SessionId.          HasValue && !AuthorizationStart.SessionId.          HasValue) ||
                  (SessionId.          HasValue &&  AuthorizationStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStart.SessionId.          Value))) &&
@@ -1247,7 +1245,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return AuthorizationStatus. GetHashCode()       * 13 ^
                        StatusCode.          GetHashCode()       * 11 ^
 
@@ -1255,7 +1252,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (ProviderId?.         GetHashCode() ?? 0);
-
             }
         }
 
