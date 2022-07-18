@@ -19,8 +19,6 @@
 
 using System;
 
-using Newtonsoft.Json.Linq;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -139,17 +137,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as a partner product identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of a partner product identification.</param>
-        public static PartnerProduct_Id? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
-
-        #endregion
-
         #region (static) TryParse(Text, out PartnerProductId)
 
         /// <summary>
@@ -160,7 +147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
 
-            Text = Text?.Trim();
+            Text = Text.Trim();
 
             if (Text.IsNotNullOrEmpty())
             {
@@ -187,7 +174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public PartnerProduct_Id Clone
 
-            => new PartnerProduct_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 
@@ -200,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Standard Price.
         /// </summary>
         public PartnerProduct_Id StandardPrice
-            => new PartnerProduct_Id("Standard Price");
+            => new ("Standard Price");
 
         #endregion
 
@@ -210,7 +197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Product for AC 1 Phase charging.
         /// </summary>
         public PartnerProduct_Id AC1
-            => new PartnerProduct_Id("AC1");
+            => new ("AC1");
 
         #endregion
 
@@ -220,7 +207,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Product for AC 3 Phase charging.
         /// </summary>
         public PartnerProduct_Id AC2
-            => new PartnerProduct_Id("AC2");
+            => new ("AC2");
 
         #endregion
 
@@ -230,7 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Product for DC charging.
         /// </summary>
         public PartnerProduct_Id DC
-            => new PartnerProduct_Id("DC");
+            => new ("DC");
 
         #endregion
 
@@ -245,7 +232,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator == (PartnerProduct_Id PartnerProductId1,
+                                           PartnerProduct_Id PartnerProductId2)
+
             => PartnerProductId1.Equals(PartnerProductId2);
 
         #endregion
@@ -258,7 +247,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator != (PartnerProduct_Id PartnerProductId1,
+                                           PartnerProduct_Id PartnerProductId2)
+
             => !PartnerProductId1.Equals(PartnerProductId2);
 
         #endregion
@@ -271,7 +262,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator < (PartnerProduct_Id PartnerProductId1,
+                                          PartnerProduct_Id PartnerProductId2)
+
             => PartnerProductId1.CompareTo(PartnerProductId2) < 0;
 
         #endregion
@@ -284,7 +277,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator <= (PartnerProduct_Id PartnerProductId1,
+                                           PartnerProduct_Id PartnerProductId2)
+
             => PartnerProductId1.CompareTo(PartnerProductId2) <= 0;
 
         #endregion
@@ -297,7 +292,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator > (PartnerProduct_Id PartnerProductId1,
+                                          PartnerProduct_Id PartnerProductId2)
+
             => PartnerProductId1.CompareTo(PartnerProductId2) > 0;
 
         #endregion
@@ -310,7 +307,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (PartnerProduct_Id PartnerProductId1, PartnerProduct_Id PartnerProductId2)
+        public static Boolean operator >= (PartnerProduct_Id PartnerProductId1,
+                                           PartnerProduct_Id PartnerProductId2)
+
             => PartnerProductId1.CompareTo(PartnerProductId2) >= 0;
 
         #endregion

@@ -570,7 +570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse MeterValuesInBetween              [optional]
 
-                IEnumerable<Decimal> MeterValuesInBetween = null;
+                IEnumerable<Decimal>? MeterValuesInBetween = null;
 
                 if (JSON.ParseOptional("MeterValueInBetween",
                                        "meter values in between",
