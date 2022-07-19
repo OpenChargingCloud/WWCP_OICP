@@ -19,8 +19,8 @@
 
 using System;
 
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -253,41 +253,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                 if (authorizeStartRequest.Identification is not null)
                 {
 
-                    if (authorizeStartRequest.Identification.RFIDId is not null)
+                    if (authorizeStartRequest.Identification.RFIDId             is not null)
                     {
                         return authorizeStartRequest.Identification.RFIDId.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStartResponse.Authorized   (Request:                           authorizeStartRequest,
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   StatusCodeDescription:             null,
-                                                                                                   StatusCodeAdditionalInfo:          null,
-                                                                                                   AuthorizationStopIdentifications:  new Identification[] {
-                                                                                                                                          Identification.FromUID(UID.Parse("11223344")),
-                                                                                                                                          Identification.FromUID(UID.Parse("55667788"))
-                                                                                                                                      },
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null)),
+                            "AABBCCDD" =>
+                                Task.FromResult(
+                                    AuthorizationStartResponse.Authorized(
+                                        Request:                           authorizeStartRequest,
+                                        SessionId:                         authorizeStartRequest.SessionId,
+                                        CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
+                                        ProviderId:                        Provider_Id.Parse("DE*GDF"),
+                                        StatusCodeDescription:             null,
+                                        StatusCodeAdditionalInfo:          null,
+                                        AuthorizationStopIdentifications:  new Identification[] {
+                                                                               Identification.FromUID(UID.Parse("11223344")),
+                                                                               Identification.FromUID(UID.Parse("55667788"))
+                                                                           },
+                                        ResponseTimestamp:                 Timestamp.Now,
+                                        EventTrackingId:                   EventTracking_Id.New,
+                                        Runtime:                           TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                         Process_Id.NewRandom,
+                                        HTTPResponse:                      null,
+                                        CustomData:                        null)),
 
-                            _          => Task.FromResult(AuthorizationStartResponse.NotAuthorized(Request:                           authorizeStartRequest,
-                                                                                                   StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null))
+                            _ =>
+                                Task.FromResult(
+                                    AuthorizationStartResponse.NotAuthorized(
+                                        Request:                           authorizeStartRequest,
+                                        StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                        SessionId:                         authorizeStartRequest.SessionId,
+                                        CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
+                                        ProviderId:                        Provider_Id.Parse("DE*GDF"),
+                                        ResponseTimestamp:                 Timestamp.Now,
+                                        EventTrackingId:                   EventTracking_Id.New,
+                                        Runtime:                           TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                         Process_Id.NewRandom,
+                                        HTTPResponse:                      null,
+                                        CustomData:                        null))
 
                         };
 
@@ -299,36 +305,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         return authorizeStartRequest.Identification.RFIDIdentification.UID.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStartResponse.Authorized   (Request:                           authorizeStartRequest,
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   StatusCodeDescription:             null,
-                                                                                                   StatusCodeAdditionalInfo:          null,
-                                                                                                   AuthorizationStopIdentifications:  new Identification[] {
-                                                                                                                                          Identification.FromUID(UID.Parse("11223344")),
-                                                                                                                                          Identification.FromUID(UID.Parse("55667788"))
-                                                                                                                                      },
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null)),
+                            "AABBCCDD" =>
+                                Task.FromResult(
+                                    AuthorizationStartResponse.Authorized(
+                                        Request:                           authorizeStartRequest,
+                                        SessionId:                         authorizeStartRequest.SessionId,
+                                        CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
+                                        ProviderId:                        Provider_Id.Parse("DE*GDF"),
+                                        StatusCodeDescription:             null,
+                                        StatusCodeAdditionalInfo:          null,
+                                        AuthorizationStopIdentifications:  new Identification[] {
+                                                                               Identification.FromUID(UID.Parse("11223344")),
+                                                                               Identification.FromUID(UID.Parse("55667788"))
+                                                                           },
+                                        ResponseTimestamp:                 Timestamp.Now,
+                                        EventTrackingId:                   EventTracking_Id.New,
+                                        Runtime:                           TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                         Process_Id.NewRandom,
+                                        HTTPResponse:                      null,
+                                        CustomData:                        null)),
 
-                            _          => Task.FromResult(AuthorizationStartResponse.NotAuthorized(Request:                           authorizeStartRequest,
-                                                                                                   StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                   SessionId:                         authorizeStartRequest.SessionId,
-                                                                                                   CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                                   EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                                   ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                   ResponseTimestamp:                 Timestamp.Now,
-                                                                                                   EventTrackingId:                   EventTracking_Id.New,
-                                                                                                   Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                   ProcessId:                         Process_Id.NewRandom,
-                                                                                                   HTTPResponse:                      null,
-                                                                                                   CustomData:                        null))
+                            _ =>
+                                Task.FromResult(
+                                    AuthorizationStartResponse.NotAuthorized(
+                                        Request:                           authorizeStartRequest,
+                                        StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                        SessionId:                         authorizeStartRequest.SessionId,
+                                        CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
+                                        ProviderId:                        Provider_Id.Parse("DE*GDF"),
+                                        ResponseTimestamp:                 Timestamp.Now,
+                                        EventTrackingId:                   EventTracking_Id.New,
+                                        Runtime:                           TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                         Process_Id.NewRandom,
+                                        HTTPResponse:                      null,
+                                        CustomData:                        null))
 
                         };
 
@@ -336,19 +348,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
                 }
 
-                return Task.FromResult(AuthorizationStartResponse.DataError     (Request:                           authorizeStartRequest,
-                                                                                 StatusCodeDescription:             "authorizeStartRequest.Identification is null!",
-                                                                                 StatusCodeAdditionalInfo:          null,
-                                                                                 SessionId:                         authorizeStartRequest.SessionId,
-                                                                                 CPOPartnerSessionId:               authorizeStartRequest.CPOPartnerSessionId,
-                                                                                 EMPPartnerSessionId:               authorizeStartRequest.EMPPartnerSessionId,
-                                                                                 ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                 ResponseTimestamp:                 Timestamp.Now,
-                                                                                 EventTrackingId:                   EventTracking_Id.New,
-                                                                                 Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                 ProcessId:                         Process_Id.NewRandom,
-                                                                                 HTTPResponse:                      null,
-                                                                                 CustomData:                        null));
+                return Task.FromResult(
+                    AuthorizationStartResponse.DataError(
+                        Request:                    authorizeStartRequest,
+                        StatusCodeDescription:      "authorizeStartRequest.Identification is null!",
+                        StatusCodeAdditionalInfo:   null,
+                        SessionId:                  authorizeStartRequest.SessionId,
+                        CPOPartnerSessionId:        authorizeStartRequest.CPOPartnerSessionId,
+                        EMPPartnerSessionId:        authorizeStartRequest.EMPPartnerSessionId,
+                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                        ResponseTimestamp:          Timestamp.Now,
+                        EventTrackingId:            EventTracking_Id.New,
+                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                        ProcessId:                  Process_Id.NewRandom,
+                        HTTPResponse:               null,
+                        CustomData:                 null));
 
             };
 
@@ -357,37 +371,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                 if (authorizeStopRequest.Identification is not null)
                 {
 
-                    if (authorizeStopRequest.Identification.RFIDId is not null)
+                    if (authorizeStopRequest.Identification.RFIDId             is not null)
                     {
                         return authorizeStopRequest.Identification.RFIDId.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStopResponse.Authorized   (Request:                           authorizeStopRequest,
-                                                                                                  SessionId:                         authorizeStopRequest.SessionId,
-                                                                                                  CPOPartnerSessionId:               authorizeStopRequest.CPOPartnerSessionId,
-                                                                                                  EMPPartnerSessionId:               authorizeStopRequest.EMPPartnerSessionId,
-                                                                                                  ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                  StatusCodeDescription:             null,
-                                                                                                  StatusCodeAdditionalInfo:          null,
-                                                                                                  ResponseTimestamp:                 Timestamp.Now,
-                                                                                                  EventTrackingId:                   EventTracking_Id.New,
-                                                                                                  Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                  ProcessId:                         Process_Id.NewRandom,
-                                                                                                  HTTPResponse:                      null,
-                                                                                                  CustomData:                        null)),
+                            "AABBCCDD" =>
+                                Task.FromResult(
+                                    AuthorizationStopResponse.Authorized(
+                                        Request:                    authorizeStopRequest,
+                                        SessionId:                  authorizeStopRequest.SessionId,
+                                        CPOPartnerSessionId:        authorizeStopRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:        authorizeStopRequest.EMPPartnerSessionId,
+                                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                                        StatusCodeDescription:      null,
+                                        StatusCodeAdditionalInfo:   null,
+                                        ResponseTimestamp:          Timestamp.Now,
+                                        EventTrackingId:            EventTracking_Id.New,
+                                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                  Process_Id.NewRandom,
+                                        HTTPResponse:               null,
+                                        CustomData:                 null)),
 
-                            _          => Task.FromResult(AuthorizationStopResponse.NotAuthorized(Request:                           authorizeStopRequest,
-                                                                                                  StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                  SessionId:                         authorizeStopRequest.SessionId,
-                                                                                                  CPOPartnerSessionId:               authorizeStopRequest.CPOPartnerSessionId,
-                                                                                                  EMPPartnerSessionId:               authorizeStopRequest.EMPPartnerSessionId,
-                                                                                                  ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                  ResponseTimestamp:                 Timestamp.Now,
-                                                                                                  EventTrackingId:                   EventTracking_Id.New,
-                                                                                                  Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                  ProcessId:                         Process_Id.NewRandom,
-                                                                                                  HTTPResponse:                      null,
-                                                                                                  CustomData:                        null))
+                            _ =>
+                                Task.FromResult(
+                                    AuthorizationStopResponse.NotAuthorized(
+                                        Request:                    authorizeStopRequest,
+                                        StatusCode:                 new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                        SessionId:                  authorizeStopRequest.SessionId,
+                                        CPOPartnerSessionId:        authorizeStopRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:        authorizeStopRequest.EMPPartnerSessionId,
+                                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                                        ResponseTimestamp:          Timestamp.Now,
+                                        EventTrackingId:            EventTracking_Id.New,
+                                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                  Process_Id.NewRandom,
+                                        HTTPResponse:               null,
+                                        CustomData:                 null))
 
                         };
 
@@ -399,32 +419,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         return authorizeStopRequest.Identification.RFIDIdentification.UID.ToString() switch
                         {
 
-                            "AABBCCDD" => Task.FromResult(AuthorizationStopResponse.Authorized   (Request:                           authorizeStopRequest,
-                                                                                                  SessionId:                         authorizeStopRequest.SessionId,
-                                                                                                  CPOPartnerSessionId:               authorizeStopRequest.CPOPartnerSessionId,
-                                                                                                  EMPPartnerSessionId:               authorizeStopRequest.EMPPartnerSessionId,
-                                                                                                  ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                  StatusCodeDescription:             null,
-                                                                                                  StatusCodeAdditionalInfo:          null,
-                                                                                                  ResponseTimestamp:                 Timestamp.Now,
-                                                                                                  EventTrackingId:                   EventTracking_Id.New,
-                                                                                                  Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                  ProcessId:                         Process_Id.NewRandom,
-                                                                                                  HTTPResponse:                      null,
-                                                                                                  CustomData:                        null)),
+                            "AABBCCDD" =>
+                                Task.FromResult(
+                                    AuthorizationStopResponse.Authorized(
+                                        Request:                    authorizeStopRequest,
+                                        SessionId:                  authorizeStopRequest.SessionId,
+                                        CPOPartnerSessionId:        authorizeStopRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:        authorizeStopRequest.EMPPartnerSessionId,
+                                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                                        StatusCodeDescription:      null,
+                                        StatusCodeAdditionalInfo:   null,
+                                        ResponseTimestamp:          Timestamp.Now,
+                                        EventTrackingId:            EventTracking_Id.New,
+                                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                  Process_Id.NewRandom,
+                                        HTTPResponse:               null,
+                                        CustomData:                 null)),
 
-                            _          => Task.FromResult(AuthorizationStopResponse.NotAuthorized(Request:                           authorizeStopRequest,
-                                                                                                  StatusCode:                        new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                                                                                  SessionId:                         authorizeStopRequest.SessionId,
-                                                                                                  CPOPartnerSessionId:               authorizeStopRequest.CPOPartnerSessionId,
-                                                                                                  EMPPartnerSessionId:               authorizeStopRequest.EMPPartnerSessionId,
-                                                                                                  ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                                  ResponseTimestamp:                 Timestamp.Now,
-                                                                                                  EventTrackingId:                   EventTracking_Id.New,
-                                                                                                  Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                                  ProcessId:                         Process_Id.NewRandom,
-                                                                                                  HTTPResponse:                      null,
-                                                                                                  CustomData:                        null))
+                            _ =>
+                                Task.FromResult(
+                                    AuthorizationStopResponse.NotAuthorized(
+                                        Request:                    authorizeStopRequest,
+                                        StatusCode:                 new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                                        SessionId:                  authorizeStopRequest.SessionId,
+                                        CPOPartnerSessionId:        authorizeStopRequest.CPOPartnerSessionId,
+                                        EMPPartnerSessionId:        authorizeStopRequest.EMPPartnerSessionId,
+                                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                                        ResponseTimestamp:          Timestamp.Now,
+                                        EventTrackingId:            EventTracking_Id.New,
+                                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                                        ProcessId:                  Process_Id.NewRandom,
+                                        HTTPResponse:               null,
+                                        CustomData:                 null))
 
                         };
 
@@ -432,19 +458,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
                 }
 
-                return Task.FromResult(AuthorizationStopResponse.DataError     (Request:                           authorizeStopRequest,
-                                                                                StatusCodeDescription:             "authorizeStopRequest.Identification is null!",
-                                                                                StatusCodeAdditionalInfo:          null,
-                                                                                SessionId:                         authorizeStopRequest.SessionId,
-                                                                                CPOPartnerSessionId:               authorizeStopRequest.CPOPartnerSessionId,
-                                                                                EMPPartnerSessionId:               authorizeStopRequest.EMPPartnerSessionId,
-                                                                                ProviderId:                        Provider_Id.Parse("DE*GDF"),
-                                                                                ResponseTimestamp:                 Timestamp.Now,
-                                                                                EventTrackingId:                   EventTracking_Id.New,
-                                                                                Runtime:                           TimeSpan.FromMilliseconds(2),
-                                                                                ProcessId:                         Process_Id.NewRandom,
-                                                                                HTTPResponse:                      null,
-                                                                                CustomData:                        null));
+                return Task.FromResult(
+                    AuthorizationStopResponse.DataError(
+                        Request:                    authorizeStopRequest,
+                        StatusCodeDescription:      "authorizeStopRequest.Identification is null!",
+                        StatusCodeAdditionalInfo:   null,
+                        SessionId:                  authorizeStopRequest.SessionId,
+                        CPOPartnerSessionId:        authorizeStopRequest.CPOPartnerSessionId,
+                        EMPPartnerSessionId:        authorizeStopRequest.EMPPartnerSessionId,
+                        ProviderId:                 Provider_Id.Parse("DE*GDF"),
+                        ResponseTimestamp:          Timestamp.Now,
+                        EventTrackingId:            EventTracking_Id.New,
+                        Runtime:                    TimeSpan.FromMilliseconds(2),
+                        ProcessId:                  Process_Id.NewRandom,
+                        HTTPResponse:               null,
+                        CustomData:                 null));
 
             };
 
