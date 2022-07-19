@@ -19,8 +19,8 @@
 
 using System;
 
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Newtonsoft.Json.Linq;
 
 #endregion
 

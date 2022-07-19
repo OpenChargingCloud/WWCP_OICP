@@ -577,7 +577,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             Acknowledgement<AuthorizeRemoteReservationStartRequest> acknowledgement = null;
+                                             Acknowledgement<AuthorizeRemoteReservationStartRequest>? acknowledgement = null;
 
                                              try
                                              {
@@ -759,7 +759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             Acknowledgement<AuthorizeRemoteReservationStopRequest> acknowledgement = null;
+                                             Acknowledgement<AuthorizeRemoteReservationStopRequest>? acknowledgement = null;
 
                                              try
                                              {

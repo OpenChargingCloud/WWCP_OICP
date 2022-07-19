@@ -19,10 +19,8 @@
 
 using System;
 
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -90,10 +88,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests
 
         #endregion
 
-        #region ChargeDetailRecord_ParseJSON_Test2()
+
+        #region ChargeDetailRecord_ParseJSONText_Test1()
 
         [Test]
-        public void ChargeDetailRecord_ParseJSON_Test2()
+        public void ChargeDetailRecord_ParseJSONText_Test1()
         {
 
             var chargeDetailRecord = ChargeDetailRecord.Parse(@"{
@@ -139,6 +138,57 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests
             Assert.IsNotNull(chargeDetailRecord);
             Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
             Assert.AreEqual ("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+
+        }
+
+        #endregion
+
+        #region ChargeDetailRecord_ParseJSONText_Test2()
+
+        [Test]
+        public void ChargeDetailRecord_ParseJSONText_Test2()
+        {
+
+            var chargeDetailRecord = ChargeDetailRecord.Parse(@"{
+                                         ""SessionID"":             ""0c00b73c-2f99-453f-974b-461794220d8a"",
+                                         ""CPOPartnerSessionID"":   ""800570-92EA34BC-05E3-44AF-9DDF-5F931C730B4A"",
+                                         ""EMPPartnerSessionID"":   ""A36D60-D237A7BD-D134-34C1-CD12-5493125DEB1F"",
+                                         ""PartnerProductID"":      ""AC3"",
+                                         ""EvseID"":                ""DE*GEF*E904780*2"",
+                                         ""Identification"": {
+                                             ""RFIDMifareFamilyIdentification"": {
+                                                 ""UID"": ""B2D6A76B""
+                                             }
+                                         },
+                                         ""ChargingStart"":         ""2022-07-18T05:35:44Z"",
+                                         ""ChargingEnd"":           ""2022-07-18T09:56:54Z"",
+                                         ""SessionStart"":          ""2022-07-18T05:35:44Z"",
+                                         ""SessionEnd"":            ""2022-07-18T09:56:54Z"",
+                                         ""MeterValueStart"":         null,
+                                         ""MeterValueEnd"":           null,
+                                         ""MeterValueInBetween"":     null,
+                                         ""SignedMeteringValues"": [{
+                                             ""SignedMeteringValue"": ""<?xml version=\""1.0\"" encoding=\""UTF-8\"" ?><signedMeterValue>  <publicKey encoding=\""base64\"">B6RqUc2+T7K3jZv/TrKrmaqDzDeZakWTnh3fLijyciNx7WrX7g/odcQjkMhJG/RX</publicKey>  <meterValueSignature encoding=\""base64\"">RNDdoaFqbnooZB365Ly9qERF/wsCOMCJuY6rv4U3uW7qxIK3Nn6rAK0XuYMRSBi/AsQ=</meterValueSignature>  <signatureMethod>ECDSA192SHA256</signatureMethod>  <encodingMethod>EDL</encodingMethod>  <encodedMeterValue encoding=\""base64\"">CQFFTUgAAIoduVEN1WIIS6JHA3oLAAABAAERAP8e//9emAsAAAAAAsSy1qdrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAN1WIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</encodedMeterValue></signedMeterValue>"",
+                                             ""MeteringStatus"": ""Start""
+                                         }, {
+                                             ""SignedMeteringValue"": ""<?xml version=\""1.0\"" encoding=\""UTF-8\"" ?><signedMeterValue>  <publicKey encoding=\""base64\"">B6RqUc2+T7K3jZv/TrKrmaqDzDeZakWTnh3fLijyciNx7WrX7g/odcQjkMhJG/RX</publicKey>  <meterValueSignature encoding=\""base64\"">vr6qHjR2nwc5hMp1L0hoy/u3fSPX3A4dgBLxWH1msJwhkA5KOXF7ov6zcU1oO2uuAsQ=</meterValueSignature>  <signatureMethod>ECDSA192SHA256</signatureMethod>  <encodingMethod>EDL</encodingMethod>  <encodedMeterValue encoding=\""base64\"">CQFFTUgAAIoduYZK1WIIgt9HA3sLAAABAAERAP8e/8YcnQsAAAAAAsSy1qdrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAN1WIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</encodedMeterValue></signedMeterValue>"",
+                                             ""MeteringStatus"": ""End""
+                                         }],
+                                         ""CalibrationLawVerificationInfo"": {
+                                             ""CalibrationLawCertificateID"":                     null,
+                                             ""PublicKey"":                                     ""B6RqUc2+T7K3jZv/TrKrmaqDzDeZakWTnh3fLijyciNx7WrX7g/odcQjkMhJG/RX"",
+                                             ""MeteringSignatureUrl"":                            null,
+                                             ""MeteringSignatureEncodingFormat"":               ""EDL"",
+                                             ""SignedMeteringValuesVerificationInstruction"":     null
+                                         },
+                                         ""ConsumedEnergy"":          31.072,
+                                         ""HubOperatorID"":         ""DE*GEF"",
+                                         ""HubProviderID"":         ""DE-GDF""
+                                     }");
+
+            Assert.IsNotNull(chargeDetailRecord);
+            Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
+            Assert.AreEqual("EDL", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
 
         }
 

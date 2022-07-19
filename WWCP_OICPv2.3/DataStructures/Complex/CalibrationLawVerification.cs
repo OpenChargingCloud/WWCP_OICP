@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="MeteringSignatureEncodingFormat">Encoding format of the metering signature data as well as the version.</param>
         /// <param name="SignedMeteringValuesVerificationInstruction">Additional information (e.g. instruction on how to use the transparency software).</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public CalibrationLawVerification(String?  CalibrationLawCertificateID                   = null,
+        public CalibrationLawVerification(String?  CalibrationLawCertificateId                   = null,
                                           String?  PublicKey                                     = null,
                                           URL?     MeteringSignatureURL                          = null,
                                           String?  MeteringSignatureEncodingFormat               = null,
@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.CalibrationLawCertificateId                  = CalibrationLawCertificateID;
+            this.CalibrationLawCertificateId                  = CalibrationLawCertificateId;
             this.PublicKey                                    = PublicKey;
             this.MeteringSignatureURL                         = MeteringSignatureURL;
             this.MeteringSignatureEncodingFormat              = MeteringSignatureEncodingFormat;
