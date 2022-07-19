@@ -575,8 +575,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        //ToDo: Refactor event-based invocations to virtual methods!
-
         #region (private) RegisterURLTemplates()
 
         private void RegisterURLTemplates()

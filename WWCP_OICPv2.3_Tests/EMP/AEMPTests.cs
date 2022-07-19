@@ -20,19 +20,11 @@
 using System;
 
 using Newtonsoft.Json.Linq;
-
 using NUnit.Framework;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Mail;
-using org.GraphDefined.Vanaheimr.Hermod.SMTP;
-using org.GraphDefined.Vanaheimr.Illias;
-
-using social.OpenData.UsersAPI;
-
-using WWCP = org.GraphDefined.WWCP;
-using cloud.charging.open.protocols.OICPv2_3.EMP;
 
 #endregion
 
@@ -244,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         #region SetupEachTest()
 
         [SetUp]
-        public async Task SetupEachTest()
+        public void SetupEachTest()
         {
 
             Timestamp.Reset();
@@ -256,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                Autostart:        true
                            );
 
-            empServerAPI.OnAuthorizeStart += (timestamp, sender, authorizeStartRequest) => {
+            empServerAPI.OnAuthorizeStart               += (timestamp, sender, authorizeStartRequest) => {
 
                 if (authorizeStartRequest.Identification is not null)
                 {
@@ -360,7 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             };
 
-            empServerAPI.OnAuthorizeStop  += (timestamp, sender, authorizeStopRequest)  => {
+            empServerAPI.OnAuthorizeStop                += (timestamp, sender, authorizeStopRequest)  => {
 
                 if (authorizeStopRequest.Identification is not null)
                 {
@@ -457,9 +449,118 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             };
 
 
+            empServerAPI.OnChargingStartNotification    += (timestamp, sender, chargingStartNotificationRequest)    => {
+
+                return Task.FromResult(
+                    new Acknowledgement<ChargingStartNotificationRequest>(
+                        Timestamp.Now,
+                        chargingStartNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        TimeSpan.Zero,
+                        new StatusCode(StatusCodes.Success),
+                        chargingStartNotificationRequest,
+                        null,
+                        true,
+                        chargingStartNotificationRequest.SessionId,
+                        chargingStartNotificationRequest.CPOPartnerSessionId,
+                        chargingStartNotificationRequest.EMPPartnerSessionId,
+                        null, // processId
+                        null  // customData
+                    )
+                );
+
+            };
+
+            empServerAPI.OnChargingProgressNotification += (timestamp, sender, chargingProgressNotificationRequest) => {
+
+                return Task.FromResult(
+                    new Acknowledgement<ChargingProgressNotificationRequest>(
+                        Timestamp.Now,
+                        chargingProgressNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        TimeSpan.Zero,
+                        new StatusCode(StatusCodes.Success),
+                        chargingProgressNotificationRequest,
+                        null,
+                        true,
+                        chargingProgressNotificationRequest.SessionId,
+                        chargingProgressNotificationRequest.CPOPartnerSessionId,
+                        chargingProgressNotificationRequest.EMPPartnerSessionId,
+                        null, // processId
+                        null  // customData
+                    )
+                );
+
+            };
+
+            empServerAPI.OnChargingEndNotification      += (timestamp, sender, chargingEndNotificationRequest)      => {
+
+                return Task.FromResult(
+                    new Acknowledgement<ChargingEndNotificationRequest>(
+                        Timestamp.Now,
+                        chargingEndNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        TimeSpan.Zero,
+                        new StatusCode(StatusCodes.Success),
+                        chargingEndNotificationRequest,
+                        null,
+                        true,
+                        chargingEndNotificationRequest.SessionId,
+                        chargingEndNotificationRequest.CPOPartnerSessionId,
+                        chargingEndNotificationRequest.EMPPartnerSessionId,
+                        null, // processId
+                        null  // customData
+                    )
+                );
+
+            };
+
+            empServerAPI.OnChargingErrorNotification    += (timestamp, sender, chargingErrorNotificationRequest)    => {
+
+                return Task.FromResult(
+                    new Acknowledgement<ChargingErrorNotificationRequest>(
+                        Timestamp.Now,
+                        chargingErrorNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        TimeSpan.Zero,
+                        new StatusCode(StatusCodes.Success),
+                        chargingErrorNotificationRequest,
+                        null,
+                        true,
+                        chargingErrorNotificationRequest.SessionId,
+                        chargingErrorNotificationRequest.CPOPartnerSessionId,
+                        chargingErrorNotificationRequest.EMPPartnerSessionId,
+                        null, // processId
+                        null  // customData
+                    )
+                );
+
+            };
+
+
+            empServerAPI.OnChargeDetailRecord           += (timestamp, sender, chargeDetailRecordRequest) => {
+
+                return Task.FromResult(
+                    new Acknowledgement<ChargeDetailRecordRequest>(
+                        Timestamp.Now,
+                        chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
+                        TimeSpan.Zero,
+                        new StatusCode(StatusCodes.Success),
+                        chargeDetailRecordRequest,
+                        null,
+                        true,
+                        chargeDetailRecordRequest.ChargeDetailRecord.SessionId,
+                        chargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
+                        chargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId,
+                        null, // processId
+                        null  // customData
+                    )
+                );
+
+            };
+
+
             //NotificationAPI    = new NotificationReceiverAPI();
 
+
         }
+
 
         #endregion
 

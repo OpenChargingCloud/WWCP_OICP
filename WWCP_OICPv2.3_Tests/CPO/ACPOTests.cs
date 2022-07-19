@@ -20,19 +20,11 @@
 using System;
 
 using Newtonsoft.Json.Linq;
-
 using NUnit.Framework;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Mail;
-using org.GraphDefined.Vanaheimr.Hermod.SMTP;
-using org.GraphDefined.Vanaheimr.Illias;
-
-using social.OpenData.UsersAPI;
-
-using WWCP = org.GraphDefined.WWCP;
-using cloud.charging.open.protocols.OICPv2_3.CPO;
 
 #endregion
 
@@ -244,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
         #region SetupEachTest()
 
         [SetUp]
-        public async Task SetupEachTest()
+        public void SetupEachTest()
         {
 
             Timestamp.Reset();
