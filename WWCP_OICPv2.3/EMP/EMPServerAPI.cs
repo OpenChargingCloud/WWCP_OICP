@@ -1626,7 +1626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Dispose this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         { }
 
         #endregion

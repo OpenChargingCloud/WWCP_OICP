@@ -148,9 +148,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region (event)              OnAuthorizeRemoteReservationStart(Request-/Response)
+
         public event OnAuthorizeRemoteReservationStartRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
         public event OnAuthorizeRemoteReservationStartDelegate?          OnAuthorizeRemoteReservationStart;
         public event OnAuthorizeRemoteReservationStartResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
+
+        #endregion
 
         #region (protected internal) OnAuthorizeRemoteReservationStartHTTPResponse
 
@@ -202,9 +206,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region (event)              OnAuthorizeRemoteReservationStop(Request-/Response)
+
         public event OnAuthorizeRemoteReservationStopRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
         public event OnAuthorizeRemoteReservationStopDelegate?          OnAuthorizeRemoteReservationStop;
         public event OnAuthorizeRemoteReservationStopResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
+
+        #endregion
 
         #region (protected internal) OnAuthorizeRemoteReservationStopHTTPResponse
 
@@ -257,9 +265,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region (event)              OnAuthorizeRemoteStart(Request-/Response)
+
         public event OnAuthorizeRemoteStartRequestDelegate?   OnAuthorizeRemoteStartRequest;
         public event OnAuthorizeRemoteStartDelegate?          OnAuthorizeRemoteStart;
         public event OnAuthorizeRemoteStartResponseDelegate?  OnAuthorizeRemoteStartResponse;
+
+        #endregion
 
         #region (protected internal) OnAuthorizeRemoteStartHTTPResponse
 
@@ -311,9 +323,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region (event)              OnAuthorizeRemoteStop(Request-/Response)
+
         public event OnAuthorizeRemoteStopRequestDelegate?   OnAuthorizeRemoteStopRequest;
         public event OnAuthorizeRemoteStopDelegate?          OnAuthorizeRemoteStop;
         public event OnAuthorizeRemoteStopResponseDelegate?  OnAuthorizeRemoteStopResponse;
+
+        #endregion
 
         #region (protected internal) OnAuthorizeRemoteStopHTTPResponse
 
@@ -1264,7 +1280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// Dispose this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         { }
 
         #endregion
