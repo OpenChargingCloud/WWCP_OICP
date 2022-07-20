@@ -46,44 +46,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task AuthorizeStart_UID_Test1()
         {
 
-            var request       = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                          Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                          EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-                                                          PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                          SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                                                          EMPPartnerSessionId:  null);
+            if (empServerAPI       is null ||
+                empServerAPIClient is null)
+            {
+                Assert.Fail("empServerAPI or empServerAPIClient is null!");
+                return;
+            }
+
+            var request     = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                        Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                        EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                        PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                                        SessionId:            Session_Id.NewRandom,
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
-            var httpresult    = await SendEMPAuthorizeStart(request);
-
-            Assert.IsNotNull(httpresult);
-            Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
-
-            var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
-
-            Assert.IsNotNull(jsonResponse);
-
-            var response      = AuthorizationStartResponse.Parse(request,
-                                                                 jsonResponse);
-
-            Assert.IsNotNull(response);
-            Assert.AreEqual(AuthorizationStatusTypes.Authorized, response.AuthorizationStatus);
-
-
-
-            // The same again...
-
-            var empServerAPIClient = new EMPServerAPIClient(URL.Parse("http://127.0.0.1:8000"),
-                                                            RequestTimeout: TimeSpan.FromSeconds(10));
-
-            var oicpResult = await empServerAPIClient.AuthorizeStart(request);
+            var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
-
 
         }
 
@@ -95,30 +79,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task AuthorizeStart_UID_Test2()
         {
 
-            var request       = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                          Identification:       Identification.FromUID(UID.Parse("CCDDAABB")),
-                                                          EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-                                                          PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                          SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                                                          EMPPartnerSessionId:  null);
+            if (empServerAPI       is null ||
+                empServerAPIClient is null)
+            {
+                Assert.Fail("empServerAPI or empServerAPIClient is null!");
+                return;
+            }
+
+            var request     = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                        Identification:       Identification.FromUID(UID.Parse("CCDDAABB")),
+                                                        EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                        PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                                        SessionId:            Session_Id.NewRandom,
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
-            var httpresult    = await SendEMPAuthorizeStart(request);
+            var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(httpresult);
-            Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
-
-            var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
-
-            Assert.IsNotNull(jsonResponse);
-
-            var response      = AuthorizationStartResponse.Parse(request,
-                                                                 jsonResponse);
-
-            Assert.IsNotNull(response);
-            Assert.AreEqual(AuthorizationStatusTypes.NotAuthorized, response.AuthorizationStatus);
+            Assert.IsNotNull(oicpResult);
+            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
 
         }
 
@@ -131,30 +113,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task AuthorizeStart_RFIDIdentification_Test1()
         {
 
-            var request       = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                          Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("AABBCCDD"), RFIDTypes.MifareClassic)),
-                                                          EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-                                                          PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                          SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                                                          EMPPartnerSessionId:  null);
+            if (empServerAPI       is null ||
+                empServerAPIClient is null)
+            {
+                Assert.Fail("empServerAPI or empServerAPIClient is null!");
+                return;
+            }
+
+            var request     = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                        Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("AABBCCDD"), RFIDTypes.MifareClassic)),
+                                                        EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                        PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                                        SessionId:            Session_Id.NewRandom,
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
-            var httpresult    = await SendEMPAuthorizeStart(request);
+            var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(httpresult);
-            Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
-
-            var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
-
-            Assert.IsNotNull(jsonResponse);
-
-            var response      = AuthorizationStartResponse.Parse(request,
-                                                                 jsonResponse);
-
-            Assert.IsNotNull(response);
-            Assert.AreEqual(AuthorizationStatusTypes.Authorized, response.AuthorizationStatus);
+            Assert.IsNotNull(oicpResult);
+            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
 
         }
 
@@ -166,30 +146,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task AuthorizeStart_RFIDIdentification_Test2()
         {
 
-            var request       = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                          Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("CCDDAABB"), RFIDTypes.MifareClassic)),
-                                                          EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-                                                          PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                          SessionId:            Session_Id.NewRandom,
-                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                                                          EMPPartnerSessionId:  null);
+            if (empServerAPI       is null ||
+                empServerAPIClient is null)
+            {
+                Assert.Fail("empServerAPI or empServerAPIClient is null!");
+                return;
+            }
+
+            var request     = new AuthorizeStartRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                        Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("CCDDAABB"), RFIDTypes.MifareClassic)),
+                                                        EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                        PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
+                                                        SessionId:            Session_Id.NewRandom,
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
 
-            var httpresult    = await SendEMPAuthorizeStart(request);
+            var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(httpresult);
-            Assert.AreEqual (HTTPStatusCode.OK, httpresult.HTTPStatusCode);
-
-            var jsonResponse  = JObject.Parse(httpresult.HTTPBody.ToUTF8String());
-
-            Assert.IsNotNull(jsonResponse);
-
-            var response      = AuthorizationStartResponse.Parse(request,
-                                                                 jsonResponse);
-
-            Assert.IsNotNull(response);
-            Assert.AreEqual(AuthorizationStatusTypes.NotAuthorized, response.AuthorizationStatus);
+            Assert.IsNotNull(oicpResult);
+            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
 
         }
 
@@ -204,17 +182,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         public async Task AuthorizeStop_UID_Test1()
         {
 
-            var request             = new AuthorizeStopRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                               Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                               EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
-                                                               SessionId:            Session_Id.NewRandom,
-                                                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                                                               EMPPartnerSessionId:  null);
+            if (empServerAPI       is null ||
+                empServerAPIClient is null)
+            {
+                Assert.Fail("empServerAPI or empServerAPIClient is null!");
+                return;
+            }
 
-            var empServerAPIClient  = new EMPServerAPIClient  (URL.Parse("http://127.0.0.1:8000"),
-                                                               RequestTimeout: TimeSpan.FromSeconds(10));
+            var request     = new AuthorizeStopRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
+                                                       Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                       EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                       SessionId:            Session_Id.NewRandom,
+                                                       CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                       EMPPartnerSessionId:  null);
 
-            var oicpResult          = await empServerAPIClient.AuthorizeStop(request);
+            Assert.IsNotNull(request);
+
+            var oicpResult  = await empServerAPIClient.AuthorizeStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);

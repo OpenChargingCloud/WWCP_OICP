@@ -20,7 +20,6 @@
 using System;
 
 using NUnit.Framework;
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -37,188 +36,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
     public abstract class ACPOTests
     {
 
-        #region (class) NotificationReceiverAPI
-
-        /// <summary>
-        /// A HTTP(S) notification test receiver.
-        /// </summary>
-        public class NotificationReceiverAPI : HTTPAPI
-        {
-
-            #region Properties
-
-            public List<HTTPRequest>  FailedHTTPRequests             { get; }
-            public List<JObject>      ReceviedAdminNotifications     { get; }
-            public List<JObject>      ReceviedMemberNotifications    { get; }
-
-            #endregion
-
-            #region Constructor(s)
-
-            public NotificationReceiverAPI()
-
-                : base(HTTPHostname:                       null,
-                       ExternalDNSName:                    null,
-                       HTTPServerPort:                     IPPort.Parse(24949),
-                       BasePath:                           null,
-                       HTTPServerName:                     "Notification Receiver API",
-
-                       URLPathPrefix:                      null,
-                       HTTPServiceName:                    "Notification Receiver API",
-                       HTMLTemplate:                       null,
-                       APIVersionHashes:                   null,
-
-                       ServerCertificateSelector:          null,
-                       ClientCertificateValidator:         null,
-                       ClientCertificateSelector:          null,
-                       AllowedTLSProtocols:                null,
-
-                       ServerThreadName:                   null,
-                       ServerThreadPriority:               null,
-                       ServerThreadIsBackground:           null,
-                       ConnectionIdBuilder:                null,
-                       ConnectionThreadsNameBuilder:       null,
-                       ConnectionThreadsPriorityBuilder:   null,
-                       ConnectionThreadsAreBackground:     null,
-                       ConnectionTimeout:                  null,
-                       MaxClientConnections:               null,
-
-                       DisableMaintenanceTasks:            true,
-                       MaintenanceInitialDelay:            null,
-                       MaintenanceEvery:                   null,
-
-                       DisableWardenTasks:                 true,
-                       WardenInitialDelay:                 null,
-                       WardenCheckEvery:                   null,
-
-                       IsDevelopment:                      null,
-                       DevelopmentServers:                 null,
-                       DisableLogging:                     true,
-                       LoggingPath:                        null,
-                       LogfileName:                        null,
-                       LogfileCreator:                     null,
-                       DNSClient:                          null,
-                       Autostart:                          true)
-
-            {
-
-                this.FailedHTTPRequests           = new List<HTTPRequest>();
-                this.ReceviedAdminNotifications   = new List<JObject>();
-                this.ReceviedMemberNotifications  = new List<JObject>();
-
-
-                #region POST  ~/adminLogs
-
-                HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                             HTTPMethod.POST,
-                                             URLPathPrefix + "/adminLogs",
-                                             HTTPDelegate: Request => {
-
-                                                 if (Request.API_Key.HasValue == false || Request.API_Key.Value.ToString() != "39cn5t235t")
-                                                 {
-                                                     return Task.FromResult(
-                                                         new HTTPResponse.Builder(Request) {
-                                                             HTTPStatusCode  = HTTPStatusCode.Unauthorized,
-                                                             Connection      = "close"
-                                                         }.AsImmutable);
-                                                 }
-
-                                                 if (!Request.TryParseJArrayRequestBody(out JArray                Notifications,
-                                                                                        out HTTPResponse.Builder  httpResponse,
-                                                                                        AllowEmptyHTTPBody: false))
-                                                 {
-                                                     FailedHTTPRequests.Add(Request);
-                                                     return Task.FromResult(httpResponse.AsImmutable);
-                                                 }
-
-                                                 foreach (var notification in Notifications)
-                                                 {
-                                                     if (notification is JObject json)
-                                                        ReceviedAdminNotifications.Add(json);
-                                                 }
-
-                                                 return Task.FromResult(
-                                                     new HTTPResponse.Builder(Request) {
-                                                         HTTPStatusCode  = HTTPStatusCode.OK,
-                                                         Connection      = "close"
-                                                     }.AsImmutable);
-
-                                             });
-
-                #endregion
-
-                #region POST  ~/memberLogs
-
-                HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                             HTTPMethod.POST,
-                                             URLPathPrefix + "/memberLogs",
-                                             HTTPDelegate: Request => {
-
-                                                 if (!(Request.Authorization is HTTPBasicAuthentication basicAuth) ||
-                                                     basicAuth.Username != "empServerAPIMember01" ||
-                                                     basicAuth.Password != "h3f0g4wh0j")
-                                                 {
-                                                     return Task.FromResult(
-                                                         new HTTPResponse.Builder(Request) {
-                                                             HTTPStatusCode  = HTTPStatusCode.Unauthorized,
-                                                             Connection      = "close"
-                                                         }.AsImmutable);
-                                                 }
-
-                                                 if (!Request.TryParseJArrayRequestBody(out JArray                Notifications,
-                                                                                        out HTTPResponse.Builder  httpResponse,
-                                                                                        AllowEmptyHTTPBody: false))
-                                                 {
-                                                     FailedHTTPRequests.Add(Request);
-                                                     return Task.FromResult(httpResponse.AsImmutable);
-                                                 }
-
-                                                 foreach (var notification in Notifications)
-                                                 {
-                                                     if (notification is JObject json)
-                                                        ReceviedMemberNotifications.Add(json);
-                                                 }
-
-                                                 return Task.FromResult(
-                                                     new HTTPResponse.Builder(Request) {
-                                                         HTTPStatusCode  = HTTPStatusCode.OK,
-                                                         Connection      = "close"
-                                                     }.AsImmutable);
-
-                                             });
-
-                #endregion
-
-            }
-
-            #endregion
-
-
-            #region ClearNotifications()
-
-            public void ClearNotifications()
-            {
-                this.ReceviedAdminNotifications. Clear();
-                this.ReceviedMemberNotifications.Clear();
-            }
-
-            #endregion
-
-        }
-
-        #endregion
-
-
         #region Data
 
-        protected CPOServerAPI              cpoServerAPI;
-
-        protected NotificationReceiverAPI   NotificationAPI;
-
-        #endregion
-
-        #region Properties
-
+        protected CPOServerAPI?        cpoServerAPI;
+        protected CPOServerAPIClient?  cpoServerAPIClient;
 
         #endregion
 
@@ -538,7 +359,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             };
 
 
-            //NotificationAPI    = new NotificationReceiverAPI();
+            cpoServerAPIClient = new CPOServerAPIClient(URL.Parse("http://127.0.0.1:7000"),
+                                                        RequestTimeout: TimeSpan.FromSeconds(10));
+
+
+            Assert.IsNotNull(cpoServerAPI);
+            Assert.IsNotNull(cpoServerAPIClient);
 
 
         }
@@ -551,7 +377,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
         public void ShutdownEachTest()
         {
             cpoServerAPI.Shutdown();
-            //NotificationAPI.Shutdown();
         }
 
         #endregion
@@ -569,25 +394,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
 
 
-        protected static async Task<HTTPResponse> SendCPOAuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
-        {
+        //protected static async Task<HTTPResponse> SendCPOAuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
+        //{
 
-            return await new HTTPSClient(URL.Parse("http://127.0.0.1:7000")).
-                             Execute(client => client.POSTRequest(HTTPPath.Parse("api/oicp/charging/v21/providers/DE*GDF/authorize-remote/start"),
-                                                                  requestbuilder => {
-                                                                      requestbuilder.Host         = HTTPHostname.Localhost;
-                                                                      requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                      requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes(Newtonsoft.Json.Formatting.None);
-                                                                      requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                      requestbuilder.Connection   = "close";
-                                                                  }),
-                                     //CancellationToken:    CancellationToken,
-                                     //EventTrackingId:      EventTrackingId,
-                                     RequestTimeout:       TimeSpan.FromSeconds(10)).
+        //    return await new HTTPSClient(URL.Parse("http://127.0.0.1:7000")).
+        //                     Execute(client => client.POSTRequest(HTTPPath.Parse("api/oicp/charging/v21/providers/DE*GDF/authorize-remote/start"),
+        //                                                          requestbuilder => {
+        //                                                              requestbuilder.Host         = HTTPHostname.Localhost;
+        //                                                              requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+        //                                                              requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes(Newtonsoft.Json.Formatting.None);
+        //                                                              requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+        //                                                              requestbuilder.Connection   = "close";
+        //                                                          }),
+        //                             //CancellationToken:    CancellationToken,
+        //                             //EventTrackingId:      EventTrackingId,
+        //                             RequestTimeout:       TimeSpan.FromSeconds(10)).
 
-                             ConfigureAwait(false);
+        //                     ConfigureAwait(false);
 
-        }
+        //}
 
     }
 
