@@ -288,9 +288,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EVCO_Id Clone
 
-            => new EVCO_Id(new String(InternalId?.ToCharArray()),
-                           ProviderId.Clone,
-                           Suffix);
+            => new (new String(InternalId?.ToCharArray()),
+                    ProviderId.Clone,
+                    Suffix);
 
         #endregion
 

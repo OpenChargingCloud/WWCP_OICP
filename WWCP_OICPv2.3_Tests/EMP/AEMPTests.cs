@@ -440,6 +440,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
 
 
+        //ToDo: RAW tests: OperatorId != OperatorIdURL
+
 
         //protected static async Task<HTTPResponse> SendEMPAuthorizeStart(AuthorizeStartRequest Request)
         //{

@@ -609,7 +609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteReservationStartRequest != null)
+                                                         if (OnAuthorizeRemoteReservationStartRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -628,7 +628,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeRemoteReservationStartLocal = OnAuthorizeRemoteReservationStart;
-                                                     if (OnAuthorizeRemoteReservationStartLocal != null)
+                                                     if (OnAuthorizeRemoteReservationStartLocal is not null)
                                                      {
 
                                                          try
@@ -639,6 +639,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                           Select(e => e(Timestamp.Now,
                                                                                                                                                         this,
                                                                                                                                                         authorizeRemoteReservationStartRequest))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -652,7 +654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                );
                                                          }
 
-                                                         if (acknowledgement == null)
+                                                         if (acknowledgement is null)
                                                              acknowledgement = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
                                                                                    authorizeRemoteReservationStartRequest,
                                                                                    "Could not process the received AuthorizeRemoteReservationStart request!"
@@ -667,7 +669,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteReservationStartResponse != null)
+                                                         if (OnAuthorizeRemoteReservationStartResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -791,7 +793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteReservationStopRequest != null)
+                                                         if (OnAuthorizeRemoteReservationStopRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -810,7 +812,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeRemoteReservationStopLocal = OnAuthorizeRemoteReservationStop;
-                                                     if (OnAuthorizeRemoteReservationStopLocal != null)
+                                                     if (OnAuthorizeRemoteReservationStopLocal is not null)
                                                      {
 
                                                          try
@@ -821,6 +823,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                          Select(e => e(Timestamp.Now,
                                                                                                                                                        this,
                                                                                                                                                        authorizeRemoteReservationStopRequest))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -834,7 +838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                );
                                                          }
 
-                                                         if (acknowledgement == null)
+                                                         if (acknowledgement is null)
                                                              acknowledgement = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
                                                                                    authorizeRemoteReservationStopRequest,
                                                                                    "Could not process the received AuthorizeRemoteReservationStop request!"
@@ -849,7 +853,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteReservationStopResponse != null)
+                                                         if (OnAuthorizeRemoteReservationStopResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -974,7 +978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteStartRequest != null)
+                                                         if (OnAuthorizeRemoteStartRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStartRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -993,7 +997,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeRemoteStartLocal = OnAuthorizeRemoteStart;
-                                                     if (OnAuthorizeRemoteStartLocal != null)
+                                                     if (OnAuthorizeRemoteStartLocal is not null)
                                                      {
 
                                                          try
@@ -1004,6 +1008,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                Select(e => e(Timestamp.Now,
                                                                                                                                              this,
                                                                                                                                              authorizeRemoteStartRequest))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteStart.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1017,7 +1023,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                );
                                                          }
 
-                                                         if (acknowledgement == null)
+                                                         if (acknowledgement is null)
                                                              acknowledgement = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
                                                                                    authorizeRemoteStartRequest,
                                                                                    "Could not process the received AuthorizeRemoteStart request!"
@@ -1032,7 +1038,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteStartResponse != null)
+                                                         if (OnAuthorizeRemoteStartResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -1156,7 +1162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteStopRequest != null)
+                                                         if (OnAuthorizeRemoteStopRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStopRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -1175,7 +1181,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeRemoteStopLocal = OnAuthorizeRemoteStop;
-                                                     if (OnAuthorizeRemoteStopLocal != null)
+                                                     if (OnAuthorizeRemoteStopLocal is not null)
                                                      {
 
                                                          try
@@ -1186,6 +1192,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                               Select(e => e(Timestamp.Now,
                                                                                                                                             this,
                                                                                                                                             authorizeRemoteStopRequest))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1214,7 +1222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeRemoteStopResponse != null)
+                                                         if (OnAuthorizeRemoteStopResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,

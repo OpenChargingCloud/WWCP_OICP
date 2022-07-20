@@ -74,53 +74,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
                 {
 
-                    if (authorizeRemoteReservationStartRequest.Identification.RFIDId is not null)
+                    if (authorizeRemoteReservationStartRequest.Identification.RemoteIdentification is not null)
                     {
-                        return authorizeRemoteReservationStartRequest.Identification.RFIDId.ToString() switch
+                        return authorizeRemoteReservationStartRequest.Identification.RemoteIdentification.ToString() switch
                         {
 
-                            "AABBCCDD" =>
-                                Task.FromResult(
-                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                        Request:               authorizeRemoteReservationStartRequest,
-                                        ResponseTimestamp:     Timestamp.Now,
-                                        EventTrackingId:       EventTracking_Id.New,
-                                        Runtime:               TimeSpan.FromMilliseconds(2),
-                                        StatusCode:            new StatusCode(StatusCodes.Success),
-                                        HTTPResponse:          null,
-                                        Result:                true,
-                                        SessionId:             authorizeRemoteReservationStartRequest.SessionId,
-                                        CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
-                                        EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
-                                        CustomData:            null)),
-
-                            _ =>
-                                Task.FromResult(
-                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                        Request:               authorizeRemoteReservationStartRequest,
-                                        ResponseTimestamp:     Timestamp.Now,
-                                        EventTrackingId:       EventTracking_Id.New,
-                                        Runtime:               TimeSpan.FromMilliseconds(2),
-                                        StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                        HTTPResponse:          null,
-                                        Result:                false,
-                                        SessionId:             authorizeRemoteReservationStartRequest.SessionId,
-                                        CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
-                                        EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
-                                        CustomData:            null))
-                        };
-
-                    }
-
-
-                    if (authorizeRemoteReservationStartRequest.Identification.RFIDIdentification is not null)
-                    {
-                        return authorizeRemoteReservationStartRequest.Identification.RFIDIdentification.UID.ToString() switch
-                        {
-
-                            "AABBCCDD" =>
+                            "DE-GDF-C12345678X" =>
                                 Task.FromResult(
                                     new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                         Request:               authorizeRemoteReservationStartRequest,
@@ -219,53 +178,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
                 if (authorizeRemoteStartRequest.Identification is not null)
                 {
 
-                    if (authorizeRemoteStartRequest.Identification.RFIDId is not null)
+                    if (authorizeRemoteStartRequest.Identification.RemoteIdentification is not null)
                     {
-                        return authorizeRemoteStartRequest.Identification.RFIDId.ToString() switch
+                        return authorizeRemoteStartRequest.Identification.RemoteIdentification.ToString() switch
                         {
 
-                            "AABBCCDD" =>
-                                Task.FromResult(
-                                    new Acknowledgement<AuthorizeRemoteStartRequest>(
-                                        Request:               authorizeRemoteStartRequest,
-                                        ResponseTimestamp:     Timestamp.Now,
-                                        EventTrackingId:       EventTracking_Id.New,
-                                        Runtime:               TimeSpan.FromMilliseconds(2),
-                                        StatusCode:            new StatusCode(StatusCodes.Success),
-                                        HTTPResponse:          null,
-                                        Result:                true,
-                                        SessionId:             authorizeRemoteStartRequest.SessionId,
-                                        CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
-                                        EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
-                                        CustomData:            null)),
-
-                            _ =>
-                                Task.FromResult(
-                                    new Acknowledgement<AuthorizeRemoteStartRequest>(
-                                        Request:               authorizeRemoteStartRequest,
-                                        ResponseTimestamp:     Timestamp.Now,
-                                        EventTrackingId:       EventTracking_Id.New,
-                                        Runtime:               TimeSpan.FromMilliseconds(2),
-                                        StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
-                                        HTTPResponse:          null,
-                                        Result:                false,
-                                        SessionId:             authorizeRemoteStartRequest.SessionId,
-                                        CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
-                                        EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
-                                        CustomData:            null))
-                        };
-
-                    }
-
-
-                    if (authorizeRemoteStartRequest.Identification.RFIDIdentification is not null)
-                    {
-                        return authorizeRemoteStartRequest.Identification.RFIDIdentification.UID.ToString() switch
-                        {
-
-                            "AABBCCDD" =>
+                            "DE-GDF-C12345678X" =>
                                 Task.FromResult(
                                     new Acknowledgement<AuthorizeRemoteStartRequest>(
                                         Request:               authorizeRemoteStartRequest,
@@ -392,6 +310,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
         #endregion
 
 
+
+
+        //ToDo: RAW tests: OperatorId != OperatorIdURL
 
 
         //protected static async Task<HTTPResponse> SendCPOAuthorizeRemoteStart(AuthorizeRemoteStartRequest Request)
