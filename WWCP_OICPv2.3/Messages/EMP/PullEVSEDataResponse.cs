@@ -584,15 +584,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataResponse>  CustomPullEVSEDataResponseSerializer   = null,
-                              CustomJObjectSerializerDelegate<EVSEDataRecord>        CustomEVSEDataRecordSerializer         = null,
-                              CustomJObjectSerializerDelegate<Address>               CustomAddressSerializer                = null,
-                              CustomJObjectSerializerDelegate<ChargingFacility>      CustomChargingFacilitySerializer       = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>        CustomGeoCoordinatesSerializer         = null,
-                              CustomJObjectSerializerDelegate<EnergySource>          CustomEnergySourceSerializer           = null,
-                              CustomJObjectSerializerDelegate<EnvironmentalImpact>   CustomEnvironmentalImpactSerializer    = null,
-                              CustomJObjectSerializerDelegate<OpeningTime>           CustomOpeningTimesSerializer           = null,
-                              CustomJObjectSerializerDelegate<StatusCode>            CustomStatusCodeSerializer             = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataResponse>?  CustomPullEVSEDataResponseSerializer   = null,
+                              CustomJObjectSerializerDelegate<EVSEDataRecord>?        CustomEVSEDataRecordSerializer         = null,
+                              CustomJObjectSerializerDelegate<Address>?               CustomAddressSerializer                = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>?      CustomChargingFacilitySerializer       = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?        CustomGeoCoordinatesSerializer         = null,
+                              CustomJObjectSerializerDelegate<EnergySource>?          CustomEnergySourceSerializer           = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?   CustomEnvironmentalImpactSerializer    = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>?           CustomOpeningTimesSerializer           = null,
+                              CustomJObjectSerializerDelegate<StatusCode>?            CustomStatusCodeSerializer             = null)
         {
 
             var JSON = JSONObject.Create(

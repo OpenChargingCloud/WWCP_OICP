@@ -423,7 +423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
         [TearDown]
         public void ShutdownEachTest()
         {
-            empServerAPI.Shutdown();
+            empServerAPI?.Shutdown();
         }
 
         #endregion

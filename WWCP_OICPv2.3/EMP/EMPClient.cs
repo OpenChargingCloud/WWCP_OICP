@@ -602,7 +602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
                                                  HTTPResponse.Runtime,
-                                                 new EVSEDataRecord[0],
+                                                 Array.Empty<EVSEDataRecord>(),
                                                  null,
                                                  null,
                                                  null,

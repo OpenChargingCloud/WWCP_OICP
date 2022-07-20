@@ -18,9 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -42,60 +39,60 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The unique identification of the e-mobility provider.
         /// </summary>
-        public Provider_Id                                    ProviderId                              { get; }
+        public Provider_Id                                     ProviderId                              { get; }
 
         /// <summary>
         /// The optional timestamp of the last call.
         /// </summary>
-        public DateTime?                                      LastCall                                { get; }
+        public DateTime?                                       LastCall                                { get; }
 
 
         /// <summary>
         /// Only return EVSEs belonging to the given optional enumeration of EVSE operators.
         /// </summary>
-        public IEnumerable<Operator_Id>                       OperatorIdFilter                        { get; }
+        public IEnumerable<Operator_Id>?                       OperatorIdFilter                        { get; }
 
         /// <summary>
         /// An optional enumeration of countries whose EVSE's a provider wants to retrieve.
         /// </summary>
-        public IEnumerable<Country>                           CountryCodeFilter                       { get; }
+        public IEnumerable<Country>?                           CountryCodeFilter                       { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<AccessibilityTypes>                AccessibilityFilter                     { get; }
+        public IEnumerable<AccessibilityTypes>?                AccessibilityFilter                     { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<AuthenticationModes>               AuthenticationModeFilter                { get; }
+        public IEnumerable<AuthenticationModes>?               AuthenticationModeFilter                { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<CalibrationLawDataAvailabilities>  CalibrationLawDataAvailabilityFilter    { get; }
+        public IEnumerable<CalibrationLawDataAvailabilities>?  CalibrationLawDataAvailabilityFilter    { get; }
 
 
-        public Boolean?                                       RenewableEnergyFilter                   { get; }
-        public Boolean?                                       IsHubjectCompatibleFilter               { get; }
-        public Boolean?                                       IsOpen24HoursFilter                     { get; }
+        public Boolean?                                        RenewableEnergyFilter                   { get; }
+        public Boolean?                                        IsHubjectCompatibleFilter               { get; }
+        public Boolean?                                        IsOpen24HoursFilter                     { get; }
 
 
 
         /// <summary>
         /// The optional geo coordinate of the search center.
         /// </summary>
-        public GeoCoordinates?                                SearchCenter                            { get; }
+        public GeoCoordinates?                                 SearchCenter                            { get; }
 
         /// <summary>
         /// The optional search distance relative to the search center.
         /// </summary>
-        public Single?                                        DistanceKM                              { get; }
+        public Single?                                         DistanceKM                              { get; }
 
         /// <summary>
         /// The optional response format for representing geo coordinates.
         /// </summary>
-        public GeoCoordinatesFormats                          GeoCoordinatesResponseFormat            { get; }
+        public GeoCoordinatesFormats                           GeoCoordinatesResponseFormat            { get; }
 
         #endregion
 
@@ -124,31 +121,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public PullEVSEDataRequest(Provider_Id                                    ProviderId,
-                                   DateTime?                                      LastCall                               = null,
+        public PullEVSEDataRequest(Provider_Id                                     ProviderId,
+                                   DateTime?                                       LastCall                               = null,
 
-                                   IEnumerable<Operator_Id>                       OperatorIdFilter                       = null,
-                                   IEnumerable<Country>                           CountryCodeFilter                      = null,
-                                   IEnumerable<AccessibilityTypes>                AccessibilityFilter                    = null,
-                                   IEnumerable<AuthenticationModes>               AuthenticationModeFilter               = null,
-                                   IEnumerable<CalibrationLawDataAvailabilities>  CalibrationLawDataAvailabilityFilter   = null,
-                                   Boolean?                                       RenewableEnergyFilter                  = null,
-                                   Boolean?                                       IsHubjectCompatibleFilter              = null,
-                                   Boolean?                                       IsOpen24HoursFilter                    = null,
+                                   IEnumerable<Operator_Id>?                       OperatorIdFilter                       = null,
+                                   IEnumerable<Country>?                           CountryCodeFilter                      = null,
+                                   IEnumerable<AccessibilityTypes>?                AccessibilityFilter                    = null,
+                                   IEnumerable<AuthenticationModes>?               AuthenticationModeFilter               = null,
+                                   IEnumerable<CalibrationLawDataAvailabilities>?  CalibrationLawDataAvailabilityFilter   = null,
+                                   Boolean?                                        RenewableEnergyFilter                  = null,
+                                   Boolean?                                        IsHubjectCompatibleFilter              = null,
+                                   Boolean?                                        IsOpen24HoursFilter                    = null,
 
-                                   GeoCoordinates?                                SearchCenter                           = null,
-                                   Single?                                        DistanceKM                             = null,
-                                   GeoCoordinatesFormats?                         GeoCoordinatesResponseFormat           = GeoCoordinatesFormats.DecimalDegree,
+                                   GeoCoordinates?                                 SearchCenter                           = null,
+                                   Single?                                         DistanceKM                             = null,
+                                   GeoCoordinatesFormats?                          GeoCoordinatesResponseFormat           = GeoCoordinatesFormats.DecimalDegree,
 
-                                   UInt32?                                        Page                                   = null,
-                                   UInt32?                                        Size                                   = null,
-                                   IEnumerable<String>                            SortOrder                              = null,
-                                   JObject                                        CustomData                             = null,
+                                   UInt32?                                         Page                                   = null,
+                                   UInt32?                                         Size                                   = null,
+                                   IEnumerable<String>?                            SortOrder                              = null,
+                                   JObject?                                        CustomData                             = null,
 
-                                   DateTime?                                      Timestamp                              = null,
-                                   CancellationToken?                             CancellationToken                      = null,
-                                   EventTracking_Id                               EventTrackingId                        = null,
-                                   TimeSpan?                                      RequestTimeout                         = null)
+                                   DateTime?                                       Timestamp                              = null,
+                                   CancellationToken?                              CancellationToken                      = null,
+                                   EventTracking_Id?                               EventTrackingId                        = null,
+                                   TimeSpan?                                       RequestTimeout                         = null)
 
             : base(Page,
                    Size,
@@ -234,25 +231,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData JSON objects.</param>
-        public static PullEVSEDataRequest Parse(JObject                                           JSON,
-                                                UInt32?                                           Page                              = null,
-                                                UInt32?                                           Size                              = null,
-                                                IEnumerable<String>                               SortOrder                         = null,
-                                                CustomJObjectParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null)
+        public static PullEVSEDataRequest Parse(JObject                                            JSON,
+                                                UInt32?                                            Page                              = null,
+                                                UInt32?                                            Size                              = null,
+                                                IEnumerable<String>?                               SortOrder                         = null,
+                                                CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         out PullEVSEDataRequest  pullEVSEDataResponse,
-                         out String               ErrorResponse,
+                         out PullEVSEDataRequest?  pullEVSEDataResponse,
+                         out String?               errorResponse,
                          Page,
                          Size,
                          SortOrder,
+                         null,
+                         null,
                          CustomPullEVSEDataRequestParser))
             {
-                return pullEVSEDataResponse;
+                return pullEVSEDataResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -265,25 +264,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
-        public static PullEVSEDataRequest Parse(String                                            Text,
-                                                UInt32?                                           Page                              = null,
-                                                UInt32?                                           Size                              = null,
-                                                IEnumerable<String>                               SortOrder                         = null,
-                                                CustomJObjectParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null)
+        public static PullEVSEDataRequest Parse(String                                             Text,
+                                                UInt32?                                            Page                              = null,
+                                                UInt32?                                            Size                              = null,
+                                                IEnumerable<String>?                               SortOrder                         = null,
+                                                CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         out PullEVSEDataRequest  pullEVSEDataResponse,
-                         out String               ErrorResponse,
+                         out PullEVSEDataRequest?  pullEVSEDataResponse,
+                         out String?               errorResponse,
                          Page,
                          Size,
                          SortOrder,
+                         null,
+                         null,
                          CustomPullEVSEDataRequestParser))
             {
-                return pullEVSEDataResponse;
+                return pullEVSEDataResponse!;
             }
 
-            throw new ArgumentException("The given text representation of a PullEVSEData request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a PullEVSEData request is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -298,13 +299,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEDataRequest">The parsed PullEVSEData request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
-        public static Boolean TryParse(JObject                                           JSON,
-                                       out PullEVSEDataRequest                           PullEVSEDataRequest,
-                                       out String                                        ErrorResponse,
-                                       UInt32?                                           Page                              = null,
-                                       UInt32?                                           Size                              = null,
-                                       IEnumerable<String>                               SortOrder                         = null,
-                                       CustomJObjectParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null)
+        public static Boolean TryParse(JObject                                            JSON,
+                                       out PullEVSEDataRequest?                           PullEVSEDataRequest,
+                                       out String?                                        ErrorResponse,
+                                       UInt32?                                            Page                              = null,
+                                       UInt32?                                            Size                              = null,
+                                       IEnumerable<String>?                               SortOrder                         = null,
+                                       DateTime?                                          Timestamp                         = null,
+                                       EventTracking_Id?                                  EventTrackingId                   = null,
+                                       CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
             try
@@ -535,7 +538,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               Size,
                                                               SortOrder,
 
-                                                              CustomData);
+                                                              CustomData,
+                                                              Timestamp,
+                                                              null,
+                                                              EventTrackingId,
+                                                              null);
 
                 if (CustomPullEVSEDataRequestParser is not null)
                     PullEVSEDataRequest = CustomPullEVSEDataRequestParser(JSON,
@@ -564,13 +571,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEDataRequest">The parsed PullEVSEData request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out PullEVSEDataRequest                           PullEVSEDataRequest,
-                                       out String                                        ErrorResponse,
-                                       UInt32?                                           Page                              = null,
-                                       UInt32?                                           Size                              = null,
-                                       IEnumerable<String>                               SortOrder                         = null,
-                                       CustomJObjectParserDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestParser   = null)
+        public static Boolean TryParse(String                                             Text,
+                                       out PullEVSEDataRequest?                           PullEVSEDataRequest,
+                                       out String?                                        ErrorResponse,
+                                       UInt32?                                            Page                              = null,
+                                       UInt32?                                            Size                              = null,
+                                       IEnumerable<String>?                               SortOrder                         = null,
+                                       DateTime?                                          Timestamp                         = null,
+                                       EventTracking_Id?                                  EventTrackingId                   = null,
+                                       CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
             try
@@ -582,6 +591,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Page,
                                 Size,
                                 SortOrder,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomPullEVSEDataRequestParser);
 
             }
@@ -603,8 +614,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomPullEVSEDataRequestSerializer">A delegate to customize the serialization of PullEVSEDataRequest responses.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataRequest>  CustomPullEVSEDataRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>       CustomGeoCoordinatesSerializer        = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?       CustomGeoCoordinatesSerializer        = null)
         {
 
             var JSON = JSONObject.Create(
@@ -616,23 +627,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("LastCall", LastCall.Value.ToIso8601())
                                : null,
 
-                           OperatorIdFilter.SafeAny()
+                           OperatorIdFilter                     is not null && OperatorIdFilter.Any()
                                ? new JProperty("OperatorIds",                     new JArray(OperatorIdFilter.                    Select(operatorId                     => operatorId.                    ToString())))
                                : null,
 
-                           CountryCodeFilter.SafeAny()
+                           CountryCodeFilter                    is not null && CountryCodeFilter.Any()
                                ? new JProperty("CountryCodes",                    new JArray(CountryCodeFilter.                   Select(countryCode                    => countryCode.                   Alpha3Code)))
                                : null,
 
-                           AccessibilityFilter.SafeAny()
+                           AccessibilityFilter                  is not null && AccessibilityFilter.Any()
                                ? new JProperty("Accessibility",                   new JArray(AccessibilityFilter.                 Select(accessibility                  => accessibility.                 AsString())))
                                : null,
 
-                           AuthenticationModeFilter.SafeAny()
+                           AuthenticationModeFilter             is not null && AuthenticationModeFilter.Any()
                                ? new JProperty("AuthenticationModes",             new JArray(AuthenticationModeFilter.            Select(authenticationMode             => authenticationMode.            AsString())))
                                : null,
 
-                           CalibrationLawDataAvailabilityFilter.SafeAny()
+                           CalibrationLawDataAvailabilityFilter is not null && CalibrationLawDataAvailabilityFilter.Any()
                                ? new JProperty("CalibrationLawDataAvailability",  new JArray(CalibrationLawDataAvailabilityFilter.Select(calibrationLawDataAvailability => calibrationLawDataAvailability.AsString())))
                                : null,
 
@@ -722,7 +733,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is PullEVSEDataRequest pullEVSEDataRequest &&
                    Equals(pullEVSEDataRequest);
@@ -736,23 +747,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PullEVSEData">An pull EVSE data request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(PullEVSEDataRequest PullEVSEData)
-        {
+        public override Boolean Equals(PullEVSEDataRequest? PullEVSEData)
 
-            if ((Object) PullEVSEData == null)
-                return false;
+            => PullEVSEData is not null &&
 
-            return ProviderId.                  Equals(PullEVSEData.ProviderId)                   &&
-                   DistanceKM.                  Equals(PullEVSEData.DistanceKM)                   &&
-                   GeoCoordinatesResponseFormat.Equals(PullEVSEData.GeoCoordinatesResponseFormat) &&
+               ProviderId.                  Equals(PullEVSEData.ProviderId)                   &&
+               DistanceKM.                  Equals(PullEVSEData.DistanceKM)                   &&
+               GeoCoordinatesResponseFormat.Equals(PullEVSEData.GeoCoordinatesResponseFormat) &&
 
-                   ((!SearchCenter.    HasValue && !PullEVSEData.SearchCenter.    HasValue) ||
-                     (SearchCenter.    HasValue &&  PullEVSEData.SearchCenter.    HasValue && SearchCenter.    Value.Equals(PullEVSEData.SearchCenter.Value))) &&
+               ((!SearchCenter.    HasValue && !PullEVSEData.SearchCenter.    HasValue) ||
+                 (SearchCenter.    HasValue &&  PullEVSEData.SearchCenter.    HasValue && SearchCenter.    Value.Equals(PullEVSEData.SearchCenter.Value))) &&
 
-                   ((!LastCall.        HasValue && !PullEVSEData.LastCall.        HasValue) ||
-                     (LastCall.        HasValue &&  PullEVSEData.LastCall.        HasValue && LastCall.        Value.Equals(PullEVSEData.LastCall.    Value)));
-
-        }
+               ((!LastCall.        HasValue && !PullEVSEData.LastCall.        HasValue) ||
+                 (LastCall.        HasValue &&  PullEVSEData.LastCall.        HasValue && LastCall.        Value.Equals(PullEVSEData.LastCall.    Value)));
 
         #endregion
 
@@ -768,7 +775,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return ProviderId.                  GetHashCode() * 17 ^
                        DistanceKM.                  GetHashCode() * 13 ^
                        GeoCoordinatesResponseFormat.GetHashCode() * 11 ^
@@ -780,7 +786,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        (!LastCall.HasValue
                             ? LastCall.GetHashCode()              *  5
                             : 0);
-
             }
         }
 

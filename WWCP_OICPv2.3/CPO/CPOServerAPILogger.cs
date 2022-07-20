@@ -27,13 +27,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The CPO client.
+    /// The CPO HTTP Server API.
     /// </summary>
     public partial class CPOServerAPI
     {
 
         /// <summary>
-        /// A CPO Server API logger.
+        /// A CPO HTTP Server API logger.
         /// </summary>
         public class Logger : HTTPServerLogger
         {
