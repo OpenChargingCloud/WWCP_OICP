@@ -34,11 +34,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
     /// EMP authorization tests.
     /// </summary>
     [TestFixture]
-    public class CPORemoteAuthorizationTests : AEMPTests
+    public class EMPAuthorizationTests : AEMPTests
     {
-
-        //ToDo: OperatorId != OperatorIdURL
-
 
         #region AuthorizeStart_UID_Test1()
 
@@ -63,11 +60,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
+
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -96,11 +103,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
+
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
+
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -130,11 +147,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
+
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -163,11 +190,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
+
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
+
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -198,11 +235,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Requests_Error);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Responses_Error);
+
             var oicpResult  = await empServerAPIClient.AuthorizeStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStop.Requests_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Requests_Error);
+            Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStop.Responses_OK);
+            Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Responses_Error);
 
         }
 
@@ -210,10 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
 
 
-        //ToDo: charging-notifications
-
-
-        //ToDo: SendCDR
+        //ToDo: RAW tests: OperatorId != OperatorIdURL
 
 
     }

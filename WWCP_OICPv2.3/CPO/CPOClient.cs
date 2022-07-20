@@ -47,47 +47,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public class Counters
         {
 
-            public CounterValues  PushEVSEData                        { get; }
-            public CounterValues  PushEVSEStatus                      { get; }
+            public APICounterValues  PushEVSEData                        { get; }
+            public APICounterValues  PushEVSEStatus                      { get; }
 
-            public CounterValues  AuthorizeStart                      { get; }
-            public CounterValues  AuthorizeStop                       { get; }
+            public APICounterValues  AuthorizeStart                      { get; }
+            public APICounterValues  AuthorizeStop                       { get; }
 
-            public CounterValues  SendChargingStartNotification       { get; }
-            public CounterValues  SendChargingProgressNotification    { get; }
-            public CounterValues  SendChargingEndNotification         { get; }
-            public CounterValues  SendChargingErrorNotification       { get; }
+            public APICounterValues  SendChargingStartNotification       { get; }
+            public APICounterValues  SendChargingProgressNotification    { get; }
+            public APICounterValues  SendChargingEndNotification         { get; }
+            public APICounterValues  SendChargingErrorNotification       { get; }
 
-            public CounterValues  SendChargeDetailRecord              { get; }
+            public APICounterValues  SendChargeDetailRecord              { get; }
 
 
-            public Counters(CounterValues? PushEVSEData                       = null,
-                            CounterValues? PushEVSEStatus                     = null,
+            public Counters(APICounterValues? PushEVSEData                       = null,
+                            APICounterValues? PushEVSEStatus                     = null,
 
-                            CounterValues? AuthorizeStart                     = null,
-                            CounterValues? AuthorizeStop                      = null,
+                            APICounterValues? AuthorizeStart                     = null,
+                            APICounterValues? AuthorizeStop                      = null,
 
-                            CounterValues? SendChargingStartNotification      = null,
-                            CounterValues? SendChargingProgressNotification   = null,
-                            CounterValues? SendChargingEndNotification        = null,
-                            CounterValues? SendChargingErrorNotification      = null,
+                            APICounterValues? SendChargingStartNotification      = null,
+                            APICounterValues? SendChargingProgressNotification   = null,
+                            APICounterValues? SendChargingEndNotification        = null,
+                            APICounterValues? SendChargingErrorNotification      = null,
 
-                            CounterValues? SendChargeDetailRecord             = null)
+                            APICounterValues? SendChargeDetailRecord             = null)
 
             {
 
-                this.PushEVSEData                      = PushEVSEData                     ?? new CounterValues();
-                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new CounterValues();
+                this.PushEVSEData                      = PushEVSEData                     ?? new APICounterValues();
+                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new APICounterValues();
 
-                this.AuthorizeStart                    = AuthorizeStart                   ?? new CounterValues();
-                this.AuthorizeStop                     = AuthorizeStop                    ?? new CounterValues();
+                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
+                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
 
-                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new CounterValues();
-                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new CounterValues();
-                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new CounterValues();
-                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new CounterValues();
+                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
+                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
+                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
+                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
 
-                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new CounterValues();
+                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
 
             }
 
@@ -507,7 +507,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.PushEVSEData.IncRequests();
+            Counter.PushEVSEData.IncRequests_OK();
 
             try
             {
@@ -1009,7 +1009,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.PushEVSEStatus.IncRequests();
+            Counter.PushEVSEStatus.IncRequests_OK();
 
             try
             {
@@ -1509,7 +1509,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.AuthorizeStart.IncRequests();
+            Counter.AuthorizeStart.IncRequests_OK();
 
             try
             {
@@ -1903,7 +1903,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -2320,7 +2320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.SendChargingStartNotification.IncRequests();
+            Counter.SendChargingStartNotification.IncRequests_OK();
 
             try
             {
@@ -2782,7 +2782,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.SendChargingProgressNotification.IncRequests();
+            Counter.SendChargingProgressNotification.IncRequests_OK();
 
             try
             {
@@ -3244,7 +3244,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.SendChargingEndNotification.IncRequests();
+            Counter.SendChargingEndNotification.IncRequests_OK();
 
             try
             {
@@ -3706,7 +3706,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.SendChargingErrorNotification.IncRequests();
+            Counter.SendChargingErrorNotification.IncRequests_OK();
 
             try
             {
@@ -4169,7 +4169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = DateTime.UtcNow;
 
-            Counter.SendChargeDetailRecord.IncRequests();
+            Counter.SendChargeDetailRecord.IncRequests_OK();
 
             try
             {

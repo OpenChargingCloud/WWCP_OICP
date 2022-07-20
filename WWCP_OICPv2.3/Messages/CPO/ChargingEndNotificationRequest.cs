@@ -18,10 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
 using System.Globalization;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -122,7 +119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
+        public IEnumerable<Decimal>?             MeterValuesInBetween               { get; }
 
         /// <summary>
         /// The optional operator identification.
@@ -173,28 +170,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public ChargingEndNotificationRequest(Session_Id             SessionId,
-                                               Identification         Identification,
-                                               EVSE_Id                EVSEId,
-                                               DateTime               ChargingStart,
-                                               DateTime               ChargingEnd,
+                                              Identification         Identification,
+                                              EVSE_Id                EVSEId,
+                                              DateTime               ChargingStart,
+                                              DateTime               ChargingEnd,
 
-                                               CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
-                                               EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
-                                               DateTime?              SessionStart             = null,
-                                               DateTime?              SessionEnd               = null,
-                                               Decimal?               ConsumedEnergy           = null,
-                                               Decimal?               MeterValueStart          = null,
-                                               Decimal?               MeterValueEnd            = null,
-                                               IEnumerable<Decimal>   MeterValuesInBetween     = null,
-                                               Operator_Id?           OperatorId               = null,
-                                               PartnerProduct_Id?     PartnerProductId         = null,
-                                               DateTime?              PenaltyTimeStart         = null,
-                                               JObject                CustomData               = null,
+                                              CPOPartnerSession_Id?  CPOPartnerSessionId    = null,
+                                              EMPPartnerSession_Id?  EMPPartnerSessionId    = null,
+                                              DateTime?              SessionStart           = null,
+                                              DateTime?              SessionEnd             = null,
+                                              Decimal?               ConsumedEnergy         = null,
+                                              Decimal?               MeterValueStart        = null,
+                                              Decimal?               MeterValueEnd          = null,
+                                              IEnumerable<Decimal>?  MeterValuesInBetween   = null,
+                                              Operator_Id?           OperatorId             = null,
+                                              PartnerProduct_Id?     PartnerProductId       = null,
+                                              DateTime?              PenaltyTimeStart       = null,
+                                              JObject?               CustomData             = null,
 
-                                               DateTime?              Timestamp                = null,
-                                               CancellationToken?     CancellationToken        = null,
-                                               EventTracking_Id       EventTrackingId          = null,
-                                               TimeSpan?              RequestTimeout           = null)
+                                              DateTime?              Timestamp              = null,
+                                              CancellationToken?     CancellationToken      = null,
+                                              EventTracking_Id?      EventTrackingId        = null,
+                                              TimeSpan?              RequestTimeout         = null)
 
             : base(CustomData,
                    Timestamp,
@@ -248,25 +245,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
-        public static ChargingEndNotificationRequest Parse(JObject                                                      JSON,
-                                                           TimeSpan                                                     RequestTimeout,
-                                                           DateTime?                                                    Timestamp                                     = null,
-                                                           EventTracking_Id                                             EventTrackingId                               = null,
-                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>  CustomChargingNotificationsEndRequestParser   = null)
+        public static ChargingEndNotificationRequest Parse(JObject                                                       JSON,
+                                                           TimeSpan                                                      RequestTimeout,
+                                                           DateTime?                                                     Timestamp                                     = null,
+                                                           EventTracking_Id?                                             EventTrackingId                               = null,
+                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          RequestTimeout,
-                         out ChargingEndNotificationRequest  chargingNotificationsEndRequest,
-                         out String                          ErrorResponse,
+                         out ChargingEndNotificationRequest?  chargingNotificationsEndRequest,
+                         out String?                          errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomChargingNotificationsEndRequestParser))
             {
-                return chargingNotificationsEndRequest;
+                return chargingNotificationsEndRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging notification end request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charging notification end request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -282,25 +279,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
-        public static ChargingEndNotificationRequest Parse(String                                                       Text,
-                                                           TimeSpan                                                     RequestTimeout,
-                                                           DateTime?                                                    Timestamp                                     = null,
-                                                           EventTracking_Id                                             EventTrackingId                               = null,
-                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>  CustomChargingNotificationsEndRequestParser   = null)
+        public static ChargingEndNotificationRequest Parse(String                                                        Text,
+                                                           TimeSpan                                                      RequestTimeout,
+                                                           DateTime?                                                     Timestamp                                     = null,
+                                                           EventTracking_Id?                                             EventTrackingId                               = null,
+                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
         {
 
             if (TryParse(Text,
                          RequestTimeout,
-                         out ChargingEndNotificationRequest  chargingNotificationsEndRequest,
-                         out String                          ErrorResponse,
+                         out ChargingEndNotificationRequest?  chargingNotificationsEndRequest,
+                         out String?                          errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomChargingNotificationsEndRequestParser))
             {
-                return chargingNotificationsEndRequest;
+                return chargingNotificationsEndRequest!;
             }
 
-            throw new ArgumentException("The given text representation of a charging notification end request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charging notification end request is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -318,13 +315,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                      JSON,
-                                       TimeSpan                                                     RequestTimeout,
-                                       out ChargingEndNotificationRequest                           ChargingNotificationsEndRequest,
-                                       out String                                                   ErrorResponse,
-                                       DateTime?                                                    Timestamp                                     = null,
-                                       EventTracking_Id                                             EventTrackingId                               = null,
-                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>  CustomChargingNotificationsEndRequestParser   = null)
+        public static Boolean TryParse(JObject                                                       JSON,
+                                       TimeSpan                                                      RequestTimeout,
+                                       out ChargingEndNotificationRequest?                           ChargingNotificationsEndRequest,
+                                       out String?                                                   ErrorResponse,
+                                       DateTime?                                                     Timestamp                                     = null,
+                                       EventTracking_Id?                                             EventTrackingId                               = null,
+                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
         {
 
             try
@@ -635,13 +632,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
-        public static Boolean TryParse(String                                                       Text,
-                                       TimeSpan                                                     RequestTimeout,
-                                       out ChargingEndNotificationRequest                           ChargingNotificationsEndRequest,
-                                       out String                                                   ErrorResponse,
-                                       DateTime?                                                    Timestamp                                     = null,
-                                       EventTracking_Id                                             EventTrackingId                               = null,
-                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>  CustomChargingNotificationsEndRequestParser   = null)
+        public static Boolean TryParse(String                                                        Text,
+                                       TimeSpan                                                      RequestTimeout,
+                                       out ChargingEndNotificationRequest?                           ChargingNotificationsEndRequest,
+                                       out String?                                                   ErrorResponse,
+                                       DateTime?                                                     Timestamp                                     = null,
+                                       EventTracking_Id?                                             EventTrackingId                               = null,
+                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
         {
 
             try
@@ -674,8 +671,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomChargingNotificationsEndRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>  CustomChargingNotificationsEndRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>                   CustomIdentificationSerializer                    = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?                  CustomIdentificationSerializer                    = null)
         {
 
             var JSON = JSONObject.Create(
@@ -714,7 +711,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeterValueEnd",         String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
                                : null,
 
-                           MeterValuesInBetween.SafeAny()
+                           MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",   new JArray(MeterValuesInBetween.
@@ -757,29 +754,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingEndNotificationRequest Clone
 
-            => new ChargingEndNotificationRequest(SessionId,
-                                                   Identification,
-                                                   EVSEId,
-                                                   ChargingStart,
-                                                   ChargingEnd,
+            => new (SessionId,
+                    Identification,
+                    EVSEId,
+                    ChargingStart,
+                    ChargingEnd,
 
-                                                   CPOPartnerSessionId,
-                                                   EMPPartnerSessionId,
-                                                   SessionStart,
-                                                   SessionEnd,
-                                                   ConsumedEnergy,
-                                                   MeterValueStart,
-                                                   MeterValueEnd,
-                                                   MeterValuesInBetween,
-                                                   OperatorId,
-                                                   PartnerProductId,
-                                                   PenaltyTimeStart,
-                                                   CustomData,
+                    CPOPartnerSessionId,
+                    EMPPartnerSessionId,
+                    SessionStart,
+                    SessionEnd,
+                    ConsumedEnergy,
+                    MeterValueStart,
+                    MeterValueEnd,
+                    MeterValuesInBetween,
+                    OperatorId,
+                    PartnerProductId,
+                    PenaltyTimeStart,
+                    CustomData,
 
-                                                   Timestamp,
-                                                   CancellationToken,
-                                                   EventTrackingId,
-                                                   RequestTimeout);
+                    Timestamp,
+                    CancellationToken,
+                    EventTrackingId,
+                    RequestTimeout);
 
         #endregion
 
@@ -838,7 +835,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingEndNotificationRequest chargingNotificationsEndRequest &&
                    Equals(chargingNotificationsEndRequest);
@@ -852,16 +849,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingNotificationsEndRequest">A charging notification end request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(ChargingEndNotificationRequest ChargingNotificationsEndRequest)
+        public override Boolean Equals(ChargingEndNotificationRequest? ChargingNotificationsEndRequest)
 
-            => !(ChargingNotificationsEndRequest is null) &&
+            => ChargingNotificationsEndRequest is not null &&
 
-                 Type.          Equals(ChargingNotificationsEndRequest.Type)           &&
-                 SessionId.     Equals(ChargingNotificationsEndRequest.SessionId)      &&
-                 Identification.Equals(ChargingNotificationsEndRequest.Identification) &&
-                 EVSEId.        Equals(ChargingNotificationsEndRequest.EVSEId)         &&
-                 ChargingStart. Equals(ChargingNotificationsEndRequest.ChargingStart)  &&
-                 ChargingEnd.   Equals(ChargingNotificationsEndRequest.ChargingEnd);
+               Type.          Equals(ChargingNotificationsEndRequest.Type)           &&
+               SessionId.     Equals(ChargingNotificationsEndRequest.SessionId)      &&
+               Identification.Equals(ChargingNotificationsEndRequest.Identification) &&
+               EVSEId.        Equals(ChargingNotificationsEndRequest.EVSEId)         &&
+               ChargingStart. Equals(ChargingNotificationsEndRequest.ChargingStart)  &&
+               ChargingEnd.   Equals(ChargingNotificationsEndRequest.ChargingEnd);
 
         #endregion
 
@@ -877,7 +874,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Type.                   GetHashCode()       * 59 ^
                        SessionId.              GetHashCode()       * 53 ^
                        Identification.         GetHashCode()       * 47 ^
@@ -896,7 +892,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (OperatorId?.            GetHashCode() ?? 0) *  5 ^
                       (PartnerProductId?.      GetHashCode() ?? 0) *  3 ^
                       (PenaltyTimeStart?.      GetHashCode() ?? 0);
-
             }
         }
 

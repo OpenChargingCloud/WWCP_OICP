@@ -90,6 +90,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     ChargingMode = ChargingNotificationTypes.End;
                     return true;
 
+                case "error":
+                    ChargingMode = ChargingNotificationTypes.Error;
+                    return true;
+
                 default:
                     ChargingMode = ChargingNotificationTypes.Error;
                     return false;

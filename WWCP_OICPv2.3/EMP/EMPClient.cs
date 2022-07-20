@@ -45,39 +45,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public class Counters
         {
 
-            public CounterValues  PullEVSEData                  { get; }
-            public CounterValues  PullEVSEStatus                { get; }
-            public CounterValues  PullEVSEStatusById            { get; }
-            public CounterValues  PullEVSEStatusByOperatorId    { get; }
-            public CounterValues  PushAuthenticationData        { get; }
-            public CounterValues  RemoteReservationStart        { get; }
-            public CounterValues  RemoteReservationStop         { get; }
-            public CounterValues  RemoteStart                   { get; }
-            public CounterValues  RemoteStop                    { get; }
-            public CounterValues  GetChargeDetailRecords        { get; }
+            public APICounterValues  PullEVSEData                  { get; }
+            public APICounterValues  PullEVSEStatus                { get; }
+            public APICounterValues  PullEVSEStatusById            { get; }
+            public APICounterValues  PullEVSEStatusByOperatorId    { get; }
+            public APICounterValues  PushAuthenticationData        { get; }
+            public APICounterValues  RemoteReservationStart        { get; }
+            public APICounterValues  RemoteReservationStop         { get; }
+            public APICounterValues  RemoteStart                   { get; }
+            public APICounterValues  RemoteStop                    { get; }
+            public APICounterValues  GetChargeDetailRecords        { get; }
 
-            public Counters(CounterValues? PullEVSEData                 = null,
-                            CounterValues? PullEVSEStatus               = null,
-                            CounterValues? PullEVSEStatusById           = null,
-                            CounterValues? PullEVSEStatusByOperatorId   = null,
-                            CounterValues? PushAuthenticationData       = null,
-                            CounterValues? RemoteReservationStart       = null,
-                            CounterValues? RemoteReservationStop        = null,
-                            CounterValues? RemoteStart                  = null,
-                            CounterValues? RemoteStop                   = null,
-                            CounterValues? GetChargeDetailRecords       = null)
+            public Counters(APICounterValues? PullEVSEData                 = null,
+                            APICounterValues? PullEVSEStatus               = null,
+                            APICounterValues? PullEVSEStatusById           = null,
+                            APICounterValues? PullEVSEStatusByOperatorId   = null,
+                            APICounterValues? PushAuthenticationData       = null,
+                            APICounterValues? RemoteReservationStart       = null,
+                            APICounterValues? RemoteReservationStop        = null,
+                            APICounterValues? RemoteStart                  = null,
+                            APICounterValues? RemoteStop                   = null,
+                            APICounterValues? GetChargeDetailRecords       = null)
             {
 
-                this.PullEVSEData                = PullEVSEData               ?? new CounterValues();
-                this.PullEVSEStatus              = PullEVSEStatus             ?? new CounterValues();
-                this.PullEVSEStatusById          = PullEVSEStatusById         ?? new CounterValues();
-                this.PullEVSEStatusByOperatorId  = PullEVSEStatusByOperatorId ?? new CounterValues();
-                this.PushAuthenticationData      = PushAuthenticationData     ?? new CounterValues();
-                this.RemoteReservationStart      = RemoteReservationStart     ?? new CounterValues();
-                this.RemoteReservationStop       = RemoteReservationStop      ?? new CounterValues();
-                this.RemoteStart                 = RemoteStart                ?? new CounterValues();
-                this.RemoteStop                  = RemoteStop                 ?? new CounterValues();
-                this.GetChargeDetailRecords      = GetChargeDetailRecords     ?? new CounterValues();
+                this.PullEVSEData                = PullEVSEData               ?? new APICounterValues();
+                this.PullEVSEStatus              = PullEVSEStatus             ?? new APICounterValues();
+                this.PullEVSEStatusById          = PullEVSEStatusById         ?? new APICounterValues();
+                this.PullEVSEStatusByOperatorId  = PullEVSEStatusByOperatorId ?? new APICounterValues();
+                this.PushAuthenticationData      = PushAuthenticationData     ?? new APICounterValues();
+                this.RemoteReservationStart      = RemoteReservationStart     ?? new APICounterValues();
+                this.RemoteReservationStop       = RemoteReservationStop      ?? new APICounterValues();
+                this.RemoteStart                 = RemoteStart                ?? new APICounterValues();
+                this.RemoteStop                  = RemoteStop                 ?? new APICounterValues();
+                this.GetChargeDetailRecords      = GetChargeDetailRecords     ?? new APICounterValues();
 
             }
 
@@ -478,7 +478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEData.IncRequests();
+            Counter.PullEVSEData.IncRequests_OK();
 
             try
             {
@@ -901,7 +901,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatus.IncRequests();
+            Counter.PullEVSEStatus.IncRequests_OK();
 
             try
             {
@@ -1273,7 +1273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatusById.IncRequests();
+            Counter.PullEVSEStatusById.IncRequests_OK();
 
             try
             {
@@ -1645,7 +1645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatusByOperatorId.IncRequests();
+            Counter.PullEVSEStatusByOperatorId.IncRequests_OK();
 
             try
             {
@@ -2034,7 +2034,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.RemoteReservationStart.IncRequests();
+            Counter.RemoteReservationStart.IncRequests_OK();
 
             try
             {
@@ -2433,7 +2433,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.RemoteReservationStop.IncRequests();
+            Counter.RemoteReservationStop.IncRequests_OK();
 
             try
             {
@@ -2832,7 +2832,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.RemoteStart.IncRequests();
+            Counter.RemoteStart.IncRequests_OK();
 
             try
             {
@@ -3231,7 +3231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.RemoteStop.IncRequests();
+            Counter.RemoteStop.IncRequests_OK();
 
             try
             {
@@ -3631,7 +3631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.GetChargeDetailRecords.IncRequests();
+            Counter.GetChargeDetailRecords.IncRequests_OK();
 
             try
             {

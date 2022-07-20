@@ -45,18 +45,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public class Counters
         {
 
-            public CounterValues  AuthorizeStart                   { get; }
-            public CounterValues  AuthorizeStop                    { get; }
-            public CounterValues  SendChargeDetailRecord           { get; }
+            public APICounterValues  AuthorizeStart                   { get; }
+            public APICounterValues  AuthorizeStop                    { get; }
+            public APICounterValues  SendChargeDetailRecord           { get; }
 
-            public Counters(CounterValues? AuthorizeStart           = null,
-                            CounterValues? AuthorizeStop            = null,
-                            CounterValues? SendChargeDetailRecord   = null)
+            public Counters(APICounterValues? AuthorizeStart           = null,
+                            APICounterValues? AuthorizeStop            = null,
+                            APICounterValues? SendChargeDetailRecord   = null)
             {
 
-                this.AuthorizeStart          = AuthorizeStart         ?? new CounterValues();
-                this.AuthorizeStop           = AuthorizeStop          ?? new CounterValues();
-                this.SendChargeDetailRecord  = SendChargeDetailRecord ?? new CounterValues();
+                this.AuthorizeStart          = AuthorizeStart         ?? new APICounterValues();
+                this.AuthorizeStop           = AuthorizeStop          ?? new APICounterValues();
+                this.SendChargeDetailRecord  = SendChargeDetailRecord ?? new APICounterValues();
 
             }
 
@@ -389,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStart.IncRequests();
+            Counter.AuthorizeStart.IncRequests_OK();
 
             try
             {
@@ -771,7 +771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -1154,7 +1154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -1531,7 +1531,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var progressTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -1908,7 +1908,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -2285,7 +2285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var errorTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -2663,7 +2663,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests();
+            Counter.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -2709,7 +2709,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       null,
                                                                       DNSClient).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;

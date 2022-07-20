@@ -45,21 +45,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public class Counters
         {
 
-            public CounterValues  AuthorizeRemoteReservationStart    { get; }
-            public CounterValues  AuthorizeRemoteReservationStop     { get; }
-            public CounterValues  AuthorizeRemoteStart               { get; }
-            public CounterValues  AuthorizeRemoteStop                { get; }
+            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
+            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+            public APICounterValues  AuthorizeRemoteStart               { get; }
+            public APICounterValues  AuthorizeRemoteStop                { get; }
 
-            public Counters(CounterValues? AuthorizeRemoteReservationStart   = null,
-                            CounterValues? AuthorizeRemoteReservationStop    = null,
-                            CounterValues? AuthorizeRemoteStart              = null,
-                            CounterValues? AuthorizeRemoteStop               = null)
+            public Counters(APICounterValues? AuthorizeRemoteReservationStart   = null,
+                            APICounterValues? AuthorizeRemoteReservationStop    = null,
+                            APICounterValues? AuthorizeRemoteStart              = null,
+                            APICounterValues? AuthorizeRemoteStop               = null)
             {
 
-                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new CounterValues();
-                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new CounterValues();
-                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new CounterValues();
-                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new CounterValues();
+                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
+                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
+                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
 
             }
 
@@ -320,7 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStart.IncRequests();
+            Counter.AuthorizeRemoteReservationStart.IncRequests_OK();
 
             try
             {
@@ -697,7 +697,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStop.IncRequests();
+            Counter.AuthorizeRemoteReservationStop.IncRequests_OK();
 
             try
             {
@@ -1075,7 +1075,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStart.IncRequests();
+            Counter.AuthorizeRemoteStart.IncRequests_OK();
 
             try
             {
@@ -1452,7 +1452,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStop.IncRequests();
+            Counter.AuthorizeRemoteStop.IncRequests_OK();
 
             try
             {

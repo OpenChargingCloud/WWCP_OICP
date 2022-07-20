@@ -31,7 +31,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 {
 
     /// <summary>
-    /// EMP authorization tests.
+    /// CPO remote authorization tests.
     /// </summary>
     [TestFixture]
     public class CPORemoteAuthorizationTests : ACPOTests

@@ -18,10 +18,7 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
 using System.Globalization;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -116,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
+        public IEnumerable<Decimal>?             MeterValuesInBetween               { get; }
 
         /// <summary>
         /// The optional operator identification.
@@ -159,26 +156,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public ChargingProgressNotificationRequest(Session_Id             SessionId,
-                                                    Identification         Identification,
-                                                    EVSE_Id                EVSEId,
-                                                    DateTime               ChargingStart,
-                                                    DateTime               EventOcurred,
+                                                   Identification         Identification,
+                                                   EVSE_Id                EVSEId,
+                                                   DateTime               ChargingStart,
+                                                   DateTime               EventOcurred,
 
-                                                    CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
-                                                    EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
-                                                    TimeSpan?              ChargingDuration         = null,
-                                                    DateTime?              SessionStart             = null,
-                                                    Decimal?               ConsumedEnergyProgress   = null,
-                                                    Decimal?               MeterValueStart          = null,
-                                                    IEnumerable<Decimal>   MeterValuesInBetween     = null,
-                                                    Operator_Id?           OperatorId               = null,
-                                                    PartnerProduct_Id?     PartnerProductId         = null,
-                                                    JObject                CustomData               = null,
+                                                   CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
+                                                   EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
+                                                   TimeSpan?              ChargingDuration         = null,
+                                                   DateTime?              SessionStart             = null,
+                                                   Decimal?               ConsumedEnergyProgress   = null,
+                                                   Decimal?               MeterValueStart          = null,
+                                                   IEnumerable<Decimal>?  MeterValuesInBetween     = null,
+                                                   Operator_Id?           OperatorId               = null,
+                                                   PartnerProduct_Id?     PartnerProductId         = null,
+                                                   JObject?               CustomData               = null,
 
-                                                    DateTime?              Timestamp                = null,
-                                                    CancellationToken?     CancellationToken        = null,
-                                                    EventTracking_Id       EventTrackingId          = null,
-                                                    TimeSpan?              RequestTimeout           = null)
+                                                   DateTime?              Timestamp                = null,
+                                                   CancellationToken?     CancellationToken        = null,
+                                                   EventTracking_Id?      EventTrackingId          = null,
+                                                   TimeSpan?              RequestTimeout           = null)
 
             : base(CustomData,
                    Timestamp,
@@ -230,25 +227,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static ChargingProgressNotificationRequest Parse(JObject                                                           JSON,
-                                                                TimeSpan                                                          RequestTimeout,
-                                                                DateTime?                                                         Timestamp                                         = null,
-                                                                EventTracking_Id                                                  EventTrackingId                                   = null,
-                                                                CustomJObjectParserDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestParser   = null)
+        public static ChargingProgressNotificationRequest Parse(JObject                                                            JSON,
+                                                                TimeSpan                                                           RequestTimeout,
+                                                                DateTime?                                                          Timestamp                                         = null,
+                                                                EventTracking_Id?                                                  EventTrackingId                                   = null,
+                                                                CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          RequestTimeout,
-                         out ChargingProgressNotificationRequest  chargingProgressNotificationRequest,
-                         out String                               ErrorResponse,
+                         out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
+                         out String?                               errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomChargingProgressNotificationRequestParser))
             {
-                return chargingProgressNotificationRequest;
+                return chargingProgressNotificationRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging notification progress request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charging notification progress request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -264,25 +261,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static ChargingProgressNotificationRequest Parse(String                                                            Text,
-                                                                TimeSpan                                                          RequestTimeout,
-                                                                DateTime?                                                         Timestamp                                         = null,
-                                                                EventTracking_Id                                                  EventTrackingId                                   = null,
-                                                                CustomJObjectParserDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestParser   = null)
+        public static ChargingProgressNotificationRequest Parse(String                                                             Text,
+                                                                TimeSpan                                                           RequestTimeout,
+                                                                DateTime?                                                          Timestamp                                         = null,
+                                                                EventTracking_Id?                                                  EventTrackingId                                   = null,
+                                                                CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
         {
 
             if (TryParse(Text,
                          RequestTimeout,
-                         out ChargingProgressNotificationRequest  chargingProgressNotificationRequest,
-                         out String                               ErrorResponse,
+                         out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
+                         out String?                               errorResponse,
                          Timestamp,
                          EventTrackingId,
                          CustomChargingProgressNotificationRequestParser))
             {
-                return chargingProgressNotificationRequest;
+                return chargingProgressNotificationRequest!;
             }
 
-            throw new ArgumentException("The given text representation of a charging notification progress request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charging notification progress request is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -300,13 +297,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                           JSON,
-                                       TimeSpan                                                          RequestTimeout,
-                                       out ChargingProgressNotificationRequest                           ChargingProgressNotificationRequest,
-                                       out String                                                        ErrorResponse,
-                                       DateTime?                                                         Timestamp                                         = null,
-                                       EventTracking_Id                                                  EventTrackingId                                   = null,
-                                       CustomJObjectParserDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestParser   = null)
+        public static Boolean TryParse(JObject                                                            JSON,
+                                       TimeSpan                                                           RequestTimeout,
+                                       out ChargingProgressNotificationRequest?                           ChargingProgressNotificationRequest,
+                                       out String?                                                        ErrorResponse,
+                                       DateTime?                                                          Timestamp                                         = null,
+                                       EventTracking_Id?                                                  EventTrackingId                                   = null,
+                                       CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
         {
 
             try
@@ -545,30 +542,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 ChargingProgressNotificationRequest = new ChargingProgressNotificationRequest(SessionId,
-                                                                                                Identification,
-                                                                                                EVSEId,
-                                                                                                ChargingStart,
-                                                                                                EventOcurred,
+                                                                                              Identification,
+                                                                                              EVSEId,
+                                                                                              ChargingStart,
+                                                                                              EventOcurred,
 
-                                                                                                CPOPartnerSessionId,
-                                                                                                EMPPartnerSessionId,
-                                                                                                ChargingDuration,
-                                                                                                SessionStart,
-                                                                                                ConsumedEnergyProgress,
-                                                                                                MeterValueStart,
-                                                                                                MeterValuesInBetween,
-                                                                                                OperatorId,
-                                                                                                PartnerProductId,
-                                                                                                CustomData,
+                                                                                              CPOPartnerSessionId,
+                                                                                              EMPPartnerSessionId,
+                                                                                              ChargingDuration,
+                                                                                              SessionStart,
+                                                                                              ConsumedEnergyProgress,
+                                                                                              MeterValueStart,
+                                                                                              MeterValuesInBetween,
+                                                                                              OperatorId,
+                                                                                              PartnerProductId,
+                                                                                              CustomData,
 
-                                                                                                Timestamp,
-                                                                                                null,
-                                                                                                EventTrackingId,
-                                                                                                RequestTimeout);
+                                                                                              Timestamp,
+                                                                                              null,
+                                                                                              EventTrackingId,
+                                                                                              RequestTimeout);
 
                 if (CustomChargingProgressNotificationRequestParser is not null)
                     ChargingProgressNotificationRequest = CustomChargingProgressNotificationRequestParser(JSON,
-                                                                                                            ChargingProgressNotificationRequest);
+                                                                                                          ChargingProgressNotificationRequest);
 
                 return true;
 
@@ -576,7 +573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 ChargingProgressNotificationRequest  = default;
-                ErrorResponse                         = "The given JSON representation of a charging notification progress request is invalid: " + e.Message;
+                ErrorResponse                        = "The given JSON representation of a charging notification progress request is invalid: " + e.Message;
                 return false;
             }
 
@@ -596,13 +593,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static Boolean TryParse(String                                                            Text,
-                                       TimeSpan                                                          RequestTimeout,
-                                       out ChargingProgressNotificationRequest                           ChargingProgressNotificationRequest,
-                                       out String                                                        ErrorResponse,
-                                       DateTime?                                                         Timestamp                                         = null,
-                                       EventTracking_Id                                                  EventTrackingId                                   = null,
-                                       CustomJObjectParserDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestParser   = null)
+        public static Boolean TryParse(String                                                             Text,
+                                       TimeSpan                                                           RequestTimeout,
+                                       out ChargingProgressNotificationRequest?                           ChargingProgressNotificationRequest,
+                                       out String?                                                        ErrorResponse,
+                                       DateTime?                                                          Timestamp                                         = null,
+                                       EventTracking_Id?                                                  EventTrackingId                                   = null,
+                                       CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
         {
 
             try
@@ -635,8 +632,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomChargingProgressNotificationRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>                       CustomIdentificationSerializer                        = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?                       CustomIdentificationSerializer                        = null)
         {
 
             var JSON = JSONObject.Create(
@@ -671,7 +668,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeterValueStart",         String.Format("{0:0.###}", MeterValueStart.       Value).Replace(",", "."))
                                : null,
 
-                           MeterValuesInBetween.SafeAny()
+                           MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",     new JArray(MeterValuesInBetween.
@@ -710,27 +707,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingProgressNotificationRequest Clone
 
-            => new ChargingProgressNotificationRequest(SessionId,
-                                                        Identification,
-                                                        EVSEId,
-                                                        ChargingStart,
-                                                        EventOcurred,
+            => new (SessionId,
+                    Identification,
+                    EVSEId,
+                    ChargingStart,
+                    EventOcurred,
 
-                                                        CPOPartnerSessionId,
-                                                        EMPPartnerSessionId,
-                                                        ChargingDuration,
-                                                        SessionStart,
-                                                        ConsumedEnergyProgress,
-                                                        MeterValueStart,
-                                                        MeterValuesInBetween,
-                                                        OperatorId,
-                                                        PartnerProductId,
-                                                        CustomData,
+                    CPOPartnerSessionId,
+                    EMPPartnerSessionId,
+                    ChargingDuration,
+                    SessionStart,
+                    ConsumedEnergyProgress,
+                    MeterValueStart,
+                    MeterValuesInBetween,
+                    OperatorId,
+                    PartnerProductId,
+                    CustomData,
 
-                                                        Timestamp,
-                                                        CancellationToken,
-                                                        EventTrackingId,
-                                                        RequestTimeout);
+                    Timestamp,
+                    CancellationToken,
+                    EventTrackingId,
+                    RequestTimeout);
 
         #endregion
 
@@ -789,7 +786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingProgressNotificationRequest chargingProgressNotificationRequest &&
                    Equals(chargingProgressNotificationRequest);
@@ -803,16 +800,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingProgressNotificationRequest">A charging notification progress request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(ChargingProgressNotificationRequest ChargingProgressNotificationRequest)
+        public override Boolean Equals(ChargingProgressNotificationRequest? ChargingProgressNotificationRequest)
 
-            => !(ChargingProgressNotificationRequest is null) &&
+            => ChargingProgressNotificationRequest is not null &&
 
-                 Type.          Equals(ChargingProgressNotificationRequest.Type)           &&
-                 SessionId.     Equals(ChargingProgressNotificationRequest.SessionId)      &&
-                 Identification.Equals(ChargingProgressNotificationRequest.Identification) &&
-                 EVSEId.        Equals(ChargingProgressNotificationRequest.EVSEId)         &&
-                 ChargingStart. Equals(ChargingProgressNotificationRequest.ChargingStart)  &&
-                 EventOcurred.  Equals(ChargingProgressNotificationRequest.EventOcurred);
+               Type.          Equals(ChargingProgressNotificationRequest.Type)           &&
+               SessionId.     Equals(ChargingProgressNotificationRequest.SessionId)      &&
+               Identification.Equals(ChargingProgressNotificationRequest.Identification) &&
+               EVSEId.        Equals(ChargingProgressNotificationRequest.EVSEId)         &&
+               ChargingStart. Equals(ChargingProgressNotificationRequest.ChargingStart)  &&
+               EventOcurred.  Equals(ChargingProgressNotificationRequest.EventOcurred);
 
         #endregion
 
@@ -828,7 +825,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return Type.                   GetHashCode()       * 47 ^
                        SessionId.              GetHashCode()       * 43 ^
                        Identification.         GetHashCode()       * 41 ^
@@ -845,7 +841,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (MeterValuesInBetween?.  GetHashCode() ?? 0) *  5 ^
                       (OperatorId?.            GetHashCode() ?? 0) *  3 ^
                       (PartnerProductId?.      GetHashCode() ?? 0);
-
             }
         }
 

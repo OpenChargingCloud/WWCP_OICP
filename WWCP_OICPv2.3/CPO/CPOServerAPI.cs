@@ -41,26 +41,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     public partial class CPOServerAPI : HTTPAPI
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
-            public CounterValues  AuthorizeRemoteReservationStart    { get; }
-            public CounterValues  AuthorizeRemoteReservationStop     { get; }
-            public CounterValues  AuthorizeRemoteStart               { get; }
-            public CounterValues  AuthorizeRemoteStop                { get; }
+            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
+            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+            public APICounterValues  AuthorizeRemoteStart               { get; }
+            public APICounterValues  AuthorizeRemoteStop                { get; }
 
-            public Counters(CounterValues? AuthorizeRemoteReservationStart   = null,
-                            CounterValues? AuthorizeRemoteReservationStop    = null,
-                            CounterValues? AuthorizeRemoteStart              = null,
-                            CounterValues? AuthorizeRemoteStop               = null)
+            public APICounters(APICounterValues? AuthorizeRemoteReservationStart   = null,
+                               APICounterValues? AuthorizeRemoteReservationStop    = null,
+                               APICounterValues? AuthorizeRemoteStart              = null,
+                               APICounterValues? AuthorizeRemoteStop               = null)
             {
 
-                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new CounterValues();
-                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new CounterValues();
-                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new CounterValues();
-                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new CounterValues();
+                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
+                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
+                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
 
             }
 
@@ -99,7 +99,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public Counters                                                              Counter                                               { get; }
+        public APICounters                                                              Counters                                               { get; }
 
         // Custom JSON parsers
 
@@ -495,7 +495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             RegisterURLTemplates();
 
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
@@ -602,7 +602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           CustomAuthorizeRemoteReservationStartRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeRemoteReservationStart.IncRequests();
+                                                     Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
                                                      #region Send OnAuthorizeRemoteReservationStartRequest event
 
@@ -784,7 +784,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          CustomAuthorizeRemoteReservationStopRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeRemoteReservationStop.IncRequests();
+                                                     Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
                                                      #region Send OnAuthorizeRemoteReservationStopRequest event
 
@@ -942,7 +942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             Acknowledgement<AuthorizeRemoteStartRequest> acknowledgement = null;
+                                             Acknowledgement<AuthorizeRemoteStartRequest>? acknowledgement = null;
 
                                              try
                                              {
@@ -967,7 +967,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                CustomAuthorizeRemoteStartRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeRemoteStart.IncRequests();
+                                                     Counters.AuthorizeRemoteStart.IncRequests_OK();
 
                                                      #region Send OnAuthorizeRemoteStartRequest event
 
@@ -1124,7 +1124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             Acknowledgement<AuthorizeRemoteStopRequest> acknowledgement = null;
+                                             Acknowledgement<AuthorizeRemoteStopRequest>? acknowledgement = null;
 
                                              try
                                              {
@@ -1149,7 +1149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               CustomAuthorizeRemoteStopRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeRemoteStop.IncRequests();
+                                                     Counters.AuthorizeRemoteStop.IncRequests_OK();
 
                                                      #region Send OnAuthorizeRemoteStopRequest event
 

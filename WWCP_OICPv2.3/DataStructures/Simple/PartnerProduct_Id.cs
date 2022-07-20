@@ -181,43 +181,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region StandardPrice
+        #region (static) StandardPrice
 
         /// <summary>
         /// Standard Price.
         /// </summary>
-        public PartnerProduct_Id StandardPrice
-            => new ("Standard Price");
+        public static PartnerProduct_Id StandardPrice
+            => Parse("Standard Price");
 
         #endregion
 
-        #region AC1
+        #region (static) AC1
 
         /// <summary>
         /// Product for AC 1 Phase charging.
         /// </summary>
-        public PartnerProduct_Id AC1
-            => new ("AC1");
+        public static PartnerProduct_Id AC1
+            => Parse("AC1");
 
         #endregion
 
-        #region AC2
+        #region (static) AC2
 
         /// <summary>
         /// Product for AC 3 Phase charging.
         /// </summary>
-        public PartnerProduct_Id AC2
-            => new ("AC2");
+        public static PartnerProduct_Id AC2
+            => Parse("AC2");
 
         #endregion
 
-        #region DC
+        #region (static) DC
 
         /// <summary>
         /// Product for DC charging.
         /// </summary>
-        public PartnerProduct_Id DC
-            => new ("DC");
+        public static PartnerProduct_Id DC
+            => Parse("DC");
 
         #endregion
 
