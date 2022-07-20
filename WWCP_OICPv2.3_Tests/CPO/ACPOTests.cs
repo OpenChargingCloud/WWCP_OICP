@@ -69,6 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
                                Autostart:        true
                            );
 
+            Assert.IsNotNull(cpoServerAPI);
+
             cpoServerAPI.OnAuthorizeRemoteReservationStart += (timestamp, sender, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
@@ -280,10 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             cpoServerAPIClient = new CPOServerAPIClient(URL.Parse("http://127.0.0.1:7000"),
                                                         RequestTimeout: TimeSpan.FromSeconds(10));
 
-
-            Assert.IsNotNull(cpoServerAPI);
             Assert.IsNotNull(cpoServerAPIClient);
-
 
         }
 

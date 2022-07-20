@@ -69,6 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                                Autostart:        true
                            );
 
+            Assert.IsNotNull(empServerAPI);
+
             empServerAPI.OnAuthorizeStart               += (timestamp, sender, authorizeStartRequest) => {
 
                 if (authorizeStartRequest.Identification is not null)
@@ -409,8 +411,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             empServerAPIClient = new EMPServerAPIClient(URL.Parse("http://127.0.0.1:8000"),
                                                         RequestTimeout: TimeSpan.FromSeconds(10));
 
-
-            Assert.IsNotNull(empServerAPI);
             Assert.IsNotNull(empServerAPIClient);
 
         }
