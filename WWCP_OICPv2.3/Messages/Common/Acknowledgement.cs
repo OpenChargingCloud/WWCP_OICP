@@ -32,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// An acknowledgement.
     /// </summary>
-    public class Acknowledgement
+    public class Acknowledgement : IResponse
     {
 
         #region Properties

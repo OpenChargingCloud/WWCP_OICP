@@ -24,8 +24,4 @@
     <ProjectReference Include="..\WWCP_OICPv2.3_WebAPI\WWCP_OICPv2.3_WebAPI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CPO\reverse\" />
-  </ItemGroup>
-
 </Project>
