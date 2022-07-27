@@ -346,29 +346,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region (protected internal) OnAuthorizeStartHTTPResponse
+        #region (protected internal) OnAuthorizationStartHTTPResponse
 
         /// <summary>
-        /// An event sent whenever an AuthorizeStart HTTP response was sent.
+        /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new();
 
         /// <summary>
-        /// An event sent whenever an AuthorizeStart HTTP response was sent.
+        /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeStartHTTPResponse(DateTime      Timestamp,
-                                                              HTTPAPI       API,
-                                                              HTTPRequest   Request,
-                                                              HTTPResponse  Response)
+        protected internal Task logAuthorizationStartHTTPResponse(DateTime      Timestamp,
+                                                                  HTTPAPI       API,
+                                                                  HTTPRequest   Request,
+                                                                  HTTPResponse  Response)
 
-            => OnAuthorizeStartHTTPResponse.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request,
-                                                    Response);
+            => OnAuthorizationStartHTTPResponse.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request,
+                                                        Response);
 
         #endregion
 
@@ -415,29 +415,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region (protected internal) OnAuthorizeStopHTTPResponse
+        #region (protected internal) OnAuthorizationStopHTTPResponse
 
         /// <summary>
-        /// An event sent whenever an AuthorizeStop HTTP response was sent.
+        /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new();
 
         /// <summary>
-        /// An event sent whenever an AuthorizeStop HTTP response was sent.
+        /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeStopHTTPResponse(DateTime      Timestamp,
-                                                             HTTPAPI       API,
-                                                             HTTPRequest   Request,
-                                                             HTTPResponse  Response)
+        protected internal Task logAuthorizationStopHTTPResponse(DateTime      Timestamp,
+                                                                 HTTPAPI       API,
+                                                                 HTTPRequest   Request,
+                                                                 HTTPResponse  Response)
 
-            => OnAuthorizeStopHTTPResponse.WhenAll(Timestamp,
-                                                   API ?? this,
-                                                   Request,
-                                                   Response);
+            => OnAuthorizationStopHTTPResponse.WhenAll(Timestamp,
+                                                       API ?? this,
+                                                       Request,
+                                                       Response);
 
         #endregion
 
@@ -1233,7 +1233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
                                          HTTPContentType.JSON_UTF8,
                                          HTTPRequestLogger:   logAuthorizeStartHTTPRequest,
-                                         HTTPResponseLogger:  logAuthorizeStartHTTPResponse,
+                                         HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
@@ -1420,7 +1420,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
                                          HTTPContentType.JSON_UTF8,
                                          HTTPRequestLogger:   logAuthorizeStopHTTPRequest,
-                                         HTTPResponseLogger:  logAuthorizeStopHTTPResponse,
+                                         HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
                                              var stopTime = Timestamp.Now;

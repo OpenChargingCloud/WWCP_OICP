@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Constructor(s)
 
-            #region EMPClientAPILogger(EMPClientAPI, Context = DefaultContext, LogFileCreator = null)
+            #region Logger(EMPClientAPI, Context = DefaultContext, LogFileCreator = null)
 
             /// <summary>
             /// Create a new EMP Client API logger using the default logging delegates.
@@ -85,7 +85,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #endregion
 
-            #region EMPClientAPILogger(EMPClientAPI, Context, ... Logging delegates ...)
+            #region Logger(EMPClientAPI, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new EMP Client API logger using the given logging delegates.
