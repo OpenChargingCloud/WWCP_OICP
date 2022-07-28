@@ -2116,7 +2116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<PushAuthenticationDataRequest>.TryParse(Request,
                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                            out Acknowledgement<PushAuthenticationDataRequest>?  authorizeRemoteReservationStartResponse,
+                                                                                            out Acknowledgement<PushAuthenticationDataRequest>?  pushAuthenticationDataResponse,
                                                                                             out String?                                          ErrorResponse,
                                                                                             HTTPResponse,
                                                                                             HTTPResponse.Timestamp,
@@ -2126,7 +2126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Success(Request,
-                                                                                                                authorizeRemoteReservationStartResponse,
+                                                                                                                pushAuthenticationDataResponse,
                                                                                                                 processId);
 
                                 }

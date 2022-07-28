@@ -155,13 +155,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomIPagedResponseSerializer">A delegate to customize the serialization of paged responses.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        protected JObject ToJSON(CustomJObjectSerializerDelegate<IPagedResponse>  CustomIPagedResponseSerializer   = null,
-                                 CustomJObjectSerializerDelegate<StatusCode>      CustomStatusCodeSerializer       = null)
+        protected JObject ToJSON(CustomJObjectSerializerDelegate<IPagedResponse>?  CustomIPagedResponseSerializer   = null,
+                                 CustomJObjectSerializerDelegate<StatusCode>?      CustomStatusCodeSerializer       = null)
         {
 
             var JSON = JSONObject.Create(
 
-                           StatusCode != null
+                           StatusCode is not null
                                ? new JProperty("StatusCode",        StatusCode.ToJSON(CustomStatusCodeSerializer))
                                : null,
 

@@ -490,13 +490,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseSerializer   = null,
-                              CustomJObjectSerializerDelegate<IPagedResponse>                  CustomIPagedResponseSerializer                   = null,
-                              CustomJObjectSerializerDelegate<ChargeDetailRecord>              CustomChargeDetailRecordSerializer               = null,
-                              CustomJObjectSerializerDelegate<Identification>                  CustomIdentificationSerializer                   = null,
-                              CustomJObjectSerializerDelegate<SignedMeteringValue>             CustomSignedMeteringValueSerializer              = null,
-                              CustomJObjectSerializerDelegate<CalibrationLawVerification>      CustomCalibrationLawVerificationSerializer       = null,
-                              CustomJObjectSerializerDelegate<StatusCode>                      CustomStatusCodeSerializer                       = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseSerializer   = null,
+                              CustomJObjectSerializerDelegate<IPagedResponse>?                  CustomIPagedResponseSerializer                   = null,
+                              CustomJObjectSerializerDelegate<ChargeDetailRecord>?              CustomChargeDetailRecordSerializer               = null,
+                              CustomJObjectSerializerDelegate<Identification>?                  CustomIdentificationSerializer                   = null,
+                              CustomJObjectSerializerDelegate<SignedMeteringValue>?             CustomSignedMeteringValueSerializer              = null,
+                              CustomJObjectSerializerDelegate<CalibrationLawVerification>?      CustomCalibrationLawVerificationSerializer       = null,
+                              CustomJObjectSerializerDelegate<StatusCode>?                      CustomStatusCodeSerializer                       = null)
         {
 
             var JSON = ToJSON(CustomIPagedResponseSerializer,

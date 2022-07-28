@@ -46,60 +46,69 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public class APICounters
         {
 
-            public APICounterValues  PullEVSEData                    { get; }
-            public APICounterValues  PullEVSEStatus                  { get; }
-            public APICounterValues  PullEVSEStatusById              { get; }
-            public APICounterValues  PullEVSEStatusByOperatorId      { get; }
-
-            public APICounterValues  AuthorizeStop                   { get; }
-            public APICounterValues  ChargingStartNotification       { get; }
-            public APICounterValues  ChargingProgressNotification    { get; }
-            public APICounterValues  ChargingEndNotification         { get; }
-            public APICounterValues  ChargingErrorNotification       { get; }
-            public APICounterValues  ChargeDetailRecord              { get; }
+            public APICounterValues  PullEVSEData                       { get; }
+            public APICounterValues  PullEVSEStatus                     { get; }
+            public APICounterValues  PullEVSEStatusById                 { get; }
+            public APICounterValues  PullEVSEStatusByOperatorId         { get; }
 
 
-            public APICounters(APICounterValues? PullEVSEData                   = null,
-                               APICounterValues? PullEVSEStatus                 = null,
-                               APICounterValues? PullEVSEStatusById             = null,
-                               APICounterValues? PullEVSEStatusByOperatorId     = null,
+            public APICounterValues  PushAuthenticationData             { get; }
 
-                               APICounterValues? AuthorizeStop                  = null,
-                               APICounterValues? ChargingStartNotification      = null,
-                               APICounterValues? ChargingProgressNotification   = null,
-                               APICounterValues? ChargingEndNotification        = null,
-                               APICounterValues? ChargingErrorNotification      = null,
-                               APICounterValues? ChargeDetailRecord             = null)
+            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
+            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+            public APICounterValues  AuthorizeRemoteStart               { get; }
+            public APICounterValues  AuthorizeRemoteStop                { get; }
+
+            public APICounterValues  GetChargeDetailRecords             { get; }
+
+
+            public APICounters(APICounterValues? PullEVSEData                      = null,
+                               APICounterValues? PullEVSEStatus                    = null,
+                               APICounterValues? PullEVSEStatusById                = null,
+                               APICounterValues? PullEVSEStatusByOperatorId        = null,
+
+                               APICounterValues? PushAuthenticationData            = null,
+
+                               APICounterValues? AuthorizeRemoteReservationStart   = null,
+                               APICounterValues? AuthorizeRemoteReservationStop    = null,
+                               APICounterValues? AuthorizeRemoteStart              = null,
+                               APICounterValues? AuthorizeRemoteStop               = null,
+
+                               APICounterValues? GetChargeDetailRecords            = null)
             {
 
-                this.PullEVSEData                  = PullEVSEData                 ?? new APICounterValues();
-                this.PullEVSEStatus                = PullEVSEStatus               ?? new APICounterValues();
-                this.PullEVSEStatusById            = PullEVSEStatusById           ?? new APICounterValues();
-                this.PullEVSEStatusByOperatorId    = PullEVSEStatusByOperatorId   ?? new APICounterValues();
+                this.PullEVSEData                     = PullEVSEData                    ?? new APICounterValues();
+                this.PullEVSEStatus                   = PullEVSEStatus                  ?? new APICounterValues();
+                this.PullEVSEStatusById               = PullEVSEStatusById              ?? new APICounterValues();
+                this.PullEVSEStatusByOperatorId       = PullEVSEStatusByOperatorId      ?? new APICounterValues();
 
-                this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
-                this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
-                this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
-                this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
-                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new APICounterValues();
-                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new APICounterValues();
+                this.PushAuthenticationData           = PushAuthenticationData          ?? new APICounterValues();
+
+                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
+                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
+                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
+
+                this.GetChargeDetailRecords           = GetChargeDetailRecords          ?? new APICounterValues();
 
             }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("PullEVSEData",                  PullEVSEData.                ToJSON()),
-                       new JProperty("PullEVSEStatus",                PullEVSEStatus.              ToJSON()),
-                       new JProperty("PullEVSEStatusById",            PullEVSEStatusById.          ToJSON()),
-                       new JProperty("PullEVSEStatusByOperatorId",    PullEVSEStatusByOperatorId.  ToJSON()),
+                       new JProperty("PullEVSEData",                     PullEVSEData.                   ToJSON()),
+                       new JProperty("PullEVSEStatus",                   PullEVSEStatus.                 ToJSON()),
+                       new JProperty("PullEVSEStatusById",               PullEVSEStatusById.             ToJSON()),
+                       new JProperty("PullEVSEStatusByOperatorId",       PullEVSEStatusByOperatorId.     ToJSON()),
 
-                       new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
-                       new JProperty("ChargingStartNotification",     ChargingStartNotification.   ToJSON()),
-                       new JProperty("ChargingProgressNotification",  ChargingProgressNotification.ToJSON()),
-                       new JProperty("ChargingEndNotification",       ChargingEndNotification.     ToJSON()),
-                       new JProperty("ChargingErrorNotification",     ChargingErrorNotification.   ToJSON()),
-                       new JProperty("ChargeDetailRecord",            ChargeDetailRecord.          ToJSON())
+                       new JProperty("PushAuthenticationData",           PushAuthenticationData.         ToJSON()),
+
+                       new JProperty("AuthorizeRemoteReservationStart",  AuthorizeRemoteReservationStart.ToJSON()),
+                       new JProperty("AuthorizeRemoteReservationStop",   AuthorizeRemoteReservationStop. ToJSON()),
+                       new JProperty("AuthorizeRemoteStart",             AuthorizeRemoteStart.           ToJSON()),
+                       new JProperty("AuthorizeRemoteStop",              AuthorizeRemoteStop.            ToJSON()),
+
+                       new JProperty("GetChargeDetailRecords",           GetChargeDetailRecords.         ToJSON())
                    );
 
         }
@@ -128,39 +137,58 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public APICounters                                                          Counters                                              { get; }
+        public APICounters                                                           Counters                                              { get; }
 
 
         // Custom JSON parsers
 
-        public CustomJObjectParserDelegate<PullEVSEDataRequest>?                    CustomPullEVSEDataRequestParser                       { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEDataRequest>?                     CustomPullEVSEDataRequestParser                       { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusRequest>?                   CustomPullEVSEStatusRequestParser                     { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?               CustomPullEVSEStatusByIdRequestParser                 { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>?       CustomPullEVSEStatusByOperatorIdRequestParser         { get; set; }
+
+        public CustomJObjectParserDelegate<PushAuthenticationDataRequest>?           CustomPushAuthenticationDataRequestParser             { get; set; }
+
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?   CustomAuthorizeRemoteReservationStopRequestParser     { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?             CustomAuthorizeRemoteStartRequestParser               { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>?              CustomAuthorizeRemoteStopRequestParser                { get; set; }
+
+        public CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?           CustomGetChargeDetailRecordsRequestParser             { get; set; }
 
 
 
         // Custom JSON serializers
 
-        public CustomJObjectSerializerDelegate<PullEVSEDataResponse>?               CustomPullEVSEDataResponseSerializer                  { get; set; }
-        public CustomJObjectSerializerDelegate<EVSEDataRecord>?                     CustomEVSEDataRecordSerializer                        { get; set; }
-        public CustomJObjectSerializerDelegate<Address>?                            CustomAddressSerializer                               { get; set; }
-        public CustomJObjectSerializerDelegate<ChargingFacility>?                   CustomChargingFacilitySerializer                      { get; set; }
-        public CustomJObjectSerializerDelegate<GeoCoordinates>?                     CustomGeoCoordinatesSerializer                        { get; set; }
-        public CustomJObjectSerializerDelegate<EnergySource>?                       CustomEnergySourceSerializer                          { get; set; }
-        public CustomJObjectSerializerDelegate<EnvironmentalImpact>?                CustomEnvironmentalImpactSerializer                   { get; set; }
-        public CustomJObjectSerializerDelegate<OpeningTime>?                        CustomOpeningTimesSerializer                          { get; set; }
-        public CustomJObjectSerializerDelegate<StatusCode>?                         CustomStatusCodeSerializer                            { get; set; }
+        public CustomJObjectSerializerDelegate<PullEVSEDataResponse>?                CustomPullEVSEDataResponseSerializer                  { get; set; }
+        public CustomJObjectSerializerDelegate<EVSEDataRecord>?                      CustomEVSEDataRecordSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<Address>?                             CustomAddressSerializer                               { get; set; }
+        public CustomJObjectSerializerDelegate<ChargingFacility>?                    CustomChargingFacilitySerializer                      { get; set; }
+        public CustomJObjectSerializerDelegate<GeoCoordinates>?                      CustomGeoCoordinatesSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<EnergySource>?                        CustomEnergySourceSerializer                          { get; set; }
+        public CustomJObjectSerializerDelegate<EnvironmentalImpact>?                 CustomEnvironmentalImpactSerializer                   { get; set; }
+        public CustomJObjectSerializerDelegate<OpeningTime>?                         CustomOpeningTimesSerializer                          { get; set; }
+        public CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                            { get; set; }
 
 
-        public CustomJObjectSerializerDelegate<PullEVSEStatusResponse>?             CustomPullEVSEStatusResponseSerializer                { get; set; }
-        public CustomJObjectSerializerDelegate<OperatorEVSEStatus>?                 CustomOperatorEVSEStatusSerializer                    { get; set; }
-        public CustomJObjectSerializerDelegate<EVSEStatusRecord>?                   CustomEVSEStatusRecordSerializer                      { get; set; }
+        public CustomJObjectSerializerDelegate<PullEVSEStatusResponse>?              CustomPullEVSEStatusResponseSerializer                { get; set; }
+        public CustomJObjectSerializerDelegate<OperatorEVSEStatus>?                  CustomOperatorEVSEStatusSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<EVSEStatusRecord>?                    CustomEVSEStatusRecordSerializer                      { get; set; }
+
+        public CustomJObjectSerializerDelegate<PullEVSEStatusByIdResponse>?          CustomPullEVSEStatusByIdResponseSerializer            { get; set; }
+        public CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseSerializer    { get; set; }
+
+        public CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>?      CustomGetChargeDetailRecordsResponseSerializer        { get; set; }
+        public CustomJObjectSerializerDelegate<IPagedResponse>?                      CustomIPagedResponseSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<ChargeDetailRecord>?                  CustomChargeDetailRecordSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<Identification>?                      CustomIdentificationSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<SignedMeteringValue>?                 CustomSignedMeteringValueSerializer                   { get; set; }
+        public CustomJObjectSerializerDelegate<CalibrationLawVerification>?          CustomCalibrationLawVerificationSerializer            { get; set; }
+
+        public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                       { get; set; }
 
 
-        public CustomJObjectSerializerDelegate<PullEVSEStatusByIdResponse>?         CustomPullEVSEStatusByIdResponseSerializer            { get; set; }
-
-        public CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseSerializer    { get; set; }
-
-
-        public Newtonsoft.Json.Formatting                                           JSONFormatting                                        { get; set; }
+        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
 
         #endregion
 
@@ -442,6 +470,422 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+
+        #region (protected internal) OnPushAuthenticationDataHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PushAuthenticationData HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPushAuthenticationDataHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PushAuthenticationData HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPushAuthenticationDataHTTPRequest(DateTime     Timestamp,
+                                                                     HTTPAPI      API,
+                                                                     HTTPRequest  Request)
+
+            => OnPushAuthenticationDataHTTPRequest.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request);
+
+        #endregion
+
+        #region (event)              OnPushAuthenticationData(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PushAuthenticationData request was received.
+        /// </summary>
+        public event OnPushAuthenticationDataAPIRequestDelegate?   OnPushAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event send whenever a PushAuthenticationData request was received.
+        /// </summary>
+        public event OnPushAuthenticationDataAPIDelegate?          OnPushAuthenticationData;
+
+        /// <summary>
+        /// An event send whenever a response to a PushAuthenticationData request was sent.
+        /// </summary>
+        public event OnPushAuthenticationDataAPIResponseDelegate?  OnPushAuthenticationDataResponse;
+
+        #endregion
+
+        #region (protected internal) OnPushAuthenticationDataHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PushAuthenticationData HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPushAuthenticationDataHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PushAuthenticationData HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPushAuthenticationDataHTTPResponse(DateTime      Timestamp,
+                                                                      HTTPAPI       API,
+                                                                      HTTPRequest   Request,
+                                                                      HTTPResponse  Response)
+
+            => OnPushAuthenticationDataHTTPResponse.WhenAll(Timestamp,
+                                                            API ?? this,
+                                                            Request,
+                                                            Response);
+
+        #endregion
+
+
+
+        #region (protected internal) OnAuthorizeRemoteReservationStartHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTime     Timestamp,
+                                                                              HTTPAPI      API,
+                                                                              HTTPRequest  Request)
+
+            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
+                                                                    API ?? this,
+                                                                    Request);
+
+        #endregion
+
+        #region (event)              OnAuthorizeRemoteReservationStart(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteReservationStart request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartAPIRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteReservationStart request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartAPIDelegate?          OnAuthorizeRemoteReservationStart;
+
+        /// <summary>
+        /// An event send whenever a response to a AuthorizeRemoteReservationStart request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartAPIResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
+
+        #endregion
+
+        #region (protected internal) OnAuthorizeRemoteReservationStartHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTime      Timestamp,
+                                                                               HTTPAPI       API,
+                                                                               HTTPRequest   Request,
+                                                                               HTTPResponse  Response)
+
+            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
+                                                                     API ?? this,
+                                                                     Request,
+                                                                     Response);
+
+        #endregion
+
+
+        #region (protected internal) OnAuthorizeRemoteReservationStopHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime     Timestamp,
+                                                                             HTTPAPI      API,
+                                                                             HTTPRequest  Request)
+
+            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
+                                                                   API ?? this,
+                                                                   Request);
+
+        #endregion
+
+        #region (event)              OnAuthorizeRemoteReservationStop(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteReservationStop request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopAPIRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteReservationStop request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopAPIDelegate?          OnAuthorizeRemoteReservationStop;
+
+        /// <summary>
+        /// An event send whenever a response to a AuthorizeRemoteReservationStop request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopAPIResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
+
+        #endregion
+
+        #region (protected internal) OnAuthorizeRemoteReservationStopHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTime      Timestamp,
+                                                                              HTTPAPI       API,
+                                                                              HTTPRequest   Request,
+                                                                              HTTPResponse  Response)
+
+            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
+                                                                    API ?? this,
+                                                                    Request,
+                                                                    Response);
+
+        #endregion
+
+
+        #region (protected internal) OnAuthorizeRemoteStartHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTime     Timestamp,
+                                                                   HTTPAPI      API,
+                                                                   HTTPRequest  Request)
+
+            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request);
+
+        #endregion
+
+        #region (event)              OnAuthorizeRemoteStart(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteStart request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartAPIRequestDelegate?   OnAuthorizeRemoteStartRequest;
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteStart request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartAPIDelegate?          OnAuthorizeRemoteStart;
+
+        /// <summary>
+        /// An event send whenever a response to a AuthorizeRemoteStart request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteStartAPIResponseDelegate?  OnAuthorizeRemoteStartResponse;
+
+        #endregion
+
+        #region (protected internal) OnAuthorizeRemoteStartHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTime      Timestamp,
+                                                                    HTTPAPI       API,
+                                                                    HTTPRequest   Request,
+                                                                    HTTPResponse  Response)
+
+            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
+                                                          API ?? this,
+                                                          Request,
+                                                          Response);
+
+        #endregion
+
+
+        #region (protected internal) OnAuthorizeRemoteStopHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTime     Timestamp,
+                                                                  HTTPAPI      API,
+                                                                  HTTPRequest  Request)
+
+            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request);
+
+        #endregion
+
+        #region (event)              OnAuthorizeRemoteStop(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteStop request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopAPIRequestDelegate?   OnAuthorizeRemoteStopRequest;
+
+        /// <summary>
+        /// An event send whenever a AuthorizeRemoteStop request was received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopAPIDelegate?          OnAuthorizeRemoteStop;
+
+        /// <summary>
+        /// An event send whenever a response to a AuthorizeRemoteStop request was sent.
+        /// </summary>
+        public event OnAuthorizeRemoteStopAPIResponseDelegate?  OnAuthorizeRemoteStopResponse;
+
+        #endregion
+
+        #region (protected internal) OnAuthorizeRemoteStopHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTime      Timestamp,
+                                                                   HTTPAPI       API,
+                                                                   HTTPRequest   Request,
+                                                                   HTTPResponse  Response)
+
+            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
+                                                         API ?? this,
+                                                         Request,
+                                                         Response);
+
+        #endregion
+
+
+
+        #region (protected internal) OnGetChargeDetailRecordsHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an GetChargeDetailRecords HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnGetChargeDetailRecordsHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an GetChargeDetailRecords HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logGetChargeDetailRecordsHTTPRequest(DateTime     Timestamp,
+                                                                     HTTPAPI      API,
+                                                                     HTTPRequest  Request)
+
+            => OnGetChargeDetailRecordsHTTPRequest.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request);
+
+        #endregion
+
+        #region (event)              OnGetChargeDetailRecords(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a GetChargeDetailRecords request was received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsAPIRequestDelegate?   OnGetChargeDetailRecordsRequest;
+
+        /// <summary>
+        /// An event send whenever a GetChargeDetailRecords request was received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsAPIDelegate?          OnGetChargeDetailRecords;
+
+        /// <summary>
+        /// An event send whenever a response to a GetChargeDetailRecords request was sent.
+        /// </summary>
+        public event OnGetChargeDetailRecordsAPIResponseDelegate?  OnGetChargeDetailRecordsResponse;
+
+        #endregion
+
+        #region (protected internal) OnGetChargeDetailRecordsHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an GetChargeDetailRecords HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnGetChargeDetailRecordsHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an GetChargeDetailRecords HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logGetChargeDetailRecordsHTTPResponse(DateTime      Timestamp,
+                                                                      HTTPAPI       API,
+                                                                      HTTPRequest   Request,
+                                                                      HTTPResponse  Response)
+
+            => OnGetChargeDetailRecordsHTTPResponse.WhenAll(Timestamp,
+                                                            API ?? this,
+                                                            Request,
+                                                            Response);
+
+        #endregion
+
         #endregion
 
         #region Constructor(s)
@@ -626,8 +1070,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
 
-            //Note: OperatorId is the remote EMP sending an authorize start/stop request!
-
             #region POST  ~/api/oicp/evsepull/v23/providers/{providerId}/data-records
 
             // -----------------------------------------------------------------------------------------------------------------------------------
@@ -677,7 +1119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        SortOrder:                        null,
                                                                                        Timestamp:                        Request.Timestamp,
                                                                                        EventTrackingId:                  Request.EventTrackingId,
-                                                                                       CustomPullEVSEDataRequestParser:  null))
+                                                                                       CustomPullEVSEDataRequestParser:  CustomPullEVSEDataRequestParser))
                                                  {
 
                                                      Counters.PullEVSEData.IncRequests_OK();
@@ -886,11 +1328,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  else if (PullEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                          //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                          //     providerId ????
-                                                                                         out PullEVSEStatusRequest?            pullEVSEStatusRequest,
+                                                                                         out PullEVSEStatusRequest?          pullEVSEStatusRequest,
                                                                                          out String?                         errorResponse,
                                                                                          Timestamp:                          Request.Timestamp,
                                                                                          EventTrackingId:                    Request.EventTrackingId,
-                                                                                         CustomPullEVSEStatusRequestParser:  null))
+                                                                                         CustomPullEVSEStatusRequestParser:  CustomPullEVSEStatusRequestParser))
                                                  {
 
                                                      Counters.PullEVSEStatus.IncRequests_OK();
@@ -1098,7 +1540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              out String?                             errorResponse,
                                                                                              Timestamp:                              Request.Timestamp,
                                                                                              EventTrackingId:                        Request.EventTrackingId,
-                                                                                             CustomPullEVSEStatusByIdRequestParser:  null))
+                                                                                             CustomPullEVSEStatusByIdRequestParser:  CustomPullEVSEStatusByIdRequestParser))
                                                  {
 
                                                      Counters.PullEVSEStatusById.IncRequests_OK();
@@ -1305,7 +1747,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                      out String?                                     errorResponse,
                                                                                                      Timestamp:                                      Request.Timestamp,
                                                                                                      EventTrackingId:                                Request.EventTrackingId,
-                                                                                                     CustomPullEVSEStatusByOperatorIdRequestParser:  null))
+                                                                                                     CustomPullEVSEStatusByOperatorIdRequestParser:  CustomPullEVSEStatusByOperatorIdRequestParser))
                                                  {
 
                                                      Counters.PullEVSEStatusByOperatorId.IncRequests_OK();
@@ -1468,9 +1910,1205 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
 
-            //ToDo: PushAuthenticationData!
+            #region POST  ~/api/oicp/authdata/v21/providers/{providerId}/push-request
+
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v23/providers/DE-GDF/push-request
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/authdata/v21/providers/{providerId}/push-request",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPushAuthenticationDataHTTPRequest,
+                                         HTTPResponseLogger:  logPushAuthenticationDataHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<PushAuthenticationDataRequest>>? pullEVSEDataResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                this,
+                                                                                new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                    Timestamp.Now,
+                                                                                    Request.EventTrackingId,
+                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                    StatusCode: new StatusCode(
+                                                                                                    StatusCodes.SystemError,
+                                                                                                    "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                )
+                                                                                )
+                                                                            );
+
+                                                 #endregion
+
+                                                 else if (PushAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                 //     providerId ????
+                                                                                                 out PushAuthenticationDataRequest?          pullEVSEDataRequest,
+                                                                                                 out String?                                 errorResponse,
+                                                                                                 Timestamp:                                  Request.Timestamp,
+                                                                                                 EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 CustomPushAuthenticationDataRequestParser:  CustomPushAuthenticationDataRequestParser))
+                                                 {
+
+                                                     Counters.PushAuthenticationData.IncRequests_OK();
+
+                                                     #region Send OnPushAuthenticationDataRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushAuthenticationDataRequest is not null)
+                                                             await Task.WhenAll(OnPushAuthenticationDataRequest.GetInvocationList().
+                                                                                Cast<OnPushAuthenticationDataAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPushAuthenticationDataRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPushAuthenticationDataLocal = OnPushAuthenticationData;
+                                                     if (OnPushAuthenticationDataLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullEVSEDataResponse = (await Task.WhenAll(OnPushAuthenticationDataLocal.GetInvocationList().
+                                                                                                                                      Cast<OnPushAuthenticationDataAPIDelegate>().
+                                                                                                                                      Select(e => e(Timestamp.Now,
+                                                                                                                                                    this,
+                                                                                                                                                    pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PushAuthenticationData.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                        this,
+                                                                                        new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.DataError,
+                                                                                                            e.Message,
+                                                                                                            e.StackTrace
+                                                                                                        )
+                                                                                        )
+                                                                                    );
+                                                         }
+                                                     }
+
+                                                     if (pullEVSEDataResponse is null)
+                                                         pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                    this,
+                                                                                    new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        "Could not process the received PushAuthenticationData request!"
+                                                                                                    )
+                                                                                    )
+                                                                                );
+
+                                                     #endregion
+
+                                                     #region Send OnPushAuthenticationDataResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushAuthenticationDataResponse is not null)
+                                                             await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
+                                                                                Cast<OnPushAuthenticationDataAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPushAuthenticationDataResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                this,
+                                                                                new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                    Timestamp.Now,
+                                                                                    Request.EventTrackingId,
+                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                    StatusCode: new StatusCode(
+                                                                                                    StatusCodes.DataError,
+                                                                                                    "We could not parse the given PushAuthenticationData request!",
+                                                                                                    errorResponse
+                                                                                                )
+                                                                                )
+                                                                            );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                            this,
+                                                                            new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                Timestamp.Now,
+                                                                                Request.EventTrackingId,
+                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                StatusCode: new StatusCode(
+                                                                                                StatusCodes.SystemError,
+                                                                                                e.Message,
+                                                                                                e.StackTrace
+                                                                                            )
+                                                                            )
+                                                                        );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullEVSEDataResponse.Response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                          CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
 
 
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
+
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote-reservation/start
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>? authorizeRemoteReservationStartResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                                   this,
+                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                       Timestamp.Now,
+                                                                                                       Request.EventTrackingId,
+                                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                                       StatusCode: new StatusCode(
+                                                                                                                       StatusCodes.SystemError,
+                                                                                                                       "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                                   )
+                                                                                                   )
+                                                                                               );
+
+                                                 #endregion
+
+                                                 else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                          //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                          providerId,
+                                                                                                          Request.Timeout ?? TimeSpan.FromSeconds(60),
+                                                                                                          out AuthorizeRemoteReservationStartRequest?          pullEVSEDataRequest,
+                                                                                                          out String?                                          errorResponse,
+                                                                                                          Timestamp:                                           Request.Timestamp,
+                                                                                                          EventTrackingId:                                     Request.EventTrackingId,
+                                                                                                          CustomAuthorizeRemoteReservationStartRequestParser:  CustomAuthorizeRemoteReservationStartRequestParser))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
+
+                                                     #region Send OnAuthorizeRemoteReservationStartRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteReservationStartRequest is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteReservationStartAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnAuthorizeRemoteReservationStartLocal = OnAuthorizeRemoteReservationStart;
+                                                     if (OnAuthorizeRemoteReservationStartLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             authorizeRemoteReservationStartResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStartLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnAuthorizeRemoteReservationStartAPIDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                                           this,
+                                                                                                           new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                               Timestamp.Now,
+                                                                                                               Request.EventTrackingId,
+                                                                                                               Timestamp.Now - Request.Timestamp,
+                                                                                                               StatusCode: new StatusCode(
+                                                                                                                               StatusCodes.DataError,
+                                                                                                                               e.Message,
+                                                                                                                               e.StackTrace
+                                                                                                                           )
+                                                                                                           )
+                                                                                                       );
+                                                         }
+                                                     }
+
+                                                     if (authorizeRemoteReservationStartResponse is null)
+                                                         authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                                       this,
+                                                                                                       new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                           Timestamp.Now,
+                                                                                                           Request.EventTrackingId,
+                                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                                           StatusCode: new StatusCode(
+                                                                                                                           StatusCodes.SystemError,
+                                                                                                                           "Could not process the received AuthorizeRemoteReservationStart request!"
+                                                                                                                       )
+                                                                                                       )
+                                                                                                   );
+
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeRemoteReservationStartResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteReservationStartResponse is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteReservationStartAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeRemoteReservationStartResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                                   this,
+                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                       Timestamp.Now,
+                                                                                                       Request.EventTrackingId,
+                                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                                       StatusCode: new StatusCode(
+                                                                                                                       StatusCodes.DataError,
+                                                                                                                       "We could not parse the given AuthorizeRemoteReservationStart request!",
+                                                                                                                       errorResponse
+                                                                                                                   )
+                                                                                                   )
+                                                                                               );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                               this,
+                                                                                               new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                   Timestamp.Now,
+                                                                                                   Request.EventTrackingId,
+                                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                                   StatusCode: new StatusCode(
+                                                                                                                   StatusCodes.SystemError,
+                                                                                                                   e.Message,
+                                                                                                                   e.StackTrace
+                                                                                                               )
+                                                                                               )
+                                                                                           );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = authorizeRemoteReservationStartResponse.Response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                             CustomStatusCodeSerializer).
+                                                                                                                                      ToString(JSONFormatting).
+                                                                                                                                      ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
+
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote-reservation/stop
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>? authorizeRemoteReservationStopResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.SystemError,
+                                                                                                                      "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
+
+                                                 #endregion
+
+                                                 else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                         //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                         providerId,
+                                                                                                         Request.Timeout ?? TimeSpan.FromSeconds(60),
+                                                                                                         out AuthorizeRemoteReservationStopRequest?          pullEVSEDataRequest,
+                                                                                                         out String?                                         errorResponse,
+                                                                                                         Timestamp:                                          Request.Timestamp,
+                                                                                                         EventTrackingId:                                    Request.EventTrackingId,
+                                                                                                         CustomAuthorizeRemoteReservationStopRequestParser:  CustomAuthorizeRemoteReservationStopRequestParser))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
+
+                                                     #region Send OnAuthorizeRemoteReservationStopRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteReservationStopRequest is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteReservationStopAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnAuthorizeRemoteReservationStopLocal = OnAuthorizeRemoteReservationStop;
+                                                     if (OnAuthorizeRemoteReservationStopLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             authorizeRemoteReservationStopResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStopLocal.GetInvocationList().
+                                                                                                                                                                Cast<OnAuthorizeRemoteReservationStopAPIDelegate>().
+                                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                                              this,
+                                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                                          this,
+                                                                                                          new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                              Timestamp.Now,
+                                                                                                              Request.EventTrackingId,
+                                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                                              StatusCode: new StatusCode(
+                                                                                                                              StatusCodes.DataError,
+                                                                                                                              e.Message,
+                                                                                                                              e.StackTrace
+                                                                                                                          )
+                                                                                                          )
+                                                                                                      );
+                                                         }
+                                                     }
+
+                                                     if (authorizeRemoteReservationStopResponse is null)
+                                                         authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                                      this,
+                                                                                                      new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                          Timestamp.Now,
+                                                                                                          Request.EventTrackingId,
+                                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                                          StatusCode: new StatusCode(
+                                                                                                                          StatusCodes.SystemError,
+                                                                                                                          "Could not process the received AuthorizeRemoteReservationStop request!"
+                                                                                                                      )
+                                                                                                      )
+                                                                                                  );
+
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeRemoteReservationStopResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteReservationStopResponse is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteReservationStopAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeRemoteReservationStopResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      "We could not parse the given AuthorizeRemoteReservationStop request!",
+                                                                                                                      errorResponse
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                              this,
+                                                                                              new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  e.Message,
+                                                                                                                  e.StackTrace
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = authorizeRemoteReservationStopResponse.Response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                            CustomStatusCodeSerializer).
+                                                                                                                                     ToString(JSONFormatting).
+                                                                                                                                     ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
+
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote/start
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>? authorizeRemoteStartResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                        this,
+                                                                                        new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.SystemError,
+                                                                                                            "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                        )
+                                                                                        )
+                                                                                    );
+
+                                                 #endregion
+
+                                                 else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                               //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                               providerId,
+                                                                                               Request.Timeout ?? TimeSpan.FromSeconds(60),
+                                                                                               out AuthorizeRemoteStartRequest?          pullEVSEDataRequest,
+                                                                                               out String?                               errorResponse,
+                                                                                               Timestamp:                                Request.Timestamp,
+                                                                                               EventTrackingId:                          Request.EventTrackingId,
+                                                                                               CustomAuthorizeRemoteStartRequestParser:  CustomAuthorizeRemoteStartRequestParser))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStart.IncRequests_OK();
+
+                                                     #region Send OnAuthorizeRemoteStartRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteStartRequest is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteStartAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnAuthorizeRemoteStartLocal = OnAuthorizeRemoteStart;
+                                                     if (OnAuthorizeRemoteStartLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             authorizeRemoteStartResponse = (await Task.WhenAll(OnAuthorizeRemoteStartLocal.GetInvocationList().
+                                                                                                                                            Cast<OnAuthorizeRemoteStartAPIDelegate>().
+                                                                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                                                                          this,
+                                                                                                                                                          pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteStart.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                                this,
+                                                                                                new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                                    Timestamp.Now,
+                                                                                                    Request.EventTrackingId,
+                                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                                    StatusCode: new StatusCode(
+                                                                                                                    StatusCodes.DataError,
+                                                                                                                    e.Message,
+                                                                                                                    e.StackTrace
+                                                                                                                )
+                                                                                                )
+                                                                                            );
+                                                         }
+                                                     }
+
+                                                     if (authorizeRemoteStartResponse is null)
+                                                         authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                            this,
+                                                                                            new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                                Timestamp.Now,
+                                                                                                Request.EventTrackingId,
+                                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                                StatusCode: new StatusCode(
+                                                                                                                StatusCodes.SystemError,
+                                                                                                                "Could not process the received AuthorizeRemoteStart request!"
+                                                                                                            )
+                                                                                            )
+                                                                                        );
+
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeRemoteStartResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteStartResponse is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteStartAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeRemoteStartResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                        this,
+                                                                                        new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.DataError,
+                                                                                                            "We could not parse the given AuthorizeRemoteStart request!",
+                                                                                                            errorResponse
+                                                                                                        )
+                                                                                        )
+                                                                                    );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                    this,
+                                                                                    new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        e.Message,
+                                                                                                        e.StackTrace
+                                                                                                    )
+                                                                                    )
+                                                                                );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = authorizeRemoteStartResponse.Response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                  CustomStatusCodeSerializer).
+                                                                                                                           ToString(JSONFormatting).
+                                                                                                                           ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
+
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/providers/DE-GDF/authorize-remote/stop
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
+                                         HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>? authorizeRemoteStopResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                       this,
+                                                                                       new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                       )
+                                                                                       )
+                                                                                   );
+
+                                                 #endregion
+
+                                                 else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                              //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                              providerId,
+                                                                                              Request.Timeout ?? TimeSpan.FromSeconds(60),
+                                                                                              out AuthorizeRemoteStopRequest?          pullEVSEDataRequest,
+                                                                                              out String?                              errorResponse,
+                                                                                              Timestamp:                               Request.Timestamp,
+                                                                                              EventTrackingId:                         Request.EventTrackingId,
+                                                                                              CustomAuthorizeRemoteStopRequestParser:  CustomAuthorizeRemoteStopRequestParser))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStop.IncRequests_OK();
+
+                                                     #region Send OnAuthorizeRemoteStopRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteStopRequest is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteStopAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnAuthorizeRemoteStopLocal = OnAuthorizeRemoteStop;
+                                                     if (OnAuthorizeRemoteStopLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             authorizeRemoteStopResponse = (await Task.WhenAll(OnAuthorizeRemoteStopLocal.GetInvocationList().
+                                                                                                                                          Cast<OnAuthorizeRemoteStopAPIDelegate>().
+                                                                                                                                          Select(e => e(Timestamp.Now,
+                                                                                                                                                        this,
+                                                                                                                                                        pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeRemoteStop.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                               this,
+                                                                                               new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                                   Timestamp.Now,
+                                                                                                   Request.EventTrackingId,
+                                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                                   StatusCode: new StatusCode(
+                                                                                                                   StatusCodes.DataError,
+                                                                                                                   e.Message,
+                                                                                                                   e.StackTrace
+                                                                                                               )
+                                                                                               )
+                                                                                           );
+                                                         }
+                                                     }
+
+                                                     if (authorizeRemoteStopResponse is null)
+                                                         authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                           this,
+                                                                                           new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                               Timestamp.Now,
+                                                                                               Request.EventTrackingId,
+                                                                                               Timestamp.Now - Request.Timestamp,
+                                                                                               StatusCode: new StatusCode(
+                                                                                                               StatusCodes.SystemError,
+                                                                                                               "Could not process the received AuthorizeRemoteStop request!"
+                                                                                                           )
+                                                                                           )
+                                                                                       );
+
+                                                     #endregion
+
+                                                     #region Send OnAuthorizeRemoteStopResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnAuthorizeRemoteStopResponse is not null)
+                                                             await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
+                                                                                Cast<OnAuthorizeRemoteStopAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              authorizeRemoteStopResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                       this,
+                                                                                       new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.DataError,
+                                                                                                           "We could not parse the given AuthorizeRemoteStop request!",
+                                                                                                           errorResponse
+                                                                                                       )
+                                                                                       )
+                                                                                   );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                   this,
+                                                                                   new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.SystemError,
+                                                                                                       e.Message,
+                                                                                                       e.StackTrace
+                                                                                                   )
+                                                                                   )
+                                                                               );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = authorizeRemoteStopResponse.Response.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                                          ToString(JSONFormatting).
+                                                                                                                          ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
+            #region POST  ~/api/oicp/cdrmgmt/v22/providers/{providerId}/get-charge-detail-records-request
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/providers/DE-GDF/get-charge-detail-records-request
+            // -------------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/cdrmgmt/v22/providers/{providerId}/get-charge-detail-records-request",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logGetChargeDetailRecordsHTTPRequest,
+                                         HTTPResponseLogger:  logGetChargeDetailRecordsHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<GetChargeDetailRecordsResponse>? getChargeDetailRecordsResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                          this,
+                                                                                          new GetChargeDetailRecordsResponse(
+                                                                                              null,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<ChargeDetailRecord>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 #endregion
+
+                                                 else if (GetChargeDetailRecordsRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                 //     providerId ????
+                                                                                                 out GetChargeDetailRecordsRequest?          pullEVSEDataRequest,
+                                                                                                 out String?                                 errorResponse,
+                                                                                                 Page:                                       0,
+                                                                                                 Size:                                       0,
+                                                                                                 SortOrder:                                  null,
+                                                                                               //  Timestamp:                                  Request.Timestamp,
+                                                                                               //  EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 CustomGetChargeDetailRecordsRequestParser:  CustomGetChargeDetailRecordsRequestParser))
+                                                 {
+
+                                                     Counters.GetChargeDetailRecords.IncRequests_OK();
+
+                                                     #region Send OnGetChargeDetailRecordsRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnGetChargeDetailRecordsRequest is not null)
+                                                             await Task.WhenAll(OnGetChargeDetailRecordsRequest.GetInvocationList().
+                                                                                Cast<OnGetChargeDetailRecordsAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnGetChargeDetailRecordsRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnGetChargeDetailRecordsLocal = OnGetChargeDetailRecords;
+                                                     if (OnGetChargeDetailRecordsLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             getChargeDetailRecordsResponse = (await Task.WhenAll(OnGetChargeDetailRecordsLocal.GetInvocationList().
+                                                                                                                                Cast<OnGetChargeDetailRecordsAPIDelegate>().
+                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                              this,
+                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.GetChargeDetailRecords.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                        this,
+                                                                                        new GetChargeDetailRecordsResponse(
+                                                                                            pullEVSEDataRequest!,
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            Array.Empty<ChargeDetailRecord>(),
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.DataError,
+                                                                                                            e.Message,
+                                                                                                            e.StackTrace
+                                                                                                        )
+                                                                                        )
+                                                                                    );
+                                                         }
+                                                     }
+
+                                                     if (getChargeDetailRecordsResponse is null)
+                                                         getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                    this,
+                                                                                    new GetChargeDetailRecordsResponse(
+                                                                                        pullEVSEDataRequest!,
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        Array.Empty<ChargeDetailRecord>(),
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        "Could not process the received GetChargeDetailRecords request!"
+                                                                                                    )
+                                                                                    )
+                                                                                );
+
+                                                     #endregion
+
+                                                     #region Send OnGetChargeDetailRecordsResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnGetChargeDetailRecordsResponse is not null)
+                                                             await Task.WhenAll(OnGetChargeDetailRecordsResponse.GetInvocationList().
+                                                                                Cast<OnGetChargeDetailRecordsAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              getChargeDetailRecordsResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnGetChargeDetailRecordsResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                          this,
+                                                                                          new GetChargeDetailRecordsResponse(
+                                                                                              pullEVSEDataRequest!,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<ChargeDetailRecord>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              "We could not parse the given GetChargeDetailRecords request!",
+                                                                                                              errorResponse
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                      this,
+                                                                                      new GetChargeDetailRecordsResponse(
+                                                                                          null,
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          Array.Empty<ChargeDetailRecord>(),
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          e.Message,
+                                                                                                          e.StackTrace
+                                                                                                      )
+                                                                                      )
+                                                                                  );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = getChargeDetailRecordsResponse.Response.ToJSON(CustomGetChargeDetailRecordsResponseSerializer,
+                                                                                                                                    CustomIPagedResponseSerializer,
+                                                                                                                                    CustomChargeDetailRecordSerializer,
+                                                                                                                                    CustomIdentificationSerializer,
+                                                                                                                                    CustomSignedMeteringValueSerializer,
+                                                                                                                                    CustomCalibrationLawVerificationSerializer,
+                                                                                                                                    CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
 
         }
 

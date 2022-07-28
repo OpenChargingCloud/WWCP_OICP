@@ -24,7 +24,7 @@ using System;
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
-    #region OnPullEVSEDataAPI                  (Request|Response)Delegate
+    #region OnPullEVSEData                     (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEData request was received.
@@ -61,7 +61,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusAPI                (Request|Response)Delegate
+    #region OnPullEVSEStatus                   (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatus request was received.
@@ -98,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusByIdAPI            (Request|Response)Delegate
+    #region OnPullEVSEStatusById               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusById request was received.
@@ -135,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusByOperatorIdAPI    (Request|Response)Delegate
+    #region OnPullEVSEStatusByOperatorId       (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusByOperatorId request was received.
@@ -173,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     #endregion
 
 
-    #region OnPushAuthenticationDataAPI        (Request|Response)Delegate
+    #region OnPushAuthenticationData           (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PushAuthenticationData request was received.
@@ -210,5 +210,191 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
+
+    #region OnAuthorizeRemoteReservationStart  (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartAPIRequestDelegate(DateTime                                                                Timestamp,
+                                                            EMPClientAPI                                                            Sender,
+                                                            AuthorizeRemoteReservationStartRequest                                  Request);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteReservationStart.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+
+        OnAuthorizeRemoteReservationStartAPIDelegate        (DateTime                                                               Timestamp,
+                                                             EMPClientAPI                                                           Sender,
+                                                             AuthorizeRemoteReservationStartRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStartAPIResponseDelegate(DateTime                                                               Timestamp,
+                                                             EMPClientAPI                                                           Sender,
+                                                             OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>    Response,
+                                                             TimeSpan                                                               Runtime);
+
+    #endregion
+
+    #region OnAuthorizeRemoteReservationStop   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopAPIRequestDelegate(DateTime                                                               Timestamp,
+                                                           EMPClientAPI                                                           Sender,
+                                                           AuthorizeRemoteReservationStopRequest                                  Request);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteReservationStop.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+
+        OnAuthorizeRemoteReservationStopAPIDelegate        (DateTime                                                              Timestamp,
+                                                            EMPClientAPI                                                          Sender,
+                                                            AuthorizeRemoteReservationStopRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteReservationStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteReservationStopAPIResponseDelegate(DateTime                                                              Timestamp,
+                                                            EMPClientAPI                                                          Sender,
+                                                            OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>    Response,
+                                                            TimeSpan                                                              Runtime);
+
+    #endregion
+
+    #region OnAuthorizeRemoteStart             (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStart request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStartAPIRequestDelegate(DateTime                                                     Timestamp,
+                                                 EMPClientAPI                                                 Sender,
+                                                 AuthorizeRemoteStartRequest                                  Request);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteStart.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+
+        OnAuthorizeRemoteStartAPIDelegate        (DateTime                                                    Timestamp,
+                                                  EMPClientAPI                                                Sender,
+                                                  AuthorizeRemoteStartRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStart response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStartAPIResponseDelegate(DateTime                                                    Timestamp,
+                                                  EMPClientAPI                                                Sender,
+                                                  OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>    Response,
+                                                  TimeSpan                                                    Runtime);
+
+    #endregion
+
+    #region OnAuthorizeRemoteStop              (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStop request was received.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStopAPIRequestDelegate(DateTime                                                    Timestamp,
+                                                EMPClientAPI                                                Sender,
+                                                AuthorizeRemoteStopRequest                                  Request);
+
+
+    /// <summary>
+    /// Send a AuthorizeRemoteStop.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
+
+        OnAuthorizeRemoteStopAPIDelegate        (DateTime                                                   Timestamp,
+                                                 EMPClientAPI                                               Sender,
+                                                 AuthorizeRemoteStopRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a AuthorizeRemoteStop response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnAuthorizeRemoteStopAPIResponseDelegate(DateTime                                                   Timestamp,
+                                                 EMPClientAPI                                               Sender,
+                                                 OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>    Response,
+                                                 TimeSpan                                                   Runtime);
+
+    #endregion
+
+
+    #region OnGetChargeDetailRecords           (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a GetChargeDetailRecords request was received.
+    /// </summary>
+    public delegate Task
+
+        OnGetChargeDetailRecordsAPIRequestDelegate(DateTime                                       Timestamp,
+                                                   EMPClientAPI                                   Sender,
+                                                   GetChargeDetailRecordsRequest                  Request);
+
+
+    /// <summary>
+    /// Send a GetChargeDetailRecords.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<GetChargeDetailRecordsResponse>>
+
+        OnGetChargeDetailRecordsAPIDelegate        (DateTime                                      Timestamp,
+                                                    EMPClientAPI                                  Sender,
+                                                    GetChargeDetailRecordsRequest                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a GetChargeDetailRecords response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnGetChargeDetailRecordsAPIResponseDelegate(DateTime                                      Timestamp,
+                                                    EMPClientAPI                                  Sender,
+                                                    OICPResult<GetChargeDetailRecordsResponse>    Response,
+                                                    TimeSpan                                      Runtime);
+
+    #endregion
 
 }
