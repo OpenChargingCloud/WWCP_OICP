@@ -182,6 +182,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#eRoamingPullEvseData
+
         // {
         //   "ProviderID":                    "string",
         //   "LastCall":                      "2021-01-09T09:16:26.888Z",
@@ -224,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomPullEVSEDataRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomPullEVSEDataRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a PullEVSEData request.
@@ -235,6 +237,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 UInt32?                                            Page                              = null,
                                                 UInt32?                                            Size                              = null,
                                                 IEnumerable<String>?                               SortOrder                         = null,
+                                                DateTime?                                          Timestamp                         = null,
+                                                EventTracking_Id?                                  EventTrackingId                   = null,
                                                 CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -244,8 +248,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Page,
                          Size,
                          SortOrder,
-                         null,
-                         null,
+                         Timestamp,
+                         EventTrackingId,
                          CustomPullEVSEDataRequestParser))
             {
                 return pullEVSEDataResponse!;
@@ -257,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomPullEVSEDataRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomPullEVSEDataRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a PullEVSEData request.
@@ -268,6 +272,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 UInt32?                                            Page                              = null,
                                                 UInt32?                                            Size                              = null,
                                                 IEnumerable<String>?                               SortOrder                         = null,
+                                                DateTime?                                          Timestamp                         = null,
+                                                EventTracking_Id?                                  EventTrackingId                   = null,
                                                 CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -277,8 +283,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Page,
                          Size,
                          SortOrder,
-                         null,
-                         null,
+                         Timestamp,
+                         EventTrackingId,
                          CustomPullEVSEDataRequestParser))
             {
                 return pullEVSEDataResponse!;
@@ -290,7 +296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out PullEVSEDataRequest, out ErrorResponse, CustomPullEVSEDataRequestParser = null)
+        #region (static) TryParse(JSON, out PullEVSEDataRequest, out ErrorResponse, ..., CustomPullEVSEDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a PullEVSEData request.
@@ -562,7 +568,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out PullEVSEDataRequest, out ErrorResponse, CustomPullEVSEDataRequestParser = null)
+        #region (static) TryParse(Text, out PullEVSEDataRequest, out ErrorResponse, ..., CustomPullEVSEDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a PullEVSEData request.
@@ -798,13 +804,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(SearchCenter.HasValue
-                                 ? SearchCenter.ToString() + " / " + DistanceKM + "km"
-                                 : "",
-                             LastCall.HasValue
-                                 ? LastCall.Value.ToIso8601()
-                                 : "",
-                             " (", ProviderId, ")");
+            => new String[] {
+                   SearchCenter.HasValue
+                       ? SearchCenter.ToString() + " / " + DistanceKM + "km"
+                       : "",
+                   LastCall.HasValue
+                       ? LastCall.Value.ToIso8601()
+                       : "",
+                   " (", ProviderId.ToString(), ")"
+               }.Where(text => text.IsNotNullOrEmpty()).
+                    AggregateWith(", ");
 
         #endregion
 

@@ -47,6 +47,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         {
 
             public APICounterValues  PullEVSEData                    { get; }
+            public APICounterValues  PullEVSEStatus                  { get; }
+            public APICounterValues  PullEVSEStatusById              { get; }
+            public APICounterValues  PullEVSEStatusByOperatorId      { get; }
+
             public APICounterValues  AuthorizeStop                   { get; }
             public APICounterValues  ChargingStartNotification       { get; }
             public APICounterValues  ChargingProgressNotification    { get; }
@@ -56,6 +60,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
             public APICounters(APICounterValues? PullEVSEData                   = null,
+                               APICounterValues? PullEVSEStatus                 = null,
+                               APICounterValues? PullEVSEStatusById             = null,
+                               APICounterValues? PullEVSEStatusByOperatorId     = null,
+
                                APICounterValues? AuthorizeStop                  = null,
                                APICounterValues? ChargingStartNotification      = null,
                                APICounterValues? ChargingProgressNotification   = null,
@@ -65,6 +73,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             {
 
                 this.PullEVSEData                  = PullEVSEData                 ?? new APICounterValues();
+                this.PullEVSEStatus                = PullEVSEStatus               ?? new APICounterValues();
+                this.PullEVSEStatusById            = PullEVSEStatusById           ?? new APICounterValues();
+                this.PullEVSEStatusByOperatorId    = PullEVSEStatusByOperatorId   ?? new APICounterValues();
+
                 this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
                 this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
                 this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
@@ -78,6 +90,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 => JSONObject.Create(
                        new JProperty("PullEVSEData",                  PullEVSEData.                ToJSON()),
+                       new JProperty("PullEVSEStatus",                PullEVSEStatus.              ToJSON()),
+                       new JProperty("PullEVSEStatusById",            PullEVSEStatusById.          ToJSON()),
+                       new JProperty("PullEVSEStatusByOperatorId",    PullEVSEStatusByOperatorId.  ToJSON()),
+
                        new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
                        new JProperty("ChargingStartNotification",     ChargingStartNotification.   ToJSON()),
                        new JProperty("ChargingProgressNotification",  ChargingProgressNotification.ToJSON()),
@@ -112,24 +128,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public APICounters                                                        Counters                                           { get; }
+        public APICounters                                                          Counters                                              { get; }
+
 
         // Custom JSON parsers
 
-        public CustomJObjectParserDelegate<PullEVSEDataRequest>?                  CustomPullEVSEDataRequestParser                    { get; set; }
-
-        public CustomJObjectSerializerDelegate<PullEVSEDataResponse>?             CustomPullEVSEDataResponseSerializer               { get; set; }
-        public CustomJObjectSerializerDelegate<EVSEDataRecord>?                   CustomEVSEDataRecordSerializer                     { get; set; }
-        public CustomJObjectSerializerDelegate<Address>?                          CustomAddressSerializer                            { get; set; }
-        public CustomJObjectSerializerDelegate<ChargingFacility>?                 CustomChargingFacilitySerializer                   { get; set; }
-        public CustomJObjectSerializerDelegate<GeoCoordinates>?                   CustomGeoCoordinatesSerializer                     { get; set; }
-        public CustomJObjectSerializerDelegate<EnergySource>?                     CustomEnergySourceSerializer                       { get; set; }
-        public CustomJObjectSerializerDelegate<EnvironmentalImpact>?              CustomEnvironmentalImpactSerializer                { get; set; }
-        public CustomJObjectSerializerDelegate<OpeningTime>?                      CustomOpeningTimesSerializer                       { get; set; }
-        public CustomJObjectSerializerDelegate<StatusCode>?                       CustomStatusCodeSerializer                         { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEDataRequest>?                    CustomPullEVSEDataRequestParser                       { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                         JSONFormatting                                     { get; set; }
+
+        // Custom JSON serializers
+
+        public CustomJObjectSerializerDelegate<PullEVSEDataResponse>?               CustomPullEVSEDataResponseSerializer                  { get; set; }
+        public CustomJObjectSerializerDelegate<EVSEDataRecord>?                     CustomEVSEDataRecordSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<Address>?                            CustomAddressSerializer                               { get; set; }
+        public CustomJObjectSerializerDelegate<ChargingFacility>?                   CustomChargingFacilitySerializer                      { get; set; }
+        public CustomJObjectSerializerDelegate<GeoCoordinates>?                     CustomGeoCoordinatesSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<EnergySource>?                       CustomEnergySourceSerializer                          { get; set; }
+        public CustomJObjectSerializerDelegate<EnvironmentalImpact>?                CustomEnvironmentalImpactSerializer                   { get; set; }
+        public CustomJObjectSerializerDelegate<OpeningTime>?                        CustomOpeningTimesSerializer                          { get; set; }
+        public CustomJObjectSerializerDelegate<StatusCode>?                         CustomStatusCodeSerializer                            { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PullEVSEStatusResponse>?             CustomPullEVSEStatusResponseSerializer                { get; set; }
+        public CustomJObjectSerializerDelegate<OperatorEVSEStatus>?                 CustomOperatorEVSEStatusSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<EVSEStatusRecord>?                   CustomEVSEStatusRecordSerializer                      { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PullEVSEStatusByIdResponse>?         CustomPullEVSEStatusByIdResponseSerializer            { get; set; }
+
+        public CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseSerializer    { get; set; }
+
+
+        public Newtonsoft.Json.Formatting                                           JSONFormatting                                        { get; set; }
 
         #endregion
 
@@ -202,6 +233,214 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                   Response);
 
         #endregion
+
+
+        #region (protected internal) OnPullEVSEStatusHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatus HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullEVSEStatusHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatus HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullEVSEStatusHTTPRequest(DateTime     Timestamp,
+                                                             HTTPAPI      API,
+                                                             HTTPRequest  Request)
+
+            => OnPullEVSEStatusHTTPRequest.WhenAll(Timestamp,
+                                                   API ?? this,
+                                                   Request);
+
+        #endregion
+
+        #region (event)              OnPullEVSEStatus(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatus request was received.
+        /// </summary>
+        public event OnPullEVSEStatusAPIRequestDelegate?   OnPullEVSEStatusRequest;
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatus request was received.
+        /// </summary>
+        public event OnPullEVSEStatusAPIDelegate?          OnPullEVSEStatus;
+
+        /// <summary>
+        /// An event send whenever a response to a PullEVSEStatus request was sent.
+        /// </summary>
+        public event OnPullEVSEStatusAPIResponseDelegate?  OnPullEVSEStatusResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullEVSEStatusHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatus HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullEVSEStatusHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatus HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullEVSEStatusHTTPResponse(DateTime      Timestamp,
+                                                              HTTPAPI       API,
+                                                              HTTPRequest   Request,
+                                                              HTTPResponse  Response)
+
+            => OnPullEVSEStatusHTTPResponse.WhenAll(Timestamp,
+                                                    API ?? this,
+                                                    Request,
+                                                    Response);
+
+        #endregion
+
+
+        #region (protected internal) OnPullEVSEStatusByIdHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusById HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullEVSEStatusByIdHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusById HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullEVSEStatusByIdHTTPRequest(DateTime     Timestamp,
+                                                                 HTTPAPI      API,
+                                                                 HTTPRequest  Request)
+
+            => OnPullEVSEStatusByIdHTTPRequest.WhenAll(Timestamp,
+                                                       API ?? this,
+                                                       Request);
+
+        #endregion
+
+        #region (event)              OnPullEVSEStatusById(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatusById request was received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdAPIRequestDelegate?   OnPullEVSEStatusByIdRequest;
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatusById request was received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdAPIDelegate?          OnPullEVSEStatusById;
+
+        /// <summary>
+        /// An event send whenever a response to a PullEVSEStatusById request was sent.
+        /// </summary>
+        public event OnPullEVSEStatusByIdAPIResponseDelegate?  OnPullEVSEStatusByIdResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullEVSEStatusByIdHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusById HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullEVSEStatusByIdHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusById HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullEVSEStatusByIdHTTPResponse(DateTime      Timestamp,
+                                                                  HTTPAPI       API,
+                                                                  HTTPRequest   Request,
+                                                                  HTTPResponse  Response)
+
+            => OnPullEVSEStatusByIdHTTPResponse.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request,
+                                                        Response);
+
+        #endregion
+
+
+        #region (protected internal) OnPullEVSEStatusByOperatorIdHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusByOperatorId HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullEVSEStatusByOperatorIdHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusByOperatorId HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPRequest(DateTime     Timestamp,
+                                                                         HTTPAPI      API,
+                                                                         HTTPRequest  Request)
+
+            => OnPullEVSEStatusByOperatorIdHTTPRequest.WhenAll(Timestamp,
+                                                               API ?? this,
+                                                               Request);
+
+        #endregion
+
+        #region (event)              OnPullEVSEStatusByOperatorId(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatusByOperatorId request was received.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdAPIRequestDelegate?   OnPullEVSEStatusByOperatorIdRequest;
+
+        /// <summary>
+        /// An event send whenever a PullEVSEStatusByOperatorId request was received.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdAPIDelegate?          OnPullEVSEStatusByOperatorId;
+
+        /// <summary>
+        /// An event send whenever a response to a PullEVSEStatusByOperatorId request was sent.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdAPIResponseDelegate?  OnPullEVSEStatusByOperatorIdResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullEVSEStatusByOperatorIdHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusByOperatorId HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullEVSEStatusByOperatorIdHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEStatusByOperatorId HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPResponse(DateTime      Timestamp,
+                                                                          HTTPAPI       API,
+                                                                          HTTPRequest   Request,
+                                                                          HTTPResponse  Response)
+
+            => OnPullEVSEStatusByOperatorIdHTTPResponse.WhenAll(Timestamp,
+                                                                API ?? this,
+                                                                Request,
+                                                                Response);
+
+        #endregion
+
 
         #endregion
 
@@ -604,6 +843,633 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
+
+            #region POST  ~/api/oicp/evsepull/v21/providers/{providerId}/status-records
+
+            // -------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records
+            // -------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullEVSEStatusHTTPRequest,
+                                         HTTPResponseLogger:  logPullEVSEStatusHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<PullEVSEStatusResponse>? pullEVSEStatusResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                                                  this,
+                                                                                  new PullEVSEStatusResponse(
+                                                                                      null,
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      Array.Empty<OperatorEVSEStatus>(),
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                  )
+                                                                                  )
+                                                                              );
+
+                                                 #endregion
+
+                                                 else if (PullEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                         //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                         //     providerId ????
+                                                                                         out PullEVSEStatusRequest?            pullEVSEStatusRequest,
+                                                                                         out String?                         errorResponse,
+                                                                                         Timestamp:                          Request.Timestamp,
+                                                                                         EventTrackingId:                    Request.EventTrackingId,
+                                                                                         CustomPullEVSEStatusRequestParser:  null))
+                                                 {
+
+                                                     Counters.PullEVSEStatus.IncRequests_OK();
+
+                                                     #region Send OnPullEVSEStatusRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusRequest is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullEVSEStatusLocal = OnPullEVSEStatus;
+                                                     if (OnPullEVSEStatusLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullEVSEStatusResponse = (await Task.WhenAll(OnPullEVSEStatusLocal.GetInvocationList().
+                                                                                                                                Cast<OnPullEVSEStatusAPIDelegate>().
+                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                              this,
+                                                                                                                                              pullEVSEStatusRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullEVSEStatus.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                                                        this,
+                                                                                        new PullEVSEStatusResponse(
+                                                                                            pullEVSEStatusRequest!,
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            Array.Empty<OperatorEVSEStatus>(),
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.DataError,
+                                                                                                            e.Message,
+                                                                                                            e.StackTrace
+                                                                                                        )
+                                                                                        )
+                                                                                    );
+                                                         }
+                                                     }
+
+                                                     if (pullEVSEStatusResponse is null)
+                                                         pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                                                    this,
+                                                                                    new PullEVSEStatusResponse(
+                                                                                        pullEVSEStatusRequest!,
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        Array.Empty<OperatorEVSEStatus>(),
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        "Could not process the received PullEVSEStatus request!"
+                                                                                                    )
+                                                                                    )
+                                                                                );
+
+                                                     #endregion
+
+                                                     #region Send OnPullEVSEStatusResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusResponse is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                                                this,
+                                                                                new PullEVSEStatusResponse(
+                                                                                    pullEVSEStatusRequest!,
+                                                                                    Timestamp.Now,
+                                                                                    Request.EventTrackingId,
+                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                    Array.Empty<OperatorEVSEStatus>(),
+                                                                                    StatusCode: new StatusCode(
+                                                                                                    StatusCodes.DataError,
+                                                                                                    "We could not parse the given PullEVSEStatus request!",
+                                                                                                    errorResponse
+                                                                                                )
+                                                                                )
+                                                                            );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                                            this,
+                                                                            new PullEVSEStatusResponse(
+                                                                                null,
+                                                                                Timestamp.Now,
+                                                                                Request.EventTrackingId,
+                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                Array.Empty<OperatorEVSEStatus>(),
+                                                                                StatusCode: new StatusCode(
+                                                                                                StatusCodes.SystemError,
+                                                                                                e.Message,
+                                                                                                e.StackTrace
+                                                                                            )
+                                                                            )
+                                                                        );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullEVSEStatusResponse.Response.ToJSON(CustomPullEVSEStatusResponseSerializer,
+                                                                                                                            CustomOperatorEVSEStatusSerializer,
+                                                                                                                            CustomEVSEStatusRecordSerializer,
+                                                                                                                            CustomStatusCodeSerializer).
+                                                                                                                     ToString(JSONFormatting).
+                                                                                                                     ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-id
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records-by-id
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-id",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullEVSEStatusByIdHTTPRequest,
+                                         HTTPResponseLogger:  logPullEVSEStatusByIdHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<PullEVSEStatusByIdResponse>? pullEVSEStatusByIdResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                  this,
+                                                                                  new PullEVSEStatusByIdResponse(
+                                                                                      null,
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      Array.Empty<EVSEStatusRecord>(),
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                  )
+                                                                                  )
+                                                                              );
+
+                                                 #endregion
+
+                                                 else if (PullEVSEStatusByIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                             //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                             //     providerId ????
+                                                                                             out PullEVSEStatusByIdRequest?          pullEVSEStatusByIdRequest,
+                                                                                             out String?                             errorResponse,
+                                                                                             Timestamp:                              Request.Timestamp,
+                                                                                             EventTrackingId:                        Request.EventTrackingId,
+                                                                                             CustomPullEVSEStatusByIdRequestParser:  null))
+                                                 {
+
+                                                     Counters.PullEVSEStatusById.IncRequests_OK();
+
+                                                     #region Send OnPullEVSEStatusByIdRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusByIdRequest is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusByIdRequest.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusByIdAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusByIdRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusByIdRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullEVSEStatusByIdLocal = OnPullEVSEStatusById;
+                                                     if (OnPullEVSEStatusByIdLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullEVSEStatusByIdResponse = (await Task.WhenAll(OnPullEVSEStatusByIdLocal.GetInvocationList().
+                                                                                                                                        Cast<OnPullEVSEStatusByIdAPIDelegate>().
+                                                                                                                                        Select(e => e(Timestamp.Now,
+                                                                                                                                                      this,
+                                                                                                                                                      pullEVSEStatusByIdRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullEVSEStatusById.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                              this,
+                                                                                              new PullEVSEStatusByIdResponse(
+                                                                                                  pullEVSEStatusByIdRequest!,
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  Array.Empty<EVSEStatusRecord>(),
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.DataError,
+                                                                                                                  e.Message,
+                                                                                                                  e.StackTrace
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+                                                         }
+                                                     }
+
+                                                     if (pullEVSEStatusByIdResponse is null)
+                                                         pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullEVSEStatusByIdResponse(
+                                                                                              pullEVSEStatusByIdRequest!,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<EVSEStatusRecord>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "Could not process the received PullEVSEStatusById request!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                     #endregion
+
+                                                     #region Send OnPullEVSEStatusByIdResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusByIdResponse is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusByIdResponse.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusByIdAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusByIdResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusByIdResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                      this,
+                                                                                      new PullEVSEStatusByIdResponse(
+                                                                                          pullEVSEStatusByIdRequest!,
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          Array.Empty<EVSEStatusRecord>(),
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.DataError,
+                                                                                                          "We could not parse the given PullEVSEStatusById request!",
+                                                                                                          errorResponse
+                                                                                                      )
+                                                                                      )
+                                                                                  );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                  this,
+                                                                                  new PullEVSEStatusByIdResponse(
+                                                                                      null,
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      Array.Empty<EVSEStatusRecord>(),
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      e.Message,
+                                                                                                      e.StackTrace
+                                                                                                  )
+                                                                                  )
+                                                                              );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullEVSEStatusByIdResponse.Response.ToJSON(CustomPullEVSEStatusByIdResponseSerializer,
+                                                                                                                                CustomEVSEStatusRecordSerializer,
+                                                                                                                                CustomStatusCodeSerializer).
+                                                                                                                         ToString(JSONFormatting).
+                                                                                                                         ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-operator-id
+
+            // ----------------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepull/v21/providers/DE-GDF/status-records-by-operator-id
+            // ----------------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-operator-id",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullEVSEStatusByOperatorIdHTTPRequest,
+                                         HTTPResponseLogger:  logPullEVSEStatusByOperatorIdHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<PullEVSEStatusByOperatorIdResponse>? pullEVSEStatusByOperatorIdResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                              this,
+                                                                                              new PullEVSEStatusByOperatorIdResponse(
+                                                                                                  null,
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  Array.Empty<OperatorEVSEStatus>(),
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+
+                                                 #endregion
+
+                                                 else if (PullEVSEStatusByOperatorIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                     //     Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                     //     providerId ????
+                                                                                                     out PullEVSEStatusByOperatorIdRequest?          pullEVSEStatusByOperatorIdRequest,
+                                                                                                     out String?                                     errorResponse,
+                                                                                                     Timestamp:                                      Request.Timestamp,
+                                                                                                     EventTrackingId:                                Request.EventTrackingId,
+                                                                                                     CustomPullEVSEStatusByOperatorIdRequestParser:  null))
+                                                 {
+
+                                                     Counters.PullEVSEStatusByOperatorId.IncRequests_OK();
+
+                                                     #region Send OnPullEVSEStatusByOperatorIdRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusByOperatorIdRequest is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusByOperatorIdRequest.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusByOperatorIdAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusByOperatorIdRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusByOperatorIdRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullEVSEStatusByOperatorIdLocal = OnPullEVSEStatusByOperatorId;
+                                                     if (OnPullEVSEStatusByOperatorIdLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullEVSEStatusByOperatorIdResponse = (await Task.WhenAll(OnPullEVSEStatusByOperatorIdLocal.GetInvocationList().
+                                                                                                                                                        Cast<OnPullEVSEStatusByOperatorIdAPIDelegate>().
+                                                                                                                                                        Select(e => e(Timestamp.Now,
+                                                                                                                                                                      this,
+                                                                                                                                                                      pullEVSEStatusByOperatorIdRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullEVSEStatusByOperatorId.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                                      this,
+                                                                                                      new PullEVSEStatusByOperatorIdResponse(
+                                                                                                          pullEVSEStatusByOperatorIdRequest!,
+                                                                                                          Timestamp.Now,
+                                                                                                          Request.EventTrackingId,
+                                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                                          Array.Empty<OperatorEVSEStatus>(),
+                                                                                                          StatusCode: new StatusCode(
+                                                                                                                          StatusCodes.DataError,
+                                                                                                                          e.Message,
+                                                                                                                          e.StackTrace
+                                                                                                                      )
+                                                                                                      )
+                                                                                                  );
+                                                         }
+                                                     }
+
+                                                     if (pullEVSEStatusByOperatorIdResponse is null)
+                                                         pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                                  this,
+                                                                                                  new PullEVSEStatusByOperatorIdResponse(
+                                                                                                      pullEVSEStatusByOperatorIdRequest!,
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      Array.Empty<OperatorEVSEStatus>(),
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.SystemError,
+                                                                                                                      "Could not process the received PullEVSEStatusByOperatorId request!"
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
+
+                                                     #endregion
+
+                                                     #region Send OnPullEVSEStatusByOperatorIdResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEStatusByOperatorIdResponse is not null)
+                                                             await Task.WhenAll(OnPullEVSEStatusByOperatorIdResponse.GetInvocationList().
+                                                                                Cast<OnPullEVSEStatusByOperatorIdAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEStatusByOperatorIdResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                              this,
+                                                                                              new PullEVSEStatusByOperatorIdResponse(
+                                                                                                  pullEVSEStatusByOperatorIdRequest!,
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  Array.Empty<OperatorEVSEStatus>(),
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.DataError,
+                                                                                                                  "We could not parse the given PullEVSEStatusByOperatorId request!",
+                                                                                                                  errorResponse
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullEVSEStatusByOperatorIdResponse(
+                                                                                              null,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<OperatorEVSEStatus>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              e.Message,
+                                                                                                              e.StackTrace
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullEVSEStatusByOperatorIdResponse.Response.ToJSON(CustomPullEVSEStatusByOperatorIdResponseSerializer,
+                                                                                                                                        CustomOperatorEVSEStatusSerializer,
+                                                                                                                                        CustomEVSEStatusRecordSerializer,
+                                                                                                                                        CustomStatusCodeSerializer).
+                                                                                                                                 ToString(JSONFormatting).
+                                                                                                                                 ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
+            //ToDo: PushAuthenticationData!
+
 
 
         }

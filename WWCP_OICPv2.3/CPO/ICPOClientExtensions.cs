@@ -18,10 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -57,10 +53,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             PushEVSEData(this ICPOClient     CPOClient,
                          OperatorEVSEData    OperatorEVSEData,
                          ActionTypes         Action              = ActionTypes.FullLoad,
+                         JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
                          CancellationToken?  CancellationToken   = null,
-                         EventTracking_Id    EventTrackingId     = null,
+                         EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null)
 
 
@@ -68,6 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new PushEVSEDataRequest(
                            OperatorEVSEData,
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,
@@ -95,17 +93,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
-            PushEVSEData(this ICPOClient                 CPOClient,
-                         IEnumerable<EVSEDataRecord>     EVSEDataRecords,
-                         Operator_Id                     OperatorId,
-                         String                          OperatorName,
-                         ActionTypes                     Action                   = ActionTypes.FullLoad,
-                         IncludeEVSEDataRecordsDelegate  IncludeEVSEDataRecords   = null,
+            PushEVSEData(this ICPOClient                  CPOClient,
+                         IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                         Operator_Id                      OperatorId,
+                         String                           OperatorName,
+                         ActionTypes                      Action                   = ActionTypes.FullLoad,
+                         IncludeEVSEDataRecordsDelegate?  IncludeEVSEDataRecords   = null,
+                         JObject?                         CustomData               = null,
 
-                         DateTime?                       Timestamp                = null,
-                         CancellationToken?              CancellationToken        = null,
-                         EventTracking_Id                EventTrackingId          = null,
-                         TimeSpan?                       RequestTimeout           = null)
+                         DateTime?                        Timestamp                = null,
+                         CancellationToken?               CancellationToken        = null,
+                         EventTracking_Id?                EventTrackingId          = null,
+                         TimeSpan?                        RequestTimeout           = null)
 
 
                 => CPOClient.PushEVSEData(
@@ -116,6 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 OperatorId,
                                                 OperatorName),
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,
@@ -147,10 +147,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          Operator_Id         OperatorId,
                          String              OperatorName,
                          ActionTypes         Action              = ActionTypes.Insert,
+                         JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
                          CancellationToken?  CancellationToken   = null,
-                         EventTracking_Id    EventTrackingId     = null,
+                         EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null)
 
 
@@ -160,6 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 OperatorId,
                                                 OperatorName),
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,
@@ -220,10 +222,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             PushEVSEStatus(this ICPOClient     CPOClient,
                            OperatorEVSEStatus  OperatorEVSEStatus,
                            ActionTypes         Action              = ActionTypes.Update,
+                           JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
                            CancellationToken?  CancellationToken   = null,
-                           EventTracking_Id    EventTrackingId     = null,
+                           EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null)
 
 
@@ -231,6 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new PushEVSEStatusRequest(
                            OperatorEVSEStatus,
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,
@@ -258,17 +262,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
-            PushEVSEStatus(this ICPOClient                   CPOClient,
-                           IEnumerable<EVSEStatusRecord>     EVSEStatusRecords,
-                           Operator_Id                       OperatorId,
-                           String                            OperatorName,
-                           ActionTypes                       Action                     = ActionTypes.Update,
-                           IncludeEVSEStatusRecordsDelegate  IncludeEVSEStatusRecords   = null,
+            PushEVSEStatus(this ICPOClient                    CPOClient,
+                           IEnumerable<EVSEStatusRecord>      EVSEStatusRecords,
+                           Operator_Id                        OperatorId,
+                           String                             OperatorName,
+                           ActionTypes                        Action                     = ActionTypes.Update,
+                           IncludeEVSEStatusRecordsDelegate?  IncludeEVSEStatusRecords   = null,
+                           JObject?                           CustomData                 = null,
 
-                           DateTime?                         Timestamp                  = null,
-                           CancellationToken?                CancellationToken          = null,
-                           EventTracking_Id                  EventTrackingId            = null,
-                           TimeSpan?                         RequestTimeout             = null)
+                           DateTime?                          Timestamp                  = null,
+                           CancellationToken?                 CancellationToken          = null,
+                           EventTracking_Id?                  EventTrackingId            = null,
+                           TimeSpan?                          RequestTimeout             = null)
 
 
                 => CPOClient.PushEVSEStatus(
@@ -281,6 +286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                OperatorName
                            ),
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,
@@ -312,10 +318,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Operator_Id         OperatorId,
                            String              OperatorName,
                            ActionTypes         Action              = ActionTypes.Update,
+                           JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
                            CancellationToken?  CancellationToken   = null,
-                           EventTracking_Id    EventTrackingId     = null,
+                           EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null)
 
 
@@ -327,6 +334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                OperatorName
                            ),
                            Action,
+                           CustomData,
 
                            Timestamp,
                            CancellationToken,

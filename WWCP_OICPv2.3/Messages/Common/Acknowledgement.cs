@@ -239,22 +239,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         HTTPResponse?          HTTPResponse               = null,
                         JObject?               CustomData                 = null)
 
-                => new Acknowledgement(RequestTimestamp  ?? Timestamp.Now,
-                                       ResponseTimestamp ?? Timestamp.Now,
-                                       EventTrackingId   ?? EventTracking_Id.New,
-                                       Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
-                                       new StatusCode(
-                                           StatusCodes.SystemError,
-                                           StatusCodeDescription ?? "System Error!",
-                                           StatusCodeAdditionalInfo
-                                       ),
-                                       HTTPResponse,
-                                       false,
-                                       SessionId,
-                                       CPOPartnerSessionId,
-                                       EMPPartnerSessionId,
-                                       ProcessId,
-                                       CustomData);
+                => new (RequestTimestamp  ?? Timestamp.Now,
+                        ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
+                        new StatusCode(
+                            StatusCodes.SystemError,
+                            StatusCodeDescription ?? "System Error!",
+                            StatusCodeAdditionalInfo
+                        ),
+                        HTTPResponse,
+                        false,
+                        SessionId,
+                        CPOPartnerSessionId,
+                        EMPPartnerSessionId,
+                        ProcessId,
+                        CustomData);
 
         #endregion
 
@@ -288,22 +288,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 HTTPResponse?          HTTPResponse               = null,
                                 JObject?               CustomData                 = null)
 
-                => new Acknowledgement(RequestTimestamp  ?? Timestamp.Now,
-                                       ResponseTimestamp ?? Timestamp.Now,
-                                       EventTrackingId   ?? EventTracking_Id.New,
-                                       Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
-                                       new StatusCode(
-                                           StatusCodes.ServiceNotAvailable,
-                                           StatusCodeDescription ?? "Service not available!",
-                                           StatusCodeAdditionalInfo
-                                       ),
-                                       HTTPResponse,
-                                       false,
-                                       SessionId,
-                                       CPOPartnerSessionId,
-                                       EMPPartnerSessionId,
-                                       ProcessId,
-                                       CustomData);
+                => new (RequestTimestamp  ?? Timestamp.Now,
+                        ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
+                        new StatusCode(
+                            StatusCodes.ServiceNotAvailable,
+                            StatusCodeDescription ?? "Service not available!",
+                            StatusCodeAdditionalInfo
+                        ),
+                        HTTPResponse,
+                        false,
+                        SessionId,
+                        CPOPartnerSessionId,
+                        EMPPartnerSessionId,
+                        ProcessId,
+                        CustomData);
 
         #endregion
 
@@ -949,6 +949,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
+
             #region ToImmutable()
 
             /// <summary>
@@ -965,18 +966,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public Acknowledgement ToImmutable()
 
-                => new Acknowledgement(RequestTimestamp  ?? Timestamp.Now,
-                                       ResponseTimestamp ?? Timestamp.Now,
-                                       EventTrackingId   ?? EventTracking_Id.New,
-                                       Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
-                                       StatusCode.ToImmutable(),
-                                       HTTPResponse,
-                                       Result,
-                                       SessionId,
-                                       CPOPartnerSessionId,
-                                       EMPPartnerSessionId,
-                                       ProcessId,
-                                       CustomData);
+                => new (RequestTimestamp  ?? Timestamp.Now,
+                        ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        Runtime           ?? (Timestamp.Now - (RequestTimestamp ?? Timestamp.Now)),
+                        StatusCode.ToImmutable(),
+                        HTTPResponse,
+                        Result,
+                        SessionId,
+                        CPOPartnerSessionId,
+                        EMPPartnerSessionId,
+                        ProcessId,
+                        CustomData);
 
             #endregion
 
@@ -1697,9 +1698,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static implicit operator Acknowledgement(Acknowledgement<TRequest> acknowledgement)
 
-                => new (acknowledgement.Request.Timestamp,
+                => new (acknowledgement.Request?.Timestamp       ?? Timestamp.Now,
                         acknowledgement.ResponseTimestamp,
-                        acknowledgement.Request.EventTrackingId,
+                        acknowledgement.Request?.EventTrackingId ?? EventTracking_Id.New,
                         acknowledgement.Runtime,
                         acknowledgement.StatusCode,
                         acknowledgement.HTTPResponse,
@@ -2313,6 +2314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
+
             #region ToImmutable()
 
             /// <summary>
@@ -2329,20 +2331,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override Acknowledgement<TRequest> ToImmutable()
 
-                => new Acknowledgement<TRequest>(ResponseTimestamp ?? Timestamp.Now,
-                                                 EventTrackingId   ?? EventTracking_Id.New,
-                                                 Runtime           ?? (Request is not null
-                                                                           ? Timestamp.Now - Request.Timestamp
-                                                                           : TimeSpan.Zero),
-                                                 StatusCode.ToImmutable(),
-                                                 Request,
-                                                 HTTPResponse,
-                                                 Result,
-                                                 SessionId,
-                                                 CPOPartnerSessionId,
-                                                 EMPPartnerSessionId,
-                                                 ProcessId,
-                                                 CustomData);
+                => new (ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        Runtime           ?? (Request is not null
+                                                  ? Timestamp.Now - Request.Timestamp
+                                                  : TimeSpan.Zero),
+                        StatusCode.ToImmutable(),
+                        Request,
+                        HTTPResponse,
+                        Result,
+                        SessionId,
+                        CPOPartnerSessionId,
+                        EMPPartnerSessionId,
+                        ProcessId,
+                        CustomData);
 
             #endregion
 

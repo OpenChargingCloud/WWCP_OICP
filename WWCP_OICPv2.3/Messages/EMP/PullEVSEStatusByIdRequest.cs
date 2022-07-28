@@ -18,9 +18,6 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
@@ -66,11 +63,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEStatusByIdRequest(Provider_Id           ProviderId,
                                          IEnumerable<EVSE_Id>  EVSEIds,
-                                         JObject               CustomData          = null,
+                                         JObject?              CustomData          = null,
 
                                          DateTime?             Timestamp           = null,
                                          CancellationToken?    CancellationToken   = null,
-                                         EventTracking_Id      EventTrackingId     = null,
+                                         EventTracking_Id?     EventTrackingId     = null,
                                          TimeSpan?             RequestTimeout      = null)
 
             : base(CustomData,
@@ -82,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             this.ProviderId  = ProviderId;
-            this.EVSEIds     = EVSEIds ?? new EVSE_Id[0];
+            this.EVSEIds     = EVSEIds ?? Array.Empty<EVSE_Id>();
 
         }
 
@@ -91,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#512-eroamingpullevsestatusbyid-message
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#eRoamingPullEVSEStatusByIDmessage
 
         // {
         //   "ProviderID": "string",
@@ -102,57 +99,65 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomPullEVSEStatusByIdRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomPullEVSEStatusByIdRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a PullEVSEStatusById request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById JSON objects.</param>
-        public static PullEVSEStatusByIdRequest Parse(JObject                                                 JSON,
-                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        public static PullEVSEStatusByIdRequest Parse(JObject                                                  JSON,
+                                                      DateTime?                                                Timestamp                               = null,
+                                                      EventTracking_Id?                                        EventTrackingId                         = null,
+                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         out PullEVSEStatusByIdRequest  pullEVSEStatusResponse,
-                         out String                     ErrorResponse,
+                         out PullEVSEStatusByIdRequest?  pullEVSEStatusResponse,
+                         out String?                     errorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomPullEVSEStatusByIdRequestParser))
             {
-                return pullEVSEStatusResponse;
+                return pullEVSEStatusResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEStatusById request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusById request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomPullEVSEStatusByIdRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomPullEVSEStatusByIdRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a PullEVSEStatusById request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
-        public static PullEVSEStatusByIdRequest Parse(String                                                  Text,
-                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        public static PullEVSEStatusByIdRequest Parse(String                                                   Text,
+                                                      DateTime?                                                Timestamp                               = null,
+                                                      EventTracking_Id?                                        EventTrackingId                         = null,
+                                                      CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         out PullEVSEStatusByIdRequest  pullEVSEStatusResponse,
-                         out String                     ErrorResponse,
+                         out PullEVSEStatusByIdRequest?  pullEVSEStatusResponse,
+                         out String?                     errorResponse,
+                         Timestamp,
+                         EventTrackingId,
                          CustomPullEVSEStatusByIdRequestParser))
             {
-                return pullEVSEStatusResponse;
+                return pullEVSEStatusResponse!;
             }
 
-            throw new ArgumentException("The given text representation of a PullEVSEStatusById request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a PullEVSEStatusById request is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out PullEVSEStatusByIdRequest, out ErrorResponse, CustomPullEVSEStatusByIdRequestParser = null)
+        #region (static) TryParse(JSON, out PullEVSEStatusByIdRequest, out ErrorResponse, ..., CustomPullEVSEStatusByIdRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a PullEVSEStatusById request.
@@ -161,10 +166,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEStatusByIdRequest">The parsed PullEVSEStatusById request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                 JSON,
-                                       out PullEVSEStatusByIdRequest                           PullEVSEStatusByIdRequest,
-                                       out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        public static Boolean TryParse(JObject                                                  JSON,
+                                       out PullEVSEStatusByIdRequest?                           PullEVSEStatusByIdRequest,
+                                       out String?                                              ErrorResponse,
+                                       DateTime?                                                Timestamp                               = null,
+                                       EventTracking_Id?                                        EventTrackingId                         = null,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestParser   = null)
         {
 
             try
@@ -214,7 +221,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(ProviderId,
                                                                           EVSEIds?.ToArray() ?? new EVSE_Id[0],
-                                                                          CustomData);
+                                                                          CustomData,
+                                                                          Timestamp,
+                                                                          null,
+                                                                          EventTrackingId);
 
                 if (CustomPullEVSEStatusByIdRequestParser is not null)
                     PullEVSEStatusByIdRequest = CustomPullEVSEStatusByIdRequestParser(JSON,
@@ -234,7 +244,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out PullEVSEStatusByIdRequest, out ErrorResponse, CustomPullEVSEStatusByIdRequestParser = null)
+        #region (static) TryParse(Text, out PullEVSEStatusByIdRequest, out ErrorResponse, ..., CustomPullEVSEStatusByIdRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a PullEVSEStatusById request.
@@ -243,10 +253,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEStatusByIdRequest">The parsed PullEVSEStatusById request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
-        public static Boolean TryParse(String                                                  Text,
-                                       out PullEVSEStatusByIdRequest                           PullEVSEStatusByIdRequest,
-                                       out String                                              ErrorResponse,
-                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestParser   = null)
+        public static Boolean TryParse(String                                                   Text,
+                                       out PullEVSEStatusByIdRequest?                           PullEVSEStatusByIdRequest,
+                                       out String?                                              ErrorResponse,
+                                       DateTime?                                                Timestamp                               = null,
+                                       EventTracking_Id?                                        EventTrackingId                         = null,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestParser   = null)
         {
 
             try
@@ -255,6 +267,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PullEVSEStatusByIdRequest,
                                 out ErrorResponse,
+                                Timestamp,
+                                EventTrackingId,
                                 CustomPullEVSEStatusByIdRequestParser);
 
             }
@@ -275,7 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomPullEVSEStatusByIdRequestSerializer">A delegate to customize the serialization of PullEVSEStatusByIdRequest responses.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByIdRequest>  CustomPullEVSEStatusByIdRequestSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -353,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is PullEVSEStatusByIdRequest pullEVSEStatusByIdRequest &&
                    Equals(pullEVSEStatusByIdRequest);
@@ -367,14 +381,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PullEVSEStatusByIdRequest">An pull EVSE status by id request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(PullEVSEStatusByIdRequest PullEVSEStatusByIdRequest)
+        public override Boolean Equals(PullEVSEStatusByIdRequest? PullEVSEStatusByIdRequest)
 
-            => !(PullEVSEStatusByIdRequest is null) &&
+            => PullEVSEStatusByIdRequest is not null &&
 
-                 ProviderId.Equals(PullEVSEStatusByIdRequest.ProviderId) &&
+               ProviderId.Equals(PullEVSEStatusByIdRequest.ProviderId) &&
 
-                 EVSEIds.Count().Equals(PullEVSEStatusByIdRequest.EVSEIds.Count()) &&
-                 EVSEIds.All(operatorId => PullEVSEStatusByIdRequest.EVSEIds.Contains(operatorId));
+               EVSEIds.Count().Equals(PullEVSEStatusByIdRequest.EVSEIds.Count()) &&
+               EVSEIds.All(operatorId => PullEVSEStatusByIdRequest.EVSEIds.Contains(operatorId));
 
         #endregion
 
@@ -390,10 +404,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return ProviderId.GetHashCode() * 3 ^
                        EVSEIds.Aggregate(0, (hashCode, evseId) => hashCode ^ evseId.GetHashCode());
-
             }
         }
 

@@ -18,18 +18,12 @@
 #region Usings
 
 using System;
-using System.Linq;
-using System.Threading;
-using System.Net.Security;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 using WWCP = org.GraphDefined.WWCP;
@@ -61,11 +55,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate    _WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
 
-        private static readonly  Regex                                                pattern                             = new Regex(@"\s=\s");
+        private static readonly  Regex                                                pattern                             = new (@"\s=\s");
 
         public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate     DefaultOperatorNameSelector         = I18N => I18N.FirstText();
 
-        private readonly         HashSet<org.GraphDefined.WWCP.EVSE_Id>               SuccessfullyUploadedEVSEs           = new HashSet<org.GraphDefined.WWCP.EVSE_Id>();
+        private readonly         HashSet<WWCP.EVSE_Id>                                SuccessfullyUploadedEVSEs           = new ();
 
         #endregion
 
@@ -554,7 +548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         // The PartnerProductId is a simple string...
-                        if (!PartnerProductId.Value.ToString().Contains("="))
+                        if (!PartnerProductId.Value.ToString().Contains('='))
                         {
                             ChargingProduct = new WWCP.ChargingProduct(
                                                   WWCP.ChargingProduct_Id.Parse(PartnerProductId.Value.ToString())
@@ -582,10 +576,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     var MinDurationText = ProductIdElements["D"];
 
                                     if (MinDurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                        MinDuration = TimeSpan.FromSeconds(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+                                        MinDuration = TimeSpan.FromSeconds(UInt32.Parse(MinDurationText[..^3]));
 
                                     if (MinDurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                        MinDuration = TimeSpan.FromMinutes(UInt32.Parse(MinDurationText.Substring(0, MinDurationText.Length - 3)));
+                                        MinDuration = TimeSpan.FromMinutes(UInt32.Parse(MinDurationText[..^3]));
 
                                 }
 
@@ -932,18 +926,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             PushEVSEData(IEnumerable<WWCP.EVSE>  EVSEs,
                          ActionTypes             ServerAction,
+                         JObject?                CustomData          = null,
 
-                         DateTime?               Timestamp          = null,
-                         CancellationToken?      CancellationToken  = null,
-                         EventTracking_Id        EventTrackingId    = null,
-                         TimeSpan?               RequestTimeout     = null)
+                         DateTime?               Timestamp           = null,
+                         CancellationToken?      CancellationToken   = null,
+                         EventTracking_Id?       EventTrackingId     = null,
+                         TimeSpan?               RequestTimeout      = null)
 
         {
 
             #region Initial checks
 
-            if (EVSEs == null)
-                EVSEs = new WWCP.EVSE[0];
+            if (EVSEs is null)
+                EVSEs = Array.Empty<WWCP.EVSE>();
 
 
             if (!Timestamp.HasValue)
@@ -952,14 +947,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
+            if (EventTrackingId is null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
 
-            WWCP.PushEVSEDataResult result;
+            WWCP.PushEVSEDataResult? result = null;
 
             #endregion
 
@@ -1040,6 +1035,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 DefaultOperatorName
                                             ),
                                             ServerAction,
+                                            CustomData,
 
                                             Timestamp,
                                             CancellationToken,
@@ -1128,6 +1124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null
                                                              ),
                                                              ActionTypes.FullLoad,
+                                                             CustomData,
 
                                                              Timestamp,
                                                              CancellationToken,
@@ -1285,18 +1282,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             PushEVSEStatus(IEnumerable<WWCP.EVSEStatusUpdate>  EVSEStatusUpdates,
                            ActionTypes                         ServerAction,
+                           JObject?                            CustomData          = null,
 
                            DateTime?                           Timestamp           = null,
                            CancellationToken?                  CancellationToken   = null,
-                           EventTracking_Id                    EventTrackingId     = null,
+                           EventTracking_Id?                   EventTrackingId     = null,
                            TimeSpan?                           RequestTimeout      = null)
 
         {
 
             #region Initial checks
 
-            if (EVSEStatusUpdates == null)
-                EVSEStatusUpdates = new WWCP.EVSEStatusUpdate[0];
+            if (EVSEStatusUpdates is null)
+                EVSEStatusUpdates = Array.Empty<WWCP.EVSEStatusUpdate>();
 
 
             if (!Timestamp.HasValue)
@@ -1305,14 +1303,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
+            if (EventTrackingId is null)
                 EventTrackingId = EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
 
-            WWCP.PushEVSEStatusResult result = null;
+            WWCP.PushEVSEStatusResult? result = null;
 
             #endregion
 
@@ -1402,6 +1400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 DefaultOperatorName
                                             ),
                                             ServerAction,
+                                            CustomData,
 
                                             Timestamp,
                                             CancellationToken,
@@ -1587,6 +1586,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(new WWCP.EVSE[] { EVSE },
                                       ActionTypes.FullLoad,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -1684,6 +1684,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(new WWCP.EVSE[] { EVSE },
                                       ActionTypes.Insert,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -1804,6 +1805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(new WWCP.EVSE[] { EVSE },
                                       ActionTypes.Update,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -1901,6 +1903,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(new WWCP.EVSE[] { EVSE },
                                       ActionTypes.Delete,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2011,6 +2014,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(EVSEs,
                                       ActionTypes.FullLoad,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2119,6 +2123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(EVSEs,
                                       ActionTypes.Insert,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2227,6 +2232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(EVSEs,
                                       ActionTypes.Update,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2335,6 +2341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(EVSEs,
                                       ActionTypes.Delete,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2491,6 +2498,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEStatus(StatusUpdates,
                                         ActionTypes.Update,
+                                        null,
 
                                         Timestamp,
                                         CancellationToken,
@@ -2600,6 +2608,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingStation.EVSEs,
                                       ActionTypes.FullLoad,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2709,6 +2718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingStation.EVSEs,
                                       ActionTypes.Insert,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2812,8 +2822,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             else
                             {
-                                var List = new List<PropertyUpdateInfos>();
-                                List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                                var List = new List<PropertyUpdateInfos> {
+                                    new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
+                                };
                                 ChargingStationsUpdateLog.Add(ChargingStation, List);
                             }
 
@@ -2838,6 +2849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingStation,
                                       ActionTypes.Update,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -2883,6 +2895,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStation.EVSEs,
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -2927,6 +2940,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
                                 ActionTypes.FullLoad,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -2971,6 +2985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
                                 ActionTypes.Insert,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3014,6 +3029,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
                                 ActionTypes.Update,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3057,6 +3073,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3223,6 +3240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionTypes.FullLoad,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -3332,6 +3350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionTypes.Insert,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -3435,8 +3454,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             else
                             {
-                                var List = new List<PropertyUpdateInfos>();
-                                List.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                                var List = new List<PropertyUpdateInfos> {
+                                    new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
+                                };
                                 ChargingPoolsUpdateLog.Add(ChargingPool, List);
                             }
 
@@ -3461,6 +3481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return await PushEVSEData(ChargingPool.EVSEs,
                                       ActionTypes.Update,
+                                      null,
 
                                       Timestamp,
                                       CancellationToken,
@@ -3506,6 +3527,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingPool.EVSEs,
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3550,6 +3572,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
                                 ActionTypes.FullLoad,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3593,6 +3616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
                                 ActionTypes.Insert,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3636,6 +3660,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
                                 ActionTypes.Update,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3679,6 +3704,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3779,6 +3805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperator.EVSEs,
                                 ActionTypes.FullLoad,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3820,6 +3847,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperator.EVSEs,
                                 ActionTypes.Insert,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3861,6 +3889,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperator.EVSEs,
                                 ActionTypes.Update,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3902,6 +3931,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperator.EVSEs,
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3944,6 +3974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperators.SafeSelectMany(stationoperator => stationoperator.EVSEs),
                                 ActionTypes.FullLoad,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -3985,6 +4016,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperators.SafeSelectMany(stationoperator => stationoperator.EVSEs),
                                 ActionTypes.Insert,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4026,6 +4058,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperators.SafeSelectMany(stationoperator => stationoperator.EVSEs),
                                 ActionTypes.Update,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4067,6 +4100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(ChargingStationOperators.SafeSelectMany(stationoperator => stationoperator.EVSEs),
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4167,6 +4201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(RoamingNetwork.EVSEs,
                                 ActionTypes.FullLoad,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4208,6 +4243,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(RoamingNetwork.EVSEs,
                                 ActionTypes.Insert,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4249,6 +4285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(RoamingNetwork.EVSEs,
                                 ActionTypes.Update,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4290,6 +4327,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             return PushEVSEData(RoamingNetwork.EVSEs,
                                 ActionTypes.Delete,
+                                null,
 
                                 Timestamp,
                                 CancellationToken,
@@ -4433,7 +4471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 ChargingProduct,
                                                 SessionId,
                                                 CPOPartnerSessionId,
-                                                new WWCP.ISendAuthorizeStartStop[0],
+                                                Array.Empty<WWCP.ISendAuthorizeStartStop>(),
                                                 RequestTimeout);
 
             }
@@ -4562,7 +4600,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  ChargingProduct,
                                                  SessionId,
                                                  CPOPartnerSessionId,
-                                                 new WWCP.ISendAuthorizeStartStop[0],
+                                                 Array.Empty<WWCP.ISendAuthorizeStartStop>(),
                                                  RequestTimeout,
                                                  result,
                                                  Runtime);
@@ -5437,6 +5475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 var pushEVSEStatusFastTask = await PushEVSEStatus(EVSEStatusFastQueueCopy.Where(evseStatusUpdate => SuccessfullyUploadedEVSEs.Contains(evseStatusUpdate.EVSE.Id)),
                                                                   ActionTypes.Update,
+                                                                  null,
 
                                                                   DateTime.UtcNow,
                                                                   new CancellationTokenSource().Token,
@@ -5673,11 +5712,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public override Int32 CompareTo(Object Object)
+        public override Int32 CompareTo(Object? Object)
         {
 
-            if (Object is WWCPEMPAdapter WWCPEMPAdapter)
-                return CompareTo(WWCPEMPAdapter);
+            if (Object is WWCPEMPAdapter wwcpEMPAdapter)
+                return CompareTo(wwcpEMPAdapter);
 
             throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
 
@@ -5714,7 +5753,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is WWCPEMPAdapter WWCPEMPAdapter &&
                    Equals(WWCPEMPAdapter);
@@ -5728,11 +5767,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(WWCPEMPAdapter WWCPEMPAdapter)
+        public Boolean Equals(WWCPEMPAdapter? WWCPEMPAdapter)
 
-            => WWCPEMPAdapter is null
-                   ? false
-                   : Id.Equals(WWCPEMPAdapter.Id);
+            => WWCPEMPAdapter is not null &&
+                   Id.Equals(WWCPEMPAdapter.Id);
 
         #endregion
 

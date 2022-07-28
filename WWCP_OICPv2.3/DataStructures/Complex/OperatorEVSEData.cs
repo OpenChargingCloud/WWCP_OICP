@@ -120,7 +120,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomOperatorEVSEDataParser = null)
+        #region (static) Parse   (JSON, ..., CustomOperatorEVSEDataParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of operator EVSE data.
@@ -136,7 +136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?            errorResponse,
                          CustomOperatorEVSEDataParser))
             {
-                return operatorEVSEData;
+                return operatorEVSEData!;
             }
 
             throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + errorResponse, nameof(JSON));
@@ -145,7 +145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomOperatorEVSEDataParser = null)
+        #region (static) Parse   (Text, ..., CustomOperatorEVSEDataParser = null)
 
         /// <summary>
         /// Parse the given text representation of operator EVSE data.
@@ -161,7 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?            errorResponse,
                          CustomOperatorEVSEDataParser))
             {
-                return operatorEVSEData;
+                return operatorEVSEData!;
             }
 
             throw new ArgumentException("The given text representation of operator EVSE data is invalid: " + errorResponse, nameof(Text));

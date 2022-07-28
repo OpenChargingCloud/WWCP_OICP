@@ -18,14 +18,13 @@
 #region Usings
 
 using System;
-using System.Threading.Tasks;
 
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
-    #region OnPullEVSEDataRequest/-Response
+    #region OnPullEVSEData                             (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEData request will be send.
@@ -46,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusRequest/-Response
+    #region OnPullEVSEStatus                           (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatus request will be send.
@@ -67,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusByIdRequest/-Response
+    #region OnPullEVSEStatusById                       (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusById request will be send.
@@ -88,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnPullEVSEStatusByOperatorIdRequest/-Response
+    #region OnPullEVSEStatusByOperatorId               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusByOperatorId request will be send.
@@ -110,7 +109,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     #endregion
 
 
-    #region OnAuthorizeRemoteReservationStart/-Stop
+    #region OnPushAuthenticationDataAPI                (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushAuthenticationData request request will be send.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataRequestDelegate(DateTime                                                    Timestamp,
+                                                EMPClient                                                   Sender,
+                                                String                                                      SenderDescription,
+                                                PushAuthenticationDataRequest                               Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PushAuthenticationData request had been received.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataResponseDelegate(DateTime                                                      Timestamp,
+                                                 EMPClient                                                     Sender,
+                                                 String                                                        SenderDescription,
+                                                 PushAuthenticationDataRequest                                 Request,
+                                                 OICPResult<Acknowledgement<PushAuthenticationDataRequest>>    Response);
+
+    #endregion
+
+
+    #region OnAuthorizeRemoteReservationStart/-Stop    (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteReservationStart request will be send.
@@ -128,6 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                            String                                                                SenderDescription,
                                                                            AuthorizeRemoteReservationStartRequest                                Request,
                                                                            OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>   Response);
+
 
 
     /// <summary>
@@ -149,7 +175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
     #endregion
 
-    #region OnAuthorizeRemoteStart/-Stop
+    #region OnAuthorizeRemoteStart/-Stop               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteStart request will be send.
@@ -167,6 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                 String                                                     SenderDescription,
                                                                 AuthorizeRemoteStartRequest                                Request,
                                                                 OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>   Response);
+
 
 
     /// <summary>
@@ -189,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     #endregion
 
 
-    #region OnGetChargeDetailRecords
+    #region OnGetChargeDetailRecords                   (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a GetChargeDetailRecords request will be send.
