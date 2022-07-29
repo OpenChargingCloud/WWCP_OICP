@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -463,7 +461,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override Boolean Equals(ChargeDetailRecordRequest? ChargeDetailRecord)
 
             => ChargeDetailRecord is not null &&
-                 ChargeDetailRecord.Equals(ChargeDetailRecord.ChargeDetailRecord);
+
+               ChargeDetailRecord.Equals(ChargeDetailRecord.ChargeDetailRecord);
 
         #endregion
 

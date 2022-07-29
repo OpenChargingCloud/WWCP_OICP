@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -611,6 +608,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override Boolean Equals(AuthorizeStartRequest? AuthorizeStart)
 
             => AuthorizeStart is not null &&
+
                OperatorId.    Equals(AuthorizeStart.OperatorId)     &&
                Identification.Equals(AuthorizeStart.Identification) &&
 
@@ -643,6 +641,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return OperatorId.          GetHashCode()       * 17 ^
                        Identification.      GetHashCode()       * 13 ^
 
@@ -651,6 +650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (PartnerProductId?.   GetHashCode() ?? 0);
+
             }
         }
 

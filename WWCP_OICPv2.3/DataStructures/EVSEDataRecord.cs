@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -334,7 +330,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               IEnumerable<PaymentOptions>       PaymentOptions,
                               IEnumerable<ValueAddedServices>   ValueAddedServices,
                               AccessibilityTypes                Accessibility,
-                              Phone_Number?                     HotlinePhoneNumber,
+                              Phone_Number?                     HotlinePhoneNumber,                // mandatory => optional, because of Hubject data quality issues!
                               Boolean                           IsOpen24Hours,
                               Boolean                           IsHubjectCompatible,
                               FalseTrueAuto                     DynamicInfoAvailable,
@@ -1686,47 +1682,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewEVSEId">An optional new EVSE identification.</param>
         public Builder ToBuilder(EVSE_Id? NewEVSEId = null)
 
-            => new Builder(NewEVSEId ?? Id,
-                           OperatorId,
-                           OperatorName,
-                           ChargingStationName,
-                           Address,
-                           GeoCoordinates,
-                           PlugTypes,
-                           ChargingFacilities,
-                           RenewableEnergy,
-                           CalibrationLawDataAvailability,
-                           AuthenticationModes,
-                           PaymentOptions,
-                           ValueAddedServices,
-                           Accessibility,
-                           HotlinePhoneNumber,
-                           IsOpen24Hours,
-                           IsHubjectCompatible,
-                           DynamicInfoAvailable,
+            => new (NewEVSEId ?? Id,
+                    OperatorId,
+                    OperatorName,
+                    ChargingStationName,
+                    Address,
+                    GeoCoordinates,
+                    PlugTypes,
+                    ChargingFacilities,
+                    RenewableEnergy,
+                    CalibrationLawDataAvailability,
+                    AuthenticationModes,
+                    PaymentOptions,
+                    ValueAddedServices,
+                    Accessibility,
+                    HotlinePhoneNumber,
+                    IsOpen24Hours,
+                    IsHubjectCompatible,
+                    DynamicInfoAvailable,
 
-                           DeltaType,
-                           LastUpdate,
+                    DeltaType,
+                    LastUpdate,
 
-                           ChargingStationId,
-                           ChargingPoolId,
-                           HardwareManufacturer,
-                           ChargingStationImageURL,
-                           SubOperatorName,
-                           DynamicPowerLevel,
-                           EnergySources,
-                           EnvironmentalImpact,
-                           MaxCapacity,
-                           AccessibilityLocationType,
-                           AdditionalInfo,
-                           ChargingStationLocationReference,
-                           GeoChargingPointEntrance,
-                           OpeningTimes,
-                           HubOperatorId,
-                           ClearingHouseId,
+                    ChargingStationId,
+                    ChargingPoolId,
+                    HardwareManufacturer,
+                    ChargingStationImageURL,
+                    SubOperatorName,
+                    DynamicPowerLevel,
+                    EnergySources,
+                    EnvironmentalImpact,
+                    MaxCapacity,
+                    AccessibilityLocationType,
+                    AdditionalInfo,
+                    ChargingStationLocationReference,
+                    GeoChargingPointEntrance,
+                    OpeningTimes,
+                    HubOperatorId,
+                    ClearingHouseId,
 
-                           CustomData,
-                           internalData);
+                    CustomData,
+                    internalData);
 
         #endregion
 
@@ -1771,7 +1767,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The name of the operator of the EVSE.
             /// </summary>
             [Mandatory]
-            public String                             OperatorName                        { get; set; }
+            public String?                            OperatorName                        { get; set; }
 
             /// <summary>
             /// The identification of the charging station hosting the EVSE.
@@ -1789,13 +1785,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The multi-language name of the charging station hosting the EVSE.
             /// </summary>
             [Mandatory]
-            public I18NText                           ChargingStationName                 { get; set; }
+            public I18NText?                          ChargingStationName                 { get; set; }
 
             /// <summary>
             /// Optional name of the EVSE manufacturer.
             /// </summary>
             [Optional]
-            public String                             HardwareManufacturer                { get; set; }
+            public String?                            HardwareManufacturer                { get; set; }
 
             /// <summary>
             /// Optional URL to an image of the EVSE.
@@ -1807,7 +1803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Optional name of the sub operator owning the EVSE.
             /// </summary>
             [Optional]
-            public String                             SubOperatorName                     { get; set; }
+            public String?                            SubOperatorName                     { get; set; }
 
             /// <summary>
             /// Whether the EVSE is able to deliver different power outputs.
@@ -1819,7 +1815,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The address of the EVSE.
             /// </summary>
             [Mandatory]
-            public Address                            Address                             { get; set; }
+            public Address?                           Address                             { get; set; }
 
             /// <summary>
             /// The geo coordinate of the EVSE.
@@ -1910,13 +1906,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Optional multi-language information about the EVSE.
             /// </summary>
             [Optional]
-            public I18NText                           AdditionalInfo                      { get; set; }
+            public I18NText?                          AdditionalInfo                      { get; set; }
 
             /// <summary>
             /// Optional last meters information regarding the location of the EVSE.
             /// </summary>
             [Optional]
-            public I18NText                           ChargingStationLocationReference    { get; set; }
+            public I18NText?                          ChargingStationLocationReference    { get; set; }
 
             /// <summary>
             /// In case that the EVSE is part of a bigger facility (e.g. parking place),
@@ -1967,7 +1963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject                            CustomData                          { get; set; }
+            public JObject?                           CustomData                          { get; set; }
 
             #endregion
 
@@ -2019,17 +2015,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(EVSE_Id?                           Id                                 = null,
                            Operator_Id?                       OperatorId                         = null,
-                           String                             OperatorName                       = null,
-                           I18NText                           ChargingStationName                = null,
-                           Address                            Address                            = null,
+                           String?                            OperatorName                       = null,
+                           I18NText?                          ChargingStationName                = null,
+                           Address?                           Address                            = null,
                            GeoCoordinates?                    GeoCoordinates                     = null,
-                           IEnumerable<PlugTypes>             PlugTypes                          = null,
-                           IEnumerable<ChargingFacility>      ChargingFacilities                 = null,
+                           IEnumerable<PlugTypes>?            PlugTypes                          = null,
+                           IEnumerable<ChargingFacility>?     ChargingFacilities                 = null,
                            Boolean?                           RenewableEnergy                    = null,
                            CalibrationLawDataAvailabilities?  CalibrationLawDataAvailability     = null,
-                           IEnumerable<AuthenticationModes>   AuthenticationModes                = null,
-                           IEnumerable<PaymentOptions>        PaymentOptions                     = null,
-                           IEnumerable<ValueAddedServices>    ValueAddedServices                 = null,
+                           IEnumerable<AuthenticationModes>?  AuthenticationModes                = null,
+                           IEnumerable<PaymentOptions>?       PaymentOptions                     = null,
+                           IEnumerable<ValueAddedServices>?   ValueAddedServices                 = null,
                            AccessibilityTypes?                Accessibility                      = null,
                            Phone_Number?                      HotlinePhoneNumber                 = null,
                            Boolean?                           IsOpen24Hours                      = null,
@@ -2041,23 +2037,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            ChargingStation_Id?                ChargingStationId                  = null,
                            ChargingPool_Id?                   ChargingPoolId                     = null,
-                           String                             HardwareManufacturer               = null,
+                           String?                            HardwareManufacturer               = null,
                            URL?                               ChargingStationImageURL            = null,
-                           String                             SubOperatorName                    = null,
+                           String?                            SubOperatorName                    = null,
                            Boolean?                           DynamicPowerLevel                  = null,
-                           IEnumerable<EnergySource>          EnergySources                      = null,
+                           IEnumerable<EnergySource>?         EnergySources                      = null,
                            EnvironmentalImpact?               EnvironmentalImpact                = null,
                            UInt32?                            MaxCapacity                        = null,
                            AccessibilityLocationTypes?        AccessibilityLocationType          = null,
-                           I18NText                           AdditionalInfo                     = null,
-                           I18NText                           ChargingStationLocationReference   = null,
+                           I18NText?                          AdditionalInfo                     = null,
+                           I18NText?                          ChargingStationLocationReference   = null,
                            GeoCoordinates?                    GeoChargingPointEntrance           = null,
-                           IEnumerable<OpeningTime>           OpeningTimes                       = null,
+                           IEnumerable<OpeningTime>?          OpeningTimes                       = null,
                            Operator_Id?                       HubOperatorId                      = null,
                            ClearingHouse_Id?                  ClearingHouseId                    = null,
 
-                           JObject                            CustomData                         = null,
-                           Dictionary<String, Object>         InternalData                       = null)
+                           JObject?                           CustomData                         = null,
+                           Dictionary<String, Object>?        InternalData                       = null)
 
                 : base(InternalData)
 
@@ -2068,13 +2064,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.OperatorName                      = OperatorName;
                 this.ChargingStationName               = ChargingStationName;
                 this.Address                           = Address;
-                this.PlugTypes                         = PlugTypes.          SafeAny() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
-                this.ChargingFacilities                = ChargingFacilities. SafeAny() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : new HashSet<ChargingFacility>();
+                this.PlugTypes                         = PlugTypes           is not null && PlugTypes.          Any() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
+                this.ChargingFacilities                = ChargingFacilities  is not null && ChargingFacilities. Any() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : new HashSet<ChargingFacility>();
                 this.RenewableEnergy                   = RenewableEnergy;
                 this.CalibrationLawDataAvailability    = CalibrationLawDataAvailability;
-                this.AuthenticationModes               = AuthenticationModes.SafeAny() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : new HashSet<AuthenticationModes>();
-                this.PaymentOptions                    = PaymentOptions.     SafeAny() ? new HashSet<PaymentOptions>     (PaymentOptions.     Distinct()) : new HashSet<PaymentOptions>();
-                this.ValueAddedServices                = ValueAddedServices. SafeAny() ? new HashSet<ValueAddedServices> (ValueAddedServices. Distinct()) : new HashSet<ValueAddedServices>();
+                this.AuthenticationModes               = AuthenticationModes is not null && AuthenticationModes.Any() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : new HashSet<AuthenticationModes>();
+                this.PaymentOptions                    = PaymentOptions      is not null && PaymentOptions.     Any() ? new HashSet<PaymentOptions>     (PaymentOptions.     Distinct()) : new HashSet<PaymentOptions>();
+                this.ValueAddedServices                = ValueAddedServices  is not null && ValueAddedServices. Any() ? new HashSet<ValueAddedServices> (ValueAddedServices. Distinct()) : new HashSet<ValueAddedServices>();
                 this.Accessibility                     = Accessibility;
                 this.HotlinePhoneNumber                = HotlinePhoneNumber;
                 this.IsOpen24Hours                     = IsOpen24Hours;
@@ -2091,14 +2087,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.SubOperatorName                   = SubOperatorName;
                 this.GeoCoordinates                    = GeoCoordinates;
                 this.DynamicPowerLevel                 = DynamicPowerLevel;
-                this.EnergySources                     = EnergySources.      SafeAny() ? new HashSet<EnergySource>       (EnergySources.      Distinct()) : new HashSet<EnergySource>();
+                this.EnergySources                     = EnergySources       is not null && EnergySources.      Any() ? new HashSet<EnergySource>       (EnergySources.      Distinct()) : new HashSet<EnergySource>();
                 this.EnvironmentalImpact               = EnvironmentalImpact;
                 this.MaxCapacity                       = MaxCapacity;
                 this.AccessibilityLocationType         = AccessibilityLocationType;
                 this.AdditionalInfo                    = AdditionalInfo;
                 this.ChargingStationLocationReference  = ChargingStationLocationReference;
                 this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
-                this.OpeningTimes                      = OpeningTimes.       SafeAny() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : new HashSet<OpeningTime>();
+                this.OpeningTimes                      = OpeningTimes        is not null && OpeningTimes.       Any() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : new HashSet<OpeningTime>();
                 this.HubOperatorId                     = HubOperatorId;
                 this.ClearingHouseId                   = ClearingHouseId;
 
@@ -2113,10 +2109,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Return an immutable version of the EVSE data record.
             /// </summary>
-            /// <param name="Builder">An EVSE data record builder.</param>
+            /// <param name="Builder">An EVSEDataRecord builder.</param>
             public static implicit operator EVSEDataRecord(Builder Builder)
 
-                => Builder?.ToImmutable();
+                => Builder.ToImmutable();
 
 
             /// <summary>
@@ -2133,6 +2129,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!OperatorId.                    HasValue)
                     throw new ArgumentException("The given operator identification must not be null!",           nameof(OperatorId));
 
+                if (ChargingStationName is null || ChargingStationName.IsNullOrEmpty())
+                    throw new ArgumentException("The given charging station name must not be null or empty!",    nameof(ChargingStationName));
+
+                if (Address is null)
+                    throw new ArgumentException("The given address must not be null!",                           nameof(Address));
+
                 if (!GeoCoordinates.                HasValue)
                     throw new ArgumentException("The given geo coordinates must not be null!",                   nameof(GeoCoordinates));
 
@@ -2144,9 +2146,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!Accessibility.                 HasValue)
                     throw new ArgumentException("The given accessibility must not be null!",                     nameof(Accessibility));
-
-                //if (!HotlinePhoneNumber.            HasValue)
-                //    throw new ArgumentException("The given hotline phone number must not be null!",              nameof(HotlinePhoneNumber));
 
                 if (!IsOpen24Hours.                 HasValue)
                     throw new ArgumentException("The given 'is open 24 hours' must not be null!",                nameof(IsOpen24Hours));
@@ -2173,7 +2172,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           PaymentOptions,
                                           ValueAddedServices,
                                           Accessibility.                 Value,
-                                          HotlinePhoneNumber, //.            Value,
+                                          HotlinePhoneNumber,
                                           IsOpen24Hours.                 Value,
                                           IsHubjectCompatible.           Value,
                                           DynamicInfoAvailable.          Value,

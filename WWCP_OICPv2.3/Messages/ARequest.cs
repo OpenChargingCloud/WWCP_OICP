@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -101,7 +99,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             this.CustomData               = CustomData;
-            this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
+            this.Timestamp                = Timestamp         ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             this.CancellationTokenSource  = CancellationToken is null
                                                 ? new CancellationTokenSource()
                                                 : null;

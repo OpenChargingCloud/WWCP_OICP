@@ -17,11 +17,10 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -47,49 +46,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode  StatusCode          { get; }
+        public StatusCode?  StatusCode          { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    First               { get; }
+        public Boolean?     First               { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    Last                { get; }
+        public Boolean?     Last                { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Number              { get; }
+        public UInt32?      Number              { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     NumberOfElements    { get; }
+        public UInt32?      NumberOfElements    { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Size                { get; }
+        public UInt32?      Size                { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalElements       { get; }
+        public UInt32?      TotalElements       { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalPages          { get; }
+        public UInt32?      TotalPages          { get; }
 
         #endregion
 
@@ -111,9 +110,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  EventTracking_Id  EventTrackingId,
                                  TimeSpan          Runtime,
 
-                                 HTTPResponse      HTTPResponse       = null,
+                                 HTTPResponse?     HTTPResponse       = null,
                                  Process_Id?       ProcessId          = null,
-                                 StatusCode        StatusCode         = null,
+                                 StatusCode?       StatusCode         = null,
                                  Boolean?          First              = null,
                                  Boolean?          Last               = null,
                                  UInt32?           Number             = null,
@@ -122,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  UInt32?           TotalElements      = null,
                                  UInt32?           TotalPages         = null,
 
-                                 JObject           CustomData         = null)
+                                 JObject?          CustomData         = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -218,49 +217,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The optional status code of this response.
             /// </summary>
             [Optional]
-            public StatusCode  StatusCode          { get; }
+            public StatusCode.Builder  StatusCode          { get; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?    First               { get; set; }
+            public Boolean?            First               { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?    Last                { get; set; }
+            public Boolean?            Last                { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     Number              { get; set; }
+            public UInt32?             Number              { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     NumberOfElements    { get; set; }
+            public UInt32?             NumberOfElements    { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     Size                { get; set; }
+            public UInt32?             Size                { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     TotalElements       { get; set; }
+            public UInt32?             TotalElements       { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     TotalPages          { get; set; }
+            public UInt32?             TotalPages          { get; set; }
 
             #endregion
 
@@ -277,23 +276,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// 
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest          Request             = null,
-                              DateTime?         ResponseTimestamp   = null,
-                              EventTracking_Id  EventTrackingId     = null,
-                              TimeSpan?         Runtime             = null,
+            protected Builder(TRequest?          Request             = null,
+                              DateTime?          ResponseTimestamp   = null,
+                              EventTracking_Id?  EventTrackingId     = null,
+                              TimeSpan?          Runtime             = null,
 
-                              HTTPResponse      HTTPResponse        = null,
-                              Process_Id?       ProcessId           = null,
-                              StatusCode        StatusCode          = null,
-                              Boolean?          First               = null,
-                              Boolean?          Last                = null,
-                              UInt32?           Number              = null,
-                              UInt32?           NumberOfElements    = null,
-                              UInt32?           Size                = null,
-                              UInt32?           TotalElements       = null,
-                              UInt32?           TotalPages          = null,
+                              HTTPResponse?      HTTPResponse        = null,
+                              Process_Id?        ProcessId           = null,
+                              StatusCode?        StatusCode          = null,
+                              Boolean?           First               = null,
+                              Boolean?           Last                = null,
+                              UInt32?            Number              = null,
+                              UInt32?            NumberOfElements    = null,
+                              UInt32?            Size                = null,
+                              UInt32?            TotalElements       = null,
+                              UInt32?            TotalPages          = null,
 
-                              JObject           CustomData          = null)
+                              JObject?           CustomData          = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -305,7 +304,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.StatusCode        = StatusCode != null ? StatusCode.ToBuilder() : new StatusCode.Builder();
+                this.StatusCode        = StatusCode is not null
+                                             ? StatusCode.ToBuilder()
+                                             : new StatusCode.Builder();
                 this.First             = First;
                 this.Last              = Last;
                 this.Number            = Number;

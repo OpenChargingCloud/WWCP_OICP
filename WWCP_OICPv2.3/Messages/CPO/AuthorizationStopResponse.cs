@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -1198,6 +1196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return AuthorizationStatus. GetHashCode()       * 13 ^
                        StatusCode.          GetHashCode()       * 11 ^
 
@@ -1205,6 +1204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (ProviderId?.         GetHashCode() ?? 0);
+
             }
         }
 
@@ -1355,7 +1355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Return an immutable version of the AuthorizationStop response.
             /// </summary>
-            /// <param name="Builder">A EVSE data record builder.</param>
+            /// <param name="Builder">An AuthorizationStopResponse builder.</param>
             public static implicit operator AuthorizationStopResponse(Builder Builder)
 
                 => Builder.ToImmutable();

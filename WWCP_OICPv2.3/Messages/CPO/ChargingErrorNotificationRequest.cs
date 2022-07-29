@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -596,6 +594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return Type.                   GetHashCode()       * 19 ^
                        SessionId.              GetHashCode()       * 17 ^
                        Identification.         GetHashCode()       * 13 ^
@@ -605,6 +604,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (CPOPartnerSessionId?.   GetHashCode() ?? 0) *  5 ^
                       (EMPPartnerSessionId?.   GetHashCode() ?? 0) *  3 ^
                       (ErrorAdditionalInfo?.   GetHashCode() ?? 0);
+
             }
         }
 

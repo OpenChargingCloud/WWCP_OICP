@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Globalization;
 
 using Newtonsoft.Json.Linq;
@@ -312,19 +311,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static ChargeDetailRecord Parse(JObject                                       JSON,
-                                           CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser   = null)
+        public static ChargeDetailRecord Parse(JObject                                           JSON,
+                                               CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser   = null)
         {
 
             if (TryParse(JSON,
-                         out ChargeDetailRecord? chargeDetailRecord,
-                         out String?             ErrorResponse,
+                         out ChargeDetailRecord?  chargeDetailRecord,
+                         out String?              errorResponse,
                          CustomChargeDetailRecordParser))
             {
                 return chargeDetailRecord!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charge detail record is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charge detail record is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -342,14 +341,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out ChargeDetailRecord? chargeDetailRecord,
-                         out String?             ErrorResponse,
+                         out ChargeDetailRecord?  chargeDetailRecord,
+                         out String?              errorResponse,
                          CustomChargeDetailRecordParser))
             {
                 return chargeDetailRecord!;
             }
 
-            throw new ArgumentException("The given text representation of a charge detail record is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charge detail record is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -844,7 +843,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId?.           Clone,
                     MeterValueStart,
                     MeterValueEnd,
-                    MeterValuesInBetween?.                                                                  ToArray(),
+                    MeterValuesInBetween?.ToArray(),
                     SignedMeteringValues is not null && SignedMeteringValues.Any()
                         ? SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray()
                         : Array.Empty<SignedMeteringValue>(),
@@ -1092,47 +1091,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargeDetailRecord is not null &&
 
-                 SessionId.     Equals(ChargeDetailRecord.SessionId)      &&
-                 EVSEId.        Equals(ChargeDetailRecord.EVSEId)         &&
-                 Identification.Equals(ChargeDetailRecord.Identification) &&
-                 SessionStart.  Equals(ChargeDetailRecord.SessionStart)   &&
-                 SessionEnd.    Equals(ChargeDetailRecord.SessionEnd)     &&
-                 ChargingStart. Equals(ChargeDetailRecord.ChargingStart)  &&
-                 ChargingEnd.   Equals(ChargeDetailRecord.ChargingEnd)    &&
-                 ConsumedEnergy.Equals(ChargeDetailRecord.ConsumedEnergy) &&
+               SessionId.     Equals(ChargeDetailRecord.SessionId)      &&
+               EVSEId.        Equals(ChargeDetailRecord.EVSEId)         &&
+               Identification.Equals(ChargeDetailRecord.Identification) &&
+               SessionStart.  Equals(ChargeDetailRecord.SessionStart)   &&
+               SessionEnd.    Equals(ChargeDetailRecord.SessionEnd)     &&
+               ChargingStart. Equals(ChargeDetailRecord.ChargingStart)  &&
+               ChargingEnd.   Equals(ChargeDetailRecord.ChargingEnd)    &&
+               ConsumedEnergy.Equals(ChargeDetailRecord.ConsumedEnergy) &&
 
-                 ((!PartnerProductId.   HasValue && !ChargeDetailRecord.PartnerProductId.   HasValue) ||
-                   (PartnerProductId.   HasValue &&  ChargeDetailRecord.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(ChargeDetailRecord.PartnerProductId.   Value))) &&
+             ((!PartnerProductId.   HasValue && !ChargeDetailRecord.PartnerProductId.   HasValue) ||
+               (PartnerProductId.   HasValue &&  ChargeDetailRecord.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(ChargeDetailRecord.PartnerProductId.   Value))) &&
 
-                 ((!CPOPartnerSessionId.HasValue && !ChargeDetailRecord.CPOPartnerSessionId.HasValue) ||
-                   (CPOPartnerSessionId.HasValue &&  ChargeDetailRecord.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(ChargeDetailRecord.CPOPartnerSessionId.Value))) &&
+             ((!CPOPartnerSessionId.HasValue && !ChargeDetailRecord.CPOPartnerSessionId.HasValue) ||
+               (CPOPartnerSessionId.HasValue &&  ChargeDetailRecord.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(ChargeDetailRecord.CPOPartnerSessionId.Value))) &&
 
-                 ((!EMPPartnerSessionId.HasValue && !ChargeDetailRecord.EMPPartnerSessionId.HasValue) ||
-                   (EMPPartnerSessionId.HasValue &&  ChargeDetailRecord.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(ChargeDetailRecord.EMPPartnerSessionId.Value))) &&
+             ((!EMPPartnerSessionId.HasValue && !ChargeDetailRecord.EMPPartnerSessionId.HasValue) ||
+               (EMPPartnerSessionId.HasValue &&  ChargeDetailRecord.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(ChargeDetailRecord.EMPPartnerSessionId.Value))) &&
 
-                 ((!MeterValueStart.    HasValue && !ChargeDetailRecord.MeterValueStart.    HasValue) ||
-                   (MeterValueStart.    HasValue &&  ChargeDetailRecord.MeterValueStart.    HasValue && MeterValueStart.    Value.Equals(ChargeDetailRecord.MeterValueStart.    Value))) &&
+             ((!MeterValueStart.    HasValue && !ChargeDetailRecord.MeterValueStart.    HasValue) ||
+               (MeterValueStart.    HasValue &&  ChargeDetailRecord.MeterValueStart.    HasValue && MeterValueStart.    Value.Equals(ChargeDetailRecord.MeterValueStart.    Value))) &&
 
-                 ((!MeterValueEnd.      HasValue && !ChargeDetailRecord.MeterValueEnd.      HasValue) ||
-                   (MeterValueEnd.      HasValue &&  ChargeDetailRecord.MeterValueEnd.      HasValue && MeterValueEnd.      Value.Equals(ChargeDetailRecord.MeterValueEnd.      Value))) &&
+             ((!MeterValueEnd.      HasValue && !ChargeDetailRecord.MeterValueEnd.      HasValue) ||
+               (MeterValueEnd.      HasValue &&  ChargeDetailRecord.MeterValueEnd.      HasValue && MeterValueEnd.      Value.Equals(ChargeDetailRecord.MeterValueEnd.      Value))) &&
 
-                 ((MeterValuesInBetween is null && ChargeDetailRecord.MeterValuesInBetween is null) ||
-                 (MeterValuesInBetween is not null && ChargeDetailRecord.MeterValuesInBetween is not null &&
-                  MeterValuesInBetween.Count().Equals(ChargeDetailRecord.MeterValuesInBetween.Count()) &&
-                  MeterValuesInBetween.All(meterValue => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue)))) &&
+              ((MeterValuesInBetween is     null && ChargeDetailRecord.MeterValuesInBetween is     null) ||
+               (MeterValuesInBetween is not null && ChargeDetailRecord.MeterValuesInBetween is not null &&
+                MeterValuesInBetween.Count().Equals(ChargeDetailRecord.MeterValuesInBetween.Count()) &&
+                MeterValuesInBetween.All(meterValue => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue)))) &&
 
-                 ((SignedMeteringValues is     null  &&  ChargeDetailRecord.SignedMeteringValues is     null) ||
-                  (SignedMeteringValues is not null  &&  ChargeDetailRecord.SignedMeteringValues is not null  && SignedMeteringValues.    Equals(ChargeDetailRecord.SignedMeteringValues))) &&
+              ((SignedMeteringValues is     null  &&  ChargeDetailRecord.SignedMeteringValues is     null) ||
+               (SignedMeteringValues is not null  &&  ChargeDetailRecord.SignedMeteringValues is not null  && SignedMeteringValues.    Equals(ChargeDetailRecord.SignedMeteringValues))) &&
 
-                 ((CalibrationLawVerificationInfo is     null && ChargeDetailRecord.CalibrationLawVerificationInfo is     null) ||
-                  (CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null &&
-                   CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo) != 0)) &&
+              ((CalibrationLawVerificationInfo is     null && ChargeDetailRecord.CalibrationLawVerificationInfo is     null) ||
+               (CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null &&
+                CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo) != 0)) &&
 
-                 ((!HubOperatorId.      HasValue && !ChargeDetailRecord.HubOperatorId.      HasValue) ||
-                   (HubOperatorId.      HasValue &&  ChargeDetailRecord.HubOperatorId.      HasValue && HubOperatorId.      Value.Equals(ChargeDetailRecord.HubOperatorId.      Value))) &&
+             ((!HubOperatorId.      HasValue && !ChargeDetailRecord.HubOperatorId.      HasValue) ||
+               (HubOperatorId.      HasValue &&  ChargeDetailRecord.HubOperatorId.      HasValue && HubOperatorId.      Value.Equals(ChargeDetailRecord.HubOperatorId.      Value))) &&
 
-                 ((!HubProviderId.      HasValue && !ChargeDetailRecord.HubProviderId.      HasValue) ||
-                   (HubProviderId.      HasValue &&  ChargeDetailRecord.HubProviderId.      HasValue && HubProviderId.      Value.Equals(ChargeDetailRecord.HubProviderId.      Value)));
+             ((!HubProviderId.      HasValue && !ChargeDetailRecord.HubProviderId.      HasValue) ||
+               (HubProviderId.      HasValue &&  ChargeDetailRecord.HubProviderId.      HasValue && HubProviderId.      Value.Equals(ChargeDetailRecord.HubProviderId.      Value)));
 
         #endregion
 
@@ -1144,28 +1143,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Get the hashcode of this object.
         /// </summary>
         public override Int32 GetHashCode()
+        {
+            unchecked
+            {
 
-            => SessionId.                       GetHashCode()       * 61 ^
-               EVSEId.                          GetHashCode()       * 59 ^
-               Identification.                  GetHashCode()       * 53 ^
-               SessionStart.                    GetHashCode()       * 47 ^
-               SessionEnd.                      GetHashCode()       * 43 ^
-               ChargingStart.                   GetHashCode()       * 41 ^
-               ChargingEnd.                     GetHashCode()       * 37 ^
-               ConsumedEnergy.                  GetHashCode()       * 31 ^
+                return SessionId.                       GetHashCode()       * 61 ^
+                       EVSEId.                          GetHashCode()       * 59 ^
+                       Identification.                  GetHashCode()       * 53 ^
+                       SessionStart.                    GetHashCode()       * 47 ^
+                       SessionEnd.                      GetHashCode()       * 43 ^
+                       ChargingStart.                   GetHashCode()       * 41 ^
+                       ChargingEnd.                     GetHashCode()       * 37 ^
+                       ConsumedEnergy.                  GetHashCode()       * 31 ^
 
-               (PartnerProductId?.              GetHashCode() ?? 0) * 29 ^
-               (CPOPartnerSessionId?.           GetHashCode() ?? 0) * 23 ^
-               (EMPPartnerSessionId?.           GetHashCode() ?? 0) * 19 ^
-               (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
-               (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
+                       (PartnerProductId?.              GetHashCode() ?? 0) * 29 ^
+                       (CPOPartnerSessionId?.           GetHashCode() ?? 0) * 23 ^
+                       (EMPPartnerSessionId?.           GetHashCode() ?? 0) * 19 ^
+                       (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
+                       (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
 
-               (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
-               (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
+                       (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
+                       (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
 
-               (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
-               (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
-               (HubProviderId?.                 GetHashCode() ?? 0);
+                       (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
+                       (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
+                       (HubProviderId?.                 GetHashCode() ?? 0);
+
+            }
+        }
 
         #endregion
 
@@ -1200,28 +1205,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewSessionId">An optional new charging session identification.</param>
         public Builder ToBuilder(Session_Id? NewSessionId = null)
 
-            => new Builder(NewSessionId ?? SessionId,
-                           EVSEId,
-                           Identification,
-                           SessionStart,
-                           SessionEnd,
-                           ChargingStart,
-                           ChargingEnd,
-                           ConsumedEnergy,
+            => new (NewSessionId ?? SessionId,
+                    EVSEId,
+                    Identification,
+                    SessionStart,
+                    SessionEnd,
+                    ChargingStart,
+                    ChargingEnd,
+                    ConsumedEnergy,
 
-                           PartnerProductId,
-                           CPOPartnerSessionId,
-                           EMPPartnerSessionId,
-                           MeterValueStart,
-                           MeterValueEnd,
-                           MeterValuesInBetween,
-                           SignedMeteringValues,
-                           CalibrationLawVerificationInfo,
-                           HubOperatorId,
-                           HubProviderId,
+                    PartnerProductId,
+                    CPOPartnerSessionId,
+                    EMPPartnerSessionId,
+                    MeterValueStart,
+                    MeterValueEnd,
+                    MeterValuesInBetween,
+                    SignedMeteringValues,
+                    CalibrationLawVerificationInfo,
+                    HubOperatorId,
+                    HubProviderId,
 
-                           CustomData,
-                           internalData);
+                    CustomData,
+                    internalData);
 
         #endregion
 
@@ -1442,7 +1447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Return an immutable version of the charge detail record.
             /// </summary>
-            /// <param name="Builder">A charge detail record builder.</param>
+            /// <param name="Builder">A ChargeDetailRecord builder.</param>
             public static implicit operator ChargeDetailRecord(Builder Builder)
 
                 => Builder.ToImmutable();

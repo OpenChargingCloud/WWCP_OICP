@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Globalization;
 
 using Newtonsoft.Json.Linq;
@@ -825,6 +824,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return Type.                   GetHashCode()       * 47 ^
                        SessionId.              GetHashCode()       * 43 ^
                        Identification.         GetHashCode()       * 41 ^
@@ -841,6 +841,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (MeterValuesInBetween?.  GetHashCode() ?? 0) *  5 ^
                       (OperatorId?.            GetHashCode() ?? 0) *  3 ^
                       (PartnerProductId?.      GetHashCode() ?? 0);
+
             }
         }
 

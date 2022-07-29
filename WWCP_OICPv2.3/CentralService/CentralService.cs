@@ -20,7 +20,6 @@
 using System;
 using System.Net.Security;
 using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
 
@@ -120,7 +119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #region Constructor(s)
 
-        #region CentralService()
+        #region CentralService(HTTPHostname = null, ...)
 
         /// <summary>
         /// Create a new central ev roaming service.

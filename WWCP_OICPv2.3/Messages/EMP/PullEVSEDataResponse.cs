@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -695,7 +693,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => PullEVSEDataResponse is not null &&
 
                (!EVSEDataRecords.Any() && !PullEVSEDataResponse.EVSEDataRecords.Any() ||
-                 EVSEDataRecords.Any() && PullEVSEDataResponse.EVSEDataRecords.Any() && EVSEDataRecords.Count().Equals(PullEVSEDataResponse.EVSEDataRecords.Count())) &&
+                 EVSEDataRecords.Any() &&  PullEVSEDataResponse.EVSEDataRecords.Any() && EVSEDataRecords.Count().Equals(PullEVSEDataResponse.EVSEDataRecords.Count())) &&
 
                ((StatusCode is     null && PullEVSEDataResponse.StatusCode is     null) ||
                 (StatusCode is not null && PullEVSEDataResponse.StatusCode is not null && StatusCode.Equals(PullEVSEDataResponse.StatusCode)));
@@ -714,8 +712,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return EVSEDataRecords.Aggregate(0, (hashCode, operatorEVSEData) => hashCode ^ operatorEVSEData.GetHashCode()) ^
                        StatusCode?.GetHashCode() ?? 0;
+
             }
         }
 
@@ -856,13 +856,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
-
             #region ToImmutable()
 
             /// <summary>
             /// Return an immutable version of the PullEVSEData response.
             /// </summary>
-            /// <param name="Builder">A PullEVSEData builder.</param>
+            /// <param name="Builder">A PullEVSEDataResponse builder.</param>
             public static implicit operator PullEVSEDataResponse(Builder Builder)
 
                 => Builder.ToImmutable();
@@ -874,9 +873,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public override PullEVSEDataResponse ToImmutable()
 
                 => new (Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                        ResponseTimestamp ?? DateTime.UtcNow,
+                        ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
+                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
                         EVSEDataRecords,
                         Number,
                         Size,

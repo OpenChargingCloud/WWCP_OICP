@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -162,11 +160,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ProviderId                            = ProviderId;
             this.LastCall                              = LastCall;
 
-            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct() ?? new Operator_Id[0];
-            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct() ?? new Country[0];
-            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct() ?? new AccessibilityTypes[0];
-            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct() ?? new AuthenticationModes[0];
-            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct() ?? new CalibrationLawDataAvailabilities[0];
+            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct() ?? Array.Empty<Operator_Id>();
+            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct() ?? Array.Empty<Country>();
+            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct() ?? Array.Empty<AccessibilityTypes>();
+            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct() ?? Array.Empty<AuthenticationModes>();
+            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct() ?? Array.Empty<CalibrationLawDataAvailabilities>();
             this.RenewableEnergyFilter                 = RenewableEnergyFilter;
             this.IsHubjectCompatibleFilter             = IsHubjectCompatibleFilter;
             this.IsOpen24HoursFilter                   = IsOpen24HoursFilter;
@@ -781,6 +779,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return ProviderId.                  GetHashCode() * 17 ^
                        DistanceKM.                  GetHashCode() * 13 ^
                        GeoCoordinatesResponseFormat.GetHashCode() * 11 ^
@@ -792,6 +791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        (!LastCall.HasValue
                             ? LastCall.GetHashCode()              *  5
                             : 0);
+
             }
         }
 

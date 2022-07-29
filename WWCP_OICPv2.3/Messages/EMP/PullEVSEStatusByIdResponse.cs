@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -489,8 +487,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return EVSEStatusRecords.Aggregate(0, (hashCode, evseStatusRecord) => hashCode ^ evseStatusRecord.GetHashCode()) ^
                        StatusCode?.GetHashCode() ?? 0;
+
             }
         }
 
@@ -599,13 +599,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
-
             #region ToImmutable()
 
             /// <summary>
             /// Return an immutable version of the PullEVSEStatusById response.
             /// </summary>
-            /// <param name="Builder">A PullEVSEStatusById builder.</param>
+            /// <param name="Builder">A PullEVSEStatusByIdResponse builder.</param>
             public static implicit operator PullEVSEStatusByIdResponse(Builder Builder)
 
                 => Builder.ToImmutable();
@@ -617,9 +616,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public override PullEVSEStatusByIdResponse ToImmutable()
 
                 => new (Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                        ResponseTimestamp ?? DateTime.UtcNow,
+                        ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
+                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
                         EVSEStatusRecords,
                         StatusCode,
                         ProcessId,

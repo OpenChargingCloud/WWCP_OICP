@@ -17,11 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -407,8 +402,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return ProviderId. GetHashCode() * 3 ^
                        OperatorIds.Aggregate(0, (hashCode, operatorId) => hashCode ^ operatorId.GetHashCode());
+
             }
         }
 

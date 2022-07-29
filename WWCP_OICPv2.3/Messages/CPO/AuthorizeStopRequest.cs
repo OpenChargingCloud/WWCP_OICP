@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -565,6 +562,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override Boolean Equals(AuthorizeStopRequest? AuthorizeStop)
 
             => AuthorizeStop is not null &&
+
                OperatorId.    Equals(AuthorizeStop.OperatorId)     &&
                SessionId.     Equals(AuthorizeStop.SessionId)      &&
                Identification.Equals(AuthorizeStop.Identification) &&
@@ -592,6 +590,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return OperatorId.          GetHashCode()       * 13 ^
                        SessionId.           GetHashCode()       * 11 ^
                        Identification.      GetHashCode()       *  7 ^
@@ -599,6 +598,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (EVSEId?.             GetHashCode() ?? 0) *  5 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0);
+
             }
         }
 

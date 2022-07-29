@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -217,11 +215,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #endregion
 
+            #region ToImmutable()
 
             /// <summary>
             /// Return an immutable response.
             /// </summary>
             public abstract TResponse  ToImmutable();
+
+            #endregion
 
         }
 

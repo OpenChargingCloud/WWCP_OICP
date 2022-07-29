@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -735,19 +733,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Acknowledgement is not null &&
 
-                 StatusCode.Equals(Acknowledgement.StatusCode) &&
+               StatusCode.Equals(Acknowledgement.StatusCode) &&
 
-              ((!Result.             HasValue && !Acknowledgement.Result.             HasValue) ||
-                (Result.             HasValue &&  Acknowledgement.Result.             HasValue && Result.             Value.Equals(Acknowledgement.Result.             Value))) &&
+            ((!Result.             HasValue && !Acknowledgement.Result.             HasValue) ||
+              (Result.             HasValue &&  Acknowledgement.Result.             HasValue && Result.             Value.Equals(Acknowledgement.Result.             Value))) &&
 
-              ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
-                (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
+            ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
+              (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
 
-              ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
-                (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
+            ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
+              (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
 
-              ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
-                (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
+            ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
+              (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
 
         #endregion
 
@@ -763,11 +761,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return StatusCode.          GetHashCode()       * 11 ^
                       (Result?.             GetHashCode() ?? 0) *  7 ^
                       (SessionId?.          GetHashCode() ?? 0) *  5 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0);
+
             }
         }
 
@@ -948,7 +948,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
 
             #endregion
-
 
             #region ToImmutable()
 
@@ -2139,19 +2138,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => Acknowledgement is not null &&
 
-                 StatusCode.Equals(Acknowledgement.StatusCode) &&
+               StatusCode.Equals(Acknowledgement.StatusCode) &&
 
-              ((!Result.             HasValue && !Acknowledgement.Result.             HasValue) ||
-                (Result.             HasValue &&  Acknowledgement.Result.             HasValue && Result.             Value.Equals(Acknowledgement.Result.             Value))) &&
+            ((!Result.             HasValue && !Acknowledgement.Result.             HasValue) ||
+              (Result.             HasValue &&  Acknowledgement.Result.             HasValue && Result.             Value.Equals(Acknowledgement.Result.             Value))) &&
 
-              ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
-                (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
+            ((!SessionId.          HasValue && !Acknowledgement.SessionId.          HasValue) ||
+              (SessionId.          HasValue &&  Acknowledgement.SessionId.          HasValue && SessionId.          Value.Equals(Acknowledgement.SessionId.          Value))) &&
 
-              ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
-                (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
+            ((!CPOPartnerSessionId.HasValue && !Acknowledgement.CPOPartnerSessionId.HasValue) ||
+              (CPOPartnerSessionId.HasValue &&  Acknowledgement.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(Acknowledgement.CPOPartnerSessionId.Value))) &&
 
-              ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
-                (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
+            ((!EMPPartnerSessionId.HasValue && !Acknowledgement.EMPPartnerSessionId.HasValue) ||
+              (EMPPartnerSessionId.HasValue &&  Acknowledgement.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(Acknowledgement.EMPPartnerSessionId.Value)));
 
         #endregion
 
@@ -2167,11 +2166,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
+
                 return StatusCode.          GetHashCode()       * 11 ^
                       (Result?.             GetHashCode() ?? 0) *  7 ^
                       (SessionId?.          GetHashCode() ?? 0) *  5 ^
                       (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
                       (EMPPartnerSessionId?.GetHashCode() ?? 0);
+
             }
         }
 
@@ -2313,7 +2314,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
 
             #endregion
-
 
             #region ToImmutable()
 

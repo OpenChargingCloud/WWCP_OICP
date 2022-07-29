@@ -505,7 +505,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PushEVSEData.IncRequests_OK();
 
@@ -914,9 +914,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                  Request,
                                  new Acknowledgement<PushEVSEDataRequest>(
-                                     DateTime.UtcNow,
+                                     Timestamp.Now,
                                      Request.EventTrackingId,
-                                     DateTime.UtcNow - Request.Timestamp,
+                                     Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -933,9 +933,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result ??= OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                Request,
                                new Acknowledgement<PushEVSEDataRequest>(
-                                   DateTime.UtcNow,
+                                   Timestamp.Now,
                                    Request.EventTrackingId,
-                                   DateTime.UtcNow - Request.Timestamp,
+                                   Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -951,7 +951,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -1007,7 +1007,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.PushEVSEStatus.IncRequests_OK();
 
@@ -1413,9 +1413,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                  Request,
                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                     DateTime.UtcNow,
+                                     Timestamp.Now,
                                      Request.EventTrackingId,
-                                     DateTime.UtcNow - Request.Timestamp,
+                                     Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
                                          e.Message,
@@ -1432,9 +1432,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result ??= OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                Request,
                                new Acknowledgement<PushEVSEStatusRequest>(
-                                   DateTime.UtcNow,
+                                   Timestamp.Now,
                                    Request.EventTrackingId,
-                                   DateTime.UtcNow - Request.Timestamp,
+                                   Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
                                        statusDescription ?? "HTTP request failed!"
@@ -1450,7 +1450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -1507,7 +1507,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.AuthorizeStart.IncRequests_OK();
 
@@ -1845,7 +1845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -1901,7 +1901,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.AuthorizeStop.IncRequests_OK();
 
@@ -2261,7 +2261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -2318,7 +2318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.SendChargingStartNotification.IncRequests_OK();
 
@@ -2688,9 +2688,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                              Request,
                              new Acknowledgement<ChargingStartNotificationRequest>(
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -2707,9 +2707,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             result ??= OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                            Request,
                            new Acknowledgement<ChargingStartNotificationRequest>(
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -2724,7 +2724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -2780,7 +2780,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.SendChargingProgressNotification.IncRequests_OK();
 
@@ -3150,9 +3150,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                              Request,
                              new Acknowledgement<ChargingProgressNotificationRequest>(
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -3169,9 +3169,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             result ??= OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                            Request,
                            new Acknowledgement<ChargingProgressNotificationRequest>(
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -3186,7 +3186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -3242,7 +3242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.SendChargingEndNotification.IncRequests_OK();
 
@@ -3612,9 +3612,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                              Request,
                              new Acknowledgement<ChargingEndNotificationRequest>(
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -3631,9 +3631,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             result ??= OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                            Request,
                            new Acknowledgement<ChargingEndNotificationRequest>(
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -3648,7 +3648,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -3704,7 +3704,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationRequest event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.SendChargingErrorNotification.IncRequests_OK();
 
@@ -4074,9 +4074,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                              Request,
                              new Acknowledgement<ChargingErrorNotificationRequest>(
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4093,9 +4093,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             result ??= OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                            Request,
                            new Acknowledgement<ChargingErrorNotificationRequest>(
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -4110,7 +4110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationResponse event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
@@ -4167,7 +4167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendChargeDetailRecord event
 
-            var StartTime = DateTime.UtcNow;
+            var StartTime = Timestamp.Now;
 
             Counter.SendChargeDetailRecord.IncRequests_OK();
 
@@ -4463,9 +4463,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                              Request,
                              new Acknowledgement<ChargeDetailRecordRequest>(
-                                 DateTime.UtcNow,
+                                 Timestamp.Now,
                                  Request.EventTrackingId,
-                                 DateTime.UtcNow - Request.Timestamp,
+                                 Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -4482,9 +4482,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             result ??= OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                            Request,
                            new Acknowledgement<ChargeDetailRecordRequest>(
-                               DateTime.UtcNow,
+                               Timestamp.Now,
                                Request.EventTrackingId,
-                               DateTime.UtcNow - Request.Timestamp,
+                               Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!",
@@ -4499,7 +4499,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnChargeDetailRecordSent event
 
-            var Endtime = DateTime.UtcNow;
+            var Endtime = Timestamp.Now;
 
             try
             {
