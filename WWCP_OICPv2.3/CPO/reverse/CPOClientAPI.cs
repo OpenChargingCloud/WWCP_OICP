@@ -136,8 +136,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public APICounters                                                           Counters                                           { get; }
 
         // Custom JSON parsers
-        public CustomJObjectParserDelegate<PushEVSEDataRequest>                      CustomPushEVSEDataRequestParser                    { get; set; }
-        public CustomJObjectParserDelegate<PushEVSEStatusRequest>                    CustomPushEVSEStatusRequestParser                  { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEDataRequest>?                     CustomPushEVSEDataRequestParser                    { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEStatusRequest>?                   CustomPushEVSEStatusRequestParser                  { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizeStartRequest>?                   CustomAuthorizeStartRequestParser                  { get; set; }
         public CustomJObjectParserDelegate<AuthorizeStopRequest>?                    CustomAuthorizeStopRequestParser                   { get; set; }
@@ -642,6 +642,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Constructor(s)
 
+        #region CPOClientAPI(HTTPAPI, ...)
+
+        public CPOClientAPI(HTTPAPI  HTTPAPI,
+                            String   LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String   LoggingContext   = DefaultLoggingContext,
+                            String   LogfileName      = DefaultHTTPAPI_LogfileName)
+
+            : base(HTTPAPI)
+
+        {
+
+            this.Counters    = new APICounters();
+
+            this.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingPath,
+                                                LoggingContext ?? DefaultLoggingContext,
+                                                LogfileCreator)
+                                   : null;
+
+            RegisterURLTemplates();
+
+        }
+
+        #endregion
+
+        #region CPOClientAPI(HTTPHostname, ...)
+
         /// <summary>
         /// Create a new CPO HTTP Client API.
         /// </summary>
@@ -774,8 +802,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            RegisterURLTemplates();
-
             this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
@@ -785,10 +811,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 LogfileCreator)
                                    : null;
 
+            RegisterURLTemplates();
+
             if (Autostart)
                 Start();
 
         }
+
+        #endregion
 
         #endregion
 

@@ -556,8 +556,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            RegisterURLTemplates();
-
             this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
@@ -566,6 +564,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                 LoggingContext ?? DefaultLoggingContext,
                                                 LogfileCreator)
                                    : null;
+
+            RegisterURLTemplates();
 
             if (Autostart)
                 Start();

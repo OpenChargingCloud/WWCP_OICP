@@ -890,6 +890,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Constructor(s)
 
+        #region EMPClientAPI(HTTPAPI, ...)
+
+        public EMPClientAPI(HTTPAPI  HTTPAPI,
+                            String   LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String   LoggingContext   = DefaultLoggingContext,
+                            String   LogfileName      = DefaultHTTPAPI_LogfileName)
+
+            : base(HTTPAPI)
+
+        {
+
+            this.Counters    = new APICounters();
+
+            this.HTTPLogger  = DisableLogging == false
+                                   ? new Logger(this,
+                                                LoggingPath,
+                                                LoggingContext ?? DefaultLoggingContext,
+                                                LogfileCreator)
+                                   : null;
+
+            RegisterURLTemplates();
+
+        }
+
+        #endregion
+
+        #region EMPClientAPI(HTTPHostname, ...)
+
         /// <summary>
         /// Create a new EMP HTTP Client API.
         /// </summary>
@@ -1022,8 +1050,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            RegisterURLTemplates();
-
             this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
@@ -1033,10 +1059,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                 LogfileCreator)
                                    : null;
 
+            RegisterURLTemplates();
+
             if (Autostart)
                 Start();
 
         }
+
+        #endregion
 
         #endregion
 

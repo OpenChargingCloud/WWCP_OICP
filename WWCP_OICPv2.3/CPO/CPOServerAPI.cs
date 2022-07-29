@@ -493,8 +493,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            RegisterURLTemplates();
-
             this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
@@ -503,6 +501,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 LoggingContext ?? DefaultLoggingContext,
                                                 LogfileCreator)
                                    : null;
+
+            RegisterURLTemplates();
 
             if (Autostart)
                 Start();
